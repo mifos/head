@@ -33,15 +33,14 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 	}
 
 	public CollectionSheetEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
-		selenium.click("link=Enter Collection Sheet Data");
+		selenium.click("link=Enter Collection Sheet Data"); //TODO: make id for this
 		waitForPageToLoad();
 		return new CollectionSheetEntrySelectPage(selenium);
 	}
 
-    public CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPageUsingLeftMenu() {
-        selenium.click("link=Create multiple Loan accounts");
+    public CreateLoanAccountsSearchPage navigateToCreateLoanAccountsUsingLeftMenu() {
+        selenium.click("link=Create multiple Loan accounts"); //TODO: make id for this
         waitForPageToLoad();
         return new CreateLoanAccountsSearchPage(selenium);
     }
-
 }

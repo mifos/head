@@ -22,9 +22,9 @@ package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateLoanAccountsSearchPage extends AbstractPage {
+public class LoanAccountPage extends AbstractPage {
 
-    public CreateLoanAccountsSearchPage(Selenium selenium) {
+    public LoanAccountPage(Selenium selenium) {
         super(selenium);
     }
 
@@ -32,25 +32,8 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
         // TODO Auto-generated method stub
     }
 
-    public void selectBranchOffice() {
+    public void verifyFeeExists() {
         // TODO Auto-generated method stub
     }
 
-    public void selectLoanOfficer() {
-        // TODO Auto-generated method stub
-    }
-
-    public void selectCenter() {
-        // TODO Auto-generated method stub
-    }
-
-    public void selectLoanInstance() {
-        // TODO Auto-generated method stub
-    }
-
-    public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
 }

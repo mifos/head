@@ -1,6 +1,6 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: mifos_gazelle
+-- Host: localhost    Database: mifos
 -- ------------------------------------------------------
 -- Server version	5.0.51a-log
 
@@ -2700,7 +2700,7 @@ CREATE TABLE `fee_frequency` (
   CONSTRAINT `fee_frequency_ibfk_2` FOREIGN KEY (`FEE_FREQUENCYTYPE_ID`) REFERENCES `fee_frequency_type` (`FEE_FREQUENCY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fee_frequency_ibfk_3` FOREIGN KEY (`FREQUENCY_PAYMENT_ID`) REFERENCES `fee_payment` (`FEE_PAYMENT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fee_frequency_ibfk_4` FOREIGN KEY (`FREQUENCY_MEETING_ID`) REFERENCES `meeting` (`MEETING_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2709,7 +2709,6 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `fee_frequency` WRITE;
 /*!40000 ALTER TABLE `fee_frequency` DISABLE KEYS */;
-INSERT INTO `fee_frequency` VALUES (1,1,2,1,NULL);
 /*!40000 ALTER TABLE `fee_frequency` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2987,7 +2986,7 @@ CREATE TABLE `fees` (
   CONSTRAINT `fees_ibfk_7` FOREIGN KEY (`FORMULA_ID`) REFERENCES `fee_formula_master` (`FORMULAID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fees_ibfk_8` FOREIGN KEY (`RATE_OR_AMOUNT_CURRENCY_ID`) REFERENCES `currency` (`CURRENCY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fees_ibfk_9` FOREIGN KEY (`FEE_AMOUNT_CURRENCY_ID`) REFERENCES `currency` (`CURRENCY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2996,7 +2995,6 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `fees` WRITE;
 /*!40000 ALTER TABLE `fees` DISABLE KEYS */;
-INSERT INTO `fees` VALUES (1,NULL,'One-time Upfront Loan Fee 1',NULL,1,50,1,5,NULL,NULL,NULL,'2009-01-12',1,NULL,NULL,0,NULL,NULL,'2.700',2,NULL,0,'AMOUNT');
 /*!40000 ALTER TABLE `fees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5124,7 +5122,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `personnel` WRITE;
 /*!40000 ALTER TABLE `personnel` DISABLE KEYS */;
-INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'hÞ8¿Jd¯&G¹\rØJÉÜŸÎ4•Ua°a','mifos',NULL,1,'mifos',1,NULL,1,NULL,'2009-01-12',0,0,5),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Z‹â>>dF\ZŒIßèl«Ô©hÖÙºïYÑVi','bagonza1228423252312','bagonza+1228423252312@example.com',0,'Bagonza Wilson',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(3,1,'0003-00003',3,NULL,1,1,NULL,NULL,'ÉÂ{D€Âãõ:ÆÑb¦Û¨¶)\nØHrÝó','bagonza1228423681546','john+1228423681546@example.com',0,'John Okoth',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(4,1,'0004-00004',4,NULL,1,1,NULL,NULL,'aNgÓ¿bœi7æi-Q|™íUe…4Y¹','bagonza1228424238375','jenna+1228424238375@example.com',0,'Jenna Barth',1,'2008-12-04',NULL,NULL,NULL,0,0,1);
+INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'hÞ8¿Jd¯&G¹\rØJÉÜŸÎ4•Ua°a','mifos',NULL,1,'mifos',1,NULL,1,NULL,'2008-12-18',0,0,4),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Z‹â>>dF\ZŒIßèl«Ô©hÖÙºïYÑVi','bagonza1228423252312','bagonza+1228423252312@example.com',0,'Bagonza Wilson',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(3,1,'0003-00003',3,NULL,1,1,NULL,NULL,'ÉÂ{D€Âãõ:ÆÑb¦Û¨¶)\nØHrÝó','bagonza1228423681546','john+1228423681546@example.com',0,'John Okoth',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(4,1,'0004-00004',4,NULL,1,1,NULL,NULL,'aNgÓ¿bœi7æi-Q|™íUe…4Y¹','bagonza1228424238375','jenna+1228424238375@example.com',0,'Jenna Barth',1,'2008-12-04',NULL,NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE `personnel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7092,4 +7090,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-01-12 22:55:37
+-- Dump completed on 2009-01-13 18:39:09

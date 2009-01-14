@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,14 @@
 package org.mifos.test.acceptance.loan;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
+import org.mifos.test.acceptance.framework.CreateLoanAccountsEntryPage;
 import org.mifos.test.acceptance.framework.CreateLoanAccountsSearchPage;
+import org.mifos.test.acceptance.framework.CreateLoanAccountsSuccessPage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.LoanAccountPage;
+import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,18 +102,27 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         formParameters.setLoanProduct("FlatInterestLoanProductWithFee");
 
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
-        CreateLoanAccountsSearchPage createLoanAccountsSearchPage =  // NOPMD by Van on 1/12/09 5:29 PM (work in progress)
-            loginAndNavigateToCreateLoanAccountsSearchPage("mifos","testmifos");  // NOPMD
-     
-        // TODO: user formParameters to make selections from drop downs
+        CreateLoanAccountsSearchPage createLoanAccountsSearchPage = navigateToCreateLoanAccountsSearchPage();
+        createLoanAccountsSearchPage.verifyPage();
+        createLoanAccountsSearchPage.selectBranchOffice();
+        createLoanAccountsSearchPage.selectLoanOfficer();
+        createLoanAccountsSearchPage.selectCenter();
+        createLoanAccountsSearchPage.selectLoanInstance();
+        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage();
+        createLoanAccountsEntryPage.verifyPage();
+        createLoanAccountsEntryPage.selectClients();
+        CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
+        createLoanAccountsSuccessPage.verifyPage();
+        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.navigateToLoanAccountPage();
+        loanAccountPage.verifyPage();
+        loanAccountPage.verifyFeeExists();
     }
-    
-    private CreateLoanAccountsSearchPage loginAndNavigateToCreateLoanAccountsSearchPage(String userName, String password) {
-        return appLauncher
-         .launchMifos()
-         .loginSuccessfulAs(userName, password)
-         .navigateToClientsAndAccountsUsingHeaderTab()
-         .navigateToCreateLoanAccountsSearchPageUsingLeftMenu();
+
+    private CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPage() {
+        LoginPage loginPage = appLauncher.launchMifos();
+        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        return clientsAndAccountsPage.navigateToCreateLoanAccountsUsingLeftMenu();    
     }
     
 }

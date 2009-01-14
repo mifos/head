@@ -30,9 +30,6 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 		super();
 	}
 
-	/**
-	 * @param selenium
-	 */
 	public CollectionSheetEntryEnterDataPage(Selenium selenium) {
 		super(selenium);
 	}

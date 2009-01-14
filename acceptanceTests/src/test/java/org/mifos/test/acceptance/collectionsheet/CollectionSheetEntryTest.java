@@ -27,11 +27,14 @@ import org.dbunit.IDatabaseTester;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
@@ -76,7 +79,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
         
         CollectionSheetEntrySelectPage selectPage = 
-            loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos");
+            loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = 
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
@@ -123,13 +126,11 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         }
     }
 
-
-    private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
-        return appLauncher
-         .launchMifos()
-         .loginSuccessfulAs(userName, password)
-         .navigateToClientsAndAccountsUsingHeaderTab()
-         .navigateToEnterCollectionSheetDataUsingLeftMenu();
+    private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
+        LoginPage loginPage = appLauncher.launchMifos();
+        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        return clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
     }
 
     

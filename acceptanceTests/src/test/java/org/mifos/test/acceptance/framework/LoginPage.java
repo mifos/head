@@ -32,7 +32,9 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class LoginPage extends AbstractPage {
 	
-	private static final String USERNAME_INPUT_ID	= "login.input.username";
+	private static final String DEFAULT_PASSWORD = "testmifos";
+    private static final String DEFAULT_USERNAME = "mifos";
+    private static final String USERNAME_INPUT_ID	= "login.input.username";
 	private static final String PASSWORD_INPUT_ID = "login.input.password";
 	private static final String LOGIN_BUTTON_ID 	= "login.button.login";
 	private static final String HEADING_LABEL_ID 	= "login.label.heading";
@@ -40,8 +42,6 @@ public class LoginPage extends AbstractPage {
 	private static final String USERNAME_LABEL_ID = "login.label.username";
 	private static final String PASSWORD_LABEL_ID = "login.label.password";
 	private static final String MESSAGE_ERROR_ID 	= "login.error.message";
-	
-	
 
 	public LoginPage() {
 		super();
@@ -51,6 +51,10 @@ public class LoginPage extends AbstractPage {
 		super(selenium);
 	}
 	
+    public HomePage loginSuccessfullyUsingDefaultCredentials() {
+        return loginSuccessfulAs(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+    }
+    
 	public HomePage loginSuccessfulAs(String userName, String password) {
 		selenium.open("loginAction.do?method=load");
 		selenium.type(USERNAME_INPUT_ID, userName);
