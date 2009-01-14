@@ -720,4 +720,28 @@ public class MeetingBO extends BusinessObject {
 		return scheduleDate;
 	}
 
+	/*
+	 * This seems like it is trying to answer the question of whether
+	 * meetings for meetingToBeMatched and meetingToBeMatchedWith overlap.
+	 * For example a weekly meeting occurring every 2 weeks potentially
+	 * overlaps with a meeting occurring every 4 weeks.
+	 */
+    public static boolean isMeetingMatched(MeetingBO meetingToBeMatched,
+            MeetingBO meetingToBeMatchedWith) {
+        return meetingToBeMatched != null
+                && meetingToBeMatchedWith != null
+                && meetingToBeMatched.getMeetingDetails().getRecurrenceType()
+                        .getRecurrenceId().equals(
+                                meetingToBeMatchedWith.getMeetingDetails()
+                                        .getRecurrenceType().getRecurrenceId())
+                && isMultiple(meetingToBeMatchedWith.getMeetingDetails()
+                        .getRecurAfter(), meetingToBeMatched
+                        .getMeetingDetails().getRecurAfter());
+    }
+
+    private static boolean isMultiple(Short valueToBeChecked,
+            Short valueToBeCheckedWith) {
+        return valueToBeChecked % valueToBeCheckedWith == 0;
+    }
+	
 }

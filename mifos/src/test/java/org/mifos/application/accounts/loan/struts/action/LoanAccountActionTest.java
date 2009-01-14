@@ -51,6 +51,7 @@ import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.productdefinition.business.service.LoanProductService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -63,6 +64,7 @@ import org.mifos.framework.util.helpers.Money;
  * which uses the "old style" of testing which hits the database.
  */
 public class LoanAccountActionTest {
+    static Short shortOne = Short.valueOf((short)1);
 
     public static junit.framework.Test testSuite() {
         return new JUnit4TestAdapter(LoanAccountActionTest.class);
@@ -84,8 +86,6 @@ public class LoanAccountActionTest {
         MasterDataService mockMasterDataService = createMock(MasterDataService.class);
         MeetingBusinessService mockMeetingBusinessService = createMock(MeetingBusinessService.class);
         ConfigurationPersistence mockConfigurationPersistence = createMock(ConfigurationPersistence.class);
-
-        Short shortOne = Short.valueOf((short)1);
         
         LoanOfferingBO mockLoanOfferingBO = createMock(LoanOfferingBO.class);
         expect(mockLoanPrdBusinessService.getLoanOffering(shortOne)).andReturn(mockLoanOfferingBO);
@@ -99,57 +99,20 @@ public class LoanAccountActionTest {
                 mockClientBusinessService,
                 mockMasterDataService,
                 mockMeetingBusinessService,
-                mockConfigurationPersistence);
-                
-        Locale local = new Locale("EN");
-        UserContext mockUserContext = createMock(UserContext.class);
-        expect(mockUserContext.getLocaleId()).andReturn(shortOne).anyTimes();
-        expect(mockUserContext.getPreferredLocale()).andReturn(local).anyTimes();
-        
+                mockConfigurationPersistence,
+                new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService));
+                        
         List<FeeView> defaultFees = new ArrayList<FeeView>();
         List<FeeView> additionalFees = new ArrayList<FeeView>();
-        
-        Money feeAmount = new Money(new MifosCurrency( (short)1,"USD","USD",(short)1,Float.valueOf(1),(short)1,(short)1,"USD"),"10");
-        
+
+        MeetingBO mockMeetingBO = createMockMeeting();
+      
         PrdOfferingMeetingEntity mockPrdOfferingMeetingEntity = createMock(PrdOfferingMeetingEntity.class);
-        MeetingBO mockMeetingBO = createMock(MeetingBO.class);
-        MeetingDetailsEntity mockMeetingDetailsEntity = createMock(MeetingDetailsEntity.class);
-        RecurrenceTypeEntity mockRecurrenceTypeEntity = createMock(RecurrenceTypeEntity.class);
-        
-        expect(mockMeetingBO.getMeetingDetails()).andReturn(mockMeetingDetailsEntity).anyTimes();
-        expect(mockMeetingBO.isWeekly()).andReturn(true).anyTimes();
-        expect(mockMeetingBO.isMonthly()).andReturn(false).anyTimes();
-        expect(mockRecurrenceTypeEntity.getRecurrenceId()).andReturn(shortOne).anyTimes();
         expect(mockPrdOfferingMeetingEntity.getMeeting()).andReturn(mockMeetingBO).anyTimes();
         
-        expect(mockMeetingDetailsEntity.getRecurAfter()).andReturn(shortOne).anyTimes();
-        expect(mockMeetingDetailsEntity.getRecurrenceType()).andReturn(mockRecurrenceTypeEntity).anyTimes();
-        
-        FeeFrequencyEntity mockFeeFrequencyEntity = createMock(FeeFrequencyEntity.class);
-        expect(mockFeeFrequencyEntity.getFeeMeetingFrequency()).andReturn(mockMeetingBO).anyTimes();
-        
-        AmountFeeBO mockUpfrontFee = createMock(AmountFeeBO.class);
-        expect(mockUpfrontFee.isPeriodic()).andReturn(false).anyTimes();
-        expect(mockUpfrontFee.getFeeId()).andReturn((short)1).anyTimes();
-        expect(mockUpfrontFee.getFeeName()).andReturn("Fee1");
-        expect(mockUpfrontFee.getFeeType()).andReturn(RateAmountFlag.AMOUNT);
-        expect(mockUpfrontFee.getFeeAmount()).andReturn(feeAmount);
-        
-        AmountFeeBO mockPeriodicMatchingFee = createMock(AmountFeeBO.class);
-        expect(mockPeriodicMatchingFee.isPeriodic()).andReturn(true).anyTimes();
-        expect(mockPeriodicMatchingFee.getFeeId()).andReturn((short)2).anyTimes();
-        expect(mockPeriodicMatchingFee.getFeeName()).andReturn("Fee2");
-        expect(mockPeriodicMatchingFee.getFeeType()).andReturn(RateAmountFlag.AMOUNT);
-        expect(mockPeriodicMatchingFee.getFeeAmount()).andReturn(feeAmount);
-        expect(mockPeriodicMatchingFee.getFeeFrequency()).andReturn(mockFeeFrequencyEntity).anyTimes();
-        
-        AmountFeeBO mockPeriodicNonMatchingFee = createMock(AmountFeeBO.class);
-        expect(mockPeriodicNonMatchingFee.isPeriodic()).andReturn(true).anyTimes();
-        expect(mockPeriodicNonMatchingFee.getFeeId()).andReturn((short)3).anyTimes();
-        expect(mockPeriodicNonMatchingFee.getFeeName()).andReturn("Fee3");
-        expect(mockPeriodicNonMatchingFee.getFeeType()).andReturn(RateAmountFlag.AMOUNT);
-        expect(mockPeriodicNonMatchingFee.getFeeAmount()).andReturn(feeAmount);
-        expect(mockPeriodicNonMatchingFee.getFeeFrequency()).andReturn(mockFeeFrequencyEntity).anyTimes();
+        AmountFeeBO mockUpfrontFee = createMockAmountFeeBO((short)1, "Fee1", "10", false, null);
+        AmountFeeBO mockPeriodicMatchingFee = createMockAmountFeeBO((short)2, "Fee2", "10", true, mockMeetingBO);
+        AmountFeeBO mockPeriodicNonMatchingFee = createMockAmountFeeBO((short)3, "Fee3", "10", true, mockMeetingBO);
         
         List<FeeBO> fees = new ArrayList<FeeBO>();
         fees.add(mockUpfrontFee);
@@ -163,9 +126,9 @@ public class LoanAccountActionTest {
         
         expect(mockFeeBusinessService.getAllAppllicableFeeForLoanCreation()).andReturn(fees);
         replay(mockFeeBusinessService, mockUpfrontFee, mockPeriodicMatchingFee, mockPeriodicNonMatchingFee,
-                mockLoanPrdBusinessService, mockLoanOfferingBO, mockRecurrenceTypeEntity,
-                mockMeetingBO, mockPrdOfferingMeetingEntity, mockFeeFrequencyEntity,mockMeetingDetailsEntity,
-                mockUserContext);
+                mockLoanPrdBusinessService, mockLoanOfferingBO, mockPrdOfferingMeetingEntity);
+        
+        UserContext mockUserContext = createUserContext();
         
         loanAccountAction.getDefaultAndAdditionalFees((short)1, mockUserContext, defaultFees, additionalFees);
         Assert.assertEquals(2, defaultFees.size());
@@ -173,6 +136,54 @@ public class LoanAccountActionTest {
         Assert.assertEquals(defaultFees.get(1).getFeeIdValue(), mockPeriodicMatchingFee.getFeeId());
         Assert.assertEquals(1, additionalFees.size());
         Assert.assertEquals(additionalFees.get(0).getFeeIdValue(), mockPeriodicNonMatchingFee.getFeeId());
+    }
+
+    private UserContext createUserContext() {
+        UserContext mockUserContext = createMock(UserContext.class);
+        Locale local = new Locale("EN");
+        expect(mockUserContext.getLocaleId()).andReturn(shortOne).anyTimes();
+        expect(mockUserContext.getPreferredLocale()).andReturn(local).anyTimes();
+        replay(mockUserContext);
+        
+        return mockUserContext;
     }    
 
+    private AmountFeeBO createMockAmountFeeBO(Short feeId, String feeName, 
+            String feeAmountString, boolean isPeriodic, MeetingBO meeting) {
+        Money feeAmount = new Money(new MifosCurrency( (short)1,"USD","USD",
+                (short)1,Float.valueOf(1),(short)1,(short)1,"USD"),feeAmountString);
+        
+        AmountFeeBO mockFee = createMock(AmountFeeBO.class);
+        expect(mockFee.getFeeId()).andReturn((short)3).anyTimes();
+        expect(mockFee.getFeeName()).andReturn("Fee3");
+        expect(mockFee.getFeeType()).andReturn(RateAmountFlag.AMOUNT);
+        expect(mockFee.getFeeAmount()).andReturn(feeAmount);
+        expect(mockFee.isPeriodic()).andReturn(isPeriodic).anyTimes();
+        if (isPeriodic) {
+            FeeFrequencyEntity mockFeeFrequencyEntity = createMock(FeeFrequencyEntity.class);
+            expect(mockFeeFrequencyEntity.getFeeMeetingFrequency()).andReturn(meeting).anyTimes();
+            expect(mockFee.getFeeFrequency()).andReturn(mockFeeFrequencyEntity).anyTimes();
+            replay(mockFeeFrequencyEntity);
+        }
+        
+        return mockFee;
+    }
+    
+    private MeetingBO createMockMeeting() {
+        MeetingBO mockMeetingBO = createMock(MeetingBO.class);
+        MeetingDetailsEntity mockMeetingDetailsEntity = createMock(MeetingDetailsEntity.class);
+        RecurrenceTypeEntity mockRecurrenceTypeEntity = createMock(RecurrenceTypeEntity.class);
+        
+        expect(mockMeetingBO.getMeetingDetails()).andReturn(mockMeetingDetailsEntity).anyTimes();
+        expect(mockMeetingBO.isWeekly()).andReturn(true).anyTimes();
+        expect(mockMeetingBO.isMonthly()).andReturn(false).anyTimes();
+        expect(mockRecurrenceTypeEntity.getRecurrenceId()).andReturn(shortOne).anyTimes();
+        
+        expect(mockMeetingDetailsEntity.getRecurAfter()).andReturn(shortOne).anyTimes();
+        expect(mockMeetingDetailsEntity.getRecurrenceType()).andReturn(mockRecurrenceTypeEntity).anyTimes();
+        
+        replay(mockMeetingBO, mockMeetingDetailsEntity, mockRecurrenceTypeEntity);
+        
+        return mockMeetingBO;
+    }
 }

@@ -87,7 +87,6 @@ import org.mifos.application.customer.client.business.service.ClientBusinessServ
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
@@ -116,6 +115,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.productdefinition.business.service.LoanProductService;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -166,6 +166,8 @@ public class LoanAccountAction extends AccountAppAction {
 	private ConfigurationBusinessService configService;
 
 	private GlimLoanUpdater glimLoanUpdater;
+	
+	private LoanProductService loanProductService;
 
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
@@ -181,7 +183,9 @@ public class LoanAccountAction extends AccountAppAction {
              new ClientBusinessService(),
              new MasterDataService(),
              new MeetingBusinessService(),
-             new ConfigurationPersistence());
+             new ConfigurationPersistence(),
+             null);
+        setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
     }
     
 	private LoanAccountAction(ConfigurationBusinessService configService,
@@ -192,14 +196,17 @@ public class LoanAccountAction extends AccountAppAction {
                 new ClientBusinessService(),
                 new MasterDataService(),
                 new MeetingBusinessService(),
-                new ConfigurationPersistence());
+                new ConfigurationPersistence(),
+                null);
+        setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
 	}
 
     public LoanAccountAction(ConfigurationBusinessService configService,
             LoanBusinessService loanBusinessService, GlimLoanUpdater glimLoanUpdater,
             FeeBusinessService feeService, LoanPrdBusinessService loanPrdBusinessService,
             ClientBusinessService clientBusinessService, MasterDataService masterDataService,
-            MeetingBusinessService meetingBusinessService, ConfigurationPersistence configurationPersistence) {
+            MeetingBusinessService meetingBusinessService, ConfigurationPersistence configurationPersistence,
+            LoanProductService loanProductService) {
         this.configService = configService;
         this.loanBusinessService = loanBusinessService;
         this.glimLoanUpdater = glimLoanUpdater;
@@ -209,6 +216,7 @@ public class LoanAccountAction extends AccountAppAction {
         this.masterDataService = masterDataService;
         this.meetingBusinessService = meetingBusinessService;
         this.configurationPersistence = configurationPersistence;
+        this.loanProductService = loanProductService;
     }
 
 
@@ -1625,30 +1633,13 @@ public class LoanAccountAction extends AccountAppAction {
 		for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter
 				.hasNext();) {
 			LoanOfferingBO loanOffering = iter.next();
-			if (!isMeetingMatched(customerMeeting, loanOffering
+			if (!MeetingBO.isMeetingMatched(customerMeeting, loanOffering
 					.getLoanOfferingMeeting().getMeeting()))
 				iter.remove();
 		}
 	}
 
-	private boolean isMeetingMatched(MeetingBO meetingToBeMatched,
-			MeetingBO meetingToBeMatchedWith) {
-		return meetingToBeMatched != null
-				&& meetingToBeMatchedWith != null
-				&& meetingToBeMatched.getMeetingDetails().getRecurrenceType()
-						.getRecurrenceId().equals(
-								meetingToBeMatchedWith.getMeetingDetails()
-										.getRecurrenceType().getRecurrenceId())
-				&& isMultiple(meetingToBeMatchedWith.getMeetingDetails()
-						.getRecurAfter(), meetingToBeMatched
-						.getMeetingDetails().getRecurAfter());
-	}
-
-	private boolean isMultiple(Short valueToBeChecked,
-			Short valueToBeCheckedWith) {
-		return valueToBeChecked % valueToBeCheckedWith == 0;
-	}
-
+	
 	// Temporarily commenting this method out because it's preventing
 	// request parameters from propogating to the response page.
 	// Manually tested behavioral changes and found no affects.
@@ -1723,22 +1714,9 @@ public class LoanAccountAction extends AccountAppAction {
 
 	protected void getDefaultAndAdditionalFees(Short loanOfferingId, 
 	        UserContext userContext, List<FeeView> defaultFees, List<FeeView> additionalFees) throws ServiceException {
-	    LoanOfferingBO loanOffering = loanPrdBusinessService
-	        .getLoanOffering(loanOfferingId);
-	    List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
-	    for (FeeBO fee : fees) {
-	        if (!fee.isPeriodic()
-	                || (isMeetingMatched(fee.getFeeFrequency()
-	                        .getFeeMeetingFrequency(), loanOffering
-	                        .getLoanOfferingMeeting().getMeeting()))) {
-	            FeeView feeView = new FeeView(userContext, fee);
-	            if (loanOffering.isFeePresent(fee))
-	                defaultFees.add(feeView);
-	            else additionalFees.add(feeView);
-	        }
-	    }
+	    loanProductService.getDefaultAndAdditionalFees(loanOfferingId, userContext, defaultFees, additionalFees);
 	}
-
+	
     private void loadMasterData(HttpServletRequest request) throws Exception {
 		// Retrieve and set into the session all collateral types from the 
 		// lookup_value_locale table associated with the current user context locale
@@ -2043,5 +2021,13 @@ public class LoanAccountAction extends AccountAppAction {
 	private static enum SaveLoan{
 		YES, NO;
 	}
+
+    public LoanProductService getLoanService() {
+        return this.loanProductService;
+    }
+
+    public void setLoanService(LoanProductService loanProductService) {
+        this.loanProductService = loanProductService;
+    }
 
 }
