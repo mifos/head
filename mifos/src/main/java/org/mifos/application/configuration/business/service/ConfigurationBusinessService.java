@@ -11,7 +11,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
 
-public class ConfigurationBusinessService extends BusinessService {
+public class ConfigurationBusinessService implements BusinessService {
 
 	private final ConfigurationPersistence configurationPersistence;
 

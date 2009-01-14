@@ -11,6 +11,7 @@ import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBORedoDisbursal;
 import org.mifos.application.accounts.loan.business.service.TestLoanBusinessService;
 import org.mifos.application.accounts.loan.persistence.TestLoanPersistence;
+import org.mifos.application.accounts.loan.struts.action.LoanAccountActionTest;
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationActionTest;
 import org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalActionTest;
 import org.mifos.application.accounts.loan.struts.action.TestAccountStatusAction;
@@ -31,6 +32,7 @@ public class LoanTestSuite extends TestSuite {
 
 	public static Test suite() {
 		TestSuite testSuite = new LoanTestSuite();
+        testSuite.addTest(LoanAccountActionTest.testSuite());
 		testSuite.addTest(LoanCalculationTest.testSuite());
 		testSuite.addTestSuite(TestLoanPersistence.class);
 		testSuite.addTestSuite(TestLoanBO.class);

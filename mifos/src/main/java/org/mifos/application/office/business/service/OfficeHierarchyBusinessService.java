@@ -47,7 +47,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
-public class OfficeHierarchyBusinessService extends BusinessService {
+public class OfficeHierarchyBusinessService implements BusinessService {
 
 	public OfficeHierarchyBusinessService() {
 		super();

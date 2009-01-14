@@ -14,7 +14,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
-public class HolidayBusinessService extends BusinessService {
+public class HolidayBusinessService implements BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {

@@ -88,7 +88,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 
-public class CustomerBusinessService extends BusinessService {
+public class CustomerBusinessService implements BusinessService {
 
 	private CustomerPersistence customerPersistence;
 

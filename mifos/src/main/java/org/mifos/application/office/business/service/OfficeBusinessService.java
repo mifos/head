@@ -13,7 +13,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
-public class OfficeBusinessService extends BusinessService {
+public class OfficeBusinessService implements BusinessService {
 
 	private OfficePersistence officePersistence = new OfficePersistence();
 

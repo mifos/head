@@ -4,7 +4,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.security.util.UserContext;
 
-public class SurveysBusinessService extends BusinessService {
+public class SurveysBusinessService implements BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {

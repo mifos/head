@@ -12,7 +12,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
 
-public class RolesPermissionsBusinessService extends BusinessService {
+public class RolesPermissionsBusinessService implements BusinessService {
 	
 	private RolesPermissionsPersistence rolesPermissionsPersistence=new RolesPermissionsPersistence();
 

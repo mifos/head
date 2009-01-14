@@ -16,7 +16,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
-public class MeetingBusinessService extends BusinessService{
+public class MeetingBusinessService implements BusinessService{
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;

@@ -9,7 +9,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
-public class CenterBusinessService extends BusinessService {
+public class CenterBusinessService implements BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {

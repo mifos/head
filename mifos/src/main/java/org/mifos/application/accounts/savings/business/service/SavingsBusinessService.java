@@ -18,7 +18,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
-public class SavingsBusinessService extends BusinessService {
+public class SavingsBusinessService implements BusinessService {
 	private SavingsPersistence savingsPersistence = new SavingsPersistence();
 
 	private MifosLogger logger = MifosLogManager

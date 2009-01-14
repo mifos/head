@@ -75,7 +75,7 @@ import org.mifos.framework.security.util.UserContext;
  * Where there is no logic, it is OK to bypass this class and call
  * {@link ReportsPersistence} directly.
  */
-public class ReportsBusinessService extends BusinessService {
+public class ReportsBusinessService implements BusinessService {
 	
 	public static final String PDF = "pdf";
 

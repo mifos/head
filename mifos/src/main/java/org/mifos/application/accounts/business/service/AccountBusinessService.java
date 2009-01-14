@@ -47,7 +47,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 
-public class AccountBusinessService extends BusinessService {
+public class AccountBusinessService implements BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {

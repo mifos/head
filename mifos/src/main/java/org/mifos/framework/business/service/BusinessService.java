@@ -3,15 +3,17 @@ package org.mifos.framework.business.service;
 
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.action.BaseAction;
 
 /**
- * There's some logic to populate a form from a business service 
- * in {@link BaseAction}.  We don't always do things that way.
- * In many cases, there is no need for a business service layer.
+ * Use of this class is @deprecated.
+ * 
+ * BusinessService classes generally return BusinessObject instances.
+ * We plan to migrate away from this pattern and define Service classes
+ * which return Data Transfer Objects (DTOs) such that the service layer
+ * does not expose domain objects.
  */
-public abstract class BusinessService {
+public interface BusinessService {
 	
-	public abstract BusinessObject getBusinessObject(UserContext userContext); 
+	public BusinessObject getBusinessObject(UserContext userContext); 
 	
 }

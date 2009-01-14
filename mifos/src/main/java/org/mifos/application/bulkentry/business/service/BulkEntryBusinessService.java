@@ -82,7 +82,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
 
-public class BulkEntryBusinessService extends BusinessService {
+public class BulkEntryBusinessService implements BusinessService {
 
 	private BulkEntryPersistenceService bulkEntryPersistanceService;
 

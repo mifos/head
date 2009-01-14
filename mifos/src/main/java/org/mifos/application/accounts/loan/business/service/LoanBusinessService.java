@@ -21,7 +21,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanBusinessService extends BusinessService {
+public class LoanBusinessService implements BusinessService {
 
 	private LoanPersistence loanPersistence;
 	private ConfigurationBusinessService configService;

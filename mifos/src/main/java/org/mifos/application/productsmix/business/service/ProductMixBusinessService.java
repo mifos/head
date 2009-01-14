@@ -58,7 +58,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
-public class ProductMixBusinessService extends BusinessService {
+public class ProductMixBusinessService implements BusinessService {
 
 	private final ProductMixPersistence productMixPersistence;
 

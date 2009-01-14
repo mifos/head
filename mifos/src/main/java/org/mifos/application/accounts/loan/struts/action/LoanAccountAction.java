@@ -172,23 +172,47 @@ public class LoanAccountAction extends AccountAppAction {
 		return true;
 	}
 
-	public LoanAccountAction() throws Exception {
-		this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater());
-	}
-
+    public LoanAccountAction() throws Exception {
+        this(new ConfigurationBusinessService(), 
+             new LoanBusinessService(), 
+             new GlimLoanUpdater(),
+             new FeeBusinessService(),
+             new LoanPrdBusinessService(),
+             new ClientBusinessService(),
+             new MasterDataService(),
+             new MeetingBusinessService(),
+             new ConfigurationPersistence());
+    }
+    
 	private LoanAccountAction(ConfigurationBusinessService configService,
 			LoanBusinessService loanBusinessService, GlimLoanUpdater glimLoanUpdater) {
-		this.configService = configService;
-		this.loanBusinessService = loanBusinessService;
-		this.glimLoanUpdater = glimLoanUpdater;
-		feeService = new FeeBusinessService();
-		loanPrdBusinessService = new LoanPrdBusinessService();
-		clientBusinessService = new ClientBusinessService();
-		masterDataService = new MasterDataService();
-		meetingBusinessService = new MeetingBusinessService();
-		configurationPersistence = new ConfigurationPersistence();
+        this(configService, loanBusinessService, glimLoanUpdater,
+                new FeeBusinessService(),
+                new LoanPrdBusinessService(),
+                new ClientBusinessService(),
+                new MasterDataService(),
+                new MeetingBusinessService(),
+                new ConfigurationPersistence());
 	}
 
+    public LoanAccountAction(ConfigurationBusinessService configService,
+            LoanBusinessService loanBusinessService, GlimLoanUpdater glimLoanUpdater,
+            FeeBusinessService feeService, LoanPrdBusinessService loanPrdBusinessService,
+            ClientBusinessService clientBusinessService, MasterDataService masterDataService,
+            MeetingBusinessService meetingBusinessService, ConfigurationPersistence configurationPersistence) {
+        this.configService = configService;
+        this.loanBusinessService = loanBusinessService;
+        this.glimLoanUpdater = glimLoanUpdater;
+        this.feeService = feeService;
+        this.loanPrdBusinessService = loanPrdBusinessService;
+        this.clientBusinessService = clientBusinessService;
+        this.masterDataService = masterDataService;
+        this.meetingBusinessService = meetingBusinessService;
+        this.configurationPersistence = configurationPersistence;
+    }
+
+
+	
 	LoanAccountAction(LoanBusinessService loanBusinessService,
 			ConfigurationBusinessService configService, GlimLoanUpdater glimLoanUpdater) {
 		this(configService, loanBusinessService, glimLoanUpdater);
@@ -1687,30 +1711,35 @@ public class LoanAccountAction extends AccountAppAction {
 		return funds;
 	}
 
-	private void loadFees(LoanAccountActionForm actionForm,
+	protected void loadFees(LoanAccountActionForm actionForm,
 			Short loanOfferingId, HttpServletRequest request) throws Exception {
-		LoanOfferingBO loanOffering = loanPrdBusinessService
-				.getLoanOffering(loanOfferingId);
-		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
-		List<FeeView> additionalFees = new ArrayList<FeeView>();
-		List<FeeView> defaultFees = new ArrayList<FeeView>();
-		for (FeeBO fee : fees) {
-			if (!fee.isPeriodic()
-					|| (isMeetingMatched(fee.getFeeFrequency()
-							.getFeeMeetingFrequency(), loanOffering
-							.getLoanOfferingMeeting().getMeeting()))) {
-				FeeView feeView = new FeeView(getUserContext(request), fee);
-				if (loanOffering.isFeePresent(fee))
-					defaultFees.add(feeView);
-				else additionalFees.add(feeView);
-			}
-		}
-		actionForm.setDefaultFees(defaultFees);
+        List<FeeView> additionalFees = new ArrayList<FeeView>();
+        List<FeeView> defaultFees = new ArrayList<FeeView>();
+        getDefaultAndAdditionalFees(loanOfferingId, getUserContext(request), defaultFees, additionalFees);
+        actionForm.setDefaultFees(defaultFees);
 		SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST,
 				additionalFees, request);
 	}
 
-	private void loadMasterData(HttpServletRequest request) throws Exception {
+	protected void getDefaultAndAdditionalFees(Short loanOfferingId, 
+	        UserContext userContext, List<FeeView> defaultFees, List<FeeView> additionalFees) throws ServiceException {
+	    LoanOfferingBO loanOffering = loanPrdBusinessService
+	        .getLoanOffering(loanOfferingId);
+	    List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
+	    for (FeeBO fee : fees) {
+	        if (!fee.isPeriodic()
+	                || (isMeetingMatched(fee.getFeeFrequency()
+	                        .getFeeMeetingFrequency(), loanOffering
+	                        .getLoanOfferingMeeting().getMeeting()))) {
+	            FeeView feeView = new FeeView(userContext, fee);
+	            if (loanOffering.isFeePresent(fee))
+	                defaultFees.add(feeView);
+	            else additionalFees.add(feeView);
+	        }
+	    }
+	}
+
+    private void loadMasterData(HttpServletRequest request) throws Exception {
 		// Retrieve and set into the session all collateral types from the 
 		// lookup_value_locale table associated with the current user context locale
 		SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES,

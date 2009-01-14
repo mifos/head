@@ -72,7 +72,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
-public class FinancialBusinessService extends BusinessService {
+public class FinancialBusinessService implements BusinessService {
 
 	public FinancialBusinessService() {
 		super();

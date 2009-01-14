@@ -25,7 +25,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
-public class MasterDataService extends BusinessService {
+public class MasterDataService implements BusinessService {
 	private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
 	private OfficePersistence officePersistence = new OfficePersistence();

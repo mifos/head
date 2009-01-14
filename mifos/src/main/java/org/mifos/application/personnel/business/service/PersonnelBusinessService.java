@@ -24,7 +24,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
-public class PersonnelBusinessService extends BusinessService {
+public class PersonnelBusinessService implements BusinessService {
 	private static final String BRANCH_MANAGER_ROLE_NAME_KEY = "RolesAndPermissions.BranchManager.RoleName";
 	private RolesPermissionsPersistence rolesPermissionsPersistence;
 	private Configuration applicationConfiguration;
