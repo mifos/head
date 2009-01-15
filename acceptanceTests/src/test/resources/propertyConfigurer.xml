@@ -13,7 +13,6 @@
                 <value>classpath:jdbc.properties</value>
                 <value>classpath:acceptanceTest.properties</value>
                 <value>file:${user.home}/.mifos/local.properties</value>
-                <value>file:${user.home}/.mifos/acceptance/deploymifosDB.properties</value>
             </list>
         </property>
     </bean>

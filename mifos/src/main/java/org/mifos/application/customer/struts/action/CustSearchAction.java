@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.SystemException;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -25,9 +24,9 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -41,7 +40,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.config.ClientRules;
 
 public class CustSearchAction extends SearchAction {
 	

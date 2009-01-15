@@ -33,8 +33,7 @@ public class CreateLoanAccountsSuccessPage extends AbstractPage {
     }
 
     public LoanAccountPage navigateToLoanAccountPage() {
-        // TODO Auto-generated method stub
-        return null;
+        return new LoanAccountPage(selenium);
     }
 
 }

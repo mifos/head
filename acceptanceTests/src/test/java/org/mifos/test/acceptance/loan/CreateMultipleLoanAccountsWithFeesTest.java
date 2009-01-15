@@ -42,7 +42,7 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"CreateMultipleLoanAccountsWithFeesTest","acceptance","ui", "workInProgress"})
 public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
 
-    private class CreateMultipleLoanAccountSelectParameters {
+    public class CreateMultipleLoanAccountSelectParameters {
         public String getBranch() {
             return this.branch;
         }
@@ -104,11 +104,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
         CreateLoanAccountsSearchPage createLoanAccountsSearchPage = navigateToCreateLoanAccountsSearchPage();
         createLoanAccountsSearchPage.verifyPage();
-        createLoanAccountsSearchPage.selectBranchOffice();
-        createLoanAccountsSearchPage.selectLoanOfficer();
-        createLoanAccountsSearchPage.selectCenter();
-        createLoanAccountsSearchPage.selectLoanInstance();
-        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage();
+        CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage(formParameters);
         createLoanAccountsEntryPage.verifyPage();
         createLoanAccountsEntryPage.selectClients();
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();

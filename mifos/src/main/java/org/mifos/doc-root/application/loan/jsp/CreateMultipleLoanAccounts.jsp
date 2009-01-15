@@ -29,6 +29,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="create.loan.accounts.search"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">

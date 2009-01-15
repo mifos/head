@@ -48,22 +48,22 @@ public class HomePage extends MifosPage {
     }
 
 	public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
-		selenium.click("link=Clients & Accounts");
+		selenium.click("id=homeheader.link.clientsAndAccounts");
 		waitForPageToLoad();
 		return new ClientsAndAccountsHomepage(selenium);
 	}
 	
 	public AdminPage navigateToAdminPage() {
-        selenium.click("homeheader.link.admin");
+        selenium.click("id=homeheader.link.admin");
         waitForPageToLoad();
         return new AdminPage(selenium);	    
 	}
 	
     public String getWelcome() {
-        return selenium.getText("home.text.welcome");
+        return selenium.getText("id=home.text.welcome");
     }
     
     public String getLastLogin() {
-        return selenium.getText("home.text.lastLogin");
+        return selenium.getText("id=home.text.lastLogin");
     }    
 }

@@ -17,7 +17,6 @@
 	    <put name="search"  value="/pages/framework/jsp/search.jsp" />
     </definition>
    
-   <!-- Added by mohammedn-->
     <definition name=".mainLayout" path="/pages/framework/jsp/mainlayout.jsp">
         <put name="title" value="Mifos" />
         <put name="header" value="/pages/framework/jsp/header.jsp" />
@@ -78,7 +77,7 @@
 	  <put name="body" value="" /> 
 	  <put name="menu" value=".menu" /> 
 	 </definition>
-    <!-- Added by mohammedn for client&accounts header-->
+
     <definition name=".clientsacclayoutmenu" extends=".withmenu" >
     <put name="header" value="/pages/framework/jsp/clientaccheader.jsp"/>
     </definition>

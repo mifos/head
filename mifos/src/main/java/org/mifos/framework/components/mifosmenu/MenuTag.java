@@ -112,8 +112,16 @@ public class MenuTag extends BaseHandlerTag{
 		output.append(menuGroup.getDisplayName()[0].toString()+"</span><br>");
 		MenuItem menuItems[]=menuGroup.getMenuItems();
 		for(int i=0;i<menuItems.length;i++){
-			output.append("<a href=\"" +menuItems[i].getLinkValue()+"\">"+ menuItems[i].getDisplayName()[0]+"</a><br>");
+			output.append(getLink(menuItems[i]));
 		}
 		output.append("<br>");
 	}
+
+    private String getLink(MenuItem menuItem) {
+        String linkText = menuItem.getDisplayName()[0];
+        String linkId = "menu.link." + linkText.replace(' ', '.').toLowerCase();
+        String linkHref = menuItem.getLinkValue();
+        return "<a href=\"" +linkHref+"\" id=\"" + linkId + "\">"+ linkText + "</a><br>\n";
+    }
+
 }

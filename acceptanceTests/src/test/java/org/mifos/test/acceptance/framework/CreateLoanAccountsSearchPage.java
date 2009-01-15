@@ -20,6 +20,9 @@
 
 package org.mifos.test.acceptance.framework;
 
+import org.mifos.test.acceptance.loan.CreateMultipleLoanAccountsWithFeesTest.CreateMultipleLoanAccountSelectParameters;
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountsSearchPage extends AbstractPage {
@@ -29,28 +32,11 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        // TODO Auto-generated method stub
+        Assert.assertEquals(selenium.getValue("page.id"), "create.loan.accounts.search");
     }
 
-    public void selectBranchOffice() {
-        // TODO Auto-generated method stub
-    }
-
-    public void selectLoanOfficer() {
-        // TODO Auto-generated method stub
-    }
-
-    public void selectCenter() {
-        // TODO Auto-generated method stub
-    }
-
-    public void selectLoanInstance() {
-        // TODO Auto-generated method stub
-    }
-
-    public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage() {
-        // TODO Auto-generated method stub
-        return null;
+    public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters formParameters) {
+        return new CreateLoanAccountsEntryPage(selenium);
     }
     
 }
