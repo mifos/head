@@ -75,8 +75,8 @@ msgid ""
 "information."
 msgstr ""
 
-#: PPI.definePovertyMeasurmentTool
-msgid "Define Poverty Measurment Tool"
+#: PPI.definePovertyMeasurementTool
+msgid "Define Poverty Measurement Tool"
 msgstr ""
 
 #: PPI.definePovertyStatus

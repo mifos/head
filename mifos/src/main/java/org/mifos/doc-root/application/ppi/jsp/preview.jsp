@@ -72,7 +72,7 @@ explanation of the license and how it is applied.
 			<tr>
 				<td class="headingorange" colspan="5">
 				<span class="heading"> 
-				<mifos:mifoslabel name="PPI.definePovertyMeasurmentTool" bundle="PPIUIResources" /> - 
+				<mifos:mifoslabel name="PPI.definePovertyMeasurementTool" bundle="PPIUIResources" /> - 
 				</span> 
 				<mifos:mifoslabel name="PPI.longName" bundle="PPIUIResources" />
 				</td>
