@@ -64,6 +64,8 @@ public interface FilePaths {
 		"org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
 	public static final String CONFIGURABLEMIFOSDBPROPERTIESFILE = 
 		"deploymifosDB.properties";
+	public static final String DEFAULTMIFOSDBPROPERTIESFILE = 
+		"hibernate.properties";
 	/**
 	 * Main Spring configuration file. This is a relative path, meant to be
 	 * resolved by something that walks the classpath.

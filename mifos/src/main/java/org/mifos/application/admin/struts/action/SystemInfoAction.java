@@ -47,7 +47,7 @@ public class SystemInfoAction extends BaseAction {
 		try {
 			DatabaseMetaData metaData = HibernateUtil.getSessionTL().connection().getMetaData();
 			ServletContext context = request.getSession().getServletContext();
-			SystemInfo systemInfo = new SystemInfo(metaData, context);
+			SystemInfo systemInfo = new SystemInfo(metaData, context, true);
 			SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
 			return mapping.findForward(ActionForwards.load_success.toString());
 		} finally {

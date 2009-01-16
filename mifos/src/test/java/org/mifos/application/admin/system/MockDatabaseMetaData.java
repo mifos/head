@@ -336,11 +336,11 @@ public class MockDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	public String getURL() throws SQLException {
-		throw new RuntimeException("not implemented");
+		return "URL";
 	}
 
 	public String getUserName() throws SQLException {
-		throw new RuntimeException("not implemented");
+		return "user";
 	}
 
 	public ResultSet getVersionColumns(String catalog, String schema,

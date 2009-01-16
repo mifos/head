@@ -64,6 +64,30 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.svnrevision" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.svnBranch}"/>@<c:out value="${sessionScope.systemInfo.svnRevision}"/></span></td>
 					</tr>
+					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.customreportsdir" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.customReportsDir}"/></span></td>
+					</tr>
+					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.source" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.infoSource}"/></span></td>
+					</tr>
+					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.server" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databaseServer}"/></span></td>
+					</tr>
+					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.port" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databasePort}"/></span></td>
+					</tr>
+					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.name" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databaseName}"/></span></td>
+					</tr>
+					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.user" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
+					</tr>
 				</table>
 			</td>
 		</html-el:form>

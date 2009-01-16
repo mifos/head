@@ -19,13 +19,16 @@
  */
 package org.mifos.application.admin.system;
 
+import java.io.File;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
+import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class SystemInfo implements Serializable {
 	
@@ -37,26 +40,36 @@ public class SystemInfo implements Serializable {
 	private String osName;
 	private String osArch;
 	private String osVersion;
+	private String customReportsDir;
+
+	private String infoSource;
+	private String infoURL;
+	private String infoUserName;
 	
 	// Note: make sure to close the connection that got the metadata!
-	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context) {
+	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, boolean getInfoSource) 
+	throws Exception {
+		this(getInfoSource);
 		this.databaseMetaData = databaseMetaData;
+		this.infoURL = databaseMetaData.getURL();
+		this.infoUserName = databaseMetaData.getUserName();
 		this.context = context;
-		setJavaVendor(System.getProperty("java.vendor"));
-		setJavaVersion(System.getProperty("java.version"));
-		setSvnRevision(new SvnRevision());
-		setOsName(System.getProperty("os.name"));
-		setOsArch(System.getProperty("os.arch"));
-		setOsVersion(System.getProperty("os.version"));
 	}
-	
-	public SystemInfo() {
+
+	public SystemInfo(boolean getInfoSource) {
+		if (getInfoSource) {
+			this.infoSource = ApplicationInitializer.getHibernateProperties();
+			if (! this.infoSource.equals(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE)) {
+				this.infoSource = FilePaths.DEFAULTMIFOSDBPROPERTIESFILE;
+			}
+		}
 		setJavaVendor(System.getProperty("java.vendor"));
 		setJavaVersion(System.getProperty("java.version"));
 		setSvnRevision(new SvnRevision());
 		setOsName(System.getProperty("os.name"));
 		setOsArch(System.getProperty("os.arch"));
 		setOsVersion(System.getProperty("os.version"));
+		setCustomReportsDir(System.getProperty("user.home")+File.separatorChar+".mifos");
 	}
 	
 	public int getApplicationVersion() {
@@ -127,6 +140,14 @@ public class SystemInfo implements Serializable {
 		this.svnRevision = svnRevision;
 	}
 
+	private void setCustomReportsDir(String dir) {
+		customReportsDir=dir;
+	}
+
+	public String getCustomReportsDir() {
+		return customReportsDir;
+	}
+
 	public String getOsName() {
 		return osName;
 	}
@@ -150,4 +171,64 @@ public class SystemInfo implements Serializable {
 	public void setOsVersion(String osVersion) {
 		this.osVersion = osVersion;
 	}
+
+	public String getInfoSource() {
+		return infoSource;
+	}
+
+	public void setInfoSource(String infoSource) {
+		this.infoSource = infoSource;
+	}
+	
+	public String getDatabaseServer() {
+		int pos = this.infoURL.indexOf("://") + "://".length();
+		String server = this.infoURL.substring(pos);
+		pos = server.indexOf(':');
+		return server.substring(0, pos);
+	}
+
+	public String getDatabasePort() {
+		int pos = this.infoURL.indexOf("://") + "://".length();
+		String server = this.infoURL.substring(pos);
+		pos = server.indexOf(':');
+		String port = server.substring(pos+1);
+		pos = port.indexOf('/');
+		return port.substring(0, pos);
+	}
+
+	public String getDatabaseName() {
+		int pos = this.infoURL.indexOf("://") + "://".length();
+		String server = this.infoURL.substring(pos);
+		pos = server.indexOf(':');
+		String port = server.substring(pos+1);
+		pos = port.indexOf('/');
+		String name = port.substring(pos+1);
+		pos = name.indexOf('?');
+		if (pos >= 0) {
+			return name.substring(0, pos);
+		} else {
+			return name;
+		}
+	}
+
+	public String getDatabaseUser() {
+		return this.infoUserName;
+	}
+
+	public String getInfoURL() {
+		return infoURL;
+	}
+
+	public void setInfoURL(String infoURL) {
+		this.infoURL = infoURL;
+	}
+
+	public String getInfoUserName() {
+		return infoUserName;
+	}
+
+	public void setInfoUserName(String infoUserName) {
+		this.infoUserName = infoUserName;
+	}
+
 }

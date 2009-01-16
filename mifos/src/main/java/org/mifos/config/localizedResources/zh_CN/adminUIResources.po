@@ -1,10 +1,11 @@
 # extracted from adminUIResources.properties
+#. extracted from adminUIResources.properties
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 10:31-0700\n"
+"POT-Creation-Date: 2009-01-16 09:19-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -275,12 +276,36 @@ msgstr ""
 msgid "Application Server"
 msgstr ""
 
+#: admin.sysinfo.customreportsdir
+msgid "Custom Reports Directory"
+msgstr ""
+
 #: admin.sysinfo.database
 msgid "Database Vendor / Version"
 msgstr ""
 
 #: admin.sysinfo.driver
 msgid "Database Driver / Version"
+msgstr ""
+
+#: admin.sysinfo.source
+msgid "Database Parameter Source"
+msgstr ""
+
+#: admin.sysinfo.server
+msgid "Database Server"
+msgstr ""
+
+#: admin.sysinfo.port
+msgid "Database Port"
+msgstr ""
+
+#: admin.sysinfo.name
+msgid "Database Name"
+msgstr ""
+
+#: admin.sysinfo.user
+msgid "Database User"
 msgstr ""
 
 #: admin.sysinfo.java

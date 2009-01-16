@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 10:30-0700\n"
+"POT-Creation-Date: 2009-01-16 09:18-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -276,6 +276,10 @@ msgstr "Version de la base de donnée MIFOS"
 msgid "Application Server"
 msgstr "Serveur d'application"
 
+#: admin.sysinfo.customreportsdir
+msgid "Custom Reports Directory"
+msgstr ""
+
 #: admin.sysinfo.database
 msgid "Database Vendor / Version"
 msgstr "Fournisseur base de donnée/ Version"
@@ -283,6 +287,26 @@ msgstr "Fournisseur base de donnée/ Version"
 #: admin.sysinfo.driver
 msgid "Database Driver / Version"
 msgstr "Pilote de base de donnée / Version"
+
+#: admin.sysinfo.source
+msgid "Database Parameter Source"
+msgstr ""
+
+#: admin.sysinfo.server
+msgid "Database Server"
+msgstr ""
+
+#: admin.sysinfo.port
+msgid "Database Port"
+msgstr ""
+
+#: admin.sysinfo.name
+msgid "Database Name"
+msgstr ""
+
+#: admin.sysinfo.user
+msgid "Database User"
+msgstr ""
 
 #: admin.sysinfo.java
 msgid "Java Vendor / Version"

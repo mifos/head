@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 10:30-0700\n"
+"POT-Creation-Date: 2009-01-16 09:18-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1526,6 +1526,10 @@ msgstr "<li>Veuiller indiquer les informations supplémentaires requises</li>"
 #: errors.Customer.specifyFeeAmount
 msgid "<li>Please specify fee amount.</li>"
 msgstr "<li>Veuiller indiquer le montant de frais.</li>"
+
+#: errors.Customer.ClientCannotBeAddedToInactiveGroup
+msgid "Customer cannot be added to an inactive group"
+msgstr ""
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"

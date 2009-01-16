@@ -19,13 +19,17 @@
  */
 package org.mifos.application.admin.system;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import javax.servlet.ServletContext;
 
 import junit.framework.JUnit4TestAdapter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import static org.junit.Assert.assertEquals;
+import org.mifos.framework.util.helpers.FilePaths;
 
 import servletunit.ServletContextSimulator;
 
@@ -39,7 +43,8 @@ public class SystemInfoTest {
 	@Before
 	public void setUp() throws Exception {
 		ServletContext servletContext = new ServletContextSimulator();
-		info = new SystemInfo(new MockDatabaseMetaData(), servletContext);
+		MockDatabaseMetaData metaData = new MockDatabaseMetaData();
+		info = new SystemInfo(metaData, servletContext, false);
 		info.setJavaVendor("Sun");
 		info.setJavaVersion("1.5");
 		info.setSvnRevision(new MockSvnRevision());
@@ -57,6 +62,18 @@ public class SystemInfoTest {
 		assertEquals("1.0", info.getDatabaseVersion());
 		assertEquals("driverName", info.getDriverName());
 		assertEquals("2.0", info.getDriverVersion());
+	}
+
+	@Test
+	public void testDatabaseInfos() throws Exception {
+		info.setInfoSource(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE);
+		assertFalse(info.getInfoSource().equals(FilePaths.DEFAULTMIFOSDBPROPERTIESFILE));
+		info.setInfoURL("jdbc.mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
+		assertEquals(info.getDatabaseServer(), "localhost"); 
+		assertEquals(info.getDatabaseName(), "mifos");
+		assertEquals(info.getDatabasePort(), "3305");
+		info.setInfoUserName("mysql");
+		assertEquals(info.getDatabaseUser(), "mysql");
 	}
 
 	@Test
