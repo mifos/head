@@ -306,27 +306,32 @@ public class ApplicationInitializer implements ServletContextListener,
 				xml.endTag("p");
 				xml.text("\n");
 
-				xml.startTag("p");
-				xml.text("Stack trace:");
-				xml.endTag("p");
-				xml.text("\n");
-
-				xml.startTag("pre");
-				StringWriter stackTrace = new StringWriter();
-				databaseError.error
-						.printStackTrace(new PrintWriter(stackTrace));
-				xml.text("\n" + stackTrace.toString());
-				xml.endTag("pre");
-				xml.text("\n");
+				addStackTraceHtml(xml);
 			}
 			else {
 				xml.startTag("p");
 				xml.text("I don't have any further details, unfortunately.");
 				xml.endTag("p");
+				addStackTraceHtml(xml);
 				xml.text("\n");
 			}
 		}
 	}
+
+    private static void addStackTraceHtml(XmlBuilder xml) {
+        xml.startTag("p");
+        xml.text("Stack trace:");
+        xml.endTag("p");
+        xml.text("\n");
+
+        xml.startTag("pre");
+        StringWriter stackTrace = new StringWriter();
+        databaseError.error
+        		.printStackTrace(new PrintWriter(stackTrace));
+        xml.text("\n" + stackTrace.toString());
+        xml.endTag("pre");
+        xml.text("\n");
+    }
 
 	public static boolean isHibernateConfigOverride() {
 		try {
