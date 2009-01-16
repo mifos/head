@@ -233,90 +233,95 @@ public class ApplicationInitializer implements ServletContextListener,
 	public static void printDatabaseError(XmlBuilder xml, int dbVersion) {
 		synchronized (ApplicationInitializer.class) {
 			if (databaseError.isError) {
-				xml.startTag("p", "style",
-						"font-weight: bolder; color: red; font-size: x-large;");
-
-				xml.text(databaseError.errmsg);
-				xml.text("\n");
-
-				if (databaseError.errorCode
-						.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
-					if (dbVersion == -1) {
-						xml.text("Database is too old to have a version.\n");
-					}
-					else {
-						xml.text("Database Version = " + dbVersion + "\n");
-					}
-					xml.text("Application Version = "
-							+ DatabaseVersionPersistence.APPLICATION_VERSION
-							+ ".\n");
-				}
-
-				xml.endTag("p");
-
-				if (databaseError.errorCode
-						.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
-					xml.startTag("p");
-					xml.text("Possible causes:");
-
-					xml.startTag("ul");
-					xml.startTag("li");
-					xml.text("MySQL is not running");
-					xml.endTag("li");
-
-					xml.startTag("li");
-					xml.text("MySQL is listening on a different port than Mifos is expecting");
-					xml.endTag("li");
-
-					xml.startTag("li");
-					xml.text("incorrect username or password");
-					xml.endTag("li");
-					xml.endTag("ul");
-					xml.endTag("p");
-					xml.text("\n");
-
-					xml.startTag("p");
-					xml
-							.startTag("a", "href",
-									"http://mifos.org/developers/wiki/ConfiguringMifos#database-connection");
-					xml
-							.text("More about configuring your database connection.");
-					xml.endTag("a");
-					xml.endTag("p");
-					xml.text("\n");
-				}
-
-				xml.text("\n");
-
-				xml.startTag("p");
-				xml.text("More details:");
-				xml.endTag("p");
-				xml.text("\n");
-
-				if (null != databaseError.error.getCause()) {
-					xml.startTag("p", "style",
-							"font-weight: bolder; color: blue;");
-					xml.text(databaseError.error.getCause().toString());
-					xml.endTag("p");
-					xml.text("\n");
-				}
-
-				xml.startTag("p", "style", "font-weight: bolder; color: blue;");
-				xml.text(getDatabaseConnectionInfo());
-				xml.endTag("p");
-				xml.text("\n");
-
-				addStackTraceHtml(xml);
+				addDatabaseErrorMessage(xml, dbVersion);
 			}
 			else {
-				xml.startTag("p");
-				xml.text("I don't have any further details, unfortunately.");
-				xml.endTag("p");
-				addStackTraceHtml(xml);
-				xml.text("\n");
+				addNoFurtherDetailsMessage(xml);
 			}
 		}
 	}
+
+    private static void addNoFurtherDetailsMessage(XmlBuilder xml) {
+        xml.startTag("p");
+        xml.text("I don't have any further details, unfortunately.");
+        xml.endTag("p");
+        xml.text("\n");
+    }
+
+    private static void addDatabaseErrorMessage(XmlBuilder xml, int dbVersion) {
+        xml.startTag("p", "style",
+        		"font-weight: bolder; color: red; font-size: x-large;");
+
+        xml.text(databaseError.errmsg);
+        xml.text("\n");
+
+        if (databaseError.errorCode.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
+        	addDatabaseVersionMessage(xml, dbVersion);
+        }
+        xml.endTag("p");
+        if (databaseError.errorCode.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
+        	addConnectionFailureMessage(xml);
+        }
+        xml.text("\n");
+        xml.startTag("p");
+        xml.text("More details:");
+        xml.endTag("p");
+        xml.text("\n");
+
+        if (null != databaseError.error.getCause()) {
+        	xml.startTag("p", "style",
+        			"font-weight: bolder; color: blue;");
+        	xml.text(databaseError.error.getCause().toString());
+        	xml.endTag("p");
+        	xml.text("\n");
+        }
+
+        xml.startTag("p", "style", "font-weight: bolder; color: blue;");
+        xml.text(getDatabaseConnectionInfo());
+        xml.endTag("p");
+        xml.text("\n");
+        addStackTraceHtml(xml);
+    }
+
+    private static void addConnectionFailureMessage(XmlBuilder xml) {
+        xml.startTag("p");
+        xml.text("Possible causes:");
+
+        xml.startTag("ul");
+        xml.startTag("li");
+        xml.text("MySQL is not running");
+        xml.endTag("li");
+
+        xml.startTag("li");
+        xml.text("MySQL is listening on a different port than Mifos is expecting");
+        xml.endTag("li");
+
+        xml.startTag("li");
+        xml.text("incorrect username or password");
+        xml.endTag("li");
+        xml.endTag("ul");
+        xml.endTag("p");
+        xml.text("\n");
+
+        xml.startTag("p");
+        xml.startTag("a", "href", "http://mifos.org/developers/wiki/ConfiguringMifos#database-connection");
+        xml.text("More about configuring your database connection.");
+        xml.endTag("a");
+        xml.endTag("p");
+        xml.text("\n");
+    }
+
+    private static void addDatabaseVersionMessage(XmlBuilder xml, int dbVersion) {
+        if (dbVersion == -1) {
+        	xml.text("Database is too old to have a version.\n");
+        }
+        else {
+        	xml.text("Database Version = " + dbVersion + "\n");
+        }
+        xml.text("Application Version = "
+        		+ DatabaseVersionPersistence.APPLICATION_VERSION
+        		+ ".\n");
+    }
 
     private static void addStackTraceHtml(XmlBuilder xml) {
         xml.startTag("p");
@@ -326,8 +331,7 @@ public class ApplicationInitializer implements ServletContextListener,
 
         xml.startTag("pre");
         StringWriter stackTrace = new StringWriter();
-        databaseError.error
-        		.printStackTrace(new PrintWriter(stackTrace));
+        databaseError.error.printStackTrace(new PrintWriter(stackTrace));
         xml.text("\n" + stackTrace.toString());
         xml.endTag("pre");
         xml.text("\n");
