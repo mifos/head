@@ -46,8 +46,8 @@ while(enn.hasMoreElements()){
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 
 				<tr>
-					<td colspan="2" align="left" valign="top"><span
-						class="headingorange"><mifos:mifoslabel name="admin.admintasks" /></span><br>
+					<td colspan="2" align="left" valign="top"><span id="admin.label.admintasks"
+						class="headingorange"><mifos:mifoslabel name="admin.admintasks"  /></span><br>
 					<span class="fontnormal"><span id="admin.text.welcome"><mifos:mifoslabel name="admin.welcometomifos" /></span></span></td>
 				</tr>
 				<tr width="100%">

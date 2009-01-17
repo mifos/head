@@ -70,7 +70,7 @@
 						<tr>
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" isColonRequired="yes" />
-								<span class="fontnormal"> 
+								<span id="createLoanProductConfirmation.text.plsnote" class="fontnormal"> 
 								<fmt:message key="product.productAssignedId">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</span>

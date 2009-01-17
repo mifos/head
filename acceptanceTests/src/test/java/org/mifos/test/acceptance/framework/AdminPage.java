@@ -20,6 +20,8 @@
 package org.mifos.test.acceptance.framework;
 
 
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -53,4 +55,15 @@ public class AdminPage extends MifosPage {
     public String getWelcome() {
         return selenium.getText("id=admin.text.welcome");
     }    
+    public DefineNewLoanProductPage navigateToDefineLoanProduct() {
+        selenium.click("link=Define new Loan product");
+        waitForPageToLoad();
+        return new DefineNewLoanProductPage(selenium);
+    }
+
+    public AdminPage verifyPage() {
+        Assert.assertTrue(selenium.isElementPresent("admin.label.admintasks"),"Didn't reach Admin home page");
+        return this;
+    }
+    
 }
