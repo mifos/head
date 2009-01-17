@@ -22,15 +22,12 @@ package org.mifos.test.acceptance.loanproduct;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.AdminPage;
-import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.DefineNewLoanProductPage.SubmitFormParameters;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -43,10 +40,6 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
-    @Autowired
-    private DriverManagerDataSource dataSource;
-//    @Autowired
-//    private DbUnitUtilities dbUnitUtilities;
         
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -81,8 +74,6 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
 
-
- //      dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
    
         AdminPage adminPage = loginAndNavigateToAdminPage("mifos", "testmifos");
         adminPage.verifyPage();
