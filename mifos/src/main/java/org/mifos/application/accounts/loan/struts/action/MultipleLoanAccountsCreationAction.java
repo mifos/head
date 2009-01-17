@@ -63,6 +63,8 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -71,6 +73,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.productdefinition.business.service.LoanProductService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
@@ -99,10 +102,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	private LoanPrdBusinessService loanPrdBusinessService;
 	private ClientBusinessService clientBusinessService;
+	private LoanProductService loanProductService;
 
 	public MultipleLoanAccountsCreationAction() {
 		loanPrdBusinessService = new LoanPrdBusinessService();
 		clientBusinessService = new ClientBusinessService();
+		loanProductService = new LoanProductService(loanPrdBusinessService,new FeeBusinessService());
 	}
 
 	@Override
@@ -290,6 +295,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		List<MultipleLoanCreationViewHelper> applicableClientDetails = loanActionForm
 				.getApplicableClientDetails();
 		List<String> accountNumbers = new ArrayList<String>();
+		
+        List<FeeView> additionalFees = new ArrayList<FeeView>();
+        List<FeeView> defaultFees = new ArrayList<FeeView>();
+		loanProductService.getDefaultAndAdditionalFees(getShortValue(loanActionForm.getPrdOfferingId()), 
+		        getUserContext(request), defaultFees, additionalFees);
+		
 		if (applicableClientDetails != null
 				&& applicableClientDetails.size() > 0) {
 			for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
@@ -304,7 +315,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 								.getCustomerAccount().getNextMeetingDate(),
 						loanOffering.isIntDedDisbursement(), loanOffering
 								.getDefInterestRate(), loanOffering
-								.getGracePeriodDuration(), null, null, null,clientDetail.getMaxLoanAmount(), clientDetail
+								.getGracePeriodDuration(), null, defaultFees, null,clientDetail.getMaxLoanAmount(), clientDetail
 								.getMinLoanAmount(), clientDetail
 								.getMaxNoOfInstall(), clientDetail
 								.getMinNoOfInstall());
