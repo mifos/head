@@ -46,7 +46,7 @@ msgstr ""
 
 #: Client.NoPictureAvailable
 msgid "(No Picture Available)"
-msgstr ""
+msgstr "无图片可"
 
 #: Client.PictureExtensionException
 msgid "<li>Picture files need to be either \".jpeg\" or \".jpg\" files.</li>"
