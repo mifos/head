@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="create.loan.accounts.search"/>
+<input type="hidden" id="page.id" value="CreateMultipleLoanAccounts"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -128,7 +128,7 @@ explanation of the license and how it is applied.
 															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" mandatory="yes" isColonRequired="Yes" />
 														</td>
 														<td width="68%">
-															<mifos:select property="branchOfficeId" onchange="fnLoadLoanOfficers(this.form)" style="width:136px;">
+															<mifos:select property="branchOfficeId" onchange="fnLoadLoanOfficers(this.form)" style="width:136px;" styleId="createMultipleLoanAccounts.select.branchOffice">
 																<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'multipleloansofficeslist')}" var="office">
 																	<html-el:option value="${office.officeId}">${office.officeName}</html-el:option>
 																</c:forEach>
@@ -141,7 +141,7 @@ explanation of the license and how it is applied.
 															<mifos:mifoslabel name="loan.loanOfficer" mandatory="yes" isColonRequired="Yes" />
 														</td>
 														<td>
-															<mifos:select property="loanOfficerId" onchange="fnLoadCustomers(this.form)" style="width:136px;">
+															<mifos:select property="loanOfficerId" onchange="fnLoadCustomers(this.form)" style="width:136px;" styleId="createMultipleLoanAccounts.select.loanOfficer" >
 																<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'multipleloansloanofficerslist')}" var="loanOfficer">
 																	<html-el:option value="${loanOfficer.personnelId}">${loanOfficer.displayName}</html-el:option>
 																</c:forEach>
@@ -160,7 +160,7 @@ explanation of the license and how it is applied.
 															</c:choose>
 														</td>
 														<td>
-															<mifos:select property="centerId" onchange="getApplPrdOfferingsForCustomer(this.form)" style="width:136px;">
+															<mifos:select property="centerId" onchange="getApplPrdOfferingsForCustomer(this.form)" style="width:136px;" styleId="createMultipleLoanAccounts.select.center" >
 																<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'multipleloanscenterslist')}" var="customer">
 																	<html-el:option value="${customer.customerId}">${customer.displayName}</html-el:option>
 																</c:forEach>
@@ -173,7 +173,7 @@ explanation of the license and how it is applied.
 															<mifos:mifoslabel name="loan.instancename" isColonRequired="Yes" />
 														</td>
 														<td>
-															<mifos:select property="prdOfferingId" style="width:136px;">
+															<mifos:select property="prdOfferingId" style="width:136px;" styleId="createMultipleLoanAccounts.select.loanProduct" >
 																<c:forEach var="loanPrdOffering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanPrdOfferings')}" >
 																		<html-el:option value="${loanPrdOffering.prdOfferingId}">${loanPrdOffering.prdOfferingName}</html-el:option>
 																	</c:forEach>
@@ -186,7 +186,7 @@ explanation of the license and how it is applied.
 														</td>
 														<td>
 															<br>
-															<html-el:submit styleClass="buttn" >
+															<html-el:submit styleId="createMultipleLoanAccounts.button.submit" styleClass="buttn" >
 																<mifos:mifoslabel name="loan.search" />
 															</html-el:submit>
 															&nbsp;

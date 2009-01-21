@@ -29,7 +29,8 @@ public class CreateLoanAccountsSuccessPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        // TODO Auto-generated method stub
+        // work in progress
+        // Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccountsSearchResults");
     }
 
     public LoanAccountPage navigateToLoanAccountPage() {

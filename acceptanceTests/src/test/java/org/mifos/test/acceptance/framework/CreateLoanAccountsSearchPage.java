@@ -32,10 +32,19 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        Assert.assertEquals(selenium.getValue("page.id"), "create.loan.accounts.search");
+        Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccounts");
     }
 
     public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters formParameters) {
+        selenium.select("id=createMultipleLoanAccounts.select.branchOffice", "label=" + formParameters.getBranch());
+        waitForPageToLoad();
+        selenium.select("id=createMultipleLoanAccounts.select.loanOfficer", "label="+ formParameters.getLoanOfficer());
+        waitForPageToLoad();
+        selenium.select("id=createMultipleLoanAccounts.select.center", "label="+ formParameters.getCenter());
+        waitForPageToLoad();
+        selenium.select("id=createMultipleLoanAccounts.select.loanProduct", "label="+ formParameters.getLoanProduct());
+        selenium.click ("id=createMultipleLoanAccounts.button.submit");
+        waitForPageToLoad();
         return new CreateLoanAccountsEntryPage(selenium);
     }
     

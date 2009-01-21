@@ -29,6 +29,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="CreateMultipleLoanAccountsSearchResults"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -184,11 +186,11 @@ explanation of the license and how it is applied.
 										<c:forEach var="clientDetail" varStatus="loopStatus" items="${sessionScope.multipleloansactionform.clientDetails}" >
 										<tr>
 											<td valign="top" class="drawtablerow">
-												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)"/>
+												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)" styleId="CreateMultipleLoanAccountsSearchResults.checkbox.${loopStatus.index}"/>
 											</td>
 											<td width="29%" valign="top" class="drawtablerow">
 												<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" isColonRequired="Yes"/></span> 
-												<c:out value="${clientDetail.client.displayName}"/>: <mifos:mifoslabel name="${ConfigurationConstants.ID}" /> <c:out value="${clientDetail.client.globalCustNum}"/>
+												<span id="CreateMultipleLoanAccountsSearchResults.clientName.${loopStatus.index}"><c:out value="${clientDetail.client.displayName}"/></span>: <mifos:mifoslabel name="${ConfigurationConstants.ID}" /> <c:out value="${clientDetail.client.globalCustNum}"/>
 												<br>
 												<span class="fontnormalbold"><mifos:mifoslabel name="bulkEntry.loanofficer" isColonRequired="Yes" /></span> 
 												<c:out value="${clientDetail.client.personnel.displayName}"/>
@@ -233,7 +235,7 @@ explanation of the license and how it is applied.
 												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
 												<c:choose>
 													<c:when test='${PendingApproval == true}'>
-														<html-el:button property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)">
+														<html-el:button property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)" styleId="CreateMultipleLoanAccountsSearchResults.button.submit">
 															<mifos:mifoslabel name="loan.submitForApproval" />
 														</html-el:button>
 													</c:when>

@@ -199,9 +199,7 @@ public class ApplicationInitializer implements ServletContextListener,
 					ProcessFlowRules.init();
 					initializeSecurity();
 
-					Money
-							.setDefaultCurrency(AccountingRules
-									.getMifosCurrency());
+					Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
 
 					// 1/4/08 Hopefully a temporary change to force Spring
 					// to initialize here (rather than in struts-config.xml

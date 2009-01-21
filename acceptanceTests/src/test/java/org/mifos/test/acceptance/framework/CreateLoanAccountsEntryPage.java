@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework;
 
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountsEntryPage extends AbstractPage {
@@ -29,15 +31,20 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
     }
 
     public void selectClients() {
-        // TODO Auto-generated method stub
+        Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName.0"), "Client - Veronica Abisya");
+        selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox.0");
+        Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName.2"), "Client - Polly Gikonyo");
+        selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox.2");
     }
 
     public CreateLoanAccountsSuccessPage submitAndNavigateToCreateMultipleLoanAccountsSuccessPage() {
+        selenium.click("CreateMultipleLoanAccountsSearchResults.button.submit");
+        waitForPageToLoad();
         return new CreateLoanAccountsSuccessPage(selenium);
     }
 
     public void verifyPage() {
-        // TODO Auto-generated method stub
+        Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccountsSearchResults");
     }
 
 }

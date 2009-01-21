@@ -40,12 +40,10 @@ package org.mifos.application.bulkentry.struts.tags;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.bulkentry.business.BulkEntryBO;
@@ -54,14 +52,13 @@ import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.config.ClientRules;
 
 public class BulkEntryTag extends BodyTagSupport {
 

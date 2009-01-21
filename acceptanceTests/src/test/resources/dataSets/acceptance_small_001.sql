@@ -1,6 +1,6 @@
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: mifos
+-- Host: localhost    Database: mifos_gazelle
 -- ------------------------------------------------------
 -- Server version	5.0.51a-log
 
@@ -2700,7 +2700,7 @@ CREATE TABLE `fee_frequency` (
   CONSTRAINT `fee_frequency_ibfk_2` FOREIGN KEY (`FEE_FREQUENCYTYPE_ID`) REFERENCES `fee_frequency_type` (`FEE_FREQUENCY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fee_frequency_ibfk_3` FOREIGN KEY (`FREQUENCY_PAYMENT_ID`) REFERENCES `fee_payment` (`FEE_PAYMENT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fee_frequency_ibfk_4` FOREIGN KEY (`FREQUENCY_MEETING_ID`) REFERENCES `meeting` (`MEETING_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2709,6 +2709,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `fee_frequency` WRITE;
 /*!40000 ALTER TABLE `fee_frequency` DISABLE KEYS */;
+INSERT INTO `fee_frequency` VALUES (1,1,2,1,NULL);
 /*!40000 ALTER TABLE `fee_frequency` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2986,7 +2987,7 @@ CREATE TABLE `fees` (
   CONSTRAINT `fees_ibfk_7` FOREIGN KEY (`FORMULA_ID`) REFERENCES `fee_formula_master` (`FORMULAID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fees_ibfk_8` FOREIGN KEY (`RATE_OR_AMOUNT_CURRENCY_ID`) REFERENCES `currency` (`CURRENCY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fees_ibfk_9` FOREIGN KEY (`FEE_AMOUNT_CURRENCY_ID`) REFERENCES `currency` (`CURRENCY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -2995,6 +2996,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `fees` WRITE;
 /*!40000 ALTER TABLE `fees` DISABLE KEYS */;
+INSERT INTO `fees` VALUES (1,NULL,'One Time Upfront Fee',NULL,1,50,1,5,NULL,NULL,NULL,'2009-01-16',1,NULL,NULL,0,NULL,NULL,'2.700',2,NULL,0,'AMOUNT');
 /*!40000 ALTER TABLE `fees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3705,7 +3707,7 @@ CREATE TABLE `loan_amount_same_for_all_loan` (
   PRIMARY KEY  (`LOAN_AMOUNT_SAME_FOR_ALL_LOAN_ID`),
   KEY `PRD_OFFERING_ID` (`PRD_OFFERING_ID`),
   CONSTRAINT `loan_amount_same_for_all_loan_ibfk_1` FOREIGN KEY (`PRD_OFFERING_ID`) REFERENCES `loan_offering` (`PRD_OFFERING_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3714,7 +3716,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `loan_amount_same_for_all_loan` WRITE;
 /*!40000 ALTER TABLE `loan_amount_same_for_all_loan` DISABLE KEYS */;
-INSERT INTO `loan_amount_same_for_all_loan` VALUES (1,1,'100.000','10000.000','2000.000'),(2,2,'100.000','10000.000','2000.000'),(3,3,'100.000','10000.000','2000.000');
+INSERT INTO `loan_amount_same_for_all_loan` VALUES (1,1,'100.000','10000.000','2000.000'),(2,2,'100.000','10000.000','2000.000'),(3,3,'100.000','10000.000','2000.000'),(4,4,'1.000','10000.000','1000.000');
 /*!40000 ALTER TABLE `loan_amount_same_for_all_loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3910,7 +3912,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `loan_offering` WRITE;
 /*!40000 ALTER TABLE `loan_offering` DISABLE KEYS */;
-INSERT INTO `loan_offering` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'30.0000000000','3.0000000000','3.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,13,41,NULL),(2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'30.0000000000','3.0000000000','3.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,13,41,NULL),(3,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'30.0000000000','3.0000000000','3.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,13,41,NULL);
+INSERT INTO `loan_offering` VALUES (1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'30.0000000000','3.0000000000','3.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,13,41,NULL),(2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'30.0000000000','3.0000000000','3.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,13,41,NULL),(3,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'30.0000000000','3.0000000000','3.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,0,13,41,NULL),(4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,'50.0000000000','1.0000000000','5.0000000000',NULL,NULL,NULL,NULL,0,0,0,NULL,5,20,42,NULL);
 /*!40000 ALTER TABLE `loan_offering` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4403,7 +4405,7 @@ CREATE TABLE `meeting` (
   PRIMARY KEY  (`MEETING_ID`),
   KEY `MEETING_TYPE_ID` (`MEETING_TYPE_ID`),
   CONSTRAINT `meeting_ibfk_1` FOREIGN KEY (`MEETING_TYPE_ID`) REFERENCES `meeting_type` (`MEETING_TYPE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -4412,7 +4414,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `meeting` WRITE;
 /*!40000 ALTER TABLE `meeting` DISABLE KEYS */;
-INSERT INTO `meeting` VALUES (1,1,'meetingPlace','2008-12-04',NULL,NULL,NULL,0),(2,4,'Wherever','2008-12-04',NULL,NULL,NULL,1),(3,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(4,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(5,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(6,1,'meetingPlace','2008-12-04',NULL,NULL,NULL,0),(7,4,'Wherever','2008-12-04',NULL,NULL,NULL,1),(8,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(9,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(10,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(11,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(12,1,'meetingPlace','2008-12-04',NULL,NULL,NULL,0),(13,4,'Wherever','2008-12-04',NULL,NULL,NULL,1),(14,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(15,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(16,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(17,4,'Wherever','2008-12-04',NULL,NULL,NULL,0);
+INSERT INTO `meeting` VALUES (1,1,'meetingPlace','2008-12-04',NULL,NULL,NULL,0),(2,4,'Wherever','2008-12-04',NULL,NULL,NULL,1),(3,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(4,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(5,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(6,1,'meetingPlace','2008-12-04',NULL,NULL,NULL,0),(7,4,'Wherever','2008-12-04',NULL,NULL,NULL,1),(8,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(9,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(10,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(11,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(12,1,'meetingPlace','2008-12-04',NULL,NULL,NULL,0),(13,4,'Wherever','2008-12-04',NULL,NULL,NULL,1),(14,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(15,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(16,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(17,4,'Wherever','2008-12-04',NULL,NULL,NULL,0),(18,1,'meetingPlace','2009-01-16',NULL,NULL,NULL,0);
 /*!40000 ALTER TABLE `meeting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4703,7 +4705,7 @@ CREATE TABLE `no_of_install_same_for_all_loan` (
   PRIMARY KEY  (`NO_OF_INSTALL_SAME_FOR_ALL_LOAN_ID`),
   KEY `PRD_OFFERING_ID` (`PRD_OFFERING_ID`),
   CONSTRAINT `no_of_install_same_for_all_loan_ibfk_1` FOREIGN KEY (`PRD_OFFERING_ID`) REFERENCES `loan_offering` (`PRD_OFFERING_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -4712,7 +4714,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `no_of_install_same_for_all_loan` WRITE;
 /*!40000 ALTER TABLE `no_of_install_same_for_all_loan` DISABLE KEYS */;
-INSERT INTO `no_of_install_same_for_all_loan` VALUES (1,1,'1.000','1000.000','11.000'),(2,2,'1.000','1000.000','11.000'),(3,3,'1.000','1000.000','11.000');
+INSERT INTO `no_of_install_same_for_all_loan` VALUES (1,1,'1.000','1000.000','11.000'),(2,2,'1.000','1000.000','11.000'),(3,3,'1.000','1000.000','11.000'),(4,4,'1.000','12.000','12.000');
 /*!40000 ALTER TABLE `no_of_install_same_for_all_loan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5122,7 +5124,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `personnel` WRITE;
 /*!40000 ALTER TABLE `personnel` DISABLE KEYS */;
-INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'hÞ8¿Jd¯&G¹\rØJÉÜŸÎ4•Ua°a','mifos',NULL,1,'mifos',1,NULL,1,NULL,'2008-12-18',0,0,4),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Z‹â>>dF\ZŒIßèl«Ô©hÖÙºïYÑVi','bagonza1228423252312','bagonza+1228423252312@example.com',0,'Bagonza Wilson',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(3,1,'0003-00003',3,NULL,1,1,NULL,NULL,'ÉÂ{D€Âãõ:ÆÑb¦Û¨¶)\nØHrÝó','bagonza1228423681546','john+1228423681546@example.com',0,'John Okoth',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(4,1,'0004-00004',4,NULL,1,1,NULL,NULL,'aNgÓ¿bœi7æi-Q|™íUe…4Y¹','bagonza1228424238375','jenna+1228424238375@example.com',0,'Jenna Barth',1,'2008-12-04',NULL,NULL,NULL,0,0,1);
+INSERT INTO `personnel` VALUES (1,2,'1',1,1,1,1,NULL,1,'hÞ8¿Jd¯&G¹\rØJÉÜŸÎ4•Ua°a','mifos',NULL,1,'mifos',1,NULL,1,NULL,'2009-01-16',0,0,5),(2,1,'0002-00002',2,NULL,1,1,NULL,NULL,'Z‹â>>dF\ZŒIßèl«Ô©hÖÙºïYÑVi','bagonza1228423252312','bagonza+1228423252312@example.com',0,'Bagonza Wilson',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(3,1,'0003-00003',3,NULL,1,1,NULL,NULL,'ÉÂ{D€Âãõ:ÆÑb¦Û¨¶)\nØHrÝó','bagonza1228423681546','john+1228423681546@example.com',0,'John Okoth',1,'2008-12-04',NULL,NULL,NULL,0,0,1),(4,1,'0004-00004',4,NULL,1,1,NULL,NULL,'aNgÓ¿bœi7æi-Q|™íUe…4Y¹','bagonza1228424238375','jenna+1228424238375@example.com',0,'Jenna Barth',1,'2008-12-04',NULL,NULL,NULL,0,0,1);
 /*!40000 ALTER TABLE `personnel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5687,7 +5689,7 @@ CREATE TABLE `prd_offering` (
   CONSTRAINT `prd_offering_ibfk_4` FOREIGN KEY (`OFFERING_STATUS_ID`) REFERENCES `prd_status` (`OFFERING_STATUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `prd_offering_ibfk_5` FOREIGN KEY (`PRD_TYPE_ID`) REFERENCES `prd_type` (`PRD_TYPE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `prd_offering_ibfk_6` FOREIGN KEY (`PRD_APPLICABLE_MASTER_ID`) REFERENCES `prd_applicable_master` (`PRD_APPLICABLE_MASTER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -5696,7 +5698,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `prd_offering` WRITE;
 /*!40000 ALTER TABLE `prd_offering` DISABLE KEYS */;
-INSERT INTO `prd_offering` VALUES (1,1,'1-001',1,1,1,'2008-12-04',NULL,NULL,'FlatInterestLoanProduct1','t1',1,'auto-generated randomly-named loan product','2008-12-04',1,NULL,NULL,0,NULL),(2,1,'1-002',1,1,1,'2008-12-04',NULL,NULL,'FlatInterestLoanProductG2','tG2',1,'auto-generated randomly-named loan product','2008-12-04',1,NULL,NULL,0,NULL),(3,1,'1-003',1,1,1,'2008-12-04',NULL,NULL,'FlatInterestLoanProductG3','tG3',1,'auto-generated randomly-named loan product','2008-12-04',1,NULL,NULL,0,NULL);
+INSERT INTO `prd_offering` VALUES (1,1,'1-001',1,1,1,'2008-12-04',NULL,NULL,'FlatInterestLoanProduct1','t1',1,'auto-generated randomly-named loan product','2008-12-04',1,NULL,NULL,0,NULL),(2,1,'1-002',1,1,1,'2008-12-04',NULL,NULL,'FlatInterestLoanProductG2','tG2',1,'auto-generated randomly-named loan product','2008-12-04',1,NULL,NULL,0,NULL),(3,1,'1-003',1,1,1,'2008-12-04',NULL,NULL,'FlatInterestLoanProductG3','tG3',1,'auto-generated randomly-named loan product','2008-12-04',1,NULL,NULL,0,NULL),(4,1,'1-004',1,1,1,'2009-01-16',NULL,NULL,'Flat Interest Loan Product With Fee','lpwf',1,'','2009-01-16',1,NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `prd_offering` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5716,7 +5718,7 @@ CREATE TABLE `prd_offering_fees` (
   KEY `PRD_OFFERING_FEE_IDX` (`PRD_OFFERING_ID`,`FEE_ID`),
   CONSTRAINT `prd_offering_fees_ibfk_1` FOREIGN KEY (`FEE_ID`) REFERENCES `fees` (`FEE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `prd_offering_fees_ibfk_2` FOREIGN KEY (`PRD_OFFERING_ID`) REFERENCES `prd_offering` (`PRD_OFFERING_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -5725,6 +5727,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `prd_offering_fees` WRITE;
 /*!40000 ALTER TABLE `prd_offering_fees` DISABLE KEYS */;
+INSERT INTO `prd_offering_fees` VALUES (1,1,4);
 /*!40000 ALTER TABLE `prd_offering_fees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5747,7 +5750,7 @@ CREATE TABLE `prd_offering_meeting` (
   CONSTRAINT `prd_offering_meeting_ibfk_1` FOREIGN KEY (`PRD_OFFERING_ID`) REFERENCES `prd_offering` (`PRD_OFFERING_ID`),
   CONSTRAINT `prd_offering_meeting_ibfk_2` FOREIGN KEY (`PRD_MEETING_ID`) REFERENCES `meeting` (`MEETING_ID`),
   CONSTRAINT `prd_offering_meeting_ibfk_3` FOREIGN KEY (`PRD_OFFERING_MEETING_TYPE_ID`) REFERENCES `meeting_type` (`MEETING_TYPE_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -5756,7 +5759,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `prd_offering_meeting` WRITE;
 /*!40000 ALTER TABLE `prd_offering_meeting` DISABLE KEYS */;
-INSERT INTO `prd_offering_meeting` VALUES (1,1,1,1),(2,2,6,1),(3,3,12,1);
+INSERT INTO `prd_offering_meeting` VALUES (1,1,1,1),(2,2,6,1),(3,3,12,1),(4,4,18,1);
 /*!40000 ALTER TABLE `prd_offering_meeting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6101,7 +6104,7 @@ CREATE TABLE `recur_on_day` (
   CONSTRAINT `recur_on_day_ibfk_1` FOREIGN KEY (`DETAILS_ID`) REFERENCES `recurrence_detail` (`DETAILS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `recur_on_day_ibfk_2` FOREIGN KEY (`DAYS`) REFERENCES `week_days_master` (`WEEK_DAYS_MASTER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `recur_on_day_ibfk_3` FOREIGN KEY (`RANK_OF_DAYS`) REFERENCES `rank_days_master` (`RANK_DAYS_MASTER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -6110,7 +6113,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `recur_on_day` WRITE;
 /*!40000 ALTER TABLE `recur_on_day` DISABLE KEYS */;
-INSERT INTO `recur_on_day` VALUES (1,1,2,NULL,NULL,0),(2,2,5,NULL,NULL,1),(3,3,5,NULL,NULL,0),(4,4,5,NULL,NULL,0),(5,5,5,NULL,NULL,0),(6,6,2,NULL,NULL,0),(7,7,5,NULL,NULL,1),(8,8,5,NULL,NULL,0),(9,9,5,NULL,NULL,0),(10,10,5,NULL,NULL,0),(11,11,5,NULL,NULL,0),(12,12,2,NULL,NULL,0),(13,13,5,NULL,NULL,1),(14,14,5,NULL,NULL,0),(15,15,5,NULL,NULL,0),(16,16,5,NULL,NULL,0),(17,17,5,NULL,NULL,0);
+INSERT INTO `recur_on_day` VALUES (1,1,2,NULL,NULL,0),(2,2,5,NULL,NULL,1),(3,3,5,NULL,NULL,0),(4,4,5,NULL,NULL,0),(5,5,5,NULL,NULL,0),(6,6,2,NULL,NULL,0),(7,7,5,NULL,NULL,1),(8,8,5,NULL,NULL,0),(9,9,5,NULL,NULL,0),(10,10,5,NULL,NULL,0),(11,11,5,NULL,NULL,0),(12,12,2,NULL,NULL,0),(13,13,5,NULL,NULL,1),(14,14,5,NULL,NULL,0),(15,15,5,NULL,NULL,0),(16,16,5,NULL,NULL,0),(17,17,5,NULL,NULL,0),(18,18,2,NULL,NULL,0);
 /*!40000 ALTER TABLE `recur_on_day` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6132,7 +6135,7 @@ CREATE TABLE `recurrence_detail` (
   KEY `MEETING_ID` (`MEETING_ID`),
   CONSTRAINT `recurrence_detail_ibfk_1` FOREIGN KEY (`RECURRENCE_ID`) REFERENCES `recurrence_type` (`RECURRENCE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `recurrence_detail_ibfk_2` FOREIGN KEY (`MEETING_ID`) REFERENCES `meeting` (`MEETING_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -6141,7 +6144,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `recurrence_detail` WRITE;
 /*!40000 ALTER TABLE `recurrence_detail` DISABLE KEYS */;
-INSERT INTO `recurrence_detail` VALUES (1,1,1,1,0),(2,2,1,1,1),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,1),(8,8,1,1,0),(9,9,1,1,0),(10,10,1,1,0),(11,11,1,1,0),(12,12,1,1,0),(13,13,1,1,1),(14,14,1,1,0),(15,15,1,1,0),(16,16,1,1,0),(17,17,1,1,0);
+INSERT INTO `recurrence_detail` VALUES (1,1,1,1,0),(2,2,1,1,1),(3,3,1,1,0),(4,4,1,1,0),(5,5,1,1,0),(6,6,1,1,0),(7,7,1,1,1),(8,8,1,1,0),(9,9,1,1,0),(10,10,1,1,0),(11,11,1,1,0),(12,12,1,1,0),(13,13,1,1,1),(14,14,1,1,0),(15,15,1,1,0),(16,16,1,1,0),(17,17,1,1,0),(18,18,1,1,0);
 /*!40000 ALTER TABLE `recurrence_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7090,4 +7093,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-01-13 18:39:09
+-- Dump completed on 2009-01-17  1:15:28
