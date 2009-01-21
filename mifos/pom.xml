@@ -27,9 +27,8 @@
 						<id>build-gazelle-war</id>
 						<configuration>
 							<tasks>
-								<property name="basedir" value="${basedir}/../mifos" />
 								<property name="build.compiler" value="extJavac" />
-								<ant dir="${basedir}/../mifos">
+								<ant>
 									<target name="war" />
 								</ant>
 							</tasks>
@@ -54,7 +53,7 @@
 						<phase>install</phase>
 						<id>install-gazelle-war</id>
 						<configuration>
-							<file>${basedir}/../mifos/dist/mifos.war</file>
+							<file>${basedir}/dist/mifos.war</file>
 							<version>0.0.3-SNAPSHOT</version>
 							<groupId>org.mifos</groupId>
 							<packaging>war</packaging>
