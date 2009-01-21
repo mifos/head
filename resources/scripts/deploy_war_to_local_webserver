@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -o errexit
+set -o xtrace
+
+# may be possible to get branch from continuous integration server
+BRANCH=trunk
+LOCAL_REPOSITORY=/var/www/maven
+
+# for more information on this maven-deploy-plugin goal, see
+# http://maven.apache.org/plugins/maven-deploy-plugin/deploy-file-mojo.html
+mvn deploy:deploy-file \
+    -DgroupId=org.mifos \
+    -DartifactId=gazelle \
+    -Dversion=$BRANCH-$SVN_REVISION \
+    -Dpackaging=war \
+    -Dfile=mifos/dist/mifos.war \
+    -Durl=file://$LOCAL_REPOSITORY \
+    -DuniqueVersion=false
+
+# this location is polled by an Ant script on the test server
+ln -f \
+    $LOCAL_REPOSITORY/org/mifos/gazelle/$BRANCH-$SVN_REVISION/gazelle-$BRANCH-$SVN_REVISION.war \
+    /var/www/gazelle/war/$BRANCH/mifos-$SVN_REVISION.war
