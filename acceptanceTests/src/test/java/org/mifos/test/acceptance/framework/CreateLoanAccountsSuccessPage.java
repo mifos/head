@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework;
 
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountsSuccessPage extends AbstractPage {
@@ -29,11 +31,12 @@ public class CreateLoanAccountsSuccessPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        // work in progress
-        // Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccountsSearchResults");
+        Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccountsConfirm");
     }
 
     public LoanAccountPage navigateToLoanAccountPage() {
+        selenium.click("id=CreateMultipleLoanAccountsConfirm.link.account.1");
+        waitForPageToLoad();
         return new LoanAccountPage(selenium);
     }
 

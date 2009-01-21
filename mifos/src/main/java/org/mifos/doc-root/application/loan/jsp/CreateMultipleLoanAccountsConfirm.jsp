@@ -47,6 +47,8 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="CreateMultipleLoanAccountsConfirm"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -67,8 +69,8 @@
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="loan.plz_note" />
 								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accs" /> <mifos:mifoslabel name="loan.withfollid" isColonRequired="Yes" /> <br> <br> </span>
-								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" >
-								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
+								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" varStatus="status" >
+								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
 								<br>
 								</c:forEach>
 								<br>

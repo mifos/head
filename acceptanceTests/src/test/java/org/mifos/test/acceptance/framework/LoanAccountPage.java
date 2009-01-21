@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework;
 
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class LoanAccountPage extends AbstractPage {
@@ -29,11 +31,11 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        // TODO Auto-generated method stub
+        Assert.assertEquals(selenium.getValue("page.id"), "LoanAccountDetail");
     }
 
     public void verifyFeeExists() {
-        // TODO Auto-generated method stub
+        Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), "2.7");
     }
 
 }

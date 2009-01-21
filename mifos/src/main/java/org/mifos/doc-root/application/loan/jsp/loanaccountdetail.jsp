@@ -35,6 +35,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="LoanAccountDetail"/>
+
 <%
 boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger(LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED) == 1);
 %>
@@ -227,7 +229,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.fees" /></td>
-							<td align="right" class="drawtablerow"><c:out
+							<td align="right" class="drawtablerow" id="LoanAccountDetail.text.loanFees"><c:out
 								value="${BusinessKey.loanSummary.originalFees}" /></td>
 							<td align="right" class="drawtablerow"><c:out
 								value="${BusinessKey.loanSummary.feesPaid}" /></td>
