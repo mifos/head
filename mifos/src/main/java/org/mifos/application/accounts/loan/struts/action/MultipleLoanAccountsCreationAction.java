@@ -38,6 +38,7 @@
 
 package org.mifos.application.accounts.loan.struts.action;
 import static org.mifos.framework.util.CollectionUtils.collect;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,8 +50,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.loan.business.service.LoanDto;
+import org.mifos.application.accounts.loan.business.service.LoanService;
+import org.mifos.application.accounts.loan.persistance.LoanDao;
 import org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
@@ -63,7 +66,6 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -103,11 +105,13 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 	private LoanPrdBusinessService loanPrdBusinessService;
 	private ClientBusinessService clientBusinessService;
 	private LoanProductService loanProductService;
+	private LoanService loanService;
 
 	public MultipleLoanAccountsCreationAction() {
 		loanPrdBusinessService = new LoanPrdBusinessService();
 		clientBusinessService = new ClientBusinessService();
 		loanProductService = new LoanProductService(loanPrdBusinessService,new FeeBusinessService());
+		loanService = new LoanService(loanProductService, new LoanDao());
 	}
 
 	@Override
@@ -277,59 +281,39 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		return mapping.findForward(actionForward.toString());
 	}
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward create(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		logger.debug("Inside create method");
-		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
-		CustomerBO center = new CustomerBusinessService()
-				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
-		checkPermissionForCreate(getShortValue(loanActionForm
-				.getStateSelected()), getUserContext(request), null, center
-				.getOffice().getOfficeId(), center.getPersonnel()
-				.getPersonnelId());
-		LoanOfferingBO loanOffering = new LoanPrdBusinessService()
-				.getLoanOffering(getShortValue(loanActionForm
-						.getPrdOfferingId()));
-		List<MultipleLoanCreationViewHelper> applicableClientDetails = loanActionForm
-				.getApplicableClientDetails();
-		List<String> accountNumbers = new ArrayList<String>();
-		
-        List<FeeView> additionalFees = new ArrayList<FeeView>();
-        List<FeeView> defaultFees = new ArrayList<FeeView>();
-		loanProductService.getDefaultAndAdditionalFees(getShortValue(loanActionForm.getPrdOfferingId()), 
-		        getUserContext(request), defaultFees, additionalFees);
-		
-		if (applicableClientDetails != null
-				&& applicableClientDetails.size() > 0) {
-			for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
-				CustomerBO client = new CustomerBusinessService()
-						.getCustomer(clientDetail.getClientId());
-				LoanBO loan = LoanBO.createLoan(getUserContext(request),
-						loanOffering, client, AccountState
-								.fromShort(getShortValue(loanActionForm
-										.getStateSelected())),
-						getMoney(clientDetail.getLoanAmount()), clientDetail
-								.getDefaultNoOfInstall(), center
-								.getCustomerAccount().getNextMeetingDate(),
-						loanOffering.isIntDedDisbursement(), loanOffering
-								.getDefInterestRate(), loanOffering
-								.getGracePeriodDuration(), null, defaultFees, null,clientDetail.getMaxLoanAmount(), clientDetail
-								.getMinLoanAmount(), clientDetail
-								.getMaxNoOfInstall(), clientDetail
-								.getMinNoOfInstall());
-				loan.setBusinessActivityId(getIntegerValue(clientDetail
-						.getBusinessActivity()));
-				loan.save();
-				accountNumbers.add(loan.getGlobalAccountNum());
-			}
-		}
-		request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
-		logger.debug("outside create method");
-		return mapping.findForward(ActionForwards.create_success.toString());
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward create(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        logger.debug("Inside create method");
+        MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
+        Integer centerId = getIntegerValue(loanActionForm.getCenterId());
+        Short loanProductId = getShortValue(loanActionForm.getPrdOfferingId());
+        Short accountStateId = getShortValue(loanActionForm.getStateSelected());
+        AccountState accountState = AccountState.fromShort(accountStateId);
+        UserContext userContext = getUserContext(request);
 
+        List<MultipleLoanCreationViewHelper> applicableClientDetails = loanActionForm
+                .getApplicableClientDetails();
+        
+        List<String> accountNumbers = new ArrayList<String>();      
+        
+        if (applicableClientDetails != null) {
+            for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
+                LoanDto loanDto = loanService.createLoan(userContext, centerId, loanProductId, 
+                        clientDetail.getClientId(), accountState, clientDetail.getLoanAmount(), 
+                        clientDetail.getDefaultNoOfInstall(), 
+                        clientDetail.getMaxLoanAmount(), clientDetail.getMinLoanAmount(), 
+                        clientDetail.getMaxNoOfInstall(), clientDetail.getMinNoOfInstall(), 
+                        getIntegerValue(clientDetail.getBusinessActivity()));
+                accountNumbers.add(loanDto.getGlobalAccountNumber());
+            }
+        }
+        request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
+        logger.debug("outside create method");
+        return mapping.findForward(ActionForwards.create_success.toString());
+    }
+	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

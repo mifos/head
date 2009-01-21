@@ -51,7 +51,6 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -63,7 +62,7 @@ import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.loan.business.LoanTestUtils;
+import org.mifos.application.accounts.loan.persistance.LoanDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -168,7 +167,8 @@ public class TestLoanBO extends MifosTestCase {
 	private RoundingMode savedInitialRoundingMode = null;
 	private RoundingMode savedFinalRoundingMode = null;
 	private Short savedDigitAfterDecimal;
-	
+
+	private LoanDao loanDao;
 	//set to true if you want to print dates
 	
 	@Override
@@ -191,6 +191,7 @@ public class TestLoanBO extends MifosTestCase {
 		AccountingRules.setFinalRoundingMode(RoundingMode.CEILING);
 		AccountingRules.setDigitsAfterDecimal((short)1);
 
+		loanDao = new LoanDao();
 	}
 
 	@Override
@@ -3386,7 +3387,7 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		try {
-			LoanBO.createLoan(TestUtils.makeUser(), null, group,
+			loanDao.createLoan(TestUtils.makeUser(), null, group,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
@@ -3465,7 +3466,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		try {
-			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null,
+			loanDao.createLoan(TestUtils.makeUser(), loanOffering, null,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
@@ -4576,7 +4577,7 @@ public class TestLoanBO extends MifosTestCase {
 				FeePayment.TIME_OF_DISBURSMENT);
 		feeViewList.add(new FeeView(userContext, disbursementFee));
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
 				(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
@@ -4665,7 +4666,7 @@ public class TestLoanBO extends MifosTestCase {
 				FeePayment.TIME_OF_DISBURSMENT);
 		feeViewList.add(new FeeView(userContext, disbursementFee));
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, 1.2, (short) 1,
@@ -4790,7 +4791,7 @@ public class TestLoanBO extends MifosTestCase {
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.MONTHLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(userContext, periodicFee));
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), disbursementDate
 						.getTime(), false, 1.2, (short) 0, new FundBO(),
@@ -4904,7 +4905,7 @@ public class TestLoanBO extends MifosTestCase {
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.MONTHLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(userContext, periodicFee));
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), disbursementDate
 						.getTime(), false, 1.2, (short) 0, new FundBO(),
@@ -5264,7 +5265,7 @@ public class TestLoanBO extends MifosTestCase {
 		feeViewList
 				.add(new FeeView(TestObjectFactory.getContext(), periodicFee));
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
 				(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
@@ -5349,7 +5350,7 @@ public class TestLoanBO extends MifosTestCase {
 		feeViewList
 				.add(new FeeView(TestObjectFactory.getContext(), periodicFee));
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
 				(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
@@ -5735,7 +5736,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		List<FeeView> feeViews = getFeeViews();
 
-		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		LoanBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), new Date(System.currentTimeMillis()),
 				false, 10.0, (short) 0, new FundBO(), feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
@@ -5804,7 +5805,7 @@ public class TestLoanBO extends MifosTestCase {
 				"1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, // 6
 				// installments
@@ -5890,7 +5891,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 				"300.0"), Short.valueOf("6"), startDate, false, // 6
 				12.0, (short) 0, new FundBO(), feeViews, null, 
@@ -5970,7 +5971,7 @@ HashMap fees0 = new HashMap();
 				"1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 0.0, 
 						(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
@@ -6028,7 +6029,7 @@ HashMap fees0 = new HashMap();
 				"1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 0.0,
 						(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
@@ -6085,7 +6086,7 @@ HashMap fees0 = new HashMap();
 						.getCustomerMeeting().getMeeting());
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, // 6 installments
@@ -6149,7 +6150,7 @@ HashMap fees0 = new HashMap();
 				GraceType.PRINCIPALONLYGRACE, "1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, // 6 installments
@@ -6215,7 +6216,7 @@ HashMap fees0 = new HashMap();
 				"1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, // 6
 				// installments
@@ -6278,7 +6279,7 @@ HashMap fees0 = new HashMap();
 				"1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, // 6
 				// installments
@@ -6337,7 +6338,7 @@ HashMap fees0 = new HashMap();
 				center.getCustomerMeeting().getMeeting());
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, // 6 installments
@@ -6394,7 +6395,7 @@ HashMap fees0 = new HashMap();
 				GraceType.PRINCIPALONLYGRACE, "1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, // 6 installments
@@ -6454,7 +6455,7 @@ HashMap fees0 = new HashMap();
 				"1", "1");
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, // 6
 				// installments

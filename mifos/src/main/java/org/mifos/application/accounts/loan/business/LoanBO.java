@@ -68,8 +68,6 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFormulaEntity;
 import org.mifos.application.fees.business.FeeView;
@@ -99,8 +97,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -226,7 +222,7 @@ public class LoanBO extends AccountBO {
 				newMeetingForRepaymentDay);
 	}
 	
-	private LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
+	public LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
 			CustomerBO customer, AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
@@ -425,51 +421,7 @@ public class LoanBO extends AccountBO {
 	private static boolean isAnyLoanParamsNull(Object... args) {
 		return Arrays.asList(args).contains(null);
 	}
-        
-    public static LoanBO createLoan(UserContext userContext,
-			LoanOfferingBO loanOffering, CustomerBO customer,
-			AccountState accountState, Money loanAmount,
-			Short noOfinstallments, Date disbursementDate,
-			boolean interestDeductedAtDisbursement, Double interestRate,
-			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields, Double maxLoanAmount,
-			Double minLoanAmount, Short maxNoOfInstall, Short minNoOfInstall)
-			throws AccountException {
-    	
-		if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate))
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTION);
-
-		if (!customer.isActive()) {
-
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-		}
-
-		if (!loanOffering.isActive())
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
-
-		if (isDisbursementDateLessThanCurrentDate(disbursementDate))
-			throw new AccountException(
-					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-
-		if (!isDisbursementDateValid(customer, disbursementDate))
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-
-		if (interestDeductedAtDisbursement == true
-				&& noOfinstallments.shortValue() <= 1)
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
-
-		return new LoanBO(userContext, loanOffering, customer, accountState,
-				loanAmount, noOfinstallments, disbursementDate,
-				interestDeductedAtDisbursement, interestRate,
-				gracePeriodDuration, fund, feeViews, customFields, false,
-				maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
-				false, null);
-	}
+      
     
 	public static LoanBO createLoan(UserContext userContext,
 			LoanOfferingBO loanOffering, CustomerBO customer,

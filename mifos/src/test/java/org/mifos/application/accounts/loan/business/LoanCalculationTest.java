@@ -42,6 +42,7 @@ import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
+import org.mifos.application.accounts.loan.persistance.LoanDao;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -155,6 +156,8 @@ public class LoanCalculationTest  {
 	private boolean allConsoleOutputEnabled = false;
 	private boolean isFileNameConsoleOutputEnabled = false;
 	
+	private LoanDao loanDao;
+	
 	@Before
 	public void setUp() throws Exception {
 		userContext = TestObjectFactory.getContext();
@@ -166,6 +169,8 @@ public class LoanCalculationTest  {
 		savedInitialRoundingMode = AccountingRules.getInitialRoundingMode();
 		savedFinalRoundingMode = AccountingRules.getFinalRoundingMode();
 		savedDaysInYear = AccountingRules.getNumberOfInterestDays();
+		
+		loanDao = new LoanDao();
 	}
 
 
@@ -605,7 +610,7 @@ public class LoanCalculationTest  {
 		
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
-		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
@@ -1041,7 +1046,7 @@ public class LoanCalculationTest  {
 		
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
-		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
@@ -1115,7 +1120,7 @@ public class LoanCalculationTest  {
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
 
-		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
@@ -1778,7 +1783,7 @@ class LoanTestCaseData {
 		
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
-		AccountBO accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+		AccountBO accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
