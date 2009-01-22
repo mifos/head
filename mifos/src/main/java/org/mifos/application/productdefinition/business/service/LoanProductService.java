@@ -27,6 +27,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
@@ -39,7 +40,7 @@ import org.mifos.framework.security.util.UserContext;
  * Data Transfer Objects (DTOs).  It appears that existing "View" 
  * classes (such as FeeView) serve as a kind of DTO.
  */
-public class LoanProductService {
+public class LoanProductService implements Service {
     private LoanPrdBusinessService loanProductBusinessService;
     private FeeBusinessService feeBusinessService;
     
@@ -86,7 +87,7 @@ public class LoanProductService {
             UserContext userContext, List<FeeView> defaultFees, List<FeeView> additionalFees) throws ServiceException {
         LoanOfferingBO loanOffering = loanProductBusinessService
             .getLoanOffering(loanProductId);
-        List<FeeBO> fees = feeBusinessService.getAllAppllicableFeeForLoanCreation();
+        List<FeeBO> fees = feeBusinessService.getAllApplicableFeesForLoanCreation();
         for (FeeBO fee : fees) {
             if (!fee.isPeriodic() || 
                 (MeetingBO.isMeetingMatched(

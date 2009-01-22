@@ -432,7 +432,7 @@ public class LoanPrdAction extends BaseAction {
 		LoanPrdBusinessService service = new LoanPrdBusinessService();
 		FeeBusinessService feeService = new FeeBusinessService();
 		FundBusinessService fundService = new FundBusinessService();
-		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
+		List<FeeBO> fees = feeService.getAllApplicableFeesForLoanCreation();
 		Short localeId = getUserContext(request).getLocaleId();
 
 		SessionUtils.setCollectionAttribute(

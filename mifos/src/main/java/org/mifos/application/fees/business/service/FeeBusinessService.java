@@ -89,7 +89,7 @@ public class FeeBusinessService implements BusinessService {
 		}
 	}
 	
-	public List<FeeBO> getAllAppllicableFeeForLoanCreation()
+	public List<FeeBO> getAllApplicableFeesForLoanCreation()
 			throws ServiceException {
 		try {
 			return feePersistence.getAllAppllicableFeeForLoanCreation();

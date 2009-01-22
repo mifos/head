@@ -124,7 +124,7 @@ public class LoanAccountActionTest {
         expect(mockLoanOfferingBO.isFeePresent(mockPeriodicNonMatchingFee)).andReturn(false);
         expect(mockLoanOfferingBO.getLoanOfferingMeeting()).andReturn(mockPrdOfferingMeetingEntity).anyTimes();
         
-        expect(mockFeeBusinessService.getAllAppllicableFeeForLoanCreation()).andReturn(fees);
+        expect(mockFeeBusinessService.getAllApplicableFeesForLoanCreation()).andReturn(fees);
         replay(mockFeeBusinessService, mockUpfrontFee, mockPeriodicMatchingFee, mockPeriodicNonMatchingFee,
                 mockLoanPrdBusinessService, mockLoanOfferingBO, mockPrdOfferingMeetingEntity);
         

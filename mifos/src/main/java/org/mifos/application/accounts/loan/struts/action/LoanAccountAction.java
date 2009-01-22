@@ -1868,7 +1868,7 @@ public class LoanAccountAction extends AccountAppAction {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+				.getAttribute(CUSTOM_FIELDS, request);
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
 		for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
@@ -1901,7 +1901,7 @@ public class LoanAccountAction extends AccountAppAction {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+				.getAttribute(CUSTOM_FIELDS, request);
 		Locale locale = getUserContext(request).getPreferredLocale();
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {

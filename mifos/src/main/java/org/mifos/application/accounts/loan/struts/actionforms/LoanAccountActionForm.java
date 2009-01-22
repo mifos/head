@@ -928,7 +928,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			ActionErrors errors) {
 		try {
 			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+					.getAttribute(LoanConstants.CUSTOM_FIELDS, request);
 			for (CustomFieldView customField : customFields) {
 				boolean isErrorFound = false;
 				for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {

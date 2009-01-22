@@ -117,7 +117,6 @@ public class LoanService implements Service {
     protected void checkPermissionForCreate(Short newState,
             UserContext userContext, Short flagSelected, Short officeId,
             Short loanOfficerId) throws ApplicationException {
-        //logger.debug("inside checkPermissionForCreate called");
         if (!isPermissionAllowed(newState, userContext, officeId,
                 loanOfficerId, true))
             throw new AccountException(
@@ -126,7 +125,6 @@ public class LoanService implements Service {
 
     private boolean isPermissionAllowed(Short newSate, UserContext userContext,
             Short officeId, Short loanOfficerId, boolean saveFlag) {
-        //logger.debug("inside isPermissionAllowed called");
         return AuthorizationManager.getInstance().isActivityAllowed(
                 userContext,
                 new ActivityContext(ActivityMapper.getInstance()
