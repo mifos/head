@@ -44,7 +44,6 @@ public class HomePage extends MifosPage {
 
     public HomePage verifyPage() {
 		Assert.assertTrue(selenium.isTextPresent("You can navigate your way through Mifos using:"));
-        Assert.assertTrue(selenium.isElementPresent("home.text.lastLogin"), "Last logged in message not found on home page");		
 		return this;
     }
 
