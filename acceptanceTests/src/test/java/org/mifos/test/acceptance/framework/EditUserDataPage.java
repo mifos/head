@@ -17,54 +17,21 @@ public class EditUserDataPage extends MifosPage {
 	public EditUserDataPage(Selenium selenium) {
 		super(selenium);
 	}
-	
-    public void setFirstName(String firstName) {
-        selenium.type("edit_user.input.firstName", firstName);
-    }
-    
-    public void setLastName(String lastName) {
-        selenium.type("edit_user.input.lastName", lastName);
-    }
-    
-    public void setEmail(String email) {
-        selenium.type("edit_user.input.email", email);
-    }
-    
-    public void setDateOfBirth(String dateOfBirthDD, String dateOfBirthMM, String dateOfBirthYYYY) {
-        selenium.type("dobDD", dateOfBirthDD);
-        selenium.type("dobMM", dateOfBirthMM);
-        selenium.type("dobYY", dateOfBirthYYYY);        
-    }
-      
-    public void setMaritalStatus(String maritalStatus) {
-        selenium.select("maritalStatus", "label=" + maritalStatus);
-    }
-      
-    public void setGender(String gender) {
-        selenium.select("gender", "label=" + gender);
-    }
-    
-    public void setPreferredLanguage(String preferredLanguage) {
-        selenium.select("preferredLocale", "label=" + preferredLanguage);
-    }
-    
-    public void setUserLevel(String userLevel) {
-        selenium.select("level", "label=" + userLevel);
-    }
-    
-    public void setUserName(String userName) {
-        selenium.type("edit_user.input.userName", userName);
-    }
-    
-    public void setPassword(String password) {
-        selenium.type("edit_user.input.password", password);
-    }
-    
-    public void setPasswordRepeat(String passwordRepeat) {
-        selenium.type("edit_user.input.passwordRepeat", passwordRepeat);
-    }    
 
-    public EditUserPreviewDataPage preview() {
+    public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserEnterDataPage.SubmitFormParameters parameters) {
+        typeTextIfNotEmpty("edit_user.input.firstName", parameters.getFirstName());
+        typeTextIfNotEmpty("edit_user.input.lastName", parameters.getLastName());
+        typeTextIfNotEmpty("edit_user.input.email", parameters.getEmail());
+        typeTextIfNotEmpty("dobDD", parameters.getDateOfBirthDD());
+        typeTextIfNotEmpty("dobMM", parameters.getDateOfBirthMM());
+        typeTextIfNotEmpty("dobYY", parameters.getDateOfBirthYYYY());        
+        selectIfNotEmpty("maritalStatus", parameters.getMaritalStatus());
+        selectIfNotEmpty("gender", parameters.getGender());
+        selectIfNotEmpty("preferredLocale", parameters.getPreferredLanguage());
+        selectIfNotEmpty("level", parameters.getUserLevel());
+        typeTextIfNotEmpty("edit_user.input.userName", parameters.getUserName());
+        typeTextIfNotEmpty("edit_user.input.password", parameters.getPassword());
+        typeTextIfNotEmpty("edit_user.input.passwordRepeat", parameters.getPasswordRepeat());
         selenium.click("edit_user.button.preview");
         waitForPageToLoad();
         return new EditUserPreviewDataPage(selenium);

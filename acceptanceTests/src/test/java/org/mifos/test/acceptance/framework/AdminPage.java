@@ -52,9 +52,6 @@ public class AdminPage extends MifosPage {
         return new ChooseOfficePage(selenium);       
     }
     
-    public String getWelcome() {
-        return selenium.getText("id=admin.text.welcome");
-    }    
     public DefineNewLoanProductPage navigateToDefineLoanProduct() {
         selenium.click("link=Define new Loan product");
         waitForPageToLoad();
@@ -63,6 +60,7 @@ public class AdminPage extends MifosPage {
 
     public AdminPage verifyPage() {
         Assert.assertTrue(selenium.isElementPresent("admin.label.admintasks"),"Didn't reach Admin home page");
+        Assert.assertTrue(selenium.isElementPresent("admin.text.welcome"), "Welcome message not found on Admin home page");
         return this;
     }
     

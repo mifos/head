@@ -42,4 +42,30 @@ public class MifosPage extends AbstractPage {
 		return new LoginPage(selenium);
 	}
 
+    protected void typeTextIfNotEmpty(String locator, String value) {
+        if (!isEmpty(value)) {
+            selenium.type(locator, value);
+        }
+    }
+    
+    protected void selectIfNotEmpty(String locator, String value) {
+        if (!isEmpty(value)) {
+            selenium.select(locator, "label=" + value);
+        }
+    } 
+    
+    protected void selectAndWaitIfNotEmpty(String locator, String value) {
+        if (!isEmpty(value)) {
+            selenium.select(locator, "label=" + value);
+            waitForPageToLoad();
+        }
+    }     
+    
+    private boolean isEmpty(String value) {
+        boolean empty = true;
+        if (value!= null && !value.isEmpty()) {
+            empty = false;
+        }
+        return empty;
+    }
 }

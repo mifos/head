@@ -19,8 +19,6 @@ package org.mifos.test.acceptance.personnel;
  * explanation of the license and how it is applied.
  */
 
-import java.util.Calendar;
-
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -44,12 +42,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-
-/*
- * Corresponds to issue tracker task 2338
- */
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"workInProgress", "createUserStory","acceptance","ui"})
+@Test(sequential=true, groups={"createUserStory","acceptance","ui"})
 public class PersonnelTest extends UiTestCaseBase {
 
 	private AppLauncher appLauncher;
@@ -67,149 +61,110 @@ public class PersonnelTest extends UiTestCaseBase {
 	}
 	
 	public void createUserTest() {
-	    HomePage homePage = appLauncher.launchMifos().loginSuccessfulAs("mifos", "testmifos");
-	    homePage.verifyPage();
-	    AdminPage adminPage = homePage.navigateToAdminPage();
-        assertTextPresent(adminPage.getWelcome(), "Welcome to mifos administrative area");
-     
-        String randomId = getRandomString(8);
-        String shortRandomId = getRandomString(3);
-        String officeName = "Bangalore Branch " + randomId;
-        
-        AdminPage adminPage2 = createOffice(adminPage, randomId);
-	    ChooseOfficePage chooseOfficePage = adminPage2.navigateToCreateUserPage();
-	    CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
-	    
-	    userEnterDataPage.setFirstName("New");
-	    userEnterDataPage.setLastName("User" + randomId);
-	    userEnterDataPage.setDateOfBirth("21", "11", "1980");
-	    userEnterDataPage.setGender("Male");
-	    userEnterDataPage.setPreferredLanguage("English");
-	    userEnterDataPage.setUserLevel("Loan Officer");
-	    userEnterDataPage.setRoles("Admin");
-	    userEnterDataPage.setUserName("loanofficer_blore" + shortRandomId);
-        userEnterDataPage.setPassword("password");
-        userEnterDataPage.setPasswordRepeat("password");
-        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.preview();
-        CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
-
-        assertTextPresent(userConfirmationPage.getConfirmation(), "New User" + randomId + " has been assigned the system ID number:");
-        
-        UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
-        assertTextPresent(userDetailsPage.getFullName(), "New User" + randomId);
-        assertEquals(userDetailsPage.getStatus(), "Active");
-
+	    createUser(getAdminUserParameters());
 	}
 	
 	public void editUserTest() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfulAs("mifos", "testmifos");
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        
-        String randomId = getRandomString(8);
-        String shortRandomId = getRandomString(3);
-        
-        adminPage = createOffice(adminPage, randomId);
-        ChooseOfficePage chooseOfficePage = adminPage.navigateToCreateUserPage();
-        String officeName = "Bangalore Branch " + randomId;        
-        CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
-
-        userEnterDataPage.setFirstName("New");
-        userEnterDataPage.setLastName("User" + randomId);
-        userEnterDataPage.setDateOfBirth("21", "11", "1980");
-        userEnterDataPage.setGender("Male");
-        userEnterDataPage.setPreferredLanguage("English");
-        userEnterDataPage.setUserLevel("Loan Officer");
-        userEnterDataPage.setUserName("loanofficer_blore" + shortRandomId);
-        userEnterDataPage.setPassword("password");
-        userEnterDataPage.setPasswordRepeat("password");
-        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.preview();
-        CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
-        
-        assertTextPresent(userConfirmationPage.getConfirmation(), "New User" + randomId + " has been assigned the system ID number:");
-        
-        UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
-        assertTextPresent(userDetailsPage.getFullName(), "New User" + randomId);
-        assertEquals(userDetailsPage.getStatus(), "Active");
+	    UserViewDetailsPage userDetailsPage = createUser(getAdminUserParameters());
         
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
-        editUserPage.setFirstName("Update");
-        String lastName = "User" + getRandomString(8);
-        editUserPage.setLastName(lastName);
-        editUserPage.setEmail("xxx.yyy@xxx.zzz");
         
-        EditUserPreviewDataPage editPreviewDataPage = editUserPage.preview();
+        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();        
+        formParameters.setFirstName("Update");
+        formParameters.setLastName("User" + getRandomString(8));
+        formParameters.setEmail("xxx.yyy@xxx.zzz");
+        
+        EditUserPreviewDataPage editPreviewDataPage = editUserPage.submitAndGotoEditUserPreviewDataPage(formParameters);
         UserViewDetailsPage userDetailsPage2 = editPreviewDataPage.submit();
-        
-        assertTextPresent(userDetailsPage2.getFullName(), "Update " + lastName);
-        assertEquals(userDetailsPage2.getEmail(), "xxx.yyy@xxx.zzz");
-        
+        assertTextPresent(userDetailsPage2.getFullName(), formParameters.getFirstName() + " " + formParameters.getLastName());
+        assertEquals(userDetailsPage2.getEmail(), formParameters.getEmail());
 	}
 	
     public void createUserWithNonAdminRoleTest() {
+        createUser(getNonAdminUserParameters());       
+    }
+     
+    public UserViewDetailsPage createUser(CreateUserEnterDataPage.SubmitFormParameters formParameters) {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfulAs("mifos", "testmifos");
-        
-        assertEquals(homePage.getWelcome(), "Welcome,  mifos"); 
-        assertTextPresent(homePage.getLastLogin(), "The last time you logged on was");
-        
+        homePage.verifyPage();
         AdminPage adminPage = homePage.navigateToAdminPage();
-        assertTextPresent(adminPage.getWelcome(), "Welcome to mifos administrative area");
-
-        String randomId = getRandomString(8);
-        String shortRandomId = getRandomString(3);        
-        String officeName = "Bangalore Branch " + randomId;
+        adminPage.verifyPage();
+     
+        String officeName = "Bangalore Branch " + getRandomString(8);
         
-        AdminPage adminPage2 = createOffice(adminPage, randomId);
-        
+        AdminPage adminPage2 = createOffice(adminPage, officeName);
         ChooseOfficePage chooseOfficePage = adminPage2.navigateToCreateUserPage();
         CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
-          
-        userEnterDataPage.setFirstName("NonAdmin");
-        userEnterDataPage.setLastName("User" + randomId);
-        userEnterDataPage.setDateOfBirth("04", "04", "1986");
-        userEnterDataPage.setGender("Male");
 
-        userEnterDataPage.setUserLevel("Non Loan Officer");
-        
-        userEnterDataPage.setUserName("tester" + shortRandomId);
-        userEnterDataPage.setPassword("tester");
-        userEnterDataPage.setPasswordRepeat("tester");
-        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.preview();
+        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(formParameters);
         CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
-        
-        assertTextPresent(userConfirmationPage.getConfirmation(), "NonAdmin User" + randomId + " has been assigned the system ID number:");
+
+        assertTextPresent(userConfirmationPage.getConfirmation(), formParameters.getFirstName() + " " + formParameters.getLastName() + " has been assigned the system ID number:");
         
         UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
-        assertTextPresent(userDetailsPage.getFullName(), "NonAdmin User");
-        assertEquals(userDetailsPage.getStatus(), "Active");        
-        }
+        assertTextPresent(userDetailsPage.getFullName(), formParameters.getFirstName() + " " + formParameters.getLastName());
+        assertEquals(userDetailsPage.getStatus(), "Active");
+        return userDetailsPage;
+    }
     
-    public AdminPage createOffice(AdminPage adminPage, String randomId) {
+    public CreateUserEnterDataPage.SubmitFormParameters getAdminUserParameters() {
+        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+        formParameters.setFirstName("New");
+        formParameters.setLastName("User" + getRandomString(8));
+        formParameters.setDateOfBirthDD("21");
+        formParameters.setDateOfBirthMM("11");
+        formParameters.setDateOfBirthYYYY("1980");        
+        formParameters.setGender("Male");
+        formParameters.setPreferredLanguage("English");
+        formParameters.setUserLevel("Loan Officer");
+        formParameters.setRole("Admin");
+        formParameters.setUserName("loanofficer_blore" + getRandomString(5));
+        formParameters.setPassword("password");
+        formParameters.setPasswordRepeat("password");
+        return formParameters;
+    }
+ 
+    public CreateUserEnterDataPage.SubmitFormParameters getNonAdminUserParameters() {
+        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();        
+        formParameters.setFirstName("NonAdmin");
+        formParameters.setLastName("User" + getRandomString(8));
+        formParameters.setDateOfBirthDD("04");
+        formParameters.setDateOfBirthMM("04");
+        formParameters.setDateOfBirthYYYY("1986");
+        formParameters.setGender("Male");
+        formParameters.setUserLevel("Non Loan Officer");
+        formParameters.setUserName("test" + getRandomString(5));
+        formParameters.setPassword("tester");
+        formParameters.setPasswordRepeat("tester");
+        return formParameters;
+    }
+    
+    public AdminPage createOffice(AdminPage adminPage, String officeName) {
         CreateOfficeEnterDataPage officeEnterDataPage = adminPage.navigateToCreateOfficeEnterDataPage();
         
-        String officeName = "Bangalore Branch " + randomId;
-        String shortName = "B" + getRandomString(3);
-        officeEnterDataPage.setOfficeName(officeName);
+        CreateOfficeEnterDataPage.SubmitFormParameters formParameters = new CreateOfficeEnterDataPage.SubmitFormParameters();
+        formParameters.setOfficeName(officeName);
+        formParameters.setShortName(getRandomString(4));
+        formParameters.setOfficeType("Branch Office");
+        formParameters.setParentOffice("regexp:Mifos\\s+HO");
+        formParameters.setAddress1("Bangalore");
+        formParameters.setAddress3("EGL");
+        formParameters.setState("karnataka");
+        formParameters.setCountry("India");
+        formParameters.setPostalCode("560071");
+        formParameters.setPhoneNumber("918025003632");
         
-        officeEnterDataPage.setShortName(shortName);
-        officeEnterDataPage.setOfficeType("Branch Office");
-        officeEnterDataPage.setParentOffice("regexp:Mifos\\s+HO");
-        officeEnterDataPage.setAddress1("Bangalore");
-        officeEnterDataPage.setAddress3("EGL");
-        officeEnterDataPage.setState("karnataka");
-        officeEnterDataPage.setCountry("India");
-        officeEnterDataPage.setPostalCode("560071");
-        officeEnterDataPage.setPhoneNumber("918025003632");
-        
-        CreateOfficePreviewDataPage previewDataPage = officeEnterDataPage.preview();
+        CreateOfficePreviewDataPage previewDataPage = officeEnterDataPage.submitAndGotoCreateOfficePreviewDataPage(formParameters);
         CreateOfficeConfirmationPage confirmationPage = previewDataPage.submit();
-        assertTextPresent(confirmationPage.getConfirmation(), "You have successfully added a new office");
+
+        confirmationPage.verifyPage();
         OfficeViewDetailsPage detailsPage = confirmationPage.navigateToOfficeViewDetailsPage();
-        assertEquals(detailsPage.getOfficeName(), officeName);
-        assertEquals(detailsPage.getShortName(), shortName);
-        assertEquals(detailsPage.getOfficeType(), "Branch Office");
+        assertEquals(detailsPage.getOfficeName(), formParameters.getOfficeName());
+        assertEquals(detailsPage.getShortName(), formParameters.getShortName());
+        assertEquals(detailsPage.getOfficeType(), formParameters.getOfficeType());
         
         return detailsPage.navigateToAdminPage();
-    }
+    }    
     
     /* Should be implemented safer and moved to utility class */
 	private void assertEquals(String text1, String text2) {
@@ -223,7 +178,7 @@ public class PersonnelTest extends UiTestCaseBase {
     
 	/* Should be implemented safer and moved to utility class */
 	private String getRandomString(int length) {
-	    String millis = Long.toString(Calendar.getInstance().getTimeInMillis());
+	    String millis = Long.toString(System.currentTimeMillis());
 	    return millis.substring(millis.length() - length);
 	}
 }

@@ -44,26 +44,24 @@ public class HomePage extends MifosPage {
 
     public HomePage verifyPage() {
 		Assert.assertTrue(selenium.isTextPresent("You can navigate your way through Mifos using:"));
+        Assert.assertTrue(selenium.isElementPresent("home.text.lastLogin"), "Last logged in message not found on home page");		
 		return this;
     }
 
 	public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
-		selenium.click("id=homeheader.link.clientsAndAccounts");
+		selenium.click("homeheader.link.clientsAndAccounts");
 		waitForPageToLoad();
 		return new ClientsAndAccountsHomepage(selenium);
 	}
 	
 	public AdminPage navigateToAdminPage() {
-        selenium.click("id=homeheader.link.admin");
+        selenium.click("homeheader.link.admin");
         waitForPageToLoad();
         return new AdminPage(selenium);	    
 	}
 	
     public String getWelcome() {
-        return selenium.getText("id=home.text.welcome");
+        return selenium.getText("home.text.welcome");
     }
-    
-    public String getLastLogin() {
-        return selenium.getText("id=home.text.lastLogin");
-    }    
+      
 }
