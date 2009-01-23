@@ -106,12 +106,13 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         createLoanAccountsSearchPage.verifyPage();
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage(formParameters);
         createLoanAccountsEntryPage.verifyPage();
-        createLoanAccountsEntryPage.selectClients();
+        createLoanAccountsEntryPage.selectClients(0, "Client - Veronica Abisya");
+        createLoanAccountsEntryPage.selectClients(2, "Client - Polly Gikonyo");
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
         createLoanAccountsSuccessPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.navigateToLoanAccountPage();
+        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoanAndNavigateToLoanAccountPage(0);
         loanAccountPage.verifyPage();
-        loanAccountPage.verifyFeeExists();
+        loanAccountPage.verifyFeeExists("2.7");
     }
 
     private CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPage() {

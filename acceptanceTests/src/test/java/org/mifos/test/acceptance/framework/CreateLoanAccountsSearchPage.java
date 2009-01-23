@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.loan.CreateMultipleLoanAccountsWithFeesTest.CreateMultipleLoanAccountSelectParameters;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -32,7 +31,7 @@ public class CreateLoanAccountsSearchPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccounts");
+        this.verifyPage("CreateMultipleLoanAccounts");
     }
 
     public CreateLoanAccountsEntryPage searchAndNavigateToCreateMultipleLoanAccountsEntryPage(CreateMultipleLoanAccountSelectParameters formParameters) {

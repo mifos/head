@@ -31,11 +31,11 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        Assert.assertEquals(selenium.getValue("page.id"), "LoanAccountDetail");
+        this.verifyPage("LoanAccountDetail");
     }
-
-    public void verifyFeeExists() {
-        Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), "2.7");
+    
+    public void verifyFeeExists(String expectedFee) {
+        Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
     }
 
 }

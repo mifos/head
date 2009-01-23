@@ -30,11 +30,9 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
         super(selenium);
     }
 
-    public void selectClients() {
-        Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName.0"), "Client - Veronica Abisya");
-        selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox.0");
-        Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName.2"), "Client - Polly Gikonyo");
-        selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox.2");
+    public void selectClients(int clientNumber, String expectedClientName) {
+        Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName." + clientNumber), expectedClientName);
+        selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox." + clientNumber);
     }
 
     public CreateLoanAccountsSuccessPage submitAndNavigateToCreateMultipleLoanAccountsSuccessPage() {
@@ -44,7 +42,7 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        Assert.assertEquals(selenium.getValue("page.id"), "CreateMultipleLoanAccountsSearchResults");
+        this.verifyPage("CreateMultipleLoanAccountsSearchResults");
     }
 
 }
