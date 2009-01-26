@@ -15,12 +15,12 @@
 		<!-- START only used by Eclipse WTP -->
 		<!-- Ant is still required to build the Mifos WAR. See
 		  http://mifos.org/developers/wiki/GazelleMavenMigration -->
-      <finalName>mifos</finalName>
-      <defaultGoal>war:war</defaultGoal>
-      <sourceDirectory>src</sourceDirectory>
-      <testSourceDirectory>test</testSourceDirectory>
-      <outputDirectory>target/mifos/WEB-INF/classes</outputDirectory>
-      <testOutputDirectory>target/test-classes</testOutputDirectory>
+		<finalName>mifos</finalName>
+		<defaultGoal>war:war</defaultGoal>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<outputDirectory>target/mifos/WEB-INF/classes</outputDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<!-- END   only used by Eclipse WTP -->
 		<plugins>
 			<plugin>
