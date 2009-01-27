@@ -30,6 +30,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.LoanProductService;
@@ -51,6 +52,8 @@ import org.mifos.framework.util.helpers.StringUtils;
  *
  */
 public class LoanService implements Service {
+    private static final FundBO NO_FUND = null;
+    
     LoanProductService loanProductService;
     LoanDao loanDao;
     
@@ -106,7 +109,7 @@ public class LoanService implements Service {
                 loanOffering.isIntDedDisbursement(), 
                 loanOffering.getDefInterestRate(), 
                 loanOffering.getGracePeriodDuration(), 
-                null, defaultFees, null, maxLoanAmount, 
+                NO_FUND, defaultFees, null, maxLoanAmount, 
                 minLoanAmount, maxInstallments, minInstallments);
         loan.setBusinessActivityId(businessActivityId);
         loan.save();

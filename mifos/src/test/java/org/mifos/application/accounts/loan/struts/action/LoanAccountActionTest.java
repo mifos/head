@@ -33,6 +33,7 @@ import junit.framework.JUnit4TestAdapter;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
@@ -86,6 +87,7 @@ public class LoanAccountActionTest {
         MasterDataService mockMasterDataService = createMock(MasterDataService.class);
         MeetingBusinessService mockMeetingBusinessService = createMock(MeetingBusinessService.class);
         ConfigurationPersistence mockConfigurationPersistence = createMock(ConfigurationPersistence.class);
+        AccountBusinessService mockAccountBusinessService = createMock(AccountBusinessService.class);
         
         LoanOfferingBO mockLoanOfferingBO = createMock(LoanOfferingBO.class);
         expect(mockLoanPrdBusinessService.getLoanOffering(shortOne)).andReturn(mockLoanOfferingBO);
@@ -100,7 +102,8 @@ public class LoanAccountActionTest {
                 mockMasterDataService,
                 mockMeetingBusinessService,
                 mockConfigurationPersistence,
-                new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService));
+                new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService),
+                mockAccountBusinessService);
                         
         List<FeeView> defaultFees = new ArrayList<FeeView>();
         List<FeeView> additionalFees = new ArrayList<FeeView>();

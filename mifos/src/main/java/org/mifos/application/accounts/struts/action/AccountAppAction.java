@@ -43,10 +43,19 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountAppAction extends BaseAction {
+    private AccountBusinessService accountBusinessService;
+    
+    public AccountAppAction() {
+        this.accountBusinessService = new AccountBusinessService();
+    }
 
-	@Override
+    public AccountAppAction(AccountBusinessService accountBusinessService) {
+        this.accountBusinessService = accountBusinessService;
+    }
+    
+    @Override
 	protected BusinessService getService() {
-		return getAccountBizService();
+		return getAccountBusinessService();
 	}
 
 	@Override
@@ -70,14 +79,14 @@ public class AccountAppAction extends BaseAction {
 		Short feeId = getShortValue(request.getParameter("feeId"));
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
-		AccountBO accountBO = getAccountBizService().getAccount(accountId);
+		AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request);
 		if (accountBO.getPersonnel() != null)
-			getAccountBizService().checkPermissionForRemoveFees(accountBO.getType(),accountBO.getCustomer().getLevel(), uc,
+			getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),accountBO.getCustomer().getLevel(), uc,
 					accountBO.getOffice().getOfficeId(), accountBO.getPersonnel()
 							.getPersonnelId());
 		else
-			getAccountBizService().checkPermissionForRemoveFees(accountBO.getType(),accountBO.getCustomer().getLevel(), uc,
+			getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),accountBO.getCustomer().getLevel(), uc,
 					accountBO.getOffice().getOfficeId(), uc.getId());
 		accountBO.removeFees(feeId, uc.getId());
 		String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
@@ -98,10 +107,10 @@ public class AccountAppAction extends BaseAction {
 		String globalAccountNum = request.getParameter("globalAccountNum");
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
-		AccountBO accountBO = getAccountBizService()
+		AccountBO accountBO = getAccountBusinessService()
 				.findBySystemId(globalAccountNum);
 		SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST,
-				getAccountBizService().getTrxnHistory(accountBO, uc), request);
+				getAccountBusinessService().getTrxnHistory(accountBO, uc), request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request);
 		return mapping.findForward("getTransactionHistory_success");
 	}
@@ -113,16 +122,16 @@ public class AccountAppAction extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
 		Integer accountId = getIntegerValue(request.getParameter("accountId"));
-		AccountBO account = getAccountBizService().getAccount(accountId);
+		AccountBO account = getAccountBusinessService().getAccount(accountId);
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account,request);
 		WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
 		if (account.getPersonnel() != null)
-			getAccountBizService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
+			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
 					account.getOffice().getOfficeId(), account.getPersonnel()
 							.getPersonnelId());
 		else
-			getAccountBizService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
+			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
 					account.getOffice().getOfficeId(), uc.getId());
 		account.waiveAmountDue(waiveEnum);
 		return mapping.findForward("waiveChargesDue_Success");
@@ -135,16 +144,16 @@ public class AccountAppAction extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
 		Integer accountId = getIntegerValue(request.getParameter("accountId"));
-		AccountBO account = getAccountBizService().getAccount(accountId);
+		AccountBO account = getAccountBusinessService().getAccount(accountId);
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account,request);
 		WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
 		if (account.getPersonnel() != null)
-			getAccountBizService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
+			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
 					account.getOffice().getOfficeId(), account.getPersonnel()
 							.getPersonnelId());
 		else
-			getAccountBizService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
+			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
 					account.getOffice().getOfficeId(), uc.getId());
 		account.waiveAmountOverDue(waiveEnum);
 		return mapping.findForward("waiveChargesOverDue_Success");
@@ -176,8 +185,8 @@ public class AccountAppAction extends BaseAction {
 				.getBusinessService(BusinessServiceName.Customer);
 	}
 	
-	protected AccountBusinessService getAccountBizService() {
-		return new AccountBusinessService();
+	protected AccountBusinessService getAccountBusinessService() {
+		return accountBusinessService;
 	}
 	
 	protected void convertCustomFieldDateToUniformPattern(

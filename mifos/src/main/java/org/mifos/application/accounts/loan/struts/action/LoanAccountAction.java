@@ -63,6 +63,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
@@ -184,7 +185,7 @@ public class LoanAccountAction extends AccountAppAction {
              new MasterDataService(),
              new MeetingBusinessService(),
              new ConfigurationPersistence(),
-             null);
+             null, new AccountBusinessService());
         setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
     }
     
@@ -197,7 +198,7 @@ public class LoanAccountAction extends AccountAppAction {
                 new MasterDataService(),
                 new MeetingBusinessService(),
                 new ConfigurationPersistence(),
-                null);
+                null, new AccountBusinessService());
         setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
 	}
 
@@ -206,7 +207,9 @@ public class LoanAccountAction extends AccountAppAction {
             FeeBusinessService feeService, LoanPrdBusinessService loanPrdBusinessService,
             ClientBusinessService clientBusinessService, MasterDataService masterDataService,
             MeetingBusinessService meetingBusinessService, ConfigurationPersistence configurationPersistence,
-            LoanProductService loanProductService) {
+            LoanProductService loanProductService, AccountBusinessService accountBusinessService) {
+        super(accountBusinessService);
+        
         this.configService = configService;
         this.loanBusinessService = loanBusinessService;
         this.glimLoanUpdater = glimLoanUpdater;
@@ -1891,7 +1894,7 @@ public class LoanAccountAction extends AccountAppAction {
 	private void loadCustomFieldDefinitions(HttpServletRequest request)
 			throws Exception {
 		SessionUtils.setCollectionAttribute(CUSTOM_FIELDS,
-				getAccountBizService().retrieveCustomFieldsDefinition(
+				getAccountBusinessService().retrieveCustomFieldsDefinition(
 						EntityType.LOAN), request);
 	}
 
