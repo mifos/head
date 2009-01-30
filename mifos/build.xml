@@ -242,9 +242,8 @@
 				<include name="*.jasper"/>
 			</fileset>
 		</copy>
-		<jsmin>
-       		<fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
-       		<!-- fileset dir="${build.src.dir}/webcontent" includes="**/*.js"/ -->
+		<jsmin force="true">
+			<fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
 		</jsmin>
 	</target>
 
