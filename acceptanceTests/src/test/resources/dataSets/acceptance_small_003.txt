@@ -1,0 +1,17 @@
+Database version: 207
+Description:
+Original data (not based on any other dataset) created with Python SeleniumRC
+seed data script (seedDataManyClients.py) using the following settings:
+
+  NUM_OFFICES = 3
+  NUM_CENTERS_PER_OFFICE = 1
+  NUM_GROUPS_PER_CENTER = 3
+  NUM_CLIENTS_PER_GROUP = 4
+
+Additionally, the following fees exist:
+
+  1 client fee (recurring weekly)
+  1 group fee (recurring weekly)
+  1 center fee (recurring weekly)
+
+http://mingle.mifos.org/projects/mifos/cards/1265

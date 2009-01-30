@@ -101,7 +101,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setLoanProduct("Flat Interest Loan Product With Fee");
 
-        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
         CreateLoanAccountsSearchPage createLoanAccountsSearchPage = navigateToCreateLoanAccountsSearchPage();
         createLoanAccountsSearchPage.verifyPage();
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage(formParameters);

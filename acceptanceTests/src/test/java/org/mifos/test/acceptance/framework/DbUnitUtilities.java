@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,19 @@
 
 package org.mifos.test.acceptance.framework;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,8 +48,8 @@ import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.util.TableFormatter;
+import org.mifos.core.ClasspathResource;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.test.acceptance.collectionsheet.DbUnitResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testng.Assert;
@@ -127,14 +134,51 @@ public class DbUnitUtilities {
         }
     }
 
-    public IDataSet getDataSetFromFile(String filename) throws IOException, DataSetException {
+    public IDataSet getDataSetFromFile(String filename)
+    throws IOException, DataSetException {
         boolean enableColumnSensing = true;
-        URL url = DbUnitResource.getInstance().getUrl(filename);
+        URL url = ClasspathResource.getInstance("/dataSets/").getUrl(filename);
         if (url == null) {
             throw new MifosRuntimeException("Couldn't find file:" + filename);
         }
-        return new FlatXmlDataSet(url,false,enableColumnSensing);
+        return new FlatXmlDataSet(
+                getUncompressed(url), false, enableColumnSensing);
     }
 
+    private URL getUncompressed(URL url) throws IOException {
+        /* Buffer size based on this tutorial:
+         * http://java.sun.com/developer/technicalArticles/Programming/compression/
+         */
+        int bufferSize = 2048;
+        byte data[] = new byte[bufferSize];
+        File tempFile = File.createTempFile("mifosDbUnitTempfile", ".tmp");
+        tempFile.deleteOnExit();
+        
+        ZipFile zipFile = new ZipFile(url.getPath());
+        Enumeration<? extends ZipEntry> zipEntries = zipFile.entries(); 
+        ZipEntry zipEntry = zipEntries.nextElement();
+        if (zipEntries.hasMoreElements()) {
+            throw new MifosRuntimeException(
+                    "only expecting one file entry per dataSet zip archive");
+        }
+        BufferedInputStream src =
+            new BufferedInputStream(zipFile.getInputStream(zipEntry));
+        BufferedOutputStream dest =
+            new BufferedOutputStream(new FileOutputStream(tempFile), bufferSize);
+
+        int count;
+        while (true) {
+            count = src.read(data, 0, bufferSize);
+            if (count == -1) {
+                break;
+            }
+            dest.write(data, 0, count);
+        }
+        dest.close();
+        src.close();
+        zipFile.close();
+        
+        return tempFile.toURI().toURL();
+    }
     
 }

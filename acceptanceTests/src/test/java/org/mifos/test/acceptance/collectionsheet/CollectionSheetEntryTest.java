@@ -76,7 +76,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
         
-        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
         
         CollectionSheetEntrySelectPage selectPage = 
             loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -94,7 +94,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
         
-        verifyCollectionSheetData("acceptance_small_002_dbunit.xml");
+        verifyCollectionSheetData("acceptance_small_002_dbunit.xml.zip");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
