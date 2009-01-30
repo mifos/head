@@ -2,7 +2,7 @@
 <!--
 
   Useful for copying an acceptance-tested WAR file to publicly accessible
-  location(s). Requires SVN_REVISION environment variable to be set, which is
+  location(s). Requires WAR_ARCHIVE environment variable to be set, which is
   currently the case with Hudson.
 
 -->
@@ -27,10 +27,10 @@
 							<groupId>org.mifos</groupId>
 							<artifactId>gazelle-webapp</artifactId>
 							<version>0.0.3-SNAPSHOT</version>
-							<destFileName>mifos-${env.SVN_REVISION}.war</destFileName>
+							<destFileName>mifos.war</destFileName>
 							<type>war</type>
 							<overWrite>true</overWrite>
-							<outputDirectory>/var/www/gazelle/war/trunk</outputDirectory>
+							<outputDirectory>${env.WAR_ARCHIVE}</outputDirectory>
 						</artifactItem>
 					</artifactItems>
 				</configuration>
