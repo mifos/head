@@ -319,7 +319,7 @@
  -->	    
   </query>
     <query name="Customer.getAttedanceForOffice">
-	    <![CDATA[select new org.mifos.application.bulkentry.business. BulkEntryClientAttendanceView( client.customerId,
+	    <![CDATA[select new org.mifos.application.bulkentry.business. CollectionSheetEntryClientAttendanceView( client.customerId,
 			clientAttendance.attendance, clientAttendance.meetingDate)   
 			from org.mifos.application.customer.client.business.ClientBO client,
 			org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance

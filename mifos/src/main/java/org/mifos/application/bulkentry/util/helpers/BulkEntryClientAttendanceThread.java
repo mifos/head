@@ -3,7 +3,7 @@ package org.mifos.application.bulkentry.util.helpers;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -12,7 +12,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class BulkEntryClientAttendanceThread implements Runnable {
 
-	List<BulkEntryView> customerViews;
+	List<CollectionSheetEntryView> customerViews;
 
 	List<ClientBO> clients;
 
@@ -22,7 +22,7 @@ public class BulkEntryClientAttendanceThread implements Runnable {
 
 	StringBuffer isThreadDone;
 
-	public BulkEntryClientAttendanceThread(List<BulkEntryView> customerViews,
+	public BulkEntryClientAttendanceThread(List<CollectionSheetEntryView> customerViews,
 			List<ClientBO> clients, List<String> customerNames,
 			Date meetingDate, StringBuffer isThreadDone) {
 		this.customerViews = customerViews;
@@ -35,7 +35,7 @@ public class BulkEntryClientAttendanceThread implements Runnable {
 	public void run() {
 		try {
 			BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
-			for (BulkEntryView parent : customerViews) {
+			for (CollectionSheetEntryView parent : customerViews) {
 				Short levelId = parent.getCustomerDetail().getCustomerLevelId();
 				if (levelId.equals(CustomerLevel.CLIENT.getValue())) {
 					try {

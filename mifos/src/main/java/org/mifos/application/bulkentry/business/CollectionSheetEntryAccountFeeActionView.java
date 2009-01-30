@@ -42,7 +42,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
-public class BulkEntryAccountFeeActionView extends View {
+public class CollectionSheetEntryAccountFeeActionView extends View {
 
 	private final Integer actionDateId;
 
@@ -52,7 +52,7 @@ public class BulkEntryAccountFeeActionView extends View {
 
 	private final Money feeAmountPaid;
 
-	public BulkEntryAccountFeeActionView(Integer actionDateId, FeeBO fee,
+	public CollectionSheetEntryAccountFeeActionView(Integer actionDateId, FeeBO fee,
 			Money feeAmount, Money feeAmountPaid) {
 		this.actionDateId = actionDateId;
 		this.fee = fee;
@@ -60,7 +60,7 @@ public class BulkEntryAccountFeeActionView extends View {
 		this.feeAmountPaid = feeAmountPaid;
 	}
 
-	public BulkEntryAccountFeeActionView(Integer actionDateId) {
+	public CollectionSheetEntryAccountFeeActionView(Integer actionDateId) {
 		this(actionDateId, null, null, null);
 	}
 
@@ -86,9 +86,9 @@ public class BulkEntryAccountFeeActionView extends View {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof BulkEntryAccountFeeActionView) {
-			BulkEntryAccountFeeActionView otherView = 
-				(BulkEntryAccountFeeActionView) obj;
+		if (obj != null && obj instanceof CollectionSheetEntryAccountFeeActionView) {
+			CollectionSheetEntryAccountFeeActionView otherView = 
+				(CollectionSheetEntryAccountFeeActionView) obj;
 			if (otherView.getActionDateId().equals(
 					getActionDateId()))
 				return true;

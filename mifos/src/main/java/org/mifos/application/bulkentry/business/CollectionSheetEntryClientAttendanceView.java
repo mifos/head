@@ -6,7 +6,7 @@ import org.mifos.framework.business.View;
 
 
 
-public class BulkEntryClientAttendanceView extends View {
+public class CollectionSheetEntryClientAttendanceView extends View {
 
     private Short attendance;
     
@@ -15,7 +15,7 @@ public class BulkEntryClientAttendanceView extends View {
     private final Date actionDate;
 
 	
-	public BulkEntryClientAttendanceView( Integer customerId,
+	public CollectionSheetEntryClientAttendanceView( Integer customerId,
 			Short attendance, Date actionDate) 
     {
         this.attendance = attendance;

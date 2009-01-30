@@ -10,7 +10,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryClientAttendanceView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
@@ -124,10 +124,10 @@ public void testGetBulkEntryClientAttendanceActionView() throws PersistenceExcep
         HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
         
-        List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceView = 
+        List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceView = 
             bulkEntryPersistanceService.getBulkEntryClientAttendanceActionView(
                 meetingDate, client.getOffice().getOfficeId());
-        assertEquals(bulkEntryClientAttendanceView.size(),1);
+        assertEquals(collectionSheetEntryClientAttendanceView.size(),1);
     }
     
     private void createInitialObjects() {

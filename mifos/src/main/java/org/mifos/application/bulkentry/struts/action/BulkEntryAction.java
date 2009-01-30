@@ -62,7 +62,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
@@ -435,7 +435,7 @@ public class BulkEntryAction extends BaseAction {
 			new ArrayList<CustomerAccountView>();
 		Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(((BulkEntryActionForm) form)
 		.getTransactionDate(), "dd/MM/yyyy"));
-		List<BulkEntryView> customerViews = new ArrayList<BulkEntryView>();
+		List<CollectionSheetEntryView> customerViews = new ArrayList<CollectionSheetEntryView>();
 		setData(bulkEntry.getBulkEntryParent(), loanAccprdViews,
 				customerAccViews, customerViews);
 		new BulkEntryBusinessService().setData(customerViews, savingsCache,
@@ -467,14 +467,14 @@ public class BulkEntryAction extends BaseAction {
 		return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
 	}
 
-	private void setData(BulkEntryView parent,
+	private void setData(CollectionSheetEntryView parent,
 			List<LoanAccountsProductView> loanAccprdViews,
 			List<CustomerAccountView> customerAccViews,
-			List<BulkEntryView> customerViews) {
-		List<BulkEntryView> children = parent.getBulkEntryChildren();
+			List<CollectionSheetEntryView> customerViews) {
+		List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 		Short levelId = parent.getCustomerDetail().getCustomerLevelId();
 		if (null != children) {
-			for (BulkEntryView child : children) {
+			for (CollectionSheetEntryView child : children) {
 				setData(child, loanAccprdViews, customerAccViews, customerViews);
 			}
 		}

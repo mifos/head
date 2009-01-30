@@ -46,7 +46,7 @@ import javax.servlet.jsp.JspException;
 
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
@@ -155,7 +155,7 @@ public class BulkEntryDisplayHelper {
 		return builder;
 	}
 
-	public Double[] buildForGroup(BulkEntryView parent,
+	public Double[] buildForGroup(CollectionSheetEntryView parent,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
 			List<CustomValueListElement> custAttTypes, StringBuilder builder,
@@ -173,9 +173,9 @@ public class BulkEntryDisplayHelper {
 		String groupAccountStr = account.format(account, group);
 		groupAccountStr = " " + groupAccountStr + " ";
 		
-		for (BulkEntryView child : parent.getBulkEntryChildren()) {
+		for (CollectionSheetEntryView child : parent.getCollectionSheetEntryChildren()) {
 			buildCompleteRow(child, loanProducts, savingsProducts, parent
-					.getBulkEntryChildren().size(), 0, rowIndex, groupTotals,
+					.getCollectionSheetEntryChildren().size(), 0, rowIndex, groupTotals,
 					centerTotals, child.getCustomerDetail().getDisplayName(),
 					builder, method, 1, currency, officeId);
 			generateAttendence(builder, custAttTypes, rowIndex, child, method);
@@ -183,7 +183,7 @@ public class BulkEntryDisplayHelper {
 			rowIndex++;
 		}
 		buildCompleteRow(parent, loanProducts, savingsProducts, parent
-				.getBulkEntryChildren().size(), 0, rowIndex, groupTotals,
+				.getCollectionSheetEntryChildren().size(), 0, rowIndex, groupTotals,
 				centerTotals, groupAccountStr, builder, method, 2, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
@@ -194,7 +194,7 @@ public class BulkEntryDisplayHelper {
 		return groupTotals;
 	}
 
-	public Double[] buildForCenter(BulkEntryView parent,
+	public Double[] buildForCenter(CollectionSheetEntryView parent,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
 			List<CustomValueListElement> custAttTypes, StringBuilder builder,
@@ -206,7 +206,7 @@ public class BulkEntryDisplayHelper {
 		Double[] centerTotals = new Double[(totalProductsSize + 1)];
 		Double[] groupTotals = new Double[(totalProductsSize + 1)];
 		MifosCurrency currency = parent.getCurrency();
-		List<BulkEntryView> children = parent.getBulkEntryChildren();
+		List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 		ResourceBundle resources = ResourceBundle.getBundle
 		(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
 		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
@@ -217,14 +217,14 @@ public class BulkEntryDisplayHelper {
 		String centerAccountStr = account.format(account, center);
 		centerAccountStr = " " + centerAccountStr + " ";
 
-		for (BulkEntryView child : children) {
+		for (CollectionSheetEntryView child : children) {
 			groupTotals = new Double[(totalProductsSize + 1)];
 			int groupInitialAccNum = rowIndex;
-			List<BulkEntryView> subChildren = child.getBulkEntryChildren();
+			List<CollectionSheetEntryView> subChildren = child.getCollectionSheetEntryChildren();
 			int groupChildSize = subChildren.size();
 			buildGroupName(builder, child.getCustomerDetail().getDisplayName(),
 					totalProductsSize + 1);
-			for (BulkEntryView subChild : subChildren) {
+			for (CollectionSheetEntryView subChild : subChildren) {
 				buildCompleteRow(subChild, loanProducts, savingsProducts,
 						groupChildSize, groupInitialAccNum, rowIndex,
 						groupTotals, centerTotals, subChild.getCustomerDetail()
@@ -257,45 +257,45 @@ public class BulkEntryDisplayHelper {
 		return centerTotals;
 	}
 
-	private void buildCompleteRow(BulkEntryView bulkEntryView,
+	private void buildCompleteRow(CollectionSheetEntryView collectionSheetEntryView,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts, int groupChildSize,
 			int groupInitialAccNum, int rowIndex, Double[] groupTotals,
 			Double[] centerTotals, String customerName, StringBuilder builder,
 			String method, int levelId, MifosCurrency currency, Short officeId)
 			throws JspException {
-		List<LoanAccountsProductView> bulkEntryLoanAccounts = bulkEntryView
+		List<LoanAccountsProductView> bulkEntryLoanAccounts = collectionSheetEntryView
 				.getLoanAccountDetails();
-		List<SavingsAccountView> bulkEntrySavingsAccounts = bulkEntryView
+		List<SavingsAccountView> bulkEntrySavingsAccounts = collectionSheetEntryView
 				.getSavingsAccountDetails();
 
 		columnIndex = 0;
-		generateStartRow(builder, customerName, bulkEntryView);
+		generateStartRow(builder, customerName, collectionSheetEntryView);
 		getLoanRow(builder, bulkEntryLoanAccounts, loanProducts, rowIndex,
-				groupTotals, centerTotals, bulkEntryView, groupChildSize,
+				groupTotals, centerTotals, collectionSheetEntryView, groupChildSize,
 				groupInitialAccNum, savingsProducts.size(), method, true,
 				officeId);
 		getDepositSavingsRow(builder, bulkEntrySavingsAccounts,
 				savingsProducts, rowIndex, groupTotals, centerTotals,
-				bulkEntryView, groupChildSize, groupInitialAccNum, loanProducts
+				collectionSheetEntryView, groupChildSize, groupInitialAccNum, loanProducts
 						.size(), method, levelId, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;",
 				true);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;",
 				true);
 		getLoanRow(builder, bulkEntryLoanAccounts, loanProducts, rowIndex,
-				groupTotals, centerTotals, bulkEntryView, groupChildSize,
+				groupTotals, centerTotals, collectionSheetEntryView, groupChildSize,
 				groupInitialAccNum, savingsProducts.size(), method, false,
 				officeId);
 		getWithdrawalSavingsRow(builder, bulkEntrySavingsAccounts,
 				savingsProducts, rowIndex, groupTotals, centerTotals,
-				bulkEntryView, groupChildSize, groupInitialAccNum, loanProducts
+				collectionSheetEntryView, groupChildSize, groupInitialAccNum, loanProducts
 						.size(), method, levelId, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;",
 				true);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "&nbsp;",
 				true);
-		buildCustomerAccount(bulkEntryView.getCustomerAccountDetails(),
+		buildCustomerAccount(collectionSheetEntryView.getCustomerAccountDetails(),
 				builder, method, currency, rowIndex, groupTotals, centerTotals,
 				groupChildSize, groupInitialAccNum, loanProducts.size(),
 				savingsProducts.size(), levelId, officeId);
@@ -319,7 +319,7 @@ public class BulkEntryDisplayHelper {
 	}
 
 	private void generateStartRow(StringBuilder builder, String customerName,
-			BulkEntryView bulkEntryView) {
+			CollectionSheetEntryView collectionSheetEntryView) {
 		BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, customerName);
 		builder
@@ -329,7 +329,7 @@ public class BulkEntryDisplayHelper {
 	private void getLoanRow(StringBuilder builder,
 			List<LoanAccountsProductView> bulkEntryAccountList,
 			List<PrdOfferingBO> loanProducts, int rows, Double[] groupTotals,
-			Double[] centerTotals, BulkEntryView bulkEntryView, int size,
+			Double[] centerTotals, CollectionSheetEntryView collectionSheetEntryView, int size,
 			int initialAccNo, int savingsProductSize, String method,
 			boolean isShowingDue, Short officeId) throws JspException {
 		for (PrdOfferingBO prdOffering : loanProducts) {
@@ -359,7 +359,7 @@ public class BulkEntryDisplayHelper {
 			List<SavingsAccountView> bulkEntryAccountList,
 			List<PrdOfferingBO> savingsProducts, int rows,
 			Double[] groupTotals, Double[] centerTotals,
-			BulkEntryView bulkEntryView, int size, int initialAccNo,
+			CollectionSheetEntryView collectionSheetEntryView, int size, int initialAccNo,
 			int loanProductsSize, String method, int levelId,
 			MifosCurrency currency, Short officeId) throws JspException {
 		for (PrdOfferingBO prdOffering : savingsProducts) {
@@ -404,7 +404,7 @@ public class BulkEntryDisplayHelper {
 			List<SavingsAccountView> bulkEntryAccountList,
 			List<PrdOfferingBO> savingsProducts, int rows,
 			Double[] groupTotals, Double[] centerTotals,
-			BulkEntryView bulkEntryView, int size, int initialAccNo,
+			CollectionSheetEntryView collectionSheetEntryView, int size, int initialAccNo,
 			int loanProductsSize, String method, int levelId,
 			MifosCurrency currency, Short officeId) throws JspException {
 		for (PrdOfferingBO prdOffering : savingsProducts) {
@@ -432,14 +432,14 @@ public class BulkEntryDisplayHelper {
 
 	private void generateAttendence(StringBuilder builder,
 			List<CustomValueListElement> custAttTypes, int rows,
-			BulkEntryView bulkEntryView, String method) {
+			CollectionSheetEntryView collectionSheetEntryView, String method) {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
-                if (bulkEntryView.getAttendence() != null && (attendence.getAssociatedId().intValue()== bulkEntryView.getAttendence().intValue()))
+                if (collectionSheetEntryView.getAttendence() != null && (attendence.getAssociatedId().intValue()== collectionSheetEntryView.getAttendence().intValue()))
                 {
                     builder.append(" selected=\"selected\"");
                 }
@@ -451,10 +451,10 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td class=\"drawtablerow\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 
-				if (null != bulkEntryView.getAttendence()
+				if (null != collectionSheetEntryView.getAttendence()
 						&& attendence.getAssociatedId().equals(
-								Integer.valueOf(bulkEntryView.getAttendence()))) {
-					if (!bulkEntryView.getAttendence().toString().equals("1")) {
+								Integer.valueOf(collectionSheetEntryView.getAttendence()))) {
+					if (!collectionSheetEntryView.getAttendence().toString().equals("1")) {
 						builder.append("<font color=\"#FF0000\">"
 								+ attendence.getLookUpValue() + "</font>");
 					} else {
@@ -471,9 +471,9 @@ public class BulkEntryDisplayHelper {
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
-				if (null != bulkEntryView.getAttendence()
+				if (null != collectionSheetEntryView.getAttendence()
 						&& attendence.getAssociatedId().equals(
-								Integer.valueOf(bulkEntryView.getAttendence()))) {
+								Integer.valueOf(collectionSheetEntryView.getAttendence()))) {
 					builder.append(" selected ");
 				}
 				builder.append(">" + attendence.getLookUpValue() + "</option>");
@@ -755,10 +755,10 @@ public class BulkEntryDisplayHelper {
 	}
 
 	private void getTotalForRow(StringBuilder builder,
-			BulkEntryView bulkEntryView, int productsSize, Double[] totals,
+			CollectionSheetEntryView collectionSheetEntryView, int productsSize, Double[] totals,
 			int rows, String method, UserContext userContext, int loanProductsSize,
 			int savingsProductSize) {
-		Short customerLevel = bulkEntryView.getCustomerDetail()
+		Short customerLevel = collectionSheetEntryView.getCustomerDetail()
 				.getCustomerLevelId();
 		ResourceBundle resources = ResourceBundle.getBundle
 		(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());

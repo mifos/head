@@ -70,7 +70,7 @@
 	
 	
 	<query name="account.getAllInstallmentsForAllLoanAcounts">
-		<![CDATA[select new org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView(
+		<![CDATA[select new org.mifos.application.bulkentry.business.CollectionSheetEntryLoanInstallmentView(
 			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
 			accountAction.actionDateId,accountAction.actionDate,accountAction.principal,accountAction.principalPaid,
 			accountAction.interest,accountAction.interestPaid,accountAction.miscFee,

@@ -47,7 +47,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.bulkentry.business.BulkEntryBO;
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.master.business.CustomValueListElement;
@@ -113,7 +113,7 @@ public class BulkEntryTag extends BodyTagSupport {
 		BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
 		builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts,
 				savingsProducts, userContext.getPreferredLocale()));
-		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
+		CollectionSheetEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
 		Double[] totals = null;
 		
 		boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();

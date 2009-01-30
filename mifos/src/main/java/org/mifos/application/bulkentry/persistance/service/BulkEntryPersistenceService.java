@@ -49,9 +49,9 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
-import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryClientAttendanceView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
 import org.mifos.application.customer.business.CustomerBO;
@@ -68,7 +68,7 @@ public class BulkEntryPersistenceService {
 
 	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
-	public List<BulkEntryInstallmentView> getBulkEntryActionView(
+	public List<CollectionSheetEntryInstallmentView> getBulkEntryActionView(
 			Date meetingDate, String searchString, Short officeId,
 			AccountTypes accountType) throws PersistenceException {
 		return new BulkEntryPersistence().getBulkEntryActionView(meetingDate,
@@ -76,14 +76,14 @@ public class BulkEntryPersistenceService {
 
 	}
 
-	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
+	public List<CollectionSheetEntryAccountFeeActionView> getBulkEntryFeeActionView(
 			Date meetingDate, String searchString, Short officeId,
 			AccountTypes accountType) throws PersistenceException {
 		return new BulkEntryPersistence().getBulkEntryFeeActionView(
 				meetingDate, searchString, officeId, accountType);
 	}
 
-	public List<BulkEntryClientAttendanceView> getBulkEntryClientAttendanceActionView(
+	public List<CollectionSheetEntryClientAttendanceView> getBulkEntryClientAttendanceActionView(
 			Date meetingDate, Short officeId) throws PersistenceException {
 		return new BulkEntryPersistence()
 				.getBulkEntryClientAttendanceActionView(meetingDate, officeId);

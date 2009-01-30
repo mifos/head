@@ -44,9 +44,9 @@ import java.util.Map;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
-import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryCustomerAccountInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -98,17 +98,17 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 	}
 
 	public CustomerAccountPaymentData(
-			BulkEntryInstallmentView bulkEntryAccountAction) {
+			CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
 		super(bulkEntryAccountAction);
-		BulkEntryCustomerAccountInstallmentView installmentView = (BulkEntryCustomerAccountInstallmentView)bulkEntryAccountAction;
+		CollectionSheetEntryCustomerAccountInstallmentView installmentView = (CollectionSheetEntryCustomerAccountInstallmentView)bulkEntryAccountAction;
 		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
 		setMiscFeePaid(installmentView.getMiscFee());
 		setMiscPenaltyPaid(installmentView.getMiscPenalty());
-		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = installmentView
-				.getBulkEntryAccountFeeActions();
-		if (bulkEntryAccountFeeActionViews != null
-				&& bulkEntryAccountFeeActionViews.size() > 0) {
-			for (BulkEntryAccountFeeActionView accountFeesActionDetailEntity : bulkEntryAccountFeeActionViews) {
+		List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews = installmentView
+				.getCollectionSheetEntryAccountFeeActions();
+		if (collectionSheetEntryAccountFeeActionViews != null
+				&& collectionSheetEntryAccountFeeActionViews.size() > 0) {
+			for (CollectionSheetEntryAccountFeeActionView accountFeesActionDetailEntity : collectionSheetEntryAccountFeeActionViews) {
 				if (accountFeesActionDetailEntity.getFeeAmount() != null
 						&& accountFeesActionDetailEntity.getFeeAmount()
 								.getAmountDoubleValue() != 0)

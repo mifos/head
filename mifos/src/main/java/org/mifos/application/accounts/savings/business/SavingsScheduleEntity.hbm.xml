@@ -30,7 +30,7 @@
 	</class>
 
 	<query name="account.getAllInstallmentsForAllSavingsAccounts">
-		<![CDATA[select new org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView(
+		<![CDATA[select new org.mifos.application.bulkentry.business.CollectionSheetEntrySavingsInstallmentView(
 			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
 			accountAction.actionDateId,accountAction.actionDate,
 			accountAction.deposit,accountAction.depositPaid

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class BulkEntryLoanInstallmentView extends BulkEntryInstallmentView {
+public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntryInstallmentView {
 
 	private final Money principal;
 
@@ -27,9 +27,9 @@ public class BulkEntryLoanInstallmentView extends BulkEntryInstallmentView {
 
 	private final Money miscPenaltyPaid;
 
-	private List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActions;
+	private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
 
-	public BulkEntryLoanInstallmentView(Integer accountId, Integer customerId,
+	public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId,
 			Short installmentId, Integer actionDateId, Date actionDate,
 			Money principal, Money principalPaid, Money interest,
 			Money interestPaid, Money miscFee, Money miscFeePaid,
@@ -48,7 +48,7 @@ public class BulkEntryLoanInstallmentView extends BulkEntryInstallmentView {
 		this.penaltyPaid = penaltyPaid;
 	}
 
-	public BulkEntryLoanInstallmentView(Integer accountId, Integer customerId) {
+	public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId) {
 		super(accountId, customerId, null, null, null);
 		this.principal = null;
 		this.interest = null;
@@ -102,13 +102,13 @@ public class BulkEntryLoanInstallmentView extends BulkEntryInstallmentView {
 		return principalPaid;
 	}
 
-	public List<BulkEntryAccountFeeActionView> getBulkEntryAccountFeeActions() {
-		return bulkEntryAccountFeeActions;
+	public List<CollectionSheetEntryAccountFeeActionView> getCollectionSheetEntryAccountFeeActions() {
+		return collectionSheetEntryAccountFeeActions;
 	}
 
-	public void setBulkEntryAccountFeeActions(
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActions) {
-		this.bulkEntryAccountFeeActions = bulkEntryAccountFeeActions;
+	public void setCollectionSheetEntryAccountFeeActions(
+			List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions) {
+		this.collectionSheetEntryAccountFeeActions = collectionSheetEntryAccountFeeActions;
 	}
 
 	public Money getPrincipalDue() {
@@ -130,8 +130,8 @@ public class BulkEntryLoanInstallmentView extends BulkEntryInstallmentView {
 
 	public Money getTotalFeeDue() {
 		Money totalFees = new Money();
-		if (bulkEntryAccountFeeActions != null)
-			for (BulkEntryAccountFeeActionView obj : bulkEntryAccountFeeActions) {
+		if (collectionSheetEntryAccountFeeActions != null)
+			for (CollectionSheetEntryAccountFeeActionView obj : collectionSheetEntryAccountFeeActions) {
 				totalFees = totalFees.add(obj.getFeeDue());
 			}
 

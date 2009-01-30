@@ -42,7 +42,7 @@ import java.util.Date;
 
 import org.mifos.framework.business.View;
 
-public abstract class BulkEntryInstallmentView extends View {
+public abstract class CollectionSheetEntryInstallmentView extends View {
 
 	private final Integer actionDateId;
 
@@ -54,7 +54,7 @@ public abstract class BulkEntryInstallmentView extends View {
 
 	private final Short installmentId;
 
-	public BulkEntryInstallmentView(Integer accountId, Integer customerId,
+	public CollectionSheetEntryInstallmentView(Integer accountId, Integer customerId,
 			Short installmentId, Integer actionDateId, Date actionDate) {
 		this.actionDateId = actionDateId;
 		this.accountId = accountId;
@@ -85,11 +85,11 @@ public abstract class BulkEntryInstallmentView extends View {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof BulkEntryInstallmentView) {
-			BulkEntryInstallmentView bulkEntryAccountActionView = (BulkEntryInstallmentView) obj;
-			if (bulkEntryAccountActionView.getAccountId()
+		if (obj != null && obj instanceof CollectionSheetEntryInstallmentView) {
+			CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView = (CollectionSheetEntryInstallmentView) obj;
+			if (collectionSheetEntryAccountActionView.getAccountId()
 					.equals(getAccountId())
-					&& bulkEntryAccountActionView.getCustomerId().equals(
+					&& collectionSheetEntryAccountActionView.getCustomerId().equals(
 							getCustomerId()))
 				return true;
 		}

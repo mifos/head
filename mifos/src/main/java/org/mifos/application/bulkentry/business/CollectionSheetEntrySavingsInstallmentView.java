@@ -4,13 +4,13 @@ import java.util.Date;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class BulkEntrySavingsInstallmentView extends BulkEntryInstallmentView {
+public class CollectionSheetEntrySavingsInstallmentView extends CollectionSheetEntryInstallmentView {
 
 	private final Money deposit;
 
 	private final Money depositPaid;
 
-	public BulkEntrySavingsInstallmentView(Integer accountId,
+	public CollectionSheetEntrySavingsInstallmentView(Integer accountId,
 			Integer customerId, Short installmentId, Integer actionDateId,
 			Date actionDate, Money deposit, Money depositPaid) {
 		super(accountId, customerId, installmentId, actionDateId, actionDate);
@@ -18,7 +18,7 @@ public class BulkEntrySavingsInstallmentView extends BulkEntryInstallmentView {
 		this.depositPaid = depositPaid;
 	}
 
-	public BulkEntrySavingsInstallmentView(Integer accountId, Integer customerId) {
+	public CollectionSheetEntrySavingsInstallmentView(Integer accountId, Integer customerId) {
 		super(accountId, customerId, null, null, null);
 		this.deposit = null;
 		this.depositPaid = null;

@@ -17,7 +17,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -372,7 +372,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private LoanAccountsProductView getAccountView(LoanBO account) {
 		LoanAccountView accountView = TestObjectFactory
 				.getLoanAccountView(account);
-		List<BulkEntryInstallmentView> actionDates = new ArrayList<BulkEntryInstallmentView>();
+		List<CollectionSheetEntryInstallmentView> actionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
 		actionDates.add(TestObjectFactory.getBulkEntryAccountActionView(account
 				.getAccountActionDates().iterator().next()));
 		accountView.addTrxnDetails(actionDates);

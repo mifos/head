@@ -52,7 +52,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -357,16 +357,16 @@ public class BulkEntryActionForm extends BaseActionForm {
 		return errors;
 	}
 
-	private ActionErrors validatePopulatedData(BulkEntryView parent,
+	private ActionErrors validatePopulatedData(CollectionSheetEntryView parent,
 			ActionErrors errors, Locale locale) {
         logger.debug("validatePopulatedData");
-		List<BulkEntryView> children = parent.getBulkEntryChildren();
+		List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 
 		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
 		String acCollections = resources.getString(BulkEntryConstants.AC_COLLECTION);
 		if (null != children) {
-			for (BulkEntryView bulkEntryView : children) {
-				validatePopulatedData(bulkEntryView, errors, locale);
+			for (CollectionSheetEntryView collectionSheetEntryView : children) {
+				validatePopulatedData(collectionSheetEntryView, errors, locale);
 			}
 		}
 		for (LoanAccountsProductView accountView : parent

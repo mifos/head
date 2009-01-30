@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntrySavingsInstallmentView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
@@ -55,7 +55,7 @@ public class SavingsAccountView extends View {
 
 	private String withDrawalAmountEntered;
 
-	private List<BulkEntryInstallmentView> accountTrxnDetails;
+	private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
 
 	private Short accountType;
 
@@ -70,7 +70,7 @@ public class SavingsAccountView extends View {
 		this.accountId = accountId;
 		this.accountType = accountType.getValue();
 		this.savingsOffering = savingsOffering;
-		accountTrxnDetails = new ArrayList<BulkEntryInstallmentView>();
+		accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
 		isValidDepositAmountEntered = true;
 		isValidWithDrawalAmountEntered = true;
 	}
@@ -79,12 +79,12 @@ public class SavingsAccountView extends View {
 		return accountId;
 	}
 
-	public List<BulkEntryInstallmentView> getAccountTrxnDetails() {
+	public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
 		return accountTrxnDetails;
 	}
 
 	public void addAccountTrxnDetail(
-			BulkEntryInstallmentView accountTrxnDetail) {
+			CollectionSheetEntryInstallmentView accountTrxnDetail) {
 		this.accountTrxnDetails.add(accountTrxnDetail);
 	}
 
@@ -136,8 +136,8 @@ public class SavingsAccountView extends View {
 	public Double getTotalDepositDue() {
 		Money totalDepositDue = new Money();
 		if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-			for (BulkEntryInstallmentView actionDates : accountTrxnDetails) {
-				totalDepositDue = totalDepositDue.add(((BulkEntrySavingsInstallmentView)actionDates)
+			for (CollectionSheetEntryInstallmentView actionDates : accountTrxnDetails) {
+				totalDepositDue = totalDepositDue.add(((CollectionSheetEntrySavingsInstallmentView)actionDates)
 						.getTotalDepositDue());
 			}
 		}

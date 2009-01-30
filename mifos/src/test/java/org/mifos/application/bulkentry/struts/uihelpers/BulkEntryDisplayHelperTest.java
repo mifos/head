@@ -21,7 +21,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -212,7 +212,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
-		BulkEntryView bulkEntryParent = new BulkEntryView(
+		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
 				getCusomerView(center));
 		SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
 		centerSavingsAccountView.setDepositAmountEntered("100");
@@ -221,7 +221,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		bulkEntryParent
 				.setCustomerAccountDetails(getCustomerAccountView(center));
 
-		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
+		CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
 		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
 		SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
 		groupSavingsAccountView.setDepositAmountEntered("100");
@@ -230,7 +230,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
 		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-		BulkEntryView bulkEntrySubChild = new BulkEntryView(
+		CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(
 				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		clientLoanAccountView.setAmountPaidAtDisbursement(0.0);

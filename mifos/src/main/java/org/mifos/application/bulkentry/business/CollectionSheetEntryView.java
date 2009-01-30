@@ -1,6 +1,6 @@
 /**
 
- * BulkEntryView.java    version: 1.0
+ * CollectionSheetEntryView.java    version: 1.0
 
  
 
@@ -65,11 +65,11 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.LocalizationConverter;
 
-public class BulkEntryView extends View {
+public class CollectionSheetEntryView extends View {
 
 	private boolean hasChild;
 
-	private List<BulkEntryView> bulkEntryChildren;
+	private List<CollectionSheetEntryView> collectionSheetEntryChildren;
 
 	private CustomerView customerDetail;
 
@@ -85,11 +85,11 @@ public class BulkEntryView extends View {
     
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
-	public BulkEntryView(CustomerView customerDetail) {
+	public CollectionSheetEntryView(CustomerView customerDetail) {
 		this.customerDetail = customerDetail;
 		loanAccountDetails = new ArrayList<LoanAccountsProductView>();
 		savingsAccountDetails = new ArrayList<SavingsAccountView>();
-		bulkEntryChildren = new ArrayList<BulkEntryView>();
+		collectionSheetEntryChildren = new ArrayList<CollectionSheetEntryView>();
 		currency = Configuration.getInstance().getSystemConfig().getCurrency();
 	}
 
@@ -142,8 +142,8 @@ public class BulkEntryView extends View {
 		this.attendence = attendence;
 	}
 
-	public List<BulkEntryView> getBulkEntryChildren() {
-		return bulkEntryChildren;
+	public List<CollectionSheetEntryView> getCollectionSheetEntryChildren() {
+		return collectionSheetEntryChildren;
 	}
 
 	public CustomerView getCustomerDetail() {
@@ -154,8 +154,8 @@ public class BulkEntryView extends View {
 		return hasChild;
 	}
 
-	public void addChildNode(BulkEntryView leafNode) {
-		bulkEntryChildren.add(leafNode);
+	public void addChildNode(CollectionSheetEntryView leafNode) {
+		collectionSheetEntryChildren.add(leafNode);
 		this.hasChild = true;
 	}
 
@@ -174,8 +174,8 @@ public class BulkEntryView extends View {
 
 	public void populateLoanAccountsInformation(CustomerBO customer,
 			Date transactionDate,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
+			List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
 		Integer customerId = customerDetail.getCustomerId();
 		List<LoanBO> customerLoanAccounts = customer
 				.getActiveAndApprovedLoanAccounts(transactionDate);
@@ -187,13 +187,13 @@ public class BulkEntryView extends View {
 					loanAccountView
 							.setAmountPaidAtDisbursement(getAmountPaidAtDisb(
 									loanAccountView, customerId,
-									bulkEntryAccountActionViews,
-									bulkEntryAccountFeeActionViews, loan));
+									collectionSheetEntryAccountActionViews,
+									collectionSheetEntryAccountFeeActionViews, loan));
 				else
 					loanAccountView.addTrxnDetails(retrieveLoanSchedule(
 							loanAccountView.getAccountId(), customerId,
-							bulkEntryAccountActionViews,
-							bulkEntryAccountFeeActionViews));
+							collectionSheetEntryAccountActionViews,
+							collectionSheetEntryAccountFeeActionViews));
 			}
 		}
 	}
@@ -209,22 +209,22 @@ public class BulkEntryView extends View {
 
 	private Double getAmountPaidAtDisb(LoanAccountView loanAccountView,
 			Integer customerId,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews,
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
+			List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews,
 			LoanBO loan) {
 		if (loanAccountView.isInterestDeductedAtDisbursement())
 			return getInterestAmountDedAtDisb(retrieveLoanSchedule(
 					loanAccountView.getAccountId(), customerId,
-					bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews));
+					collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
 		else
 			return getFeeAmountAtDisb(loan.getAccountFees());
 	}
 
 	private Double getInterestAmountDedAtDisb(
-			List<BulkEntryInstallmentView> installments) {
-		for (BulkEntryInstallmentView bulkEntryAccountAction : installments)
-			if (bulkEntryAccountAction.getInstallmentId().shortValue() == 1)
-				return ((BulkEntryLoanInstallmentView) bulkEntryAccountAction)
+			List<CollectionSheetEntryInstallmentView> installments) {
+		for (CollectionSheetEntryInstallmentView collectionSheetEntryAccountAction : installments)
+			if (collectionSheetEntryAccountAction.getInstallmentId().shortValue() == 1)
+				return ((CollectionSheetEntryLoanInstallmentView) collectionSheetEntryAccountAction)
 						.getTotalDueWithFees().getAmountDoubleValue();
 		return 0.0;
 	}
@@ -239,28 +239,28 @@ public class BulkEntryView extends View {
 		return feeAtDisbursement.getAmountDoubleValue();
 	}
 
-	private List<BulkEntryInstallmentView> retrieveLoanSchedule(
+	private List<CollectionSheetEntryInstallmentView> retrieveLoanSchedule(
 			Integer accountId, Integer customerId,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
-		int index = bulkEntryAccountActionViews
-				.indexOf(new BulkEntryLoanInstallmentView(accountId, customerId));
-		int lastIndex = bulkEntryAccountActionViews
-				.lastIndexOf(new BulkEntryLoanInstallmentView(accountId,
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
+			List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
+		int index = collectionSheetEntryAccountActionViews
+				.indexOf(new CollectionSheetEntryLoanInstallmentView(accountId, customerId));
+		int lastIndex = collectionSheetEntryAccountActionViews
+				.lastIndexOf(new CollectionSheetEntryLoanInstallmentView(accountId,
 						customerId));
 		if (lastIndex != -1 && index != -1) {
-			List<BulkEntryInstallmentView> applicableInstallments = bulkEntryAccountActionViews
+			List<CollectionSheetEntryInstallmentView> applicableInstallments = collectionSheetEntryAccountActionViews
 					.subList(index, lastIndex + 1);
-			for (BulkEntryInstallmentView bulkEntryAccountActionView : applicableInstallments) {
-				int feeIndex = bulkEntryAccountFeeActionViews
-						.indexOf(new BulkEntryAccountFeeActionView(
-								bulkEntryAccountActionView.getActionDateId()));
-				int feeLastIndex = bulkEntryAccountFeeActionViews
-						.lastIndexOf(new BulkEntryAccountFeeActionView(
-								bulkEntryAccountActionView.getActionDateId()));
+			for (CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView : applicableInstallments) {
+				int feeIndex = collectionSheetEntryAccountFeeActionViews
+						.indexOf(new CollectionSheetEntryAccountFeeActionView(
+								collectionSheetEntryAccountActionView.getActionDateId()));
+				int feeLastIndex = collectionSheetEntryAccountFeeActionViews
+						.lastIndexOf(new CollectionSheetEntryAccountFeeActionView(
+								collectionSheetEntryAccountActionView.getActionDateId()));
 				if (feeIndex != -1 && feeLastIndex != -1)
-					((BulkEntryLoanInstallmentView) bulkEntryAccountActionView)
-							.setBulkEntryAccountFeeActions(bulkEntryAccountFeeActionViews
+					((CollectionSheetEntryLoanInstallmentView) collectionSheetEntryAccountActionView)
+							.setCollectionSheetEntryAccountFeeActions(collectionSheetEntryAccountFeeActionViews
 									.subList(feeIndex, feeLastIndex + 1));
 			}
 			return applicableInstallments;
@@ -268,29 +268,29 @@ public class BulkEntryView extends View {
 		return null;
 	}
 
-	private List<BulkEntryInstallmentView> retrieveCustomerSchedule(
+	private List<CollectionSheetEntryInstallmentView> retrieveCustomerSchedule(
 			Integer accountId, Integer customerId,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
-		int index = bulkEntryAccountActionViews
-				.indexOf(new BulkEntryCustomerAccountInstallmentView(accountId,
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
+			List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
+		int index = collectionSheetEntryAccountActionViews
+				.indexOf(new CollectionSheetEntryCustomerAccountInstallmentView(accountId,
 						customerId));
-		int lastIndex = bulkEntryAccountActionViews
-				.lastIndexOf(new BulkEntryCustomerAccountInstallmentView(
+		int lastIndex = collectionSheetEntryAccountActionViews
+				.lastIndexOf(new CollectionSheetEntryCustomerAccountInstallmentView(
 						accountId, customerId));
 		if (lastIndex != -1 && index != -1) {
-			List<BulkEntryInstallmentView> applicableInstallments = bulkEntryAccountActionViews
+			List<CollectionSheetEntryInstallmentView> applicableInstallments = collectionSheetEntryAccountActionViews
 					.subList(index, lastIndex + 1);
-			for (BulkEntryInstallmentView bulkEntryAccountActionView : applicableInstallments) {
-				int feeIndex = bulkEntryAccountFeeActionViews
-						.indexOf(new BulkEntryAccountFeeActionView(
-								bulkEntryAccountActionView.getActionDateId()));
-				int feeLastIndex = bulkEntryAccountFeeActionViews
-						.lastIndexOf(new BulkEntryAccountFeeActionView(
-								bulkEntryAccountActionView.getActionDateId()));
+			for (CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView : applicableInstallments) {
+				int feeIndex = collectionSheetEntryAccountFeeActionViews
+						.indexOf(new CollectionSheetEntryAccountFeeActionView(
+								collectionSheetEntryAccountActionView.getActionDateId()));
+				int feeLastIndex = collectionSheetEntryAccountFeeActionViews
+						.lastIndexOf(new CollectionSheetEntryAccountFeeActionView(
+								collectionSheetEntryAccountActionView.getActionDateId()));
 				if (feeIndex != -1 && feeLastIndex != -1)
-					((BulkEntryCustomerAccountInstallmentView) bulkEntryAccountActionView)
-							.setBulkEntryAccountFeeActions(bulkEntryAccountFeeActionViews
+					((CollectionSheetEntryCustomerAccountInstallmentView) collectionSheetEntryAccountActionView)
+							.setCollectionSheetEntryAccountFeeActions(collectionSheetEntryAccountFeeActionViews
 									.subList(feeIndex, feeLastIndex + 1));
 			}
 			return applicableInstallments;
@@ -299,26 +299,26 @@ public class BulkEntryView extends View {
 	}
 
 	public void populateCustomerAccountInformation(CustomerBO customer,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
-			List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews) {
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
+			List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
 		CustomerAccountBO customerAccount = customer.getCustomerAccount();
 		CustomerAccountView customerAccountView = new CustomerAccountView(
 				customerAccount.getAccountId());
 		customerAccountView.setAccountActionDates(retrieveCustomerSchedule(
 				customerAccount.getAccountId(), customer.getCustomerId(),
-				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews));
+				collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
 		setCustomerAccountDetails(customerAccountView);
 	}
 
 	public void populateSavingsAccountsInformation(CustomerBO customer) {
 		List<SavingsAccountView> savingsAccounts = getSavingsAccountViews(customer);
 		if (customerDetail.isCustomerCenter()) {
-			for (BulkEntryView child : bulkEntryChildren) {
-				addSavingsAccountViewToClients(child.getBulkEntryChildren(),
+			for (CollectionSheetEntryView child : collectionSheetEntryChildren) {
+				addSavingsAccountViewToClients(child.getCollectionSheetEntryChildren(),
 						savingsAccounts);
 			}
 		} else if (customerDetail.isCustomerGroup()) {
-			addSavingsAccountViewToClients(bulkEntryChildren, savingsAccounts);
+			addSavingsAccountViewToClients(collectionSheetEntryChildren, savingsAccounts);
 		}
 		for (SavingsAccountView savingsAccountView : savingsAccounts)
 			addSavingsAccountDetail(savingsAccountView);
@@ -357,11 +357,11 @@ public class BulkEntryView extends View {
 	}
 
 	private void addSavingsAccountViewToClients(
-			List<BulkEntryView> clientBulkEntryViews,
+			List<CollectionSheetEntryView> clientCollectionSheetEntryViews,
 			List<SavingsAccountView> savingsAccountViews) {
-		for (BulkEntryView bulkEntryView : clientBulkEntryViews) {
+		for (CollectionSheetEntryView collectionSheetEntryView : clientCollectionSheetEntryViews) {
 			for (SavingsAccountView savingsAccountView : savingsAccountViews) {
-				bulkEntryView
+				collectionSheetEntryView
 						.addSavingsAccountDetail(getSavingsAccountView(savingsAccountView));
 			}
 		}
@@ -369,7 +369,7 @@ public class BulkEntryView extends View {
 
 	public void populateSavingsAccountActions(Integer customerId,
 			Date transactionDate,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews) {
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews) {
 		if (customerDetail.isCustomerCenter())
 			return;
 		for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
@@ -377,16 +377,16 @@ public class BulkEntryView extends View {
 					.getSavingsOffering().getRecommendedAmntUnit()
 					.getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
 				addAccountActionToSavingsView(savingsAccountView, customerId,
-						transactionDate, bulkEntryAccountActionViews);
+						transactionDate, collectionSheetEntryAccountActionViews);
 			}
 		}
 	}
     public void populateClientAttendance(Integer customerId,
             Date transactionDate,
-            List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceViews) {
+            List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceViews) {
         if (customerDetail.isCustomerCenter())
             return;
-        for (BulkEntryClientAttendanceView clientAttendanceView : bulkEntryClientAttendanceViews) {
+        for (CollectionSheetEntryClientAttendanceView clientAttendanceView : collectionSheetEntryClientAttendanceViews) {
             logger.debug("populateClientAttendance");
             logger.debug("clientAttendanceView.getCustomerId() " +clientAttendanceView.getCustomerId());
             logger.debug("customerId " + customerId);
@@ -401,36 +401,36 @@ public class BulkEntryView extends View {
 	private void addAccountActionToSavingsView(
 			SavingsAccountView savingsAccountView, Integer customerId,
 			Date transactionDate,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews) {
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews) {
 		boolean isMandatory = false;
 		if (savingsAccountView.getSavingsOffering().getSavingsType()
 				.getId()
 				.equals(SavingsType.MANDATORY.getValue()))
 			isMandatory = true;
-		List<BulkEntryInstallmentView> accountActionDetails = retrieveSavingsAccountActions(
+		List<CollectionSheetEntryInstallmentView> accountActionDetails = retrieveSavingsAccountActions(
 				savingsAccountView.getAccountId(), customerId,
-				bulkEntryAccountActionViews, isMandatory);
+				collectionSheetEntryAccountActionViews, isMandatory);
 		if (accountActionDetails != null)
-			for (BulkEntryInstallmentView accountAction : accountActionDetails) {
+			for (CollectionSheetEntryInstallmentView accountAction : accountActionDetails) {
 				savingsAccountView.addAccountTrxnDetail(accountAction);
 			}
 	}
 
-	private List<BulkEntryInstallmentView> retrieveSavingsAccountActions(
+	private List<CollectionSheetEntryInstallmentView> retrieveSavingsAccountActions(
 			Integer accountId, Integer customerId,
-			List<BulkEntryInstallmentView> bulkEntryAccountActionViews,
+			List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
 			boolean isMandatory) {
-		int index = bulkEntryAccountActionViews
-				.indexOf(new BulkEntrySavingsInstallmentView(accountId,
+		int index = collectionSheetEntryAccountActionViews
+				.indexOf(new CollectionSheetEntrySavingsInstallmentView(accountId,
 						customerId));
 		if (!isMandatory && index != -1) {
-			return bulkEntryAccountActionViews.subList(index, index + 1);
+			return collectionSheetEntryAccountActionViews.subList(index, index + 1);
 		}
-		int lastIndex = bulkEntryAccountActionViews
-				.lastIndexOf(new BulkEntrySavingsInstallmentView(accountId,
+		int lastIndex = collectionSheetEntryAccountActionViews
+				.lastIndexOf(new CollectionSheetEntrySavingsInstallmentView(accountId,
 						customerId));
 		if (lastIndex != -1 && index != -1)
-			return bulkEntryAccountActionViews.subList(index, lastIndex + 1);
+			return collectionSheetEntryAccountActionViews.subList(index, lastIndex + 1);
 		return null;
 	}
 

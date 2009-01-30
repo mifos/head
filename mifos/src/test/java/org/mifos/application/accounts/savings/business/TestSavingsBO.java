@@ -69,7 +69,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -2686,7 +2686,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	private SavingsPaymentData getSavingsPaymentdata(
-			BulkEntryInstallmentView bulkEntryAccountActionView) {
+			CollectionSheetEntryInstallmentView bulkEntryAccountActionView) {
 		return new SavingsPaymentData(bulkEntryAccountActionView);
 	}
 

@@ -39,7 +39,7 @@
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 
 public abstract class AccountPaymentData {
 
@@ -80,7 +80,7 @@ public abstract class AccountPaymentData {
 		this.accountActionDateEntity = accountActionDate;
 	}
 
-	public AccountPaymentData(BulkEntryInstallmentView bulkEntryAccountAction) {
+	public AccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
 		if (bulkEntryAccountAction != null)
 			setInstallmentId(bulkEntryAccountAction.getInstallmentId());
 		setPaymentStatus(PaymentStatus.PAID.getValue());

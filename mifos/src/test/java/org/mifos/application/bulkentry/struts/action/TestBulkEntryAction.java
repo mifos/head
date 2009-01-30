@@ -56,7 +56,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
-import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -662,7 +662,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
-		BulkEntryView bulkEntryParent = new BulkEntryView(
+		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
 				getCusomerView(center));
 		SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
 		centerSavingsAccountView.setDepositAmountEntered("100");
@@ -671,7 +671,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		bulkEntryParent
 				.setCustomerAccountDetails(getCustomerAccountView(center));
 
-		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
+		CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
 		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
 		SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
 		groupSavingsAccountView.setDepositAmountEntered("100");
@@ -680,7 +680,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
 		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-		BulkEntryView bulkEntrySubChild = new BulkEntryView(
+		CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(
 				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
@@ -778,18 +778,18 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
-		BulkEntryView bulkEntryParent = new BulkEntryView(
+		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
 				getCusomerView(center));
 		bulkEntryParent
 				.addSavingsAccountDetail(getSavingsAccountView(centerSavingsAccount));
 		bulkEntryParent
 				.setCustomerAccountDetails(getCustomerAccountView(center));
 
-		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
+		CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
 		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
 		bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
 		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
-		BulkEntryView bulkEntrySubChild = new BulkEntryView(
+		CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(
 				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);

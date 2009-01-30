@@ -43,8 +43,8 @@ import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryLoanInstallmentView;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
@@ -56,7 +56,7 @@ public class LoanAccountView extends View {
 
 	private String prdOfferingShortName;
 
-	private List<BulkEntryInstallmentView> accountTrxnDetails;
+	private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
 
 	private Short accountType;
 
@@ -75,7 +75,7 @@ public class LoanAccountView extends View {
 		this.prdOfferingShortName = prdOfferingShortName;
 		this.accountType = accountType.getValue();
 		this.prdOfferingId = prdOfferingId;
-		accountTrxnDetails = new ArrayList<BulkEntryInstallmentView>();
+		accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
 		this.accountSate = state.getValue();
 		this.interestDeductedAtDisbursement = 
 			interestDeductedAtDisbursement
@@ -100,12 +100,12 @@ public class LoanAccountView extends View {
 		return prdOfferingId;
 	}
 
-	public List<BulkEntryInstallmentView> getAccountTrxnDetails() {
+	public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
 		return accountTrxnDetails;
 	}
 
 	public void addTrxnDetails(
-			List<BulkEntryInstallmentView> accountTrxnDetails) {
+			List<CollectionSheetEntryInstallmentView> accountTrxnDetails) {
 		if (null != accountTrxnDetails && accountTrxnDetails.size() > 0)
 			this.accountTrxnDetails.addAll(accountTrxnDetails);
 	}
@@ -116,8 +116,8 @@ public class LoanAccountView extends View {
 			return amountPaidAtDisbursement;
 		} else {
 			if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-				for (BulkEntryInstallmentView accountAction : accountTrxnDetails) {
-					totalAmount = totalAmount.add(((BulkEntryLoanInstallmentView)accountAction)
+				for (CollectionSheetEntryInstallmentView accountAction : accountTrxnDetails) {
+					totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentView)accountAction)
 							.getTotalDueWithFees());
 				}
 			}

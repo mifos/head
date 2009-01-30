@@ -102,9 +102,9 @@ public class TestBulkEntryView extends MifosTestCase {
 		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
-		BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
-		BulkEntryView groupBulkEntryView = parentBulkEntryView
-				.getBulkEntryChildren().get(0);
+		CollectionSheetEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
+		CollectionSheetEntryView groupBulkEntryView = parentBulkEntryView
+				.getCollectionSheetEntryChildren().get(0);
 		List<LoanAccountsProductView> loanProducts = groupBulkEntryView
 				.getLoanAccountDetails();
 		LoanAccountsProductView loanAccountsProductView = loanProducts.get(0);
@@ -150,9 +150,9 @@ public class TestBulkEntryView extends MifosTestCase {
 		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
-		BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
-		BulkEntryView groupBulkEntryView = parentBulkEntryView
-				.getBulkEntryChildren().get(0);
+		CollectionSheetEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
+		CollectionSheetEntryView groupBulkEntryView = parentBulkEntryView
+				.getCollectionSheetEntryChildren().get(0);
 		List<LoanAccountsProductView> loanProducts = groupBulkEntryView
 				.getLoanAccountDetails();
 		LoanAccountsProductView loanAccountsProductView = loanProducts.get(0);
@@ -202,9 +202,9 @@ public class TestBulkEntryView extends MifosTestCase {
 		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
-		BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
-		BulkEntryView groupBulkEntryView = parentBulkEntryView
-				.getBulkEntryChildren().get(0);
+		CollectionSheetEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
+		CollectionSheetEntryView groupBulkEntryView = parentBulkEntryView
+				.getCollectionSheetEntryChildren().get(0);
 		List<LoanAccountsProductView> loanProducts = groupBulkEntryView
 				.getLoanAccountDetails();
 		LoanAccountsProductView loanAccountsProductView = loanProducts.get(0);
@@ -228,21 +228,21 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
-		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
+		List<CollectionSheetEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
 						center.getSearchId(), center.getOffice().getOfficeId(),
 						AccountTypes.CUSTOMER_ACCOUNT);
-		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
+		List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
 						center.getSearchId(), center.getOffice().getOfficeId(),
 						AccountTypes.CUSTOMER_ACCOUNT);
 		assertNotNull(center.getCustomerAccount());
-		BulkEntryView bulkEntryView = new BulkEntryView(getCustomerView(center));
-		bulkEntryView.populateCustomerAccountInformation(center,
-				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
-		CustomerAccountView customerAccountView = bulkEntryView
+		CollectionSheetEntryView collectionSheetEntryView = new CollectionSheetEntryView(getCustomerView(center));
+		collectionSheetEntryView.populateCustomerAccountInformation(center,
+				bulkEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews);
+		CustomerAccountView customerAccountView = collectionSheetEntryView
 				.getCustomerAccountDetails();
 		assertEquals(
 				"The retrieved accountId of the customer account should be equal to the created",
@@ -277,15 +277,15 @@ public class TestBulkEntryView extends MifosTestCase {
         HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
          
-        List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceView = bulkEntryPersistanceService
+        List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceView = bulkEntryPersistanceService
             .getBulkEntryClientAttendanceActionView(meetingDate, center.getOffice().getOfficeId() );
          
-        BulkEntryView bulkEntryView = new BulkEntryView(getCustomerView(client));
-        bulkEntryView.populateClientAttendance(client.getCustomerId(), sqlMeetingDate, bulkEntryClientAttendanceView);
+        CollectionSheetEntryView collectionSheetEntryView = new CollectionSheetEntryView(getCustomerView(client));
+        collectionSheetEntryView.populateClientAttendance(client.getCustomerId(), sqlMeetingDate, collectionSheetEntryClientAttendanceView);
          
         assertEquals(
                 "Attendance was set",
-                    clientAttendance.getAttendance().toString(), bulkEntryView.getAttendence().toString());
+                    clientAttendance.getAttendance().toString(), collectionSheetEntryView.getAttendence().toString());
              
         BulkEntryBO bulkEntry = new BulkEntryBO();
         bulkEntry.setOffice(getOfficeView(center.getOffice()));
@@ -296,11 +296,11 @@ public class TestBulkEntryView extends MifosTestCase {
         CustomerView parentCustomer = getCustomerView(center);
         bulkEntry.buildBulkEntryView(parentCustomer);
 
-        BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
-        BulkEntryView groupBulkEntryView = parentBulkEntryView
-                .getBulkEntryChildren().get(0);  
-        BulkEntryView clientBulkEntryView = 
-        	groupBulkEntryView.getBulkEntryChildren().get(0); 
+        CollectionSheetEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
+        CollectionSheetEntryView groupBulkEntryView = parentBulkEntryView
+                .getCollectionSheetEntryChildren().get(0);  
+        CollectionSheetEntryView clientBulkEntryView = 
+        	groupBulkEntryView.getCollectionSheetEntryChildren().get(0); 
              
         //System.out.println(clientBulkEntryView.getAttendence());
          

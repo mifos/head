@@ -83,11 +83,11 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
-import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
-import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryCustomerAccountInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryLoanInstallmentView;
+import org.mifos.application.bulkentry.business.CollectionSheetEntrySavingsInstallmentView;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
@@ -2130,12 +2130,12 @@ public class TestObjectFactory {
 				.isInterestDeductedAtDisbursement(), loan.getLoanBalance());
 	}
 
-	public static BulkEntryInstallmentView getBulkEntryAccountActionView(
+	public static CollectionSheetEntryInstallmentView getBulkEntryAccountActionView(
 			AccountActionDateEntity accountActionDateEntity) {
-		BulkEntryInstallmentView bulkEntryAccountActionView = null;
+		CollectionSheetEntryInstallmentView bulkEntryAccountActionView = null;
 		if (accountActionDateEntity instanceof LoanScheduleEntity) {
 			LoanScheduleEntity actionDate = (LoanScheduleEntity) accountActionDateEntity;
-			BulkEntryLoanInstallmentView installmentView = new BulkEntryLoanInstallmentView(
+			CollectionSheetEntryLoanInstallmentView installmentView = new CollectionSheetEntryLoanInstallmentView(
 					actionDate.getAccount().getAccountId(), actionDate
 							.getCustomer().getCustomerId(), actionDate
 							.getInstallmentId(), actionDate.getActionDateId(),
@@ -2146,12 +2146,12 @@ public class TestObjectFactory {
 					actionDate.getPenaltyPaid(), actionDate.getMiscPenalty(),
 					actionDate.getMiscPenaltyPaid());
 			installmentView
-					.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
+					.setCollectionSheetEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
 			bulkEntryAccountActionView = installmentView;
 		}
 		else if (accountActionDateEntity instanceof SavingsScheduleEntity) {
 			SavingsScheduleEntity actionDate = (SavingsScheduleEntity) accountActionDateEntity;
-			BulkEntrySavingsInstallmentView installmentView = new BulkEntrySavingsInstallmentView(
+			CollectionSheetEntrySavingsInstallmentView installmentView = new CollectionSheetEntrySavingsInstallmentView(
 					actionDate.getAccount().getAccountId(), actionDate
 							.getCustomer().getCustomerId(), actionDate
 							.getInstallmentId(), actionDate.getActionDateId(),
@@ -2162,7 +2162,7 @@ public class TestObjectFactory {
 		}
 		else if (accountActionDateEntity instanceof CustomerScheduleEntity) {
 			CustomerScheduleEntity actionDate = (CustomerScheduleEntity) accountActionDateEntity;
-			BulkEntryCustomerAccountInstallmentView installmentView = new BulkEntryCustomerAccountInstallmentView(
+			CollectionSheetEntryCustomerAccountInstallmentView installmentView = new CollectionSheetEntryCustomerAccountInstallmentView(
 					actionDate.getAccount().getAccountId(), actionDate
 							.getCustomer().getCustomerId(), actionDate
 							.getInstallmentId(), actionDate.getActionDateId(),
@@ -2170,23 +2170,23 @@ public class TestObjectFactory {
 					actionDate.getMiscFeePaid(), actionDate.getMiscPenalty(),
 					actionDate.getMiscPenaltyPaid());
 			installmentView
-					.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
+					.setCollectionSheetEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
 			bulkEntryAccountActionView = installmentView;
 		}
 		return bulkEntryAccountActionView;
 	}
 
-	public static BulkEntryAccountFeeActionView getBulkEntryAccountFeeActionView(
+	public static CollectionSheetEntryAccountFeeActionView getBulkEntryAccountFeeActionView(
 			AccountFeesActionDetailEntity feeAction) {
-		return new BulkEntryAccountFeeActionView(feeAction
+		return new CollectionSheetEntryAccountFeeActionView(feeAction
 				.getAccountActionDate().getActionDateId(), feeAction.getFee(),
 				feeAction.getFeeAmount(), feeAction.getFeeAmountPaid());
 
 	}
 
-	public static List<BulkEntryAccountFeeActionView> getBulkEntryAccountFeeActionViews(
+	public static List<CollectionSheetEntryAccountFeeActionView> getBulkEntryAccountFeeActionViews(
 			AccountActionDateEntity accountActionDateEntity) {
-		List<BulkEntryAccountFeeActionView> bulkEntryFeeViews = new ArrayList<BulkEntryAccountFeeActionView>();
+		List<CollectionSheetEntryAccountFeeActionView> bulkEntryFeeViews = new ArrayList<CollectionSheetEntryAccountFeeActionView>();
 		Set<AccountFeesActionDetailEntity> feeActions = null;
 		if (accountActionDateEntity instanceof LoanScheduleEntity) {
 			feeActions = ((LoanScheduleEntity) accountActionDateEntity)
@@ -2206,9 +2206,9 @@ public class TestObjectFactory {
 
 	}
 
-	public static List<BulkEntryInstallmentView> getBulkEntryAccountActionViews(
+	public static List<CollectionSheetEntryInstallmentView> getBulkEntryAccountActionViews(
 			List<AccountActionDateEntity> actionDates) {
-		List<BulkEntryInstallmentView> bulkEntryActionViews = new ArrayList<BulkEntryInstallmentView>();
+		List<CollectionSheetEntryInstallmentView> bulkEntryActionViews = new ArrayList<CollectionSheetEntryInstallmentView>();
 		if (actionDates != null && actionDates.size() > 0) {
 			for (AccountActionDateEntity actionDate : actionDates) {
 				bulkEntryActionViews
