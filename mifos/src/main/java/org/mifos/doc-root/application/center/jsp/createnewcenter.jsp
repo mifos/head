@@ -206,7 +206,7 @@
 											<!-- Error Display if any -->
 											<tr>
 												<td>
-													<font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /></font>
+													<font class="fontnormalRedBold"><span id="createnewcenter.error.message"><html-el:errors bundle="CenterUIResources" /></font>
 												</td>
 											</tr>
 										</table>
@@ -237,10 +237,12 @@
 										<!-- Center Name -->
 										<tr class="fontnormal">
 											<td width="21%" align="right">
+												<span id="createnewcenter.label.name">
 												<mifos:mifoslabel name="Center.Name" mandatory="yes" bundle="CenterUIResources" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext property="displayName" maxlength="200" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.name" property="displayName" maxlength="200" />
 											</td>
 										</tr>
 										<!-- Loan Officer Name -->
@@ -262,7 +264,7 @@
 												<mifos:mifoslabel name="Center.MeetingSchedule" mandatory="yes" bundle="CenterUIResources" />
 											</td>
 											<td>
-												<html-el:link href="javascript:loadMeeting()">
+												<html-el:link styleId="createnewcenter.link.meetingSchedule" href="javascript:loadMeeting()">
 													<mifos:mifoslabel name="Center.MeetingScheduleLink" bundle="CenterUIResources" />
 												</html-el:link>
 											</td>
@@ -270,13 +272,15 @@
 										<!-- External Id -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
+												<span id="createnewcenter.label.externalId">
 												<mifos:mifoslabel keyhm="Center.ExternalId" isColonRequired="Yes" name="${ConfigurationConstants.EXTERNALID}" />
+												</span>
 											</td>
 											<td>
 												<table width="95%" border="0" cellspacing="0" cellpadding="0">
 													<tr>
 														<td width="24%">
-															<mifos:mifosalphanumtext keyhm="Center.ExternalId" property="externalId" maxlength="50" />
+															<mifos:mifosalphanumtext styleId="createnewcenter.input.externalId" keyhm="Center.ExternalId" property="externalId" maxlength="50" />
 														</td>
 														<td width="76%" class="fontnormal8pt">
 															<mifos:mifoslabel keyhm="Center.ExternalId" name="Center.ExternalIdInfo" bundle="CenterUIResources" />
@@ -310,10 +314,12 @@
 										<!-- Line 1 of address -->
 										<tr class="fontnormal">
 											<td align="right" width="21%" class="fontnormal">
+												<span id="createnewcenter.label.address1">
 												<mifos:mifoslabel keyhm="Center.Address1" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS1}" />
+												</span>
 											</td>
 											<td width="79%">
-												<mifos:mifosalphanumtext keyhm="Center.Address1" name="centerCustActionForm" property="address.line1" maxlength="200" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.address1" keyhm="Center.Address1" name="centerCustActionForm" property="address.line1" maxlength="200" />
 											</td>
 										</tr>
 
@@ -321,65 +327,79 @@
 
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
+											<span id="createnewcenter.label.address2">
 												<mifos:mifoslabel keyhm="Center.Address2" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS2}" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.Address2" name="centerCustActionForm" property="address.line2" maxlength="200" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.address2" keyhm="Center.Address2" name="centerCustActionForm" property="address.line2" maxlength="200" />
 											</td>
 										</tr>
 										<!-- Line 3 of address -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
+											<span id="createnewcenter.label.address3">
 												<mifos:mifoslabel keyhm="Center.Address3" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS3}" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.Address3" name="centerCustActionForm" property="address.line3" maxlength="200" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.address3" keyhm="Center.Address3" name="centerCustActionForm" property="address.line3" maxlength="200" />
 											</td>
 										</tr>
 										<!-- City of address -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
+											<span id="createnewcenter.label.city">
 												<mifos:mifoslabel keyhm="Center.City" isColonRequired="Yes" name="${ConfigurationConstants.CITY}" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.City" name="centerCustActionForm" property="address.city" maxlength="100" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.city" keyhm="Center.City" name="centerCustActionForm" property="address.city" maxlength="100" />
 											</td>
 										</tr>
 										<!-- State of address -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
+												<span id="createnewcenter.label.state">
 												<mifos:mifoslabel keyhm="Center.State" isColonRequired="Yes" name="${ConfigurationConstants.STATE}" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.State" name="centerCustActionForm" property="address.state" maxlength="100" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.state" keyhm="Center.State" name="centerCustActionForm" property="address.state" maxlength="100" />
 											</td>
 										</tr>
 										<!-- Country of address -->
 										<tr class="fontnormal">
 
 											<td align="right" class="fontnormal">
+												<span id="createnewcenter.label.country">
 												<mifos:mifoslabel keyhm="Center.Country" name="Center.Country" bundle="CenterUIResources" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.Country" name="centerCustActionForm" property="address.country" maxlength="100" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.country" keyhm="Center.Country" name="centerCustActionForm" property="address.country" maxlength="100" />
 											</td>
 										</tr>
 										<!-- Postal Code of address -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
+												<span id="createnewcenter.label.postalCode">
 												<mifos:mifoslabel keyhm="Center.PostalCode" name="${ConfigurationConstants.POSTAL_CODE}" isColonRequired="yes"/>
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.PostalCode" name="centerCustActionForm" property="address.zip" maxlength="20" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.postalCode" keyhm="Center.PostalCode" name="centerCustActionForm" property="address.zip" maxlength="20" />
 											</td>
 										</tr>
 										<!-- Telephone of address -->
 										<tr class="fontnormal">
 											<td align="right">
+												<span id="createnewcenter.label.telephone">
 												<mifos:mifoslabel keyhm="Center.PhoneNumber" name="Center.Telephone" bundle="CenterUIResources" />
+												</span>
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="Center.PhoneNumber" name="centerCustActionForm" property="address.phoneNumber" maxlength="20" />
+												<mifos:mifosalphanumtext styleId="createnewcenter.input.telephone" keyhm="Center.PhoneNumber" name="centerCustActionForm" property="address.phoneNumber" maxlength="20" />
 											</td>
 										</tr>
 									</table>
@@ -404,16 +424,16 @@
 											</bean:define>
 											<tr class="fontnormal">
 												<td width="21%" align="right">
-													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="CenterUIResources" isColonRequired="yes"/>
+													<span id="createnewcenter.label.customField"><mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="CenterUIResources" isColonRequired="yes"/></span>
 												</td>
 												<td width="79%">
 													<html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
 													<html-el:hidden property='fieldTypeList' value='${cf.fieldType}' />
 													<c:if test="${cf.fieldType == CustomFieldType.NUMERIC.value}">
-														<mifos:mifosnumbertext name="centerCustActionForm" property='customField[${ctr}].fieldValue' maxlength="200" />
+														<mifos:mifosnumbertext styleId="createnewcenter.input.customField" name="centerCustActionForm" property='customField[${ctr}].fieldValue' maxlength="200" />
 													</c:if>
 													<c:if test="${cf.fieldType == CustomFieldType.ALPHA_NUMERIC.value}">
-														<mifos:mifosalphanumtext name="centerCustActionForm" property='customField[${ctr}].fieldValue' maxlength="200" />
+														<mifos:mifosalphanumtext styleId="createnewcenter.input.customField" name="centerCustActionForm" property='customField[${ctr}].fieldValue' maxlength="200" />
 													</c:if>
 													<c:if test="${cf.fieldType == CustomFieldType.DATE.value}">
 														<date:datetag property="customField[${ctr}].fieldValue" />
@@ -454,7 +474,7 @@
 																			<c:out value="${adminFees.amount}" />
 																		</c:when>
 																		<c:otherwise>
-																			<mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
+																			<mifos:mifosdecimalinput styleId="createnewcenter.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
 																		</c:otherwise>
 																	</c:choose>
 																</td>
@@ -471,8 +491,8 @@
 																	</c:choose>
 																</td>
 																<td width="170">
-																	<html-el:checkbox property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
-																	Check to Remove
+																	<html-el:checkbox styleId="createnewcenter.input.remove" property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
+																	<span id="createnewcenter.label.remove">Check to Remove</span>
 																</td>
 															</tr>
 														</table>
@@ -508,10 +528,11 @@
 												</mifos:select>
 											</td>
 											<td width="12%" align="right" class="fontnormal">
-												<mifos:mifoslabel name="Center.Amount" bundle="CenterUIResources" />
+												<span id="createnewcenter.label.amount">
+												<mifos:mifoslabel name="Center.Amount" bundle="CenterUIResources" /></span>
 											</td>
 											<td width="50%" class="fontnormal">
-												<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' />
+												<mifos:mifosdecimalinput styleId="createnewcenter.input.amount" property='selectedFee[${ctr2}].amount' />
 											</td>
 											<c:if test="${ctr2 == 0}">
 												<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
@@ -538,11 +559,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" >
+												<html-el:submit styleId="createnewcenter.button.preview" styleClass="buttn" >
 													<mifos:mifoslabel name="button.preview" bundle="CenterUIResources" />
 												</html-el:submit>
 												&nbsp; &nbsp;
-												<html-el:button onclick="goToCancelPage();" property="cancelButton" styleClass="cancelbuttn" >
+												<html-el:button styleId="createnewcenter.button.cancel" onclick="goToCancelPage();" property="cancelButton" styleClass="cancelbuttn" >
 													<mifos:mifoslabel name="button.cancel" bundle="CenterUIResources" />
 												</html-el:button>
 											</td>

@@ -72,8 +72,8 @@
 				<td width="70%" height="24" align="left" valign="top"
 					class="paddingL15T15">
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
-					<font class="fontnormalRedBold"><html-el:errors
-						bundle="CenterUIResources" /></font>
+					<font class="fontnormalRedBold"><span id="view_centerchargesdetail.error.message"><html-el:errors
+						bundle="CenterUIResources" /></span></font>
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
@@ -91,14 +91,14 @@
 								style="padding-left:10px; padding-bottom:3px;"><span
 								class="fontnormalbold"> <mifos:mifoslabel
 								name="Center.ApplyTransaction" bundle="CenterUIResources" /></span>
-							&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link
+							&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_centerchargesdetail.link.applyPayment"
 								href="applyPaymentAction.do?method=load&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="accounts.apply_payment" />
-							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link
+							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_centerchargesdetail.link.applyAdjustment"
 								href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&globalAccountNum=${BusinessKey.globalAccountNum}&input=ViewCenterCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.ApplyAdjustment"
 									bundle="CenterUIResources" />
-							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link
+							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link styleId="view_centerchargesdetail.link.applyCharges"
 								href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewCenterCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.ApplyCharges" />
 							</html-el:link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -116,7 +116,7 @@
 							name="Center.AmountDue" bundle="CenterUIResources" isColonRequired="yes" /><c:out
 							value='${BusinessKey.nextDueAmount}' /> </span> <c:if
 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
-							<html-el:link
+							<html-el:link styleId="view_centerchargesdetail.link.waiveChargeDue"
 								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&input=Center&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.waive" bundle="CenterUIResources" />
 							</html-el:link>
@@ -125,7 +125,7 @@
 							name="Center.AmountOverdue" bundle="CenterUIResources" isColonRequired="yes" /><c:out
 							value='${BusinessKey.totalAmountInArrears}' /> </span> <c:if
 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
-							<html-el:link
+							<html-el:link styleId="view_centerchargesdetail.link.waiveChargeOverDue"
 								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&input=Center&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.waive" bundle="CenterUIResources" />
 							</html-el:link>
@@ -144,7 +144,7 @@
 							name="Center.UpcomingCharges" bundle="CenterUIResources" /> (<c:out
 							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.upcomingChargesDate)}' />)
 						</td>
-						<td width="70%" align="right" class="fontnormal"><html-el:link
+						<td width="70%" align="right" class="fontnormal"><html-el:link styleId="view_centerchargesdetail.link.transactionHistory"
 							href="accountAppAction.do?method=getTrxnHistory&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Center.TransactionHistory" />
 						</html-el:link></td>
@@ -205,7 +205,7 @@
 						<td width="28%" class="headingorange"><mifos:mifoslabel
 							name="Center.RecentAccountActivity" bundle="CenterUIResources" />
 						</td>
-						<td width="72%" align="right" class="fontnormal"><html-el:link
+						<td width="72%" align="right" class="fontnormal"><html-el:link styleId="view_centerchargesdetail.link.accountActivity"
 							href="customerAction.do?method=getAllActivity&statusId=${BusinessKey.customer.customerStatus.id}&type=Center&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Center.AccountActivity"
 								bundle="CenterUIResources" />
@@ -278,7 +278,7 @@
 									<mifos:mifoslabel name="Fees.labelMonths"
 										bundle="FeesUIResources" />
 								</c:if> )</td>
-								<td width="55%"><html-el:link
+								<td width="55%"><html-el:link styleId="view_centerchargesdetail.link.remove"
 									href="accountAppAction.do?method=removeFees&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&feeId=${recurrenceFees.fees.feeId}&accountId=${recurrenceFees.account.accountId}&fromPage=center&input=Center&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="Center.remove"
 										bundle="CenterUIResources" />

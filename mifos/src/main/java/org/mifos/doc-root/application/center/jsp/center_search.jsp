@@ -130,7 +130,7 @@
                 </span>
                   </td>
               </tr>
-              <tr><td><font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font></td></tr>
+              <tr><td><font class="fontnormalRedBold"><span id="center_search.error.message"><html-el:errors bundle="CenterUIResources" /></span> </font></td></tr>
             </table>
               <br>
               
@@ -140,11 +140,12 @@
 					 
 					 <tr class="fontnormal">
                  	    <td align="right">
+                 	    	<span id="center_search.label.search">
                  	    	<fmt:message key="Center.centerName">
                  	    		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/></fmt:param>
-                 	    	</fmt:message>:</td>
+                 	    	</fmt:message></span>:</td>
 		                <td>
-		                  <html-el:text property="searchString" maxlength = "200"/>
+		                  <html-el:text styleId="center_search.input.search" property="searchString" maxlength = "200"/>
 		                </td>
 	                </tr>
 	               	<!-- Search results--->
@@ -153,8 +154,8 @@
 	                <tr class="fontnormal">
                   		<td width="30%">&nbsp; </td>
                   		<td width="70%"><br>
-	                     <html-el:submit styleClass="buttn" ><mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel></html-el:submit>						  &nbsp;
-	      				  <html-el:button property="cancelButton" onclick="goToCancelPage();" styleClass="cancelbuttn" ><mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> </html-el:button>
+	                     <html-el:submit styleId="center_search.button.search" styleClass="buttn" ><mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel></html-el:submit>						  &nbsp;
+	      				  <html-el:button styleId="center_search.button.cancel" property="cancelButton" onclick="goToCancelPage();" styleClass="cancelbuttn" ><mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> </html-el:button>
                   			<br><br>
                   		</td>
                 	</tr>

@@ -116,7 +116,7 @@
 
           <table width="93%" border="0" cellpadding="0" cellspacing="0">
            <!-- Error Display if any -->
-                	<font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font>
+                	<font class="fontnormalRedBold"><span id="previeweditcenter.error.message"><html-el:errors bundle="CenterUIResources" /></span> </font>
 
            <tr>
              <td width="100%" class="fontnormal">
@@ -242,7 +242,7 @@
     				  </c:forEach>
 					  <br>
 					</span>
-			        <html-el:button onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn">
+			        <html-el:button styleId="previeweditcenter.button.previous" onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn">
 			        <mifos:mifoslabel name="button.previous" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
 					</span>
 				</td>
@@ -259,7 +259,7 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">&nbsp;
-                  	<html-el:submit property="submitButton" styleClass="buttn">
+                  	<html-el:submit styleId="previeweditcenter.button.submit" property="submitButton" styleClass="buttn">
                   	<mifos:mifoslabel name="button.submit" bundle="CenterUIResources" ></mifos:mifoslabel></html-el:submit>
                   	&nbsp;
 				  	&nbsp;

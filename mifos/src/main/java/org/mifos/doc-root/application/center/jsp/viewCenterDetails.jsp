@@ -77,10 +77,10 @@ explanation of the license and how it is applied.
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td class="headingorange"><c:out
-								value="${BusinessKey.displayName}" /></td>
+							<td class="headingorange"><span id="viewCenterDetails.text.displayName"><c:out
+								value="${BusinessKey.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
-							<span class="fontnormal"> <!-- Edit center status link --> <a
+							<span class="fontnormal"> <!-- Edit center status link --> <a id="viewCenterDetails.link.edit"
 								href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=center&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Center.Edit" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
@@ -88,12 +88,12 @@ explanation of the license and how it is applied.
 							</span></td>
 						</tr>
 						<tr>
-							<td colspan="2"><font class="fontnormalRedBold"><html-el:errors
-								bundle="CenterUIResources" /></font></td>
+							<td colspan="2"><font class="fontnormalRedBold"><span id="viewCenterDetails.error.message"><html-el:errors
+								bundle="CenterUIResources" /></span></font></td>
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><c:set var="statusID" scope="request"
-								value="${BusinessKey.customerStatus.id}" /> <!-- Status of the center. Depending on the status id active or inactive is displayed -->
+								value="${BusinessKey.customerStatus.id}" /><!-- Status of the center. Depending on the status id active or inactive is displayed -->
 
 
 							<c:if test="${statusID == CustomerConstants.CENTER_ACTIVE_STATE}">
@@ -105,13 +105,13 @@ explanation of the license and how it is applied.
 									src="pages/framework/images/status_closedblack.gif" width="8"
 									height="9">
 								</span>
-							</c:if> <c:out value="${BusinessKey.customerStatus.name}" /><br>
+							</c:if> <span id="viewCenterDetails.text.status"><c:out value="${BusinessKey.customerStatus.name}" /></span><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
 								name="Center.SystemId" />:</span> <span class="fontnormal"><c:out
 								value="${BusinessKey.globalCustNum}" /><br>
 							<!-- Loan Officer of the center --> <mifos:mifoslabel
 								name="Center.LoanOff" ></mifos:mifoslabel>
-							<c:out value="${BusinessKey.personnel.displayName}" /></span><br>
+							<span id="viewCenterDetails.text.loanOfficer"><c:out value="${BusinessKey.personnel.displayName}" /></span></span><br>
 							<br>
 							<!-- List of groups under the center -->
 							<span class="fontnormalBold"> <mifos:mifoslabel
@@ -121,7 +121,7 @@ explanation of the license and how it is applied.
 								</span>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if test="${statusID != CustomerConstants.CENTER_INACTIVE_STATE}">
-								<span class="fontnormal"> <a
+								<span class="fontnormal"> <a id="viewCenterDetails.link.add"
 									href="groupCustAction.do?method=load&centerSystemId=<c:out value="${BusinessKey.globalCustNum}"/>&parentOfficeId=${BusinessKey.office.officeId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Center.Add"  />
 								<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></a>
@@ -139,7 +139,7 @@ explanation of the license and how it is applied.
 							<span class="fontnormal"> <c:choose>
 								<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groups')}">
 									<c:forEach var="group" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groups')}">
-										<span class="fontnormal"> <a
+										<span class="fontnormal"> <a id="viewCenterDetails.link.group"
 											href="groupCustAction.do?method=get&globalCustNum=<c:out value="${group.globalCustNum}"/>&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}">
 										<c:out value="${group.displayName}" /></a><br>
 										</span>
@@ -171,7 +171,7 @@ explanation of the license and how it is applied.
 								test="${statusID == CustomerConstants.CENTER_ACTIVE_STATE}">
 								<mifos:mifoslabel name="Center.AccountsLink"
 									/>&nbsp;
-		               <html-el:link
+		               <html-el:link styleId="viewCenterDetails.link.newSavingsAccount"
 									href="savingsAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link></span> </c:if></td>
@@ -202,7 +202,7 @@ explanation of the license and how it is applied.
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link
+													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewCenterDetails.link.savingsAccount"
 														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}">
 														<c:out value="${savings.savingsOffering.prdOfferingName}" />, <mifos:mifoslabel name="Center.acc" bundle="CenterUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
@@ -251,7 +251,7 @@ explanation of the license and how it is applied.
 										<c:set var="accID" scope="request" value="${cp.accountId}"/>
 
 									</c:if>
-								</c:forEach> --%> <a
+								</c:forEach> --%> <a id="viewCenterDetails.link.viewDetails"
 										href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
 										<mifos:mifoslabel name="Center.Viewdetails" bundle="CenterUIResources" />
 									</a> </span></td>
@@ -280,7 +280,7 @@ explanation of the license and how it is applied.
 
 						<tr>
 							<td width="38%" align="right" class="fontnormal"><span
-								class="fontnormal"><a
+								class="fontnormal"><a id="viewCenterDetails.link.viewAllClosedAccounts"
 								href="custAction.do?method=getClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&input=center&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Group.viewallclosedaccounts"
 									bundle="GroupUIResources"></mifos:mifoslabel>
@@ -300,7 +300,7 @@ explanation of the license and how it is applied.
 							<td width="50%" height="23" class="headingorange"><mifos:mifoslabel
 								name="${ConfigurationConstants.CENTER}" /><c:out value=" " /><mifos:mifoslabel
 								name="Center.Information" bundle="CenterUIResources" /></td>
-							<td width="50%" align="right" class="fontnormal"><html-el:link
+							<td width="50%" align="right" class="fontnormal"><html-el:link styleId="viewCenterDetails.link.editCenterDetails"
 								action="centerCustAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources" />
 								<c:out value=" " />
@@ -362,7 +362,8 @@ explanation of the license and how it is applied.
 										name="Center.MeetingsHeading" />
 									</td>
 									<td align="right">
-									<html-el:link	action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
+									<html-el:link styleId="viewCenterDetails.link.meetings"
+										action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
 										<mifos:mifoslabel name="Center.MeetingsLink"
 											/>
 									</html-el:link></td>
@@ -483,7 +484,7 @@ explanation of the license and how it is applied.
 							<br>
 							</span>
 							</c:if>
-							<html-el:link href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link styleId="viewCenterDetails.link.viewChangeLog" href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel
 								name="Center.ChangeLogLink" bundle="CenterUIResources"></mifos:mifoslabel>
 							</html-el:link> <br>
@@ -566,7 +567,7 @@ explanation of the license and how it is applied.
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=center">
+                    <a id="viewCenterDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=center">
                       <c:out value="${surveyInstance.survey.name}"/>
                     </a>
                   </span>
@@ -581,10 +582,10 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=center">
+                  <a id="viewCenterDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=center">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
-                  <a href="surveysAction.do?method=mainpage">
+                  <a id="viewCenterDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
                     <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
                   </a>
               </td>
@@ -629,13 +630,13 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
-								<html-el:link
+								<html-el:link styleId="viewCenterDetails.link.seeAllNotes"
 									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&securityParamInput=Center&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="center.SeeAllNotesLink"
 										bundle="CenterUIResources"></mifos:mifoslabel>
 								</html-el:link>
 								<br>
-							</c:if> <a
+							</c:if> <a id="viewCenterDetails.link.notesLink"
 								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Center.NotesLink"
 								/> </a> </span></td>

@@ -149,7 +149,7 @@
 
 
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
-								<font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font>
+								<font class="fontnormalRedBold"><span id="editcenter.error.message"><html-el:errors bundle="CenterUIResources" /></span> </font>
 								<tr>
 									<td colspan="2" class="fontnormalbold">
 										<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
@@ -187,13 +187,15 @@
 
 								<tr class="fontnormal" id="Center.ExternalId">
 									<td align="right" class="fontnormal">
+										<span id="editcenter.label.externalId">
 										<mifos:mifoslabel keyhm="Center.ExternalId" isColonRequired="Yes" name="${ConfigurationConstants.EXTERNALID}" />
+										</span>
 									</td>
 									<td>
 										<table width="95%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
 												<td width="29%">
-													<mifos:mifosalphanumtext keyhm="Center.ExternalId" property="externalId" maxlength="50"/>
+													<mifos:mifosalphanumtext styleId="editcenter.input.externalId" keyhm="Center.ExternalId" property="externalId" maxlength="50"/>
 												</td>
 												<td width="71%" class="fontnormal8pt">
 													<mifos:mifoslabel keyhm="Center.ExternalId" name="Center.ExternalIdInfo" bundle="CenterUIResources"></mifos:mifoslabel>
@@ -263,66 +265,82 @@
 								</tr>
 								<tr class="fontnormal">
 									<td width="26%" align="right">
+										<span id="editcenter.label.address1">
 										<mifos:mifoslabel keyhm="Center.Address1" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS1}" />
+										</span>
 									</td>
 									<td width="74%">
-										<mifos:mifosalphanumtext keyhm="Center.Address1" name="centerCustActionForm" property="address.line1"  maxlength="200" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.address1" keyhm="Center.Address1" name="centerCustActionForm" property="address.line1"  maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.address2">
 										<mifos:mifoslabel keyhm="Center.Address2" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS2}" />
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.Address2" name="centerCustActionForm" property="address.line2"  maxlength="200" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.address2" keyhm="Center.Address2" name="centerCustActionForm" property="address.line2"  maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.address3">
 										<mifos:mifoslabel keyhm="Center.Address3" name="${ConfigurationConstants.ADDRESS3}" />
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.Address3" name="centerCustActionForm" property="address.line3" maxlength="200" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.address3" keyhm="Center.Address3" name="centerCustActionForm" property="address.line3" maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.city">
 										<mifos:mifoslabel keyhm="Center.City" isColonRequired="Yes" name="${ConfigurationConstants.CITY}" />
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.City" name="centerCustActionForm" property="address.city"  maxlength="100" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.city" keyhm="Center.City" name="centerCustActionForm" property="address.city"  maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.state">
 										<mifos:mifoslabel keyhm="Center.State" isColonRequired="Yes" name="${ConfigurationConstants.STATE}" />
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.State" name="centerCustActionForm" property="address.state"  maxlength="100" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.state" keyhm="Center.State" name="centerCustActionForm" property="address.state"  maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.country">
 										<mifos:mifoslabel keyhm="Center.Country" name="Center.Country" bundle="CenterUIResources"></mifos:mifoslabel>
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.Country" name="centerCustActionForm" property="address.country"  maxlength="100" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.country" keyhm="Center.Country" name="centerCustActionForm" property="address.country"  maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.postalCode">
 										<mifos:mifoslabel keyhm="Center.PostalCode" name="${ConfigurationConstants.POSTAL_CODE}" />
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.PostalCode" name="centerCustActionForm" property="address.zip"  maxlength="20" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.postalCode" keyhm="Center.PostalCode" name="centerCustActionForm" property="address.zip"  maxlength="20" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right">
+										<span id="editcenter.label.telephone">
 										<mifos:mifoslabel keyhm="Center.PhoneNumber" name="Center.Telephone" bundle="CenterUIResources" />
+										</span>
 									</td>
 									<td>
-										<mifos:mifosalphanumtext keyhm="Center.PhoneNumber" name="centerCustActionForm" property="address.phoneNumber"  maxlength="20" />
+										<mifos:mifosalphanumtext styleId="editcenter.input.telephone" keyhm="Center.PhoneNumber" name="centerCustActionForm" property="address.phoneNumber"  maxlength="20" />
 									</td>
 								</tr>
 							</table>
@@ -347,7 +365,7 @@
 										<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 											<tr class="fontnormal">
 												<td width="26%" align="right">
-													<mifos:mifoslabel name="${customFieldDef.lookUpEntity.entityType}" mandatory="${customFieldDef.mandatoryStringValue}" bundle="CenterUIResources"></mifos:mifoslabel>
+													<span id="editcenter.label.customField"><mifos:mifoslabel name="${customFieldDef.lookUpEntity.entityType}" mandatory="${customFieldDef.mandatoryStringValue}" bundle="CenterUIResources"></mifos:mifoslabel></span>
 													:
 												</td>
 												<td width="74%">
@@ -356,10 +374,10 @@
 													<html-el:hidden property='customField[${ctr}].fieldType' value='${customFieldDef.fieldType}' />
 													<%--<html-el:hidden property='customField[${ctr}].locale' value="${sessionScope.UserContext.mfiLocale}"></html-el:hidden>--%>
 													<c:if test="${customFieldDef.fieldType == CustomFieldType.NUMERIC.value}">
-														<mifos:mifosnumbertext name="centerCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
+														<mifos:mifosnumbertext styleId="editcenter.input.customField" name="centerCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 													</c:if>
 													<c:if test="${customFieldDef.fieldType == CustomFieldType.ALPHA_NUMERIC.value}">
-														<mifos:mifosalphanumtext name="centerCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
+														<mifos:mifosalphanumtext styleId="editcenter.input.customField" name="centerCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 													</c:if>
 													<c:if test="${customFieldDef.fieldType == CustomFieldType.DATE.value}">
 														<date:datetag property="customField[${ctr}].fieldValue" />
@@ -383,11 +401,11 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center">
-										<html-el:submit styleClass="buttn" >
+										<html-el:submit styleId="editcenter.button.preview" styleClass="buttn" >
 											<mifos:mifoslabel name="button.preview" bundle="CenterUIResources"></mifos:mifoslabel>
 										</html-el:submit>
 										&nbsp; &nbsp;
-										<html-el:button onclick="goToCancelPage();" property="cancelButton" styleClass="cancelbuttn" >
+										<html-el:button styleId="editcenter.button.cancel" onclick="goToCancelPage();" property="cancelButton" styleClass="cancelbuttn" >
 											<mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel>
 										</html-el:button>
 

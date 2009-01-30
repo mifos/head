@@ -100,19 +100,19 @@
               </tr>
             </table>
             <table width="96%" border="0" cellspacing="0" cellpadding="3">
-					 <font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font><br>
+					 <font class="fontnormalRedBold"><span id="center_search_transfer_group.error.message"><html-el:errors bundle="CenterUIResources" /></span> </font><br>
 					 <tr class="fontnormal">
-                 	    <td align="right"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/>
-							<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel></td>
+                 	    <td align="right"><span id="center_search_transfer_group.label.search"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/>
+							<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel></span></td>
 		                <td>
-		                  <html-el:text property="searchString" maxlength = "200"/>
+		                  <html-el:text styleId="center_search_transfer_group.input.search" property="searchString" maxlength = "200"/>
 		                </td>
 	                </tr>
 	                <tr class="fontnormal">
                   		<td width="20%">&nbsp; </td>
                   		<td width="80%"><br>
-	                     <html-el:submit styleClass="buttn"><mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel></html-el:submit>						  &nbsp;
-	      				  <html-el:button property="cancelButton" onclick="goToCancelPage();" styleClass="cancelbuttn"><mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> </html-el:button>
+	                     <html-el:submit styleId="center_search_transfer_group.button.search" styleClass="buttn"><mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel></html-el:submit>						  &nbsp;
+	      				  <html-el:button styleId="center_search_transfer_group.button.cancel" property="cancelButton" onclick="goToCancelPage();" styleClass="cancelbuttn"><mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> </html-el:button>
                   			<br><br>
                   		</td>
                 	</tr>

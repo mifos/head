@@ -102,8 +102,8 @@
 								bundle="CenterUIResources"></mifos:mifoslabel> </span></td>
 						</tr>
 						<tr><logic:messagesPresent>
-							<td><font class="fontnormalRedBold"><html-el:errors
-								bundle="CenterUIResources" /> </font></td>
+							<td><font class="fontnormalRedBold"><span id="center_search_results.error.message"><html-el:errors
+								bundle="CenterUIResources" /></span> </font></td>
 							</logic:messagesPresent>
 						</tr>
 					</table>
@@ -112,11 +112,11 @@
 					<table width="96%" border="0" cellspacing="0" cellpadding="0">
 
 						<tr class="fontnormal">
-							<td><br><span class="fontnormal"> 
+							<td><br><span id="center_search_results.label.search" class="fontnormal"> 
 							<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/>
 							<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel></span>
-							<html-el:text property="searchString" />  <html-el:submit
-								styleClass="buttn" style="width:70px;">
+							<html-el:text styleId="center_search_results.input.search" property="searchString" />  <html-el:submit
+								styleId="center_search_results.button.search" styleClass="buttn" style="width:70px;">
 								<mifos:mifoslabel name="button.Search"
 									bundle="CenterUIResources"></mifos:mifoslabel>
 							</html-el:submit></td>
@@ -132,7 +132,7 @@
 					 <br>
 					<table width="96%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td align="center"><html-el:button property="cancelButton"
+							<td align="center"><html-el:button styleId="center_search_results.button.cancel" property="cancelButton"
 								onclick="goToCancelPage();" styleClass="cancelbuttn"
 								style="width:70px;">
 								<mifos:mifoslabel name="button.cancel"

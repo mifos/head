@@ -117,8 +117,8 @@ function goToCancelPage(){
 						cellspacing="0" class="bluetableborder">
 						<tr align="center">
 						<td align="left" valign="top" class="paddingL15T15">
-							<font class="fontnormalRedBold"><html-el:errors
-								bundle="MeetingResources" /> </font>
+							<font class="fontnormalRedBold"><span id="createmeeting.error.message"><html-el:errors
+								bundle="MeetingResources" /></span> </font>
 						</td>
 						</tr>
 						<tr>
@@ -139,12 +139,12 @@ function goToCancelPage(){
 									<table width="98%" border="0" cellspacing="0" cellpadding="2">
 										<tr valign="top" class="fontnormal">
 
-											<td width="24%"><html-el:radio property="frequency" value="1"
-												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /></td>
-											<td width="55%"><html-el:radio property="frequency" value="2"
-												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+											<td width="24%"><html-el:radio styleId="createmeeting.input.frequencyWeeks" property="frequency" value="1"
+												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyWeeks"><mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" /></span></td>
+											<td width="55%"><html-el:radio styleId="createmeeting.input.frequencyMonths" property="frequency" value="2"
+												onclick="showMeetingFrequency();" /> <span id="createmeeting.label.frequencyMonths"><mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
 										</tr>
 									</table>
 									</td>
@@ -165,8 +165,10 @@ function goToCancelPage(){
 												name="meeting.labelRecurEvery" bundle="MeetingResources" />
 
 
-											<mifos:mifosnumbertext property="recurWeek" size="3"  maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /> 
+											<mifos:mifosnumbertext styleId="createmeeting.input.weekFrequency" property="recurWeek" size="3"  maxlength="3"/> 
+											<span id="createcustomermeeting.label.weekFrequency">
+											<mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" /></span> 
 												<mifos:select property="weekDay">
 													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
@@ -180,17 +182,17 @@ function goToCancelPage(){
 									<br>
 									<table border="0" cellspacing="0" cellpadding="2">
 										<tr class="fontnormal">
-											<td><html-el:radio property="monthType" value="1" /></td>
-											<td><mifos:mifoslabel name="meeting.labelDay"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
+											<td><html-el:radio styleId="createmeeting.input.monthType1" property="monthType" value="1" /></td>
+											<td><span id="createmeeting.label.dayOfMonth"><mifos:mifoslabel name="meeting.labelDay"
+												bundle="MeetingResources" /></span> <mifos:mifosnumbertext styleId="createmeeting.input.dayOfMonth"
 												property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
 												 <mifos:mifoslabel name="meeting.labelOfEvery"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+												bundle="MeetingResources" /> <mifos:mifosnumbertext styleId="createmeeting.input.monthFrequency1"
+												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <span id="createmeeting.label.monthFrequency1"><mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
 										</tr>
 										<tr class="fontnormal">
-											<td><html-el:radio property="monthType" value="2" /></td>
+											<td><html-el:radio styleId="createmeeting.input.monthType2" property="monthType" value="2" /></td>
 											<td><mifos:mifoslabel name="meeting.labelThe"
 												bundle="MeetingResources" /> 
 												<mifos:select	property="monthRank" onfocus="checkMonthType2()">
@@ -203,9 +205,11 @@ function goToCancelPage(){
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 												</c:forEach>
 											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+												bundle="MeetingResources" /> <mifos:mifosnumbertext styleId="createmeeting.input.monthFrequency2"
+												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3"/> 
+												<span id="createmeeting.label.monthFrequency2">
+												<mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
 										</tr>
 									</table>
 									</div>
@@ -217,10 +221,10 @@ function goToCancelPage(){
 									<td>&nbsp;</td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel
+									<td align="right"><span id="createmeeting.label.meetingPlace"><mifos:mifoslabel
 										name="meeting.labelPlaceOfMeeting" bundle="MeetingResources"
-										mandatory="yes" /></td>
-									<td><html-el:text property="meetingPlace" maxlength="200"/></td>
+										mandatory="yes" /></span></td>
+									<td><html-el:text styleId="createmeeting.input.meetingPlace" property="meetingPlace" maxlength="200"/></td>
 								</tr>
 
 							</table>
@@ -233,10 +237,10 @@ function goToCancelPage(){
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<!-- Next are submit and cancel button -->
-									<td align="center"><html-el:submit styleClass="buttn">
+									<td align="center"><html-el:submit styleId="createmeeting.button.save" styleClass="buttn">
 										<mifos:mifoslabel name="meeting.button.save"
 											bundle="MeetingResources"></mifos:mifoslabel>
-									</html-el:submit> &nbsp; <html-el:button
+									</html-el:submit> &nbsp; <html-el:button styleId="createmeeting.button.cancel"
 										onclick="goToCancelPage();" property="cancelButton"
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="office.button.cancel"

@@ -19,7 +19,7 @@
  */
 package org.mifos.test.acceptance.framework;
 
-
+import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -64,4 +64,46 @@ public class AdminPage extends MifosPage {
         return this;
     }
     
+    public AdminPage createOffice(AdminPage adminPage, String officeName) {
+        CreateOfficeEnterDataPage officeEnterDataPage = adminPage.navigateToCreateOfficeEnterDataPage();
+        
+        CreateOfficeEnterDataPage.SubmitFormParameters formParameters = new CreateOfficeEnterDataPage.SubmitFormParameters();
+        formParameters.setOfficeName(officeName);
+        formParameters.setShortName(StringUtil.getRandomString(4));
+        formParameters.setOfficeType("Branch Office");
+        formParameters.setParentOffice("regexp:Mifos\\s+HO");
+        formParameters.setAddress1("Bangalore");
+        formParameters.setAddress3("EGL");
+        formParameters.setState("karnataka");
+        formParameters.setCountry("India");
+        formParameters.setPostalCode("560071");
+        formParameters.setPhoneNumber("918025003632");
+        
+        CreateOfficePreviewDataPage previewDataPage = officeEnterDataPage.submitAndGotoCreateOfficePreviewDataPage(formParameters);
+        CreateOfficeConfirmationPage confirmationPage = previewDataPage.submit();
+
+        confirmationPage.verifyPage();
+        OfficeViewDetailsPage detailsPage = confirmationPage.navigateToOfficeViewDetailsPage();
+        Assert.assertEquals(detailsPage.getOfficeName(), formParameters.getOfficeName());
+        Assert.assertEquals(detailsPage.getShortName(), formParameters.getShortName());
+        Assert.assertEquals(detailsPage.getOfficeType(), formParameters.getOfficeType());
+        
+        return detailsPage.navigateToAdminPage();
+    }
+  
+    public UserViewDetailsPage createUser(AdminPage adminPage, CreateUserEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+        ChooseOfficePage chooseOfficePage = adminPage.navigateToCreateUserPage();
+        CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
+
+        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(formParameters);
+        CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
+
+        Assert.assertTrue(userConfirmationPage.getConfirmation().contains(formParameters.getFirstName() + " " + formParameters.getLastName() + " has been assigned the system ID number:"));
+        
+        UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
+        Assert.assertTrue(userDetailsPage.getFullName().contains(formParameters.getFirstName() + " " + formParameters.getLastName()));
+        Assert.assertEquals(userDetailsPage.getStatus(), "Active");
+        return userDetailsPage;
+    }
+  
 }

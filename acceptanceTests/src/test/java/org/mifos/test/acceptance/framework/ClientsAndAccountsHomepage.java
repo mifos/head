@@ -43,4 +43,10 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         waitForPageToLoad();
         return new CreateLoanAccountsSearchPage(selenium);
     }
+    
+    public CreateCenterChooseOfficePage navigateToCreateNewCenterPage() {
+        selenium.click("link=Create new Center"); 
+        waitForPageToLoad();
+        return new CreateCenterChooseOfficePage(selenium);
+    }    
 }

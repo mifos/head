@@ -141,7 +141,7 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center"> &nbsp;
-	                  <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+	                  <html-el:button styleId="chooseOffice.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel>
     	              </html-el:button>
                   </td></tr>

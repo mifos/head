@@ -80,7 +80,7 @@
 						<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="CenterUIResources" /> 
+											<span id="viewChangeLog.error.message"><html-el:errors bundle="CenterUIResources" /></span> 
 										</font>
 									</td>
 						</tr>
@@ -106,7 +106,7 @@
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
+							<td align="center"><html-el:button styleId="viewChangeLog.button.back" property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
 								styleClass="buttn">
 								<mifos:mifoslabel name="Center.backtodetailspage"

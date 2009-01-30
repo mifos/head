@@ -141,7 +141,7 @@ function goToEditPage(){
 
               <!-- Center information entered on the create page -->
               <table width="93%" border="0" cellspacing="0" cellpadding="3">
-              <font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /> </font>
+              <font class="fontnormalRedBold"><span id="previewcenter.error.message"><html-el:errors bundle="CenterUIResources" /></span> </font>
                 <tr>
                   <td class="fontnormal">
                   	<span class="fontnormalbold">                  		<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><c:out value=" "/>
@@ -356,7 +356,7 @@ function goToEditPage(){
 				  <td>
 					<!-- FEe end -->
 					<!-- Edit Button -->
-					<html-el:button onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn" >
+					<html-el:button styleId="previewcenter.button.edit" onclick="goToEditPage()" property = "editButton" styleClass="insidebuttn" >
 					<mifos:mifoslabel name="Center.Edit" bundle="CenterUIResources"/><c:out value=" "/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/><mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/>
 
 					</html-el:button>
@@ -375,10 +375,10 @@ function goToEditPage(){
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">&nbsp;
-                  <html-el:submit styleClass="buttn" property = "submitButton"><mifos:mifoslabel name="button.submit" bundle="CenterUIResources"></mifos:mifoslabel></html-el:submit>
+                  <html-el:submit styleId="previewcenter.button.submit" styleClass="buttn" property = "submitButton"><mifos:mifoslabel name="button.submit" bundle="CenterUIResources"></mifos:mifoslabel></html-el:submit>
                   &nbsp;
 				  &nbsp;
-				  <html-el:button onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn"><mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
+				  <html-el:button styleId="previewcenter.button.cancel" onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn"><mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
 
                  </td>
                  </tr>

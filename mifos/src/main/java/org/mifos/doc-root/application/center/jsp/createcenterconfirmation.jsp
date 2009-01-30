@@ -63,9 +63,9 @@
               	<tr>
                   <td class="headingorange">
                   
-                  <fmt:message key="Center.ConfMessage">
+                  <span id="createcenterconfirmation.text.confirmation"><fmt:message key="Center.ConfMessage">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
-				  </fmt:message>
+				  </fmt:message></span>
 				  <br>
 				  </td>
                               
@@ -87,7 +87,7 @@
                     <br>
                     </span>
                      <!-- Link to view the center details -->
-                    <a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
+                    <a id="createcenterconfirmation.link.viewDetailsInfo" href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
                     	
                     	<fmt:message key="Center.ViewDetailsInfo">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
@@ -102,7 +102,7 @@
       				</span><span class="fontnormal"> <br>
                     </span><mifos:mifoslabel name="Center.AccountsHeading" bundle="CenterUIResources"/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><span class="fontnormal"><br>
 					<!-- Link to create a new savingsa account link -->
-                    <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.centerCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
+                    <html-el:link styleId="createcenterconfirmation.link.createNewSavingsAccount" href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.centerCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
                     
                     <fmt:message key="Center.CreateNewAccount">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
@@ -112,7 +112,7 @@
                     </html-el:link><br>
                     <br>
                     <!-- Link to create a new center -->
-                    <a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}"/>
+                    <a id="createcenterconfirmation.link.CreateLinkNewCenter" href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}"/>
                     
                     <fmt:message key="Center.CreateLinkNewCenter">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
