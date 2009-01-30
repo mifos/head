@@ -30,7 +30,7 @@ class SeedDataManyClients(unittest.TestCase):
       self.verificationErrors = []
       # if you have both Firefox 2 and 3 installed, change the third argument
       # of this instantiation call to "*chrome /usr/lib/firefox/firefox-2-bin"
-      self.selenium = selenium("localhost", 4444, "*chrome", "http://%s:8080" % HOST)
+      self.selenium = selenium("localhost", 4444, "*firefox", "http://%s:8080" % HOST)
       self.selenium.start()
 
    def tearDown(self):
@@ -41,9 +41,9 @@ class SeedDataManyClients(unittest.TestCase):
       sel = self.selenium
       sel.open("/mifos/loginAction.do?method=logout")
       self.failUnless(sel.is_text_present("successfully logged out"))
-      sel.type("userName", USER)
-      sel.type("password", PASSWORD)
-      self.clickAndWaitForPageToLoad("//input[@value='Login']")
+      sel.type("login.input.username", USER)
+      sel.type("login.input.password", PASSWORD)
+      self.clickAndWaitForPageToLoad("login.button.login")
       self.failUnless(sel.is_text_present("Welcome,"))
       self.loanProduct1 = self.addLoanProduct(sel)
       self.loanProduct2 = self.addLoanProduct(sel)
