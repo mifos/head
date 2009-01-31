@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.util;
 
-
 public class StringUtil {
 
     public static String getRandomString(int length) {
