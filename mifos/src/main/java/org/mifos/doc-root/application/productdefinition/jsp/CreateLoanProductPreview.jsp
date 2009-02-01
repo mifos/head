@@ -52,6 +52,8 @@
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
+<input type="hidden" id="page.id" value="CreateLoanProductPreview"/>
+
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script language="javascript">

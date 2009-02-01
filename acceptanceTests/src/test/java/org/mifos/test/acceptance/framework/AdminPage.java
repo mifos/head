@@ -19,6 +19,7 @@
  */
 package org.mifos.test.acceptance.framework;
 
+import org.mifos.test.acceptance.framework.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
@@ -104,6 +105,15 @@ public class AdminPage extends MifosPage {
         Assert.assertTrue(userDetailsPage.getFullName().contains(formParameters.getFirstName() + " " + formParameters.getLastName()));
         Assert.assertEquals(userDetailsPage.getStatus(), "Active");
         return userDetailsPage;
+    }
+
+    public void defineLoanProduct(SubmitFormParameters formParameters) {
+        DefineNewLoanProductPage newLoanPage = navigateToDefineLoanProduct();
+        newLoanPage.verifyPage();
+        DefineNewLoanProductPreviewPage previewPage = newLoanPage.submitAndGotoNewLoanProductPreviewPage(formParameters);
+        previewPage.verifyPage();
+        DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
+        confirmationPage.verifyPage();    
     }
   
 }

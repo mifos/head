@@ -31,7 +31,7 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyPage() {
-        this.verifyPage("LoanAccountDetail");
+        this.verifyPage();
     }
     
     public void verifyFeeExists(String expectedFee) {

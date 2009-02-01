@@ -32,6 +32,8 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["LOCALE"]}' />
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources" />
 
+<input type="hidden" id="page.id" value="CreateLoanProduct"/>
+
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script>
@@ -263,20 +265,20 @@ explanation of the license and how it is applied.
 										name="product.prodinstname" mandatory="yes"
 										bundle="ProductDefUIResources" /> </span>:</td>
 									<td width="70%" valign="top"><mifos:mifosalphanumtext
-										property="prdOfferingName" /></td>
+										styleId= "createLoanProduct.input.prdOffering" property="prdOfferingName" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="product.shortname" mandatory="yes"
 										bundle="ProductDefUIResources" /> :</td>
 									<td valign="top"><mifos:mifosalphanumtext
-										property="prdOfferingShortName" maxlength="4" size="4" /></td>
+										styleId= "createLoanProduct.input.prdOfferingShortName" property="prdOfferingShortName" maxlength="4" size="4" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><span class="mandatorytext"></span>
 									<mifos:mifoslabel name="product.desc"
 										bundle="ProductDefUIResources" /> :</td>
-									<td valign="top"><html-el:textarea property="description"
+									<td valign="top"><html-el:textarea styleId= "createLoanProduct.input.description" property="description"
 										style="width:320px; height:110px;">
 									</html-el:textarea></td>
 								</tr>
@@ -635,7 +637,7 @@ explanation of the license and how it is applied.
 											</fmt:param>
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
-											property="maxInterestRate" /> <mifos:mifoslabel
+											styleId= "createLoanProduct.input.maxInterestRate" property="maxInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
@@ -648,7 +650,7 @@ explanation of the license and how it is applied.
 											</fmt:param>
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
-											property="minInterestRate" /> <mifos:mifoslabel
+											styleId= "createLoanProduct.input.minInterestRate" property="minInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
@@ -662,7 +664,7 @@ explanation of the license and how it is applied.
 											</fmt:param>
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
-											property="defInterestRate" /> <mifos:mifoslabel
+											styleId= "createLoanProduct.input.defInterestRate"  property="defInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 								</table>
@@ -709,7 +711,7 @@ explanation of the license and how it is applied.
 													<tr class="fontnormal">
 														<td colspan="3"><mifos:mifoslabel
 															name="product.recur" bundle="ProductDefUIResources" /> <mifos:mifosnumbertext
-															property="recurAfter" size="3" maxlength="3" /></td>
+															styleId="createLoanProduct.input.recur" property="recurAfter" size="3" maxlength="3" /></td>
 														<td><span id="week"> <mifos:mifoslabel
 															name="product.week" bundle="ProductDefUIResources" /> </span> <span
 															id="month"> <mifos:mifoslabel name="product.month"

@@ -1,6 +1,24 @@
-package org.mifos.test.acceptance.framework;
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
 
-import org.testng.Assert;
+package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -14,9 +32,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         super(selenium);
     }
     
-    public DefineNewLoanProductPage verifyPage() {
-        Assert.assertTrue(selenium.isElementPresent("createLoanProduct.heading"),"Didn't reach Define Loan Product page");
-        return this;
+    public void verifyPage() {
+          this.verifyPage("CreateLoanProduct");
+
     }
 
     public DefineNewLoanProductPage submitPage() {
@@ -40,6 +58,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String minInterestRate;
         private String maxInterestRate;
         private String defaultInterestRate;
+        private String freqOfInstallments;
         private String defInstallments;
         private String maxInstallments;
         private String gracePeriodType;
@@ -155,6 +174,14 @@ public class DefineNewLoanProductPage extends AbstractPage {
             return this.defInstallments;
         }
 
+        public void setFreqOfInstallments(String freqOfInstallments) {
+            this.freqOfInstallments = freqOfInstallments;
+        }
+
+        public String getFreqOfInstallments() {
+            return freqOfInstallments;
+        }
+
         public void setDefInstallments(String defInstallments) {
             this.defInstallments = defInstallments;
         }
@@ -194,22 +221,21 @@ public class DefineNewLoanProductPage extends AbstractPage {
         
     }
         
- //  Need to add form parameters 
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage(SubmitFormParameters parameters) {
- //   public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
         
-        selenium.type("prdOfferingName", parameters.getOfferingName());
-        selenium.type("prdOfferingShortName", parameters.getOfferingShortName());
-        selenium.type("description", parameters.getDescription());
+        selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
+        selenium.type("createLoanProduct.input.prdOfferingShortName", parameters.getOfferingShortName());
+        selenium.type("createLoanProduct.input.description", parameters.getDescription());
         selenium.select("prdCategory", "label=" + parameters.getCategory());
         selenium.select("prdApplicableMaster", "label=" + parameters.getApplicableFor());
         selenium.type("minLoanAmount", parameters.getMinLoanAmount());
         selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
         selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
         selenium.select("interestTypes", "label=" + parameters.getInterestTypes());
-        selenium.type("maxInterestRate", parameters.getMaxInterestRate());
-        selenium.type("minInterestRate", parameters.getMinInterestRate() );
-        selenium.type("defInterestRate", parameters.getDefaultInterestRate());
+        selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
+        selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
+        selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
+        selenium.click("createLoanProduct.radio.freqOfInstallments" + parameters.getFreqOfInstallments()); 
         selenium.type("maxNoInstallments", parameters.getMaxInstallments());
         selenium.type("defNoInstallments", parameters.getDefInstallments());
         selenium.select("gracePeriodType", "label=" + parameters.getGracePeriodType());
