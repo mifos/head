@@ -88,6 +88,10 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
         this.miscFeePaid = miscFeePaid;
     }
 
+    public void payMiscFee(Money miscFeeToPay) {
+        this.miscFeePaid = this.miscFeePaid.add(miscFeeToPay);
+    }
+
     public Money getMiscPenalty() {
         return miscPenalty;
     }
@@ -102,6 +106,10 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 
     void setMiscPenaltyPaid(Money miscPenaltyPaid) {
         this.miscPenaltyPaid = miscPenaltyPaid;
+    }
+
+    public void payMiscPenalty(Money miscPenaltyToPay) {
+        this.miscPenaltyPaid = this.miscPenaltyPaid.add(miscPenaltyToPay);
     }
 
     public Money getMiscFeeDue() {

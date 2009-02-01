@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
@@ -44,6 +45,7 @@ import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -125,14 +127,13 @@ public class AccountApplyPaymentAction extends BaseAction {
                 userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
 
         validateAccountPayment(accountPaymentDto, accountId, request);
+        validateAmount(accountPaymentDto, actionForm.getAmount());
 
         PaymentTypeDto paymentTypeDto;
-        String amount = "0";
+        String amount = actionForm.getAmount();
         if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
-            amount = actionForm.getAmount();
             paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         } else {
-            amount = accountPaymentDto.getTotalPaymentDue().toString();
             paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         }
 
@@ -144,6 +145,13 @@ public class AccountApplyPaymentAction extends BaseAction {
 
         return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
 
+    }
+
+    private void validateAmount(AccountPaymentDto accountPaymentDto, String amount) throws ApplicationException {
+        if (new BigDecimal(amount).compareTo(new BigDecimal(accountPaymentDto.getTotalPaymentDue())) > 0 ||
+            new BigDecimal(amount).compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ApplicationException("errors.invalid_amount_according_to_due");
+        }
     }
 
     private void validateAccountPayment(AccountPaymentDto accountPaymentDto, Integer accountId, HttpServletRequest request) throws Exception {

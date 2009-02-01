@@ -356,7 +356,7 @@ public class CustomerAccountBO extends AccountBO {
             
             BigDecimal miscPenaltyToPay = leftFromPaidIn.min(customerSchedule.getMiscPenaltyDue().getAmount());
             if (miscPenaltyToPay.compareTo(BigDecimal.ZERO) > 0) {
-                customerSchedule.setMiscPenaltyPaid(new Money(totalPaid.getCurrency(), miscPenaltyToPay));
+                customerSchedule.payMiscPenalty(new Money(totalPaid.getCurrency(), miscPenaltyToPay));
                 customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
                 leftFromPaidIn = leftFromPaidIn.subtract(miscPenaltyToPay);
             }
@@ -378,7 +378,7 @@ public class CustomerAccountBO extends AccountBO {
             if (leftFromPaidIn.compareTo(BigDecimal.ZERO) > 0) {
                 miscFeeToPay = leftFromPaidIn.min(customerSchedule.getMiscFeeDue().getAmount());
                 if (miscFeeToPay.compareTo(BigDecimal.ZERO) > 0) {
-                    customerSchedule.setMiscFeePaid(new Money(totalPaid.getCurrency(), miscFeeToPay));
+                    customerSchedule.payMiscFee(new Money(totalPaid.getCurrency(), miscFeeToPay));
                     customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
                     leftFromPaidIn = leftFromPaidIn.subtract(miscFeeToPay);
                 }
@@ -632,6 +632,16 @@ public class CustomerAccountBO extends AccountBO {
         });
 
         return customerSchedulePayments;
+    }
+
+    @Override
+     public Money getTotalPaymentDue() {
+        Money totalAmt = getTotalAmountInArrears();
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null && !nextInstallment.isPaid()) {
+            totalAmt = totalAmt.add(getDueAmount(nextInstallment));
+        }
+        return totalAmt;
     }
 
     public void generateNextSetOfMeetingDates(ScheduledDateGeneration scheduleGenerationStrategy) {

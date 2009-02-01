@@ -62,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.mifos.customers.business.CustomerAccountBO;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -126,7 +127,7 @@ public class StandardAccountService implements AccountService {
         final int accountId = accountPaymentParametersDto.getAccountId();
         final AccountBO account = this.accountPersistence.getAccount(accountId);
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
-        if (validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
+        if (!(account instanceof CustomerAccountBO) && validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
             throw new AccountException("errors.invalidTxndate");
         }
 

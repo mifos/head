@@ -118,7 +118,7 @@ explanation of the license and how it is applied.
 								<c:otherwise>
 								<html-el:text property="amount"
 								styleId="applypayment.input.amount"
-								disabled="true" name="applyPaymentActionForm" />
+								name="applyPaymentActionForm" />
 								</c:otherwise>
 							</c:choose>
 							</td>
