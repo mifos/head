@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
-// TODO: rename to DatabaseInitFilter
 public class DatabaseInitFilter implements Filter {
     
     private static boolean databaseVerified = false;
