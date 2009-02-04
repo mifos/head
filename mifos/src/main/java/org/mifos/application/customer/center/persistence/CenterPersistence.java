@@ -26,11 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -43,9 +41,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.persistence.SessionPersistence;
 import org.mifos.framework.security.util.UserContext;
 
 public class CenterPersistence extends Persistence {
