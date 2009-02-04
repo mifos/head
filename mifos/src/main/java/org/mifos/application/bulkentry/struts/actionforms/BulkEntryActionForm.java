@@ -256,7 +256,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 
 				for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
 					attendance[rowIndex] = request
-							.getParameter("attendenceSelected[" + rowIndex
+							.getParameter("attendanceSelected[" + rowIndex
 									+ "]");
 					for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
 						enteredAmount[rowIndex][columnIndex] = request

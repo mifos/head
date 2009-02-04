@@ -186,7 +186,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("attendenceSelected[0]", "2");
+		addRequestParameter("attendanceSelected[0]", "2");
 		addRequestDateParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
 		addRequestParameter("customerId", "1");
@@ -288,7 +288,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 //		setRequestPathInfo("/bulkentryaction.do");
 //		addRequestParameter("method", "create");
 //		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-//		addRequestParameter("attendenceSelected[0]", "2");
+//		addRequestParameter("attendanceSelected[0]", "2");
 //		addRequestDateParameter("transactionDate", day + "/" + (zeroBasedMonth + 1) + "/"
 //				+ year);
 //
@@ -324,7 +324,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "preview");
-		addRequestParameter("attendenceSelected[0]", "1");
+		addRequestParameter("attendanceSelected[0]", "1");
 		addRequestParameter("enteredAmount[0][0]", "212.0");
 		addRequestParameter("enteredAmount[1][1]", "212.0");
 		addRequestParameter("enteredAmount[0][1]", "212.0");

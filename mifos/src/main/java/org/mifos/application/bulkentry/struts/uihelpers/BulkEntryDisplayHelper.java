@@ -435,7 +435,7 @@ public class BulkEntryDisplayHelper {
 			CollectionSheetEntryView collectionSheetEntryView, String method) {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
-			builder.append("<select name=\"attendenceSelected[" + rows
+			builder.append("<select name=\"attendanceSelected[" + rows
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
@@ -467,7 +467,7 @@ public class BulkEntryDisplayHelper {
 		} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
-			builder.append("<select name=\"attendenceSelected[" + rows
+			builder.append("<select name=\"attendanceSelected[" + rows
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
