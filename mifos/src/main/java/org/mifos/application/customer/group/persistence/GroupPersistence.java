@@ -15,6 +15,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
@@ -55,7 +56,7 @@ public class GroupPersistence extends Persistence {
                 template.getExternalId(), template.isTrained(), template.getTrainedDate(),
                 template.getAddress(), template.getCustomFieldViews(), template.getFees(),
                 template.getLoanOfficerId(), center);
-        group.save();
+        saveGroup(group);
         return group;
     }
 
@@ -228,5 +229,17 @@ public class GroupPersistence extends Persistence {
     	return result;
     }
     
-    
+
+    public void saveGroup(GroupBO groupBo) throws CustomerException {
+        CustomerPersistence customerPersistence = new CustomerPersistence();
+        customerPersistence.saveCustomer(groupBo);
+        try {
+            if (groupBo.getParentCustomer() != null)
+                customerPersistence.createOrUpdate(groupBo
+                        .getParentCustomer());
+        } catch (PersistenceException pe) {
+            throw new CustomerException(
+                    CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
+        }
+    }   
 }

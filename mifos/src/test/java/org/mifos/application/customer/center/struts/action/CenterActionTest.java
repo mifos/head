@@ -12,6 +12,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -502,7 +503,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		center = new CenterBO(TestUtils.makeUser(), "center",
 				new Address(), null, null, null, null, Short.valueOf("3"),
 				getMeeting(), Short.valueOf("1"));
-		center.save();
+		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class,

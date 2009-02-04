@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -197,7 +198,7 @@ public class CenterBOTest extends MifosTestCase {
 		meeting = getMeeting();
 		center = new CenterBO(TestUtils.makeUser(), name, null,
 				null, null, null, null, officeId, meeting, personnel);
-		center.save();
+		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -212,7 +213,7 @@ public class CenterBOTest extends MifosTestCase {
 		center = new CenterBO(TestUtils.makeUser(), name, null,
 				getCustomFields(), null, null, null, officeId, meeting,
 				personnel);
-		center.save();
+		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -275,7 +276,7 @@ public class CenterBOTest extends MifosTestCase {
 		center = new CenterBO(TestUtils.makeUser(), name, null,
 				getCustomFields(), fees, externalId, mfiJoiningDate, officeId,
 				meeting, personnel);
-		center.save();
+		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center

@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.customer.client.business;
 
 import java.io.IOException;
@@ -14,19 +34,15 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
-import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -40,7 +56,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -411,22 +426,8 @@ public class ClientBO extends CustomerBO {
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			this.setCustomerActivationDate(new Date());
 			createAccountsForClient();
-			persistSavingAccounts();
+			new SavingsPersistence().persistSavingAccounts(this);
 			createDepositSchedule();
-		}
-	}
-	
-	@Override
-	public void save() throws CustomerException {
-		super.save();
-		try {
-			if (this.getParentCustomer() != null)
-				new CustomerPersistence().createOrUpdate(this
-						.getParentCustomer());
-			persistSavingAccounts();
-		} catch (PersistenceException pe) {
-			throw new CustomerException(
-					CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
 		}
 	}
 
@@ -836,20 +837,7 @@ public class ClientBO extends CustomerBO {
 					customFieldDef.getFieldType()));
 		return customFields;
 	}
-	
-	private void persistSavingAccounts()throws CustomerException{
-		for(AccountBO account: getAccounts()){
-			if(account.getType() == AccountTypes.SAVINGS_ACCOUNT
-					&& account.getGlobalAccountNum()==null){
-				try {
-					((SavingsBO)account).save();
-				} catch (AccountException ae) {
-					throw new CustomerException(ae);
-				}
-			}
-		}
-	}
-	
+
 	private boolean isGroupStatusLower(Short clientStatusId, Short parentStatus) {
 		return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId),
 				CustomerStatus.fromInt(parentStatus));

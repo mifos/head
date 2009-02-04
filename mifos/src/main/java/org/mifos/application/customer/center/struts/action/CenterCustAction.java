@@ -57,6 +57,7 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -208,7 +209,7 @@ public class CenterCustAction extends CustAction {
 				getDateFromString(actionForm.getMfiJoiningDate(), userContext
 						.getPreferredLocale()), actionForm.getOfficeIdValue(),
 				meeting, actionForm.getLoanOfficerIdValue());
-		center.save();
+		new CenterPersistence().saveCenter(center);
 		actionForm.setCustomerId(center.getCustomerId().toString());
 		actionForm.setGlobalCustNum(center.getGlobalCustNum());
 		center = null;

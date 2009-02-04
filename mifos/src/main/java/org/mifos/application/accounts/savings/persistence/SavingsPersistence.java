@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.accounts.savings.persistence;
 
 import java.util.Date;
@@ -8,6 +28,7 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -15,6 +36,8 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
@@ -214,4 +237,16 @@ public class SavingsPersistence extends Persistence {
 		return queryResult;
 
 	}
+
+	public void persistSavingAccounts(ClientBO clientBO) throws CustomerException {
+        for (AccountBO account : clientBO.getAccounts()) {
+            if (account.getType() == AccountTypes.SAVINGS_ACCOUNT && account.getGlobalAccountNum() == null) {
+                try {
+                    ((SavingsBO) account).save();
+                } catch (AccountException ae) {
+                    throw new CustomerException(ae);
+                }
+            }
+        }
+    }
 }

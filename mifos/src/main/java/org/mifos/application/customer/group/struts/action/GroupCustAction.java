@@ -61,6 +61,7 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -223,7 +224,7 @@ public class GroupCustAction extends CustAction {
 		else
 			group = createGroupWithoutCenter(actionForm, request);
 		
-		group.save();
+		new GroupPersistence().saveGroup(group);
 		actionForm.setCustomerId(group.getCustomerId().toString());
 		actionForm.setGlobalCustNum(group.getGlobalCustNum());
 		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,

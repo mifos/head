@@ -69,6 +69,7 @@ import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -527,7 +528,7 @@ public class ClientCustAction extends CustAction {
 							.getClientDetailView(), actionForm
 							.getCustomerPicture());
 		}
-		client.save();
+		new CustomerPersistence().saveCustomer(client);
 		actionForm.setCustomerId(client.getCustomerId().toString());
 		actionForm.setGlobalCustNum(client.getGlobalCustNum());
 		client = null;

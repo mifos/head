@@ -56,9 +56,11 @@ import org.mifos.application.customer.client.business.ClientInitialSavingsOfferi
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.business.TestClientBO;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -1355,7 +1357,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null);
-		client.save();
+		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class,
@@ -1699,7 +1701,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null);
-		client.save();
+		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class,
@@ -1814,7 +1816,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		group = new GroupBO(userContext, "groupName", CustomerStatus.GROUP_PENDING,
 				"1234", false, null, null, null,null, Short.valueOf("3"),Short.valueOf("3"), meeting, Short.valueOf("3"));
-		group.save();
+		new GroupPersistence().saveGroup(group);
 		HibernateUtil.commitTransaction();
 	}
 

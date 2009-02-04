@@ -18,6 +18,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;
@@ -102,7 +103,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 					null, null, null, YesNoFlag.YES.getValue(),
 					clientNameDetailView, spouseNameDetailView,
 					clientDetailView, null);
-			client.save();
+			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		} catch (CustomerException e) {
 			throw new RuntimeException(e);

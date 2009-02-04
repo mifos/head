@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.customer.center.persistence;
 
 import java.util.ArrayList;
@@ -6,9 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -22,14 +44,11 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.persistence.SessionPersistence;
 import org.mifos.framework.security.util.UserContext;
 
-public class CenterPersistence extends SessionPersistence {
-
-	public CenterPersistence(SessionHolder sessionHolder) {
-		super(sessionHolder);
-	}
+public class CenterPersistence extends Persistence {
 
 	public CenterPersistence() {
 		super();
@@ -100,7 +119,18 @@ public class CenterPersistence extends SessionPersistence {
 			    template.getAddress(), template.getCustomFieldViews(), template.getFees(),
                 template.getExternalId(), template.getMfiJoiningDate(), template.getOfficeId(),
                 template.getMeeting(), template.getLoanOfficerId());
-        center.save();
+        saveCenter(center);
         return center;
+    }
+
+    public void saveCenter(CenterBO center) throws CustomerException {
+        try {
+            createOrUpdate(center);
+            center.generateGlobalCustomerNumber();
+            createOrUpdate(center);
+        } catch (PersistenceException e) {
+            throw new CustomerException(
+                    CustomerConstants.CREATE_FAILED_EXCEPTION, e);
+        }
     }
 }

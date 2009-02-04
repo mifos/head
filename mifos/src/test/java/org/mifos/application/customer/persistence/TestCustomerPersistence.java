@@ -823,8 +823,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 				CustomerStatus.CLIENT_CLOSED, group);
 		ClientBO client3 = TestObjectFactory.createClient("client3",
 				CustomerStatus.CLIENT_CANCELLED, group1);
-		List<Integer> customerIds = customerPersistence.getCustomers(Short
-				.valueOf("3"));
+		List<Integer> customerIds = customerPersistence.getCustomers(
+		        CustomerLevel.CENTER.getValue());
 		assertEquals(2, customerIds.size());
 
 		TestObjectFactory.cleanUp(client3);

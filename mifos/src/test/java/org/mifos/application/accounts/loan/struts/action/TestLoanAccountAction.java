@@ -200,7 +200,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 			}
 			}
 			GroupBO group = GroupBO.createInstanceForTest(userContext, groupTemplate, center, disbursementDate);
-			group.save();
+			new GroupPersistence().saveGroup(group);
 			return group;
 		}
 	

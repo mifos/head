@@ -49,7 +49,7 @@ public class TestCenterPersistence extends MifosTestCase{
             throws PersistenceException, OfficeException,
             MeetingException, CustomerException, ValidationException {
         UserContext userContext = TestUtils.makeUser();
-        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        long beforeTransactionCount = getStatisticsService().getSuccessfulTransactionCount();
         OfficeTemplate template =
                 OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
         try {
@@ -64,7 +64,8 @@ public class TestCenterPersistence extends MifosTestCase{
         finally {
             HibernateUtil.rollbackTransaction();
         }
-        assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
+        long afterTransactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        assertEquals(beforeTransactionCount, afterTransactionCount);
     }
 
     public void testIsCenterExists_true() throws Exception {

@@ -105,14 +105,17 @@ import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -323,7 +326,7 @@ public class TestObjectFactory {
 			center = new CenterBO(TestUtils.makeUserWithLocales(),
 					customerName, null, null, fees, null, null, officeId,
 					meeting, personnelId);
-			center.save();
+			new CenterPersistence().saveCenter(center);
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -414,7 +417,7 @@ public class TestObjectFactory {
 			group = new GroupBO(TestUtils.makeUserWithLocales(), customerName,
 					customerStatus, externalId, trained, trainedDate, address,
 					customFields, fees, formedById, parentCustomer);
-			group.save();
+			new GroupPersistence().saveGroup(group);
 			HibernateUtil.commitTransaction();
 		}
 		catch (Exception e) {
@@ -454,7 +457,7 @@ public class TestObjectFactory {
 					customerStatus, externalId, trained, trainedDate, address,
 					customFields, fees, formedById, officeId, meeting,
 					loanOfficerId);
-			group.save();
+			new GroupPersistence().saveGroup(group);
 			HibernateUtil.commitTransaction();
 		}
 		catch (Exception e) {
@@ -487,7 +490,7 @@ public class TestObjectFactory {
 					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null);
-			client.save();
+			new ClientPersistence().saveClient(client);
 		}
 		catch (CustomerException e) {
 			throw new RuntimeException(e);
@@ -523,7 +526,7 @@ public class TestObjectFactory {
 					meeting, PersonnelConstants.SYSTEM_USER, new Date(), null,
 					null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null);
-			client.save();
+			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		}
 		catch (Exception e) {
@@ -583,7 +586,7 @@ public class TestObjectFactory {
 						clientNameDetailView, spouseNameDetailView,
 						clientDetailView, null);
 
-			client.save();
+			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 
 		}

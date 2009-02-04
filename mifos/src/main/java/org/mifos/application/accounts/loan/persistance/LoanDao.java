@@ -37,6 +37,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.persistence.DataAccessObject;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -48,7 +49,7 @@ import org.mifos.framework.util.helpers.Money;
  * Further refactoring: loan creation seems like a good
  * candidate to make use of the Factory pattern.
  */
-public class LoanDao {
+public class LoanDao implements DataAccessObject {
 
     public LoanBO createLoan(UserContext userContext,
             LoanOfferingBO loanOffering, CustomerBO customer,

@@ -14,6 +14,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -82,7 +83,7 @@ public class DataExchanger {
 		for (Center center : centers) {
 			CenterBO centerBO = CenterMapper.mapCenterToCenterBO(center, userContext);
 			try {
-				centerBO.save();			
+				new CenterPersistence().saveCenter(centerBO);		
 			}
 			catch (CustomerException e) {
 				throw new RuntimeException(e);

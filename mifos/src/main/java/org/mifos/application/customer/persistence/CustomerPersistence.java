@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.customer.persistence;
 
+package org.mifos.application.customer.persistence;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -51,20 +51,18 @@ import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
-import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerStatusFlagEntity;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.BasicGroupInfo;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -82,8 +80,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -124,7 +120,18 @@ public class CustomerPersistence extends Persistence {
 		}
 	};
 	
-	public CustomerPersistence() {
+	public void saveCustomer(CustomerBO customer) throws CustomerException {
+	    try {
+	        createOrUpdate(customer);
+	        customer.generateGlobalCustomerNumber();
+	        createOrUpdate(customer);
+	    } catch (PersistenceException e) {
+	        throw new CustomerException(
+	                CustomerConstants.CREATE_FAILED_EXCEPTION, e);
+	    }
+    }
+
+    public CustomerPersistence() {
 	}
 
 	public List<CustomerView> getChildrenForParent(Integer customerId,

@@ -30,6 +30,7 @@ import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
@@ -483,7 +484,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = new GroupBO(TestUtils.makeUser(), name,
 				CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
 				getAddress(), getCustomFields(), getFees(), personnel, center);
-		group.save();
+		new GroupPersistence().saveGroup(group);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -522,7 +523,7 @@ public class GroupBOTest extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, externalId, false, null,
 				getAddress(), getCustomFields(), getFees(), personnel, office,
 				getMeeting(), personnel);
-		group.save();
+		new GroupPersistence().saveGroup(group);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -1324,7 +1325,7 @@ public class GroupBOTest extends MifosTestCase {
 					CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
 					getAddress(), null, null, personnel, center);
 			TestObjectFactory.simulateInvalidConnection();
-			group.save();
+			new GroupPersistence().saveGroup(group);
 			fail();
 		} catch (CustomerException ce) {
 			assertEquals("Customer.CreateFailed", ce.getKey());
