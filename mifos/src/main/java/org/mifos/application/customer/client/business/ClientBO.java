@@ -359,38 +359,40 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	public void changeStatus(Short newStatusId, Short flagId, String comment)
+	public void changeStatus(Short newStatusId, Short flagId, String comment,
+	        CustomerPersistence customerPersistence)
 			throws CustomerException {
-		super.changeStatus(newStatusId, flagId, comment);
+		super.changeStatus(newStatusId, flagId, comment, customerPersistence);
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
 						.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {
 			resetPositions(getParentCustomer());
 			getParentCustomer().setUserContext(getUserContext());
-			getParentCustomer().update();
+			getParentCustomer().update(customerPersistence);
 			CustomerBO center = getParentCustomer().getParentCustomer();
 			if (center != null) {
 				resetPositions(center);
 				center.setUserContext(getUserContext());
-				center.update();
+				center.update(customerPersistence);
 				center = null;
 			}
 		}
 	}
 	
 	@Override
-	public void updateMeeting(MeetingBO meeting) throws CustomerException {
+	public void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException {
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
 		else
-			saveUpdatedMeeting(meeting);
-		this.update();
+			saveUpdatedMeeting(meeting, customerPersistence);
+		this.update(customerPersistence);
 	}
 
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
+	    throws CustomerException{
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-		super.saveUpdatedMeeting(meeting);
+		super.saveUpdatedMeeting(meeting, customerPersistence);
 		if(getParentCustomer()==null)
 			deleteMeeting(newMeeting);
 	}
@@ -432,18 +434,18 @@ public class ClientBO extends CustomerBO {
 	}
 
 	public void updatePersonalInfo(String displayname, String governmentId,
-			Date dateOfBirth) throws CustomerException {
+			Date dateOfBirth, CustomerPersistence customerPersistence) throws CustomerException {
 		validateForDuplicateNameOrGovtId(displayname, dateOfBirth,
 				governmentId);
 		setDisplayName(displayname);
 		setGovernmentId(governmentId);
 		setDateOfBirth(dateOfBirth);
 		
-		super.update();
+		super.update(customerPersistence);
 	}
 
 
-	public void updateMfiInfo(PersonnelBO personnel) throws CustomerException {
+	public void updateMfiInfo(PersonnelBO personnel, CustomerPersistence customerPersistence) throws CustomerException {
 		if (isActive() || isOnHold()) {
 			validateLO(personnel);
 		}
@@ -451,10 +453,10 @@ public class ClientBO extends CustomerBO {
 		for (AccountBO account: this.getAccounts()) {
 					account.setPersonnel(this.getPersonnel());
 					}
-		super.update();
+		super.update(customerPersistence);
 	}
 
-	public void transferToBranch(OfficeBO officeToTransfer)
+	public void transferToBranch(OfficeBO officeToTransfer, CustomerPersistence customerPersistence)
 			throws CustomerException {
 		validateBranchTransfer(officeToTransfer);
 		logger
@@ -469,13 +471,13 @@ public class ClientBO extends CustomerBO {
 		makeCustomerMovementEntries(officeToTransfer);
 		this.setPersonnel(null);
 		generateSearchId();
-		super.update();
+		super.update(customerPersistence);
 		logger
 				.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :"
 						+ getCustomerId());
 	}
 
-	public void transferToGroup(GroupBO newParent) throws CustomerException {
+	public void transferToGroup(GroupBO newParent, CustomerPersistence customerPersistence) throws CustomerException {
 		validateGroupTransfer(newParent);
 		logger.debug("In ClientBO::transferToGroup(), transfering customerId: "
 				+ getCustomerId() + "to Group Id : "
@@ -485,22 +487,22 @@ public class ClientBO extends CustomerBO {
 			makeCustomerMovementEntries(newParent.getOffice());
 
 		CustomerBO oldParent = getParentCustomer();
-		changeParentCustomer(newParent);
+		changeParentCustomer(newParent, customerPersistence);
 		resetPositions(oldParent);
 
 		if (oldParent.getParentCustomer() != null) {
 			CustomerBO center = oldParent.getParentCustomer();
 			resetPositions(center);
 			center.setUserContext(getUserContext());
-			center.update();
+			center.update(customerPersistence);
 		}
-		this.update();
+		update(customerPersistence);
 		logger
 				.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :"
 						+ getCustomerId());
 	}
 
-	public void handleGroupTransfer() throws CustomerException {
+	public void handleGroupTransfer(CustomerPersistence customerPersistence) throws CustomerException {
 		if (!isSameBranch(getParentCustomer().getOffice())) {
 			makeCustomerMovementEntries(getParentCustomer().getOffice());
 			if (isActive())
@@ -514,7 +516,7 @@ public class ClientBO extends CustomerBO {
 			setPersonnel(getParentCustomer().getPersonnel());
 			setUpdatedMeeting(getParentCustomer().getParentCustomer().getCustomerMeeting().getMeeting());
 		}
-		this.update();
+		update(customerPersistence);
 	}
 
 	public ClientNameDetailEntity getClientName() {
@@ -869,10 +871,10 @@ public class ClientBO extends CustomerBO {
 			throw new CustomerException(ae);
 		}
 	}
-	public void updateClientFlag() throws CustomerException,
+	public void updateClientFlag(CustomerPersistence customerPersistence) throws CustomerException,
 			PersistenceException {
 			this.groupFlag = YesNoFlag.NO.getValue();
-			this.update();
+			update(customerPersistence);
 
 	}
 	
@@ -892,7 +894,7 @@ public class ClientBO extends CustomerBO {
 				: false;
 	}
 	
-	public void addClientToGroup(GroupBO newParent) throws CustomerException {
+	public void addClientToGroup(GroupBO newParent, CustomerPersistence customerPersistence) throws CustomerException {
 		validateAddClientToGroup(newParent);
 
 		if (!isSameBranch(newParent.getOffice()))
@@ -905,10 +907,10 @@ public class ClientBO extends CustomerBO {
 		setSearchId(newParent.getSearchId() + "."
 				+ String.valueOf(newParent.getMaxChildCount()));
 		newParent.setUserContext(getUserContext());
-		newParent.update();
+		newParent.update(customerPersistence);
 		
 		groupFlag = YesNoFlag.YES.getValue();
-		update();
+		update(customerPersistence);
 	}
 	
 	private void validateAddClientToGroup(GroupBO toGroup)

@@ -65,6 +65,7 @@ import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -318,7 +319,8 @@ public class GroupCustAction extends CustAction {
 		groupBO.setVersionNo(group.getVersionNo());
 		groupBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(groupBO);
-		groupBO.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+		groupBO.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), 
+		        actionForm.getCustomFields(), actionForm.getCustomerPositions(), new CustomerPersistence());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	

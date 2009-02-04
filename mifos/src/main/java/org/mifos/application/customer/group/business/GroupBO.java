@@ -145,7 +145,8 @@ public class GroupBO extends CustomerBO {
 			Short loanOfficerId, String externalId, Short trained,
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields,
-			List<CustomerPositionView> customerPositions)
+			List<CustomerPositionView> customerPositions,
+			CustomerPersistence customerPersistence)
 			throws Exception {
 		validateFieldsForUpdate(displayName, loanOfficerId);
 		if (trained != null)
@@ -156,10 +157,10 @@ public class GroupBO extends CustomerBO {
 		updateLoanOfficer(loanOfficerId);
 		setDisplayName(displayName);
 		super.update(userContext, externalId, address, customFields,
-				customerPositions);
+				customerPositions, customerPersistence);
 	}
 
-	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
+	public void transferToBranch(OfficeBO officeToTransfer, CustomerPersistence customerPersistence)throws CustomerException{
 		validateNewOffice(officeToTransfer);
 		logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
 		validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
@@ -168,19 +169,19 @@ public class GroupBO extends CustomerBO {
 			setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
 		
 		makeCustomerMovementEntries(officeToTransfer);
-		this.setPersonnel(null);
-		this.setSearchId(generateSearchId());
-		this.update();
+		setPersonnel(null);
+		setSearchId(generateSearchId());
+		update(customerPersistence);
 		if(getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				client.setUserContext(getUserContext());
-				((ClientBO)client).handleGroupTransfer();
+				((ClientBO)client).handleGroupTransfer(customerPersistence);
 			}
 		}
 		logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());		
 	}
 	
-	public void transferToCenter(CenterBO newParent)throws CustomerException{
+	public void transferToCenter(CenterBO newParent, CustomerPersistence customerPersistence)throws CustomerException{
 		validateNewCenter(newParent);
 		logger.debug("In GroupBO::transferToCenter(), transfering customerId: " + getCustomerId() +  "to Center Id : "+ newParent.getCustomerId());
 
@@ -192,64 +193,65 @@ public class GroupBO extends CustomerBO {
 				setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
 		}
 		
-		changeParentCustomer(newParent);
+		changeParentCustomer(newParent, customerPersistence);
 		makeInactive(newParent);
 		
-		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
-		this.update();
+		addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
+		update(customerPersistence);
 		if(getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				client.setUserContext(getUserContext());
-				((ClientBO)client).handleGroupTransfer();
+				((ClientBO)client).handleGroupTransfer(customerPersistence);
 			}
 		}
 	}
 	
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{
 		logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: "
 				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-		super.saveUpdatedMeeting(meeting);
+		super.saveUpdatedMeeting(meeting, customerPersistence);
 		if(getParentCustomer()==null)
 			deleteMeeting(newMeeting);
 	}
 	
 	@Override
-	public void updateMeeting(MeetingBO meeting) throws CustomerException{
+	public void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In GroupBO::updateMeeting(), customerId: "
 				+ getCustomerId());
 		if(getParentCustomer()==null){			
 			if(getCustomerMeeting()==null){
 				this.setCustomerMeeting(createCustomerMeeting(meeting));
-				updateMeetingForClients(meeting);
+				updateMeetingForClients(meeting, customerPersistence);
 			}
 			else
-				saveUpdatedMeeting(meeting);
+				saveUpdatedMeeting(meeting, customerPersistence);
 		}else
-			saveUpdatedMeeting(meeting);
-		this.update();
+			saveUpdatedMeeting(meeting, customerPersistence);
+		update(customerPersistence);
 	}
 	
-	private void updateMeetingForClients(MeetingBO meeting)throws CustomerException{
+	private void updateMeetingForClients(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{
 		Set<CustomerBO> clients = getChildren();			
 		if(clients!=null){
 			for(CustomerBO client : clients){
 				client.setUserContext(getUserContext());
-				client.updateMeeting(meeting);
+				client.updateMeeting(meeting, customerPersistence);
 			}
 		}
 	}
 	
 	@Override
-	public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException {
+	public void changeStatus(Short newStatusId, Short flagId, String comment, 
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
-		super.changeStatus(newStatusId, flagId, comment);
+		super.changeStatus(newStatusId, flagId, comment, customerPersistence);
 		if(oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue()) && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				if(client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())){
 					client.setUserContext(getUserContext());
-					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment);
+					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment, customerPersistence);
 				}
 			}
 		}
@@ -567,10 +569,10 @@ public class GroupBO extends CustomerBO {
 	}
 	
 	@Override
-	public void update() throws CustomerException {
+	public void update(CustomerPersistence customerPersistence) throws CustomerException {
 		try {
 			setUpdateDetails();
-			new GroupPersistence().createOrUpdate(this);
+			customerPersistence.createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new CustomerException(
 					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);

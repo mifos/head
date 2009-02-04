@@ -735,7 +735,7 @@ public class ClientCustAction extends CustAction {
 		client.updateClientDetails(actionForm.getClientDetailView());
 		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),
 				actionForm.getGovernmentId(), DateUtils.getDateAsSentFromBrowser(actionForm
-				.getDateOfBirth()));
+				.getDateOfBirth()), new CustomerPersistence());
 
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
@@ -816,7 +816,7 @@ public class ClientCustAction extends CustAction {
 			personnel = client.getPersonnel();
 		}
 
-		client.updateMfiInfo(personnel);
+		client.updateMfiInfo(personnel, new CustomerPersistence());
 		client.setUserContext(getUserContext(request));
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
 				.toString());

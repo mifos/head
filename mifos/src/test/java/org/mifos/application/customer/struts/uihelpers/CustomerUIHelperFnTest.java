@@ -47,6 +47,7 @@ import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.action.EditCustomerStatusAction;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -106,7 +107,7 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(
 				positionEntity, client, client.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
-		group.update();
+		group.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(CustomerBO.class,
@@ -186,7 +187,7 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(
 				positionEntity, client, client.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
-		group.update();
+		group.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(CustomerBO.class,

@@ -62,6 +62,7 @@ import org.mifos.application.customer.center.struts.actionforms.CenterCustAction
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -294,7 +295,8 @@ public class CenterCustAction extends CustAction {
 		centerBO.update(getUserContext(request), actionForm
 				.getLoanOfficerIdValue(), actionForm.getExternalId(),
 				mfiJoiningDate, actionForm.getAddress(), actionForm
-						.getCustomFields(), actionForm.getCustomerPositions());
+						.getCustomFields(), actionForm.getCustomerPositions(),
+						new CustomerPersistence());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

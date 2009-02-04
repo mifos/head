@@ -3875,7 +3875,8 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testGetTotalAmountDueForActiveCustomers() throws Exception {
 		savings = getSavingsAccountForCenter();
 		client1.changeStatus(CustomerStatus.CLIENT_CLOSED,
-				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "Client closed");
+				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "Client closed",
+				new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());

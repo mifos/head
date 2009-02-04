@@ -95,11 +95,11 @@ public class CenterBO extends CustomerBO {
 	}
 
 	@Override
-	public void updateMeeting(MeetingBO meeting) throws CustomerException{
+	public void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CenterBO::updateMeeting(), customerId: "
 				+ getCustomerId());
-		saveUpdatedMeeting(meeting);
-		this.update();
+		saveUpdatedMeeting(meeting, customerPersistence);
+		this.update(customerPersistence);
 	}
 	
 	private void validateFields(String displayName, MeetingBO meeting,
@@ -144,11 +144,14 @@ public class CenterBO extends CustomerBO {
 		logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
 	
-	public void update(UserContext userContext, Short loanOfficerId, String externalId, Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) throws Exception {
+	public void update(UserContext userContext, Short loanOfficerId, String externalId, 
+	        Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, 
+	        List<CustomerPositionView> customerPositions,
+	        CustomerPersistence customerPersistence) throws Exception {
 		validateFieldsForUpdate(loanOfficerId);
 		setMfiJoiningDate(mfiJoiningDate);
 		updateLoanOfficer(loanOfficerId);
-		super.update(userContext, externalId, address, customFields, customerPositions);
+		super.update(userContext, externalId, address, customFields, customerPositions, customerPersistence);
 	}
 	
 	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{
@@ -168,9 +171,9 @@ public class CenterBO extends CustomerBO {
 	}
 		
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{	
+	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{	
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-		super.saveUpdatedMeeting(meeting);
+		super.saveUpdatedMeeting(meeting, customerPersistence);
 		deleteMeeting(newMeeting);
 	}
 }

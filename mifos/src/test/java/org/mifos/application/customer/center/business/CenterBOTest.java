@@ -11,6 +11,7 @@ import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
@@ -95,7 +96,8 @@ public class CenterBOTest extends MifosTestCase {
 		center.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.update(TestUtils.makeUser(), personnel,
-				externalId, mfiJoiningDate, address, null, null);
+				externalId, mfiJoiningDate, address, null, null,
+				new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -301,7 +303,7 @@ public class CenterBOTest extends MifosTestCase {
 		createCustomers();
 		try {
 			center.update(TestUtils.makeUser(), null, "1234",
-					null, null, null, null);
+					null, null, null, null, new CustomerPersistence());
 			fail();
 		} catch (CustomerException ce) {
 			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
@@ -319,7 +321,8 @@ public class CenterBOTest extends MifosTestCase {
 		address.setLine1(addressLine1);
 
 		center.update(TestUtils.makeUser(), personnel,
-				externalId, mfiJoiningDate, address, null, null);
+				externalId, mfiJoiningDate, address, null, null,
+				new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -338,24 +341,25 @@ public class CenterBOTest extends MifosTestCase {
 
 	public void testSuccessfulUpdateWithoutLO_in_InActiveState()
 			throws Exception {
+	    CustomerPersistence customerPersistence = new CustomerPersistence();
 		createCustomers();
 		client.changeStatus(CustomerStatus.CLIENT_CANCELLED, 
 				CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW, 
-				"client cancelled");
-		client.update();
+				"client cancelled", customerPersistence);
+		client.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
-				"group cancelled");
-		group.update();
+				"group cancelled",customerPersistence);
+		group.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
-				"Center_Inactive");
-		center.update();
+				"Center_Inactive",customerPersistence);
+		center.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -365,7 +369,7 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), null, center
 				.getExternalId(), center.getMfiJoiningDate(), center
-				.getAddress(), null, null);
+				.getAddress(), null, null,customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -392,7 +396,7 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), newLO
 				.getPersonnelId(), center.getExternalId(), center
-				.getMfiJoiningDate(), center.getAddress(), null, null);
+				.getMfiJoiningDate(), center.getAddress(), null, null,new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -422,7 +426,7 @@ public class CenterBOTest extends MifosTestCase {
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		center.setUserContext(TestObjectFactory.getContext());
-		center.updateMeeting(newMeeting);
+		center.updateMeeting(newMeeting, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 

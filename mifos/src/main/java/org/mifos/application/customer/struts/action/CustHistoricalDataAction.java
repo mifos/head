@@ -16,6 +16,7 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -163,7 +164,7 @@ public class CustHistoricalDataAction extends BaseAction {
 		setCustomerHistoricalDataEntity(customerBO, historicalActionForm,
 				customerHistoricalDataEntity);
 		customerBO.updateHistoricalData(customerHistoricalDataEntity);
-		customerBO.update();
+		customerBO.update(new CustomerPersistence());
 		return mapping.findForward(ActionForwards.updateHistoricalData_success
 				.toString());
 	}

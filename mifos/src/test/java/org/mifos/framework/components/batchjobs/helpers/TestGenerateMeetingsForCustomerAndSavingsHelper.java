@@ -10,6 +10,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -143,7 +144,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		// give batch jobs something useful to do
 		// TODO: move this method to a shared util class?
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
-		center.update();
+		center.update(new CustomerPersistence());
 	}
 	
 	

@@ -59,6 +59,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -542,7 +543,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		group.addCustomerPosition(customerPositionEntity);
 		savingsBO = getSavingsAccount("fsaf6","ads6");
 		loanBO = getLoanAccount();
-		group.update();
+		group.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 

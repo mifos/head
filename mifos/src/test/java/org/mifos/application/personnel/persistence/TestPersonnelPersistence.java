@@ -11,6 +11,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -175,8 +176,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	public void testClosedCustomerUnderLO() throws Exception{
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
-		center.update();
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive", new CustomerPersistence());
+		center.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
@@ -187,8 +188,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED);
 		assertTrue(persistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
-		center.update();
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive", new CustomerPersistence());
+		center.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());

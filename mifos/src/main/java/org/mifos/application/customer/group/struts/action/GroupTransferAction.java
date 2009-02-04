@@ -128,7 +128,7 @@ public class GroupTransferAction extends BaseAction {
 		group.setVersionNo(groupInSession.getVersionNo());
 		group.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(group);
-		group.transferToBranch(officeToTransfer);
+		group.transferToBranch(officeToTransfer, new CustomerPersistence());
 		groupInSession = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
@@ -181,7 +181,7 @@ public class GroupTransferAction extends BaseAction {
 		group.setUserContext(getUserContext(request));
 		group.setVersionNo(groupInSession.getVersionNo());
 		setInitialObjectForAuditLogging(group);
-		group.transferToCenter(transferToCenter);
+		group.transferToCenter(transferToCenter, new CustomerPersistence());
 		groupInSession = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
@@ -257,14 +257,15 @@ public class GroupTransferAction extends BaseAction {
 		ClientBO client = getClientBusinessService().getClient(
 				customerBO.getCustomerId());
 	
-		client.updateClientFlag();
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		client.updateClientFlag(customerPersistence);
 		setInitialObjectForAuditLogging(customerBO);
 		PersonnelBO personnel=null;
 		if (!StringUtils.isNullOrEmpty(actionForm.getAssignedLoanOfficerId())){
 		personnel = getPersonnelBusinessService().getPersonnel(
 				Short.valueOf(actionForm.getAssignedLoanOfficerId()));
 		}
-		customerBO.removeGroupMemberShip(personnel,actionForm.getComment());
+		customerBO.removeGroupMemberShip(personnel,actionForm.getComment(), customerPersistence);
 		
 		customerBOInSession = null;
 		customerBO = null;

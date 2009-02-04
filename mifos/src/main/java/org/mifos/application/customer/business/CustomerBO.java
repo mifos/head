@@ -446,35 +446,36 @@ public abstract class CustomerBO extends BusinessObject {
 	            userContext.getBranchGlobalNum());
 	}
 
-	public void update() throws CustomerException {
+    protected void persist() throws CustomerException {
+        try {
+            new CustomerPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new CustomerException(
+                    CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+        }
+    }
+    
+	public void update(CustomerPersistence customerPersistence) throws CustomerException {
 		try {
 			setUpdateDetails();
-			new CustomerPersistence().createOrUpdate(this);
+			customerPersistence.createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new CustomerException(
 					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
 		}
 	}
 
-	protected void persist() throws CustomerException {
-		try {
-			new CustomerPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new CustomerException(
-					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
-		}
-	}
-	
 	public void update(UserContext userContext, String externalId,
 			Address address, List<CustomFieldView> customFields,
-			List<CustomerPositionView> customerPositions)
+			List<CustomerPositionView> customerPositions,
+			CustomerPersistence customerPersistence)
 			throws CustomerException {
 		this.setUserContext(userContext);
 		this.setExternalId(externalId);
 		updateAddress(address);
 		updateCustomFields(customFields);
 		updateCustomerPositions(customerPositions);
-		this.update();
+		this.update(customerPersistence);
 	}
 
 	public void updateAddress(Address address) throws CustomerException {
@@ -704,11 +705,12 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 	
 	public void changeStatus(
-			CustomerStatus newStatus, CustomerStatusFlag flag, String comment) 
+			CustomerStatus newStatus, CustomerStatusFlag flag, String comment,
+			CustomerPersistence customerPersistence) 
 	throws CustomerException {
 		changeStatus(newStatus.getValue(), 
 			flag == null ? null : flag.getValue(), 
-			comment);
+			comment, customerPersistence);
 	}
 
 	/**
@@ -716,7 +718,8 @@ public abstract class CustomerBO extends BusinessObject {
 	 * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)} 
 	 * instead.
 	 */
-	public void changeStatus(Short newStatusId, Short flagId, String comment)
+	public void changeStatus(Short newStatusId, Short flagId, String comment,
+	        CustomerPersistence customerPersistence)
 			throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
 		validateStatusChange(newStatusId);
@@ -759,7 +762,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		
 		handleActiveForFirstTime(oldStatusId, newStatusId);
-		this.update();
+		update(customerPersistence);
 	}
 
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
@@ -772,26 +775,26 @@ public abstract class CustomerBO extends BusinessObject {
 		}		
 	}
 
-	public abstract void updateMeeting(MeetingBO meeting)
+	public abstract void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
 			throws CustomerException;
 
-	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{
 		logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: "
 				+ getCustomerId());
 		getCustomerMeeting().setUpdatedMeeting(meeting);
-		setUpdatedMeetingForChildren(meeting);
+		setUpdatedMeetingForChildren(meeting, customerPersistence);
 		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 		this.persist();
 	}
 	
-	private void setUpdatedMeetingForChildren(MeetingBO meeting) throws CustomerException{
+	private void setUpdatedMeetingForChildren(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::setUpdatedMeetingForChildren(), customerId: "
 				+ getCustomerId());
 		Set<CustomerBO> childList = getChildren();
 		if(childList!=null){
 			for(CustomerBO child : childList){
 				child.setUserContext(getUserContext());
-				child.updateMeeting(meeting);
+				child.updateMeeting(meeting, customerPersistence);
 			}
 		}	
 	}
@@ -1095,7 +1098,8 @@ public abstract class CustomerBO extends BusinessObject {
 		this.addCustomerMovement(newCustomerMovement);
 	}
 
-	protected void changeParentCustomer(CustomerBO newParent)
+	protected void changeParentCustomer(CustomerBO newParent,
+	        CustomerPersistence customerPersistence)
 			throws CustomerException {
 		CustomerBO oldParent = getParentCustomer();
 		setParentCustomer(newParent);
@@ -1111,9 +1115,9 @@ public abstract class CustomerBO extends BusinessObject {
 				+ String.valueOf(newParent.getMaxChildCount()));
 
 		oldParent.setUserContext(getUserContext());
-		oldParent.update();
+		oldParent.update(customerPersistence);
 		newParent.setUserContext(getUserContext());
-		newParent.update();
+		newParent.update(customerPersistence);
 	}
 
 	protected String generateSystemId() {
@@ -1299,7 +1303,8 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
-	public void removeGroupMemberShip(PersonnelBO personnel, String comment) throws PersistenceException, CustomerException {
+	public void removeGroupMemberShip(PersonnelBO personnel, String comment,
+	        CustomerPersistence customerPersistence) throws PersistenceException, CustomerException {
 
 		PersonnelBO user = new PersonnelPersistence()
 		.getPersonnel(getUserContext().getId());
@@ -1310,12 +1315,12 @@ public abstract class CustomerBO extends BusinessObject {
 			
 			resetPositions(getParentCustomer());
 			getParentCustomer().setUserContext(getUserContext());
-			getParentCustomer().update();
+			getParentCustomer().update(customerPersistence);
 
 			setPersonnel(personnel);
 			setParentCustomer(null);
 			generateSearchId();			
-			this.update();
+			update(customerPersistence);
 		}
 
 	protected void handleAddClientToGroup() throws CustomerException {

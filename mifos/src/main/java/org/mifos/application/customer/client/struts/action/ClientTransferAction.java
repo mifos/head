@@ -49,6 +49,7 @@ import org.mifos.application.customer.client.business.service.ClientBusinessServ
 import org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchInputView;
 import org.mifos.application.office.business.OfficeBO;
@@ -124,7 +125,7 @@ public class ClientTransferAction extends BaseAction {
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);
-		client.transferToBranch(officeToTransfer);
+		client.transferToBranch(officeToTransfer, new CustomerPersistence());
 		clientInSession = null;
 		officeToTransfer = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
@@ -174,7 +175,7 @@ public class ClientTransferAction extends BaseAction {
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);
-		client.transferToGroup(transferToGroup);
+		client.transferToGroup(transferToGroup, new CustomerPersistence());
 		clientInSession = null;
 		transferToGroup = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);

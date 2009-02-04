@@ -31,6 +31,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
@@ -192,7 +193,7 @@ public class GroupBOTest extends MifosTestCase {
 		String meetingPlace = "Bangalore";
 		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		
-		group.updateMeeting(newMeeting);
+		group.updateMeeting(newMeeting, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -241,7 +242,7 @@ public class GroupBOTest extends MifosTestCase {
 		
 		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
-		group.changeStatus(CustomerStatus.GROUP_CANCELLED, null, "Group Cancelled");
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED, null, "Group Cancelled", new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -271,7 +272,7 @@ public class GroupBOTest extends MifosTestCase {
 			group.update(TestUtils.makeUser(), group.getDisplayName(), personnel,
 					"ABCD", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getNewCustomFields(),
-							customerPositionList);
+							customerPositionList, new CustomerPersistence());
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			group = TestObjectFactory.getObject(GroupBO.class, group
@@ -307,7 +308,7 @@ public class GroupBOTest extends MifosTestCase {
 		group.setUserContext(center.getUserContext());
 		HibernateUtil.getSessionTL();
 		HibernateUtil.getInterceptor().createInitialValueMap(group);
-		group.transferToCenter(center1);
+		group.transferToCenter(center1, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -557,7 +558,7 @@ public class GroupBOTest extends MifosTestCase {
 		group.update(TestUtils.makeUser(), newName, personnel,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
-				new ArrayList<CustomerPositionView>());
+				new ArrayList<CustomerPositionView>(), new CustomerPersistence());
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(newName, group.getDisplayName());
@@ -576,7 +577,7 @@ public class GroupBOTest extends MifosTestCase {
 		group.update(TestUtils.makeUser(), newName, personnel,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
-				new ArrayList<CustomerPositionView>());
+				new ArrayList<CustomerPositionView>(), new CustomerPersistence());
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(newName, group.getDisplayName());
@@ -596,7 +597,7 @@ public class GroupBOTest extends MifosTestCase {
 			group.update(TestUtils.makeUser(), newName, null,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
-					new ArrayList<CustomerPositionView>());
+					new ArrayList<CustomerPositionView>(), new CustomerPersistence());
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -617,7 +618,7 @@ public class GroupBOTest extends MifosTestCase {
 			group.update(TestUtils.makeUser(), newName, null,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
-					new ArrayList<CustomerPositionView>());
+					new ArrayList<CustomerPositionView>(), new CustomerPersistence());
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -641,7 +642,7 @@ public class GroupBOTest extends MifosTestCase {
 			group1.update(TestUtils.makeUser(), name, personnel,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
-					new ArrayList<CustomerPositionView>());
+					new ArrayList<CustomerPositionView>(), new CustomerPersistence());
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -753,7 +754,7 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		try {
-			group.transferToBranch(null);
+			group.transferToBranch(null, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -765,7 +766,7 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		try {
-			group.transferToBranch(group.getOffice());
+			group.transferToBranch(group.getOffice(), new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -782,7 +783,7 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		try {
-			group.transferToBranch(officeBO);
+			group.transferToBranch(officeBO, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -802,7 +803,7 @@ public class GroupBOTest extends MifosTestCase {
 		group1 = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE, officeBO
 				.getOfficeId());
 		try {
-			group.transferToBranch(officeBO);
+			group.transferToBranch(officeBO, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -820,7 +821,7 @@ public class GroupBOTest extends MifosTestCase {
 		officeBO = createOffice();
 		client2.changeStatus(CustomerStatus.CLIENT_CLOSED, 
 				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, 
-				"comment");
+				"comment", new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -829,7 +830,7 @@ public class GroupBOTest extends MifosTestCase {
 		group.setUserContext(TestUtils.makeUser());
 		assertNull(client.getActiveCustomerMovement());
 
-		group.transferToBranch(officeBO);
+		group.transferToBranch(officeBO, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -866,7 +867,7 @@ public class GroupBOTest extends MifosTestCase {
 	public void testUpdateCenterFailure_CenterNULL() throws Exception {
 		createInitialObjects();
 		try {
-			group.transferToCenter(null);
+			group.transferToCenter(null, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -877,7 +878,7 @@ public class GroupBOTest extends MifosTestCase {
 	public void testUpdateCenterFailure_TransferInSameCenter() throws Exception {
 		createInitialObjects();
 		try {
-			group.transferToCenter((CenterBO) group.getParentCustomer());
+			group.transferToCenter((CenterBO) group.getParentCustomer(), new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -889,10 +890,10 @@ public class GroupBOTest extends MifosTestCase {
 	public void testUpdateCenterFailure_TransferInInactiveCenter() throws Exception {
 		createInitialObjects();
 		center1 = createCenter("newCenter");
-		center1.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "changeStatus");
+		center1.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "changeStatus", new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		try {
-			group.transferToCenter(center1);
+			group.transferToCenter(center1, new CustomerPersistence());
 			fail();
 		} catch (CustomerException e) {
 			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e
@@ -909,7 +910,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		try {
-			group.transferToCenter(center1);
+			group.transferToCenter(center1, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -934,7 +935,7 @@ public class GroupBOTest extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		try {
-			group.transferToCenter(center1);
+			group.transferToCenter(center1, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -959,7 +960,7 @@ public class GroupBOTest extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		try {
-			group.transferToCenter(center1);
+			group.transferToCenter(center1, new CustomerPersistence());
 			assertTrue(false);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -984,7 +985,7 @@ public class GroupBOTest extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
-		group.transferToCenter(center1);
+		group.transferToCenter(center1, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
@@ -1029,7 +1030,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		group.setUserContext(center.getUserContext());
-		group.transferToCenter(center1);
+		group.transferToCenter(center1, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -1089,7 +1090,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		group.setUserContext(center.getUserContext());
-		group.transferToCenter(center1);
+		group.transferToCenter(center1, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -1158,7 +1159,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
-		group.transferToCenter(center1);
+		group.transferToCenter(center1, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -1168,7 +1169,7 @@ public class GroupBOTest extends MifosTestCase {
 				.getCustomerId());
 		
 		group.setUserContext(TestObjectFactory.getContext());
-		group.transferToCenter(center);
+		group.transferToCenter(center, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -1211,7 +1212,7 @@ public class GroupBOTest extends MifosTestCase {
 		String meetingPlace = "Bangalore";
 		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		
-		group.updateMeeting(newMeeting);
+		group.updateMeeting(newMeeting, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -1257,7 +1258,7 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		
 		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		group.updateMeeting(newMeeting);
+		group.updateMeeting(newMeeting, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -1292,7 +1293,7 @@ public class GroupBOTest extends MifosTestCase {
 		String meetingPlace = "newPlace";
 		Short recurAfter = Short.valueOf("4");
 		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new Date(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-		group.updateMeeting(newMeeting);
+		group.updateMeeting(newMeeting, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		

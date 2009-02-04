@@ -30,6 +30,7 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -1169,7 +1170,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meetingBO);
 		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(), 14);
-		center.update();
+		center.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -1198,7 +1199,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meetingBO);
 		changeFirstInstallmentDateToPreviousDate(center.getCustomerAccount());
-		center.update();
+		center.update(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center

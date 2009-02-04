@@ -51,6 +51,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -149,7 +150,7 @@ public class AddGroupMembershipAction extends BaseAction {
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);
 
-		client.addClientToGroup(addToGroup);
+		client.addClientToGroup(addToGroup, new CustomerPersistence());
 
 		clientInSession = null;
 		addToGroup = null;
