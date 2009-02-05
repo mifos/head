@@ -42,7 +42,7 @@ public class PaymentData {
 
     private final PersonnelBO personnel;
 
-    private final Date transactionDate;
+    private Date transactionDate;
 
     private String receiptNum;
 
@@ -130,6 +130,10 @@ public class PaymentData {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setTransactionDate(Date date) {
+        this.transactionDate = date;
     }
 
 }

@@ -118,6 +118,8 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                 && customerAccountDto.isValidCustomerAccountAmountEntered()) {
             customerAccountAmountEntered = getDoubleValue(customerAccountDto.getCustomerAccountAmountEntered());
         }
+
+        /*
         if (!customerAccountDto.isValidCustomerAccountAmountEntered()
                 || !customerAccountAmountEntered.equals(customerAccountDto.getTotalAmountDue().getAmountDoubleValue())
                 && !customerAccountAmountEntered.equals(0.0)) {
@@ -125,6 +127,7 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                     CollectionSheetEntryConstants.BULKENTRYINVALIDACCOLLECTIONS, acCollections, parent
                             .getCustomerDetail().getDisplayName()));
         }
+         */
         return errors;
     }
 
