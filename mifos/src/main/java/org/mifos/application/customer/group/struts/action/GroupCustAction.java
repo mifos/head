@@ -75,6 +75,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -319,8 +320,11 @@ public class GroupCustAction extends CustAction {
 		groupBO.setVersionNo(group.getVersionNo());
 		groupBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(groupBO);
-		groupBO.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), 
-		        actionForm.getCustomFields(), actionForm.getCustomerPositions(), new CustomerPersistence());
+		groupBO.update(getUserContext(request),actionForm.getDisplayName(), 
+		        actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),
+		        actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), 
+		        actionForm.getCustomFields(), actionForm.getCustomerPositions(), 
+		        new CustomerPersistence(),new PersonnelPersistence());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	

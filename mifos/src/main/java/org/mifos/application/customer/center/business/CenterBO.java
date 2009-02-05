@@ -44,6 +44,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -148,10 +149,11 @@ public class CenterBO extends CustomerBO {
 	public void update(UserContext userContext, Short loanOfficerId, String externalId, 
 	        Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, 
 	        List<CustomerPositionView> customerPositions,
-	        CustomerPersistence customerPersistence) throws Exception {
+	        CustomerPersistence customerPersistence,
+	        PersonnelPersistence personnelPersistence) throws Exception {
 		validateFieldsForUpdate(loanOfficerId);
 		setMfiJoiningDate(mfiJoiningDate);
-		updateLoanOfficer(loanOfficerId);
+		updateLoanOfficer(loanOfficerId, customerPersistence, personnelPersistence);
 		super.update(userContext, externalId, address, customFields, customerPositions, customerPersistence);
 	}
 	

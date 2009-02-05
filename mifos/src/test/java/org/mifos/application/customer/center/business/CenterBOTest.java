@@ -28,6 +28,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -97,7 +98,7 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.update(TestUtils.makeUser(), personnel,
 				externalId, mfiJoiningDate, address, null, null,
-				new CustomerPersistence());
+				new CustomerPersistence(),new PersonnelPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -303,7 +304,8 @@ public class CenterBOTest extends MifosTestCase {
 		createCustomers();
 		try {
 			center.update(TestUtils.makeUser(), null, "1234",
-					null, null, null, null, new CustomerPersistence());
+					null, null, null, null, 
+					new CustomerPersistence(),new PersonnelPersistence());
 			fail();
 		} catch (CustomerException ce) {
 			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
@@ -322,7 +324,7 @@ public class CenterBOTest extends MifosTestCase {
 
 		center.update(TestUtils.makeUser(), personnel,
 				externalId, mfiJoiningDate, address, null, null,
-				new CustomerPersistence());
+				new CustomerPersistence(),new PersonnelPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -369,7 +371,8 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), null, center
 				.getExternalId(), center.getMfiJoiningDate(), center
-				.getAddress(), null, null,customerPersistence);
+				.getAddress(), null, null,customerPersistence,
+				new PersonnelPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -396,7 +399,8 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), newLO
 				.getPersonnelId(), center.getExternalId(), center
-				.getMfiJoiningDate(), center.getAddress(), null, null,new CustomerPersistence());
+				.getMfiJoiningDate(), center.getAddress(), null, null,
+				new CustomerPersistence(),new PersonnelPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center

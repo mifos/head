@@ -75,6 +75,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -296,7 +297,7 @@ public class CenterCustAction extends CustAction {
 				.getLoanOfficerIdValue(), actionForm.getExternalId(),
 				mfiJoiningDate, actionForm.getAddress(), actionForm
 						.getCustomFields(), actionForm.getCustomerPositions(),
-						new CustomerPersistence());
+						new CustomerPersistence(),new PersonnelPersistence());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

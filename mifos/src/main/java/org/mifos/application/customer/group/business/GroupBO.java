@@ -50,6 +50,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -146,7 +147,8 @@ public class GroupBO extends CustomerBO {
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields,
 			List<CustomerPositionView> customerPositions,
-			CustomerPersistence customerPersistence)
+			CustomerPersistence customerPersistence, 
+			PersonnelPersistence personnelPersistence)
 			throws Exception {
 		validateFieldsForUpdate(displayName, loanOfficerId);
 		if (trained != null)
@@ -154,7 +156,7 @@ public class GroupBO extends CustomerBO {
 		else
 			setTrained(YesNoFlag.NO.getValue());
 		setTrainedDate(trainedDate);
-		updateLoanOfficer(loanOfficerId);
+		updateLoanOfficer(loanOfficerId, customerPersistence, personnelPersistence);
 		setDisplayName(displayName);
 		super.update(userContext, externalId, address, customFields,
 				customerPositions, customerPersistence);

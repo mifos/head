@@ -272,7 +272,8 @@ public class GroupBOTest extends MifosTestCase {
 			group.update(TestUtils.makeUser(), group.getDisplayName(), personnel,
 					"ABCD", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getNewCustomFields(),
-							customerPositionList, new CustomerPersistence());
+							customerPositionList, new CustomerPersistence(),
+							new PersonnelPersistence());
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			group = TestObjectFactory.getObject(GroupBO.class, group
@@ -558,7 +559,8 @@ public class GroupBOTest extends MifosTestCase {
 		group.update(TestUtils.makeUser(), newName, personnel,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
-				new ArrayList<CustomerPositionView>(), new CustomerPersistence());
+				new ArrayList<CustomerPositionView>(), new CustomerPersistence(),
+				new PersonnelPersistence());
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(newName, group.getDisplayName());
@@ -577,7 +579,8 @@ public class GroupBOTest extends MifosTestCase {
 		group.update(TestUtils.makeUser(), newName, personnel,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
-				new ArrayList<CustomerPositionView>(), new CustomerPersistence());
+				new ArrayList<CustomerPositionView>(), new CustomerPersistence(),
+				new PersonnelPersistence());
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(newName, group.getDisplayName());
@@ -597,7 +600,8 @@ public class GroupBOTest extends MifosTestCase {
 			group.update(TestUtils.makeUser(), newName, null,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
-					new ArrayList<CustomerPositionView>(), new CustomerPersistence());
+					new ArrayList<CustomerPositionView>(), new CustomerPersistence(),
+					new PersonnelPersistence());
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -618,7 +622,8 @@ public class GroupBOTest extends MifosTestCase {
 			group.update(TestUtils.makeUser(), newName, null,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
-					new ArrayList<CustomerPositionView>(), new CustomerPersistence());
+					new ArrayList<CustomerPositionView>(), new CustomerPersistence(),
+					new PersonnelPersistence());
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -642,7 +647,8 @@ public class GroupBOTest extends MifosTestCase {
 			group1.update(TestUtils.makeUser(), name, personnel,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
-					new ArrayList<CustomerPositionView>(), new CustomerPersistence());
+					new ArrayList<CustomerPositionView>(), new CustomerPersistence(),
+					new PersonnelPersistence());
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);

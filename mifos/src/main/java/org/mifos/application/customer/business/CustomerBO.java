@@ -1055,21 +1055,22 @@ public abstract class CustomerBO extends BusinessObject {
 					}
 	}
 
-	protected void updateLoanOfficer(Short loanOfficerId)
+	protected void updateLoanOfficer(Short loanOfficerId, CustomerPersistence customerPersistence,
+	        PersonnelPersistence personnelPersistence)
 			throws Exception {
 
 		try {
 			if (isLOChanged(loanOfficerId)) {
 				// If a new loan officer has been assigned, then propagate this
 				// change to the customer's children and to their associated accounts.
-				new CustomerPersistence()
+			    customerPersistence
 						.updateLOsForAllChildren(loanOfficerId, getSearchId(),
 								getOffice().getOfficeId());
-				new CustomerPersistence()
+			    customerPersistence
 						.updateLOsForAllChildrenAccounts(loanOfficerId, getSearchId(),
 						getOffice().getOfficeId());
 				if (loanOfficerId != null)
-					this.personnel = new PersonnelPersistence()
+					this.personnel = personnelPersistence
 							.getPersonnel(loanOfficerId);
 				else
 					this.personnel = null;
