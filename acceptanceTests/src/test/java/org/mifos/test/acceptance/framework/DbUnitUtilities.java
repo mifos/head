@@ -37,7 +37,9 @@ import java.util.zip.ZipFile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dbunit.Assertion;
+import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
@@ -55,7 +57,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testng.Assert;
 
 /**
- * Utility methods for operating on dbunit data.
+ * Utility methods for operating on DbUnit data.
  */
 public class DbUnitUtilities {
     private static final Log LOG = LogFactory.getLog(DbUnitUtilities.class);
@@ -69,12 +71,21 @@ public class DbUnitUtilities {
     private void initialize() {
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_ATTENDANCE", new String[] { "id", "meeting_date" });        
         columnsToIgnoreWhenVerifyingTables.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
     }
 
+    /** 
+     * Compare two tables using DbUnit DataSets 
+     * @param tableName
+     * @param databaseDataSet
+     * @param expectedDataSet
+     * @throws DataSetException
+     * @throws DatabaseUnitException
+     */
     public void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
             DatabaseUnitException {
         
@@ -86,9 +97,25 @@ public class DbUnitUtilities {
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
     }
 
-    public void verifySortedTable(String tableName, IDataSet databaseDataSet, 
-            IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException,
+    /**
+     * Convenience method for comparing multiple tables using DbUnit DataSets
+     * @param tableNames
+     * @param databaseDataSet
+     * @param expectedDataSet
+     * @throws DataSetException
+     * @throws DatabaseUnitException
+     */
+    
+    public void verifyTables(String[] tableNames, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
     DatabaseUnitException {
+        for (String tableName : tableNames) {
+            this.verifyTable(tableName, databaseDataSet, expectedDataSet);
+        }
+     }
+
+
+    public void verifySortedTable(String tableName, IDataSet databaseDataSet, 
+            IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException, DatabaseUnitException {
 
         Assert.assertNotNull(columnsToIgnoreWhenVerifyingTables.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnoreWhenVerifyingTables map.");
         ITable expectedTable = expectedDataSet.getTable(tableName);
@@ -144,6 +171,46 @@ public class DbUnitUtilities {
         return new FlatXmlDataSet(
                 getUncompressed(url), false, enableColumnSensing);
     }
+    
+    /**
+     * Convenience method to get a DbUnit DataSet of only one table.
+     * @param driverManagerDataSource 
+     * @param tableName
+     * @return
+     * @throws Exception 
+     * @throws Exception
+     * @throws SQLException
+     * @throws DataSetException
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public IDataSet getDataSetForTable(DriverManagerDataSource driverManagerDataSource, String tableName) throws Exception  {
+        return this.getDataSetForTables(driverManagerDataSource, new String[] { tableName });
+    }
+
+    /**
+     * Returns a DbUnit DataSet for several tables.
+     * @param driverManagerDataSource TODO
+     * @param tableNames
+     * @return
+     * @throws Exception 
+     */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public IDataSet getDataSetForTables(DriverManagerDataSource driverManagerDataSource, String[] tableNames) throws Exception  {
+        Connection jdbcConnection = null;
+        IDataSet databaseDataSet = null;
+        try {
+            jdbcConnection = DataSourceUtils.getConnection(driverManagerDataSource);
+            IDatabaseTester databaseTester = new DataSourceDatabaseTester(driverManagerDataSource);
+            IDatabaseConnection databaseConnection = databaseTester.getConnection();
+            databaseDataSet = databaseConnection.createDataSet(tableNames);
+        }
+        finally {
+            jdbcConnection.close();
+            DataSourceUtils.releaseConnection(jdbcConnection, driverManagerDataSource);
+        }
+        return databaseDataSet;
+    }    
+    
 
     private URL getUncompressed(URL url) throws IOException {
         /* Buffer size based on this tutorial:

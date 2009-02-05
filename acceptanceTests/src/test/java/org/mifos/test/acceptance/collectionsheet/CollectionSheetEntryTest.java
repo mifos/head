@@ -20,11 +20,8 @@
 
 package org.mifos.test.acceptance.collectionsheet;
 
-import java.sql.Connection;
-
-import org.dbunit.DataSourceDatabaseTester;
-import org.dbunit.IDatabaseTester;
-import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -39,7 +36,6 @@ import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -49,6 +45,12 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
+    private static final String LOAN_TRXN_DETAIL = "LOAN_TRXN_DETAIL";
+    private static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
+    private static final String LOAN_ACTIVITY_DETAILS = "LOAN_ACTIVITY_DETAILS";
+    private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
+    private static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
+    private static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
     private AppLauncher appLauncher;
 
     @Autowired
@@ -99,31 +101,33 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyCollectionSheetData(String filename) throws Exception {
-        Connection jdbcConnection = null;
-        try {
-            jdbcConnection = DataSourceUtils.getConnection(dataSource);
-            IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-            IDatabaseConnection databaseConnection = databaseTester.getConnection();
-            IDataSet databaseDataSet = databaseConnection.createDataSet();
-            IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
-            
-            dbUnitUtilities.verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
-            dbUnitUtilities.verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
-            // the ordering of the financial transactions varies per test run,
-            // so sort the columns to get a fixed order
-            String[] orderByColumns = 
-                new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
-            dbUnitUtilities.verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
-                orderByColumns);
-            dbUnitUtilities.verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
-            dbUnitUtilities.verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
-            dbUnitUtilities.verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
-            // Note: CUSTOMER_ATTENDANCE is updated but we are not verifying it in this test
-        }
-        finally {
-            jdbcConnection.close();
-            DataSourceUtils.releaseConnection(jdbcConnection, dataSource);
-        }
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT,
+                                   ACCOUNT_TRXN,
+                                   FINANCIAL_TRXN,
+                                   LOAN_ACTIVITY_DETAILS,
+                                   LOAN_SCHEDULE,
+                                   LOAN_TRXN_DETAIL });
+        verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);   
+        verifyFinancialTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
+        // Note: CUSTOMER_ATTENDANCE is updated but we are not verifying it in this test
+    }
+
+    private void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
+            DatabaseUnitException {
+        dbUnitUtilities.verifyTables(new String[] { ACCOUNT_PAYMENT,
+                ACCOUNT_TRXN,
+                LOAN_ACTIVITY_DETAILS,
+                LOAN_SCHEDULE,
+                LOAN_TRXN_DETAIL }, databaseDataSet, expectedDataSet);
+    }
+
+    private void verifyFinancialTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
+            throws DataSetException, DatabaseUnitException {
+        String[] orderByColumns = 
+            new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
+        dbUnitUtilities.verifySortedTable(FINANCIAL_TRXN, databaseDataSet, expectedDataSet, 
+            orderByColumns);
     }
 
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {

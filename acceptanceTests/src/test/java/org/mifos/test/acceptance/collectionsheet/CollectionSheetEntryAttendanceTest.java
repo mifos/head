@@ -15,11 +15,15 @@
  * permissions and limitations under the License.
  * 
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
- * explanation of the license and how it is applied.
+ * explanation of the license and how it is applied.    
  */
 
 package org.mifos.test.acceptance.collectionsheet;
 
+import java.io.IOException;
+
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
@@ -32,6 +36,7 @@ import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.framework.util.SimpleDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,10 +48,11 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
+    private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
     private static final String ATTENDANCE_P = "1";
-    private static final String ATTENDANCE_L = "2";
+    private static final String ATTENDANCE_A = "2";
     private static final String ATTENDANCE_AA = "3";
-    private static final String ATTENDANCE_A = "4";
+    private static final String ATTENDANCE_L = "4";
 
     private AppLauncher appLauncher;
 
@@ -68,7 +74,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
+    public void defaultAdminUserEntersAttendanceData() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office2");
         formParameters.setLoanOfficer("John Okoth");
@@ -93,7 +99,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         CollectionSheetEntryConfirmationPage confirmationPage = 
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
-        
+        verifyAttendanceData();
     }
 
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
@@ -103,6 +109,21 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         return clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    private void verifyAttendanceData() throws Exception {
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTable(dataSource, CUSTOMER_ATTENDANCE);
+        dbUnitUtilities.verifyTable(CUSTOMER_ATTENDANCE, databaseDataSet, this.getAttendanceDataSet());   
+    }
+
+    private IDataSet getAttendanceDataSet() throws DataSetException, IOException {
+        SimpleDataSet attendanceDataSet = new SimpleDataSet();
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=4");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=3");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=2");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=1");
+        return attendanceDataSet.getDataSet();
+    }
+    
     
 }
 
