@@ -68,6 +68,7 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFormulaEntity;
 import org.mifos.application.fees.business.FeeView;
@@ -1813,7 +1814,8 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(Short nextInstallmentId)
+	protected void regenerateFutureInstallments(Short nextInstallmentId,
+	        CustomerPersistence customerPersistence)
 			throws AccountException {
 		if ((!this.getAccountState().getId().equals(
 				AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()))

@@ -55,6 +55,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -475,8 +476,8 @@ public class TestAccountBO extends TestAccount {
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		TestObjectFactory.updateObject(center);
 		
-		center.getCustomerAccount().handleChangeInMeetingSchedule();
-		accountBO.handleChangeInMeetingSchedule();
+		center.getCustomerAccount().handleChangeInMeetingSchedule(new CustomerPersistence());
+		accountBO.handleChangeInMeetingSchedule(new CustomerPersistence());
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center

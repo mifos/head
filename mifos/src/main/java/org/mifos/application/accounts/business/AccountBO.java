@@ -405,7 +405,8 @@ public class AccountBO extends BusinessObject {
 		buildFinancialEntries(new HashSet(reversedTrxns));
 	}
 	
-	public final void handleChangeInMeetingSchedule() throws AccountException {
+	public final void handleChangeInMeetingSchedule(
+	        CustomerPersistence customerPersistence) throws AccountException {
 		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		if (accountActionDateEntity != null) {
@@ -413,18 +414,19 @@ public class AccountBO extends BusinessObject {
 			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
 				installmentId += 1;
 			}
-			regenerateFutureInstallments(installmentId);
+			regenerateFutureInstallments(installmentId, customerPersistence);
 			try {
 				(new AccountPersistence()).createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
 		}else{
-			resetUpdatedFlag();
+			resetUpdatedFlag(customerPersistence);
 		}
 	}
 
-	protected void resetUpdatedFlag()throws AccountException{
+	protected void resetUpdatedFlag(
+	        CustomerPersistence customerPersistence) throws AccountException{
 	}
 	
 	public void changeStatus(
@@ -1251,7 +1253,8 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	protected void regenerateFutureInstallments(Short nextIntallmentId)
+	protected void regenerateFutureInstallments(
+	        Short nextIntallmentId, CustomerPersistence customerPersistence)
 			throws AccountException {
 	}
 

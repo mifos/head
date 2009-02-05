@@ -211,8 +211,8 @@ public class GroupBOTest extends MifosTestCase {
 		
 		Integer updatedMeetingId = group.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
 		
-		client1.changeUpdatedMeeting();
-		group.changeUpdatedMeeting();		
+		client1.changeUpdatedMeeting(new CustomerPersistence());
+		group.changeUpdatedMeeting(new CustomerPersistence());		
 		
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -998,8 +998,8 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(WeekDay.MONDAY,group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
 		assertEquals(WeekDay.MONDAY,client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
 	
-		group.changeUpdatedMeeting();
-		client.changeUpdatedMeeting();
+		group.changeUpdatedMeeting(new CustomerPersistence());
+		client.changeUpdatedMeeting(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 

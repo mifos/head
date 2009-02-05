@@ -81,6 +81,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -2889,7 +2890,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = meeting.getAllDates(6);
 		((LoanBO) accountBO)
-				.regenerateFutureInstallments(Short.valueOf("3"));
+				.regenerateFutureInstallments(Short.valueOf("3"), new CustomerPersistence());
 		((LoanBO) accountBO).update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -2951,7 +2952,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
-						.getInstallmentId() + 1));
+						.getInstallmentId() + 1), new CustomerPersistence());
 		((LoanBO) accountBO).update();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
@@ -2997,7 +2998,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
-						.getInstallmentId().intValue() + 1));
+						.getInstallmentId().intValue() + 1), new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,

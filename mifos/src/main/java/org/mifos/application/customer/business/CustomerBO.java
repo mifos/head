@@ -446,15 +446,6 @@ public abstract class CustomerBO extends BusinessObject {
 	            userContext.getBranchGlobalNum());
 	}
 
-    protected void persist() throws CustomerException {
-        try {
-            new CustomerPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new CustomerException(
-                    CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
-        }
-    }
-    
 	public void update(CustomerPersistence customerPersistence) throws CustomerException {
 		try {
 			setUpdateDetails();
@@ -465,6 +456,15 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+	protected void persist(CustomerPersistence customerPersistence) throws CustomerException {
+		try {
+		    customerPersistence.createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new CustomerException(
+					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+		}
+	}
+	
 	public void update(UserContext userContext, String externalId,
 			Address address, List<CustomFieldView> customFields,
 			List<CustomerPositionView> customerPositions,
@@ -778,16 +778,18 @@ public abstract class CustomerBO extends BusinessObject {
 	public abstract void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
 			throws CustomerException;
 
-	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: "
 				+ getCustomerId());
 		getCustomerMeeting().setUpdatedMeeting(meeting);
 		setUpdatedMeetingForChildren(meeting, customerPersistence);
 		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
-		this.persist();
+		persist(customerPersistence);
 	}
 	
-	private void setUpdatedMeetingForChildren(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException{
+	private void setUpdatedMeetingForChildren(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::setUpdatedMeetingForChildren(), customerId: "
 				+ getCustomerId());
 		Set<CustomerBO> childList = getChildren();
@@ -799,7 +801,8 @@ public abstract class CustomerBO extends BusinessObject {
 		}	
 	}
 	
-	public void changeUpdatedMeeting()throws CustomerException {
+	public void changeUpdatedMeeting(CustomerPersistence customerPersistence)
+	    throws CustomerException {
 		logger.debug("In CustomerBO::changeUpdatedMeeting(), customerId: "
 				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
@@ -809,23 +812,24 @@ public abstract class CustomerBO extends BusinessObject {
 				logger.debug("In CustomerBO::changeUpdatedMeeting(), Same Recurrence Found, customerId: "
 						+ getCustomerId());
 				updateMeeting(oldMeeting, newMeeting);
-				resetUpdatedMeetingForChildren(oldMeeting);
+				resetUpdatedMeetingForChildren(oldMeeting, customerPersistence);
 				if(getParentCustomer()==null)
 					deleteMeeting(newMeeting);			
 			}else{
 				logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
 						+ getCustomerId());
 				getCustomerMeeting().setMeeting(newMeeting);
-				resetUpdatedMeetingForChildren(newMeeting);
+				resetUpdatedMeetingForChildren(newMeeting, customerPersistence);
 				if(getParentCustomer()==null)
 					deleteMeeting(oldMeeting);
 			}			
 			getCustomerMeeting().setUpdatedMeeting(null);
 		}
-		this.persist();
+		persist(customerPersistence);
 	}
 
-	protected void resetUpdatedMeetingForChildren(MeetingBO currentMeeting) throws CustomerException {
+	protected void resetUpdatedMeetingForChildren(MeetingBO currentMeeting,
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		logger.debug("In CustomerBO::resetUpdatedMeetingForChildren(), customerId: "
 				+ getCustomerId());
 		Set<CustomerBO> childList = getChildren();
@@ -833,8 +837,8 @@ public abstract class CustomerBO extends BusinessObject {
 			for(CustomerBO child : childList){
 				child.getCustomerMeeting().setMeeting(currentMeeting);
 				child.getCustomerMeeting().setUpdatedMeeting(null);
-				child.resetUpdatedMeetingForChildren(currentMeeting);
-				child.persist();
+				child.resetUpdatedMeetingForChildren(currentMeeting, customerPersistence);
+				child.persist(customerPersistence);
 			}
 		}			
 	}
@@ -853,7 +857,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 	
-	protected void updateMeeting(MeetingBO oldMeeting, MeetingBO newMeeting)throws CustomerException {
+	protected void updateMeeting(MeetingBO oldMeeting, MeetingBO newMeeting) throws CustomerException {
 		try {
 			if (oldMeeting.isWeekly())
 				oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(),

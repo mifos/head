@@ -4502,7 +4502,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getLastDayOfNextYear());
 		meetingDates.remove(0);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
-				.getInstallmentId().intValue() + 1));
+				.getInstallmentId().intValue() + 1), new CustomerPersistence());
 		savings.update();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
@@ -4558,7 +4558,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
 				null, "");
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
-				.getInstallmentId().intValue() + 1));
+				.getInstallmentId().intValue() + 1), new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,

@@ -2041,7 +2041,8 @@ public class SavingsBO extends AccountBO {
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(Short nextInstallmentId)
+	protected void regenerateFutureInstallments(
+	        Short nextInstallmentId, CustomerPersistence customerPersistence)
 			throws AccountException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_CANCEL)

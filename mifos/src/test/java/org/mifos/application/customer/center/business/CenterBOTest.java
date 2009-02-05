@@ -470,7 +470,7 @@ public class CenterBOTest extends MifosTestCase {
 		testUpdateMeeting_SaveToUpdateLater();
 		Integer updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting()
 				.getMeetingId();
-		center.changeUpdatedMeeting();
+		center.changeUpdatedMeeting(new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center

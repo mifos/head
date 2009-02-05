@@ -597,7 +597,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		meetingDates = meeting.getAllDates((short) 10);
 		meetingDates.remove(0);
 		center.getCustomerAccount().regenerateFutureInstallments(
-				nextInstallmentId);
+				nextInstallmentId, new CustomerPersistence());
 		TestObjectFactory.updateObject(center);
 
 		HibernateUtil.commitTransaction();
@@ -630,7 +630,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 		List<java.util.Date> meetingDates = meeting.getAllDates((short) 10);
 		meetingDates.remove(0);
-		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
+		group.getCustomerAccount().regenerateFutureInstallments((short) 2, new CustomerPersistence());
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.updateObject(group);
 		HibernateUtil.commitTransaction();
@@ -676,7 +676,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED);
 		TestCustomerBO.setCustomerStatus(group, customerStatusEntity);
-		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
+		group.getCustomerAccount().regenerateFutureInstallments((short) 2, new CustomerPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center

@@ -380,7 +380,8 @@ public class ClientBO extends CustomerBO {
 	}
 	
 	@Override
-	public void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException {
+	public void updateMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
 		else
@@ -389,8 +390,8 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
-	    throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence)throws CustomerException{
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting, customerPersistence);
 		if(getParentCustomer()==null)

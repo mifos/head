@@ -207,7 +207,8 @@ public class GroupBO extends CustomerBO {
 	}
 	
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: "
 				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
@@ -217,7 +218,8 @@ public class GroupBO extends CustomerBO {
 	}
 	
 	@Override
-	public void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException{
+	public void updateMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In GroupBO::updateMeeting(), customerId: "
 				+ getCustomerId());
 		if(getParentCustomer()==null){			
@@ -232,7 +234,8 @@ public class GroupBO extends CustomerBO {
 		update(customerPersistence);
 	}
 	
-	private void updateMeetingForClients(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{
+	private void updateMeetingForClients(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		Set<CustomerBO> clients = getChildren();			
 		if(clients!=null){
 			for(CustomerBO client : clients){

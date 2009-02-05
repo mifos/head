@@ -95,7 +95,8 @@ public class CenterBO extends CustomerBO {
 	}
 
 	@Override
-	public void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence) throws CustomerException{
+	public void updateMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CenterBO::updateMeeting(), customerId: "
 				+ getCustomerId());
 		saveUpdatedMeeting(meeting, customerPersistence);
@@ -171,7 +172,8 @@ public class CenterBO extends CustomerBO {
 	}
 		
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)throws CustomerException{	
+	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
+	    throws CustomerException{	
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting, customerPersistence);
 		deleteMeeting(newMeeting);
