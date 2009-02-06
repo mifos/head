@@ -90,10 +90,11 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterOverwriteAttendanceData(enterDataPage);
-        CollectionSheetEntryConfirmationPage secondConfirmationPage = submitDataAndVerifySuccessPage(formParameters, enterDataPage);
+        submitDataAndVerifySuccessPage(formParameters, enterDataPage);
         verifyAttendanceData(this.getOverwriteAttendanceDataSet());
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private CollectionSheetEntryConfirmationPage enterAndVerifyBasicAttendanceData() throws DatabaseUnitException, SQLException, IOException,
             Exception, DataSetException {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
