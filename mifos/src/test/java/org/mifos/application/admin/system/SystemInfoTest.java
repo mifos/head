@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.application.admin.system;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
+import java.net.URI;
 
 import javax.servlet.ServletContext;
 
@@ -68,12 +71,12 @@ public class SystemInfoTest {
 	public void testDatabaseInfos() throws Exception {
 		info.setInfoSource(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE);
 		assertFalse(info.getInfoSource().equals(FilePaths.DEFAULTMIFOSDBPROPERTIESFILE));
-		info.setInfoURL("jdbc.mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
-		assertEquals(info.getDatabaseServer(), "localhost"); 
-		assertEquals(info.getDatabaseName(), "mifos");
-		assertEquals(info.getDatabasePort(), "3305");
+		info.setInfoURL(new URI("nocolon://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8"));
+		assertEquals("localhost", info.getDatabaseServer()); 
+		assertEquals("mifos", info.getDatabaseName());
+		assertEquals("3305", info.getDatabasePort());
 		info.setInfoUserName("mysql");
-		assertEquals(info.getDatabaseUser(), "mysql");
+		assertEquals("mysql", info.getDatabaseUser());
 	}
 
 	@Test

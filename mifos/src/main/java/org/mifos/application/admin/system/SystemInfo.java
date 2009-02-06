@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ package org.mifos.application.admin.system;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
@@ -43,7 +44,7 @@ public class SystemInfo implements Serializable {
 	private String customReportsDir;
 
 	private String infoSource;
-	private String infoURL;
+	private URI infoURL;
 	private String infoUserName;
 	
 	// Note: make sure to close the connection that got the metadata!
@@ -51,7 +52,10 @@ public class SystemInfo implements Serializable {
 	throws Exception {
 		this(getInfoSource);
 		this.databaseMetaData = databaseMetaData;
-		this.infoURL = databaseMetaData.getURL();
+		/* ':' is not a valid scheme character and java.net.URI can't parse URIs with a ':'. java.net.URL can't
+		 * parse JDBC URLs either since only "standard" schemes like http and ftp are allowed. */  
+		String sanitizedURI = databaseMetaData.getURL().replaceFirst("jdbc:", "");
+		this.infoURL = new URI(sanitizedURI);
 		this.infoUserName = databaseMetaData.getUserName();
 		this.context = context;
 	}
@@ -181,34 +185,21 @@ public class SystemInfo implements Serializable {
 	}
 	
 	public String getDatabaseServer() {
-		int pos = this.infoURL.indexOf("://") + "://".length();
-		String server = this.infoURL.substring(pos);
-		pos = server.indexOf(':');
-		return server.substring(0, pos);
+		return infoURL.getHost();
 	}
 
 	public String getDatabasePort() {
-		int pos = this.infoURL.indexOf("://") + "://".length();
-		String server = this.infoURL.substring(pos);
-		pos = server.indexOf(':');
-		String port = server.substring(pos+1);
-		pos = port.indexOf('/');
-		return port.substring(0, pos);
+		if (infoURL.getPort() < 0)
+		    return "unknown";
+		else
+		    return "" + infoURL.getPort();
 	}
 
 	public String getDatabaseName() {
-		int pos = this.infoURL.indexOf("://") + "://".length();
-		String server = this.infoURL.substring(pos);
-		pos = server.indexOf(':');
-		String port = server.substring(pos+1);
-		pos = port.indexOf('/');
-		String name = port.substring(pos+1);
-		pos = name.indexOf('?');
-		if (pos >= 0) {
-			return name.substring(0, pos);
-		} else {
-			return name;
-		}
+		String path = infoURL.getPath();
+		if (path != null) // database name is not required
+		    path = path.replaceFirst("/", "");
+		return path;
 	}
 
 	public String getDatabaseUser() {
@@ -216,10 +207,13 @@ public class SystemInfo implements Serializable {
 	}
 
 	public String getInfoURL() {
-		return infoURL;
+		return infoURL.toString();
 	}
 
-	public void setInfoURL(String infoURL) {
+	/**
+	 * @param infoURL Must not contain a ':' (colon character) in the scheme.
+	 */
+	public void setInfoURL(URI infoURL) {
 		this.infoURL = infoURL;
 	}
 
