@@ -162,6 +162,11 @@
 	</profiles>
 	<repositories>
 		<repository>
+			<id>maven-repository.mifos.org</id>
+			<name>Mifos Maven Repository</name>
+			<url>http://neem.mifos.org/maven/</url>
+		</repository>
+		<repository>
 			<id>spring-snapshot</id>
 			<name>Spring Portfolio Milestone Repository</name>
 			<url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
