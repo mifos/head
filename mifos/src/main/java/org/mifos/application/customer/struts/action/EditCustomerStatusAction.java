@@ -55,6 +55,8 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -356,7 +358,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		checkPermission(customerBO, request, newStatusId, flagId);
 		setInitialObjectForAuditLogging(customerBO);
 		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
-				.getNotes(), new CustomerPersistence());
+				.getNotes(), new CustomerPersistence(), new PersonnelPersistence(), new MasterPersistence());
 		customerBOInSession = null;
 		customerBO = null;
 	}

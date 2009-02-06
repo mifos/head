@@ -42,6 +42,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -113,11 +114,13 @@ public class GroupBOTest extends MifosTestCase {
 	private PersonnelBO personnelBo;
 
 	CustomerPersistence customerPersistence = new CustomerPersistence();
+	PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+	MasterPersistence masterPersistence = new MasterPersistence();
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
+		personnelBo = personnelPersistence.getPersonnel(personnelId);
 		officeBo1 = new OfficePersistence().getOffice(officeId1);
 	}
 
@@ -248,7 +251,8 @@ public class GroupBOTest extends MifosTestCase {
 		
 		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
-		group.changeStatus(CustomerStatus.GROUP_CANCELLED, null, "Group Cancelled", customerPersistence);
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED, null, "Group Cancelled", customerPersistence,
+		        personnelPersistence, masterPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -831,7 +835,7 @@ public class GroupBOTest extends MifosTestCase {
 		officeBO = createOffice();
 		client2.changeStatus(CustomerStatus.CLIENT_CLOSED, 
 				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, 
-				"comment", customerPersistence);
+				"comment", customerPersistence, personnelPersistence, masterPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -900,7 +904,8 @@ public class GroupBOTest extends MifosTestCase {
 	public void testUpdateCenterFailure_TransferInInactiveCenter() throws Exception {
 		createInitialObjects();
 		center1 = createCenter("newCenter");
-		center1.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "changeStatus", customerPersistence);
+		center1.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "changeStatus", customerPersistence,
+		        personnelPersistence, masterPersistence);
 		HibernateUtil.commitTransaction();
 		try {
 			group.transferToCenter(center1, customerPersistence);

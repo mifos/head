@@ -35,6 +35,7 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -265,7 +266,8 @@ public class GroupTransferAction extends BaseAction {
 		personnel = getPersonnelBusinessService().getPersonnel(
 				Short.valueOf(actionForm.getAssignedLoanOfficerId()));
 		}
-		customerBO.removeGroupMemberShip(personnel,actionForm.getComment(), customerPersistence);
+		customerBO.removeGroupMemberShip(personnel,actionForm.getComment(), customerPersistence,
+		        new PersonnelPersistence());
 		
 		customerBOInSession = null;
 		customerBO = null;

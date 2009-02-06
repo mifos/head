@@ -692,11 +692,12 @@ public abstract class CustomerBO extends BusinessObject {
 	
 	public void changeStatus(
 			CustomerStatus newStatus, CustomerStatusFlag flag, String comment,
-			CustomerPersistence customerPersistence) 
+			CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
+			MasterPersistence masterPersistence) 
 	throws CustomerException {
 		changeStatus(newStatus.getValue(), 
 			flag == null ? null : flag.getValue(), 
-			comment, customerPersistence);
+			comment, customerPersistence, personnelPersistence, masterPersistence);
 	}
 
 	/**
@@ -705,7 +706,8 @@ public abstract class CustomerBO extends BusinessObject {
 	 * instead.
 	 */
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
-	        CustomerPersistence customerPersistence)
+	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
+	        MasterPersistence masterPersistence)
 			throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
 		validateStatusChange(newStatusId, customerPersistence);
@@ -716,8 +718,6 @@ public abstract class CustomerBO extends BusinessObject {
 			if (!isBlackListed())
 				getCustomerFlags().clear();
 		}
-		// TODO: inject persistence
-		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomerStatusEntity customerStatus;
 		try {
 			customerStatus = (CustomerStatusEntity) masterPersistence
@@ -737,7 +737,7 @@ public abstract class CustomerBO extends BusinessObject {
 				throw new CustomerException(e);
 			}
 		}
-		CustomerNoteEntity customerNote = createCustomerNotes(comment);
+		CustomerNoteEntity customerNote = createCustomerNotes(comment, personnelPersistence);
 		this.setCustomerStatus(customerStatus);
 		this.addCustomerNotes(customerNote);
 		if (customerStatusFlagEntity != null) {
@@ -1200,13 +1200,12 @@ public abstract class CustomerBO extends BusinessObject {
 				parentCustomer));
 	}
 
-	private CustomerNoteEntity createCustomerNotes(String comment)
+	private CustomerNoteEntity createCustomerNotes(String comment, PersonnelPersistence personnelPersistence)
 			throws CustomerException {
 		try {
-		    // TODO: inject persistence
 			return new CustomerNoteEntity(comment,
 					new java.sql.Date(System.currentTimeMillis()),
-					new PersonnelPersistence().getPersonnel(getUserContext()
+					personnelPersistence.getPersonnel(getUserContext()
 							.getId()), this);
 		} catch (PersistenceException ae) {
 			throw new CustomerException(ae);
@@ -1301,9 +1300,9 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public void removeGroupMemberShip(PersonnelBO personnel, String comment,
-	        CustomerPersistence customerPersistence) throws PersistenceException, CustomerException {
-	    // TODO: inject persistence
-		PersonnelBO user = new PersonnelPersistence()
+	        CustomerPersistence customerPersistence,
+	        PersonnelPersistence personnelPersistence) throws PersistenceException, CustomerException {
+		PersonnelBO user = personnelPersistence
 		.getPersonnel(getUserContext().getId());
 		CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment,
 				new java.sql.Date(System.currentTimeMillis()), user,

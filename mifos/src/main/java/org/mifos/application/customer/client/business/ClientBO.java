@@ -52,10 +52,12 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -364,9 +366,11 @@ public class ClientBO extends CustomerBO {
 
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
-	        CustomerPersistence customerPersistence)
+	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
+	        MasterPersistence masterPersistence)
 			throws CustomerException {
-		super.changeStatus(newStatusId, flagId, comment, customerPersistence);
+		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
+		        masterPersistence);
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
 						.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {

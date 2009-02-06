@@ -81,6 +81,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -2218,7 +2219,7 @@ public class TestSavingsBO extends MifosTestCase {
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_PENDING_APPROVAL, new Money("100"),
-				getCustomFieldView(), new CustomerPersistence());
+				getCustomFieldView(), customerPersistence);
 		savings.save();
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
@@ -2524,7 +2525,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(10, savings.getAccountActionDates().size());
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
-		client1 = new CustomerPersistence()
+		client1 = customerPersistence
 				.getCustomer(client1.getCustomerId());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -2597,7 +2598,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
 		assertEquals(1, savings.getSavingsActivityDetails().size());
 		savings.getAccountPayments().clear();
-		client1 = new CustomerPersistence()
+		client1 = customerPersistence
 				.getCustomer(client1.getCustomerId());
 	}
 
@@ -2651,7 +2652,7 @@ public class TestSavingsBO extends MifosTestCase {
 						.getCustomerId());
 			}
 		}
-		client1 = new CustomerPersistence()
+		client1 = customerPersistence
 				.getCustomer(client1.getCustomerId());
 	}
 
@@ -3878,7 +3879,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccountForCenter();
 		client1.changeStatus(CustomerStatus.CLIENT_CLOSED,
 				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "Client closed",
-				new CustomerPersistence());
+				customerPersistence, new PersonnelPersistence(), new MasterPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());
@@ -4504,7 +4505,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getLastDayOfNextYear());
 		meetingDates.remove(0);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
-				.getInstallmentId().intValue() + 1), new CustomerPersistence());
+				.getInstallmentId().intValue() + 1), customerPersistence);
 		savings.update();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
@@ -4560,7 +4561,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
 				null, "", customerPersistence);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
-				.getInstallmentId().intValue() + 1), new CustomerPersistence());
+				.getInstallmentId().intValue() + 1), customerPersistence);
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,

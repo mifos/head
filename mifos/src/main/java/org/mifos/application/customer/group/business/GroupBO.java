@@ -45,6 +45,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -248,14 +249,18 @@ public class GroupBO extends CustomerBO {
 	
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment, 
-	        CustomerPersistence customerPersistence) throws CustomerException {
+	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
+	        MasterPersistence masterPersistence)
+	throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
-		super.changeStatus(newStatusId, flagId, comment, customerPersistence);
+		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
+		        masterPersistence);
 		if(oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue()) && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				if(client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())){
 					client.setUserContext(getUserContext());
-					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment, customerPersistence);
+					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment,
+					        customerPersistence, personnelPersistence, masterPersistence);
 				}
 			}
 		}
