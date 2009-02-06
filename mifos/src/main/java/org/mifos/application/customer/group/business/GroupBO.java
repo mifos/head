@@ -35,7 +35,6 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -77,10 +76,10 @@ public class GroupBO extends CustomerBO {
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			Short formedById, CustomerBO parentCustomer)
+			PersonnelBO formedBy, CustomerBO parentCustomer)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId, trained,
-				trainedDate, address, customFields, fees, formedById, null,
+				trainedDate, address, customFields, fees, formedBy, null,
 				parentCustomer, null, null);
 		validateFieldsForGroupUnderCenter(parentCustomer);
 		setValues(trained, trainedDate);
@@ -91,12 +90,12 @@ public class GroupBO extends CustomerBO {
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			Short formedById, Short officeId, MeetingBO meeting,
-			Short loanOfficerId) throws CustomerException {
+			PersonnelBO formedBy, OfficeBO office, MeetingBO meeting,
+			PersonnelBO loanOfficer) throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId, trained,
-				trainedDate, address, customFields, fees, formedById, officeId,
-				null, meeting, loanOfficerId);
-		validateFieldsForGroupUnderOffice(loanOfficerId, meeting, officeId);
+				trainedDate, address, customFields, fees, formedBy, office,
+				null, meeting, loanOfficer);
+		validateFieldsForGroupUnderOffice(loanOfficer, meeting, office);
 		setValues(trained, trainedDate);
 		this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
 	}
@@ -110,12 +109,12 @@ public class GroupBO extends CustomerBO {
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			Short formedById, Short officeId, CustomerBO parentCustomer,
-			MeetingBO meeting, Short loanOfficerId) throws CustomerException {
+			PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer,
+			MeetingBO meeting, PersonnelBO loanOfficer) throws CustomerException {
 		super(userContext, displayName, CustomerLevel.GROUP, customerStatus,
-				externalId, null, address, customFields, fees, formedById,
-				officeId, parentCustomer, meeting, loanOfficerId);
-		validateFields(displayName, formedById, trained, trainedDate);
+				externalId, null, address, customFields, fees, formedBy,
+				office, parentCustomer, meeting, loanOfficer);
+		validateFields(displayName, formedBy, trained, trainedDate);
 	}
 	
 	private GroupBO(int customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
@@ -458,7 +457,7 @@ public class GroupBO extends CustomerBO {
 		return searchId;
 	}
 
-	private void validateFields(String displayName, Short formedBy,
+	private void validateFields(String displayName, PersonnelBO formedBy,
 			boolean trained, Date trainedDate) throws CustomerException {
 		validateFormedBy(formedBy);
 		if ((trained && trainedDate == null)
@@ -469,7 +468,7 @@ public class GroupBO extends CustomerBO {
 			validateForDuplicateName(displayName, getOffice().getOfficeId());
 	}
 
-	private void validateFormedBy(Short formedBy) throws CustomerException {
+	private void validateFormedBy(PersonnelBO formedBy) throws CustomerException {
 		if (formedBy == null)
 			throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
 
@@ -492,11 +491,11 @@ public class GroupBO extends CustomerBO {
 			throw new CustomerException(CustomerConstants.INVALID_PARENT);
 	}
 
-	private void validateFieldsForGroupUnderOffice(Short loanOfficerId,
-			MeetingBO meeting, Short officeId) throws CustomerException {
-		validateOffice(officeId);
+	private void validateFieldsForGroupUnderOffice(PersonnelBO loanOfficer,
+			MeetingBO meeting, OfficeBO office) throws CustomerException {
+		validateOffice(office);
 		if (isActive()) {
-			validateLO(loanOfficerId);
+			validateLO(loanOfficer);
 			validateMeeting(meeting);
 		}
 	}
@@ -516,16 +515,6 @@ public class GroupBO extends CustomerBO {
 			throw new CustomerException(
 					CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
-	}
-
-	public static GroupBO createInstanceForTest(UserContext userContext,
-			GroupTemplate template, CenterBO center, Date customerActivationDate) throws CustomerException {
-		GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(),
-				                template.getExternalId(), template.isTrained(), template.getTrainedDate(),
-				                template.getAddress(), template.getCustomFieldViews(), template.getFees(),
-				                template.getLoanOfficerId(), center);
-		group.setCustomerActivationDate(customerActivationDate);
-		return group;
 	}
 
 	@Override

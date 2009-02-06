@@ -104,17 +104,21 @@ public class GroupBOTest extends MifosTestCase {
 
 	private SavingsOfferingBO savingsOffering;
 
-	private Short officeId = 3;
+	private Short officeId3 = 3;
 
-	private Short office = 1;
+	private Short officeId1 = 1;
+	private OfficeBO officeBo1;
 
-	private Short personnel = 3;
-	
+	private Short personnelId = 3;
+	private PersonnelBO personnelBo;
+
 	CustomerPersistence customerPersistence = new CustomerPersistence();
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
+		officeBo1 = new OfficePersistence().getOffice(officeId1);
 	}
 
 	@Override
@@ -183,7 +187,7 @@ public class GroupBOTest extends MifosTestCase {
 		String oldMeetingPlace = "Delhi";
 		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
-				officeId, weeklyMeeting, personnel);
+				officeId3, weeklyMeeting, personnelId);
 		
 		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient(group, CustomerStatus.CLIENT_ACTIVE);
@@ -237,7 +241,7 @@ public class GroupBOTest extends MifosTestCase {
 	
 	public void testChangeStatus_UpdatePendingClientToPartial_OnGroupCancelled() throws Exception {
 		group = TestObjectFactory.createGroupUnderBranch("MyGroup", CustomerStatus.GROUP_PENDING,
-				Short.valueOf("3"), meeting, personnel,null);
+				Short.valueOf("3"), meeting, personnelId,null);
 		client1 = createClient(group, CustomerStatus.CLIENT_PENDING);
 		client2 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		HibernateUtil.closeSession();
@@ -271,7 +275,7 @@ public class GroupBOTest extends MifosTestCase {
 			
 			List<CustomerPositionView> customerPositionList= new ArrayList<CustomerPositionView>();
 			TestCustomerBO.setDisplayName(group,"changed group name");
-			group.update(TestUtils.makeUser(), group.getDisplayName(), personnel,
+			group.update(TestUtils.makeUser(), group.getDisplayName(), personnelId,
 					"ABCD", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getNewCustomFields(),
 							customerPositionList, customerPersistence,
@@ -353,7 +357,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group = new GroupBO(TestUtils.makeUser(), "",
 					CustomerStatus.GROUP_PARTIAL, null, false, null, null,
-					null, null, personnel, office, meeting, personnel);
+					null, null, personnelBo, officeBo1, meeting, personnelBo);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -365,7 +369,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", null, null, false, null, null, null, null,
-					personnel, office, meeting, personnel);
+					personnelBo, officeBo1, meeting, personnelBo);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -378,7 +382,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, false,
-					null, null, null, null, personnel, null, meeting, personnel);
+					null, null, null, null, personnelBo, null, meeting, personnelBo);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -391,7 +395,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_ACTIVE, null, false,
-					null, null, null, null, personnel, office, meeting, null);
+					null, null, null, null, personnelBo, officeBo1, meeting, null);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -404,7 +408,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_ACTIVE, null, false,
-					null, null, null, null, personnel, office, null, personnel);
+					null, null, null, null, personnelBo, officeBo1, null, personnelBo);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -418,7 +422,7 @@ public class GroupBOTest extends MifosTestCase {
 			meeting = getMeeting();
 			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, false,
-					null, null, null, null, personnel, null);
+					null, null, null, null, personnelBo, null);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -446,7 +450,7 @@ public class GroupBOTest extends MifosTestCase {
 			meeting = getMeeting();
 			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, true,
-					null, null, null, null, personnel, center);
+					null, null, null, null, personnelBo, center);
 			assertFalse("Group Created", true);
 		} catch (CustomerException ce) {
 			assertNull(group);
@@ -466,7 +470,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group1 = new GroupBO(TestUtils.makeUser(), name,
 					CustomerStatus.GROUP_ACTIVE, null, false, null, null, null,
-					fees, personnel, center);
+					fees, personnelBo, center);
 			assertFalse(true);
 		} catch (CustomerException e) {
 			assertTrue(true);
@@ -487,7 +491,8 @@ public class GroupBOTest extends MifosTestCase {
 
 		group = new GroupBO(TestUtils.makeUser(), name,
 				CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
-				getAddress(), getCustomFields(), getFees(), personnel, center);
+				getAddress(), getCustomFields(), getFees(), 
+				personnelBo, center);
 		new GroupPersistence().saveGroup(group);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -525,8 +530,10 @@ public class GroupBOTest extends MifosTestCase {
 		String externalId = "1234";
 		group = new GroupBO(TestUtils.makeUser(), name,
 				CustomerStatus.GROUP_ACTIVE, externalId, false, null,
-				getAddress(), getCustomFields(), getFees(), personnel, office,
-				getMeeting(), personnel);
+				getAddress(), getCustomFields(), getFees(), 
+				personnelBo, 
+				officeBo1,
+				getMeeting(), personnelBo);
 		new GroupPersistence().saveGroup(group);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -543,10 +550,10 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals("Bangalore", address.getCity());
 		assertEquals(getCustomFields().size(), group.getCustomFields().size());
 
-		assertEquals(personnel, group.getCustomerFormedByPersonnel()
+		assertEquals(personnelId, group.getCustomerFormedByPersonnel()
 				.getPersonnelId());
-		assertEquals(personnel, group.getPersonnel().getPersonnelId());
-		assertEquals(office, group.getOffice().getOfficeId());
+		assertEquals(personnelId, group.getPersonnel().getPersonnelId());
+		assertEquals(officeId1, group.getOffice().getOfficeId());
 		assertNotNull(group.getCustomerMeeting().getMeeting());
 		assertEquals("1.1", group.getSearchId());
 	}
@@ -558,7 +565,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(name, group.getDisplayName());
-		group.update(TestUtils.makeUser(), newName, personnel,
+		group.update(TestUtils.makeUser(), newName, personnelId,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
 				new ArrayList<CustomerPositionView>(), customerPersistence,
@@ -578,7 +585,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(name, group.getDisplayName());
-		group.update(TestUtils.makeUser(), newName, personnel,
+		group.update(TestUtils.makeUser(), newName, personnelId,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
 				new ArrayList<CustomerPositionView>(), customerPersistence,
@@ -646,7 +653,7 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(name, group.getDisplayName());
 		assertEquals(newName, group1.getDisplayName());
 		try {
-			group1.update(TestUtils.makeUser(), name, personnel,
+			group1.update(TestUtils.makeUser(), name, personnelId,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
 					new ArrayList<CustomerPositionView>(), customerPersistence,
@@ -1203,7 +1210,7 @@ public class GroupBOTest extends MifosTestCase {
 		String oldMeetingPlace = "Delhi";
 		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
-				officeId, weeklyMeeting, personnel);
+				officeId3, weeklyMeeting, personnelId);
 		
 		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient(group, CustomerStatus.CLIENT_ACTIVE);
@@ -1327,7 +1334,8 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			group = new GroupBO(TestUtils.makeUser(), name,
 					CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
-					getAddress(), null, null, personnel, center);
+					getAddress(), null, null, 
+					personnelBo, center);
 			TestObjectFactory.simulateInvalidConnection();
 			new GroupPersistence().saveGroup(group);
 			fail();
@@ -1343,7 +1351,7 @@ public class GroupBOTest extends MifosTestCase {
 
 	private GroupBO createGroupUnderBranchWithoutMeeting(String name) {
 		return TestObjectFactory.createGroupUnderBranch(name, CustomerStatus.GROUP_PENDING,
-				office, null, personnel);
+				officeId1, null, personnelId);
 	}
 	
 	private void createCenter() {
@@ -1353,13 +1361,13 @@ public class GroupBOTest extends MifosTestCase {
 	}
 	
 	private CenterBO createCenter(String name) throws Exception{
-		return createCenter(name, officeId, WeekDay.MONDAY);
+		return createCenter(name, officeId3, WeekDay.MONDAY);
 	}
 
 	private CenterBO createCenter(String name, Short officeId, WeekDay weekDay) throws Exception{
 		meeting = new MeetingBO(weekDay, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		return TestObjectFactory.createCenter(name, meeting, officeId,
-				personnel);
+				personnelId);
 	}
 
 	
@@ -1373,25 +1381,25 @@ public class GroupBOTest extends MifosTestCase {
 			CustomerStatus customerStatus) {
 		meeting = getMeeting();
 		return TestObjectFactory.createGroupUnderBranch(name, customerStatus,
-				office, meeting, personnel);
+				officeId1, meeting, personnelId);
 	}
 	
 	private GroupBO createGroupUnderBranch(String name,
 			CustomerStatus customerStatus,List<CustomFieldView> customFieldView) {
 		meeting = getMeeting();
 		return TestObjectFactory.createGroupUnderBranch(name, customerStatus,
-				office, meeting, personnel,customFieldView);
+				officeId1, meeting, personnelId,customFieldView);
 	}
 	
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus)throws Exception {
-		return createGroupUnderBranch(groupStatus, officeId);
+		return createGroupUnderBranch(groupStatus, officeId3);
 	}
 
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus,
 			Short officeId) throws Exception{
 		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		return TestObjectFactory.createGroupUnderBranchWithMakeUser("group1", groupStatus,
-				officeId, meeting, personnel);
+				officeId, meeting, personnelId);
 	}
 
 	private MeetingBO getMeeting() {
@@ -1452,7 +1460,7 @@ public class GroupBOTest extends MifosTestCase {
 		createInitialObjects();
 		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient(group, CustomerStatus.CLIENT_CANCELLED);
-		center1 = createCenter("toTransfer", officeId, WeekDay.THURSDAY);
+		center1 = createCenter("toTransfer", officeId3, WeekDay.THURSDAY);
 		group1 = createGroup("newGroup", center1);
 	}
 
@@ -1535,8 +1543,8 @@ public class GroupBOTest extends MifosTestCase {
 	}
 	
 	private CenterBO createCenter(String name, MeetingBO meeting){
-		return TestObjectFactory.createCenter(name, meeting, officeId,
-				personnel);
+		return TestObjectFactory.createCenter(name, meeting, officeId3,
+				personnelId);
 	}
 	
 	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate) throws MeetingException{

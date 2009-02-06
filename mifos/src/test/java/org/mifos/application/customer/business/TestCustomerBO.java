@@ -205,7 +205,7 @@ public class TestCustomerBO extends MifosTestCase {
 	private ClientBO createClientToTestActiveLoanProducts() throws CustomerException {
 		return new ClientBO(TestUtils.makeUserWithLocales(),
 				"customerName", CustomerStatus.CLIENT_ACTIVE, null, null, null, null, new ArrayList<FeeView>(), null,
-				PersonnelConstants.SYSTEM_USER, Short.valueOf("3"),
+				getSystemUser(), getHeadOffice(),
 				null, null, null, null,
 				null, YesNoFlag.YES.getValue(), TestObjectFactory.clientNameView(
 						NameType.CLIENT, "customerName"),

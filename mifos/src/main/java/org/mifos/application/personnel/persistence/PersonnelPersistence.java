@@ -62,6 +62,9 @@ public class PersonnelPersistence extends Persistence {
 
 	public PersonnelBO getPersonnel(Short personnelId)
 			throws PersistenceException {
+	    if (personnelId == null) {
+	        return null;
+	    }
 		return (PersonnelBO) getPersistentObject(PersonnelBO.class, personnelId);
 	}
 

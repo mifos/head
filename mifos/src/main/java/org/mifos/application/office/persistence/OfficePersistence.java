@@ -80,6 +80,9 @@ public class OfficePersistence extends Persistence {
 	 * dereference the returned office without any checking for null)
 	 */
 	public OfficeBO getOffice(Short officeId) throws PersistenceException {
+	    if (officeId == null) {
+	        return null;
+	    }
 		return (OfficeBO) getPersistentObject(OfficeBO.class, officeId);
 	}
 

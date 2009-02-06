@@ -41,6 +41,7 @@ import java.sql.Statement;
 
 public class GroupPersistence extends Persistence {
     private CenterPersistence centerPersistence = new CenterPersistence();
+    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
     public GroupBO createGroup(UserContext userContext, GroupTemplate template)
             throws CustomerException, PersistenceException, ValidationException {
@@ -52,10 +53,14 @@ public class GroupPersistence extends Persistence {
             }
         }
 
+        PersonnelBO loanOfficer = null;
+        if (template.getLoanOfficerId() != null) {
+            loanOfficer = personnelPersistence.getPersonnel(template.getLoanOfficerId());
+        }
         GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(),
                 template.getExternalId(), template.isTrained(), template.getTrainedDate(),
                 template.getAddress(), template.getCustomFieldViews(), template.getFees(),
-                template.getLoanOfficerId(), center);
+                loanOfficer, center);
         saveGroup(group);
         return group;
     }

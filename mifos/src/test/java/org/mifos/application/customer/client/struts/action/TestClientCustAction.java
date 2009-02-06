@@ -76,6 +76,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -1327,8 +1332,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 	
 	private void createClientForAuditLog() throws Exception {
-		Short officeId = 1;
-		Short personnel = 3;
+        OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
+        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
 		meeting = getMeeting();
 		Integer salutation = 47;
 		Integer ethincity = 218;
@@ -1354,7 +1359,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = new ClientBO(TestUtils.makeUser(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.fromInt(new Short("1")), null, null, new Address(),
-				getCustomFields(), null, null, personnel, officeId, meeting,
+				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
@@ -1684,8 +1689,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 	
 	private void createAndSetClientInSession() throws Exception {
-		Short officeId = 1;
-		Short personnel = 3;
+        OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
+        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
 		meeting = getMeeting();
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 				NameType.CLIENT, 1, "Client", "", "1",
@@ -1698,7 +1703,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = new ClientBO(TestUtils.makeUser(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.fromInt(new Short("1")), null, null, new Address(),
-				getCustomFields(), null, null, personnel, officeId, meeting,
+				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
@@ -1814,9 +1819,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 	
 	private void createGroupWithoutFee()throws Exception{
-		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
+		meeting = new MeetingBO(WeekDay.MONDAY, TestObjectFactory.EVERY_WEEK, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		group = new GroupBO(userContext, "groupName", CustomerStatus.GROUP_PENDING,
-				"1234", false, null, null, null,null, Short.valueOf("3"),Short.valueOf("3"), meeting, Short.valueOf("3"));
+				"1234", false, null, null, null,null, 
+				new PersonnelPersistence().getPersonnel(Short.valueOf("3")),
+				new OfficePersistence().getOffice(Short.valueOf("3")), meeting, 
+				new PersonnelPersistence().getPersonnel(Short.valueOf("3")));
 		new GroupPersistence().saveGroup(group);
 		HibernateUtil.commitTransaction();
 	}

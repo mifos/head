@@ -75,6 +75,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -562,8 +563,10 @@ public class GroupCustAction extends CustAction {
 				CustomerConstants.CUSTOMER_MEETING, request);
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
 				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPreferredLocale()),
-				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), 
-				actionForm.getOfficeIdValue(), meeting, actionForm.getLoanOfficerIdValue());
+				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), 
+				new PersonnelPersistence().getPersonnel(actionForm.getFormedByPersonnelValue()), 
+				new OfficePersistence().getOffice(actionForm.getOfficeIdValue()), meeting, 
+				new PersonnelPersistence().getPersonnel(actionForm.getLoanOfficerIdValue()));
 		return group;
 	}
 
@@ -577,8 +580,11 @@ public class GroupCustAction extends CustAction {
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 		
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
-				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPreferredLocale()),
-				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), actionForm.getParentCustomer());
+				actionForm.getExternalId(), actionForm.isCustomerTrained(), 
+				actionForm.getTrainedDateValue(userContext.getPreferredLocale()),
+				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), 
+				new PersonnelPersistence().getPersonnel(actionForm.getFormedByPersonnelValue()), 
+				actionForm.getParentCustomer());
 		return group;
 	}
 }

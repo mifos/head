@@ -219,7 +219,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 			    throw new ValidationException(GroupConstants.PARENT_OFFICE_ID);
 			}
 			}
-			GroupBO group = GroupBO.createInstanceForTest(userContext, groupTemplate, center, disbursementDate);
+			GroupBO group = TestObjectFactory.createInstanceForTest(userContext, groupTemplate, center, disbursementDate);
 			new GroupPersistence().saveGroup(group);
 			return group;
 		}

@@ -31,6 +31,8 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -500,9 +502,13 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulUpdate() throws Exception {
+	    Short officeId = (short)3;
+	    Short loanOfficerId = (short)1;
 		center = new CenterBO(TestUtils.makeUser(), "center",
-				new Address(), null, null, null, null, Short.valueOf("3"),
-				getMeeting(), Short.valueOf("1"));
+				new Address(), null, null, null, null, 
+				new OfficePersistence().getOffice(officeId),
+				getMeeting(), 
+				new PersonnelPersistence().getPersonnel(loanOfficerId));
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

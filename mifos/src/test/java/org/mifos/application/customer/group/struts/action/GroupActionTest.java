@@ -71,6 +71,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -85,6 +87,8 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class GroupActionTest extends MifosMockStrutsTestCase {
 	private CenterBO center;
@@ -1008,8 +1012,10 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	private void createCenterWithoutFee()throws Exception{
-		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-		center  = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, officeId, meeting, Short.valueOf("3"));
+		meeting = new MeetingBO(WeekDay.MONDAY, EVERY_WEEK, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
+		center  = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, 
+		        TestObjectFactory.getBranchOffice(), meeting, 
+		        TestObjectFactory.getTestUser());
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 	}

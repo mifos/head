@@ -46,7 +46,9 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.ppi.business.PPISurvey;
@@ -73,6 +75,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -102,11 +105,11 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	private ClientBO createClient() {
+	private ClientBO createClient() throws PersistenceException {
 		ClientBO client = null;
 		try {
-			Short office = TestObjectFactory.SAMPLE_BRANCH_OFFICE;
-			Short formedBy = PersonnelConstants.SYSTEM_USER;
+			OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+			PersonnelBO formedBy = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 					NameType.MAYBE_CLIENT, TestObjectFactory.SAMPLE_SALUTATION, "Test Client ",
 					"middle", "Test Client ", "secondLast");

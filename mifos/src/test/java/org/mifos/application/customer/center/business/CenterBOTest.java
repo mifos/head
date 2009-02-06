@@ -27,6 +27,8 @@ import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -52,14 +54,18 @@ public class CenterBOTest extends MifosTestCase {
 	private ClientBO client;
 
 	private Short officeId = 1;
+	private OfficeBO officeBo;
 
-	private Short personnel = 3;
+	private Short personnelId = 3;
+	private PersonnelBO personnelBo;
 
 	private MeetingBO meeting;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		officeBo = new OfficePersistence().getOffice(officeId);
+		personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
 	}
 
 	@Override
@@ -96,7 +102,7 @@ public class CenterBOTest extends MifosTestCase {
 
 		center.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
-		center.update(TestUtils.makeUser(), personnel,
+		center.update(TestUtils.makeUser(), personnelId,
 				externalId, mfiJoiningDate, address, null, null,
 				new CustomerPersistence(),new PersonnelPersistence());
 		HibernateUtil.commitTransaction();
@@ -150,7 +156,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestUtils.makeUser(), "", null,
-					null, null, null, null, officeId, meeting, personnel);
+					null, null, null, null, officeBo, meeting, personnelBo);
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -163,7 +169,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, officeId, meeting, null);
+					null, null, null, null, null, officeBo, meeting, null);
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -175,7 +181,7 @@ public class CenterBOTest extends MifosTestCase {
 	public void testCreateWithoutMeeting() throws Exception {
 		try {
 			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, officeId, meeting, personnel);
+					null, null, null, null, null, officeBo, meeting, personnelBo);
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -187,7 +193,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, null, meeting, personnel);
+					null, null, null, null, null, null, meeting, personnelBo);
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -200,7 +206,7 @@ public class CenterBOTest extends MifosTestCase {
 		String name = "Center1";
 		meeting = getMeeting();
 		center = new CenterBO(TestUtils.makeUser(), name, null,
-				null, null, null, null, officeId, meeting, personnel);
+				null, null, null, null, officeBo, meeting, personnelBo);
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -214,8 +220,8 @@ public class CenterBOTest extends MifosTestCase {
 		String name = "Center1";
 		meeting = getMeeting();
 		center = new CenterBO(TestUtils.makeUser(), name, null,
-				getCustomFields(), null, null, null, officeId, meeting,
-				personnel);
+				getCustomFields(), null, null, null, officeBo, meeting,
+				personnelBo);
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -238,8 +244,8 @@ public class CenterBOTest extends MifosTestCase {
 		List<FeeView> fees = getFees();
 		try {
 			center = new CenterBO(TestUtils.makeUser(), name,
-					null, null, fees, externalId, mfiJoiningDate, officeId,
-					meeting, personnel);
+					null, null, fees, externalId, mfiJoiningDate, officeBo,
+					meeting, personnelBo);
 			fail();
 		} catch (CustomerException e) {
 			assertEquals(
@@ -261,7 +267,7 @@ public class CenterBOTest extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			center = new CenterBO(userContext, name, null, null, null,
-					externalId, mfiJoiningDate, officeId, meeting, personnel);
+					externalId, mfiJoiningDate, officeBo, meeting, personnelBo);
 			fail();
 		} catch (CustomerException e) {
 			assertTrue(true);
@@ -277,8 +283,10 @@ public class CenterBOTest extends MifosTestCase {
 		meeting = getMeeting();
 		List<FeeView> fees = getFees();
 		center = new CenterBO(TestUtils.makeUser(), name, null,
-				getCustomFields(), fees, externalId, mfiJoiningDate, officeId,
-				meeting, personnel);
+				getCustomFields(), fees, externalId, mfiJoiningDate, 
+				new OfficePersistence().getOffice(officeId),
+				meeting, 
+				new PersonnelPersistence().getPersonnel(personnelId));
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -322,7 +330,7 @@ public class CenterBOTest extends MifosTestCase {
 		address.setCity(city);
 		address.setLine1(addressLine1);
 
-		center.update(TestUtils.makeUser(), personnel,
+		center.update(TestUtils.makeUser(), personnelId,
 				externalId, mfiJoiningDate, address, null, null,
 				new CustomerPersistence(),new PersonnelPersistence());
 		HibernateUtil.commitTransaction();
@@ -338,7 +346,7 @@ public class CenterBOTest extends MifosTestCase {
 		assertEquals(externalId, center.getExternalId());
 		assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center
 				.getMfiJoiningDate().getTime()));
-		assertEquals(personnel, center.getPersonnel().getPersonnelId());
+		assertEquals(personnelId, center.getPersonnel().getPersonnelId());
 	}
 
 	public void testSuccessfulUpdateWithoutLO_in_InActiveState()
@@ -519,26 +527,27 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		
 		// In real life, would be another branch rather than an area
-		Short branch1 = TestObjectFactory.SAMPLE_AREA_OFFICE;
+		OfficeBO branch1 = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 		
 		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short)1,
 			startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
 
+		PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
 		center = new CenterBO(TestUtils.makeUser(), 
 			"center1", null, null, null, null, startDate, 
 			branch1, meeting,
-			PersonnelConstants.SYSTEM_USER);
+			systemUser);
 		HibernateUtil.getSessionTL().save(center);
 
 		CenterBO center2 = new CenterBO(TestUtils.makeUser(), 
 				"center2", null, null, null, null, startDate, 
-				TestObjectFactory.SAMPLE_BRANCH_OFFICE, meeting,
-				PersonnelConstants.SYSTEM_USER);
+				new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), 
+				    meeting, systemUser);
 		
 		CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), 
 				"sameBranch", null, null, null, null, startDate, 
 				branch1, meeting,
-				PersonnelConstants.SYSTEM_USER);
+				systemUser);
 		HibernateUtil.getSessionTL().save(center);
 		HibernateUtil.commitTransaction();
 		
@@ -548,7 +557,7 @@ public class CenterBOTest extends MifosTestCase {
 	}
 
 	private void createCustomers() throws Exception {
-		meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"),
+		meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK,
 				new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center",
 				meeting);

@@ -75,6 +75,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -206,11 +207,11 @@ public class CenterCustAction extends CustAction {
 
 		CenterBO center = new CenterBO(userContext,
 				actionForm.getDisplayName(), actionForm.getAddress(),
-				customFields, actionForm.getFeesToApply(), actionForm
-						.getExternalId(),
-				getDateFromString(actionForm.getMfiJoiningDate(), userContext
-						.getPreferredLocale()), actionForm.getOfficeIdValue(),
-				meeting, actionForm.getLoanOfficerIdValue());
+				customFields, actionForm.getFeesToApply(), actionForm.getExternalId(),
+				getDateFromString(actionForm.getMfiJoiningDate(), 
+				userContext.getPreferredLocale()), 
+				new OfficePersistence().getOffice(actionForm.getOfficeIdValue()),
+				meeting, new PersonnelPersistence().getPersonnel(actionForm.getLoanOfficerIdValue()));
 		new CenterPersistence().saveCenter(center);
 		actionForm.setCustomerId(center.getCustomerId().toString());
 		actionForm.setGlobalCustNum(center.getGlobalCustNum());

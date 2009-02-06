@@ -105,8 +105,8 @@ public class ClientBO extends CustomerBO {
 			CustomerStatus customerStatus, String externalId,
 			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			List<SavingsOfferingBO> offeringsSelected, Short formedById,
-			Short officeId, CustomerBO parentCustomer, Date dateOfBirth,
+			List<SavingsOfferingBO> offeringsSelected, PersonnelBO formedBy,
+			OfficeBO office, CustomerBO parentCustomer, Date dateOfBirth,
 			String governmentId, Short trained, Date trainedDate,
 			Short groupFlag, ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
@@ -115,7 +115,7 @@ public class ClientBO extends CustomerBO {
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
-				formedById, officeId, parentCustomer, null, null, dateOfBirth,
+				formedBy, office, parentCustomer, null, null, dateOfBirth,
 				governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
 				picture, customerPersistence);
@@ -125,8 +125,8 @@ public class ClientBO extends CustomerBO {
 			CustomerStatus customerStatus, String externalId,
 			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			List<SavingsOfferingBO> offeringsSelected, Short formedById,
-			Short officeId, MeetingBO meeting, Short loanOfficerId,
+			List<SavingsOfferingBO> offeringsSelected, PersonnelBO formedBy,
+			OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer,
 			Date dateOfBirth, String governmentId, Short trained,
 			Date trainedDate, Short groupFlag,
 			ClientNameDetailView clientNameDetailView,
@@ -136,7 +136,7 @@ public class ClientBO extends CustomerBO {
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
-				formedById, officeId, null, meeting, loanOfficerId,
+				formedBy, office, null, meeting, loanOfficer,
 				dateOfBirth, governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
 				picture, customerPersistence);
@@ -154,9 +154,9 @@ public class ClientBO extends CustomerBO {
 			CustomerStatus customerStatus, String externalId,
 			Date mfiJoiningDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			List<SavingsOfferingBO> offeringsSelected, Short formedById,
-			Short officeId, CustomerBO parentCustomer, MeetingBO meeting,
-			Short loanOfficerId, Date dateOfBirth, String governmentId,
+			List<SavingsOfferingBO> offeringsSelected, PersonnelBO formedBy,
+			OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
+			PersonnelBO loanOfficer, Date dateOfBirth, String governmentId,
 			Short trained, Date trainedDate, Short groupFlag,
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
@@ -165,8 +165,8 @@ public class ClientBO extends CustomerBO {
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
-				formedById, officeId, parentCustomer, meeting, loanOfficerId);
-		validateOffice(officeId);
+				formedBy, office, parentCustomer, meeting, loanOfficer);
+		validateOffice(office);
 		validateOfferings(offeringsSelected);
 		nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
@@ -200,7 +200,7 @@ public class ClientBO extends CustomerBO {
 		}
 	
 		if (isActive()) {
-			validateFieldsForActiveClient(loanOfficerId, meeting);
+			validateFieldsForActiveClient(loanOfficer, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
 			createAccountsForClient(customerPersistence);
 			createDepositSchedule();
@@ -680,11 +680,11 @@ public class ClientBO extends CustomerBO {
 						: getCustomerId());
 	}
 
-	private void validateFieldsForActiveClient(Short loanOfficerId,
+	private void validateFieldsForActiveClient(PersonnelBO loanOfficer,
 			MeetingBO meeting) throws CustomerException {
 		if (isActive()) {
 			if (!isClientUnderGroup()) {
-				validateLO(loanOfficerId);
+				validateLO(loanOfficer);
 				validateMeeting(meeting);
 			}
 		}

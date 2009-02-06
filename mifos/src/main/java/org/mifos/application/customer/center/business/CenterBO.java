@@ -43,6 +43,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -60,17 +61,17 @@ public class CenterBO extends CustomerBO {
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, String externalId, Date mfiJoiningDate,
-			Short office, MeetingBO meeting, Short loanOfficerId)
+			OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CENTER,
 				CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,
 				address, customFields, fees, null, office, null, meeting,
-				loanOfficerId);
-		validateFields(displayName, meeting, loanOfficerId, office);
+				loanOfficer);
+		validateFields(displayName, meeting, loanOfficer, office);
 		int count;
 		try {
 			count = new CustomerPersistence().getCustomerCountForOffice(
-					CustomerLevel.CENTER, office);
+					CustomerLevel.CENTER, office.getOfficeId());
 		} catch (PersistenceException pe) {
 			throw new CustomerException(pe);
 		}
@@ -105,7 +106,7 @@ public class CenterBO extends CustomerBO {
 	}
 	
 	private void validateFields(String displayName, MeetingBO meeting,
-			Short personnel, Short officeId) throws CustomerException {
+			PersonnelBO personnel, OfficeBO office) throws CustomerException {
 		try {
 			if (new CenterPersistence().isCenterExists(displayName)) {
 				throw new CustomerException(
@@ -117,7 +118,7 @@ public class CenterBO extends CustomerBO {
 		} 
 		validateMeeting(meeting);
 		validateLO(personnel);
-		validateOffice(officeId);
+		validateOffice(office);
 	}
 
 	@Override

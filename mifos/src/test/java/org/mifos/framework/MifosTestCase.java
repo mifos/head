@@ -28,9 +28,16 @@ import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
 import org.hibernate.jmx.StatisticsService;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
  * Inheriting from this instead of TestCase is deprecated,
@@ -70,4 +77,49 @@ public class MifosTestCase extends TestCase {
         statisticsService.setSessionFactory(HibernateUtil.getSessionFactory());
         statisticsService.setStatisticsEnabled(true);
     }
+    
+    /*
+     * Gets the test data office with office_id == 3
+     */
+    public OfficeBO getHeadOffice() {
+        try {
+            return new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+
+    /*
+     * Gets the test data office with office_id == 3
+     */
+    public OfficeBO getBranchOffice() {
+        try {
+            return new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+
+    /*
+     * Gets the test data user personnel_id == 1
+     */    
+    public PersonnelBO getSystemUser() {
+        try {
+            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);      
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+    
+    /*
+     * Gets the test data user personnel_id == 3
+     */    
+    public PersonnelBO getTestUser() {
+        try {
+            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);      
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+
 }

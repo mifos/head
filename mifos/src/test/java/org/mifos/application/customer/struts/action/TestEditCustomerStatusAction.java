@@ -63,6 +63,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -1124,7 +1125,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE),
 				"customer_office", "cust");
 		group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus,
-				office.getOfficeId(), getMeeting(), null);
+				office.getOfficeId(), getMeeting(),PersonnelConstants.TEST_USER);
 		client = TestObjectFactory.createClient("new client", clientStatus,
 				group, new java.util.Date());
 	}

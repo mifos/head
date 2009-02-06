@@ -40,6 +40,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -52,6 +53,7 @@ public class ClientPersistence extends Persistence {
 
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private OfficePersistence officePersistence = new OfficePersistence();
+    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
     public ClientBO createClient(UserContext userContext, ClientTemplate template)
             throws CustomerException, PersistenceException, ValidationException {
@@ -68,8 +70,9 @@ public class ClientPersistence extends Persistence {
                 template.getCustomerStatus(), template.getExternalId(),
                 template.getMfiJoiningDate(), template.getAddress(),
                 template.getCustomFieldViews(), template.getFees(),
-                template.getOfferingsSelected(), template.getFormedById(),
-                template.getOfficeId(), parentCustomer,
+                template.getOfferingsSelected(), 
+                personnelPersistence.getPersonnel(template.getFormedById()),
+                officePersistence.getOffice(template.getOfficeId()), parentCustomer,
                 template.getDateOfBirth(), template.getGovernmentId(),
                 template.getTrained(), template.getTrainedDate(),
                 template.getGroupFlag(), template.getClientNameDetailView(),

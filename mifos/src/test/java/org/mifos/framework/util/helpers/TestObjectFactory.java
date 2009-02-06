@@ -92,6 +92,7 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -127,9 +128,11 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
@@ -167,6 +170,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -299,8 +303,8 @@ public class TestObjectFactory {
 		CenterBO center;
 		try {
 			center = new CenterBO(TestUtils.makeUserWithLocales(),
-					customerName, null, null, fees, null, null, officeId,
-					meeting, personnelId);
+					customerName, null, null, fees, null, null, new OfficePersistence().getOffice(officeId),
+					meeting, new PersonnelPersistence().getPersonnel(personnelId));
 			new CenterPersistence().saveCenter(center);
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
@@ -391,7 +395,8 @@ public class TestObjectFactory {
 		try {
 			group = new GroupBO(TestUtils.makeUserWithLocales(), customerName,
 					customerStatus, externalId, trained, trainedDate, address,
-					customFields, fees, formedById, parentCustomer);
+					customFields, fees, new PersonnelPersistence().getPersonnel(formedById), 
+					parentCustomer);
 			new GroupPersistence().saveGroup(group);
 			HibernateUtil.commitTransaction();
 		}
@@ -427,11 +432,16 @@ public class TestObjectFactory {
 			Short formedById, Short officeId, MeetingBO meeting,
 			Short loanOfficerId) {
 		GroupBO group;
+		PersonnelBO loanOfficer = null;
 		try {
+	        if (loanOfficerId != null) {
+	            loanOfficer = new PersonnelPersistence().getPersonnel(loanOfficerId);
+	        }
 			group = new GroupBO(TestUtils.makeUserWithLocales(), customerName,
 					customerStatus, externalId, trained, trainedDate, address,
-					customFields, fees, formedById, officeId, meeting,
-					loanOfficerId);
+					customFields, fees, new PersonnelPersistence().getPersonnel(formedById), 
+					new OfficePersistence().getOffice(officeId), meeting, 
+					loanOfficer);
 			new GroupPersistence().saveGroup(group);
 			HibernateUtil.commitTransaction();
 		}
@@ -461,7 +471,8 @@ public class TestObjectFactory {
 		try {
 			client = new ClientBO(TestUtils.makeUserWithLocales(),
 					customerName, status, null, null, null, null, fees, null,
-					PersonnelConstants.SYSTEM_USER, SAMPLE_BRANCH_OFFICE,
+					new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER), 
+					new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE),
 					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
@@ -469,7 +480,9 @@ public class TestObjectFactory {
 		}
 		catch (CustomerException e) {
 			throw new RuntimeException(e);
-		}
+		} catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }
 		HibernateUtil.commitTransaction();
 		addObject(client);
 		return client;
@@ -484,7 +497,10 @@ public class TestObjectFactory {
 	public static ClientBO createClient(String customerName, MeetingBO meeting,
 			CustomerStatus status) {
 		ClientBO client;
+		
 		try {
+	        PersonnelBO systemUser = 
+	            new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 					NameType.CLIENT, SAMPLE_SALUTATION, customerName, "middle",
 					customerName, "secondLast");
@@ -497,8 +513,11 @@ public class TestObjectFactory {
 			client = new ClientBO(TestUtils.makeUserWithLocales(),
 					clientNameDetailView.getDisplayName(), status, null, null,
 					null, null, getFees(), null,
-					PersonnelConstants.SYSTEM_USER, SAMPLE_BRANCH_OFFICE,
-					meeting, PersonnelConstants.SYSTEM_USER, new Date(), null,
+					systemUser, 
+					new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE),
+					meeting, 
+                    systemUser, 
+					new Date(), null,
 					null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
 			new ClientPersistence().saveClient(client);
@@ -538,8 +557,8 @@ public class TestObjectFactory {
 						null, // List<CustomFieldView> customFields
 						getFees(), // List<FeeView> fees
 						null, // List<SavingsOfferingBO> offeringsSelected
-						personnel, // Short formedById
-						SAMPLE_BRANCH_OFFICE, // Short officeId
+						new PersonnelPersistence().getPersonnel(personnel), // Short formedById
+						new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), // Short officeId
 						null, // MeetingBO
 						null, // Short loanOfficerId
 						null, // Date dateOfBirth
@@ -555,8 +574,9 @@ public class TestObjectFactory {
 			else
 				client = new ClientBO(TestUtils.makeUserWithLocales(),
 						clientNameDetailView.getDisplayName(), status, null, null,
-						null, null, getFees(), null, personnel,
-						parentCustomer.getOffice().getOfficeId(), parentCustomer, null,
+						null, null, getFees(), null, 
+						new PersonnelPersistence().getPersonnel(personnel),
+						parentCustomer.getOffice(), parentCustomer, null,
 						null, null, null, YesNoFlag.YES.getValue(),
 						clientNameDetailView, spouseNameDetailView,
 						clientDetailView, null, new CustomerPersistence());
@@ -2474,5 +2494,49 @@ public class TestObjectFactory {
  	}
 
  	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
-	
+
+    public static GroupBO createInstanceForTest(UserContext userContext,
+            GroupTemplate template, CenterBO center, Date customerActivationDate) throws CustomerException, PersistenceException {
+        
+        GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(),
+                                template.getExternalId(), template.isTrained(), template.getTrainedDate(),
+                                template.getAddress(), template.getCustomFieldViews(), template.getFees(),
+                                new PersonnelPersistence().getPersonnel(template.getLoanOfficerId()), center);
+        group.setCustomerActivationDate(customerActivationDate);
+        return group;
+    }
+    
+    /*
+     * Gets the test data office with office_id == 3
+     */
+    public static OfficeBO getBranchOffice() {
+        try {
+            return new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+
+    /*
+     * Gets the test data user personnel_id == 1
+     */    
+    public static PersonnelBO getSystemUser() {
+        try {
+            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);      
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+    
+    /*
+     * Gets the test data user personnel_id == 3
+     */    
+    public static PersonnelBO getTestUser() {
+        try {
+            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);      
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }                
+    }
+    
 }

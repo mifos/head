@@ -33,6 +33,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -45,6 +46,8 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
 
 public class CenterPersistence extends Persistence {
+    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private OfficePersistence officePersistence = new OfficePersistence(); 
 
 	public CenterPersistence() {
 		super();
@@ -110,11 +113,13 @@ public class CenterPersistence extends Persistence {
 	}
 
     public CenterBO createCenter(UserContext userContext, CenterTemplate template)
-            throws CustomerException {
+            throws CustomerException, PersistenceException {
         CenterBO center = new CenterBO(userContext, template.getDisplayName(),
 			    template.getAddress(), template.getCustomFieldViews(), template.getFees(),
-                template.getExternalId(), template.getMfiJoiningDate(), template.getOfficeId(),
-                template.getMeeting(), template.getLoanOfficerId());
+                template.getExternalId(), template.getMfiJoiningDate(), 
+                officePersistence.getOffice(template.getOfficeId()),
+                template.getMeeting(), 
+                personnelPersistence.getPersonnel(template.getLoanOfficerId()));
         saveCenter(center);
         return center;
     }

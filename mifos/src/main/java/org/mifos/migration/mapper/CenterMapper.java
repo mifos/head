@@ -27,6 +27,9 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.migration.generated.Center;
@@ -100,11 +103,14 @@ public class CenterMapper {
 		try {
 			centerBO = new CenterBO(userContext, center.getName(), address,
 					fields, fees, center.getExternalId(), mfiJoiningDate,
-					center.getOfficeId(), meeting, center.getLoanOfficerId());
+					new OfficePersistence().getOffice(center.getOfficeId()), 
+					meeting, new PersonnelPersistence().getPersonnel(center.getLoanOfficerId()));
 		}
 		catch (CustomerException e) {
 			throw new RuntimeException(e);
-		}
+		} catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }
 
 
 		return centerBO;

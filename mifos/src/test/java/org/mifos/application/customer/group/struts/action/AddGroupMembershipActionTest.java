@@ -54,6 +54,10 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -168,8 +172,8 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 		
 	}
 	private void createAndSetClientInSession() throws Exception {
-		Short officeId = 1;
-		Short personnel = 3;
+		OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
 		meeting = getMeeting();
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 				NameType.CLIENT, 1, "Client", "", "1",
@@ -182,7 +186,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 		client = new ClientBO(TestUtils.makeUser(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.fromInt(new Short("1")), null, null, new Address(),
-				getCustomFields(), null, null, personnel, officeId, meeting,
+				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null,
