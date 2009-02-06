@@ -17,23 +17,23 @@
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage" >
+          <td class="tablightorange"><a id="clientsAndAccountsHeader.link.home" href="custSearchAction.do?method=getHomePage" >
 		<mifos:mifoslabel name="framework.home" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
           <c:choose>
               <c:when test="${requestScope.perspective == 'redoLoan'}">
-                  <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch"><mifos:mifoslabel
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a href="reportsAction.do?method=load"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="taborange"><a href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
+                  <td class="taborange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:when>
               <c:otherwise>
-                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite"><mifos:mifoslabel
+                  <td class="taborange"><a id="clientsAndAccountsHeader.link.clientsAndAccounts" href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite"><mifos:mifoslabel
 								name="framework.clientsAndAccounts" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a href="reportsAction.do?method=load"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.reports" href="reportsAction.do?method=load"><mifos:mifoslabel
 								name="framework.reports" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
-                  <td class="tablightorange"><a href="AdminAction.do?method=load"><mifos:mifoslabel
+                  <td class="tablightorange"><a id="clientsAndAccountsHeader.link.admin" href="AdminAction.do?method=load"><mifos:mifoslabel
 								name="framework.admin" bundle="FrameworkUIResources"></mifos:mifoslabel></a></td>
               </c:otherwise>
           </c:choose>

@@ -85,7 +85,6 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = 
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterDataPage.verifyPage(formParameters);
         enterDataPage.enterAccountValue(0,0,99.0);
         enterDataPage.enterAccountValue(1,1,0.0);
         enterDataPage.enterAccountValue(2,0,0.0);

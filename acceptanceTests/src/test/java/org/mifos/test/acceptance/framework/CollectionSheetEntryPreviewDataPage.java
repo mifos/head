@@ -20,8 +20,6 @@
 
 package org.mifos.test.acceptance.framework;
 
-import org.testng.Assert;
-
 import com.thoughtworks.selenium.Selenium;
 
 public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
@@ -36,7 +34,7 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 	
 
 	public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
-	    Assert.assertTrue(selenium.isElementPresent("bulkentry_preview.heading"),"Didn't get to Bulk Entry Preview Data page");
+        this.verifyPage("BulkEntryPreview");
 		return this;
 	}
 
@@ -44,7 +42,6 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
         selenium.click("bulkentry_preview.button.submit");
         waitForPageToLoad();
         return new CollectionSheetEntryConfirmationPage(selenium);
-        
     }
 
 	

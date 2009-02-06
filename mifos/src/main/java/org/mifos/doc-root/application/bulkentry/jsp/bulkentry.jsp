@@ -17,7 +17,7 @@ permissions and limitations under the License.
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
-<!-- bulkentry.jsp -->
+<input type="hidden" id="page.id" value="BulkEntry"/>
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>

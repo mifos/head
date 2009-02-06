@@ -46,6 +46,8 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/date" prefix="date"%>
 
+<input type="hidden" id="page.id" value="BulkEntryConfirmation"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">

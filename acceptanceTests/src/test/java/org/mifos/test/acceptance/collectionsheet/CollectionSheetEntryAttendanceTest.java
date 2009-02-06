@@ -21,7 +21,9 @@
 package org.mifos.test.acceptance.collectionsheet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -75,31 +77,75 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void defaultAdminUserEntersAttendanceData() throws Exception {
-        SubmitFormParameters formParameters = new SubmitFormParameters();
-        formParameters.setBranch("Office2");
-        formParameters.setLoanOfficer("John Okoth");
-        formParameters.setCenter("Center2");
-        formParameters.setPaymentMode("Cash");
-        
+        enterAndVerifyBasicAttendanceData();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void secondCollectionSheetEntryOverwritesFirstAttendanceData() throws Exception {
+        CollectionSheetEntryConfirmationPage confirmationPage = enterAndVerifyBasicAttendanceData();
+        verifyAttendanceData(this.getBasicAttendanceDataSet());
+        SubmitFormParameters formParameters = getFormParameters();
+        HomePage homePage = confirmationPage.navigateToHomePage();
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterOverwriteAttendanceData(enterDataPage);
+        CollectionSheetEntryConfirmationPage secondConfirmationPage = submitDataAndVerifySuccessPage(formParameters, enterDataPage);
+        verifyAttendanceData(this.getOverwriteAttendanceDataSet());
+    }
+
+    private CollectionSheetEntryConfirmationPage enterAndVerifyBasicAttendanceData() throws DatabaseUnitException, SQLException, IOException,
+            Exception, DataSetException {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
-        
+        SubmitFormParameters formParameters = getFormParameters();
+        CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
+        enterBasicAttendanceData(enterDataPage);
+        CollectionSheetEntryConfirmationPage confirmationPage = submitDataAndVerifySuccessPage(formParameters, enterDataPage);
+        verifyAttendanceData(this.getBasicAttendanceDataSet());
+        return confirmationPage;
+    }
+
+    private void enterBasicAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage) {
+        enterDataPage.enterAttendance(0,ATTENDANCE_L);
+        enterDataPage.enterAttendance(1,ATTENDANCE_AA);
+        enterDataPage.enterAttendance(2,ATTENDANCE_A);
+        enterDataPage.enterAttendance(3,ATTENDANCE_P);
+    }
+
+    private void enterOverwriteAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage) {
+        enterDataPage.enterAttendance(0,ATTENDANCE_P);
+        enterDataPage.enterAttendance(1,ATTENDANCE_P);
+        enterDataPage.enterAttendance(2,ATTENDANCE_P);
+        enterDataPage.enterAttendance(3,ATTENDANCE_L);
+    }
+
+    private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
         CollectionSheetEntrySelectPage selectPage = 
             loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = 
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterDataPage.verifyPage(formParameters);
-        enterDataPage.enterAttendance(0,ATTENDANCE_L);
-        enterDataPage.enterAttendance(1,ATTENDANCE_AA);
-        enterDataPage.enterAttendance(2,ATTENDANCE_A);
-        enterDataPage.enterAttendance(3,ATTENDANCE_P);
+        return enterDataPage;
+    }
+
+    private CollectionSheetEntryConfirmationPage submitDataAndVerifySuccessPage(SubmitFormParameters formParameters,
+            CollectionSheetEntryEnterDataPage enterDataPage) {
         CollectionSheetEntryPreviewDataPage previewPage = 
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);
         CollectionSheetEntryConfirmationPage confirmationPage = 
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
-        verifyAttendanceData();
+        return confirmationPage;
+    }
+
+    private SubmitFormParameters getFormParameters() {
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+        formParameters.setBranch("Office2");
+        formParameters.setLoanOfficer("John Okoth");
+        formParameters.setCenter("Center2");
+        formParameters.setPaymentMode("Cash");
+        return formParameters;
     }
 
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
@@ -110,17 +156,26 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    private void verifyAttendanceData() throws Exception {
+    private void verifyAttendanceData(IDataSet attendanceDataSet) throws Exception {
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTable(dataSource, CUSTOMER_ATTENDANCE);
-        dbUnitUtilities.verifyTable(CUSTOMER_ATTENDANCE, databaseDataSet, this.getAttendanceDataSet());   
+        dbUnitUtilities.verifyTable(CUSTOMER_ATTENDANCE, databaseDataSet, attendanceDataSet);   
     }
 
-    private IDataSet getAttendanceDataSet() throws DataSetException, IOException {
+    private IDataSet getBasicAttendanceDataSet() throws DataSetException, IOException {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
         attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=4");
         attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=3");
         attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=2");
         attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=1");
+        return attendanceDataSet.getDataSet();
+    }
+
+    private IDataSet getOverwriteAttendanceDataSet() throws DataSetException, IOException {
+        SimpleDataSet attendanceDataSet = new SimpleDataSet();
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=1");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=1");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=1");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=4");
         return attendanceDataSet.getDataSet();
     }
     

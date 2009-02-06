@@ -50,6 +50,8 @@
 <%@taglib uri="/mifos/bulkentrytags" prefix="bulkentry"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="BulkEntryPreview"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">

@@ -21,8 +21,6 @@
 package org.mifos.test.acceptance.framework;
 
 
-import org.testng.Assert;
-
 import com.thoughtworks.selenium.Selenium;
 
 
@@ -41,7 +39,7 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 	}
 
 	public CollectionSheetEntrySelectPage verifyPage() {
-        Assert.assertTrue(selenium.isElementPresent("bulkentry.heading"),"Didn't reach Bulk entry select page");
+        this.verifyPage("BulkEntry");
 		return this;
 	}
 
@@ -173,7 +171,9 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 		typeTextIfNotEmpty  ("receiptDateYY",     parameters.getReceiptYear());
 		selenium.click (CONTINUE_BUTTON_ID);
 		waitForPageToLoad();
-		return new CollectionSheetEntryEnterDataPage(selenium);
+		CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = new CollectionSheetEntryEnterDataPage(selenium);
+		collectionSheetEntryEnterDataPage.verifyPage();
+        return collectionSheetEntryEnterDataPage;
 	}
 	
 	private void typeTextIfNotEmpty(String locator, String value) {
