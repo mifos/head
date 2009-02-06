@@ -113,7 +113,8 @@ public class SavingsBO extends AccountBO {
 	public SavingsBO(UserContext userContext,
 			SavingsOfferingBO savingsOffering, CustomerBO customer,
 			AccountState accountState, Money recommendedAmount,
-			List<CustomFieldView> customFields) throws AccountException {
+			List<CustomFieldView> customFields,
+			CustomerPersistence customerPersistence) throws AccountException {
 		super(userContext, customer, AccountTypes.SAVINGS_ACCOUNT, accountState);
 		savingsActivityDetails = new HashSet<SavingsActivityEntity>();
 		this.setSavingsOffering(savingsOffering);
@@ -128,7 +129,7 @@ public class SavingsBO extends AccountBO {
 		// generated the deposit action dates only if savings account is being
 		// saved in approved state
 		if (isActive())
-			setValuesForActiveState();
+			setValuesForActiveState(customerPersistence);
 
 	}
 	
@@ -950,7 +951,8 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	private void generateDepositAccountActions() throws AccountException {
+	private void generateDepositAccountActions(
+	        CustomerPersistence customerPersistence) throws AccountException {
 		logger.debug("In SavingsBO::generateDepositAccountActions()");
 		// deposit happens on each meeting date of the customer. If for
 		// center/group with individual deposits, insert row for every client
@@ -971,7 +973,8 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.ACTIVE_AND_ONHOLD);
+							ChildrenStateType.ACTIVE_AND_ONHOLD,
+							customerPersistence);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
@@ -1222,9 +1225,10 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	private void setValuesForActiveState() throws AccountException {
+	private void setValuesForActiveState(
+	        CustomerPersistence customerPersistence) throws AccountException {
 		this.setActivationDate(new Date(new java.util.Date().getTime()));
-		this.generateDepositAccountActions();
+		this.generateDepositAccountActions(customerPersistence);
 		try {
 			Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());	
 			this.setNextIntCalcDate(intCalcDate);
@@ -1239,17 +1243,18 @@ public class SavingsBO extends AccountBO {
 	}
 
 	@Override
-	protected void activationDateHelper(Short newStatusId)
+	protected void activationDateHelper(Short newStatusId,
+	        CustomerPersistence customerPersistence)
 			throws AccountException {
 		if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
 			if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PENDINGAPPROVAL
 					&& newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
-				setValuesForActiveState();
+				setValuesForActiveState(customerPersistence);
 			}
 		} else {
 			if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PARTIALAPPLICATION
 					&& newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
-				setValuesForActiveState();
+				setValuesForActiveState(customerPersistence);
 			}
 		}
 	}
@@ -2068,7 +2073,8 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.OTHER_THAN_CLOSED);
+							ChildrenStateType.OTHER_THAN_CLOSED,
+							customerPersistence);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
@@ -2182,7 +2188,8 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	public void generateNextSetOfMeetingDates() throws AccountException {
+	public void generateNextSetOfMeetingDates(
+	        CustomerPersistence customerPersistence) throws AccountException {
 		CustomerBO customerBO = getCustomer();
 		if (customerBO.getCustomerMeeting() != null
 				&& customerBO.getCustomerMeeting().getMeeting() != null) {
@@ -2205,7 +2212,8 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.OTHER_THAN_CLOSED);
+							ChildrenStateType.OTHER_THAN_CLOSED,
+							customerPersistence);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}

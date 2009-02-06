@@ -1517,9 +1517,9 @@ public class LoanBO extends AccountBO {
 	}
 
 	public final void reverseLoanDisbursal(final PersonnelBO loggedInUser,
-			final String note) throws AccountException {
+			final String note, CustomerPersistence customerPersistence) throws AccountException {
 		changeStatus(AccountState.LOAN_CANCELLED.getValue(),
-				AccountStateFlag.LOAN_REVERSAL.getValue(), note);
+				AccountStateFlag.LOAN_REVERSAL.getValue(), note, customerPersistence);
 		if (getAccountPayments() != null && getAccountPayments().size() > 0) {
 			for (AccountPaymentEntity accountPayment : getAccountPayments()) {
 				if (accountPayment.getAmount().getAmountDoubleValue() > 0.0) {

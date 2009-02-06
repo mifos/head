@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -170,7 +170,7 @@ public class TestLoanBO extends MifosTestCase {
 	private Short savedDigitAfterDecimal;
 
 	private LoanDao loanDao;
-	//set to true if you want to print dates
+	private CustomerPersistence customerPersistence = new CustomerPersistence();
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -2995,7 +2995,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
+		accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "", customerPersistence);
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
 						.getInstallmentId().intValue() + 1), new CustomerPersistence());
@@ -3097,7 +3097,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null,
-				"");
+				"", customerPersistence);
 		changeInstallmentDate(accountBO, 14, Short.valueOf("1"));
 		changeInstallmentDate(accountBO, 14, Short.valueOf("2"));
 		TestObjectFactory.updateObject(accountBO);
@@ -3270,7 +3270,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null,
-				"");
+				"", customerPersistence);
 
 		TestObjectFactory.updateObject(accountBO);
 		HibernateUtil.closeSession();
@@ -4218,7 +4218,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date firstInstallmentDate = incrementCurrentDate(21);
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
+		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "", customerPersistence);
 
 		LoanBO loanBO = ((LoanBO) accountBO);
 		((LoanBO) accountBO).updateLoan(loanBO
@@ -5196,7 +5196,7 @@ public class TestLoanBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDate2 = loan
 				.getAccountActionDate((short) 2);
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
+		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "", customerPersistence);
 		((LoanScheduleEntity) accountActionDate1)
 				.setActionDate(offSetCurrentDate(21));
 		((LoanScheduleEntity) accountActionDate2)

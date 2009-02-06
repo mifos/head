@@ -429,19 +429,18 @@ public class AccountBO extends BusinessObject {
 	        CustomerPersistence customerPersistence) throws AccountException{
 	}
 	
-	public void changeStatus(
-			AccountState newStatus, Short flagId, String comment) 
-	throws AccountException {
-		changeStatus(newStatus.getValue(), flagId, comment);
-	}
+	public void changeStatus(AccountState newStatus, Short flagId, String comment,
+	        CustomerPersistence customerPersistence) throws AccountException {
+        changeStatus(newStatus.getValue(), flagId, comment, customerPersistence);
+    }
 
 	public final void changeStatus(Short newStatusId, Short flagId,
-			String comment) throws AccountException {
+			String comment, CustomerPersistence customerPersistence) throws AccountException {
 		try {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"In the change status method of AccountBO:: new StatusId= "
 							+ newStatusId);
-			activationDateHelper(newStatusId);
+			activationDateHelper(newStatusId, customerPersistence);
 			MasterPersistence masterPersistence = new MasterPersistence();
 			AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class, newStatusId);
@@ -1301,7 +1300,8 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 	}
 
-	protected void activationDateHelper(Short newStatusId)
+	protected void activationDateHelper(Short newStatusId,
+	        CustomerPersistence customerPersistence)
 			throws AccountException {
 	}
 

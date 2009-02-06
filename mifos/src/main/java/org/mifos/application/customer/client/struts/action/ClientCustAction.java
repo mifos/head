@@ -469,6 +469,7 @@ public class ClientCustAction extends CustAction {
 				.getPreferredLocale());
 		Short personnelId = null;
 		Short officeId = null;
+		CustomerPersistence customerPersistence = new CustomerPersistence();
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
 			if (actionForm.getParentGroup().getPersonnel() != null) {
 				personnelId = actionForm.getParentGroup().getPersonnel()
@@ -504,7 +505,7 @@ public class ClientCustAction extends CustAction {
 							.getGroupFlagValue(), actionForm.getClientName(),
 					actionForm.getSpouseName(), actionForm
 							.getClientDetailView(), actionForm
-							.getCustomerPicture());
+							.getCustomerPicture(), customerPersistence);
 		}
 		else {
 			CustomerBO parentCustomer = getCustomerBusinessService()
@@ -526,7 +527,7 @@ public class ClientCustAction extends CustAction {
 							.getGroupFlagValue(), actionForm.getClientName(),
 					actionForm.getSpouseName(), actionForm
 							.getClientDetailView(), actionForm
-							.getCustomerPicture());
+							.getCustomerPicture(), customerPersistence);
 		}
 		new CustomerPersistence().saveCustomer(client);
 		actionForm.setCustomerId(client.getCustomerId().toString());

@@ -121,7 +121,8 @@ public class CenterBO extends CustomerBO {
 	}
 
 	@Override
-	protected void validateStatusChange(Short newStatusId)
+	protected void validateStatusChange(Short newStatusId,
+	        CustomerPersistence customerPersistence)
 	throws CustomerException {
 		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
@@ -129,7 +130,9 @@ public class CenterBO extends CustomerBO {
 				throw new CustomerException(
 						CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
 			}
-			if (getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
+			if (getChildren(CustomerLevel.GROUP,
+			        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
+			        customerPersistence).size() > 0) {
 				throw new CustomerException(
 						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
 						new Object[] { MessageLookup.getInstance().lookupLabel(
@@ -178,6 +181,6 @@ public class CenterBO extends CustomerBO {
 	    throws CustomerException{	
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting, customerPersistence);
-		deleteMeeting(newMeeting);
+		deleteMeeting(newMeeting, customerPersistence);
 	}
 }

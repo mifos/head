@@ -25,6 +25,7 @@ import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -109,7 +110,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
 			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(
-							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
+							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD,
+							new CustomerPersistence()), request);
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 					request);

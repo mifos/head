@@ -110,14 +110,15 @@ public class ClientBO extends CustomerBO {
 			String governmentId, Short trained, Date trainedDate,
 			Short groupFlag, ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
-			ClientDetailView clientDetailView, InputStream picture)
+			ClientDetailView clientDetailView, InputStream picture,
+			CustomerPersistence customerPersistence)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedById, officeId, parentCustomer, null, null, dateOfBirth,
 				governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture);
+				picture, customerPersistence);
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
@@ -130,14 +131,15 @@ public class ClientBO extends CustomerBO {
 			Date trainedDate, Short groupFlag,
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
-			ClientDetailView clientDetailView, InputStream picture)
+			ClientDetailView clientDetailView, InputStream picture,
+			CustomerPersistence customerPersistence)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedById, officeId, null, meeting, loanOfficerId,
 				dateOfBirth, governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture);
+				picture, customerPersistence);
 	}
 
 	protected ClientBO() {
@@ -158,7 +160,8 @@ public class ClientBO extends CustomerBO {
 			Short trained, Date trainedDate, Short groupFlag,
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
-			ClientDetailView clientDetailView, InputStream picture)
+			ClientDetailView clientDetailView, InputStream picture,
+			CustomerPersistence customerPersistence)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
@@ -199,7 +202,7 @@ public class ClientBO extends CustomerBO {
 		if (isActive()) {
 			validateFieldsForActiveClient(loanOfficerId, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
-			createAccountsForClient();
+			createAccountsForClient(customerPersistence);
 			createDepositSchedule();
 		}
 		generateSearchId();
@@ -395,11 +398,12 @@ public class ClientBO extends CustomerBO {
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting, customerPersistence);
 		if(getParentCustomer()==null)
-			deleteMeeting(newMeeting);
+			deleteMeeting(newMeeting, customerPersistence);
 	}
 	
 	@Override
-	protected void validateStatusChange(Short newStatusId)
+	protected void validateStatusChange(Short newStatusId,
+	        CustomerPersistence customerPersistence)
 			throws CustomerException {
 		if (getParentCustomer() != null) {
 			checkIfClientStatusIsLower(newStatusId, getParentCustomer()
@@ -424,11 +428,12 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
-		super.handleActiveForFirstTime(oldStatusId, newStatusId);
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
+	        CustomerPersistence customerPersistence) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence);
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			this.setCustomerActivationDate(new Date());
-			createAccountsForClient();
+			createAccountsForClient(customerPersistence);
 			new SavingsPersistence().persistSavingAccounts(this);
 			createDepositSchedule();
 		}
@@ -812,23 +817,28 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-	private void createAccountsForClient() throws CustomerException {
-		if(offeringsAssociatedInCreate!=null){
-			for(ClientInitialSavingsOfferingEntity clientOffering: offeringsAssociatedInCreate){
-				try {
-					SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering.getSavingsOffering().getPrdOfferingId());
-					if(savingsOffering.isActive()){
-						List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence().retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-						addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,savingsOffering.getRecommendedAmount(), createCustomFieldViewsForClientSavingsAccount(customFieldDefs)));
-					}
-				} catch (PersistenceException pe) {
-					throw new CustomerException(pe);
-				} catch (AccountException pe) {
-					throw new CustomerException(pe);
-				}
-			}				
-		}
-	}
+	private void createAccountsForClient(CustomerPersistence customerPersistence) throws CustomerException {
+        if (offeringsAssociatedInCreate != null) {
+            for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
+                try {
+                    SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering
+                            .getSavingsOffering().getPrdOfferingId());
+                    if (savingsOffering.isActive()) {
+                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
+                                .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+                        addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,
+                                savingsOffering.getRecommendedAmount(),
+                                createCustomFieldViewsForClientSavingsAccount(customFieldDefs),
+                                customerPersistence));
+                    }
+                } catch (PersistenceException pe) {
+                    throw new CustomerException(pe);
+                } catch (AccountException pe) {
+                    throw new CustomerException(pe);
+                }
+            }
+        }
+    }
 	
 	private List<CustomFieldView> createCustomFieldViewsForClientSavingsAccount(List<CustomFieldDefinitionEntity> customFieldDefs){
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
@@ -895,7 +905,8 @@ public class ClientBO extends CustomerBO {
 				: false;
 	}
 	
-	public void addClientToGroup(GroupBO newParent, CustomerPersistence customerPersistence) throws CustomerException {
+	public void addClientToGroup(GroupBO newParent,
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		validateAddClientToGroup(newParent);
 
 		if (!isSameBranch(newParent.getOffice()))
@@ -903,7 +914,7 @@ public class ClientBO extends CustomerBO {
 		
 		setParentCustomer(newParent);
 		addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-		handleAddClientToGroup();
+		handleAddClientToGroup(customerPersistence);
 		childAddedForParent(newParent);
 		setSearchId(newParent.getSearchId() + "."
 				+ String.valueOf(newParent.getMaxChildCount()));

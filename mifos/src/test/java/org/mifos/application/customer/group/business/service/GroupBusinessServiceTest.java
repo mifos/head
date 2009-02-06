@@ -12,6 +12,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -83,7 +84,8 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,group.getOpenLoanAccounts().size());
 		assertEquals(1,group.getOpenSavingAccounts().size());
 		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(),group.getCustomerStatus().getId());
-		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).getActiveClientCount().intValue());
+		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).getActiveClientCount(
+		        new CustomerPersistence()).intValue());
 		HibernateUtil.closeSession();
 		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
 		savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
@@ -125,7 +127,8 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,group.getOpenLoanAccounts().size());
 		assertEquals(1,group.getOpenSavingAccounts().size());
 		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(),group.getCustomerStatus().getId());
-		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).getActiveClientCount().intValue());
+		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).getActiveClientCount(
+		        new CustomerPersistence()).intValue());
 		HibernateUtil.closeSession();
 		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
 		savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());

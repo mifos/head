@@ -162,9 +162,9 @@ public class TestCustomerPersistence extends MifosTestCase {
 				group.getSearchId() + ".%");
 		assertEquals(new Money("600"), amount);
 		clientAccount1.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "none");
+				null, "none", customerPersistence);
 		clientAccount2.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "none");
+				null, "none", customerPersistence);
 		TestObjectFactory.updateObject(clientAccount1);
 		TestObjectFactory.updateObject(clientAccount2);
 		HibernateUtil.commitTransaction();
@@ -569,7 +569,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.LOAN_CLOSED_OBLIGATIONS_MET);
 		account.setUserContext(TestObjectFactory.getContext());
-		account.changeStatus(accountStateEntity.getId(), null, "");
+		account.changeStatus(accountStateEntity.getId(), null, "", customerPersistence);
 		TestObjectFactory.updateObject(account);
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
@@ -930,12 +930,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 		getCustomer();
 		groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
-				"WITHDRAW LOAN ACCOUNT");
+				"WITHDRAW LOAN ACCOUNT", customerPersistence);
 		clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(),
-				null, "WITHDRAW LOAN ACCOUNT");
+				null, "WITHDRAW LOAN ACCOUNT", customerPersistence);
 		clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED
 				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
-				"WITHDRAW LOAN ACCOUNT");
+				"WITHDRAW LOAN ACCOUNT", customerPersistence);
 		TestObjectFactory.updateObject(groupAccount);
 		TestObjectFactory.updateObject(clientAccount);
 		TestObjectFactory.updateObject(clientSavingsAccount);
@@ -1088,7 +1088,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		groupAccount = getLoanAccount();
 		groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
-				"WITHDRAW LOAN ACCOUNT");
+				"WITHDRAW LOAN ACCOUNT", customerPersistence);
 		TestObjectFactory.updateObject(groupAccount);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1254,7 +1254,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testSearchForActiveInBadStandingLoanAccount() throws Exception {
 		groupAccount = getLoanAccount();
 		groupAccount.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "Changing to badStanding");
+				null, "Changing to badStanding", customerPersistence);
 		TestObjectFactory.updateObject(groupAccount);
 		HibernateUtil.closeSession();
 		groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount

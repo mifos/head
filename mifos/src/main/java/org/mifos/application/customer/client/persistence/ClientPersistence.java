@@ -74,7 +74,8 @@ public class ClientPersistence extends Persistence {
                 template.getTrained(), template.getTrainedDate(),
                 template.getGroupFlag(), template.getClientNameDetailView(),
                 template.getSpouseNameDetailView(),
-                template.getClientDetailView(), template.getPicture());
+                template.getClientDetailView(), template.getPicture(),
+                customerPersistence);
         customerPersistence.saveCustomer(client);
         return client;
     }

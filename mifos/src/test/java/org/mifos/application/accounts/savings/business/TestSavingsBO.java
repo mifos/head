@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -125,6 +125,8 @@ public class TestSavingsBO extends MifosTestCase {
 	private SavingsPersistence savingsPersistence = new SavingsPersistence();
 
 	private AccountPersistence accountPersistence = new AccountPersistence();
+	
+	private CustomerPersistence customerPersistence = new CustomerPersistence();
 
 	private MifosCurrency currency = Configuration.getInstance()
 			.getSystemConfig().getCurrency();
@@ -637,7 +639,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountState.SAVINGS_ACTIVE, userContext);
 		savings.setActivationDate(startDate);
 		Short flagId = 1;
-		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
+		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved", customerPersistence);
 		assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
 		Money depositMoney = new Money(currency, "200.0");
 		Money balanceAmt = new Money(currency, "200.0");
@@ -676,7 +678,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountState.SAVINGS_ACTIVE, userContext);
 		savings.setActivationDate(startDate);
 		Short flagId = 1;
-		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
+		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved", customerPersistence);
 		assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
 		Money depositMoney = new Money(currency, "200.0");
 		Money balanceAmt = new Money(currency, "200.0");
@@ -714,7 +716,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountState.SAVINGS_ACTIVE, userContext);
 		savings.setActivationDate(startDate);
 		Short flagId = 1;
-		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
+		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved", customerPersistence);
 		assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
 		Money depositMoney = new Money(currency, "200.0");
 		Money balanceAmt = new Money(currency, "200.0");
@@ -2216,7 +2218,7 @@ public class TestSavingsBO extends MifosTestCase {
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_PENDING_APPROVAL, new Money("100"),
-				getCustomFieldView());
+				getCustomFieldView(), new CustomerPersistence());
 		savings.save();
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
@@ -2240,7 +2242,7 @@ public class TestSavingsBO extends MifosTestCase {
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), getCustomFieldView());
+						.getRecommendedAmount(), getCustomFieldView(), customerPersistence);
 		savings.save();
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
@@ -2349,7 +2351,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savingsOffering.setInterestCalcType(intType);
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), null);
+						.getRecommendedAmount(), null, customerPersistence);
 		savings.save();
 		HibernateUtil.commitTransaction();
 		savings.setActivationDate(helper.getDate("15/05/2006"));
@@ -2382,7 +2384,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savingsOffering.setMinAmntForInt(new Money("5000"));
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), null);
+						.getRecommendedAmount(), null, customerPersistence);
 		savings.save();
 		HibernateUtil.commitTransaction();
 		savings.setActivationDate(helper.getDate("15/05/2006"));
@@ -2415,7 +2417,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), null);
+						.getRecommendedAmount(), null, customerPersistence);
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, new Money(currency, "700.0"), new Money(currency,
 						"1700.0"), helper.getDate("15/01/2006"),
@@ -2661,7 +2663,7 @@ public class TestSavingsBO extends MifosTestCase {
 				userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
-				null, "");
+				null, "", customerPersistence);
 
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -2738,7 +2740,7 @@ public class TestSavingsBO extends MifosTestCase {
 				userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
-				null, "");
+				null, "", customerPersistence);
 
 		savings.setUserContext(this.userContext);
 		AccountStateEntity state = (AccountStateEntity) session.get(
@@ -2766,7 +2768,7 @@ public class TestSavingsBO extends MifosTestCase {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 				AccountTypes.SAVINGS_ACCOUNT, null);
 		savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL
-				.getValue(), null, "notes");
+				.getValue(), null, "notes", customerPersistence);
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
 				.getAccountState().getId().shortValue());
 
@@ -2784,7 +2786,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 6 is blacklisted
 
 		savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), Short
-				.valueOf("6"), "notes");
+				.valueOf("6"), "notes", customerPersistence);
 		assertEquals(AccountStates.SAVINGS_ACC_CANCEL, savings
 				.getAccountState().getId().shortValue());
 
@@ -3093,7 +3095,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
 		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
-				null, "status changed");
+				null, "status changed", customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -3155,7 +3157,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
 		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
-				null, "changedInactive");
+				null, "changedInactive", customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -4556,7 +4558,7 @@ public class TestSavingsBO extends MifosTestCase {
 		meetingDates.remove(0);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
-				null, "");
+				null, "", customerPersistence);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
 				.getInstallmentId().intValue() + 1), new CustomerPersistence());
 		HibernateUtil.commitTransaction();
@@ -4604,7 +4606,7 @@ public class TestSavingsBO extends MifosTestCase {
 			meetingIntCalc, meetingIntPost);
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), getCustomFieldView());
+						.getRecommendedAmount(), getCustomFieldView(), customerPersistence);
 		savings.save();
 		HibernateUtil.getTransaction().commit();
 		return savings;
@@ -4827,7 +4829,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.intValue()
 				+ (short) 1;
 
-		savingsBO.generateNextSetOfMeetingDates();
+		savingsBO.generateNextSetOfMeetingDates(customerPersistence);
 		TestObjectFactory.updateObject(savingsBO);
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.updateObject(group);

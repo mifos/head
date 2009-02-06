@@ -48,6 +48,7 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -184,7 +185,8 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 				getCustomFields(), null, null, personnel, officeId, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null);
+				spouseNameDetailView, clientDetailView, null,
+				new CustomerPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.accounts.savings.persistence;
 
 import java.util.Calendar;
@@ -22,6 +42,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -47,6 +68,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 	private SavingsPersistence savingsPersistence;
 
 	private AccountPersistence accountPersistence;
+	
+	private CustomerPersistence customerPersistence;
 
 	private CustomerBO group;
 
@@ -71,6 +94,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		super.setUp();
 		savingsPersistence = new SavingsPersistence();
 		accountPersistence = new AccountPersistence();
+		customerPersistence = new CustomerPersistence();
 		userContext = TestUtils.makeUser();
 
 	}
@@ -190,7 +214,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 			savingsOffering = helper.createSavingsOffering("effwe", "231");
 			savings = new SavingsBO(userContext, savingsOffering, group,
 					AccountState.SAVINGS_ACTIVE, savingsOffering
-							.getRecommendedAmount(), null);
+							.getRecommendedAmount(), null, customerPersistence);
 
 			AccountPaymentEntity payment = helper
 					.createAccountPaymentToPersist(savings, new Money(
@@ -290,7 +314,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
-				null, "");
+				null, "", customerPersistence);
 
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
@@ -337,7 +361,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
-				null, "");
+				null, "", customerPersistence);
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);

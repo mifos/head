@@ -39,6 +39,7 @@ import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -218,7 +219,7 @@ public class TestAccountService extends MifosTestCase {
 		incrementInstallmentDate(accountBO, 1, Short.valueOf("1"));
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(
-				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue(),null,"");
+				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue(),null,"", new CustomerPersistence());
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CustomerBO.class,

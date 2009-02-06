@@ -1,40 +1,23 @@
-/**
-
- * TestObjectFactory.java    version: 1.0
-
-
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
-
-
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
  *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied.  
-
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
+
 package org.mifos.framework.util.helpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
@@ -481,7 +464,7 @@ public class TestObjectFactory {
 					PersonnelConstants.SYSTEM_USER, SAMPLE_BRANCH_OFFICE,
 					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null);
+					spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
 			new ClientPersistence().saveClient(client);
 		}
 		catch (CustomerException e) {
@@ -517,7 +500,7 @@ public class TestObjectFactory {
 					PersonnelConstants.SYSTEM_USER, SAMPLE_BRANCH_OFFICE,
 					meeting, PersonnelConstants.SYSTEM_USER, new Date(), null,
 					null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null);
+					spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		}
@@ -568,7 +551,7 @@ public class TestObjectFactory {
 						spouseNameDetailView, // ClientNameDetailView
 						clientDetailView, // ClientDetailView
 						null // InputStream picture
-						);
+						, new CustomerPersistence());
 			else
 				client = new ClientBO(TestUtils.makeUserWithLocales(),
 						clientNameDetailView.getDisplayName(), status, null, null,
@@ -576,7 +559,7 @@ public class TestObjectFactory {
 						parentCustomer.getOffice().getOfficeId(), parentCustomer, null,
 						null, null, null, YesNoFlag.YES.getValue(),
 						clientNameDetailView, spouseNameDetailView,
-						clientDetailView, null);
+						clientDetailView, null, new CustomerPersistence());
 
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
@@ -976,10 +959,10 @@ public class TestObjectFactory {
 				.getMeeting());
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
 				customer, AccountState.SAVINGS_PARTIAL_APPLICATION,
-				new Money(currency, "300.0"), null);
+				new Money(currency, "300.0"), null, new CustomerPersistence());
 		savings.save();
 		savings.setUserContext(TestObjectFactory.getContext());
-		savings.changeStatus(accountStateId, null, "");
+		savings.changeStatus(accountStateId, null, "", new CustomerPersistence());
 		TestSavingsBO.setActivationDate(savings, new Date(System
 				.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
@@ -1016,7 +999,7 @@ public class TestObjectFactory {
 		userContext = TestUtils.makeUserWithLocales();
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
 				customer, state, savingsOffering.getRecommendedAmount(),
-				getCustomFieldView());
+				getCustomFieldView(), new CustomerPersistence());
 		savings.save();
 		TestSavingsBO.setActivationDate(savings, new Date(System
 				.currentTimeMillis()));

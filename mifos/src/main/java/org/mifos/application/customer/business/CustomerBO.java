@@ -573,9 +573,10 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public List<CustomerBO> getChildren(CustomerLevel customerLevel,
-			ChildrenStateType stateType) throws CustomerException {
+			ChildrenStateType stateType,
+			CustomerPersistence customerPersistence) throws CustomerException {
 		try {
-			return new CustomerPersistence().getChildren(getSearchId(),
+			return customerPersistence.getChildren(getSearchId(),
 					getOffice().getOfficeId(), customerLevel, stateType);
 		} catch (PersistenceException pe) {
 			throw new CustomerException(pe);
@@ -722,7 +723,7 @@ public abstract class CustomerBO extends BusinessObject {
 	        CustomerPersistence customerPersistence)
 			throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
-		validateStatusChange(newStatusId);
+		validateStatusChange(newStatusId, customerPersistence);
 		if (getPersonnel() != null)
 			validateLoanOfficerAssigned();
 		if (checkStatusChangeCancelToPartial(CustomerStatus
@@ -761,11 +762,12 @@ public abstract class CustomerBO extends BusinessObject {
 				blackListed = YesNoFlag.YES.getValue();
 		}
 		
-		handleActiveForFirstTime(oldStatusId, newStatusId);
+		handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence);
 		update(customerPersistence);
 	}
 
-	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			try {
 				this.getCustomerAccount().generateCustomerFeeSchedule();
@@ -814,14 +816,14 @@ public abstract class CustomerBO extends BusinessObject {
 				updateMeeting(oldMeeting, newMeeting);
 				resetUpdatedMeetingForChildren(oldMeeting, customerPersistence);
 				if(getParentCustomer()==null)
-					deleteMeeting(newMeeting);			
+					deleteMeeting(newMeeting, customerPersistence);			
 			}else{
 				logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
 						+ getCustomerId());
 				getCustomerMeeting().setMeeting(newMeeting);
 				resetUpdatedMeetingForChildren(newMeeting, customerPersistence);
 				if(getParentCustomer()==null)
-					deleteMeeting(oldMeeting);
+					deleteMeeting(oldMeeting, customerPersistence);
 			}			
 			getCustomerMeeting().setUpdatedMeeting(null);
 		}
@@ -843,14 +845,15 @@ public abstract class CustomerBO extends BusinessObject {
 		}			
 	}
 
-	protected void deleteMeeting(MeetingBO meeting)throws CustomerException{
+	protected void deleteMeeting(MeetingBO meeting,
+	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::deleteMeeting(), customerId: "
 				+ getCustomerId());
 		try{
 			if(meeting!=null){
 				logger.debug("In CustomerBO::deleteMeeting(), customerId: "
 						+ getCustomerId()+" , meetingId: "+ meeting.getMeetingId());
-				new CustomerPersistence().deleteMeeting(meeting);
+				customerPersistence.deleteMeeting(meeting);
 			}
 		}catch(PersistenceException pe){
 			throw new CustomerException(pe);
@@ -997,7 +1000,8 @@ public abstract class CustomerBO extends BusinessObject {
 		return false;
 	}
 
-	protected abstract void validateStatusChange(Short newStatusId)
+	protected abstract void validateStatusChange(
+	        Short newStatusId, CustomerPersistence customerPersistence)
 			throws CustomerException;
 
 	protected boolean isSameBranch(OfficeBO officeObj) {
@@ -1112,8 +1116,8 @@ public abstract class CustomerBO extends BusinessObject {
 		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
 		if (null != currentHierarchy)
 			currentHierarchy.makeInactive(userContext.getId());
-		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-		this.handleParentTransfer();
+		addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
+		handleParentTransfer(customerPersistence);
 		childRemovedForParent(oldParent);
 		childAddedForParent(newParent);
 		setSearchId(newParent.getSearchId() + "."
@@ -1137,7 +1141,8 @@ public abstract class CustomerBO extends BusinessObject {
 				+ getCustomerId();
 	}
 
-	private void handleParentTransfer() throws CustomerException {
+	private void handleParentTransfer(
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
 		if (getParentCustomer().getCustomerMeeting() != null) {
 			if (getCustomerMeeting() != null){
@@ -1150,7 +1155,7 @@ public abstract class CustomerBO extends BusinessObject {
 						.getCustomerMeeting().getMeeting()));
 			}
 		} else if (getCustomerMeeting() != null) {
-				deleteCustomerMeeting();							
+				deleteCustomerMeeting(customerPersistence);							
 			}
 	}
 
@@ -1159,11 +1164,12 @@ public abstract class CustomerBO extends BusinessObject {
 		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 	}
 	
-	protected void deleteCustomerMeeting()throws CustomerException{
+	protected void deleteCustomerMeeting(
+	        CustomerPersistence customerPersistence)throws CustomerException{
 		logger.debug("In CustomerBO::deleteCustomerMeeting(), customerId: "
 				+ getCustomerId());
 		try {
-			new CustomerPersistence().deleteCustomerMeeting(this);
+			customerPersistence.deleteCustomerMeeting(this);
 			setCustomerMeeting(null);
 		} catch (PersistenceException pe) {
 			new CustomerException(pe);
@@ -1290,7 +1296,8 @@ public abstract class CustomerBO extends BusinessObject {
 		return false;
 	}	
 
-	private void generateSearchId() throws CustomerException {
+	private void generateSearchId(
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {
 			childAddedForParent(getParentCustomer());
@@ -1298,7 +1305,7 @@ public abstract class CustomerBO extends BusinessObject {
 					+ getParentCustomer().getMaxChildCount());
 		} else {
 			try {
-				count = new CustomerPersistence().getCustomerCountForOffice(
+				count = customerPersistence.getCustomerCountForOffice(
 						CustomerLevel.CLIENT, getOffice().getOfficeId());
 			} catch (PersistenceException pe) {
 				throw new CustomerException(pe);
@@ -1324,14 +1331,15 @@ public abstract class CustomerBO extends BusinessObject {
 
 			setPersonnel(personnel);
 			setParentCustomer(null);
-			generateSearchId();			
+			generateSearchId(customerPersistence);			
 			update(customerPersistence);
 		}
 
-	protected void handleAddClientToGroup() throws CustomerException {
+	protected void handleAddClientToGroup(
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
 			if (getCustomerMeeting() != null){
-					deleteCustomerMeeting();		
+					deleteCustomerMeeting(customerPersistence);
 					setCustomerMeeting(createCustomerMeeting(getParentCustomer()
 							.getCustomerMeeting().getMeeting()));
 							

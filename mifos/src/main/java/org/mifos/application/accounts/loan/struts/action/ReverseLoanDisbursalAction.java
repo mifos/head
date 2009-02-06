@@ -57,6 +57,7 @@ import org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisburs
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -190,7 +191,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 				.getBusinessService(BusinessServiceName.Personnel))
 				.getPersonnel(getUserContext(request).getId());
 		loan.setUserContext(getUserContext(request));
-		loan.reverseLoanDisbursal(personnel, actionForm.getNote());
+		loan.reverseLoanDisbursal(personnel, actionForm.getNote(), new CustomerPersistence());
 		logger.debug("Outside update method");
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}

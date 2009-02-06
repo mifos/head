@@ -48,6 +48,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
@@ -309,7 +310,7 @@ public class SavingsAction extends AccountAppAction {
 				AccountState.fromShort(getShortValue(savingsActionForm
 						.getStateSelected())), savingsActionForm
 						.getRecommendedAmntValue(),
-						customFields);
+						customFields, new CustomerPersistence());
 		saving.save();
 
 		request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, saving

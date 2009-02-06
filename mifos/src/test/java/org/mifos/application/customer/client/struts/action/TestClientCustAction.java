@@ -61,6 +61,7 @@ import org.mifos.application.customer.client.struts.actionforms.ClientCustAction
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -1356,7 +1357,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, officeId, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null);
+				spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1700,7 +1701,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, officeId, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null);
+				spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

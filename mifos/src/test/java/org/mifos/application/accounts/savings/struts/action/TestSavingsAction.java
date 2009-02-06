@@ -1,12 +1,30 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.accounts.savings.struts.action;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsRecentActivityView;
@@ -19,9 +37,8 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -39,7 +56,6 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -101,7 +117,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		SavingsBO savingsObj = new SavingsBO(userContext, savingsOffering,
 				group, AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), getCustomFieldView());
+						.getRecommendedAmount(), getCustomFieldView(), new CustomerPersistence());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsObj,request);
 		addRequestParameter("selectedPrdOfferingId", savingsOffering
 				.getPrdOfferingId().toString());
@@ -155,7 +171,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd2", "prd2", currentDate);
-		savings  = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION, new Money("100"),null);
+		savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
+                new Money("100"), null, new CustomerPersistence());
 		savings.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -696,7 +713,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 				AccountTypes.SAVINGS_ACCOUNT, null);
 		savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL
-				.getValue(), null, "notes");
+				.getValue(), null, "notes", new CustomerPersistence());
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
 				.getAccountState().getId().shortValue());
 

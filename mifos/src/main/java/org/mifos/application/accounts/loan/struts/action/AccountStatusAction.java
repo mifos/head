@@ -53,6 +53,7 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.business.service.OfficeBusinessService;
@@ -169,7 +170,8 @@ public class AccountStatusAction extends BaseAction {
 
 		List accountList = updateAccountsStatus(accountStatusActionForm
 				.getAccountRecords(), accountStatusActionForm.getNewStatus(),
-				accountStatusActionForm.getComments(), getUserContext(request));
+				accountStatusActionForm.getComments(), getUserContext(request),
+				new CustomerPersistence());
 		request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountList);
 
 		return mapping
@@ -250,7 +252,8 @@ public class AccountStatusAction extends BaseAction {
 	}
 
 	private List updateAccountsStatus(List<String> accountList,
-			String newStatus, String comments, UserContext userContext)
+			String newStatus, String comments, UserContext userContext,
+			CustomerPersistence customerPersistence)
 			throws Exception {
 		loanService = new LoanBusinessService();
 
@@ -263,7 +266,7 @@ public class AccountStatusAction extends BaseAction {
 
 				accountNumbers.add(loanBO.getGlobalAccountNum());
 				loanBO.setUserContext(userContext);
-				loanBO.changeStatus(getShortValue(newStatus), null, comments);
+				loanBO.changeStatus(getShortValue(newStatus), null, comments, customerPersistence);
 				loanBO.update();
 			}
 		}

@@ -61,6 +61,7 @@ import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.actionforms.CustActionForm;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -341,7 +342,8 @@ public class CustAction extends SearchAction {
 			throws ApplicationException {
 		List<CustomerBO> customerList;
 		customerList = customerBO
-				.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
+				.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
+				        new CustomerPersistence());
 		SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, customerList,
 				request);
 	}

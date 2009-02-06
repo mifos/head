@@ -55,6 +55,7 @@ import org.mifos.application.accounts.savings.struts.actionforms.SavingsClosureA
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -157,7 +158,7 @@ public class SavingsClosureAction extends BaseAction {
 						.equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
 			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST,
 					savings.getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.ACTIVE_AND_ONHOLD), request);
+							ChildrenStateType.ACTIVE_AND_ONHOLD, new CustomerPersistence()), request);
 		else SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 				request);
 

@@ -87,6 +87,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -901,13 +902,15 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private LoanBO redoLoan(LoanAccountActionForm loanActionForm,
-			HttpServletRequest request, SaveLoan save) throws PageExpiredException,
+			HttpServletRequest request, SaveLoan save, CustomerPersistence customerPersistence)
+	    throws PageExpiredException,
 			AccountException, ServiceException, PersistenceException, NumberFormatException, MeetingException {
 		LoanBO loan = constructLoan(loanActionForm, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 	
 		loan.changeStatus(AccountState.LOAN_APPROVED, null,
-						"Automatic Status Update (Redo Loan)");
+						"Automatic Status Update (Redo Loan)",
+						customerPersistence);
 		
 
 		PersonnelBO personnel = getPersonnel(request);
@@ -970,7 +973,7 @@ public class LoanAccountAction extends AccountAppAction {
 		if (perspective != null) {
 			if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
 				LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-				LoanBO loan = redoLoan(loanActionForm, request,SaveLoan.NO);
+				LoanBO loan = redoLoan(loanActionForm, request,SaveLoan.NO, new CustomerPersistence());
 				SessionUtils
 						.setAttribute(Constants.BUSINESS_KEY, loan, request);
 			}
@@ -1091,7 +1094,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId());
 		LoanBO loan;
 		if (isRedoOperation(perspective)) {
-			loan = redoLoan(loanActionForm, request,SaveLoan.YES);
+			loan = redoLoan(loanActionForm, request,SaveLoan.YES, new CustomerPersistence());
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 		}
 		else {

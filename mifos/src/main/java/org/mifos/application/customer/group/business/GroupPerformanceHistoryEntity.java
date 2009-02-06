@@ -1,4 +1,25 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.customer.group.business;
+
 import static org.mifos.application.customer.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
 import static org.mifos.framework.util.CollectionUtils.find;
 import static org.mifos.framework.util.CollectionUtils.select;
@@ -11,12 +32,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
@@ -25,15 +43,12 @@ import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpda
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnRepayment;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnReversal;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnWriteOff;
-import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
@@ -175,10 +190,10 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.group = group;
 	}
 
-	public Money getAvgLoanAmountForMember() throws CustomerException {
+	public Money getAvgLoanAmountForMember(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amountForActiveAccount = new Money();
 		Integer countOfActiveLoans = 0;
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amountForActiveAccount = amountForActiveAccount.add(client
@@ -193,19 +208,19 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return new Money();
 	}
 
-	public Integer getActiveClientCount() throws CustomerException {
-		List<CustomerBO> clients = getChildren();
+	public Integer getActiveClientCount(CustomerPersistence customerPersistence) throws CustomerException {
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			return Integer.valueOf(clients.size());
 		}
 		return Integer.valueOf(0);
 	}
 
-	public Money getTotalOutStandingLoanAmount() throws CustomerException {
+	public Money getTotalOutStandingLoanAmount(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amount = group.getOutstandingLoanAmount();
 		//System.out.println("group outstanding amount: " + amount.toString());
 		Money clientAmount = new Money();
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getOutstandingLoanAmount());
@@ -217,9 +232,9 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return amount;
 	}
 
-	public Money getTotalSavingsAmount() throws CustomerException {
+	public Money getTotalSavingsAmount(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amount = group.getSavingsBalance();
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getSavingsBalance());
@@ -229,24 +244,24 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	}
 	
 	// this method calculates the PAR using the method LoanBO.hasPortfolioAtRisk() to determine if a loan is in arrears
-	public void generatePortfolioAtRisk() throws CustomerException {
+	public void generatePortfolioAtRisk(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amount = group.getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
+		double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount(customerPersistence).getAmountDoubleValue();
 		if (totalOutstandingLoanAmount != 0.0)
 			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/totalOutstandingLoanAmount)));
 	}
 	
 	
 	
-	private List<CustomerBO> getChildren() throws CustomerException {
-		return group.getChildren(CustomerLevel.CLIENT,ChildrenStateType.ACTIVE_AND_ONHOLD);
-	}
+	private List<CustomerBO> getChildren(CustomerPersistence customerPersistence) throws CustomerException {
+        return group.getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD, customerPersistence);
+    }
 
 	public void updateLoanCounter(final LoanOfferingBO loanOffering,
 			YesNoFlag yesNoFlag) {

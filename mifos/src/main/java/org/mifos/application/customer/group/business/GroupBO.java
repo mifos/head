@@ -216,7 +216,7 @@ public class GroupBO extends CustomerBO {
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting, customerPersistence);
 		if(getParentCustomer()==null)
-			deleteMeeting(newMeeting);
+			deleteMeeting(newMeeting, customerPersistence);
 	}
 	
 	@Override
@@ -263,12 +263,13 @@ public class GroupBO extends CustomerBO {
 	}
 	
 	@Override
-	protected void validateStatusChange(Short newStatusId)
+	protected void validateStatusChange(Short newStatusId,
+	        CustomerPersistence customerPersistence)
 			throws CustomerException {
 		logger.debug("In GroupBO::validateStatusChange(), customerId: "
 				+ getCustomerId());
 		if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue()))
-			checkIfGroupCanBeClosed();
+			checkIfGroupCanBeClosed(customerPersistence);
 		if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
 			checkIfGroupCanBeActive(newStatusId);
 		if (getCustomerStatus().getId().equals(
@@ -290,8 +291,9 @@ public class GroupBO extends CustomerBO {
 	}
 
 	@Override
-	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
-		super.handleActiveForFirstTime(oldStatusId, newStatusId);
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
+	        CustomerPersistence customerPersistence) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence);
 		if (isActiveForFirstTime(oldStatusId, newStatusId))
 			this.setCustomerActivationDate(new Date());
 	}
@@ -419,12 +421,15 @@ public class GroupBO extends CustomerBO {
 		}
 	}
 
-	private void checkIfGroupCanBeClosed() throws CustomerException {
+	private void checkIfGroupCanBeClosed(
+	        CustomerPersistence customerPersistence) throws CustomerException {
 		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
-		if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
+		if (getChildren(CustomerLevel.CLIENT,
+		        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
+		        customerPersistence)
 				.size() > 0)
 			throw new CustomerException(
 					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,

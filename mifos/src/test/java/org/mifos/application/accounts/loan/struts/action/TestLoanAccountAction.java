@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.text.DateFormat;
@@ -26,7 +46,6 @@ import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
@@ -59,6 +78,7 @@ import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -392,7 +412,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		((LoanBO) accountBO).setBusinessActivityId(1);
 		accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null,
-				"status changed");
+				"status changed", new CustomerPersistence());
 		accountBO.update();
 
 		HibernateUtil.commitTransaction();
@@ -523,7 +543,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		accountBO.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
-				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed");
+				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed", new CustomerPersistence());
 		accountBO.update();
 		HibernateUtil.commitTransaction();
 		LoanBO loan = (LoanBO) accountBO;
