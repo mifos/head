@@ -185,34 +185,12 @@ public abstract class CustomerBO extends BusinessObject {
 		if (parentCustomer != null) {
 		    inheritDetailsFromParent(parentCustomer);
 		} else {
-		    // TODO: assign BOs directly
 		    personnel = loanOfficer;
 		    customerMeeting = createCustomerMeeting(meeting);
 		    this.office = office;
-		    /*
-			    if (loanOfficerId != null)
-					this.personnel = new PersonnelPersistence()
-							.getPersonnel(loanOfficerId);
-				this.customerMeeting = createCustomerMeeting(meeting);
-				if (officeId != null) {
-					this.office = new OfficePersistence().getOffice(officeId);
-					if (this.office == null) {
-						throw new IllegalStateException(
-							"office id " + officeId + " not found in database");
-					}
-				}
-		     */
 		}
 
 		formedByPersonnel = formedBy;
-
-		/* TODO: remove this comment
-			if (formedBy != null)
-				this.formedByPersonnel = new PersonnelPersistence()
-						.getPersonnel(formedBy);
-			else
-				this.formedByPersonnel = null;
-		 */
 
 		this.parentCustomer = parentCustomer;
 
@@ -481,7 +459,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.setExternalId(externalId);
 		updateAddress(address);
 		updateCustomFields(customFields);
-		updateCustomerPositions(customerPositions);
+		updateCustomerPositions(customerPositions, customerPersistence);
 		this.update(customerPersistence);
 	}
 
@@ -738,6 +716,7 @@ public abstract class CustomerBO extends BusinessObject {
 			if (!isBlackListed())
 				getCustomerFlags().clear();
 		}
+		// TODO: inject persistence
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomerStatusEntity customerStatus;
 		try {
@@ -1033,7 +1012,8 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	protected void updateCustomerPositions(
-			List<CustomerPositionView> customerPositions)throws CustomerException {
+			List<CustomerPositionView> customerPositions, CustomerPersistence customerPersistence)
+	throws CustomerException {
 		if (customerPositions != null) {
 			for (CustomerPositionView positionView : customerPositions) {
 				boolean isPositionFound = false;
@@ -1041,7 +1021,7 @@ public abstract class CustomerBO extends BusinessObject {
 					if (positionView.getPositionId().equals(
 							positionEntity.getPosition().getId())) {
 						positionEntity.setCustomer(getCustomer(positionView
-								.getCustomerId()));
+								.getCustomerId(), customerPersistence));
 						isPositionFound = true;
 						break;
 					}
@@ -1049,7 +1029,7 @@ public abstract class CustomerBO extends BusinessObject {
 				if (!isPositionFound) {
 						addCustomerPosition(new CustomerPositionEntity(
 								new PositionEntity(positionView.getPositionId()),
-								getCustomer(positionView.getCustomerId()), this));
+								getCustomer(positionView.getCustomerId(), customerPersistence), this));
 				}
 			}
 		}
@@ -1223,6 +1203,7 @@ public abstract class CustomerBO extends BusinessObject {
 	private CustomerNoteEntity createCustomerNotes(String comment)
 			throws CustomerException {
 		try {
+		    // TODO: inject persistence
 			return new CustomerNoteEntity(comment,
 					new java.sql.Date(System.currentTimeMillis()),
 					new PersonnelPersistence().getPersonnel(getUserContext()
@@ -1245,9 +1226,10 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(CustomerConstants.INVALID_STATUS);
 	}
 
-	private CustomerBO getCustomer(Integer customerId) throws CustomerException {
+	private CustomerBO getCustomer(Integer customerId, CustomerPersistence customerPersistence)
+	throws CustomerException {
 		try {
-			return customerId != null ? new CustomerPersistence()
+			return customerId != null ? customerPersistence
 					.getCustomer(customerId) : null;
 		} catch (PersistenceException pe) {
 			throw new CustomerException(pe);
@@ -1320,7 +1302,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public void removeGroupMemberShip(PersonnelBO personnel, String comment,
 	        CustomerPersistence customerPersistence) throws PersistenceException, CustomerException {
-
+	    // TODO: inject persistence
 		PersonnelBO user = new PersonnelPersistence()
 		.getPersonnel(getUserContext().getId());
 		CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment,

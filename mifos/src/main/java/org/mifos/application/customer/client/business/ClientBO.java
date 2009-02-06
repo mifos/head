@@ -348,6 +348,7 @@ public class ClientBO extends CustomerBO {
 		if (persist)
 		{
 			try {
+			    // TODO: inject persistence
 				new CustomerPersistence().createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
@@ -434,6 +435,7 @@ public class ClientBO extends CustomerBO {
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			this.setCustomerActivationDate(new Date());
 			createAccountsForClient(customerPersistence);
+			// TODO: inject persistence
 			new SavingsPersistence().persistSavingAccounts(this);
 			createDepositSchedule();
 		}
