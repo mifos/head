@@ -153,28 +153,30 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 
     }
 
-    public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(SubmitFormParameters parameters) {
-		
-		selenium.select("officeId",          "label=" + parameters.getBranch());
-		waitForPageToLoad();
-		selenium.select("loanOfficerId",     "label="+ parameters.getLoanOfficer());
-		waitForPageToLoad();
-		selenium.select("customerId",        "label="+ parameters.getCenter());
-		waitForPageToLoad();
-		typeTextIfNotEmpty  ("transactionDateDD", parameters.getTransactionDay());
-		typeTextIfNotEmpty  ("transactionDateMM", parameters.getTransactionMonth());
-		typeTextIfNotEmpty  ("transactionDateYY", parameters.getTransactionYear());
-		selenium.select("paymentId",         "label=" + parameters.getPaymentMode());
-		typeTextIfNotEmpty  (RECEIPT_INPUT_ID,    parameters.getReceiptId());
-		typeTextIfNotEmpty  ("receiptDateDD",     parameters.getReceiptDay());
-		typeTextIfNotEmpty  ("receiptDateMM",     parameters.getReceiptMonth());
-		typeTextIfNotEmpty  ("receiptDateYY",     parameters.getReceiptYear());
-		selenium.click (CONTINUE_BUTTON_ID);
-		waitForPageToLoad();
-		CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = new CollectionSheetEntryEnterDataPage(selenium);
-		collectionSheetEntryEnterDataPage.verifyPage();
+    public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(
+            SubmitFormParameters parameters) {
+
+        selenium.select("officeId", "label=" + parameters.getBranch());
+        waitForPageToLoad();
+        selenium.select("loanOfficerId", "label=" + parameters.getLoanOfficer());
+        waitForPageToLoad();
+        selenium.select("customerId", "label=" + parameters.getCenter());
+        waitForPageToLoad();
+        typeTextIfNotEmpty("transactionDateDD", parameters.getTransactionDay());
+        typeTextIfNotEmpty("transactionDateMM", parameters.getTransactionMonth());
+        typeTextIfNotEmpty("transactionDateYY", parameters.getTransactionYear());
+        selenium.select("paymentId", "label=" + parameters.getPaymentMode());
+        typeTextIfNotEmpty(RECEIPT_INPUT_ID, parameters.getReceiptId());
+        typeTextIfNotEmpty("receiptDateDD", parameters.getReceiptDay());
+        typeTextIfNotEmpty("receiptDateMM", parameters.getReceiptMonth());
+        typeTextIfNotEmpty("receiptDateYY", parameters.getReceiptYear());
+        selenium.click(CONTINUE_BUTTON_ID);
+        waitForPageToLoad();
+        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = new CollectionSheetEntryEnterDataPage(
+                selenium);
+        collectionSheetEntryEnterDataPage.verifyPage();
         return collectionSheetEntryEnterDataPage;
-	}
+    }
 	
 	private void typeTextIfNotEmpty(String locator, String value) {
 		if (value!= null && !value.isEmpty()) {

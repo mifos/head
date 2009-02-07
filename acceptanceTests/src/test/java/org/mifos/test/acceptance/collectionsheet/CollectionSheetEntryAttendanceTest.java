@@ -84,25 +84,39 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     public void secondCollectionSheetEntryOverwritesFirstAttendanceData() throws Exception {
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndVerifyBasicAttendanceData();
         verifyAttendanceData(this.getBasicAttendanceDataSet());
-        SubmitFormParameters formParameters = getFormParameters();
+        SubmitFormParameters formParameters = getFormParametersForCenter2();
         HomePage homePage = confirmationPage.navigateToHomePage();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterOverwriteAttendanceData(enterDataPage);
         submitDataAndVerifySuccessPage(formParameters, enterDataPage);
-        verifyAttendanceData(this.getOverwriteAttendanceDataSet());
+        verifyAttendanceData(getOverwriteAttendanceDataSet());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void enteringAttendanceDataForOneCenterDoesNotAffectOtherCenters() throws Exception {
+        CollectionSheetEntryConfirmationPage confirmationPage = enterAndVerifyBasicAttendanceData();
+        verifyAttendanceData(this.getBasicAttendanceDataSet());
+        SubmitFormParameters formParameters = getFormParametersForCenter1();
+        HomePage homePage = confirmationPage.navigateToHomePage();
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterSecondCenterAttendanceData(enterDataPage);
+        submitDataAndVerifySuccessPage(formParameters, enterDataPage);
+        verifyAttendanceData(getTwoCenterAttendanceData());
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private CollectionSheetEntryConfirmationPage enterAndVerifyBasicAttendanceData() throws DatabaseUnitException, SQLException, IOException,
             Exception, DataSetException {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
-        SubmitFormParameters formParameters = getFormParameters();
+        SubmitFormParameters formParameters = getFormParametersForCenter2();
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
         enterBasicAttendanceData(enterDataPage);
         CollectionSheetEntryConfirmationPage confirmationPage = submitDataAndVerifySuccessPage(formParameters, enterDataPage);
-        verifyAttendanceData(this.getBasicAttendanceDataSet());
+        verifyAttendanceData(getBasicAttendanceDataSet());
         return confirmationPage;
     }
 
@@ -120,12 +134,17 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         enterDataPage.enterAttendance(3,ATTENDANCE_L);
     }
 
+    private void enterSecondCenterAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage) {
+        enterDataPage.enterAttendance(0,ATTENDANCE_AA);
+        enterDataPage.enterAttendance(1,ATTENDANCE_A);
+        enterDataPage.enterAttendance(2,ATTENDANCE_L);
+    }
+
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
-        CollectionSheetEntrySelectPage selectPage = 
-            loginAndNavigateToCollectionSheetEntrySelectPage();
+        CollectionSheetEntrySelectPage selectPage = loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
-        CollectionSheetEntryEnterDataPage enterDataPage = 
-            selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        CollectionSheetEntryEnterDataPage enterDataPage = selectPage
+                .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         return enterDataPage;
     }
 
@@ -140,11 +159,20 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         return confirmationPage;
     }
 
-    private SubmitFormParameters getFormParameters() {
+    private SubmitFormParameters getFormParametersForCenter2() {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office2");
         formParameters.setLoanOfficer("John Okoth");
         formParameters.setCenter("Center2");
+        formParameters.setPaymentMode("Cash");
+        return formParameters;
+    }
+
+    private SubmitFormParameters getFormParametersForCenter1() {
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+        formParameters.setBranch("Office1");
+        formParameters.setLoanOfficer("Bagonza Wilson");
+        formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
         return formParameters;
     }
@@ -180,6 +208,17 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         return attendanceDataSet.getDataSet();
     }
     
+    private IDataSet getTwoCenterAttendanceData() throws DataSetException, IOException {
+        SimpleDataSet attendanceDataSet = new SimpleDataSet();
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=4");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=3");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=2");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=1");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=5","MEETING_DATE=[null]","CUSTOMER_ID=3","ATTENDANCE=3");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=6","MEETING_DATE=[null]","CUSTOMER_ID=4","ATTENDANCE=2");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=7","MEETING_DATE=[null]","CUSTOMER_ID=5","ATTENDANCE=4");
+        return attendanceDataSet.getDataSet();
+    }
     
 }
 
