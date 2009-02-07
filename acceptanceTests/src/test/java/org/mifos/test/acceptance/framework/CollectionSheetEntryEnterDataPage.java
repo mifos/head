@@ -23,6 +23,11 @@ package org.mifos.test.acceptance.framework;
 import com.thoughtworks.selenium.Selenium;
 
 public class CollectionSheetEntryEnterDataPage extends AbstractPage {
+	
+    public static final int ATTENDANCE_P = 1;
+    public static final int ATTENDANCE_A = 2;
+    public static final int ATTENDANCE_AA = 3;
+    public static final int ATTENDANCE_L = 4;
 
 	public CollectionSheetEntryEnterDataPage() {
 		super();
@@ -53,7 +58,7 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
         return this;
     }
 
-    public CollectionSheetEntryEnterDataPage enterAttendance(int row, String attendance) {
+    public CollectionSheetEntryEnterDataPage enterAttendance(int row, int attendance) {
         selenium.select("attendanceSelected[" + row + "]", "value=" + attendance);
         return this;
     }

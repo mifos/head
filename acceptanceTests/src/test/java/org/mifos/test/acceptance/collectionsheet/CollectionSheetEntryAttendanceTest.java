@@ -50,11 +50,16 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
+    private static final int ATTENDANCE_P = CollectionSheetEntryEnterDataPage.ATTENDANCE_P;
+    private static final int ATTENDANCE_A = CollectionSheetEntryEnterDataPage.ATTENDANCE_A;
+    private static final int ATTENDANCE_AA = CollectionSheetEntryEnterDataPage.ATTENDANCE_AA;
+    private static final int ATTENDANCE_L = CollectionSheetEntryEnterDataPage.ATTENDANCE_L;
+
+    private static final int[] BASIC_ATTENDANCE_VALUES = new int[] { ATTENDANCE_L, ATTENDANCE_AA, ATTENDANCE_A, ATTENDANCE_P };
+    private static final int[] OVERWRITE_ATTENDANCE_VALUES = new int[] { ATTENDANCE_P, ATTENDANCE_P, ATTENDANCE_P, ATTENDANCE_L };
+    private static final int[] SECOND_CENTER_ATTENDANCE_VALUES = new int[] { ATTENDANCE_AA, ATTENDANCE_A, ATTENDANCE_L };
+
     private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
-    private static final String ATTENDANCE_P = "1";
-    private static final String ATTENDANCE_A = "2";
-    private static final String ATTENDANCE_AA = "3";
-    private static final String ATTENDANCE_L = "4";
 
     private AppLauncher appLauncher;
 
@@ -85,13 +90,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndVerifyBasicAttendanceData();
         verifyAttendanceData(this.getBasicAttendanceDataSet());
         SubmitFormParameters formParameters = getFormParametersForCenter2();
-        HomePage homePage = confirmationPage.navigateToHomePage();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
-        CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterOverwriteAttendanceData(enterDataPage);
-        submitDataAndVerifySuccessPage(formParameters, enterDataPage);
-        verifyAttendanceData(getOverwriteAttendanceDataSet());
+        enterAttendanceDataForSecondCenter(confirmationPage, formParameters, OVERWRITE_ATTENDANCE_VALUES, getOverwriteAttendanceDataSet());
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -99,45 +98,39 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndVerifyBasicAttendanceData();
         verifyAttendanceData(this.getBasicAttendanceDataSet());
         SubmitFormParameters formParameters = getFormParametersForCenter1();
+        enterAttendanceDataForSecondCenter(confirmationPage, formParameters, SECOND_CENTER_ATTENDANCE_VALUES, getTwoCenterAttendanceDataSet());
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    private void enterAttendanceDataForSecondCenter(CollectionSheetEntryConfirmationPage confirmationPage, SubmitFormParameters formParameters, int[] attendanceValues, IDataSet dataSetToVerify)
+    throws Exception, DataSetException, IOException {
         HomePage homePage = confirmationPage.navigateToHomePage();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterSecondCenterAttendanceData(enterDataPage);
+        enterAttendanceData(enterDataPage, attendanceValues);
         submitDataAndVerifySuccessPage(formParameters, enterDataPage);
-        verifyAttendanceData(getTwoCenterAttendanceData());
+        verifyAttendanceData(dataSetToVerify);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    private CollectionSheetEntryConfirmationPage enterAndVerifyBasicAttendanceData() throws DatabaseUnitException, SQLException, IOException,
+    public CollectionSheetEntryConfirmationPage enterAndVerifyBasicAttendanceData() throws DatabaseUnitException, SQLException, IOException,
             Exception, DataSetException {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
         SubmitFormParameters formParameters = getFormParametersForCenter2();
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
-        enterBasicAttendanceData(enterDataPage);
+        enterAttendanceData(enterDataPage, BASIC_ATTENDANCE_VALUES);
         CollectionSheetEntryConfirmationPage confirmationPage = submitDataAndVerifySuccessPage(formParameters, enterDataPage);
         verifyAttendanceData(getBasicAttendanceDataSet());
         return confirmationPage;
     }
 
-    private void enterBasicAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage) {
-        enterDataPage.enterAttendance(0,ATTENDANCE_L);
-        enterDataPage.enterAttendance(1,ATTENDANCE_AA);
-        enterDataPage.enterAttendance(2,ATTENDANCE_A);
-        enterDataPage.enterAttendance(3,ATTENDANCE_P);
-    }
-
-    private void enterOverwriteAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage) {
-        enterDataPage.enterAttendance(0,ATTENDANCE_P);
-        enterDataPage.enterAttendance(1,ATTENDANCE_P);
-        enterDataPage.enterAttendance(2,ATTENDANCE_P);
-        enterDataPage.enterAttendance(3,ATTENDANCE_L);
-    }
-
-    private void enterSecondCenterAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage) {
-        enterDataPage.enterAttendance(0,ATTENDANCE_AA);
-        enterDataPage.enterAttendance(1,ATTENDANCE_A);
-        enterDataPage.enterAttendance(2,ATTENDANCE_L);
+    private void enterAttendanceData(CollectionSheetEntryEnterDataPage enterDataPage, int[] attendanceValues) {
+        int id = 0;
+    	for (int attendance : attendanceValues) {
+            enterDataPage.enterAttendance(id, attendance);
+            id++;
+        }
     }
 
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
@@ -192,32 +185,37 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private IDataSet getBasicAttendanceDataSet() throws DataSetException, IOException {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=4");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=3");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=2");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=1");
-        return attendanceDataSet.getDataSet();
-    }
-
-    private IDataSet getOverwriteAttendanceDataSet() throws DataSetException, IOException {
-        SimpleDataSet attendanceDataSet = new SimpleDataSet();
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=1");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=1");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=1");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=4");
+        addBasicAttendanceRows(attendanceDataSet);
         return attendanceDataSet.getDataSet();
     }
     
-    private IDataSet getTwoCenterAttendanceData() throws DataSetException, IOException {
+    private IDataSet getOverwriteAttendanceDataSet() throws DataSetException, IOException {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1","MEETING_DATE=[null]","CUSTOMER_ID=8","ATTENDANCE=4");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2","MEETING_DATE=[null]","CUSTOMER_ID=9","ATTENDANCE=3");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=3","MEETING_DATE=[null]","CUSTOMER_ID=10","ATTENDANCE=2");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=4","MEETING_DATE=[null]","CUSTOMER_ID=11","ATTENDANCE=1");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=5","MEETING_DATE=[null]","CUSTOMER_ID=3","ATTENDANCE=3");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=6","MEETING_DATE=[null]","CUSTOMER_ID=4","ATTENDANCE=2");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=7","MEETING_DATE=[null]","CUSTOMER_ID=5","ATTENDANCE=4");
+        addAttendanceRow(attendanceDataSet, 1, 8, ATTENDANCE_P);
+        addAttendanceRow(attendanceDataSet, 2, 9, ATTENDANCE_P);
+        addAttendanceRow(attendanceDataSet, 3, 10, ATTENDANCE_P);
+        addAttendanceRow(attendanceDataSet, 4, 11, ATTENDANCE_L);
         return attendanceDataSet.getDataSet();
+    }
+
+    private IDataSet getTwoCenterAttendanceDataSet() throws DataSetException, IOException {
+        SimpleDataSet attendanceDataSet = new SimpleDataSet();
+        addBasicAttendanceRows(attendanceDataSet);
+        addAttendanceRow(attendanceDataSet, 5, 3, ATTENDANCE_AA);
+        addAttendanceRow(attendanceDataSet, 6, 4, ATTENDANCE_A);
+        addAttendanceRow(attendanceDataSet, 7, 5, ATTENDANCE_L);
+        return attendanceDataSet.getDataSet();
+    }
+
+    private void addBasicAttendanceRows(SimpleDataSet attendanceDataSet) {
+        addAttendanceRow(attendanceDataSet, 1, 8, ATTENDANCE_L);
+        addAttendanceRow(attendanceDataSet, 2, 9, ATTENDANCE_AA);
+        addAttendanceRow(attendanceDataSet, 3, 10, ATTENDANCE_A);
+        addAttendanceRow(attendanceDataSet, 4, 11, ATTENDANCE_P);
+    }
+
+    private void addAttendanceRow(SimpleDataSet dataSet, int id, int customerId, int attendance) {
+        dataSet.row(CUSTOMER_ATTENDANCE, "ID=" + id,"MEETING_DATE=[null]","CUSTOMER_ID=" + customerId,"ATTENDANCE=" + attendance);
     }
     
 }
