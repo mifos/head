@@ -18,8 +18,11 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework;
+package org.mifos.test.acceptance.framework.collectionsheet;
 
+
+import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.HomePage;
 
 import com.thoughtworks.selenium.Selenium;
 

@@ -18,28 +18,34 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework;
+package org.mifos.test.acceptance.framework.collectionsheet;
+
+import org.mifos.test.acceptance.framework.AbstractPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class CollectionSheetEntryConfirmationPage extends AbstractPage {
+public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 
-    public CollectionSheetEntryConfirmationPage(Selenium selenium) {
-        super(selenium);
-    }
+	public CollectionSheetEntryPreviewDataPage() {
+		super();
+	}
 
-    public CollectionSheetEntryConfirmationPage verifyPage() {
-        this.verifyPage("BulkEntryConfirmation");
-        return this;
-    }
-    
-    public HomePage navigateToHomePage() {
-        selenium.click("id=clientsAndAccountsHeader.link.home");
+	public CollectionSheetEntryPreviewDataPage(Selenium selenium) {
+		super(selenium);
+	}
+	
+
+	public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
+        this.verifyPage("BulkEntryPreview");
+		return this;
+	}
+
+    public CollectionSheetEntryConfirmationPage submitAndGotoCollectionSheetEntryConfirmationPage() {
+        selenium.click("bulkentry_preview.button.submit");
         waitForPageToLoad();
-        HomePage homePage = new HomePage(selenium);
-        homePage.verifyPage();
-        return homePage;
+        return new CollectionSheetEntryConfirmationPage(selenium);
     }
 
+	
 
 }

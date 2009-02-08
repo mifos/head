@@ -26,24 +26,22 @@ import java.sql.SQLException;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntryEnterDataPage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntryPreviewDataPage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
 import org.mifos.test.framework.util.SimpleDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
@@ -61,20 +59,11 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
 
-    private AppLauncher appLauncher;
-
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
-        appLauncher = new AppLauncher(selenium);
-    }
-
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
@@ -134,7 +123,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     }
 
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryPage(SubmitFormParameters formParameters) {
-        CollectionSheetEntrySelectPage selectPage = loginAndNavigateToCollectionSheetEntrySelectPage();
+        CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = selectPage
                 .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
@@ -168,13 +157,6 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
         return formParameters;
-    }
-
-    private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
-        LoginPage loginPage = appLauncher.launchMifos();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

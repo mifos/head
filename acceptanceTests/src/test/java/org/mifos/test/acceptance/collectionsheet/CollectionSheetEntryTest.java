@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,23 +23,19 @@ package org.mifos.test.acceptance.collectionsheet;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntryEnterDataPage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntryPreviewDataPage;
-import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
@@ -51,20 +47,12 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
     private static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
     private static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
-    private AppLauncher appLauncher;
 
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
-        appLauncher = new AppLauncher(selenium);
-    }
-
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
@@ -81,7 +69,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
         
         CollectionSheetEntrySelectPage selectPage = 
-            loginAndNavigateToCollectionSheetEntrySelectPage();
+            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
         CollectionSheetEntryEnterDataPage enterDataPage = 
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
@@ -129,13 +117,5 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             orderByColumns);
     }
 
-    private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage() {
-        LoginPage loginPage = appLauncher.launchMifos();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
-    }
-
-    
 }
 
