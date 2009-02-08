@@ -71,7 +71,9 @@ public class SystemInfoTest {
 	public void testDatabaseInfos() throws Exception {
 		info.setInfoSource(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE);
 		assertFalse(info.getInfoSource().equals(FilePaths.DEFAULTMIFOSDBPROPERTIESFILE));
-		info.setInfoURL(new URI("nocolon://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8"));
+		URI full = new URI("jdbc:mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
+		URI mysqlSpecific = new URI(full.getSchemeSpecificPart());
+		info.setInfoURL(mysqlSpecific);
 		assertEquals("localhost", info.getDatabaseServer()); 
 		assertEquals("mifos", info.getDatabaseName());
 		assertEquals("3305", info.getDatabasePort());

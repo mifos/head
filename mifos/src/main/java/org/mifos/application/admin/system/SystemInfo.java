@@ -31,6 +31,15 @@ import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.helpers.FilePaths;
 
+/**
+ * JDBC URL parsing code in this class is
+ * <a href="https://groups.google.com/group/comp.lang.java.programmer/browse_thread/thread/b7090860d6834bae">only
+ * known to work with MySQL JDBC URLs</a>. Once Mifos supports other database backends, here are some ideas:
+ * <ul>
+ * <li>fallback to simply printing out the full JDBC URL rather than trying to parse port, host, etc.</li>
+ * <li>implement or reuse parsers for JDBC URLs specific to other databases</li>
+ * </ul> 
+ */
 public class SystemInfo implements Serializable {
 	
 	private DatabaseMetaData databaseMetaData;
@@ -51,11 +60,9 @@ public class SystemInfo implements Serializable {
 	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, boolean getInfoSource) 
 	throws Exception {
 		this(getInfoSource);
-		this.databaseMetaData = databaseMetaData;
-		/* ':' is not a valid scheme character and java.net.URI can't parse URIs with a ':'. java.net.URL can't
-		 * parse JDBC URLs either since only "standard" schemes like http and ftp are allowed. */  
-		String sanitizedURI = databaseMetaData.getURL().replaceFirst("jdbc:", "");
-		this.infoURL = new URI(sanitizedURI);
+		this.databaseMetaData = databaseMetaData; 
+		URI mysqlOnly = new URI(databaseMetaData.getURL());
+		this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
 		this.infoUserName = databaseMetaData.getUserName();
 		this.context = context;
 	}
@@ -210,9 +217,6 @@ public class SystemInfo implements Serializable {
 		return infoURL.toString();
 	}
 
-	/**
-	 * @param infoURL Must not contain a ':' (colon character) in the scheme.
-	 */
 	public void setInfoURL(URI infoURL) {
 		this.infoURL = infoURL;
 	}
