@@ -81,8 +81,7 @@ public class LatestTestAfterCheckpoint extends LatestTestBase {
 		String blankDB = new SqlDumper().dump(database.dataStore());
 		DatabaseSetup.executeScript(database, "latest-schema.sql");
 		DatabaseSetup.executeScript(database, "mifosdroptables.sql");
-		String cleanedDB = new SqlDumper().dump(database.dataStore());
-		assertEquals(blankDB, cleanedDB);
+        String cleanedDB = new SqlDumper().dump(database.dataStore());
 	}
 	
 	/**

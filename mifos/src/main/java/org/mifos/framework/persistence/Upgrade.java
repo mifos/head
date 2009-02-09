@@ -116,7 +116,7 @@ public abstract class Upgrade {
 		return newLookupId;
 	}
 	
-	private int largestLookupId(Connection connection) throws SQLException {
+	protected int largestLookupId(Connection connection) throws SQLException {
 		Statement statement = connection.createStatement();
 		ResultSet results = statement.executeQuery(
 			"select max(lookup_id) from LOOKUP_VALUE");
