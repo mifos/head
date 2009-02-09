@@ -1,3 +1,4 @@
+
 Database version: 207
 Description:
 Original data (not based on any other dataset) created with Python SeleniumRC
@@ -8,10 +9,48 @@ seed data script (seedDataManyClients.py) using the following settings:
   NUM_GROUPS_PER_CENTER = 3
   NUM_CLIENTS_PER_GROUP = 4
 
+Loan Products:
+	MonthlyClientFlatLoanWithFees
+	MyLoanProduct1232993826860 
+	MyLoanProduct1233171667425
+	MyLoanProduct1233265917048
+	WeeklyClientDeclinetLoanWithPeriodicFee
+	WeeklyFlatLoanWithOneTimeFees
+	WeeklyGroupDeclineLoanWithPeriodicFee
+	WeeklyGroupFlatLoanWithOnetimeFee  
+  (Note: MyLoanProduct* loan products are all all weekly flat interest loans with no fees)
+  
 Additionally, the following fees exist:
 
+Client fees:
   1 client fee (recurring weekly)
   1 group fee (recurring weekly)
   1 center fee (recurring weekly)
+  
+ Product Fees
+	OneTimeDisburse9 ( Loans )
+	OneTimeFirstRepay90 ( Loans )
+	OneTimeUpFront900 ( Loans )
+	PeriodicMonthlyLoanFee89 ( Loans )
+	PeriodicWeeklyLoanFee8 ( Loans )
 
+Group with disbursed loan with one time fees:
+  MyOffice1233266206574 / MyCenter1233266210775 / MyGroup1233266213024 / WeeklyGroupDeclineLoanWithPeriodicFee 
+
+Group with disbursed loan with one time fees:
+  MyOffice1233266206574 / MyCenter1233266210775 / MyGroup1233266255641 / WeeklyGroupFlatLoanWithOnetimeFee 
+
+Group with two approved loans with fees.  Neither loan has been disbursed:
+  MyOffice1233266206574 / MyCenter1233266210775 / MyGroup1233266297718 / 
+	
+Center with center charges:
+  MyOffice1233265929385 / MyCenter1233265933427 
+	
+Group with charges:
+  MyOffice1233265929385 / MyCenter1233265933427 / MyGroup1233265937564 
+	
+Client with charges:
+  MyOffice1233265929385 / MyCenter1233265933427 / MyGroup1233265937564 / Stu1233265978656 Client1233265978656 / 
+ 
+ 
 http://mingle.mifos.org/projects/mifos/cards/1265
