@@ -56,20 +56,5 @@ public class Upgrade208 extends Upgrade {
                                                                                                                  lookupId + ")";
         execute(connection, insertLanguageSql);
     }
-	
-    protected int insertLookupValue(Connection connection, int lookupEntity, String lookupName) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(
-            "insert into LOOKUP_VALUE(" +
-            "LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) " +
-            "VALUES(?,?,?)");
-        int lookupId = largestLookupId(connection) + 1;
-        statement.setInt(1, lookupId);
-        statement.setInt(2, lookupEntity);
-        statement.setString(3, lookupName);
-        statement.executeUpdate();
-        statement.close();
-        return lookupId;
-    }
-    
-    
+
 }

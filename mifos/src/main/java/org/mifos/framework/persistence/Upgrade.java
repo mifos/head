@@ -87,9 +87,6 @@ public abstract class Upgrade {
 		return insertLookupValue(connection, lookupEntity, " ");
 	}
 	
-	/*
-	 * This method is used for version 174 and lower and must not be used after 174
-	 */
 	protected int insertLookupValue(Connection connection, 
 			int lookupEntity, String lookupKey) throws SQLException {
 		/* LOOKUP_ID is not AUTO_INCREMENT until database version 121.
@@ -106,9 +103,6 @@ public abstract class Upgrade {
 			"VALUES(?,?,?)");
 		statement.setInt(1, newLookupId);
 		statement.setInt(2, lookupEntity);
-		
-		/* Pretty much all existing code inserts a space here.
-		   I'm not sure this field is used for anything. */
 		statement.setString(3, lookupKey);
 	
 		statement.executeUpdate();
