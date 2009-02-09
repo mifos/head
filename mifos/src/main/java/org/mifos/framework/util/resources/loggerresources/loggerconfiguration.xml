@@ -31,7 +31,7 @@ the location of Mifos_log.log.
   --> 
   <appender name="MifosRollingFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
     <!-- Name of the file. At midnight a new file with the name Mifos_log.log.date is created -->
-    <param name="File" value="/Users/adam/work/mifos/workspace/mifos-gazelle/acceptance/Mifos_log.log"/>
+    <param name="File" value="Mifos_log.log"/>
     <!-- Rolling Schedule: Rolls over at midnight. Hence new file will be rolling.log.newDate -->
     <param name="DatePattern" value="'.'yyyy-MM-dd"/>
   
