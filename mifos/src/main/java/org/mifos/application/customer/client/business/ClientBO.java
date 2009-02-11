@@ -113,14 +113,14 @@ public class ClientBO extends CustomerBO {
 			Short groupFlag, ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
 			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence)
+			CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedBy, office, parentCustomer, null, null, dateOfBirth,
 				governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture, customerPersistence);
+				picture, customerPersistence, clientPersistence);
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
@@ -134,14 +134,14 @@ public class ClientBO extends CustomerBO {
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
 			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence)
+			CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedBy, office, null, meeting, loanOfficer,
 				dateOfBirth, governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture, customerPersistence);
+				picture, customerPersistence, clientPersistence);
 	}
 
 	protected ClientBO() {
@@ -163,7 +163,7 @@ public class ClientBO extends CustomerBO {
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
 			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence)
+			CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
@@ -191,7 +191,7 @@ public class ClientBO extends CustomerBO {
 		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
 				spouseNameDetailView));
 		this.customerDetail = new ClientDetailEntity(this, clientDetailView);
-		createPicture(picture);
+		createPicture(picture, clientPersistence);
 		offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
 		createAssociatedOfferings(offeringsSelected);
 		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
@@ -556,8 +556,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
-	public void updatePicture(InputStream picture) throws CustomerException {
-		ClientPersistence clientPersistence = new ClientPersistence();
+	public void updatePicture(InputStream picture, ClientPersistence clientPersistence) throws CustomerException {
 		if (customerPicture != null)
 			try {
 				customerPicture.setPicture(clientPersistence
@@ -575,12 +574,12 @@ public class ClientBO extends CustomerBO {
 
 	}
 
-	private void createPicture(InputStream picture) throws CustomerException {
+	private void createPicture(InputStream picture, ClientPersistence clientPersistence) throws CustomerException {
 		try {
 			if (picture != null && picture.available() > 0)
 				try {
 					this.customerPicture = new CustomerPictureEntity(this,
-							new ClientPersistence().createBlob(picture));
+							clientPersistence.createBlob(picture));
 				} catch (PersistenceException e) {
 					throw new CustomerException(e);
 				}

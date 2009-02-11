@@ -24,6 +24,7 @@ import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.business.NameType;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -215,7 +216,7 @@ public class TestCustomerBO extends MifosTestCase {
 						TestObjectFactory.clientNameView(
 								NameType.SPOUSE, "customerName"), new ClientDetailView(1, 1, 1, 1, 1,
 						1, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("41")), null,
-						customerPersistence);
+						customerPersistence, new ClientPersistence());
 	}
 
 	public void testCheckIfClientIsATitleHolder() throws Exception {

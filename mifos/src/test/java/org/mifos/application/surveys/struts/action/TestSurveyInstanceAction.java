@@ -126,7 +126,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 					new Date(1222333444000L),
 					null, null, null, YesNoFlag.YES.getValue(),
 					clientNameDetailView, spouseNameDetailView,
-					clientDetailView, null, new CustomerPersistence());
+					clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		} catch (CustomerException e) {

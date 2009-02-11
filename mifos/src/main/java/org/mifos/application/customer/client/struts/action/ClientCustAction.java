@@ -506,7 +506,7 @@ public class ClientCustAction extends CustAction {
 		        DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), 
 		        actionForm.getGroupFlagValue(), actionForm.getClientName(),
 		        actionForm.getSpouseName(), actionForm.getClientDetailView(), 
-		        actionForm.getCustomerPicture(),customerPersistence);
+		        actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence());
 		}
 		else {
 			CustomerBO parentCustomer = getCustomerBusinessService()
@@ -526,7 +526,7 @@ public class ClientCustAction extends CustAction {
 				DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), 
 				actionForm.getGroupFlagValue(), actionForm.getClientName(),
 				actionForm.getSpouseName(), actionForm.getClientDetailView(), 
-				actionForm.getCustomerPicture(),customerPersistence);
+				actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence());
 		}
 		new CustomerPersistence().saveCustomer(client);
 		actionForm.setCustomerId(client.getCustomerId().toString());
@@ -729,7 +729,7 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getPicture() != null
 				&& !StringUtils.isNullOrEmpty(actionForm.getPicture()
 						.getFileName())) {
-			client.updatePicture(actionForm.getCustomerPicture());
+			client.updatePicture(actionForm.getCustomerPicture(), new ClientPersistence());
 		}
 		client.setUserContext(getUserContext(request));
 		client.updateClientDetails(actionForm.getClientDetailView());

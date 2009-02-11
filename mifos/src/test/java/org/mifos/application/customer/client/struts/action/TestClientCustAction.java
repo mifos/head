@@ -1362,7 +1362,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
+				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1706,7 +1706,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
+				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

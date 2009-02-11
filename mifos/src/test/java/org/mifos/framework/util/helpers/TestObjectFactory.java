@@ -475,7 +475,7 @@ public class TestObjectFactory {
 					new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE),
 					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
+					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
 			new ClientPersistence().saveClient(client);
 		}
 		catch (CustomerException e) {
@@ -519,7 +519,7 @@ public class TestObjectFactory {
                     systemUser, 
 					new Date(), null,
 					null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null, new CustomerPersistence());
+					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		}
@@ -570,7 +570,7 @@ public class TestObjectFactory {
 						spouseNameDetailView, // ClientNameDetailView
 						clientDetailView, // ClientDetailView
 						null // InputStream picture
-						, new CustomerPersistence());
+						, new CustomerPersistence(), new ClientPersistence());
 			else
 				client = new ClientBO(TestUtils.makeUserWithLocales(),
 						clientNameDetailView.getDisplayName(), status, null, null,
@@ -579,7 +579,7 @@ public class TestObjectFactory {
 						parentCustomer.getOffice(), parentCustomer, null,
 						null, null, null, YesNoFlag.YES.getValue(),
 						clientNameDetailView, spouseNameDetailView,
-						clientDetailView, null, new CustomerPersistence());
+						clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
 
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();

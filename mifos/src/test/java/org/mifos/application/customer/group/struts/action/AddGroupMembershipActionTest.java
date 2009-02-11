@@ -190,7 +190,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null,
-				new CustomerPersistence());
+				new CustomerPersistence(), new ClientPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
