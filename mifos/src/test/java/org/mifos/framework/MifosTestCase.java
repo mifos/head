@@ -79,7 +79,7 @@ public class MifosTestCase extends TestCase {
     }
     
     /*
-     * Gets the test data office with office_id == 3
+     * Gets the test data office with office_id == 1
      */
     public OfficeBO getHeadOffice() {
         try {

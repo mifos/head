@@ -574,6 +574,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
+
 	private void createPicture(InputStream picture, ClientPersistence clientPersistence) throws CustomerException {
 		try {
 			if (picture != null && picture.available() > 0)
@@ -660,6 +661,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
+    // TODO: inject persistence
 	private void generateSearchId() throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {
@@ -695,6 +697,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // TODO: inject persistence	
 	private void checkForDuplicates(String name, Date dob, String governmentId,
 			Integer customerId) throws CustomerException {
 		ClientPersistence clientPersistence = new ClientPersistence();
@@ -779,6 +782,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // TODO: inject persistence	
 	private void checkIfClientCanBeActive(Short newStatus)
 			throws CustomerException {
 		boolean loanOfficerActive = false;
@@ -822,6 +826,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // TODO: inject persistence	
 	private void createAccountsForClient(CustomerPersistence customerPersistence) throws CustomerException {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
@@ -870,6 +875,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 	
+    // TODO: inject persistence	
 	private void createDepositSchedule() throws CustomerException{
 		try{
 			if(getParentCustomer()!=null){
