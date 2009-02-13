@@ -79,14 +79,31 @@ public abstract class Upgrade {
 		statement.close();
 	}
 
-	/*
-	 * This method is used for version 174 and lower (it was used in Upgrade169) and must not be used after 174
+	/**
+	 * This method is used for version 174 and lower (it was used in Upgrade169) 
+	 * and must not be used after 174 because after 174, a lookup key is 
+	 * required for a lookup value to be displayed.  Prior to version 174
+	 * an empty (" ") key was passed in because the key was unused.
+	 * 
+	 * @deprecated
 	 */
 	protected int insertLookupValue(Connection connection, 
 			int lookupEntity) throws SQLException {
 		return insertLookupValue(connection, lookupEntity, " ");
 	}
 	
+	/**
+	 * Add a new Lookup Value.  A Lookup Value is a string key that is resolved
+	 * to a message by looking up the key value in a properties file.  The
+	 * message can be overridden by a LookupValueLocale in the database that is
+	 * associated with a given LookupValue.  
+	 * 
+	 * @param connection the database connection to use
+	 * @param lookupEntity the primary key of the lookup entity that this key is associated with
+	 * @param lookupKey the string key to lookup in a properties file to get the message to display
+	 * @return the newly generated lookup id (primary key) for the lookup value just inserted
+	 * @throws SQLException
+	 */
 	protected int insertLookupValue(Connection connection, 
 			int lookupEntity, String lookupKey) throws SQLException {
 		/* LOOKUP_ID is not AUTO_INCREMENT until database version 121.
