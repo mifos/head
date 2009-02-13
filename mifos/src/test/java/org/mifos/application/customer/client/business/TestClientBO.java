@@ -414,7 +414,7 @@ public class TestClientBO extends MifosTestCase {
 	public void testHandleAttendance() throws Exception{
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		client.handleAttendance(meetingDate, AttendanceType.PRESENT);
+		client.handleAttendance(meetingDate, AttendanceType.PRESENT, customerPersistence);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of customer attendance is : ", client
 				.getClientAttendances().size(), 1);
@@ -422,7 +422,7 @@ public class TestClientBO extends MifosTestCase {
 				AttendanceType.PRESENT,
 				client.getClientAttendanceForMeeting(meetingDate)
 						.getAttendanceAsEnum());
-		client.handleAttendance(meetingDate, AttendanceType.ABSENT);
+		client.handleAttendance(meetingDate, AttendanceType.ABSENT, customerPersistence);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of customer attendance is : ",
 				1, client.getClientAttendances().size());
@@ -438,7 +438,7 @@ public class TestClientBO extends MifosTestCase {
 	public void testHandleAttendanceForDifferentDates()	throws Exception {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		client.handleAttendance(meetingDate, AttendanceType.PRESENT);
+		client.handleAttendance(meetingDate, AttendanceType.PRESENT, customerPersistence);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of customer attendance is : ", client
 				.getClientAttendances().size(), 1);
@@ -448,7 +448,7 @@ public class TestClientBO extends MifosTestCase {
 						.getAttendanceAsEnum());
 		HibernateUtil.closeSession();
 		Date offSetDate = getDateOffset(1);
-		client.handleAttendance(offSetDate, AttendanceType.ABSENT);
+		client.handleAttendance(offSetDate, AttendanceType.ABSENT, customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client

@@ -383,7 +383,7 @@ public class BulkEntryBusinessService implements BusinessService {
 		try {
 			ClientBO client = (ClientBO) getCustomer(customerId);
 			boolean persist = false; // this is for Preview so no persistence
-			client.handleAttendance(meetingDate, attendance, persist);
+			client.handleAttendance(meetingDate, attendance, persist, customerPersistence);
 			clients.add(client);
 		} catch (Exception e) {
 			throw new ServiceException("errors.update", e,
