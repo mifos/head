@@ -72,10 +72,15 @@ public class DbUnitUtilities {
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
         columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_ATTENDANCE", new String[] { "id", "meeting_date" });        
-        columnsToIgnoreWhenVerifyingTables.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date", "debit_credit_flag", "fin_action_id" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_FEE_SCHEDULE", new String[] { "account_fees_detail_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("FEE_TRXN_DETAIL", new String[] { "account_trxn_id", "account_fee_id", "fee_trxn_detail_id" });
+        columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_ACCOUNT_ACTIVITY", new String[] { "customer_account_activity_id", "created_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_TRXN_DETAIL", new String[] { "account_trxn_id" });        
+        
     }
 
     /** 
@@ -94,6 +99,7 @@ public class DbUnitUtilities {
         ITable actualTable = databaseDataSet.getTable(tableName);
         actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
                 expectedTable.getTableMetaData().getColumns());
+        
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
     }
 
@@ -110,25 +116,31 @@ public class DbUnitUtilities {
     DatabaseUnitException {
         for (String tableName : tableNames) {
             this.verifyTable(tableName, databaseDataSet, expectedDataSet);
+            
         }
      }
 
-
     public void verifySortedTable(String tableName, IDataSet databaseDataSet, 
             IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException, DatabaseUnitException {
+        Boolean actualDBSortFlag = true;
+        Boolean expectedDBSortFlag = true;        
+        verifySortedTableWithOrdering(tableName, databaseDataSet, expectedDataSet, sortingColumns, actualDBSortFlag, expectedDBSortFlag);                 
+    }
+
+    
+    public void verifySortedTableWithOrdering(String tableName, IDataSet databaseDataSet, 
+            IDataSet expectedDataSet, String[] sortingColumns, Boolean actualDBComparableFlag, Boolean expectedDBComparableFlag) throws DataSetException, DatabaseUnitException {
 
         Assert.assertNotNull(columnsToIgnoreWhenVerifyingTables.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnoreWhenVerifyingTables map.");
         ITable expectedTable = expectedDataSet.getTable(tableName);
         ITable actualTable = databaseDataSet.getTable(tableName);
-
         actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
                 expectedTable.getTableMetaData().getColumns());
-
         SortedTable sortedExpectedTable = new SortedTable(expectedTable, sortingColumns);
-        sortedExpectedTable.setUseComparable(true);
+        sortedExpectedTable.setUseComparable(expectedDBComparableFlag);
         expectedTable = sortedExpectedTable;
         SortedTable sortedActualTable = new SortedTable(actualTable, sortingColumns);
-        sortedActualTable.setUseComparable(true);
+        sortedActualTable.setUseComparable(actualDBComparableFlag);
         actualTable = sortedActualTable;
         
         if (LOG.isDebugEnabled()) {

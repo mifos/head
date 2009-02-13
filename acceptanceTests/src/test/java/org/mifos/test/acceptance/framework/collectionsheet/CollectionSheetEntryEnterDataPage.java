@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.collectionsheet;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -63,6 +65,17 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
     public CollectionSheetEntryEnterDataPage enterAttendance(int row, int attendance) {
         selenium.select("attendanceSelected[" + row + "]", "value=" + attendance);
         return this;
+    }
+
+    public void verifyAccountValue(int row, int col, double fee) {
+        Assert.assertEquals(selenium.getValue("customerAccountAmountEntered[" + row + "][" + col + "]"),  Double.toString(fee));
+      
+    }
+
+    public HomePage cancel() {
+        selenium.click("id=bulkentry_data.button.cancel");
+        waitForPageToLoad();
+        return new HomePage(selenium);
     }
 
 }
