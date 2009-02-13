@@ -42,6 +42,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
@@ -54,6 +55,8 @@ public class ClientPersistence extends Persistence {
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private OfficePersistence officePersistence = new OfficePersistence();
     private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private SavingsPersistence savingsPersistence = new SavingsPersistence();
+    private SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
 
     public ClientBO createClient(UserContext userContext, ClientTemplate template)
             throws CustomerException, PersistenceException, ValidationException {
@@ -78,7 +81,7 @@ public class ClientPersistence extends Persistence {
                 template.getGroupFlag(), template.getClientNameDetailView(),
                 template.getSpouseNameDetailView(),
                 template.getClientDetailView(), template.getPicture(),
-                customerPersistence, this);
+                customerPersistence, this, savingsPersistence, savingsPrdPersistence);
         customerPersistence.saveCustomer(client);
         return client;
     }

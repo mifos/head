@@ -41,6 +41,7 @@ package org.mifos.application.customer.group.struts.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
@@ -58,6 +59,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -190,7 +192,8 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null,
-				new CustomerPersistence(), new ClientPersistence());
+				new CustomerPersistence(), new ClientPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

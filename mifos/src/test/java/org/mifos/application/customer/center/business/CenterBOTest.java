@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
@@ -33,6 +34,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
@@ -358,23 +360,28 @@ public class CenterBOTest extends MifosTestCase {
 			throws Exception {
 	    CustomerPersistence customerPersistence = new CustomerPersistence();
 	    PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+	    SavingsPersistence savingsPersistence = new SavingsPersistence();
+	    SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
 		createCustomers();
 		client.changeStatus(CustomerStatus.CLIENT_CANCELLED, 
 				CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW, 
-				"client cancelled", customerPersistence, personnelPersistence, masterPersistence);
+				"client cancelled", customerPersistence, personnelPersistence, masterPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		client.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
-				"group cancelled",customerPersistence, personnelPersistence, masterPersistence);
+				"group cancelled",customerPersistence, personnelPersistence, masterPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		group.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
-				"Center_Inactive",customerPersistence, personnelPersistence, masterPersistence);
+				"Center_Inactive",customerPersistence, personnelPersistence, masterPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		center.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

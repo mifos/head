@@ -32,6 +32,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -56,6 +57,7 @@ import org.mifos.application.ppi.business.PPISurveyInstance;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
@@ -126,7 +128,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 					new Date(1222333444000L),
 					null, null, null, YesNoFlag.YES.getValue(),
 					clientNameDetailView, spouseNameDetailView,
-					clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
+					clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
+					new SavingsPersistence(), new SavingsPrdPersistence());
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		} catch (CustomerException e) {

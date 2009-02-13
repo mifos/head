@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -29,6 +30,7 @@ import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -954,7 +956,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
-				"center is inactive now", customerPersistence, personnelPersistence, new MasterPersistence());
+				"center is inactive now", customerPersistence, personnelPersistence, new MasterPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		HibernateUtil.commitTransaction();
 		invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
 		setRequestPathInfo("/editCustomerStatusAction.do");

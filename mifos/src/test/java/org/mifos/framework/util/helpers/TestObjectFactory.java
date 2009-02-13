@@ -56,6 +56,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -149,6 +150,7 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
@@ -475,7 +477,8 @@ public class TestObjectFactory {
 					new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE),
 					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
+					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
+					new SavingsPersistence(), new SavingsPrdPersistence());
 			new ClientPersistence().saveClient(client);
 		}
 		catch (CustomerException e) {
@@ -519,7 +522,8 @@ public class TestObjectFactory {
                     systemUser, 
 					new Date(), null,
 					null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
+					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
+					new SavingsPersistence(), new SavingsPrdPersistence());
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		}
@@ -570,7 +574,8 @@ public class TestObjectFactory {
 						spouseNameDetailView, // ClientNameDetailView
 						clientDetailView, // ClientDetailView
 						null // InputStream picture
-						, new CustomerPersistence(), new ClientPersistence());
+						, new CustomerPersistence(), new ClientPersistence(),
+						new SavingsPersistence(), new SavingsPrdPersistence());
 			else
 				client = new ClientBO(TestUtils.makeUserWithLocales(),
 						clientNameDetailView.getDisplayName(), status, null, null,
@@ -579,7 +584,8 @@ public class TestObjectFactory {
 						parentCustomer.getOffice(), parentCustomer, null,
 						null, null, null, YesNoFlag.YES.getValue(),
 						clientNameDetailView, spouseNameDetailView,
-						clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
+						clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
+						new SavingsPersistence(), new SavingsPrdPersistence());
 
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();

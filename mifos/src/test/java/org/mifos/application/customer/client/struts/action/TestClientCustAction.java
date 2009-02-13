@@ -47,6 +47,7 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -83,6 +84,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -1362,7 +1364,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
+				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1706,7 +1709,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence());
+				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

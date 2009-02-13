@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -51,6 +52,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -250,17 +252,19 @@ public class GroupBO extends CustomerBO {
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment, 
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
-	        MasterPersistence masterPersistence)
+	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
+	        SavingsPrdPersistence savingsPrdPersistence)
 	throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
 		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
-		        masterPersistence);
+		        masterPersistence, savingsPersistence, savingsPrdPersistence);
 		if(oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue()) && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				if(client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())){
 					client.setUserContext(getUserContext());
 					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment,
-					        customerPersistence, personnelPersistence, masterPersistence);
+					        customerPersistence, personnelPersistence, masterPersistence, savingsPersistence,
+					        savingsPrdPersistence);
 				}
 			}
 		}
@@ -296,8 +300,10 @@ public class GroupBO extends CustomerBO {
 
 	@Override
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
-	        CustomerPersistence customerPersistence) throws CustomerException{
-		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence);
+	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
+	        SavingsPrdPersistence savingsPrdPersistence) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence, savingsPersistence,
+		        savingsPrdPersistence);
 		if (isActiveForFirstTime(oldStatusId, newStatusId))
 			this.setCustomerActivationDate(new Date());
 	}

@@ -28,6 +28,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -66,6 +67,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -97,6 +99,8 @@ public class TestClientBO extends MifosTestCase {
 	private CustomerPersistence customerPersistence = new CustomerPersistence();
 	private MasterPersistence masterPersistence = new MasterPersistence();
 	private ClientPersistence clientPersistence = new ClientPersistence();
+    private SavingsPersistence savingsPersistence = new SavingsPersistence();
+    private SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -245,7 +249,7 @@ public class TestClientBO extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getContext());
 		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive", customerPersistence,
-		        new PersonnelPersistence(), masterPersistence);
+		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -280,7 +284,7 @@ public class TestClientBO extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getContext());
 		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive", customerPersistence,
-		        new PersonnelPersistence(), masterPersistence);
+		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -338,7 +342,7 @@ public class TestClientBO extends MifosTestCase {
 			        CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, 
 			        personnel, officeBo, null, null,
 				null,null,null,YesNoFlag.NO.getValue(),clientView,spouseView,clientDetailView,null,
-				customerPersistence, clientPersistence);
+				customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
 		}catch(CustomerException ce){
 			assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
 			assertTrue(true);
@@ -359,7 +363,8 @@ public class TestClientBO extends MifosTestCase {
 		        clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_PARTIAL, 
 		        null, null, null, null, null, offerings, personnel, officeBo, null, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,
-				spouseNameDetailView,clientDetailView,null, customerPersistence, clientPersistence);
+				spouseNameDetailView,clientDetailView,null, customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -476,7 +481,7 @@ public class TestClientBO extends MifosTestCase {
 					null, null, null, personnel, officeBo, null, null,
 					null,null,null,YesNoFlag.YES.getValue(),
 					clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence,
-					clientPersistence);
+					clientPersistence, savingsPersistence, savingsPrdPersistence);
 			fail("Client Created");
 		} catch (CustomerException ce) {
 			assertNull(client);
@@ -494,7 +499,8 @@ public class TestClientBO extends MifosTestCase {
 					CustomerStatus.fromInt(new Short("1")), 
 					null, null, null, null, null, null, personnel, null, null, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,
-					clientDetailView,null, customerPersistence, clientPersistence);
+					clientDetailView,null, customerPersistence, clientPersistence,
+					savingsPersistence, savingsPrdPersistence);
 			fail("Client Created");
 		} catch (CustomerException ce) {
 			assertNull(client);
@@ -513,7 +519,8 @@ public class TestClientBO extends MifosTestCase {
 				CustomerStatus.fromInt(new Short("1")), null, null, null, 
 				null, null, null, personnel, officeBo, null, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,
-				spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence);
+				spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -540,7 +547,8 @@ public class TestClientBO extends MifosTestCase {
 		        new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), getMeeting(), 
 		        personnel,
 				null, null,null,null,YesNoFlag.NO.getValue(),
-				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence);
+				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -577,7 +585,8 @@ public class TestClientBO extends MifosTestCase {
 		        null, null, null, null, null, selectedOfferings, personnel, 
 		        getBranchOffice(), getMeeting(), personnel,
 				null,null,null,null,YesNoFlag.YES.getValue(),
-				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence);
+				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -588,7 +597,8 @@ public class TestClientBO extends MifosTestCase {
 		
 		client.setUserContext(TestObjectFactory.getContext());
 		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, 
-				null, "Client Made Active", customerPersistence, new PersonnelPersistence(), masterPersistence);
+				null, "Client Made Active", customerPersistence, new PersonnelPersistence(), masterPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -616,7 +626,8 @@ public class TestClientBO extends MifosTestCase {
 		        CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, 
 		        personnel, group.getOffice(), group, null,
 				null,null,null,YesNoFlag.YES.getValue(),
-				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence);
+				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -637,7 +648,8 @@ public class TestClientBO extends MifosTestCase {
 				null, personnel, group.getOffice(), group, null,
 				null,null,null,YesNoFlag.YES.getValue(),
 				clientNameDetailView,spouseNameDetailView,
-				clientDetailView,null,customerPersistence, clientPersistence);
+				clientDetailView,null,customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 			fail();
 		} catch (CustomerException e) {
 			assertNull(client);
@@ -659,7 +671,8 @@ public class TestClientBO extends MifosTestCase {
 					group, null,
 					null,null,null,YesNoFlag.YES.getValue(),
 					clientNameDetailView,spouseNameDetailView,
-					clientDetailView,null,customerPersistence, clientPersistence);
+					clientDetailView,null,customerPersistence, clientPersistence,
+					savingsPersistence, savingsPrdPersistence);
 			fail();
 		} catch (CustomerException e) {
 			assertNull(client);
@@ -680,7 +693,8 @@ public class TestClientBO extends MifosTestCase {
 			        clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("3")), 
 			        null, null, null, null, fees, null, personnel, officeBo, meeting,null, null,
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,
-					spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence);
+					spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence,
+					savingsPersistence, savingsPrdPersistence);
 			fail();
 		} catch (CustomerException e) {
 			assertNull(client);
@@ -700,7 +714,7 @@ public class TestClientBO extends MifosTestCase {
 			        personnel, officeBo, null,personnel, null,
 					null,null,null,YesNoFlag.NO.getValue(),
 					clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence,
-					clientPersistence);
+					clientPersistence, savingsPersistence, savingsPrdPersistence);
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(client);
@@ -719,7 +733,8 @@ public class TestClientBO extends MifosTestCase {
 		        null, null, null, null, null, null, personnel, officeBo, 
 		        null,personnel, date,
 				null,null,null,YesNoFlag.YES.getValue(),
-				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence, clientPersistence);
+				clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence,
+				clientPersistence, savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -730,7 +745,7 @@ public class TestClientBO extends MifosTestCase {
 			        personnel, officeBo, null,personnel, date,
 					null,null,null,YesNoFlag.NO.getValue(),
 					clientNameDetailView,spouseNameDetailView,clientDetailView,null,customerPersistence,
-					clientPersistence);
+					clientPersistence, savingsPersistence, savingsPrdPersistence);
 			fail();
 		} catch (CustomerException e) {
 			assertEquals(
@@ -748,7 +763,7 @@ public class TestClientBO extends MifosTestCase {
 		        clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), 
 		        null, null, null, null, null, null, personnel, officeBo, null,personnel, new java.util.Date(),
 				"1",null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,
-				null,customerPersistence, clientPersistence);
+				null,customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -762,7 +777,8 @@ public class TestClientBO extends MifosTestCase {
 				new java.util.Date(),
 				"1",null,null,YesNoFlag.NO.getValue(),
 				clientNameDetailView,spouseNameDetailView,
-				clientDetailView,null,customerPersistence, clientPersistence);
+				clientDetailView,null,customerPersistence, clientPersistence,
+				savingsPersistence, savingsPrdPersistence);
 			fail();
 		} catch (CustomerException e) {
 			assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, 
@@ -784,7 +800,7 @@ public class TestClientBO extends MifosTestCase {
 		        getCustomFields(), null, null, personnel, office, meeting,
 		        personnel, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,
-				null,customerPersistence, clientPersistence);
+				null,customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -822,7 +838,7 @@ public class TestClientBO extends MifosTestCase {
 		group1.changeStatus(CustomerStatus.GROUP_CANCELLED,
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
 				"Status Changed", customerPersistence, new PersonnelPersistence(),
-				masterPersistence);
+				masterPersistence, savingsPersistence, savingsPrdPersistence);
 		HibernateUtil.commitTransaction();
 		try{
 			client.transferToGroup(group1, customerPersistence);
@@ -843,7 +859,8 @@ public class TestClientBO extends MifosTestCase {
 		refetchGroup();
 		group1.changeStatus(CustomerStatus.GROUP_CLOSED,
 				CustomerStatusFlag.GROUP_CLOSED_TRANSFERRED, 
-				"Status Changed", customerPersistence, new PersonnelPersistence(), masterPersistence);
+				"Status Changed", customerPersistence, new PersonnelPersistence(), masterPersistence,
+				savingsPersistence, savingsPrdPersistence);
 		HibernateUtil.commitTransaction();
 		try {
 			client.transferToGroup(group1, customerPersistence);
@@ -873,7 +890,7 @@ public class TestClientBO extends MifosTestCase {
 		client = (ClientBO) customerPersistence.getCustomer(client.getCustomerId());
 		client.setUserContext(TestUtils.makeUserWithLocales());
 		client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold", customerPersistence,
-		        new PersonnelPersistence(), masterPersistence);
+		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence);
 		try{
 			client.transferToGroup(group1, customerPersistence);
 			fail();

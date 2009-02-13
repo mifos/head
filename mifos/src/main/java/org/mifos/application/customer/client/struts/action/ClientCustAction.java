@@ -55,6 +55,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
@@ -86,6 +87,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -506,7 +508,8 @@ public class ClientCustAction extends CustAction {
 		        DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), 
 		        actionForm.getGroupFlagValue(), actionForm.getClientName(),
 		        actionForm.getSpouseName(), actionForm.getClientDetailView(), 
-		        actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence());
+		        actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence(),
+		        new SavingsPersistence(), new SavingsPrdPersistence());
 		}
 		else {
 			CustomerBO parentCustomer = getCustomerBusinessService()
@@ -526,7 +529,8 @@ public class ClientCustAction extends CustAction {
 				DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), 
 				actionForm.getGroupFlagValue(), actionForm.getClientName(),
 				actionForm.getSpouseName(), actionForm.getClientDetailView(), 
-				actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence());
+				actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		}
 		new CustomerPersistence().saveCustomer(client);
 		actionForm.setCustomerId(client.getCustomerId().toString());

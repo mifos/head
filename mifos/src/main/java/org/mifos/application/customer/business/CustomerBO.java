@@ -34,6 +34,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -60,6 +61,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
@@ -693,11 +695,13 @@ public abstract class CustomerBO extends BusinessObject {
 	public void changeStatus(
 			CustomerStatus newStatus, CustomerStatusFlag flag, String comment,
 			CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
-			MasterPersistence masterPersistence) 
+			MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
+			SavingsPrdPersistence savingsPrdPersistence)
 	throws CustomerException {
-		changeStatus(newStatus.getValue(), 
-			flag == null ? null : flag.getValue(), 
-			comment, customerPersistence, personnelPersistence, masterPersistence);
+		changeStatus(newStatus.getValue(),
+			flag == null ? null : flag.getValue(),
+			comment, customerPersistence, personnelPersistence, masterPersistence, savingsPersistence,
+			savingsPrdPersistence);
 	}
 
 	/**
@@ -707,7 +711,8 @@ public abstract class CustomerBO extends BusinessObject {
 	 */
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
-	        MasterPersistence masterPersistence)
+	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
+	        SavingsPrdPersistence savingsPrdPersistence)
 			throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
 		validateStatusChange(newStatusId, customerPersistence);
@@ -748,12 +753,14 @@ public abstract class CustomerBO extends BusinessObject {
 				blackListed = YesNoFlag.YES.getValue();
 		}
 		
-		handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence);
+		handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence, savingsPersistence,
+		        savingsPrdPersistence);
 		update(customerPersistence);
 	}
 
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
-	        CustomerPersistence customerPersistence) throws CustomerException{
+	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
+	        SavingsPrdPersistence savingsPrdPersistence) throws CustomerException{
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			try {
 				this.getCustomerAccount().generateCustomerFeeSchedule();

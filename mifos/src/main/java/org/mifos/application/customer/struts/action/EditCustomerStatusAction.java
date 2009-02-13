@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
@@ -57,6 +58,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -358,7 +360,8 @@ public class EditCustomerStatusAction extends BaseAction {
 		checkPermission(customerBO, request, newStatusId, flagId);
 		setInitialObjectForAuditLogging(customerBO);
 		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
-				.getNotes(), new CustomerPersistence(), new PersonnelPersistence(), new MasterPersistence());
+				.getNotes(), new CustomerPersistence(), new PersonnelPersistence(), new MasterPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		customerBOInSession = null;
 		customerBO = null;
 	}

@@ -89,6 +89,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -3879,7 +3880,8 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccountForCenter();
 		client1.changeStatus(CustomerStatus.CLIENT_CLOSED,
 				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "Client closed",
-				customerPersistence, new PersonnelPersistence(), new MasterPersistence());
+				customerPersistence, new PersonnelPersistence(), new MasterPersistence(),
+				new SavingsPersistence(), new SavingsPrdPersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());

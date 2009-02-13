@@ -113,14 +113,15 @@ public class ClientBO extends CustomerBO {
 			Short groupFlag, ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
 			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
+			CustomerPersistence customerPersistence, ClientPersistence clientPersistence,
+			SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedBy, office, parentCustomer, null, null, dateOfBirth,
 				governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture, customerPersistence, clientPersistence);
+				picture, customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
@@ -134,14 +135,15 @@ public class ClientBO extends CustomerBO {
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
 			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
+			CustomerPersistence customerPersistence, ClientPersistence clientPersistence,
+			SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedBy, office, null, meeting, loanOfficer,
 				dateOfBirth, governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture, customerPersistence, clientPersistence);
+				picture, customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
 	}
 
 	protected ClientBO() {
@@ -163,7 +165,8 @@ public class ClientBO extends CustomerBO {
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
 			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
+			CustomerPersistence customerPersistence, ClientPersistence clientPersistence,
+			SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
@@ -204,7 +207,7 @@ public class ClientBO extends CustomerBO {
 		if (isActive()) {
 			validateFieldsForActiveClient(loanOfficer, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
-			createAccountsForClient(customerPersistence);
+			createAccountsForClient(customerPersistence, savingsPersistence, savingsPrdPersistence);
 			createDepositSchedule();
 		}
 		generateSearchId();
@@ -367,10 +370,11 @@ public class ClientBO extends CustomerBO {
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
-	        MasterPersistence masterPersistence)
+	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
+	        SavingsPrdPersistence savingsPrdPersistence)
 			throws CustomerException {
 		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
-		        masterPersistence);
+		        masterPersistence, savingsPersistence, savingsPrdPersistence);
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
 						.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {
@@ -434,13 +438,14 @@ public class ClientBO extends CustomerBO {
 
 	@Override
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
-	        CustomerPersistence customerPersistence) throws CustomerException{
-		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence);
+	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
+	        SavingsPrdPersistence savingsPrdPersistence) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence, savingsPersistence,
+		        savingsPrdPersistence);
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			this.setCustomerActivationDate(new Date());
-			createAccountsForClient(customerPersistence);
-			// TODO: inject persistence
-			new SavingsPersistence().persistSavingAccounts(this);
+			createAccountsForClient(customerPersistence, savingsPersistence, savingsPrdPersistence);
+			savingsPersistence.persistSavingAccounts(this);
 			createDepositSchedule();
 		}
 	}
@@ -827,14 +832,16 @@ public class ClientBO extends CustomerBO {
 	}
 
     // TODO: inject persistence	
-	private void createAccountsForClient(CustomerPersistence customerPersistence) throws CustomerException {
+	private void createAccountsForClient(CustomerPersistence customerPersistence,
+	        SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
+	throws CustomerException {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
                 try {
-                    SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering
+                    SavingsOfferingBO savingsOffering = savingsPrdPersistence.getSavingsProduct(clientOffering
                             .getSavingsOffering().getPrdOfferingId());
                     if (savingsOffering.isActive()) {
-                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
+                        List<CustomFieldDefinitionEntity> customFieldDefs = savingsPersistence
                                 .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
                         addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,
                                 savingsOffering.getRecommendedAmount(),
