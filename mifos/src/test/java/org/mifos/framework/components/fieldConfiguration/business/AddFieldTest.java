@@ -41,7 +41,7 @@ VALUES(74,'AssignClients',1,0,0);
 		upgrade.upgrade(database.openConnection(), null);
 		FieldConfigurationEntity fetched = (FieldConfigurationEntity) 
 			database.openSession().get(FieldConfigurationEntity.class, newId);
-		assertEquals(newId, fetched.getFieldConfigId());
+		assertEquals(newId, (int) fetched.getFieldConfigId());
 		assertFalse(fetched.isHidden());
 		assertFalse(fetched.isMandatory());
 		assertEquals(EntityType.CLIENT, fetched.getEntityType());

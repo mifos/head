@@ -37,7 +37,7 @@ public class AddReportTest {
 		upgrade.upgrade(database.openConnection(), null);
 		ReportsBO fetched = (ReportsBO) 
 			database.openSession().get(ReportsBO.class, newId);
-		assertEquals(newId, fetched.getReportId());
+		assertEquals(newId, (int) fetched.getReportId());
 		assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
 		assertEquals(null, fetched.getActivityId());
 		assertEquals("Detailed Aging of Portfolio at Risk", 
@@ -45,7 +45,7 @@ public class AddReportTest {
 		assertEquals("aging_portfolio_at_risk", 
 			fetched.getReportIdentifier());
 		assertEquals(ReportsCategoryBO.ANALYSIS, 
-			fetched.getReportsCategoryBO().getReportCategoryId());
+			(int) fetched.getReportsCategoryBO().getReportCategoryId());
 		
 		ReportsJasperMap map = fetched.getReportsJasperMap();
 		assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", 

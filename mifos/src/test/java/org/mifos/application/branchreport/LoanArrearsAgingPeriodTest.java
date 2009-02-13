@@ -11,8 +11,6 @@ import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.TWO_WEEK
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
-import org.junit.runners.Suite;
-import org.mifos.framework.util.TestLocalizationConverter;
 
 public class LoanArrearsAgingPeriodTest {
 	
@@ -20,33 +18,33 @@ public class LoanArrearsAgingPeriodTest {
 
 	@Test
 	public void testLoanArrearsAgingPeriodValues() throws Exception {
-		assertEquals(1, ONE_WEEK.getMinDays());
-		assertEquals(TOTAL_WEEK_DAYS, ONE_WEEK.getMaxDays());
-		assertEquals(TOTAL_WEEK_DAYS+1, ONE_WEEK.getNotLessThanDays());
+		assertEquals(1, (int) ONE_WEEK.getMinDays());
+		assertEquals(TOTAL_WEEK_DAYS, (int) ONE_WEEK.getMaxDays());
+		assertEquals(TOTAL_WEEK_DAYS+1, (int) ONE_WEEK.getNotLessThanDays());
 		
-		assertEquals(TOTAL_WEEK_DAYS+1, TWO_WEEK.getMinDays());
-		assertEquals(TOTAL_WEEK_DAYS*2, TWO_WEEK.getMaxDays());
-		assertEquals(TOTAL_WEEK_DAYS*2+1, TWO_WEEK.getNotLessThanDays());
+		assertEquals(TOTAL_WEEK_DAYS+1, (int) TWO_WEEK.getMinDays());
+		assertEquals(TOTAL_WEEK_DAYS*2, (int) TWO_WEEK.getMaxDays());
+		assertEquals(TOTAL_WEEK_DAYS*2+1, (int) TWO_WEEK.getNotLessThanDays());
 		
-		assertEquals(TOTAL_WEEK_DAYS*2+1, THREE_WEEK.getMinDays());
-		assertEquals(TOTAL_WEEK_DAYS*3, THREE_WEEK.getMaxDays());
-		assertEquals(TOTAL_WEEK_DAYS*3+1, THREE_WEEK.getNotLessThanDays());		
+		assertEquals(TOTAL_WEEK_DAYS*2+1, (int) THREE_WEEK.getMinDays());
+		assertEquals(TOTAL_WEEK_DAYS*3, (int) THREE_WEEK.getMaxDays());
+		assertEquals(TOTAL_WEEK_DAYS*3+1, (int) THREE_WEEK.getNotLessThanDays());		
 		
-		assertEquals(TOTAL_WEEK_DAYS*3+1, FOUR_WEEK.getMinDays());
-		assertEquals(TOTAL_WEEK_DAYS*4, FOUR_WEEK.getMaxDays());
-		assertEquals(TOTAL_WEEK_DAYS*4+1, FOUR_WEEK.getNotLessThanDays());		
+		assertEquals(TOTAL_WEEK_DAYS*3+1, (int) FOUR_WEEK.getMinDays());
+		assertEquals(TOTAL_WEEK_DAYS*4, (int) FOUR_WEEK.getMaxDays());
+		assertEquals(TOTAL_WEEK_DAYS*4+1, (int) FOUR_WEEK.getNotLessThanDays());		
 
-		assertEquals(TOTAL_WEEK_DAYS*4+1, FIVE_TO_EIGHT_WEEK.getMinDays());
-		assertEquals(TOTAL_WEEK_DAYS*8, FIVE_TO_EIGHT_WEEK.getMaxDays());
-		assertEquals(TOTAL_WEEK_DAYS*8+1, FIVE_TO_EIGHT_WEEK.getNotLessThanDays());		
+		assertEquals(TOTAL_WEEK_DAYS*4+1, (int) FIVE_TO_EIGHT_WEEK.getMinDays());
+		assertEquals(TOTAL_WEEK_DAYS*8, (int) FIVE_TO_EIGHT_WEEK.getMaxDays());
+		assertEquals(TOTAL_WEEK_DAYS*8+1, (int) FIVE_TO_EIGHT_WEEK.getNotLessThanDays());		
 
-		assertEquals(TOTAL_WEEK_DAYS*8+1, NINE_TO_TWELVE_WEEK.getMinDays());
-		assertEquals(TOTAL_WEEK_DAYS*12, NINE_TO_TWELVE_WEEK.getMaxDays());
-		assertEquals(TOTAL_WEEK_DAYS*12+1, NINE_TO_TWELVE_WEEK.getNotLessThanDays());		
+		assertEquals(TOTAL_WEEK_DAYS*8+1, (int) NINE_TO_TWELVE_WEEK.getMinDays());
+		assertEquals(TOTAL_WEEK_DAYS*12, (int) NINE_TO_TWELVE_WEEK.getMaxDays());
+		assertEquals(TOTAL_WEEK_DAYS*12+1, (int) NINE_TO_TWELVE_WEEK.getNotLessThanDays());		
 
-		assertEquals(TOTAL_WEEK_DAYS*12+1, MORE_THAN_TWELVE.getMinDays());
-		assertEquals(Integer.MAX_VALUE-1, MORE_THAN_TWELVE.getMaxDays());
-		assertEquals(Integer.MAX_VALUE, MORE_THAN_TWELVE.getNotLessThanDays());		
+		assertEquals(TOTAL_WEEK_DAYS*12+1, (int) MORE_THAN_TWELVE.getMinDays());
+		assertEquals(Integer.MAX_VALUE-1, (int) MORE_THAN_TWELVE.getMaxDays());
+		assertEquals(Integer.MAX_VALUE, (int) MORE_THAN_TWELVE.getNotLessThanDays());		
 	}
 	
 	@Test

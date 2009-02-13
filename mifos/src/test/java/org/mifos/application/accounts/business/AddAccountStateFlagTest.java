@@ -75,8 +75,8 @@ public class AddAccountStateFlagTest {
 			AccountStateFlagEntity.class, FLAG_FEET_TOO_BIG);
 		flag.setLocaleId(TEST_LOCALE);
 
-		assertEquals(FLAG_FEET_TOO_BIG, flag.getId());
-		assertEquals(10, flag.getStatusId());
+		assertEquals((Object)FLAG_FEET_TOO_BIG, (Object)flag.getId());
+		assertEquals(10, (short) flag.getStatusId());
 		assertEquals(false, flag.isFlagRetained());
 		assertEquals("Feet too big", flag.getFlagDescription());
 

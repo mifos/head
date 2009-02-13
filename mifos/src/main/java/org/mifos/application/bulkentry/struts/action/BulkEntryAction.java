@@ -362,7 +362,7 @@ public class BulkEntryAction extends BaseAction {
 
 
 	/**
-	 * This method is called once the search criterias have been entered by the
+	 * This method is called once the search criteria have been entered by the
 	 * user to generate the bulk entry details for a particular customer It
 	 * retrieves the loan officer office, and parent customer that was selected
 	 * and sets them into the bulk entry business object. The list of attendance
@@ -370,52 +370,39 @@ public class BulkEntryAction extends BaseAction {
 	 * also retrieved
 	 */
 	@TransactionDemarcate(joinToken = true)
-	public ActionForward get(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
-		CustomerView parentCustomer = getSelectedCustomer(request, form);
-		UserContext userContext = getUserContext(request);
-		String centerId = bulkEntryForm.getCustomerId();
-		String userId = userContext.getName();
-		LockInfo info = startProcessingCenter(centerId, userId);
-		if (info != null)
-		{
-			// error
-			buildErrorMessage(parentCustomer.getDisplayName(), request, info);
-			return mapping.findForward(BulkEntryConstants.GET_FAILURE);
-		}
-	
-		Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate",
-				request);
-		BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession()
-				.getAttribute(Constants.BUSINESS_KEY);
-		PersonnelView loanOfficer = getSelectedLO(request, form);
-		bulkEntry.setLoanOfficer(loanOfficer);
-		bulkEntry.setOffice(getSelectedBranchOffice(request, form));
-		bulkEntry.setPaymentType(getSelectedPaymentType(request, form));
-		bulkEntry.buildBulkEntryView(parentCustomer);
-		bulkEntry.setLoanProducts(masterService.getLoanProductsAsOfMeetingDate(
-				meetingDate, parentCustomer.getCustomerSearchId(), loanOfficer
-						.getPersonnelId()));
-		bulkEntry.setSavingsProducts(masterService
-				.getSavingsProductsAsOfMeetingDate(meetingDate, parentCustomer
-						.getCustomerSearchId(), loanOfficer.getPersonnelId()));
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		SessionUtils
-				.setCollectionAttribute(
-						BulkEntryConstants.CUSTOMERATTENDANCETYPES,
-						masterService
-								.getMasterData(
-										MasterConstants.ATTENDENCETYPES,
-										userContext.getLocaleId(),
-										"org.mifos.application.master.business.CustomerAttendance",
-										"attendanceId").getCustomValueListElements(),
-						request);
+    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+        CustomerView parentCustomer = getSelectedCustomer(request, form);
+        UserContext userContext = getUserContext(request);
+        String centerId = bulkEntryForm.getCustomerId();
+        String userId = userContext.getName();
+        LockInfo info = startProcessingCenter(centerId, userId);
+        if (info != null) {
+            // error
+            buildErrorMessage(parentCustomer.getDisplayName(), request, info);
+            return mapping.findForward(BulkEntryConstants.GET_FAILURE);
+        }
 
-		return mapping.findForward(BulkEntryConstants.GETSUCCESS);
-	}
+        Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate", request);
+        BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        PersonnelView loanOfficer = getSelectedLO(request, form);
+        bulkEntry.setLoanOfficer(loanOfficer);
+        bulkEntry.setOffice(getSelectedBranchOffice(request, form));
+        bulkEntry.setPaymentType(getSelectedPaymentType(request, form));
+        bulkEntry.buildBulkEntryView(parentCustomer);
+        bulkEntry.setLoanProducts(masterService.getLoanProductsAsOfMeetingDate(meetingDate, parentCustomer
+                .getCustomerSearchId(), loanOfficer.getPersonnelId()));
+        bulkEntry.setSavingsProducts(masterService.getSavingsProductsAsOfMeetingDate(meetingDate, parentCustomer
+                .getCustomerSearchId(), loanOfficer.getPersonnelId()));
+        SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry, request);
+        SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERATTENDANCETYPES, masterService.getMasterData(
+                MasterConstants.ATTENDENCETYPES, userContext.getLocaleId(),
+                "org.mifos.application.master.business.CustomerAttendance", "attendanceId")
+                .getCustomValueListElements(), request);
+
+        return mapping.findForward(BulkEntryConstants.GETSUCCESS);
+    }
 
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,

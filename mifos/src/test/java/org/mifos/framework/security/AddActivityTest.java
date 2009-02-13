@@ -87,7 +87,7 @@ public class AddActivityTest {
 
 		assertEquals("Can use the executive washroom", fetched.getActivityName());
 		
-		assertEquals(SecurityConstants.LOAN_MANAGEMENT, fetched.getParent()
+		assertEquals(SecurityConstants.LOAN_MANAGEMENT, (short) fetched.getParent()
 				.getId());
 
 		ActivityContext activityContext = new ActivityContext(newId,

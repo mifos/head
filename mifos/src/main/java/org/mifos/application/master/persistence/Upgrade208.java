@@ -2,7 +2,6 @@ package org.mifos.application.master.persistence;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.mifos.framework.persistence.DatabaseVersionPersistence;

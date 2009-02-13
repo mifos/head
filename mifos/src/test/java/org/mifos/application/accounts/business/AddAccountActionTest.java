@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Session;
@@ -38,7 +39,7 @@ public class AddAccountActionTest {
 				AccountActionEntity.class, SEND_TO_ORPHANS);
 		action.setLocaleId(TEST_LOCALE);
 
-		assertEquals(SEND_TO_ORPHANS, action.getId());
+		assertEquals(SEND_TO_ORPHANS, (short) action.getId());
 		assertEquals(" ", action.getLookUpValue().getLookUpName());
 	}
 	
