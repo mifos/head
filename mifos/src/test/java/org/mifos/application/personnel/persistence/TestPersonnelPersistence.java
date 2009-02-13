@@ -180,7 +180,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive", customerPersistence,
-		        personnelPersistence, new MasterPersistence(), new SavingsPersistence(), new SavingsPrdPersistence());
+		        personnelPersistence, new MasterPersistence(), new SavingsPersistence(), new SavingsPrdPersistence(),
+		        new OfficePersistence());
 		center.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -193,7 +194,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 			CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED);
 		assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive", customerPersistence,
-		        personnelPersistence, new MasterPersistence(), new SavingsPersistence(), new SavingsPrdPersistence());
+		        personnelPersistence, new MasterPersistence(), new SavingsPersistence(), new SavingsPrdPersistence(),
+		        new OfficePersistence());
 		center.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

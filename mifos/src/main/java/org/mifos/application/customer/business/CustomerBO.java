@@ -696,12 +696,12 @@ public abstract class CustomerBO extends BusinessObject {
 			CustomerStatus newStatus, CustomerStatusFlag flag, String comment,
 			CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
 			MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
-			SavingsPrdPersistence savingsPrdPersistence)
+			SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
 	throws CustomerException {
 		changeStatus(newStatus.getValue(),
 			flag == null ? null : flag.getValue(),
 			comment, customerPersistence, personnelPersistence, masterPersistence, savingsPersistence,
-			savingsPrdPersistence);
+			savingsPrdPersistence, officePersistence);
 	}
 
 	/**
@@ -712,10 +712,10 @@ public abstract class CustomerBO extends BusinessObject {
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
 	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence)
+	        SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
 			throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
-		validateStatusChange(newStatusId, customerPersistence);
+		validateStatusChange(newStatusId, customerPersistence, officePersistence);
 		if (getPersonnel() != null)
 			validateLoanOfficerAssigned();
 		if (checkStatusChangeCancelToPartial(CustomerStatus
@@ -994,7 +994,7 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	protected abstract void validateStatusChange(
-	        Short newStatusId, CustomerPersistence customerPersistence)
+	        Short newStatusId, CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 			throws CustomerException;
 
 	protected boolean isSameBranch(OfficeBO officeObj) {

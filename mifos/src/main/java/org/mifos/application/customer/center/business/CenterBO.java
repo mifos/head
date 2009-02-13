@@ -44,6 +44,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -123,7 +124,7 @@ public class CenterBO extends CustomerBO {
 
 	@Override
 	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence)
+	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 	throws CustomerException {
 		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {

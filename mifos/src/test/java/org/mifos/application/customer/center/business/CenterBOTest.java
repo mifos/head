@@ -362,11 +362,12 @@ public class CenterBOTest extends MifosTestCase {
 	    PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 	    SavingsPersistence savingsPersistence = new SavingsPersistence();
 	    SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
+	    OfficePersistence officePersistence = new OfficePersistence();
 		createCustomers();
 		client.changeStatus(CustomerStatus.CLIENT_CANCELLED, 
 				CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW, 
 				"client cancelled", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		client.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -374,14 +375,14 @@ public class CenterBOTest extends MifosTestCase {
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
 				"group cancelled",customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		group.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"Center_Inactive",customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		center.update(customerPersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

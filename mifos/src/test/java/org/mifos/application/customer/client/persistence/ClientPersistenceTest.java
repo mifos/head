@@ -262,7 +262,8 @@ public class ClientPersistenceTest extends MifosTestCase {
 		clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
 		try {
 			clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, 
-			        DateUtils.getDate(1980, Calendar.JANUARY, 1), new CustomerPersistence());
+			        DateUtils.getDate(1980, Calendar.JANUARY, 1), new CustomerPersistence(),
+			        new ClientPersistence());
 			HibernateUtil.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -276,7 +277,7 @@ public class ClientPersistenceTest extends MifosTestCase {
 		clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
 		try {
 			clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, 
-			        DateUtils.getDate(1980, Calendar.JANUARY, 1), new CustomerPersistence());
+			        DateUtils.getDate(1980, Calendar.JANUARY, 1), new CustomerPersistence(), new ClientPersistence());
 			HibernateUtil.commitTransaction();
 			fail("Should throw error when updating to a government id of active client");
 		}

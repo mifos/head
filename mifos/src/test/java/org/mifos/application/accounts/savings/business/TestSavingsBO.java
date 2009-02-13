@@ -84,6 +84,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -3881,7 +3882,7 @@ public class TestSavingsBO extends MifosTestCase {
 		client1.changeStatus(CustomerStatus.CLIENT_CLOSED,
 				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "Client closed",
 				customerPersistence, new PersonnelPersistence(), new MasterPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				new SavingsPersistence(), new SavingsPrdPersistence(), new OfficePersistence());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());

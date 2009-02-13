@@ -25,6 +25,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -957,7 +958,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"center is inactive now", customerPersistence, personnelPersistence, new MasterPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				new SavingsPersistence(), new SavingsPrdPersistence(), new OfficePersistence());
 		HibernateUtil.commitTransaction();
 		invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
 		setRequestPathInfo("/editCustomerStatusAction.do");

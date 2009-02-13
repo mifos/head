@@ -253,18 +253,18 @@ public class GroupBO extends CustomerBO {
 	public void changeStatus(Short newStatusId, Short flagId, String comment, 
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
 	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence)
+	        SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
 	throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
 		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
-		        masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
 		if(oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue()) && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				if(client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())){
 					client.setUserContext(getUserContext());
 					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment,
 					        customerPersistence, personnelPersistence, masterPersistence, savingsPersistence,
-					        savingsPrdPersistence);
+					        savingsPrdPersistence, officePersistence);
 				}
 			}
 		}
@@ -272,7 +272,7 @@ public class GroupBO extends CustomerBO {
 	
 	@Override
 	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence)
+	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 			throws CustomerException {
 		logger.debug("In GroupBO::validateStatusChange(), customerId: "
 				+ getCustomerId());

@@ -88,6 +88,7 @@ public class TestCustomerBO extends MifosTestCase {
 	private MasterPersistence masterPersistence = new MasterPersistence();
     private SavingsPersistence savingsPersistence = new SavingsPersistence();
     private SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
+    private OfficePersistence officePersistence = new OfficePersistence();
 
 	private MeetingBO meeting;
 
@@ -264,7 +265,7 @@ public class TestCustomerBO extends MifosTestCase {
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
@@ -295,7 +296,7 @@ public class TestCustomerBO extends MifosTestCase {
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_DUPLICATE, 
 				"comment", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
@@ -593,7 +594,7 @@ public class TestCustomerBO extends MifosTestCase {
 		try {
 			center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "Test",
 			        customerPersistence, personnelPersistence, masterPersistence,
-			        savingsPersistence, savingsPrdPersistence);
+			        savingsPersistence, savingsPrdPersistence, officePersistence);
 			fail();
 		} catch (CustomerException expected) {
 			assertEquals(
@@ -614,7 +615,8 @@ public class TestCustomerBO extends MifosTestCase {
 				CustomerStatus.CLIENT_PARTIAL, group);
 		try {
 			client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Test", customerPersistence,
-			        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence);
+			        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence,
+			        officePersistence);
 			fail();
 		} catch (CustomerException expected) {
 			assertEquals(
@@ -634,7 +636,8 @@ public class TestCustomerBO extends MifosTestCase {
 				CustomerStatus.CLIENT_PARTIAL, group);
 		try {
 			client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Test", customerPersistence, 
-			        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence);
+			        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence,
+			        officePersistence);
 			fail();
 		} catch (CustomerException sce) {
 			assertEquals(
@@ -658,7 +661,8 @@ public class TestCustomerBO extends MifosTestCase {
 				client.getCustomerId());
 		try {
 			client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test", customerPersistence,
-			        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence);
+			        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence,
+			        officePersistence);
 			fail();
 		} catch (CustomerException expected) {
 			assertEquals(
@@ -685,7 +689,7 @@ public class TestCustomerBO extends MifosTestCase {
 				.getPersonnelId());
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -697,7 +701,7 @@ public class TestCustomerBO extends MifosTestCase {
 		try {
 			center.changeStatus(CustomerStatus.CENTER_ACTIVE, null,
 					"comment", customerPersistence, personnelPersistence, masterPersistence,
-					savingsPersistence, savingsPrdPersistence);
+					savingsPersistence, savingsPrdPersistence, officePersistence);
 			fail();
 		} catch (CustomerException expected) {
 			assertEquals(
@@ -725,7 +729,7 @@ public class TestCustomerBO extends MifosTestCase {
 				.getPersonnelId());
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -737,7 +741,7 @@ public class TestCustomerBO extends MifosTestCase {
 		try {
 			center.changeStatus(CustomerStatus.CENTER_ACTIVE, null,
 					"comment", customerPersistence, personnelPersistence, masterPersistence,
-					savingsPersistence, savingsPrdPersistence);
+					savingsPersistence, savingsPrdPersistence, officePersistence);
 			assertFalse(true);
 		} catch (CustomerException ce) {
 			assertTrue(true);
@@ -765,7 +769,7 @@ public class TestCustomerBO extends MifosTestCase {
 		try {
 			client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test", 
 			        customerPersistence, personnelPersistence, masterPersistence,
-			        savingsPersistence, savingsPrdPersistence);
+			        savingsPersistence, savingsPrdPersistence, officePersistence);
 			fail();
 		} catch (CustomerException expected) {
 			assertEquals(

@@ -120,6 +120,7 @@ public class GroupBOTest extends MifosTestCase {
 	MasterPersistence masterPersistence = new MasterPersistence();
     SavingsPersistence savingsPersistence = new SavingsPersistence();
     SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
+    OfficePersistence officePersistence = new OfficePersistence();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -256,7 +257,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, null, "Group Cancelled", customerPersistence,
-		        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -840,7 +841,7 @@ public class GroupBOTest extends MifosTestCase {
 		client2.changeStatus(CustomerStatus.CLIENT_CLOSED, 
 				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, 
 				"comment", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -910,7 +911,7 @@ public class GroupBOTest extends MifosTestCase {
 		createInitialObjects();
 		center1 = createCenter("newCenter");
 		center1.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "changeStatus", customerPersistence,
-		        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        personnelPersistence, masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		try {
 			group.transferToCenter(center1, customerPersistence);

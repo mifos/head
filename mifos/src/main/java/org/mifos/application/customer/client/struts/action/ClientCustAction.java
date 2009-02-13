@@ -739,7 +739,7 @@ public class ClientCustAction extends CustAction {
 		client.updateClientDetails(actionForm.getClientDetailView());
 		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),
 				actionForm.getGovernmentId(), DateUtils.getDateAsSentFromBrowser(actionForm
-				.getDateOfBirth()), new CustomerPersistence());
+				.getDateOfBirth()), new CustomerPersistence(), new ClientPersistence());
 
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());

@@ -57,6 +57,7 @@ import org.mifos.application.customer.struts.actionforms.EditCustomerStatusActio
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -361,7 +362,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		setInitialObjectForAuditLogging(customerBO);
 		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
 				.getNotes(), new CustomerPersistence(), new PersonnelPersistence(), new MasterPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				new SavingsPersistence(), new SavingsPrdPersistence(), new OfficePersistence());
 		customerBOInSession = null;
 		customerBO = null;
 	}

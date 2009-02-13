@@ -101,6 +101,7 @@ public class TestClientBO extends MifosTestCase {
 	private ClientPersistence clientPersistence = new ClientPersistence();
     private SavingsPersistence savingsPersistence = new SavingsPersistence();
     private SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
+    private OfficePersistence officePersistence = new OfficePersistence();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -249,7 +250,8 @@ public class TestClientBO extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getContext());
 		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive", customerPersistence,
-		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence,
+		        officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -284,7 +286,8 @@ public class TestClientBO extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getContext());
 		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive", customerPersistence,
-		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence,
+		        officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -598,7 +601,7 @@ public class TestClientBO extends MifosTestCase {
 		client.setUserContext(TestObjectFactory.getContext());
 		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, 
 				null, "Client Made Active", customerPersistence, new PersonnelPersistence(), masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -838,7 +841,7 @@ public class TestClientBO extends MifosTestCase {
 		group1.changeStatus(CustomerStatus.GROUP_CANCELLED,
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
 				"Status Changed", customerPersistence, new PersonnelPersistence(),
-				masterPersistence, savingsPersistence, savingsPrdPersistence);
+				masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		try{
 			client.transferToGroup(group1, customerPersistence);
@@ -860,7 +863,7 @@ public class TestClientBO extends MifosTestCase {
 		group1.changeStatus(CustomerStatus.GROUP_CLOSED,
 				CustomerStatusFlag.GROUP_CLOSED_TRANSFERRED, 
 				"Status Changed", customerPersistence, new PersonnelPersistence(), masterPersistence,
-				savingsPersistence, savingsPrdPersistence);
+				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		try {
 			client.transferToGroup(group1, customerPersistence);
@@ -890,7 +893,8 @@ public class TestClientBO extends MifosTestCase {
 		client = (ClientBO) customerPersistence.getCustomer(client.getCustomerId());
 		client.setUserContext(TestUtils.makeUserWithLocales());
 		client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold", customerPersistence,
-		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        new PersonnelPersistence(), masterPersistence, savingsPersistence, savingsPrdPersistence,
+		        officePersistence);
 		try{
 			client.transferToGroup(group1, customerPersistence);
 			fail();

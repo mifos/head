@@ -197,7 +197,7 @@ public class ClientBO extends CustomerBO {
 		createPicture(picture, clientPersistence);
 		offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
 		createAssociatedOfferings(offeringsSelected);
-		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId, clientPersistence);
 
 		if (parentCustomer != null) {
 			checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer
@@ -208,9 +208,9 @@ public class ClientBO extends CustomerBO {
 			validateFieldsForActiveClient(loanOfficer, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
 			createAccountsForClient(customerPersistence, savingsPersistence, savingsPrdPersistence);
-			createDepositSchedule();
+			createDepositSchedule(customerPersistence);
 		}
-		generateSearchId();
+		generateSearchId(customerPersistence);
 	}
 
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
@@ -371,10 +371,10 @@ public class ClientBO extends CustomerBO {
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
 	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence)
+	        SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
 			throws CustomerException {
 		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
-		        masterPersistence, savingsPersistence, savingsPrdPersistence);
+		        masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
 						.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {
@@ -412,7 +412,7 @@ public class ClientBO extends CustomerBO {
 	
 	@Override
 	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence)
+	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 			throws CustomerException {
 		if (getParentCustomer() != null) {
 			checkIfClientStatusIsLower(newStatusId, getParentCustomer()
@@ -424,7 +424,7 @@ public class ClientBO extends CustomerBO {
 		}
 
 		if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-			checkIfClientCanBeActive(newStatusId);
+			checkIfClientCanBeActive(newStatusId, officePersistence);
 		}
 	}
 
@@ -446,14 +446,15 @@ public class ClientBO extends CustomerBO {
 			this.setCustomerActivationDate(new Date());
 			createAccountsForClient(customerPersistence, savingsPersistence, savingsPrdPersistence);
 			savingsPersistence.persistSavingAccounts(this);
-			createDepositSchedule();
+			createDepositSchedule(customerPersistence);
 		}
 	}
 
 	public void updatePersonalInfo(String displayname, String governmentId,
-			Date dateOfBirth, CustomerPersistence customerPersistence) throws CustomerException {
+			Date dateOfBirth, CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
+	throws CustomerException {
 		validateForDuplicateNameOrGovtId(displayname, dateOfBirth,
-				governmentId);
+				governmentId, clientPersistence);
 		setDisplayName(displayname);
 		setGovernmentId(governmentId);
 		setDateOfBirth(dateOfBirth);
@@ -487,7 +488,7 @@ public class ClientBO extends CustomerBO {
 
 		makeCustomerMovementEntries(officeToTransfer);
 		this.setPersonnel(null);
-		generateSearchId();
+		generateSearchId(customerPersistence);
 		super.update(customerPersistence);
 		logger
 				.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :"
@@ -666,8 +667,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
-    // TODO: inject persistence
-	private void generateSearchId() throws CustomerException {
+	private void generateSearchId(CustomerPersistence customerPersistence) throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {
 			childAddedForParent(getParentCustomer());
@@ -675,7 +675,7 @@ public class ClientBO extends CustomerBO {
 					+ getParentCustomer().getMaxChildCount());
 		} else {
 			try {
-				count = new CustomerPersistence().getCustomerCountForOffice(
+				count = customerPersistence.getCustomerCountForOffice(
 						CustomerLevel.CLIENT, getOffice().getOfficeId());
 			} catch (PersistenceException pe) {
 				throw new CustomerException(pe);
@@ -686,10 +686,10 @@ public class ClientBO extends CustomerBO {
 	}
 
 	private void validateForDuplicateNameOrGovtId(String displayName,
-			Date dateOfBirth, String governmentId) throws CustomerException {
+			Date dateOfBirth, String governmentId, ClientPersistence clientPersistence) throws CustomerException {
 		checkForDuplicates(displayName, dateOfBirth, governmentId,
 				getCustomerId() == null ? Integer.valueOf("0")
-						: getCustomerId());
+						: getCustomerId(), clientPersistence);
 	}
 
 	private void validateFieldsForActiveClient(PersonnelBO loanOfficer,
@@ -702,10 +702,8 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // TODO: inject persistence	
 	private void checkForDuplicates(String name, Date dob, String governmentId,
-			Integer customerId) throws CustomerException {
-		ClientPersistence clientPersistence = new ClientPersistence();
+			Integer customerId, ClientPersistence clientPersistence) throws CustomerException {
 
 		if (!StringUtils.isNullOrEmpty(governmentId)) {
 			try {
@@ -787,8 +785,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // TODO: inject persistence	
-	private void checkIfClientCanBeActive(Short newStatus)
+	private void checkIfClientCanBeActive(Short newStatus, OfficePersistence officePersistence)
 			throws CustomerException {
 		boolean loanOfficerActive = false;
 		boolean branchInactive = false;
@@ -803,15 +800,14 @@ public class ClientBO extends CustomerBO {
 		}
 		if (getPersonnel() != null) {
 			try {
-				loanOfficerActive = new OfficePersistence()
-						.hasActivePeronnel(officeId);
+				loanOfficerActive = officePersistence.hasActivePeronnel(officeId);
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
 			}
 		}
 
 		try {
-			branchInactive = new OfficePersistence().isBranchInactive(officeId);
+			branchInactive = officePersistence.isBranchInactive(officeId);
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
 		}
@@ -831,7 +827,6 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // TODO: inject persistence	
 	private void createAccountsForClient(CustomerPersistence customerPersistence,
 	        SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
 	throws CustomerException {
@@ -882,13 +877,14 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 	
-    // TODO: inject persistence	
-	private void createDepositSchedule() throws CustomerException{
+	private void createDepositSchedule(CustomerPersistence customerPersistence) throws CustomerException{
 		try{
 			if(getParentCustomer()!=null){
-				List<SavingsBO> savingsList = new CustomerPersistence().retrieveSavingsAccountForCustomer(getParentCustomer().getCustomerId());
+				List<SavingsBO> savingsList = customerPersistence.retrieveSavingsAccountForCustomer(
+				        getParentCustomer().getCustomerId());
 				if(getParentCustomer().getParentCustomer()!=null)
-					savingsList.addAll(new CustomerPersistence().retrieveSavingsAccountForCustomer(getParentCustomer().getParentCustomer().getCustomerId()));
+					savingsList.addAll(customerPersistence.retrieveSavingsAccountForCustomer(
+					        getParentCustomer().getParentCustomer().getCustomerId()));
 				for(SavingsBO savings : savingsList){
 					savings.setUserContext(getUserContext());
 					savings.generateAndUpdateDepositActionsForClient(this);				
