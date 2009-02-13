@@ -18,6 +18,7 @@
  * explanation of the license and how it is applied.
  */
 package org.mifos.application.accounts.business;
+
 import static org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
 import static org.mifos.application.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
@@ -75,8 +76,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
-
-
 
 public class AccountBO extends BusinessObject {
 
