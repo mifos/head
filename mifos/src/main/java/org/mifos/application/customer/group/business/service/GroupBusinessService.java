@@ -18,7 +18,8 @@ public class GroupBusinessService implements BusinessService {
 	
 	public GroupBO findBySystemId(String globalCustNum) throws ServiceException{
 		try {
-			return new GroupPersistence().findBySystemId(globalCustNum);
+		    GroupBO groupBO = new GroupPersistence().findBySystemId(globalCustNum);
+		    return groupBO;
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -26,7 +27,8 @@ public class GroupBusinessService implements BusinessService {
 	
 	public GroupBO getGroup(Integer customerId) throws ServiceException{
 		try{
-			return new GroupPersistence().geGroup(customerId);
+		    GroupBO groupBO = new GroupPersistence().getGroupByCustomerId(customerId); 
+			return groupBO;
 		}catch(PersistenceException pe){
 			throw new ServiceException(pe);
 		}

@@ -77,10 +77,6 @@ public class GroupPersistence extends Persistence {
 				}
 		return group;
 	}
-
-	public GroupBO geGroup(Integer customerId) throws PersistenceException{
-		return (GroupBO) getPersistentObject(GroupBO.class, customerId);
-	}
 	
 	public boolean isGroupExists(String name, Short officeId) throws PersistenceException{
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -177,8 +173,12 @@ public class GroupPersistence extends Persistence {
     public CenterPersistence getCenterPersistence() {
         return centerPersistence;
     }
-    
-    public GroupBO getGroup(Integer groupId)
+
+    public GroupBO getGroupByCustomerId(Integer customerId) throws PersistenceException {
+        return (GroupBO) getPersistentObject(GroupBO.class, customerId);
+    }
+
+    public GroupBO getGroupByGroupId(Integer groupId)
 	throws PersistenceException {
 		return (GroupBO) getPersistentObject(GroupBO.class, groupId);
 	}
