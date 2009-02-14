@@ -32,7 +32,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
-	CustomerBO center = null;
+	private static final double DELTA = 0.00000001;
+
+    CustomerBO center = null;
 
 	CustomerBO group = null;
 
@@ -99,8 +101,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		AccountFeesActionDetailEntity accountFeesAction = installment
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertEquals(5.0, accountFeesAction.getFeeAmount()
-				.getAmountDoubleValue());
+		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 		HibernateUtil.closeSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
@@ -214,8 +215,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				.getAccountFees(trainingFee.getFeeId());
 
 		assertNotNull(accountFee);
-		assertEquals(5.0, accountFee.getAccountFeeAmount()
-				.getAmountDoubleValue());
+		assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testExecuteStatusInactiveToActive() throws Exception {
@@ -297,15 +297,13 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
 		assertNotNull(accountFeesAction);
-		assertEquals(5.0, accountFeesAction.getFeeAmount()
-				.getAmountDoubleValue());
+		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 		assertEquals(2, ((CustomerScheduleEntity) installment)
 				.getAccountFeesActionDetails().size());
 		AccountFeesEntity accountFee = center.getCustomerAccount()
 				.getAccountFees(trainingFee.getFeeId());
 		assertNotNull(accountFee);
-		assertEquals(5.0, accountFee.getAccountFeeAmount()
-				.getAmountDoubleValue());
+		assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testExecuteAmountUpdatedForMultipleAccount() throws Exception {
@@ -364,16 +362,14 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertEquals(5.0, accountFeesAction.getFeeAmount()
-				.getAmountDoubleValue());
+		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 
 		AccountActionDateEntity groupinstallment = group.getCustomerAccount()
 				.getAccountActionDate(Short.valueOf("1"));
 
 		AccountFeesActionDetailEntity groupaccountFeesAction = ((CustomerScheduleEntity) groupinstallment)
 				.getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
-		assertEquals(5.0, groupaccountFeesAction.getFeeAmount()
-				.getAmountDoubleValue());
+		assertEquals(5.0, groupaccountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 	}
 	
 	public void testBatchJobException(){

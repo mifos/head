@@ -36,7 +36,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 	
-	private AccountBO account1 = null;
+	private static final double DELTA = 0.00000001;
+
+    private AccountBO account1 = null;
 
 	private AccountBO account2 = null;
 
@@ -161,7 +163,7 @@ public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 				.getCustomerId());
 		double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group.getOffice().getOfficeId(), 
 				     group.getOffice().getSearchId());
-		assertEquals(1.0, portfolioAtRisk);
+		assertEquals(1.0, portfolioAtRisk, DELTA);
 				
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -202,7 +204,7 @@ public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 				.getCustomerId());
 		double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group.getOffice().getOfficeId(), 
 			     group.getOffice().getSearchId());
-		assertEquals(0.5, portfolioAtRisk);
+		assertEquals(0.5, portfolioAtRisk, DELTA);
 		
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());

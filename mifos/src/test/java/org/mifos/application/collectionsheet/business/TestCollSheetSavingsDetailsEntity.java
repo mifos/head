@@ -59,7 +59,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
-	private CustomerBO group;
+	private static final double DELTA = 0.00000001;
+
+    private CustomerBO group;
 
 	private CustomerBO center;
 
@@ -93,30 +95,24 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		// date is 200
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 		accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -135,10 +131,8 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testForMandatoryAccountWithFullPayment()
@@ -157,10 +151,8 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testForVoluntaryAccountWithPartialPayment()
@@ -178,10 +170,8 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testForVoluntaryAccountWithFullPayment()
@@ -200,10 +190,8 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testTotalSavingsAmountDueForVoluntaryAccount()
@@ -217,8 +205,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testTotalSavingsAmountDueForMandatoryAccount()
@@ -232,8 +219,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
-		assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue()
-				.getAmountDoubleValue());
+		assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
 	}
 
 	private SavingsBO createSavingsAccount(SavingsType savingsType) 

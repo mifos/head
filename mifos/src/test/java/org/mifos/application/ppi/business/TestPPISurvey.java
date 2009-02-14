@@ -40,7 +40,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.mifos.config.GeneralConfig;
 
 public class TestPPISurvey {
-	private PPIPersistence persistence;
+	private static final double DELTA = 0.00000001;
+    private PPIPersistence persistence;
 	private TestDatabase database;
 
 	@Before public void setUp() {
@@ -228,8 +229,8 @@ public class TestPPISurvey {
 		assertEquals(1, retrievedSurvey.getLikelihood(5).getOrder());
 		assertEquals(5, retrievedSurvey.getLikelihood(25).getOrder());
 		
-		assertEquals(6.9, retrievedSurvey.getLikelihood(43).getBottomHalfBelowPovertyLinePercent());
-		assertEquals(29.5, retrievedSurvey.getLikelihood(43).getTopHalfBelowPovertyLinePercent());
+		assertEquals(6.9, retrievedSurvey.getLikelihood(43).getBottomHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(29.5, retrievedSurvey.getLikelihood(43).getTopHalfBelowPovertyLinePercent(), DELTA);
 	}
 	
 	private PersonnelBO makeSystemUser() throws Exception {

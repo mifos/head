@@ -69,7 +69,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeeActionTest extends MifosMockStrutsTestCase {
 
-	private final static String GLOCDE_ID = "47";
+	private static final double DELTA = 0.00000001;
+
+    private final static String GLOCDE_ID = "47";
 
 	private FeeBO fee;
 
@@ -499,9 +501,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Loan_Periodic_Fee", fee.getFeeName());
 		assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
 		assertEquals(RateAmountFlag.RATE, fee.getFeeType());
-		assertEquals(23.0, ((RateFeeBO) fee).getRate());
-		assertEquals(((RateFeeBO) fee).getFeeFormula().getId(),
-				FeeFormula.AMOUNT.getValue());
+		assertEquals(23.0, ((RateFeeBO) fee).getRate(), DELTA);
+        assertEquals(((RateFeeBO) fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue(), DELTA);
 		assertTrue(fee.isPeriodic());
 		assertTrue(fee.isActive());
 	}
@@ -710,7 +711,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertTrue(fee.isActive());
-		assertEquals(30.0, ((RateFeeBO) fee).getRate());
+		assertEquals(30.0, ((RateFeeBO) fee).getRate(), DELTA);
 	}
 
 	public void testSuccessfulViewAllFees() throws Exception {

@@ -37,7 +37,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
-	private SavingsOfferingBO product;
+	private static final double DELTA = 0.00000001;
+
+    private SavingsOfferingBO product;
 
 	private String flowKey;
 
@@ -934,7 +936,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.getMeetingDetails().getRecurAfter().intValue());
 		assertEquals("Recommended Amount", new Money("120"), product
 				.getRecommendedAmount());
-		assertEquals(9.0, product.getInterestRate());
+		assertEquals(9.0, product.getInterestRate(), DELTA);
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 

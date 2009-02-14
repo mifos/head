@@ -341,8 +341,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		verifyForward(ActionForwards.get_success.toString());
 
 		// this retrieve the loan purposes so this is 129 if empty lookup name are removed
-		assertEquals(131, ((List) SessionUtils.getAttribute(
-				MasterConstants.BUSINESS_ACTIVITIES, request)).size());
+        assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request)).size());
 		assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING,
 				request));
 		assertNotNull(SessionUtils.getAttribute(

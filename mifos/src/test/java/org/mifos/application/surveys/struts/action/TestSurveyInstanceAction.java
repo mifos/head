@@ -88,7 +88,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 
-	@Override
+	private static final double DELTA = 0.00000001;
+
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -371,7 +373,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 				.retrieveResponsesByInstance(newInstance);
 		assertEquals(5, responses.size());
 		assertEquals("answer 1", responses.get(0).getFreetextValue());
-		assertEquals(2.0, responses.get(1).getNumberValue());
+		assertEquals(2.0, responses.get(1).getNumberValue(), DELTA);
 		Date retrievedDate = responses.get(2).getDateValue();
 		calendar.setTime(retrievedDate);
 		assertEquals(14, calendar.get(Calendar.DAY_OF_MONTH));
@@ -575,8 +577,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertTrue(retrievedInstance instanceof PPISurveyInstance);
 		assertTrue(retrievedInstance.getSurvey() instanceof PPISurvey);
 		assertEquals(0, ((PPISurveyInstance)retrievedInstance).getScore());
-		assertEquals(82.2, ((PPISurveyInstance)retrievedInstance).getBottomHalfBelowPovertyLinePercent());
-		assertEquals(6.2, ((PPISurveyInstance)retrievedInstance).getTopHalfBelowPovertyLinePercent());
+		assertEquals(82.2, ((PPISurveyInstance)retrievedInstance).getBottomHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(6.2, ((PPISurveyInstance)retrievedInstance).getTopHalfBelowPovertyLinePercent(), DELTA);
 	}
 
 	public void testChooseSurveyForClient() throws Exception {

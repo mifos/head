@@ -105,7 +105,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestClientCustAction extends MifosMockStrutsTestCase {
-	private UserContext userContext;
+	private static final double DELTA = 0.00000001;
+
+    private UserContext userContext;
 
 	private CenterBO center;
 
@@ -1299,7 +1301,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue());
+		assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue(), DELTA);
 
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
 				EntityType.CLIENT,client.getCustomerId());

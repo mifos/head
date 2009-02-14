@@ -140,7 +140,8 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestLoanAccountAction extends AbstractLoanActionTestCase {
-	private String flowKey1;
+	private static final double DELTA = 0.00000001;
+    private String flowKey1;
 	private HashMap<String, String> schedulePreviewPageParams;
 	private HashMap<String, String> prdOfferingPageParams;
 	private CustomerBO customerMock;
@@ -449,7 +450,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		verifyForward(ActionForwards.update_success.toString());
 		loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 		assertEquals("test", loan.getCollateralNote());
-		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
+		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
 		assertFalse(loan.isInterestDeductedAtDisbursement());
 		assertEquals(0, loan.getGracePeriodDuration().intValue());
 		assertEquals(firstInstallmentDateWithNoInterestPaidAtDisbursementDate, 
@@ -1291,7 +1292,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 
 		loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 		assertEquals("test", loan.getCollateralNote());
-		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
+		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue(), DELTA);
 		assertFalse(loan.isInterestDeductedAtDisbursement());
 		assertEquals(1, loan.getGracePeriodDuration().intValue());
 		assertEquals(DateUtils.format(newDate), DateUtils.getUserLocaleDate(TestObjectFactory

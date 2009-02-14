@@ -40,7 +40,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import java.math.RoundingMode;
 
 public class TestSavingsIntCalcHelper extends MifosTestCase {
-	private UserContext userContext;
+	private static final double DELTA = 0.000001;
+
+    private UserContext userContext;
 
 	private CustomerBO group;
 
@@ -189,12 +191,10 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				.getNextIntCalcDate());
 		
 		// using the old money class the result here was 15.4
-		assertEquals(15.387, savings1.getInterestToBePosted()
-				.getAmountDoubleValue());
+        assertEquals(15.387, savings1.getInterestToBePosted().getAmountDoubleValue(), DELTA);
 
 		// using the old money class the result here was 4.3
-		assertEquals(4.274, savings4.getInterestToBePosted()
-				.getAmountDoubleValue());
+        assertEquals(4.274, savings4.getInterestToBePosted().getAmountDoubleValue(), DELTA);
 		assertEquals(helper.getDate("31/05/2006"), savings4
 				.getNextIntCalcDate());
 		AccountingRules.setDigitsAfterDecimal(savedDigits);

@@ -87,7 +87,9 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanOfferingBOTest extends MifosTestCase {
 
-	private LoanOfferingBO product;
+	private static final double DELTA = 0.00000001;
+
+    private LoanOfferingBO product;
 
 	private FeeBO periodicFee;
 
@@ -754,9 +756,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(new Money("1000").getAmountDoubleValue(), eligibleLoanAmount.getMinLoanAmount());
 		assertEquals(new Money("3000").getAmountDoubleValue(), eligibleLoanAmount.getMaxLoanAmount());
 		assertEquals(new Money("2000").getAmountDoubleValue(), eligibleLoanAmount.getDefaultLoanAmount());
-		assertEquals(2.0, product.getMinInterestRate());
-		assertEquals(12.0, product.getMaxInterestRate());
-		assertEquals(3.0, product.getDefInterestRate());
+		assertEquals(2.0, product.getMinInterestRate(), DELTA);
+		assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+		assertEquals(3.0, product.getDefInterestRate(), DELTA);
 		LoanOfferingInstallmentRange eligibleNoOfInstall = product.eligibleNoOfInstall(null, null);
 		assertEquals(Short.valueOf("11"), eligibleNoOfInstall.getMinNoOfInstall());
 		assertEquals(Short.valueOf("20"), eligibleNoOfInstall.getMaxNoOfInstall());
@@ -1244,9 +1246,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(GraceType.NONE, product.getGraceType());
 		assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
 		assertEquals(InterestType.FLAT, product.getInterestType());
-		assertEquals(2.0, product.getMinInterestRate());
-		assertEquals(12.0, product.getMaxInterestRate());
-		assertEquals(12.0, product.getDefInterestRate());
+		assertEquals(2.0, product.getMinInterestRate(), DELTA);
+		assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+		assertEquals(12.0, product.getDefInterestRate(), DELTA);
 		assertFalse(product.isIncludeInLoanCounter());
 		assertTrue(product.isIntDedDisbursement());
 		assertFalse(product.isPrinDueLastInst());
@@ -1446,9 +1448,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			assertEquals(new Short("2"), noofInstallSameForAllLoanBO
 					.getDefaultNoOfInstall());
 		}
-		assertEquals(2.0, product.getMinInterestRate());
-		assertEquals(12.0, product.getMaxInterestRate());
-		assertEquals(3.0, product.getDefInterestRate());
+		assertEquals(2.0, product.getMinInterestRate(), DELTA);
+		assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+		assertEquals(3.0, product.getDefInterestRate(), DELTA);
 		assertFalse(product.isIncludeInLoanCounter());
 		assertFalse(product.isIntDedDisbursement());
 		assertFalse(product.isPrinDueLastInst());
@@ -1665,9 +1667,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			assertEquals(new Short("70"), noOfInstallFromLastLoanAmountBO
 					.getDefaultNoOfInstall());
 		}
-		assertEquals(2.0, product.getMinInterestRate());
-		assertEquals(12.0, product.getMaxInterestRate());
-		assertEquals(3.0, product.getDefInterestRate());
+		assertEquals(2.0, product.getMinInterestRate(), DELTA);
+		assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+		assertEquals(3.0, product.getDefInterestRate(), DELTA);
 		assertFalse(product.isIncludeInLoanCounter());
 		assertFalse(product.isIntDedDisbursement());
 		assertFalse(product.isPrinDueLastInst());
@@ -1824,9 +1826,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 					.getDefaultNoOfInstall());
 
 		}
-		assertEquals(2.0, product.getMinInterestRate());
-		assertEquals(12.0, product.getMaxInterestRate());
-		assertEquals(3.0, product.getDefInterestRate());
+		assertEquals(2.0, product.getMinInterestRate(), DELTA);
+		assertEquals(12.0, product.getMaxInterestRate(), DELTA);
+		assertEquals(3.0, product.getDefInterestRate(), DELTA);
 		assertFalse(product.isIncludeInLoanCounter());
 		assertFalse(product.isIntDedDisbursement());
 		assertFalse(product.isPrinDueLastInst());

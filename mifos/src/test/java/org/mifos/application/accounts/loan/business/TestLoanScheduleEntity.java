@@ -14,12 +14,14 @@ import org.mifos.framework.util.helpers.Money;
 
 public class TestLoanScheduleEntity extends TestAccount {
 
-	public void testGetPrincipalDue() {
+	private static final double DELTA = 0.00000001;
+
+    public void testGetPrincipalDue() {
 		LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO
 				.getAccountActionDates().toArray()[0];
 		accountActionDate.setPrincipalPaid(new Money("10.0"));
 		assertEquals(90.0, accountActionDate.getPrincipalDue()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -28,7 +30,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 				.getAccountActionDates().toArray()[0];
 		accountActionDate.setInterestPaid(new Money("2.0"));
 		assertEquals(10.0, accountActionDate.getInterestDue()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -40,7 +42,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 		accountActionDate.setMiscPenalty(new Money("10.0"));
 		accountActionDate.setMiscPenaltyPaid(new Money("5.0"));
 		assertEquals(20.0, accountActionDate.getPenaltyDue()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -55,7 +57,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 		accountActionDate.setMiscFee(new Money("20.0"));
 		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		assertEquals(140.0, accountActionDate.getTotalDue()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -70,7 +72,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 		accountActionDate.setMiscFee(new Money("20.0"));
 		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		assertEquals(240.0, accountActionDate.getTotalDueWithFees()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -85,7 +87,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 		accountActionDate.setMiscFee(new Money("20.0"));
 		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		assertEquals(115.0, accountActionDate.getDueAmnts().getFeesOverdue()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 	}
 
@@ -100,11 +102,10 @@ public class TestLoanScheduleEntity extends TestAccount {
 		accountActionDate.setMiscFee(new Money("20.0"));
 		accountActionDate.setMiscFeePaid(new Money("5.0"));
 		OverDueAmounts totalDue = accountActionDate.getDueAmnts();
-		assertEquals(115.0, totalDue.getFeesOverdue().getAmountDoubleValue());
-		assertEquals(90.0, totalDue.getPrincipalOverDue()
-				.getAmountDoubleValue());
-		assertEquals(10.0, totalDue.getInterestOverdue().getAmountDoubleValue());
-		assertEquals(25.0, totalDue.getPenaltyOverdue().getAmountDoubleValue());
+		assertEquals(115.0, totalDue.getFeesOverdue().getAmountDoubleValue(), DELTA);
+        assertEquals(90.0, totalDue.getPrincipalOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(10.0, totalDue.getInterestOverdue().getAmountDoubleValue(), DELTA);
+        assertEquals(25.0, totalDue.getPenaltyOverdue().getAmountDoubleValue(), DELTA);
 
 	}
 	

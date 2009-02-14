@@ -27,7 +27,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountActionDateEntity extends TestAccount {
 
-	public static void addAccountActionDate(
+	private static final double DELTA = 0.00000001;
+
+    public static void addAccountActionDate(
 			AccountActionDateEntity accountAction, AccountBO account) {
 		account.addAccountActionDate(accountAction);
 	}
@@ -38,7 +40,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		for (AccountActionDateEntity accountActionDate : accountActionDates) {
 			Money principal = ((LoanScheduleEntity) accountActionDate)
 					.getPrincipal();
-			assertEquals(100.0, principal.getAmount().doubleValue());
+			assertEquals(100.0, principal.getAmount().doubleValue(), DELTA);
 		}
 	}
 

@@ -66,7 +66,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFinancialBusinessService extends MifosTestCase {
-	protected LoanBO loan = null;
+	private static final double DELTA = 0.00000001;
+
+    protected LoanBO loan = null;
 
 	protected SavingsBO savings;
 
@@ -246,8 +248,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 						.getFinancialTransactions()) {
 					if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
 						countNegativeFinTrxn++;
-						assertEquals(1000.0, finTrxn.getPostedAmount().negate()
-								.getAmountDoubleValue());
+						assertEquals(1000.0, finTrxn.getPostedAmount().negate().getAmountDoubleValue(), DELTA);
 					} else
 						assertTrue(false);
 				}
@@ -323,8 +324,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 					if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
 						countNegativeFinTrxn++;
 					} else
-						assertEquals(1000.0, finTrxn.getPostedAmount()
-								.getAmountDoubleValue());
+						assertEquals(1000.0, finTrxn.getPostedAmount().getAmountDoubleValue(), DELTA);
 					assertEquals("correction entry", finTrxn.getNotes());
 				}
 

@@ -36,7 +36,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsIntPostingHelper extends MifosTestCase {
-	private UserContext userContext;
+	private static final double DELTA = 0.000001;
+
+    private UserContext userContext;
 
 	private CustomerBO group;
 
@@ -113,13 +115,12 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		savings3 = persistence.findById(savings3.getAccountId());
 		savings4 = persistence.findById(savings4.getAccountId());
 
-		assertEquals(0.0, savings1.getInterestToBePosted()
-				.getAmountDoubleValue());
-		assertEquals(750.0, savings1.getSavingsBalance().getAmountDoubleValue());
+		assertEquals(0.0, savings1.getInterestToBePosted().getAmountDoubleValue(), DELTA);
+		assertEquals(750.0, savings1.getSavingsBalance().getAmountDoubleValue(), DELTA);
 		assertEquals(1, savings1.getAccountPayments().size());
 		AccountPaymentEntity payment1 = savings1.getAccountPayments()
 				.iterator().next();
-		assertEquals(500.0, payment1.getAmount().getAmountDoubleValue());
+		assertEquals(500.0, payment1.getAmount().getAmountDoubleValue(), DELTA);
 		assertEquals(helper.getDate("30/04/2006"), savings1
 				.getNextIntPostDate());
 
@@ -131,17 +132,13 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 					DateUtils.getDateWithoutTimeStamp(activity
 							.getTrxnCreatedDate().getTime()));
 
-		assertEquals(1050.4, savings4.getSavingsBalance()
-				.getAmountDoubleValue());
-		assertEquals(0.0, savings4.getInterestToBePosted()
-				.getAmountDoubleValue());
+		assertEquals(1050.4, savings4.getSavingsBalance().getAmountDoubleValue(), DELTA);
+        assertEquals(0.0, savings4.getInterestToBePosted().getAmountDoubleValue(), DELTA);
 		assertEquals(1, savings4.getAccountPayments().size());
 
-		AccountPaymentEntity payment4 = savings4.getAccountPayments()
-				.iterator().next();
-		assertEquals(800.4, payment4.getAmount().getAmountDoubleValue());
-		assertEquals(helper.getDate("30/04/2006"), savings4
-				.getNextIntPostDate());
+		AccountPaymentEntity payment4 = savings4.getAccountPayments().iterator().next();
+		assertEquals(800.4, payment4.getAmount().getAmountDoubleValue(), DELTA);
+		assertEquals(helper.getDate("30/04/2006"), savings4.getNextIntPostDate());
 
 		assertEquals(1, savings1.getSavingsActivityDetails().size());
 		for (SavingsActivityEntity activity : savings1

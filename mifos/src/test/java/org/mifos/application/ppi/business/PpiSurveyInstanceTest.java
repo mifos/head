@@ -13,7 +13,8 @@ import org.mifos.framework.exceptions.ValidationException;
 
 public class PpiSurveyInstanceTest {
 	
-	@Test
+	private static final double DELTA = 0.00000001;
+    @Test
 	public void testComputeScore() {
 		PPISurveyInstance instance = new PPISurveyInstance();
 		instance.setSurveyResponses(createSurveyResponses());
@@ -22,12 +23,11 @@ public class PpiSurveyInstanceTest {
 
 	@Test
 	public void testLikelihoodsAfterInitialize() throws Exception {
-		double delta = 0.0001;
 		PPISurveyInstance instance = createPPISurveyInstance();
-		assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), delta);
-		assertEquals(55.0, instance.getTopHalfBelowPovertyLinePercent(), delta);
-		assertEquals(25.0, instance.getAbovePovertyLinePercent(), delta);
-		assertEquals(75.0, instance.getBelowPovertyLine(), delta);
+		assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(55.0, instance.getTopHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(25.0, instance.getAbovePovertyLinePercent(), DELTA);
+		assertEquals(75.0, instance.getBelowPovertyLine(), DELTA);
 	}
 
 	private Set<SurveyResponse> createSurveyResponses() {

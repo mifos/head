@@ -49,7 +49,9 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestLoanPersistence extends MifosTestCase {
 
-	LoanPersistence loanPersistence;
+	private static final double DELTA = 0.00000001;
+
+    LoanPersistence loanPersistence;
 
 	CustomerBO center = null;
 
@@ -155,9 +157,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetFeeAmountAtDisbursement() throws Exception {
 		loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting,
 				AccountState.LOAN_APPROVED);
-		assertEquals(30.0, loanPersistence
-				.getFeeAmountAtDisbursement(loanAccountForDisbursement
-						.getAccountId()));
+		assertEquals(30.0, loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId()), DELTA);
 	}
 
 	public void testGetLoanAccountsInArrearsInGoodStanding()

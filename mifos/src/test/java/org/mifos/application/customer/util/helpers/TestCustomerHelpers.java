@@ -11,7 +11,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerHelpers extends MifosTestCase {
 
-	private CustomerBO center;
+	private static final double DELTA = 0.00000001;
+    private CustomerBO center;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -96,9 +97,8 @@ public class TestCustomerHelpers extends MifosTestCase {
 		performanceHistoryView.setTotalSavings(10);
 		assertEquals(10, performanceHistoryView.getNumberOfClients());
 		assertEquals(10, performanceHistoryView.getNumberOfGroups());
-		assertEquals(10.0, performanceHistoryView
-				.getTotalOutstandingPortfolio());
-		assertEquals(10.0, performanceHistoryView.getTotalSavings());
+		assertEquals(10.0, performanceHistoryView.getTotalOutstandingPortfolio(), DELTA);
+        assertEquals(10.0, performanceHistoryView.getTotalSavings(), DELTA);
 	}
 
 	public void testIdGenerator() {

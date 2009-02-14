@@ -55,7 +55,9 @@ import static org.easymock.classextension.EasyMock.createMock;
 
 public class TestCollSheetBO extends MifosTestCase {
 
-	protected AccountBO accountBO = null;
+	private static final double DELTA = 0.00000001;
+
+    protected AccountBO accountBO = null;
 
 	protected CustomerBO center = null;
 
@@ -121,7 +123,7 @@ public class TestCollSheetBO extends MifosTestCase {
 				.getCollectionSheetCustomerForCustomerId(group.getCustomerId())
 				.getLoanDetailsForAccntId(loan.getAccountId())
 				.getAmntToBeDisbursed();
-		assertEquals(300.00, disbursedAmount.getAmountDoubleValue());
+		assertEquals(300.00, disbursedAmount.getAmountDoubleValue(), DELTA);
 
 	}
 

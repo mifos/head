@@ -30,43 +30,44 @@ import org.junit.Test;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.exceptions.ValidationException;
 
+
 public class PpiLikelihoodTest {
-	private double delta = 0.000001;
+    private static final double DELTA = 0.000001;
 
 	@Test
 	public void testLikelihoodConstructor() throws Exception{
 		PPILikelihood lh = new PPILikelihood(0, 5, 20.1, 21.2);
-		Assert.assertEquals(20.1,lh.getBottomHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(21.2,lh.getTopHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(41.3,lh.getBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(58.7,lh.getAbovePovertyLinePercent(),delta);
+		Assert.assertEquals(20.1,lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(21.2,lh.getTopHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(41.3,lh.getBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(58.7,lh.getAbovePovertyLinePercent(), DELTA);
 	}
 	
 	@Test
 	public void testLikelihoodConstructorZeroBottomHalf() throws Exception {
 		PPILikelihood lh = new PPILikelihood(0, 5, 0.0, 21.2);
-		Assert.assertEquals(0.0,lh.getBottomHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(21.2,lh.getTopHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(21.2,lh.getBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(78.8,lh.getAbovePovertyLinePercent(),delta);
+		Assert.assertEquals(0.0,lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(21.2,lh.getTopHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(21.2,lh.getBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(78.8,lh.getAbovePovertyLinePercent(), DELTA);
 	}
 	
 	@Test
 	public void testLikelihoodConstructorZeroTopHalf() throws Exception {
 		PPILikelihood lh = new PPILikelihood(0, 5, 20.1, 0.0);
-		Assert.assertEquals(20.1,lh.getBottomHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(0.0,lh.getTopHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(20.1,lh.getBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(79.9,lh.getAbovePovertyLinePercent(),delta);
+		Assert.assertEquals(20.1,lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(0.0,lh.getTopHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(20.1,lh.getBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(79.9,lh.getAbovePovertyLinePercent(), DELTA);
 	}
 	
 	@Test
 	public void testLikelihoodConstructorBothZero() throws Exception {
 		PPILikelihood lh = new PPILikelihood(0, 5, 0.0, 0.0);
-		Assert.assertEquals(0.0,lh.getBottomHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(0.0,lh.getTopHalfBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(0.0,lh.getBelowPovertyLinePercent(),delta);
-		Assert.assertEquals(100.0,lh.getAbovePovertyLinePercent(),delta);
+		Assert.assertEquals(0.0,lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(0.0,lh.getTopHalfBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(0.0,lh.getBelowPovertyLinePercent(), DELTA);
+		Assert.assertEquals(100.0,lh.getAbovePovertyLinePercent(), DELTA);
 	}
 	
 	@Test(expected=ValidationException.class)

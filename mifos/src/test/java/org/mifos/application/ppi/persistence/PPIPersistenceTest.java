@@ -14,14 +14,12 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.ppi.business.MockSurveyResponse;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPILikelihood;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPISurveyInstance;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.surveys.business.Question;
-import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.SurveyResponse;
@@ -31,16 +29,14 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIPersistenceTest extends MifosTestCase {
-	private TestDatabase database;
+	private static final double DELTA = 0.00000001;
+    private TestDatabase database;
 	private PPIPersistence persistence;
 	
 	@Override
@@ -66,14 +62,14 @@ public class PPIPersistenceTest extends MifosTestCase {
 		PPILikelihood lh = retreivedSurvey.getLikelihood(17);
 		assertEquals(0, lh.getScoreFrom());
 		assertEquals(20, lh.getScoreTo());
-		assertEquals(80.0, lh.getBottomHalfBelowPovertyLinePercent());
-		assertEquals(20.0, lh.getTopHalfBelowPovertyLinePercent());
+		assertEquals(80.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(20.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
 		
 		lh = retreivedSurvey.getLikelihood(46);
 		assertEquals(21, lh.getScoreFrom());
 		assertEquals(100, lh.getScoreTo());
-		assertEquals(30.0, lh.getBottomHalfBelowPovertyLinePercent());
-		assertEquals(70.0, lh.getTopHalfBelowPovertyLinePercent());
+		assertEquals(30.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(70.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
 	}
 	
 	@Test
@@ -109,8 +105,8 @@ public class PPIPersistenceTest extends MifosTestCase {
 		PPISurveyInstance retrievedInstance = (PPISurveyInstance) persistence.getInstance(instanceId);
 		assertEquals("surveyName", retrievedInstance.getSurvey().getName());
 		assertEquals(5, retrievedInstance.getScore());
-		assertEquals(80.0, retrievedInstance.getBottomHalfBelowPovertyLinePercent());
-		assertEquals(20.0, retrievedInstance.getTopHalfBelowPovertyLinePercent());
+		assertEquals(80.0, retrievedInstance.getBottomHalfBelowPovertyLinePercent(), DELTA);
+		assertEquals(20.0, retrievedInstance.getTopHalfBelowPovertyLinePercent(), DELTA);
 	}
 
 	private int createSurveyInstance(PPISurvey survey) throws Exception {

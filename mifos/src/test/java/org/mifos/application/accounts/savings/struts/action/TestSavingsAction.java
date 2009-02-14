@@ -62,7 +62,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsAction extends MifosMockStrutsTestCase {
 
-	private UserContext userContext;
+	private static final double DELTA = 0.00000001;
+
+    private UserContext userContext;
 
 	private CustomerBO group;
 
@@ -217,8 +219,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = null;
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertNotNull(savings);
-		assertEquals(600.0, savings.getRecommendedAmount()
-				.getAmountDoubleValue());
+		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
 		assertEquals(1, savings.getAccountCustomFields().size());
 		
 	}
@@ -401,8 +402,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		assertNotNull(globalAccountNum);
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
-		assertEquals(1000.0, savings.getRecommendedAmount()
-				.getAmountDoubleValue());
+		assertEquals(1000.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
 		assertEquals(AccountState.SAVINGS_PARTIAL_APPLICATION.getValue(),
 				savings.getAccountState().getId());
 
@@ -424,8 +424,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		assertNotNull(globalAccountNum);
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
-		assertEquals(1000.0, savings.getRecommendedAmount()
-				.getAmountDoubleValue());
+		assertEquals(1000.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
 		assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings
 				.getAccountState().getId());
 
@@ -509,8 +508,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
-		assertEquals(600.0, savings.getRecommendedAmount()
-				.getAmountDoubleValue());
+		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
@@ -531,8 +529,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
-		assertEquals(600.0, savings.getRecommendedAmount()
-				.getAmountDoubleValue());
+		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 
@@ -753,8 +750,7 @@ public void testSuccessful_Update_AuditLog() throws Exception {
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
-		assertEquals(600.0, savings.getRecommendedAmount()
-				.getAmountDoubleValue());
+		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
 		
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
 				EntityType.SAVINGS,savings.getAccountId());

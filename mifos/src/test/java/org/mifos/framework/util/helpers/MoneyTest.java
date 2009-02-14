@@ -48,15 +48,13 @@ import java.math.BigDecimal;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 
-import com.mchange.util.AssertException;
-
 public class MoneyTest {
-	public static junit.framework.Test suite() {
+	private static final double DELTA = 0.00000001;
+
+    public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(MoneyTest.class);
 	}
 	
@@ -227,10 +225,8 @@ public class MoneyTest {
 
 	@Test
 	public void testSetScaleNewMoney() {
-		assertEquals(142.344, new Money(RUPEE, "142.344").getAmountDoubleValue(),
-				0.00000001);
-		assertEquals(142.356, new Money(RUPEE, "142.356").getAmountDoubleValue(),
-				0.00000001);
+		assertEquals(142.344, new Money(RUPEE, "142.344").getAmountDoubleValue(), DELTA);
+        assertEquals(142.356, new Money(RUPEE, "142.356").getAmountDoubleValue(), DELTA);
 	}
 
 	

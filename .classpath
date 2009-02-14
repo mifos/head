@@ -7,7 +7,11 @@
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-collections-3.2.jar"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="lib" path="mifos/lib/activation.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/annogen-0.1.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/antlr-2.7.6.jar"/>
@@ -64,7 +68,6 @@
 	<classpathentry kind="lib" path="mifos/lib/jsr173_1.0_api.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jta.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/junit-4.3.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/mayfly-cvs-2008-03-25.jar"/>
@@ -91,5 +94,6 @@
 	<classpathentry kind="lib" path="mifos/lib/XmlSchema-1.0.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/xmlunit-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/cheetah-common-0.0.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/junit-4.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -79,7 +79,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountBO extends TestAccount {
 
-	public static void addAccountFlag(AccountStateFlagEntity flagDetail,
+	private static final double DELTA = 0.00000001;
+
+    public static void addAccountFlag(AccountStateFlagEntity flagDetail,
 			AccountBO account) {
 		account.addAccountFlag(flagDetail);
 	}
@@ -133,7 +135,7 @@ public class TestAccountBO extends TestAccount {
 		loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				loan.getAccountId());		
 		
-		assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted());
+		assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted(), DELTA);
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 	}

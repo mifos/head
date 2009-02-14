@@ -139,7 +139,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBO extends MifosTestCase {
 
-	private static final double DEFAULT_LOAN_AMOUNT = 300.0;
+	private static final double DELTA = 0.00000001;
+
+    private static final double DEFAULT_LOAN_AMOUNT = 300.0;
 
 	LoanOfferingBO loanOffering = null;
 
@@ -2052,16 +2054,14 @@ public class TestLoanBO extends MifosTestCase {
 			for (AccountTrxnEntity transaction : accountTrxns) {
 
 				if (transaction.getAccountAction() == AccountActionTypes.FEE_REPAYMENT) {
-					assertEquals(30.0, transaction.getAmount()
-							.getAmountDoubleValue());
+					assertEquals(30.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
 					// it should have two feetrxn's
 					Set<FeesTrxnDetailEntity> feesTrxnDetails = ((LoanTrxnDetailEntity) transaction)
 							.getFeesTrxnDetails();
 					assertEquals(2, feesTrxnDetails.size());
 				}
 				if (transaction.getAccountAction() == AccountActionTypes.DISBURSAL)
-					assertEquals(300.0, transaction.getAmount()
-							.getAmountDoubleValue());
+					assertEquals(300.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
 
 				assertEquals(accountBO.getAccountId(), transaction.getAccount()
 						.getAccountId());
@@ -2071,8 +2071,7 @@ public class TestLoanBO extends MifosTestCase {
 			// check loan summary fee paid should be updated
 			LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
 					.getLoanSummary();
-			assertEquals(30.0, loanSummaryEntity.getFeesPaid()
-					.getAmountDoubleValue());
+			assertEquals(30.0, loanSummaryEntity.getFeesPaid().getAmountDoubleValue(), DELTA);
 			// check the loan object for the disbursal date
 			assertEquals(startDate, ((LoanBO) accountBO).getDisbursementDate());
 			// check new account state
@@ -2121,8 +2120,7 @@ public class TestLoanBO extends MifosTestCase {
 			AccountTrxnEntity accountTrxn = accountTrxns.iterator().next();
 			assertEquals(AccountActionTypes.DISBURSAL, accountTrxn
 					.getAccountAction());
-			assertEquals(300.0, accountTrxn.getAmount().getAmountDoubleValue(),
-					0.00001);
+			assertEquals(300.0, accountTrxn.getAmount().getAmountDoubleValue(), DELTA);
 			assertEquals(accountBO.getAccountId(), accountTrxn.getAccount()
 					.getAccountId());
 		}
@@ -2162,7 +2160,7 @@ public class TestLoanBO extends MifosTestCase {
 			AccountActionTypes accountAction = transaction.getAccountAction();
 			if (accountAction == AccountActionTypes.FEE_REPAYMENT) {
 				assertEquals(40.0, transaction.getAmount()
-						.getAmountDoubleValue());
+						.getAmountDoubleValue(), DELTA);
 				// it should have two feetrxn's
 				Set<FeesTrxnDetailEntity> feesTrxnDetails = ((LoanTrxnDetailEntity) transaction)
 						.getFeesTrxnDetails();
@@ -2172,11 +2170,11 @@ public class TestLoanBO extends MifosTestCase {
 			}
 			else if (accountAction == AccountActionTypes.DISBURSAL) {
 				assertEquals(300.0, transaction.getAmount()
-						.getAmountDoubleValue());
+						.getAmountDoubleValue(), DELTA);
 			}
 			else if (accountAction == AccountActionTypes.LOAN_REPAYMENT) {
 				assertEquals(52.0, transaction.getAmount()
-						.getAmountDoubleValue());
+						.getAmountDoubleValue(), DELTA);
 			}
 			else {
 				fail("unexpected account action " + accountAction.name());
@@ -2191,7 +2189,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
 				.getLoanSummary();
 		assertEquals(40.0, loanSummaryEntity.getFeesPaid()
-				.getAmountDoubleValue());
+				.getAmountDoubleValue(), DELTA);
 
 		// check new account state
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING,
@@ -3085,7 +3083,7 @@ public class TestLoanBO extends MifosTestCase {
 			AccountTrxnEntity transaction = accountTrxns.iterator().next();
 			assertEquals(AccountActionTypes.DISBURSAL, transaction
 					.getAccountAction());
-			assertEquals(300.0, transaction.getAmount().getAmountDoubleValue());
+			assertEquals(300.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
 			assertEquals(accountBO.getAccountId(), transaction.getAccount()
 					.getAccountId());
 		}
@@ -5728,7 +5726,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
 				.getAccountId());
-		assertEquals(1.0, ((LoanBO) accountBO).getPaymentsInArrears());
+		assertEquals(1.0, ((LoanBO) accountBO).getPaymentsInArrears(), DELTA);
 
 	}
 

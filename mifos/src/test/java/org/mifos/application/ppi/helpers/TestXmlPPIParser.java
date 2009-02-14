@@ -1,13 +1,13 @@
 package org.mifos.application.ppi.helpers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.*;
-
+import org.junit.Test;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.business.Question;
@@ -15,10 +15,10 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.config.GeneralConfig;
-import org.w3c.dom.Document;
 
 public class TestXmlPPIParser {
-	private static XmlPPISurveyParser parser = new XmlPPISurveyParser();
+	private static final double DELTA = 0.00000001;
+    private static XmlPPISurveyParser parser = new XmlPPISurveyParser();
 	
 	/**
 	 *  Assumes {{@link #testParse()} passes -- parser#parse must work correctly
@@ -54,10 +54,10 @@ public class TestXmlPPIParser {
 		assertEquals(1, survey.getQuestions().size());
 		assertEquals(2, survey.getQuestions().get(0).getQuestion().getChoices().size());
 		
-		assertEquals(80.0, survey.getLikelihood(1).getBelowPovertyLinePercent());
-		assertEquals(20.0, survey.getLikelihood(1).getAbovePovertyLinePercent());
-		assertEquals(69.0, survey.getLikelihood(17).getBelowPovertyLinePercent());
-		assertEquals(31.0, survey.getLikelihood(17).getAbovePovertyLinePercent());
+		assertEquals(80.0, survey.getLikelihood(1).getBelowPovertyLinePercent(), DELTA);
+		assertEquals(20.0, survey.getLikelihood(1).getAbovePovertyLinePercent(), DELTA);
+		assertEquals(69.0, survey.getLikelihood(17).getBelowPovertyLinePercent(), DELTA);
+		assertEquals(31.0, survey.getLikelihood(17).getAbovePovertyLinePercent(), DELTA);
 	}
 	
 	@Test

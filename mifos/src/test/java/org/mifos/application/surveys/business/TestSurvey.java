@@ -39,7 +39,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSurvey extends MifosTestCase {
 	
-	@Override
+	private static final double DELTA = 0.00000001;
+
+    @Override
 	public void setUp() throws Exception {
 		super.setUp();
 
@@ -512,14 +514,14 @@ public class TestSurvey extends MifosTestCase {
 		assertTrue(responses.contains(response1));
 		assertTrue(responses.contains(response2));
 		assertEquals(AnswerType.NUMBER, responses.get(1).getQuestion().getAnswerTypeAsEnum());
-		assertEquals(5.0, responses.get(1).getNumberValue());
+		assertEquals(5.0, responses.get(1).getNumberValue(), DELTA);
 		assertEquals(response1Value, responses.get(0).getFreetextValue());
 		
 		responses = persistence.retrieveResponsesByInstance(instance2);
 		assertEquals(1, responses.size());
 		assertTrue(responses.contains(response3));
 		assertEquals(AnswerType.NUMBER, responses.get(0).getQuestion().getAnswerTypeAsEnum());
-		assertEquals(42.0, responses.get(0).getNumberValue());
+		assertEquals(42.0, responses.get(0).getNumberValue(), DELTA);
 		assertNull(responses.get(0).getFreetextValue());
 		
 		SurveyInstance retrievedInstance = persistence.getInstance(instance1.getInstanceId());

@@ -66,7 +66,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsOfferingBO extends MifosTestCase {
 
-	private SavingsOfferingBO savingsProduct;
+	private static final double DELTA = 0.00000001;
+
+    private SavingsOfferingBO savingsProduct;
 
 	private SavingsOfferingBO savingsOffering1;
 
@@ -917,7 +919,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 						.getMeetingDetails().getRecurAfter());
 		assertEquals("Recommended Amount", new Money("10"), savingsProduct
 				.getRecommendedAmount());
-		assertEquals(10.0, savingsProduct.getInterestRate());
+		assertEquals(10.0, savingsProduct.getInterestRate(), DELTA);
 		assertEquals("Max Amount Withdrawl Amount", new Money("100"),
 				savingsProduct.getMaxAmntWithdrawl());
 		assertEquals("Min Amount Withdrawl Amount", new Money("1"),

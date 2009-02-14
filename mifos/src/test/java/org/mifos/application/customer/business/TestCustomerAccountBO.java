@@ -56,7 +56,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerAccountBO extends MifosTestCase {
-	protected CustomerAccountBO customerAccountBO = null;
+	private static final double DELTA = 0.00000001;
+
+    protected CustomerAccountBO customerAccountBO = null;
 
 	private CustomerBO center = null;
 
@@ -1009,8 +1011,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
-		assertEquals(100.00, center.getCustomerAccount().getNextDueAmount()
-				.getAmountDoubleValue());
+		assertEquals(100.00, center.getCustomerAccount().getNextDueAmount().getAmountDoubleValue(), DELTA);
 	}
 
 	public void testGenerateMeetingSchedule() throws AccountException {
