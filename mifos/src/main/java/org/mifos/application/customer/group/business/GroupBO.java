@@ -119,14 +119,6 @@ public class GroupBO extends CustomerBO {
 				office, parentCustomer, meeting, loanOfficer);
 		validateFields(displayName, formedBy, trained, trainedDate);
 	}
-	
-	private GroupBO(int customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
-		super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
-	}	
-	
-	public static GroupBO createInstanceForTest(int customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
-		return new GroupBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
-	}
 
 	@Override
 	public boolean isActive() {
