@@ -433,6 +433,7 @@ public abstract class CustomerBO extends BusinessObject {
 	            userContext.getBranchGlobalNum());
 	}
 
+	// NOTE: Injected Persistence
 	public void update(CustomerPersistence customerPersistence) throws CustomerException {
 		try {
 			setUpdateDetails();
@@ -443,6 +444,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	protected void persist(CustomerPersistence customerPersistence) throws CustomerException {
 		try {
 		    customerPersistence.createOrUpdate(this);
@@ -452,6 +454,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 	
+    // NOTE: Injected Persistence
 	public void update(UserContext userContext, String externalId,
 			Address address, List<CustomFieldView> customFields,
 			List<CustomerPositionView> customerPositions,
@@ -559,6 +562,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return historicalData;
 	}
 
+    // TODO: Remove Injected Persistence 
 	public List<CustomerBO> getChildren(CustomerLevel customerLevel,
 			ChildrenStateType stateType,
 			CustomerPersistence customerPersistence) throws CustomerException {
@@ -692,6 +696,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return amount;
 	}
 	
+    // NOTE: Injected Persistence
 	public void changeStatus(
 			CustomerStatus newStatus, CustomerStatusFlag flag, String comment,
 			CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
@@ -709,6 +714,7 @@ public abstract class CustomerBO extends BusinessObject {
 	 * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)} 
 	 * instead.
 	 */
+    // NOTE: Injected Persistence
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
 	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
@@ -758,6 +764,7 @@ public abstract class CustomerBO extends BusinessObject {
 		update(customerPersistence);
 	}
 
+    // NOTE: Injected Persistence
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
 	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
 	        SavingsPrdPersistence savingsPrdPersistence) throws CustomerException{
@@ -770,9 +777,11 @@ public abstract class CustomerBO extends BusinessObject {
 		}		
 	}
 
+    // NOTE: Injected Persistence
 	public abstract void updateMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
 			throws CustomerException;
 
+    // NOTE: Injected Persistence
 	protected void saveUpdatedMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: "
@@ -783,6 +792,7 @@ public abstract class CustomerBO extends BusinessObject {
 		persist(customerPersistence);
 	}
 	
+    // NOTE: Injected Persistence
 	private void setUpdatedMeetingForChildren(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::setUpdatedMeetingForChildren(), customerId: "
@@ -796,6 +806,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}	
 	}
 	
+    // NOTE: Injected Persistence
 	public void changeUpdatedMeeting(CustomerPersistence customerPersistence)
 	    throws CustomerException {
 		logger.debug("In CustomerBO::changeUpdatedMeeting(), customerId: "
@@ -823,6 +834,7 @@ public abstract class CustomerBO extends BusinessObject {
 		persist(customerPersistence);
 	}
 
+    // NOTE: Injected Persistence
 	protected void resetUpdatedMeetingForChildren(MeetingBO currentMeeting,
 	        CustomerPersistence customerPersistence) throws CustomerException {
 		logger.debug("In CustomerBO::resetUpdatedMeetingForChildren(), customerId: "
@@ -838,6 +850,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}			
 	}
 
+    // NOTE: Injected Persistence
 	protected void deleteMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
 		logger.debug("In CustomerBO::deleteMeeting(), customerId: "
@@ -993,6 +1006,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return false;
 	}
 
+    // NOTE: Injected Persistence
 	protected abstract void validateStatusChange(
 	        Short newStatusId, CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 			throws CustomerException;
@@ -1018,6 +1032,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	protected void updateCustomerPositions(
 			List<CustomerPositionView> customerPositions, CustomerPersistence customerPersistence)
 	throws CustomerException {
@@ -1053,6 +1068,7 @@ public abstract class CustomerBO extends BusinessObject {
 					}
 	}
 
+    // NOTE: Injected Persistence
 	protected void updateLoanOfficer(Short loanOfficerId, CustomerPersistence customerPersistence,
 	        PersonnelPersistence personnelPersistence)
 			throws Exception {
@@ -1101,6 +1117,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.addCustomerMovement(newCustomerMovement);
 	}
 
+    // NOTE: Injected Persistence
 	protected void changeParentCustomer(CustomerBO newParent,
 	        CustomerPersistence customerPersistence)
 			throws CustomerException {
@@ -1135,6 +1152,7 @@ public abstract class CustomerBO extends BusinessObject {
 				+ getCustomerId();
 	}
 
+    // NOTE: Injected Persistence
 	private void handleParentTransfer(
 	        CustomerPersistence customerPersistence) throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
@@ -1158,6 +1176,7 @@ public abstract class CustomerBO extends BusinessObject {
 		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 	}
 	
+    // NOTE: Injected Persistence
 	protected void deleteCustomerMeeting(
 	        CustomerPersistence customerPersistence)throws CustomerException{
 		logger.debug("In CustomerBO::deleteCustomerMeeting(), customerId: "
@@ -1207,6 +1226,7 @@ public abstract class CustomerBO extends BusinessObject {
 				parentCustomer));
 	}
 
+    // NOTE: Injected Persistence
 	private CustomerNoteEntity createCustomerNotes(String comment, PersonnelPersistence personnelPersistence)
 			throws CustomerException {
 		try {
@@ -1223,6 +1243,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.accounts.add(account);
 	}
 
+    // NOTE: Injected Persistence
 	private void validateFields(String displayName,
 			CustomerStatus customerStatus, 
 			CustomerBO parentCustomer) throws CustomerException {
@@ -1232,6 +1253,7 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(CustomerConstants.INVALID_STATUS);
 	}
 
+    // NOTE: Injected Persistence
 	private CustomerBO getCustomer(Integer customerId, CustomerPersistence customerPersistence)
 	throws CustomerException {
 		try {
@@ -1287,6 +1309,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return false;
 	}	
 
+    // NOTE: Injected Persistence
 	private void generateSearchId(
 	        CustomerPersistence customerPersistence) throws CustomerException {
 		int count;
@@ -1306,6 +1329,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	public void removeGroupMemberShip(PersonnelBO personnel, String comment,
 	        CustomerPersistence customerPersistence,
 	        PersonnelPersistence personnelPersistence) throws PersistenceException, CustomerException {
@@ -1326,6 +1350,7 @@ public abstract class CustomerBO extends BusinessObject {
 			update(customerPersistence);
 		}
 
+    // NOTE: Injected Persistence
 	protected void handleAddClientToGroup(
 	        CustomerPersistence customerPersistence) throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
