@@ -98,6 +98,7 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
+        // NOTE: Incomplete Initialization
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
 				group.getCustomerId());
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(

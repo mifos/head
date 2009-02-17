@@ -175,11 +175,13 @@ public class GroupPersistence extends Persistence {
     }
 
     public GroupBO getGroupByCustomerId(Integer customerId) throws PersistenceException {
+        // NOTE: Incomplete Initialization
         return (GroupBO) getPersistentObject(GroupBO.class, customerId);
     }
 
     public GroupBO getGroupByGroupId(Integer groupId)
 	throws PersistenceException {
+     // NOTE: Incomplete Initialization
 		return (GroupBO) getPersistentObject(GroupBO.class, groupId);
 	}
     

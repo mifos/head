@@ -562,6 +562,7 @@ public class TestAccountBO extends TestAccount {
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		centerBO = TestObjectFactory.getObject(CenterBO.class,
 				centerBO.getCustomerId());
 		for (AccountActionDateEntity actionDate : centerBO.getCustomerAccount()
@@ -583,6 +584,7 @@ public class TestAccountBO extends TestAccount {
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		centerBO = TestObjectFactory.getObject(CenterBO.class,
 				centerBO.getCustomerId());
 		

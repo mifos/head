@@ -579,6 +579,7 @@ public class GroupCustAction extends CustAction {
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 		
+		// NOTE: Incomplete Initialization
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
 				actionForm.getExternalId(), actionForm.isCustomerTrained(), 
 				actionForm.getTrainedDateValue(userContext.getPreferredLocale()),

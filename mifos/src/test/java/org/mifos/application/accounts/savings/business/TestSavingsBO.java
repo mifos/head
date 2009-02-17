@@ -2497,6 +2497,7 @@ public class TestSavingsBO extends MifosTestCase {
                 userContext);
         HibernateUtil.closeSession();
 
+        // NOTE: Incomplete Initialization
         group = (GroupBO) HibernateUtil.getSessionTL().get(
             GroupBO.class, group.getCustomerId());
         // This calls savings.generateAndUpdateDepositActionsForClient

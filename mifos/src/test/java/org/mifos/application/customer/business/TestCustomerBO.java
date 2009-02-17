@@ -268,6 +268,7 @@ public class TestCustomerBO extends MifosTestCase {
 				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -299,6 +300,7 @@ public class TestCustomerBO extends MifosTestCase {
 				savingsPersistence, savingsPrdPersistence, officePersistence);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		group = TestObjectFactory.getObject(GroupBO.class, group
@@ -672,6 +674,7 @@ public class TestCustomerBO extends MifosTestCase {
 			assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
 		}
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -694,6 +697,7 @@ public class TestCustomerBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		updatePersonnel(PersonnelLevel.LOAN_OFFICER, PersonnelStatus.INACTIVE,
@@ -710,6 +714,7 @@ public class TestCustomerBO extends MifosTestCase {
 			);
 			assertEquals(CustomerStatus.CENTER_INACTIVE, center.getStatus());
 		}
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -734,6 +739,7 @@ public class TestCustomerBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		updatePersonnel(PersonnelLevel.LOAN_OFFICER, PersonnelStatus.ACTIVE,
@@ -750,6 +756,7 @@ public class TestCustomerBO extends MifosTestCase {
 			assertEquals(CustomerStatus.CENTER_INACTIVE.getValue(), center
 					.getCustomerStatus().getId());
 		}
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -779,6 +786,7 @@ public class TestCustomerBO extends MifosTestCase {
 			assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
 		}
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,

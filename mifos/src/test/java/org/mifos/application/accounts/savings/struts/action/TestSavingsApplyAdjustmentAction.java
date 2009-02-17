@@ -68,6 +68,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
+	    // NOTE: Incomplete Initialization
 		try {
 			if (savings != null) {
 				savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());

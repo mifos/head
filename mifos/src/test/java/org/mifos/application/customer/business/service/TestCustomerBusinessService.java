@@ -418,6 +418,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount(group, "fsaf5", "ads5");
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		group = (GroupBO) service.findBySystemId(group.getGlobalCustNum(),
 				group.getCustomerLevel().getId());
 		assertEquals("Group_Active_test", group.getDisplayName());
@@ -574,6 +575,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				AccountBO.class, Integer.valueOf(account.getAccountId())));
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
 				Integer.valueOf(client.getCustomerId())));
+		// NOTE: Incomplete Initialization
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
 				Integer.valueOf(group.getCustomerId())));
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
@@ -632,6 +634,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(1, service.getStatusChecklist(
 				center.getCustomerStatus().getId(),
 				center.getCustomerLevel().getId()).size());
+		// NOTE: Incomplete Initialization
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
 				Integer.valueOf(client.getCustomerId())));
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -739,6 +742,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 			assertEquals(center.getPersonnel().getPersonnelId(), note
 					.getPersonnel().getPersonnelId());
 		}
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				Integer.valueOf(center.getCustomerId())));
 	}

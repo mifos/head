@@ -201,6 +201,7 @@ public class TestLoanBO extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		try {
 			TestObjectFactory.removeObject(loanOffering);
+			// NOTE: Incomplete Initialization
 			if (accountBO != null)
 				accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 						AccountBO.class, accountBO.getAccountId());

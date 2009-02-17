@@ -244,6 +244,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 		.getSession().getAttribute("clientCustActionForm");
 		assertNull(actionForm.getFormedByPersonnelValue());
+		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		HibernateUtil.closeSession();
@@ -271,6 +272,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
 		assertEquals(0, additionalFees.size());
 		
+		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
@@ -298,6 +300,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
 		assertNotNull(additionalFees);
 		assertEquals(1, additionalFees.size());
+		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
@@ -1096,6 +1099,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		// assertEquals("No of active loan accounts should be
 		// 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,

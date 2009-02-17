@@ -583,6 +583,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		center = createCenter();
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test",
 				CustomerStatus.GROUP_ACTIVE, center);
+		// NOTE: Incomplete Initialization
 		GroupBO groupBO = (GroupBO) customerPersistence.findBySystemId(group
 				.getGlobalCustNum());
 		assertEquals(groupBO.getDisplayName(), group.getDisplayName());
@@ -857,6 +858,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, customerPersistence.getStatusChecklist(
 				center.getCustomerStatus().getId(),
 				center.getCustomerLevel().getId()).size());
+		// NOTE: Incomplete Initialization
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
 				Integer.valueOf(client.getCustomerId())));
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -907,6 +909,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 			assertEquals(center.getPersonnel().getPersonnelId(), note
 					.getPersonnel().getPersonnelId());
 		}
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				Integer.valueOf(center.getCustomerId())));
 	}

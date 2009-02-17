@@ -729,6 +729,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				AccountActionTypes.DISBURSAL.getValue(), SessionUtils
 						.getAttribute(AccountConstants.LAST_PAYMENT_ACTION,
 								request));
+		// NOTE: Incomplete Initialization
 		client = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, client.getCustomerId());
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,

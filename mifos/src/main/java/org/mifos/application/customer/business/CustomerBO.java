@@ -149,7 +149,8 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	
-	protected CustomerBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+	protected CustomerBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel,
+	        PersonnelBO personnel, String displayName) {
 		super();
 		this.customerId = customerId;
 		this.customerLevel = customerLevel;

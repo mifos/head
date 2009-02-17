@@ -62,6 +62,7 @@ public class CenterPersistence extends Persistence {
 	}
 
 	public CenterBO getCenter(Integer customerId) throws PersistenceException {
+	    // NOTE: Incomplete Initialization
 		return (CenterBO) getPersistentObject(CenterBO.class, customerId);
 	}
 

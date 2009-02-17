@@ -34,6 +34,7 @@ public class TestAuditInterceptor extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+	    // NOTE: Incomplete Initialization
 		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());

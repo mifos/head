@@ -84,11 +84,13 @@ public class CenterBO extends CustomerBO {
 		super();
 	}
 	
-	public static CenterBO createInstanceForTest(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+	public static CenterBO createInstanceForTest(Integer customerId, CustomerLevelEntity customerLevel,
+	        PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
 		return new CenterBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
 	}
 	
-	private CenterBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+	private CenterBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel,
+	        PersonnelBO personnel, String displayName) {
 		super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
 	}
 	

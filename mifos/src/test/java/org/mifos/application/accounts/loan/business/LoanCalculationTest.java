@@ -178,6 +178,7 @@ public class LoanCalculationTest  {
 	@After
 	public void tearDown() throws Exception {
 		TestObjectFactory.removeObject(loanOffering);
+		// NOTE: Incomplete Initialization
 		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());

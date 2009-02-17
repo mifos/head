@@ -223,6 +223,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		personnel.addNotes(PersonnelConstants.SYSTEM_USER, personnelNotes);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,

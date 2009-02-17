@@ -66,6 +66,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	private void reloadMembers() {
+	    // NOTE: Incomplete Initialization
 		if (savingsBO != null) {
 			savingsBO = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savingsBO.getAccountId());
 		}

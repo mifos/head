@@ -65,6 +65,7 @@ public class TestLoanBOForReversal extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+	    // NOTE: Incomplete Initialization
 		if (loan != null)
 			loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 					loan.getAccountId());

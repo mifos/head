@@ -147,6 +147,7 @@ public class CustomerPersistence extends Persistence {
 
 	public CustomerBO getCustomerWithSearchId(String searchId, Short officeId)
 			throws PersistenceException {
+	    // NOTE: Incomplete Initialization
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("SEARCH_STRING", searchId);
 		queryParameters.put("OFFICE_ID", officeId);
@@ -164,6 +165,7 @@ public class CustomerPersistence extends Persistence {
 		List<CustomerBO> queryResult = executeNamedQuery(
 				NamedQueryConstants.ACTIVE_CUSTOMERS_UNDER_PARENT,
 				queryParameters);
+		// NOTE: Incomplete Initialization
 		queryResult.add(getCustomerWithSearchId(searchId, officeId));
 		return queryResult;
 	}
@@ -234,6 +236,7 @@ public class CustomerPersistence extends Persistence {
 
 	public CustomerBO getCustomer(Integer customerId)
 			throws PersistenceException {
+	    // NOTE: Incomplete Initialization
 		return (CustomerBO) getPersistentObject(CustomerBO.class, customerId);
 	}
 
@@ -246,6 +249,7 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.CUSTOMER_FIND_ACCOUNT_BY_SYSTEM_ID,
 				queryParameters);
 		if (null != queryResult && queryResult.size() > 0) {
+		    // NOTE: Incomplete Initialization
 			customer = queryResult.get(0);
 		}
 		return customer;
@@ -261,6 +265,7 @@ public class CustomerPersistence extends Persistence {
 					NamedQueryConstants.GET_CENTER_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
 				customer = queryResult.get(0);
+				// NOTE: Incomplete Initialization
 				initializeCustomer(customer);
 			}
 		}
@@ -269,6 +274,7 @@ public class CustomerPersistence extends Persistence {
 					NamedQueryConstants.GET_GROUP_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
 				customer = queryResult.get(0);
+				// NOTE: Incomplete Initialization
 				initializeCustomer(customer);
 			}
 
@@ -278,6 +284,7 @@ public class CustomerPersistence extends Persistence {
 					NamedQueryConstants.GET_CLIENT_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
 				customer = queryResult.get(0);
+				// NOTE: Incomplete Initialization
 				initializeCustomer(customer);
 			}
 		}

@@ -208,6 +208,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.center_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		// NOTE: Incomplete Initialization
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
 		assertEquals(1, center.getCustomerNotes().size());
