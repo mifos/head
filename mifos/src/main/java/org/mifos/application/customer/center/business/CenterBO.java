@@ -97,6 +97,7 @@ public class CenterBO extends CustomerBO {
 		return getStatus() == CustomerStatus.CENTER_ACTIVE;
 	}
 
+    // NOTE: Injected Persistence
 	@Override
 	public void updateMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
@@ -122,6 +123,7 @@ public class CenterBO extends CustomerBO {
 		validateOffice(office);
 	}
 
+    // NOTE: Injected Persistence
 	@Override
 	protected void validateStatusChange(Short newStatusId,
 	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
@@ -151,6 +153,7 @@ public class CenterBO extends CustomerBO {
 		logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
 	
+    // NOTE: Injected Persistence
 	public void update(UserContext userContext, Short loanOfficerId, String externalId, 
 	        Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, 
 	        List<CustomerPositionView> customerPositions,
@@ -178,6 +181,7 @@ public class CenterBO extends CustomerBO {
 		return null;
 	}
 		
+    // NOTE: Injected Persistence
 	@Override
 	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
 	    throws CustomerException{	

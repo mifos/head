@@ -136,6 +136,7 @@ public class GroupBO extends CustomerBO {
 		this.groupPerformanceHistory = groupPerformanceHistory;
 	}
 
+    // NOTE: Injected Persistence
 	public void update(UserContext userContext, String displayName,
 			Short loanOfficerId, String externalId, Short trained,
 			Date trainedDate, Address address,
@@ -156,6 +157,7 @@ public class GroupBO extends CustomerBO {
 				customerPositions, customerPersistence);
 	}
 
+    // NOTE: Injected Persistence
 	public void transferToBranch(OfficeBO officeToTransfer, CustomerPersistence customerPersistence)throws CustomerException{
 		validateNewOffice(officeToTransfer);
 		logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
@@ -177,6 +179,7 @@ public class GroupBO extends CustomerBO {
 		logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());		
 	}
 	
+    // NOTE: Injected Persistence
 	public void transferToCenter(CenterBO newParent, CustomerPersistence customerPersistence)throws CustomerException{
 		validateNewCenter(newParent);
 		logger.debug("In GroupBO::transferToCenter(), transfering customerId: " + getCustomerId() +  "to Center Id : "+ newParent.getCustomerId());
@@ -202,6 +205,7 @@ public class GroupBO extends CustomerBO {
 		}
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	protected void saveUpdatedMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
@@ -213,6 +217,7 @@ public class GroupBO extends CustomerBO {
 			deleteMeeting(newMeeting, customerPersistence);
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	public void updateMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
@@ -230,6 +235,7 @@ public class GroupBO extends CustomerBO {
 		update(customerPersistence);
 	}
 	
+    // NOTE: Injected Persistence
 	private void updateMeetingForClients(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException{
 		Set<CustomerBO> clients = getChildren();			
@@ -241,6 +247,7 @@ public class GroupBO extends CustomerBO {
 		}
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment, 
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
@@ -262,6 +269,7 @@ public class GroupBO extends CustomerBO {
 		}
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	protected void validateStatusChange(Short newStatusId,
 	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
@@ -290,6 +298,7 @@ public class GroupBO extends CustomerBO {
 				&& newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()));
 	}
 
+    // NOTE: Injected Persistence
 	@Override
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
 	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
@@ -423,6 +432,7 @@ public class GroupBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	private void checkIfGroupCanBeClosed(
 	        CustomerPersistence customerPersistence) throws CustomerException {
 		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
@@ -570,6 +580,7 @@ public class GroupBO extends CustomerBO {
 		updatePerformanceHistoryOnRepayment(loan, totalAmount);
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	public void update(CustomerPersistence customerPersistence) throws CustomerException {
 		try {
