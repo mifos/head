@@ -340,7 +340,8 @@ public class ClientBO extends CustomerBO {
 		return null;
 	}
 	
-    // when this method is called from Bulk Entry preview persist will be false
+    // NOTE: Injected Persistence
+	// when this method is called from Bulk Entry preview persist will be false
 	public void handleAttendance(Date meetingDate, Short attendance, boolean persist,
 	        CustomerPersistence customerPersistence)
 			throws ServiceException, CustomerException {
@@ -361,12 +362,14 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	public void handleAttendance(Date meetingDate, AttendanceType attendance, CustomerPersistence customerPersistence) 
 	throws ServiceException, CustomerException {
 		boolean persist = true;
 		handleAttendance(meetingDate, attendance.getValue(), persist, customerPersistence);
 	}
 
+    // NOTE: Injected Persistence
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment,
 	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
@@ -391,6 +394,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	public void updateMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence) throws CustomerException {
@@ -401,6 +405,7 @@ public class ClientBO extends CustomerBO {
 		this.update(customerPersistence);
 	}
 
+    // NOTE: Injected Persistence
 	@Override
 	protected void saveUpdatedMeeting(MeetingBO meeting,
 	        CustomerPersistence customerPersistence)throws CustomerException{
@@ -410,6 +415,7 @@ public class ClientBO extends CustomerBO {
 			deleteMeeting(newMeeting, customerPersistence);
 	}
 	
+    // NOTE: Injected Persistence
 	@Override
 	protected void validateStatusChange(Short newStatusId,
 	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
@@ -436,6 +442,7 @@ public class ClientBO extends CustomerBO {
 				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())); 
 	}
 
+    // NOTE: Injected Persistence
 	@Override
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
 	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
@@ -450,6 +457,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	public void updatePersonalInfo(String displayname, String governmentId,
 			Date dateOfBirth, CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
 	throws CustomerException {
@@ -463,6 +471,7 @@ public class ClientBO extends CustomerBO {
 	}
 
 
+    // NOTE: Injected Persistence
 	public void updateMfiInfo(PersonnelBO personnel, CustomerPersistence customerPersistence) throws CustomerException {
 		if (isActive() || isOnHold()) {
 			validateLO(personnel);
@@ -474,6 +483,7 @@ public class ClientBO extends CustomerBO {
 		super.update(customerPersistence);
 	}
 
+    // NOTE: Injected Persistence
 	public void transferToBranch(OfficeBO officeToTransfer, CustomerPersistence customerPersistence)
 			throws CustomerException {
 		validateBranchTransfer(officeToTransfer);
@@ -495,6 +505,7 @@ public class ClientBO extends CustomerBO {
 						+ getCustomerId());
 	}
 
+    // NOTE: Injected Persistence
 	public void transferToGroup(GroupBO newParent, CustomerPersistence customerPersistence) throws CustomerException {
 		validateGroupTransfer(newParent);
 		logger.debug("In ClientBO::transferToGroup(), transfering customerId: "
@@ -520,6 +531,7 @@ public class ClientBO extends CustomerBO {
 						+ getCustomerId());
 	}
 
+    // NOTE: Injected Persistence
 	public void handleGroupTransfer(CustomerPersistence customerPersistence) throws CustomerException {
 		if (!isSameBranch(getParentCustomer().getOffice())) {
 			makeCustomerMovementEntries(getParentCustomer().getOffice());
@@ -562,6 +574,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
+    // NOTE: Injected Persistence
 	public void updatePicture(InputStream picture, ClientPersistence clientPersistence) throws CustomerException {
 		if (customerPicture != null)
 			try {
@@ -667,6 +680,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
+    // NOTE: Injected Persistence
 	private void generateSearchId(CustomerPersistence customerPersistence) throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {
@@ -685,6 +699,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	private void validateForDuplicateNameOrGovtId(String displayName,
 			Date dateOfBirth, String governmentId, ClientPersistence clientPersistence) throws CustomerException {
 		checkForDuplicates(displayName, dateOfBirth, governmentId,
@@ -702,6 +717,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	private void checkForDuplicates(String name, Date dob, String governmentId,
 			Integer customerId, ClientPersistence clientPersistence) throws CustomerException {
 
@@ -785,6 +801,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	private void checkIfClientCanBeActive(Short newStatus, OfficePersistence officePersistence)
 			throws CustomerException {
 		boolean loanOfficerActive = false;
@@ -827,6 +844,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+    // NOTE: Injected Persistence
 	private void createAccountsForClient(CustomerPersistence customerPersistence,
 	        SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
 	throws CustomerException {
@@ -877,6 +895,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 	
+    // NOTE: Injected Persistence
 	private void createDepositSchedule(CustomerPersistence customerPersistence) throws CustomerException{
 		try{
 			if(getParentCustomer()!=null){
@@ -896,6 +915,8 @@ public class ClientBO extends CustomerBO {
 			throw new CustomerException(ae);
 		}
 	}
+
+    // NOTE: Injected Persistence
 	public void updateClientFlag(CustomerPersistence customerPersistence) throws CustomerException,
 			PersistenceException {
 			this.groupFlag = YesNoFlag.NO.getValue();
@@ -919,6 +940,7 @@ public class ClientBO extends CustomerBO {
 				: false;
 	}
 	
+    // NOTE: Injected Persistence
 	public void addClientToGroup(GroupBO newParent,
 	        CustomerPersistence customerPersistence) throws CustomerException {
 		validateAddClientToGroup(newParent);
