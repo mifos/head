@@ -59,7 +59,7 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 	public void defaultAdminLoginSuccessTest() {
 		appLauncher
 			.launchMifos()
-				.loginSuccessfulAs("mifos", "testmifos")
+				.loginSuccessfullyUsingDefaultCredentials()
 					.verifyPage();
 	}
 

@@ -59,7 +59,7 @@ public class CenterTest extends UiTestCaseBase {
 	}
 	
 	public void createCenterTest() {   
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfulAs("mifos", "testmifos");
+        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();

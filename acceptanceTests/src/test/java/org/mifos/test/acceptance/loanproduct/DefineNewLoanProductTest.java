@@ -76,7 +76,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setPrincipalGLCode("1506");
 
    
-        AdminPage adminPage = loginAndNavigateToAdminPage("mifos", "testmifos");
+        AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineLoanProduct(formParameters);
 
@@ -104,16 +104,16 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
 
-        AdminPage adminPage = loginAndNavigateToAdminPage("mifos", "testmifos");
+        AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineLoanProduct(formParameters);
 
     }
                     
-    private AdminPage loginAndNavigateToAdminPage(String userName, String password) {
+    private AdminPage loginAndNavigateToAdminPage() {
         return appLauncher
          .launchMifos()
-         .loginSuccessfulAs(userName, password)
+         .loginSuccessfullyUsingDefaultCredentials()
          .navigateToAdminPage();
      }
 

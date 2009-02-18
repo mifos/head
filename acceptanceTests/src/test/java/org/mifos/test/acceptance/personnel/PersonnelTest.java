@@ -54,14 +54,14 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     public void createUserTest() {
-        AdminPage adminPage = loginAndGoToAdminPage("mifos", "testmifos");
+        AdminPage adminPage = loginAndGoToAdminPage();
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
         adminPage.createUser(adminPage2, getAdminUserParameters(), officeName);
     }
 
     public void editUserTest() {
-        AdminPage adminPage = loginAndGoToAdminPage("mifos", "testmifos");
+        AdminPage adminPage = loginAndGoToAdminPage();
 
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
@@ -81,7 +81,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     public void createUserWithNonAdminRoleTest() {
-        AdminPage adminPage = loginAndGoToAdminPage("mifos", "testmifos");
+        AdminPage adminPage = loginAndGoToAdminPage();
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
         adminPage.createUser(adminPage2, getNonAdminUserParameters(), officeName);
@@ -120,8 +120,8 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
 
-    public AdminPage loginAndGoToAdminPage(String userName, String password) {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfulAs(userName, password);
+    public AdminPage loginAndGoToAdminPage() {
+        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();
