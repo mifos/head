@@ -1,6 +1,5 @@
-package org.mifos.test.acceptance.user;
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +18,8 @@ package org.mifos.test.acceptance.user;
  * explanation of the license and how it is applied.
  */
 
+package org.mifos.test.acceptance.user;
+
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -26,7 +27,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 
 /*
  * Corresponds to story 661 in mingle

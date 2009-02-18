@@ -1,6 +1,5 @@
-package org.mifos.test.acceptance.personnel;
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +17,8 @@ package org.mifos.test.acceptance.personnel;
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
+package org.mifos.test.acceptance.personnel;
 
 import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
