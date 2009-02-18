@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2008 Grameen Foundation USA
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,7 @@ import org.mifos.application.master.persistence.Upgrade176;
 import org.mifos.application.master.persistence.Upgrade183;
 import org.mifos.application.master.persistence.Upgrade198;
 import org.mifos.application.master.persistence.Upgrade208;
+import org.mifos.application.master.persistence.Upgrade209;
 import org.mifos.application.productdefinition.business.AddInterestCalcRule;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.Upgrade127;
@@ -59,7 +60,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 208;
+	public static final int APPLICATION_VERSION = 209;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
     private final Connection connection;
@@ -116,6 +117,7 @@ public class DatabaseVersionPersistence {
 		register203(register);
         register204(register);
         register(register, new Upgrade208());
+        register(register, new Upgrade209());
 		return Collections.unmodifiableMap(register);
 	}
 
