@@ -22,10 +22,9 @@ package org.mifos.test.acceptance.group;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.group.SearchResultsPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,8 +32,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"GroupTest","acceptance","ui"})
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@Test(sequential = true, groups = { "GroupTest", "acceptance", "ui" })
 public class GroupTest extends UiTestCaseBase {
 
     @Autowired
@@ -42,7 +41,7 @@ public class GroupTest extends UiTestCaseBase {
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     private AppLauncher appLauncher;
-    
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
@@ -58,8 +57,11 @@ public class GroupTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void testHitGroupDashboard() throws Exception {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
-        LoginPage loginPage = appLauncher.launchMifos();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
+        // TODO: remove method chaining
+        SearchResultsPage searchResultsPage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials()
+                .search("mygroup");
+        searchResultsPage.verifyPage();
+        // TODO: click on first search result ("MyGroup...")
+        // TODO: verifyPage on group page
     }
 }

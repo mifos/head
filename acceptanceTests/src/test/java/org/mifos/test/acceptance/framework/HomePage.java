@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework;
 
+import org.mifos.test.acceptance.framework.group.SearchResultsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -60,6 +61,13 @@ public class HomePage extends MifosPage {
 	
     public String getWelcome() {
         return selenium.getText("home.text.welcome");
+    }
+    
+    public SearchResultsPage search(String searchFor) {
+        selenium.type("home.input.search", searchFor);
+        selenium.click("home.button.search");
+        waitForPageToLoad();
+        return new SearchResultsPage(selenium); 
     }
       
 }
