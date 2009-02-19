@@ -39,7 +39,7 @@ public class TestMasterPersistence extends MifosTestCase {
 				.getCustomValueList(
 						MasterConstants.ATTENDENCETYPES,
 						(short)1,
-						"org.mifos.application.master.business.CustomerAttendance",
+						"org.mifos.application.master.business.CustomerAttendanceType",
 						"attendanceId");
 		List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
 		assertEquals(4, paymentValues.size());
@@ -55,7 +55,7 @@ public class TestMasterPersistence extends MifosTestCase {
 					.getCustomValueList(
 							MasterConstants.ATTENDENCETYPES,
 							(short)1,
-							"org.mifos.application.master.business.CustomerAttendance",
+							"org.mifos.application.master.business.CustomerAttendanceType",
 							"attendanceId");
 			fail();
 		} catch (Exception e) {

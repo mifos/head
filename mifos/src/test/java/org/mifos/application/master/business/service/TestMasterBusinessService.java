@@ -122,7 +122,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 				.getMasterData(
 						MasterConstants.ATTENDENCETYPES,
 						(short)1,
-						"org.mifos.application.master.business.CustomerAttendance",
+						"org.mifos.application.master.business.CustomerAttendanceType",
 						"attendanceId");
 		List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
 		assertEquals(4, paymentValues.size());

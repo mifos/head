@@ -65,7 +65,7 @@ public interface MasterConstants {
 	public static final String SAVINGS_TYPE ="SavingsType";
 	public static final String INTEREST_CAL_TYPES="IntCalTypes";
 	public static final String RECOMMENDED_AMOUNT_UNIT ="RecommendedAmtUnit";
-	public static final String ATTENDENCETYPES = "CustomerAttendance";
+	public static final String ATTENDENCETYPES = "CustomerAttendanceType";
 	public static final String PAYMENT_TYPE ="PaymentType";
 	public static final String LOAN_PURPOSES ="LoanPurposes";
 	public static final String OFFICER_TITLES = "Titles";

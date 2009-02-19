@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(209);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(210);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -359,11 +359,11 @@ VALUES(73,'Position','Position');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(74,'Language','Language');
 INSERT INTO LOOKUP_ENTITY 
-VALUES(75,'CustomerAttendance','CustomerAttendance');
+VALUES(75,'CustomerAttendanceType','CustomerAttendanceType');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(76,'FinancialAction','Financial Action');
 INSERT INTO LOOKUP_ENTITY 
-VALUES(77,'BulkEntry','BulkENtry');
+VALUES(77,'BulkEntry','BulkEntry');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(78,'SavingsAccountFlag','SavingsAccountFlag');
 INSERT INTO LOOKUP_ENTITY 

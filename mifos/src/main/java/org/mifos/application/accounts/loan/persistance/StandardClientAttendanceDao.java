@@ -23,14 +23,14 @@ package org.mifos.application.accounts.loan.persistance;
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.master.business.CustomerAttendance;
+import org.mifos.application.master.business.CustomerAttendanceType;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
     @Override
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
-        CustomerAttendance customerAttendance = new CustomerAttendance();
+        CustomerAttendanceType customerAttendance = new CustomerAttendanceType();
         ClientAttendanceBO clientAttendanceBO;
         try {
             System.out.println("***** clientId: " + clientId);

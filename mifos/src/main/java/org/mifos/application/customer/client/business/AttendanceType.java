@@ -1,7 +1,7 @@
 package org.mifos.application.customer.client.business;
 
 /*
- * Encapsulates valid id values for {@link CustomerAttendance} class.
+ * Encapsulates valid id values for {@link CustomerAttendanceType} class.
  */
 public enum AttendanceType {
 

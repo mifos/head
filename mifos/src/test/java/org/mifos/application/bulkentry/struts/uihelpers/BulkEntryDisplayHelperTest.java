@@ -129,7 +129,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		final String[] EXPECTED_ATTENDANCE_TYPES = {"P", "A", "AA", "L"};
 		List<CustomValueListElement> attendanceTypesCustomValueList = new MasterDataService().getMasterData(
 				MasterConstants.ATTENDENCETYPES, (short) 1,
-				"org.mifos.application.master.business.CustomerAttendance",
+				"org.mifos.application.master.business.CustomerAttendanceType",
 				"attendanceId").getCustomValueListElements();
 		List<String> attendanceTypesLookupValueList = new ArrayList<String>();
 		for(CustomValueListElement attendanceTypeCustomValueListElement: attendanceTypesCustomValueList) {

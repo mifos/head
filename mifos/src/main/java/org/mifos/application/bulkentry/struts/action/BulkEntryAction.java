@@ -398,7 +398,7 @@ public class BulkEntryAction extends BaseAction {
         SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERATTENDANCETYPES, masterService.getMasterData(
                 MasterConstants.ATTENDENCETYPES, userContext.getLocaleId(),
-                "org.mifos.application.master.business.CustomerAttendance", "attendanceId")
+                "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements(), request);
 
         return mapping.findForward(BulkEntryConstants.GETSUCCESS);

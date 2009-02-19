@@ -76,7 +76,7 @@ public class MasterDataService implements BusinessService {
 	 * Only one non-test usage in BulkEntryAction.get for getting
 	 *   (MasterConstants.ATTENDENCETYPES,
 	 *   userContext.getLocaleId(),
-	 *   "org.mifos.application.master.business.CustomerAttendance",
+	 *   "org.mifos.application.master.business.CustomerAttendanceType",
 	 *   "attendanceId")
 	 */
 	public CustomValueList getMasterData(String entityName, Short localeId,
