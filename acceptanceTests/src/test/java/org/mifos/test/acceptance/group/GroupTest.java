@@ -22,9 +22,11 @@ package org.mifos.test.acceptance.group;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.group.SearchResultsPage;
+import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,7 +35,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "GroupTest", "acceptance", "ui" })
+// TODO: remove workInProgress once issue #2366 is fixed
+@Test(sequential = true, groups = { "GroupTest", "acceptance", "ui", "workInProgress" })
 public class GroupTest extends UiTestCaseBase {
 
     @Autowired
@@ -57,11 +60,12 @@ public class GroupTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void testHitGroupDashboard() throws Exception {
         dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
-        // TODO: remove method chaining
-        SearchResultsPage searchResultsPage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials()
-                .search("mygroup");
+        LoginPage loginPage = appLauncher.launchMifos();
+        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        SearchResultsPage searchResultsPage = homePage.search("mygroup");
         searchResultsPage.verifyPage();
-        // TODO: click on first search result ("MyGroup...")
-        // TODO: verifyPage on group page
+        // click on any search result leading to a group dashboard
+        GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
+        groupViewDetailsPage.verifyPage();
     }
 }

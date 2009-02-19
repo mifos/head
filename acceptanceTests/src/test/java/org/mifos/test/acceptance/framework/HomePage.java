@@ -20,7 +20,7 @@
 
 package org.mifos.test.acceptance.framework;
 
-import org.mifos.test.acceptance.framework.group.SearchResultsPage;
+import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;

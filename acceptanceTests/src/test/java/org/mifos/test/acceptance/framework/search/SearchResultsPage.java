@@ -18,9 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.search;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.group.GroupViewDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -40,5 +41,15 @@ public class SearchResultsPage extends MifosPage {
     public SearchResultsPage verifyPage() {
         verifyPage("MainSearchResults");
         return this;
+    }
+    
+    /**
+     * A search result link must be explicitly clicked to land on the "view group details" page. 
+     * @param locator Selenium locator indicating search result leading to "view group details" page.
+     */
+    public GroupViewDetailsPage navigateToGroupViewDetailsPage(String locator) {
+        selenium.click(locator);
+        waitForPageToLoad();
+        return new GroupViewDetailsPage(selenium);
     }
 }
