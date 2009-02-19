@@ -25,6 +25,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -50,8 +51,8 @@ import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.util.TableFormatter;
-import org.mifos.core.ClasspathResource;
 import org.mifos.core.MifosRuntimeException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testng.Assert;
@@ -157,7 +158,7 @@ public class DbUnitUtilities {
     }    
     
     public void loadDataFromFile(String filename, DriverManagerDataSource dataSource) 
-    throws DatabaseUnitException, SQLException, IOException {
+    throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
         Connection jdbcConnection = null;
         IDataSet dataSet = getDataSetFromFile(filename);
         try {
@@ -174,14 +175,15 @@ public class DbUnitUtilities {
     }
 
     public IDataSet getDataSetFromFile(String filename)
-    throws IOException, DataSetException {
+    throws IOException, DataSetException, URISyntaxException {
         boolean enableColumnSensing = true;
-        URL url = ClasspathResource.getInstance("/dataSets/").getUrl(filename);
-        if (url == null) {
+        ClassPathResource resource = new ClassPathResource("/dataSets/" + filename);
+        File file = resource.getFile();
+        if (file == null) {
             throw new MifosRuntimeException("Couldn't find file:" + filename);
         }
         return new FlatXmlDataSet(
-                getUncompressed(url), false, enableColumnSensing);
+                getUncompressed(file), false, enableColumnSensing);
     }
     
     /**
@@ -223,8 +225,7 @@ public class DbUnitUtilities {
         return databaseDataSet;
     }    
     
-
-    private URL getUncompressed(URL url) throws IOException {
+    private URL getUncompressed(File file) throws IOException {
         /* Buffer size based on this tutorial:
          * http://java.sun.com/developer/technicalArticles/Programming/compression/
          */
@@ -233,7 +234,7 @@ public class DbUnitUtilities {
         File tempFile = File.createTempFile("mifosDbUnitTempfile", ".tmp");
         tempFile.deleteOnExit();
         
-        ZipFile zipFile = new ZipFile(url.getPath());
+        ZipFile zipFile = new ZipFile(file);
         Enumeration<? extends ZipEntry> zipEntries = zipFile.entries(); 
         ZipEntry zipEntry = zipEntries.nextElement();
         if (zipEntries.hasMoreElements()) {
