@@ -128,8 +128,6 @@ public class SavingsBO extends AccountBO {
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	private SavingsHelper helper = new SavingsHelper();
-	
-	private CustomerPersistence customerPersistence = null;
 
 	public SavingsBO(UserContext userContext,
 			SavingsOfferingBO savingsOffering, CustomerBO customer,
@@ -147,7 +145,6 @@ public class SavingsBO extends AccountBO {
 		addcustomFields(customFields);
 		this.recommendedAmount = recommendedAmount;
 		this.setSavingsOfferingDetails();
-		setCustomerPersistence(customerPersistence);
 		// generated the deposit action dates only if savings account is being
 		// saved in approved state
 		if (isActive())
@@ -2279,11 +2276,4 @@ public class SavingsBO extends AccountBO {
 		return savingsOffering.equals(productOffering);
 	}
 
-    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
-        this.customerPersistence = customerPersistence;
-    }
-
-    public CustomerPersistence getCustomerPersistence() {
-        return customerPersistence;
-    }
 }
