@@ -5,7 +5,7 @@
 	<artifactId>gazelle-testing</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.3-SNAPSHOT</version>
-	<name>Mifos - Gazelle Acceptance Tests</name>
+	<name>Mifos Gazelle Acceptance Tests</name>
 	<url>http://www.mifos.org</url>
 
 	<properties>
