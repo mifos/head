@@ -399,8 +399,6 @@ public class TestObjectFactory {
 					customerStatus, externalId, trained, trainedDate, address,
 					customFields, fees, new PersonnelPersistence().getPersonnel(formedById), 
 					parentCustomer);
-			// FIXME: this may belong elsewhere
-			group.setCustomerPersistence(new CustomerPersistence());
 			new GroupPersistence().saveGroup(group);
 			HibernateUtil.commitTransaction();
 		}
