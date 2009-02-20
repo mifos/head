@@ -343,6 +343,7 @@
 				<pathelement location="${build.classes}"/>
 				<pathelement location="${test.classes}"/>
             <pathelement location="${test.classes}/org/mifos/config/resources"/>
+                                <path refid="test.maven-dependencies.classpath"/>
 			</classpath>
 
 			<formatter type="xml" />
@@ -638,13 +639,6 @@
       <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
          <artifact:pom id="maven.project.dependencies" file="pom.xml" />
       </artifact:dependencies>
-      <artifact:dependencies filesetId="test.maven-dependencies.fileset" useScope="test">
-         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
-      </artifact:dependencies>
-      <copy todir="${test.classes}">
-        <fileset refid="test.maven-dependencies.fileset" />
-        <mapper type="flatten" />
-      </copy>
    </target>
 
 </project>
