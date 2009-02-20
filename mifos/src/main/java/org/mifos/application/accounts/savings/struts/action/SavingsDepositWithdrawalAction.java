@@ -110,8 +110,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
 			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(
-							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD,
-							new CustomerPersistence()), request);
+							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 					request);

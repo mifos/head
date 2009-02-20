@@ -417,8 +417,7 @@ public class ClientBO extends CustomerBO {
 	
     // NOTE: Injected Persistence
 	@Override
-	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
+	protected void validateStatusChange(Short newStatusId, OfficePersistence officePersistence)
 			throws CustomerException {
 		if (getParentCustomer() != null) {
 			checkIfClientStatusIsLower(newStatusId, getParentCustomer()

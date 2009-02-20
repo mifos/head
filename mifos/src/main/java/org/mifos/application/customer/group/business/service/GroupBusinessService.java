@@ -2,6 +2,7 @@ package org.mifos.application.customer.group.business.service;
 
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -19,6 +20,8 @@ public class GroupBusinessService implements BusinessService {
 	public GroupBO findBySystemId(String globalCustNum) throws ServiceException{
 		try {
 		    GroupBO groupBO = new GroupPersistence().findBySystemId(globalCustNum);
+		    // NOTE: Incomplete Initialization
+		    groupBO.setCustomerPersistence(new CustomerPersistence());
 		    return groupBO;
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
@@ -27,7 +30,8 @@ public class GroupBusinessService implements BusinessService {
 	
 	public GroupBO getGroup(Integer customerId) throws ServiceException{
 		try{
-		    GroupBO groupBO = new GroupPersistence().getGroupByCustomerId(customerId); 
+		    GroupBO groupBO = new GroupPersistence().getGroupByCustomerId(customerId);
+		    // NOTE: Incomplete Initialization
 			return groupBO;
 		}catch(PersistenceException pe){
 			throw new ServiceException(pe);

@@ -427,8 +427,7 @@ public class GroupCustAction extends CustAction {
 				savingsAccounts, request);
 		List<CustomerBO> allChildNodes = groupBO.getChildren(
 				CustomerLevel.CLIENT,
-				ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
-				new CustomerPersistence());
+				ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
 
 		// bug #1417 - wrong client sort order. Client sort order on bulk
 		// entry screens should match ordering on group details page.

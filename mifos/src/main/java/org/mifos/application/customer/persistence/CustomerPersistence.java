@@ -288,6 +288,10 @@ public class CustomerPersistence extends Persistence {
 				initializeCustomer(customer);
 			}
 		}
+
+		if (customer != null)
+		    customer.setCustomerPersistence(new CustomerPersistence());
+
 		return customer;
 	}
 
