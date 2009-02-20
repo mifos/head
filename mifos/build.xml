@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="mifos" default="dist" basedir=".">
+<project xmlns:artifact="urn:maven-artifact-ant" name="mifos" default="dist" basedir=".">
 
+  <path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.0.9.jar" />
+  <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+           uri="urn:maven-artifact-ant"
+           classpathref="maven-ant-tasks.classpath" />
+	
 	<property environment="env"/>
 	<property name="build.compiler" value="modern"/>
 	<property name="java.home" value="${env.JAVA_HOME}"/>
@@ -54,12 +59,13 @@
 	<property name="db.driver" value="com.mysql.jdbc.Driver"/>
 	<property name="database.driver.jar" 
 		value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
+	
 	<path id="class.path">
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar"/>
 		</fileset>
-        <pathelement location="${build.src.dir}"/>
-        <pathelement location="${build.classes}"/>
+      <pathelement location="${build.src.dir}"/>
+      <pathelement location="${build.classes}"/>
 	</path>
 
     <echo level="debug">CLASSPATH - ${java.class.path}</echo>
@@ -88,7 +94,7 @@
 	</loadfile>
 	</target>
 	
-	<target name="copy-revision" depends="svn-revision" description="Creates revision property file">
+	<target name="copy-revision" depends="svn-revision, maven_dependencies" description="Creates revision property file">
 		<copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
 			<filterset>
 				<filter token="revision" value="${svn.version}" />
@@ -147,7 +153,7 @@
 		<delete dir="${dist.dir}"/>
 	</target>
 
-	<target name="compile" depends="init,make_dir" 
+	<target name="compile" depends="init,make_dir,maven_dependencies" 
 		description="Compiles the source files">
 		<javac srcdir="${src.dir}" 
 		       destdir="${build.classes}" 
@@ -155,11 +161,14 @@
 		       target="1.5"
 		       includes="**/*.java"
 		       excludes="${global.exclude}">
-			<classpath refid="class.path"/>
+         <classpath>
+            <path refid="class.path"/>
+            <path refid="maven-dependencies.classpath"/>
+         </classpath>
 		</javac>
 	</target>
 
-	<target name="compile_test" depends="compile" 
+	<target name="compile_test" depends="compile,maven_test_dependencies" 
 		description="Compiles the test files">
 		<javac srcdir="${test.dir}" 
 		       destdir="${test.classes}" 
@@ -168,7 +177,9 @@
 		       excludes="${global.exclude}">
 			<classpath>
 				<path refid="class.path"/>
-				<pathelement location="${build.classes}"/>
+				<pathelement location="{build.classes}"/>
+		      <path refid="maven-dependencies.classpath"/>
+		      <path refid="test.maven-dependencies.classpath"/>
 			</classpath>
 
 		</javac>
@@ -275,8 +286,7 @@
 			</fileset>
 		</copy>
 		<jar basedir="${build.lib}"
-                 destfile="${dist.dir}/mifos-lib.jar"
-		 />
+           destfile="${dist.dir}/mifos-lib.jar" />
 	</target>
 
 	<!-- The lib-x target is only for bootstrapping the API. It should go away soon -->
@@ -332,7 +342,7 @@
 				<path refid="class.path"/>
 				<pathelement location="${build.classes}"/>
 				<pathelement location="${test.classes}"/>
-				<pathelement location="${test.classes}/org/mifos/config/resources"/>
+            <pathelement location="${test.classes}/org/mifos/config/resources"/>
 			</classpath>
 
 			<formatter type="xml" />
@@ -610,4 +620,31 @@
 			<classpath refid="class.path"/>
 		</javadoc>
 	</target>
+	
+	<target name="maven_dependencies">
+      <artifact:dependencies pathId="maven-dependencies.classpath" useScope="runtime">
+         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+      </artifact:dependencies>
+      <artifact:dependencies filesetId="maven-dependencies.fileset" useScope="runtime">
+         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+      </artifact:dependencies>
+		<copy todir="${webapp.output}/WEB-INF/lib">
+		  <fileset refid="maven-dependencies.fileset" />
+		  <mapper type="flatten" />
+		</copy>
+	</target>
+
+   <target name="maven_test_dependencies">
+      <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
+         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+      </artifact:dependencies>
+      <artifact:dependencies filesetId="test.maven-dependencies.fileset" useScope="test">
+         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+      </artifact:dependencies>
+      <copy todir="${test.classes}">
+        <fileset refid="test.maven-dependencies.fileset" />
+        <mapper type="flatten" />
+      </copy>
+   </target>
+
 </project>

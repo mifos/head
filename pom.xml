@@ -5,7 +5,7 @@
 	<artifactId>gazelle-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>gazelle-parent</name>
+	<name>Mifos Gazelle Parent</name>
 	
 	<modules>
 		<module>mifos</module>
