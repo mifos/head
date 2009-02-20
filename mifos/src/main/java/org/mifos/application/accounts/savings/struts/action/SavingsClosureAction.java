@@ -158,7 +158,7 @@ public class SavingsClosureAction extends BaseAction {
 						.equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
 			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST,
 					savings.getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.ACTIVE_AND_ONHOLD), request);
+							ChildrenStateType.ACTIVE_AND_ONHOLD, new CustomerPersistence()), request);
 		else SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 				request);
 

@@ -190,10 +190,10 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.group = group;
 	}
 
-	public Money getAvgLoanAmountForMember() throws CustomerException {
+	public Money getAvgLoanAmountForMember(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amountForActiveAccount = new Money();
 		Integer countOfActiveLoans = 0;
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amountForActiveAccount = amountForActiveAccount.add(client
@@ -208,19 +208,19 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return new Money();
 	}
 
-	public Integer getActiveClientCount() throws CustomerException {
-		List<CustomerBO> clients = getChildren();
+	public Integer getActiveClientCount(CustomerPersistence customerPersistence) throws CustomerException {
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			return Integer.valueOf(clients.size());
 		}
 		return Integer.valueOf(0);
 	}
 
-	public Money getTotalOutStandingLoanAmount() throws CustomerException {
+	public Money getTotalOutStandingLoanAmount(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amount = group.getOutstandingLoanAmount();
 		//System.out.println("group outstanding amount: " + amount.toString());
 		Money clientAmount = new Money();
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getOutstandingLoanAmount());
@@ -232,9 +232,9 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return amount;
 	}
 
-	public Money getTotalSavingsAmount() throws CustomerException {
+	public Money getTotalSavingsAmount(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amount = group.getSavingsBalance();
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getSavingsBalance());
@@ -246,21 +246,21 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	// this method calculates the PAR using the method LoanBO.hasPortfolioAtRisk() to determine if a loan is in arrears
 	public void generatePortfolioAtRisk(CustomerPersistence customerPersistence) throws CustomerException {
 		Money amount = group.getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = getChildren();
+		List<CustomerBO> clients = getChildren(customerPersistence);
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
+		double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount(customerPersistence).getAmountDoubleValue();
 		if (totalOutstandingLoanAmount != 0.0)
 			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/totalOutstandingLoanAmount)));
 	}
 	
 	
 	
-	private List<CustomerBO> getChildren() throws CustomerException {
-        return group.getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
+	private List<CustomerBO> getChildren(CustomerPersistence customerPersistence) throws CustomerException {
+        return group.getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD, customerPersistence);
     }
 
 	public void updateLoanCounter(final LoanOfferingBO loanOffering,

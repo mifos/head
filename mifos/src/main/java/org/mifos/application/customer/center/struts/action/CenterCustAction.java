@@ -388,7 +388,8 @@ public class CenterCustAction extends CustAction {
 				getUserContext(request).getLocaleId());
 		SessionUtils.setCollectionAttribute(CenterConstants.GROUP_LIST, centerBO
 				.getChildren(CustomerLevel.GROUP,
-						ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
+						ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
+						new CustomerPersistence()),
 				request);
 
 		CenterPerformanceHistory centerPerformanceHistory = customerBusinessService

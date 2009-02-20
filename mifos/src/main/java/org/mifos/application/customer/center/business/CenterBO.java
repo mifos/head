@@ -127,7 +127,8 @@ public class CenterBO extends CustomerBO {
 
     // NOTE: Injected Persistence
 	@Override
-	protected void validateStatusChange(Short newStatusId, OfficePersistence officePersistence)
+	protected void validateStatusChange(Short newStatusId,
+	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 	throws CustomerException {
 		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
@@ -136,7 +137,8 @@ public class CenterBO extends CustomerBO {
 						CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
 			}
 			if (getChildren(CustomerLevel.GROUP,
-			        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
+			        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
+			        customerPersistence).size() > 0) {
 				throw new CustomerException(
 						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
 						new Object[] { MessageLookup.getInstance().lookupLabel(

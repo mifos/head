@@ -35,7 +35,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "GroupTest", "acceptance", "ui" })
+// TODO: remove workInProgress once issue #2366 is fixed
+@Test(sequential = true, groups = { "GroupTest", "acceptance", "ui", "workInProgress" })
 public class GroupTest extends UiTestCaseBase {
 
     @Autowired
@@ -58,7 +59,7 @@ public class GroupTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void testHitGroupDashboard() throws Exception {
-        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         SearchResultsPage searchResultsPage = homePage.search("mygroup");

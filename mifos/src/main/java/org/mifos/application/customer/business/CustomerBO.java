@@ -142,18 +142,8 @@ public abstract class CustomerBO extends BusinessObject {
 			.getLogger(LoggerConstants.CUSTOMERLOGGER);
 
 	private Set<CustomerBO> children;
-	
-	private CustomerPersistence customerPersistence = null;
 
-	public CustomerPersistence getCustomerPersistence() {
-        return this.customerPersistence;
-    }
-
-    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
-        this.customerPersistence = customerPersistence;
-    }
-
-    protected CustomerBO() {
+	protected CustomerBO() {
 		this(null, null, null, null, null);
 		this.globalCustNum = null;
 	}
@@ -573,8 +563,10 @@ public abstract class CustomerBO extends BusinessObject {
 		return historicalData;
 	}
 
+    // TODO: Remove Injected Persistence 
 	public List<CustomerBO> getChildren(CustomerLevel customerLevel,
-			ChildrenStateType stateType) throws CustomerException {
+			ChildrenStateType stateType,
+			CustomerPersistence customerPersistence) throws CustomerException {
 		try {
 			return customerPersistence.getChildren(getSearchId(),
 					getOffice().getOfficeId(), customerLevel, stateType);
@@ -730,7 +722,7 @@ public abstract class CustomerBO extends BusinessObject {
 	        SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
 			throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
-		validateStatusChange(newStatusId, officePersistence);
+		validateStatusChange(newStatusId, customerPersistence, officePersistence);
 		if (getPersonnel() != null)
 			validateLoanOfficerAssigned();
 		if (checkStatusChangeCancelToPartial(CustomerStatus
@@ -1017,7 +1009,7 @@ public abstract class CustomerBO extends BusinessObject {
 
     // NOTE: Injected Persistence
 	protected abstract void validateStatusChange(
-	        Short newStatusId, OfficePersistence officePersistence)
+	        Short newStatusId, CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 			throws CustomerException;
 
 	protected boolean isSameBranch(OfficeBO officeObj) {

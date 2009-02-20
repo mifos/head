@@ -271,12 +271,13 @@ public class GroupBO extends CustomerBO {
 	
     // NOTE: Injected Persistence
 	@Override
-	protected void validateStatusChange(Short newStatusId, OfficePersistence officePersistence)
+	protected void validateStatusChange(Short newStatusId,
+	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
 			throws CustomerException {
 		logger.debug("In GroupBO::validateStatusChange(), customerId: "
 				+ getCustomerId());
 		if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue()))
-			checkIfGroupCanBeClosed(getCustomerPersistence());
+			checkIfGroupCanBeClosed(customerPersistence);
 		if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
 			checkIfGroupCanBeActive(newStatusId);
 		if (getCustomerStatus().getId().equals(
@@ -439,7 +440,8 @@ public class GroupBO extends CustomerBO {
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
 		if (getChildren(CustomerLevel.CLIENT,
-		        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
+		        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
+		        customerPersistence)
 				.size() > 0)
 			throw new CustomerException(
 					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
