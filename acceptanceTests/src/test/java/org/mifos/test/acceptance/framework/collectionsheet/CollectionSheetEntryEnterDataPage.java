@@ -57,6 +57,11 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
         return this;
     }
 
+    public CollectionSheetEntryEnterDataPage enterDepositAccountValue(int row, int column, double amount) {
+        selenium.type("depositAmountEntered[" + row + "][" + column + "]", Double.toString(amount));
+        return this;
+    }
+
     public CollectionSheetEntryEnterDataPage enterCustomerAccountValue(int row, int column, double amount) {
         selenium.type("customerAccountAmountEntered[" + row + "][" + column + "]", Double.toString(amount));
         return this;

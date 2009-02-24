@@ -39,7 +39,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"workInProgress", "CollectionSheetEntryTest","acceptance","ui"})
+@Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     private static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
@@ -60,12 +60,8 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void clientAccountFeesSavedToDatabase() throws Exception {
-        SubmitFormParameters formParameters = new SubmitFormParameters();
-        formParameters.setBranch("MyOffice1233265929385");
-        formParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
-        formParameters.setCenter("MyCenter1233265933427");
-        formParameters.setPaymentMode("Cash");
-        
+         SubmitFormParameters formParameters = getFormParametersForTestOffice();
+     
         dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
         
         CollectionSheetEntrySelectPage selectPage = 
@@ -75,8 +71,8 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterDataPage.verifyPage();
 
-        // submit fee information...
-
+        enterAllCustomerAccountValues(enterDataPage);
+        
         CollectionSheetEntryPreviewDataPage previewPage = 
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);
@@ -84,9 +80,93 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
         
-        verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.zip");
-
+        verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
     }
+
+
+    private void enterAllCustomerAccountValues(CollectionSheetEntryEnterDataPage enterDataPage) {
+        // first Group's information...
+        enterDataPage.enterAccountValue(0,0,0.0);
+        enterDataPage.enterAccountValue(0,1,183.0);
+        enterDataPage.enterDepositAccountValue(0,2,0.0);
+        enterDataPage.enterCustomerAccountValue(0, 6, 17.0);
+   
+        enterDataPage.enterAccountValue(1,0,0.0);
+        enterDataPage.enterAccountValue(1,1,183.0);
+        enterDataPage.enterDepositAccountValue(1,2,0.0);
+        enterDataPage.enterCustomerAccountValue(1, 6, 77.0);
+
+        enterDataPage.enterAccountValue(2,0,0.0);
+        enterDataPage.enterAccountValue(2,1,183.0);
+        enterDataPage.enterDepositAccountValue(2,2,0.0);
+        enterDataPage.enterCustomerAccountValue(2, 6, 123.0);
+
+        enterDataPage.enterAccountValue(3,0,0.0);
+        enterDataPage.enterAccountValue(3,1,183.0);
+        enterDataPage.enterDepositAccountValue(3,2,0.0);
+        enterDataPage.enterCustomerAccountValue(3, 6, 217.0);
+
+        enterDataPage.enterCustomerAccountValue(4, 6, 44.0);
+
+        // second Group's information...
+        enterDataPage.enterAccountValue(5,0,0.0);
+        enterDataPage.enterAccountValue(5,1,183.0);
+        enterDataPage.enterDepositAccountValue(5,2,0.0);
+        enterDataPage.enterCustomerAccountValue(5, 6, 0.0);
+   
+        enterDataPage.enterAccountValue(6,0,0.0);
+        enterDataPage.enterAccountValue(6,1,183.0);
+        enterDataPage.enterDepositAccountValue(6,2,0.0);
+        enterDataPage.enterCustomerAccountValue(6, 6, 0.0);
+
+        enterDataPage.enterAccountValue(7,0,0.0);
+        enterDataPage.enterAccountValue(7,1,183.0);
+        enterDataPage.enterDepositAccountValue(7,2,0.0);
+        enterDataPage.enterCustomerAccountValue(7, 6, 0.0);
+
+        enterDataPage.enterAccountValue(8,0,0.0);
+        enterDataPage.enterAccountValue(8,1,183.0);
+        enterDataPage.enterDepositAccountValue(8,2,0.0);
+        enterDataPage.enterCustomerAccountValue(8, 6, 0.0);
+
+        enterDataPage.enterCustomerAccountValue(9, 6, 0.0);
+
+        // third Group's information...
+        enterDataPage.enterAccountValue(10,0,0.0);
+        enterDataPage.enterAccountValue(10,1,183.0);
+        enterDataPage.enterDepositAccountValue(10,2,0.0);
+        enterDataPage.enterCustomerAccountValue(10, 6, 0.0);
+   
+        enterDataPage.enterAccountValue(11,0,0.0);
+        enterDataPage.enterAccountValue(11,1,183.0);
+        enterDataPage.enterDepositAccountValue(11,2,0.0);
+        enterDataPage.enterCustomerAccountValue(11, 6, 0.0);
+
+        enterDataPage.enterAccountValue(12,0,0.0);
+        enterDataPage.enterAccountValue(12,1,183.0);
+        enterDataPage.enterDepositAccountValue(12,2,0.0);
+        enterDataPage.enterCustomerAccountValue(12, 6, 0.0);
+
+        enterDataPage.enterAccountValue(13,0,0.0);
+        enterDataPage.enterAccountValue(13,1,183.0);
+        enterDataPage.enterDepositAccountValue(13,2,0.0);
+        enterDataPage.enterCustomerAccountValue(13, 6, 0.0);
+
+        enterDataPage.enterCustomerAccountValue(14, 6, 0.0);
+
+        // center charges
+        enterDataPage.enterCustomerAccountValue(15, 6, 234.0);
+    }
+ 
+    private SubmitFormParameters getFormParametersForTestOffice() {
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+      formParameters.setBranch("MyOffice1233265929385");
+      formParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
+      formParameters.setCenter("MyCenter1233265933427");
+      formParameters.setPaymentMode("Cash");
+        return formParameters;
+    }
+
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyCollectionSheetData(String filename) throws Exception {
@@ -99,7 +179,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
 
     }
-    
+       
     private void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
     DatabaseUnitException {
         dbUnitUtilities.verifyTables(new String[] { CUSTOMER_ACCOUNT_ACTIVITY }, databaseDataSet, expectedDataSet);
@@ -108,15 +188,15 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     private void verifyTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
             throws DataSetException, DatabaseUnitException {
         String[] orderFinTrxnByColumns = 
-            new String[]{"account_trxn_id","glcode_id","fin_action_id","debit_credit_flag"};  
+            new String[]{"posted_amount", "glcode_id"};  
         dbUnitUtilities.verifySortedTableWithOrdering(FINANCIAL_TRXN, databaseDataSet, expectedDataSet, 
-                orderFinTrxnByColumns, false, false);
+                orderFinTrxnByColumns, false, true);
         String [] orderFeeTrxnByColumns = new String[]{"fee_trxn_detail_id", "account_trxn_id", "account_fee_id"};
         dbUnitUtilities.verifySortedTableWithOrdering(FEE_TRXN_DETAIL, databaseDataSet, expectedDataSet, 
                 orderFeeTrxnByColumns, true, true);
-        String [] orderCustTrxnByColumns = new String[] {"account_trxn_id"};
+        String [] orderCustTrxnByColumns = new String[] {"total_amount"};
         dbUnitUtilities.verifySortedTableWithOrdering(CUSTOMER_TRXN_DETAIL, databaseDataSet, expectedDataSet, 
-                orderCustTrxnByColumns, true, true);
+                orderCustTrxnByColumns, false, true);
         
         
       
