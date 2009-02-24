@@ -86,12 +86,75 @@
           <groupId>org.springframework</groupId>
           <artifactId>spring-beans</artifactId>
           <version>2.5.6</version>
-      </dependency> 
+      </dependency>
       <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-context</artifactId>
-          <version>2.5.6</version>
-      </dependency>   
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-context</artifactId>
+         <version>2.5.6</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springmodules</groupId>
+         <artifactId>spring-modules-cache</artifactId>
+         <version>0.8a</version>
+         <exclusions>
+            <exclusion>
+               <groupId>gigaspaces</groupId>
+               <artifactId>gigaspaces-ce</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>jsk-lib</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>jsk-platform</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>mahalo</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>reggie</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>start</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>boot</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jini</groupId>
+               <artifactId>webster</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jboss</groupId>
+               <artifactId>jboss-common</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jboss</groupId>
+               <artifactId>jboss-jmx</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jboss</groupId>
+               <artifactId>jboss-minimal</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jboss</groupId>
+               <artifactId>jboss-system</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>jcs</groupId>
+               <artifactId>jcs</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>xpp3</groupId>
+               <artifactId>xpp3_min</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
    </dependencies>   
 
 	<build>
