@@ -20,25 +20,37 @@
 
 package org.mifos.application.accounts.loan.persistance;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.master.business.CustomerAttendanceType;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
+    public StandardClientAttendanceDao() {
+    }
+    
     @Override
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
-        CustomerAttendanceType customerAttendance = new CustomerAttendanceType();
-        ClientAttendanceBO clientAttendanceBO;
+        MasterPersistence masterPersistence = new MasterPersistence();
+        ClientAttendanceBO result;
         try {
-            System.out.println("***** clientId: " + clientId);
-            clientAttendanceBO = (ClientAttendanceBO) customerAttendance.getPersistentObject(
-                    ClientAttendanceBO.class, Integer.valueOf(clientId));
+            Map<String, Object> queryParameters = new HashMap<String, Object>();
+            queryParameters.put("CUSTOMER_ID", clientId);
+            queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
+            result = (ClientAttendanceBO) masterPersistence.execUniqueResultNamedQuery("ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
+            if (result == null) {
+                throw new PersistenceException("Could not find attendance for clientId " + clientId + " and meeting date " + meetingDate.toDateMidnight().toDate());
+            }
+            return result.getAttendanceAsEnum();
         } catch (NumberFormatException e) {
             throw new PersistenceException(e);
         }
-        return clientAttendanceBO.getAttendanceAsEnum();
     }
+
+
 }

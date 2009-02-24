@@ -1,10 +1,30 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
+ */
+
 package org.mifos.application.master.persistence;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -12,7 +32,6 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
@@ -21,7 +40,6 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
@@ -29,11 +47,9 @@ import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.util.helpers.StringUtils;
-import java.util.Set;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)
@@ -51,7 +67,7 @@ public class MasterPersistence extends Persistence {
 	public CustomValueList getLookUpEntity(String entityName, Short localeId)
 			throws ApplicationException, SystemException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = getSession();
 
 			Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
 			queryEntity.setString("entityType", entityName);
@@ -94,7 +110,7 @@ public class MasterPersistence extends Persistence {
 			throws ApplicationException, SystemException {
 		Session session = null;
 		try {
-			session = HibernateUtil.getSessionTL();
+			session = getSession();
 
 			Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
 			queryEntity.setString("entityType", entityName);
@@ -140,7 +156,7 @@ public class MasterPersistence extends Persistence {
 	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)
 			throws PersistenceException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = getSession();
 			List<PaymentTypeEntity> paymentTypes = session
 					.createQuery(
 							"from org.mifos.application.master.business.PaymentTypeEntity")
@@ -158,7 +174,7 @@ public class MasterPersistence extends Persistence {
 	public List<MasterDataEntity> retrieveMasterEntities(Class clazz,
 			Short localeId) throws PersistenceException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = getSession();
 			List<MasterDataEntity> masterEntities = session.createQuery(
 					"from " + clazz.getName()).list();
 			for (MasterDataEntity masterData : masterEntities) {
@@ -175,7 +191,7 @@ public class MasterPersistence extends Persistence {
 	public MasterDataEntity retrieveMasterEntity(Short entityId, Class clazz,
 			Short localeId) throws PersistenceException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = getSession();
 			List<MasterDataEntity> masterEntity = session.createQuery(
 					"from " + clazz.getName()
 							+ " masterEntity where masterEntity.id = "
@@ -241,7 +257,7 @@ public class MasterPersistence extends Persistence {
 			throws PersistenceException {
 		List<MasterDataEntity> queryResult = null;
 		try {
-			queryResult = HibernateUtil.getSessionTL().createQuery(
+			queryResult = getSession().createQuery(
 					"from " + classPath).list();
 		}
 		catch (Exception he) {

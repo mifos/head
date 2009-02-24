@@ -29,6 +29,7 @@ import org.mifos.framework.persistence.Persistence;
 public class CustomerAttendanceType extends Persistence {
 
 	public CustomerAttendanceType() {
+	    super();
 	}
 
 	private Short attendanceId;

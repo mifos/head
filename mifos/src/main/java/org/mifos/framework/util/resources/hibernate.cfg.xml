@@ -3,8 +3,9 @@
 	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
-	<session-factory>
 
+	<session-factory>
+   
 		<!-- master data mapping files-->
 
 		<mapping resource="org/mifos/application/master/business/LookUpEntity.hbm.xml" />

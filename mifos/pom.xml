@@ -4,14 +4,35 @@
 	<groupId>org.mifos</groupId>
 	<artifactId>gazelle</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>Mifos Gazelle Application</name>
 	<parent>
 		<groupId>org.mifos</groupId>
 		<artifactId>gazelle-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 	</parent>
 
+   <repositories>
+      <repository>
+         <id>maven2-repository.dev.java.net</id>
+         <name>Java.net Repository for Maven</name>
+         <url>http://download.java.net/maven/2/</url>
+         <layout>default</layout>
+      </repository>
+      <repository>
+         <id>maven2-jboss-repository</id>
+         <name>JBoss maven2 repository</name>
+         <url>http://repository.jboss.com/maven2</url>
+         <layout>default</layout>
+      </repository>
+      <repository>
+         <id>ibiblio-maven2-repository</id>
+         <name>Ibiblio maven2 repository</name>
+         <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
+         <layout>default</layout>
+      </repository>
+   </repositories>
+   
    <dependencies>
       <dependency>
          <groupId>org.mifos</groupId>
@@ -28,9 +49,49 @@
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-test</artifactId>
-         <version>2.5.5</version>
+         <version>2.5.6</version>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-aop</artifactId>
+         <version>2.5.6</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-taglibs</artifactId>
+         <version>2.0.4</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring</artifactId>
+         <version>2.5.6</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>2.5.6</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-core</artifactId>
+         <version>2.0.4</version>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-acl</artifactId>
+          <version>2.0.4</version>
+      </dependency> 
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-beans</artifactId>
+          <version>2.5.6</version>
+      </dependency> 
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+          <version>2.5.6</version>
+      </dependency>   
    </dependencies>   
 
 	<build>

@@ -4,14 +4,14 @@
 	<groupId>org.mifos</groupId>
 	<artifactId>gazelle-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>Mifos Gazelle Parent</name>
 	
 	<modules>
 		<module>mifos</module>
 		<module>acceptanceTests</module>
 	</modules>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>

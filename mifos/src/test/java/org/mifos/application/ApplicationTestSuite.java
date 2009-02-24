@@ -1,47 +1,29 @@
-/**
-
- * ApplicationTestSuite.java    version: xxx
-
-
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
-
-
-
- * Apache License
- * Copyright (c) 2005-2006 Grameen Foundation USA
- *
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
-
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the
-
- * License.
- *
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
-
- * and how it is applied.
-
- *
-
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
 
 package org.mifos.application;
 
-import junit.framework.Test;
 import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
 import org.mifos.application.accounts.AccountTestSuite;
 import org.mifos.application.accounts.financial.FinancialTestSuite;
@@ -70,12 +52,12 @@ import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
+import org.mifos.config.ConfigTestSuite;
 import org.mifos.config.TestConfigurationManager;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceTest;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;
@@ -86,72 +68,59 @@ import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
-import org.mifos.config.ConfigTestSuite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+    ConfigTestSuite.class,
+    TestConfigurationManager.class, 
+    ProductMixTestSuite.class,
+    FastTests.class,
+    SecurityTestSuite.class,
+    CollectionSheetTestSuite.class,
+    CustomerTestSuite.class,
+    BulkEntryTestSuite.class,
+    ApplicationConfigurationTestSuite.class,         
+    MasterTestSuite.class,
+    AccountTestSuite.class,
+    FinancialTestSuite.class,
+    StringToMoneyConverterTest.class,
+    ConfigurationTestSuite.class,
+    BatchJobTestSuite.class,
+    LoanTestSuite.class,
+    SavingsTestSuite.class,
+    ProductDefinitionTestSuite.class,
+    ReportsTestSuite.class,
+    FeeTestSuite.class,
+    FieldConfigurationTestSuite.class,
+    OfficeTestSuite.class,
+    ComponentsTestSuite.class,
+    PersonnelTestSuite.class,
+    RolesAndPermissionTestSuite.class,
+    MeetingTestSuite.class,
+    LoginTestSuite.class,
+    FundTestSuite.class,
+    TestAuditLogSuite.class,
+    CheckListTestSuite.class,
+    AdminTestSuite.class,
+    StrutsTestSuite.class,
+    HibernateTest.class,
+    LatestTestAfterCheckpoint.class,
+    MayflyMiscTest.class,
+    TestMenuParser.class,
+    TestHibernateHelper.class,
+    TestPersistence.class,
+    FrameworkUtilsSuite.class,
+    HolidayTestSuite.class,
+    SurveysTestSuite.class,
+    PPITestSuite.class,
+    ApplicationAcceptedPaymentTypeTestSuite.class,
+    CollectionSheetTestSuite.class,
+    CollectionSheetReportTestSuite.class,         
+    BranchReportTestSuite.class,         
+    BranchCashConfirmationReportTestSuite.class,
+    IntegrationTests.class
+})
 public class ApplicationTestSuite extends TestSuite {
-
-	public ApplicationTestSuite() throws Exception {
-	}
-
-	public static void main(String[] args) throws Exception {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
-
-	public static Test suite() throws Exception {
-		TestSuite suite = new ApplicationTestSuite();
-		suite.addTest(ConfigTestSuite.suite());
-		// Put fast tests at the top for quick feedback if they fail
-		suite.addTest(TestConfigurationManager.suite());
-		suite.addTest(ProductMixTestSuite.suite());
-		suite.addTest(FastTests.suite());
-		suite.addTest(SecurityTestSuite.suite());
-		suite.addTest(CollectionSheetTestSuite.suite());
-		suite.addTest(CustomerTestSuite.suite());
-		suite.addTest(BulkEntryTestSuite.suite());
-		suite.addTest(ApplicationConfigurationTestSuite.suite());		
-		suite.addTest(MasterTestSuite.suite());
-		suite.addTest(AccountTestSuite.suite());
-		suite.addTest(FinancialTestSuite.suite());
-		suite.addTestSuite(StringToMoneyConverterTest.class);
-		suite.addTest(ConfigurationTestSuite.suite());
-		suite.addTest(BatchJobTestSuite.suite());
-		suite.addTest(LoanTestSuite.suite());
-		suite.addTest(SavingsTestSuite.suite());
-		suite.addTest(ProductDefinitionTestSuite.suite());
-		suite.addTest(ReportsTestSuite.suite());
-		suite.addTest(FeeTestSuite.suite());
-		suite.addTest(FieldConfigurationTestSuite.suite());
-		suite.addTest(OfficeTestSuite.suite());
-		suite.addTest(ComponentsTestSuite.suite());
-		suite.addTest(PersonnelTestSuite.suite());
-		suite.addTest(RolesAndPermissionTestSuite.suite());
-		suite.addTest(MeetingTestSuite.suite());
-		suite.addTest(LoginTestSuite.suite());
-		suite.addTest(FundTestSuite.suite());
-		suite.addTest(TestAuditLogSuite.suite());
-		suite.addTest(CheckListTestSuite.suite());
-		suite.addTest(AdminTestSuite.suite());
-		suite.addTest(StrutsTestSuite.suite());
-
-		suite.addTestSuite(HibernateTest.class);
-		suite.addTest(LatestTestAfterCheckpoint.suite());
-		suite.addTestSuite(MayflyMiscTest.class);
-
-		suite.addTestSuite(TestMenuParser.class);
-		suite.addTestSuite(TestHibernateHelper.class);
-		suite.addTestSuite(TestPersistence.class);
-		suite.addTest(FrameworkUtilsSuite.suite());
-		suite.addTest(HolidayTestSuite.suite());
-		suite.addTest(SurveysTestSuite.suite());
-		suite.addTest(PPITestSuite.suite());
-		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
-		suite.addTest(CollectionSheetTestSuite.suite());
-		suite.addTest(CollectionSheetReportTestSuite.suite());		
-		suite.addTest(BranchReportTestSuite.suite());		
-		suite.addTest(BranchCashConfirmationReportTestSuite.suite());
-
-		return suite;
-	}
+    // placeholder class for above annotations
 }
 

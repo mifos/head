@@ -83,64 +83,34 @@ import org.mifos.framework.util.helpers.StringUtils;
 public abstract class CustomerBO extends BusinessObject {
 
     private final Integer customerId;
-
 	private String globalCustNum;
-
 	private String displayName;
-
 	private String displayAddress;
-
 	private String externalId;
-
 	private Short trained;
-
 	private Date trainedDate;
-
 	private Date mfiJoiningDate;
-
 	private String searchId;
-
 	private Integer maxChildCount;
-
 	private Date customerActivationDate;
-
 	private CustomerStatusEntity customerStatus;
-
 	private Set<CustomerCustomFieldEntity> customFields;
-
 	private Set<CustomerPositionEntity> customerPositions;
-
 	private Set<CustomerFlagDetailEntity> customerFlags;
-
 	private CustomerBO parentCustomer;
-
 	private Set<AccountBO> accounts;
-
 	private final CustomerLevelEntity customerLevel;
-
 	private PersonnelBO personnel;
-
 	private final PersonnelBO formedByPersonnel;
-
 	private OfficeBO office;
-
 	private CustomerAddressDetailEntity customerAddressDetail;
-
 	private CustomerMeetingEntity customerMeeting;
-
 	private Set<CustomerHierarchyEntity> customerHierarchies;
-
 	private Set<CustomerMovementEntity> customerMovements;
-
 	private CustomerHistoricalDataEntity historicalData;
-
 	private Short blackListed;
-
 	private Set<CustomerNoteEntity> customerNotes;
-
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.CUSTOMERLOGGER);
-
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 	private Set<CustomerBO> children;
 
 	protected CustomerBO() {

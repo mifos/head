@@ -26,8 +26,6 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.application.accounts.loan.persistance.ClientDao;
-import org.mifos.application.customer.client.business.AttendanceType;
-import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 

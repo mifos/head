@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
+ */
+
 package org.mifos.framework.persistence;
 
 import java.io.Serializable;
@@ -90,30 +110,27 @@ public abstract class Persistence {
 		return query;
 	}
 
-	public Object execUniqueResultNamedQuery(String queryName,
-			Map queryParameters) throws PersistenceException {
-		try {
-			Query query = null;
-			Session session = HibernateUtil.getSessionTL();
-			if (null != session) {
-				query = session.getNamedQuery(queryName);
-				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-						.debug(
-								"The query object for the query with the name  "
-										+ queryName + " has been obtained");
-			}
+	public Object execUniqueResultNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
+        try {
+            Query query = null;
+            Session session = HibernateUtil.getSessionTL();
+            if (null != session) {
+                query = session.getNamedQuery(queryName);
+                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                        "The query object for the query with the name  " + queryName + " has been obtained");
+            }
 
-			setParametersInQuery(query, queryName, queryParameters);
-			if (null != query) {
-				return query.uniqueResult();
-			}
-			return null;
-		} catch (GenericJDBCException gje) {
-			throw new ConnectionNotFoundException(gje);
-		} catch (Exception e) {
-			throw new PersistenceException(e);
-		}
-	}
+            setParametersInQuery(query, queryName, queryParameters);
+            if (null != query) {
+                return query.uniqueResult();
+            }
+            return null;
+        } catch (GenericJDBCException gje) {
+            throw new ConnectionNotFoundException(gje);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
 
 	public static void setParametersInQuery(Query query, String queryName,
 			Map queryParameters) throws PersistenceException {

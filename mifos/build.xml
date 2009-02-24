@@ -247,12 +247,22 @@
 				<include name="*.wsdl"/>
 			</fileset>
 		</copy>
-		<copy todir="${build.src.dir}/pages/application/reports/uploads">
-			<fileset dir="${src.dir}/org/mifos/application/reports/uploads">
-				<include name="*.jrxml"/>
-				<include name="*.jasper"/>
-			</fileset>
-		</copy>
+      <copy todir="${build.src.dir}/pages/application/reports/uploads">
+         <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
+            <include name="*.jrxml"/>
+            <include name="*.jasper"/>
+         </fileset>
+      </copy>
+      <copy todir="${build.classes}">
+         <fileset dir="${basedir}/src/main/resources">
+            <include name="*.xml"/>
+         </fileset>
+      </copy>
+      <copy todir="${test.classes}">
+         <fileset dir="${basedir}/src/test/resources">
+            <include name="*.xml"/>
+         </fileset>
+      </copy>
 		<jsmin force="true">
 			<fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
 		</jsmin>
@@ -629,14 +639,17 @@
       <artifact:dependencies filesetId="maven-dependencies.fileset" useScope="runtime">
          <artifact:pom id="maven.project.dependencies" file="pom.xml" />
       </artifact:dependencies>
-		<copy todir="${webapp.output}/WEB-INF/lib">
-		  <fileset refid="maven-dependencies.fileset" />
-		  <mapper type="flatten" />
-		</copy>
+      <copy todir="${build.web-inf}/lib">
+        <fileset refid="maven-dependencies.fileset" />
+        <mapper type="flatten" />
+      </copy>
 	</target>
 
    <target name="maven_test_dependencies">
       <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
+         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+      </artifact:dependencies>
+      <artifact:dependencies filesetId="test.maven-dependencies.fileset" useScope="test">
          <artifact:pom id="maven.project.dependencies" file="pom.xml" />
       </artifact:dependencies>
    </target>
