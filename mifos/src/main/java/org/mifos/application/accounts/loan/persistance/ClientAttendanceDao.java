@@ -28,5 +28,6 @@ import org.mifos.framework.persistence.DataAccessObject;
 public interface ClientAttendanceDao extends DataAccessObject {
 
     AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException;
+    void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance) throws PersistenceException;
 
 }

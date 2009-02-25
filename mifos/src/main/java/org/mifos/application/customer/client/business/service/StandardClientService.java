@@ -68,6 +68,16 @@ public class StandardClientService implements ClientService {
         return clientAttendance;
     }
     
+    public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException {
+        for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDtos) {
+            try {
+                clientAttendanceDao.setAttendance(clientAttendanceDto.getClientId(), clientAttendanceDto.getMeetingDate(), clientAttendanceDto.getAttendance());
+            } catch (PersistenceException e) {
+                throw new ServiceException(e);
+            }
+        }
+    }
+
     public ClientDao getClientDao() {
         return this.clientDao;
     }

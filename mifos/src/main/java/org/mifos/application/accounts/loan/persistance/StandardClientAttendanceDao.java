@@ -52,5 +52,12 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         }
     }
 
+    @Override
+    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance)
+            throws PersistenceException {
+        // TODO Auto-generated method stub
+        
+    }
+
 
 }

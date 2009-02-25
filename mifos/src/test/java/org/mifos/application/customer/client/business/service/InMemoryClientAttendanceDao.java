@@ -16,6 +16,7 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
         return attendance.get(getKey(clientId, meetingDate));
     }
 
+    @Override
     public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance) {
         String key = getKey(clientId, meetingDate);
         this.attendance.put(key, attendance);
@@ -26,4 +27,8 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
         return clientId.toString() + "-" + meetingDate.toString();
     }
     
+    public int getNumberOfRecords() {
+        return attendance.size();
+    }
+
 }

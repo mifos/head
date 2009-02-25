@@ -31,6 +31,7 @@ import org.mifos.framework.exceptions.ServiceException;
 public interface ClientService extends Service {
 
     public HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException;
+    public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException;
     public ClientDao getClientDao();
     public void setClientDao(ClientDao clientDao);
     public ClientAttendanceDao getClientAttendanceDao();
