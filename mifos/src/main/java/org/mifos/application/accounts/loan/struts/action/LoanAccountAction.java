@@ -742,7 +742,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.isLoanPendingApprovalStateEnabled();
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
 				isPendingApprovalDefined, request);
-		if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+		if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
 			checkIntervalBetweenTwoDates(getTheFirstRepaymentDay(installments), loanActionForm
 					.getDisbursementDateValue(getUserContext(request)
 							.getPreferredLocale()));

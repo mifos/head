@@ -127,7 +127,7 @@ public class LoanDisbursmentAction extends BaseAction {
 
 	private void setIsRepaymentScheduleEnabled(HttpServletRequest request) throws PageExpiredException, PersistenceException {
 		SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-        		ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
+        		new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
 	}
 	
 

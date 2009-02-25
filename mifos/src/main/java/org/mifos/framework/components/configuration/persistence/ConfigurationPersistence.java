@@ -187,8 +187,8 @@ public class ConfigurationPersistence extends Persistence {
 	 * Helper method for loan repayments independent of meeting schedule.
 	 * TODO Find a better home for me
 	 */
-	public static boolean isRepaymentIndepOfMeetingEnabled() throws PersistenceException {
-		Integer repIndepOfMeetingEnabled = new ConfigurationPersistence().getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
+	public boolean isRepaymentIndepOfMeetingEnabled() throws PersistenceException {
+		Integer repIndepOfMeetingEnabled = getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
 	    return !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
 	}
 

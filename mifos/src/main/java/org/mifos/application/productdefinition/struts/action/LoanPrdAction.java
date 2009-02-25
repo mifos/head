@@ -151,7 +151,7 @@ public class LoanPrdAction extends BaseAction {
 				ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
 		loadMasterData(request);
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-        		ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
+        		new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
 		loadSelectedFeesAndFunds(new ArrayList<FeeView>(),
 				new ArrayList<FundBO>(), request);
 		prdDefLogger.debug("Load method of loan Product Action called");

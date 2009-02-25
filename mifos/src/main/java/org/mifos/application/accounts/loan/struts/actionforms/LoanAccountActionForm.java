@@ -1021,7 +1021,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			if (null != this.getRecurrenceId()) {
 				recurrenceId = new Short(this.getRecurrenceId());
 			}
-			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+			if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
 				if (StringUtils.isNullOrEmpty(this.getFrequency())) {
 					addError(errors, "",
 							LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");

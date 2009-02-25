@@ -48,7 +48,7 @@ public class ConfigurationBusinessService implements BusinessService {
 	
 	public boolean isRepaymentIndepOfMeetingEnabled() throws ServiceException {
 		try {
-			return configurationPersistence.isRepaymentIndepOfMeetingEnabled();
+			return new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 		}
 		catch (PersistenceException e) {
 			throw new ServiceException(e);

@@ -4946,7 +4946,7 @@ public class TestLoanBO extends MifosTestCase {
 			fail("The Loan object is created for invalid disbursement date");
 		}
 		catch (AccountException expected) {
-			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+			if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
 				assertEquals("exceptions.application.loan.invalidDisbursement",
 						expected.getKey());
 			}

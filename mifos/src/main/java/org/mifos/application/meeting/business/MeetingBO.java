@@ -282,7 +282,7 @@ public class MeetingBO extends BusinessObject {
 		
 		boolean isRepaymentIndepOfMeetingEnabled;
 		try {
-			isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+			isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 		} catch (PersistenceException e) {
 			throw new MeetingException(e);
 		}
@@ -306,7 +306,7 @@ public class MeetingBO extends BusinessObject {
 		
 		boolean isRepaymentIndepOfMeetingEnabled;
 		try {
-			isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+			isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 		} catch (PersistenceException e) {
 			throw new MeetingException(e);
 		}

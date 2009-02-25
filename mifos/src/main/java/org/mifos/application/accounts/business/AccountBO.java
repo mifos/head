@@ -417,7 +417,7 @@ public class AccountBO extends BusinessObject {
             Date receiptDate, Short paymentTypeId) {
         PersonnelBO personnel;
         try {
-            personnel = new PersonnelPersistence()
+            personnel = getPersonnelPersistence()
                     .getPersonnel(userContext.getId());
         } catch (PersistenceException e) {
             // Generally this is the UserContext id, which shouldn't ever
@@ -524,7 +524,7 @@ public class AccountBO extends BusinessObject {
 					"In the change status method of AccountBO:: new StatusId= "
 							+ newStatusId);
 			activationDateHelper(newStatusId);
-			MasterPersistence masterPersistence = new MasterPersistence();
+			MasterPersistence masterPersistence = getMasterPersistence();
 			AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class, newStatusId);
 			accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
@@ -534,7 +534,7 @@ public class AccountBO extends BusinessObject {
 						.getPersistentObject(AccountStateFlagEntity.class,
 								flagId);
 			}
-			PersonnelBO personnel = new PersonnelPersistence()
+			PersonnelBO personnel = getPersonnelPersistence()
 					.getPersonnel(getUserContext().getId());
 			AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 					this.getAccountState(), accountStateEntity, personnel, this);
@@ -842,7 +842,7 @@ public class AccountBO extends BusinessObject {
             Date meetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(
             		getCustomer().getCustomerId());
             
-            if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+            if (getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
             	// payment date for loans must be >= disbursement date
             	if (this instanceof LoanBO) {
             		Date apporvalDate = this.getAccountApprovalDate();
@@ -1228,7 +1228,7 @@ public class AccountBO extends BusinessObject {
 		List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();
 		for (AccountFeesEntity accountFee : getAccountFees()) {
 			if (accountFee.getFees().isPeriodic()) {
-				new FeePersistence().getFee(accountFee.getFees().getFeeId());
+				getFeePersistence().getFee(accountFee.getFees().getFeeId());
 				periodicFeeList.add(accountFee);
 			}
 		}
@@ -1516,7 +1516,7 @@ public class AccountBO extends BusinessObject {
 	
 	private PersonnelBO getLoggedInUser()throws AccountException{
 		try{
-			return new PersonnelPersistence().getPersonnel(getUserContext().getId());
+			return getPersonnelPersistence().getPersonnel(getUserContext().getId());
 		}catch(PersistenceException pe){
 			throw new AccountException(pe);
 		}
