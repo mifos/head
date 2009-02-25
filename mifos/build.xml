@@ -68,8 +68,6 @@
       <pathelement location="${build.classes}"/>
    </path>
 
-    <echo level="debug">CLASSPATH - ${java.class.path}</echo>
-
    <!-- read latest SVN revision number -->
    <target name="svn-revision">
    <loadfile property="svn.version" srcFile="${basedir}/.svn/entries" failonerror="true">
@@ -103,17 +101,6 @@
       </copy>  
    </target>
    
-   <target name="init">
-      <tstamp>
-         <format property="BUILD_ID" pattern="MMM-dd-yyyy hh:mm aa z" locale="en"/>
-      </tstamp>
-   </target>
-
-   <target name="check_config">
-      <fail message="JAVA_HOME not set. Please set JAVA_HOME" unless="env.JAVA_HOME"/>
-      <!--check the jre version-->
-   </target>
-
    <target name="make_dir">
       <mkdir dir="${dist.dir}"/>
       <mkdir dir="${build.classes}"/>
@@ -124,36 +111,11 @@
       <mkdir dir="${test.classes}"/>
    </target>
 
-   <target name="clean_src_classes" description="Cleans the source classes">
-      <delete>
-         <fileset dir="${build.classes}" includes="**/*.class"/>
-      </delete>
-   </target>
-
-   <target name="clean_test_classes" description="Cleans the test classes">
-      <delete>
-         <fileset dir="${test.classes}" includes="**/*.class"/>
-      </delete>
-   </target>
-
    <target name="clean" description="Cleans the temp build directory">
       <delete dir="${build.dir}"/>
    </target>
 
-   <target name="bkp-war" description="move old war files to the dist/bkp directory">
-      <mkdir dir="${dist.dir}/bkp"/>
-      <move todir="${dist.dir}/bkp">
-         <fileset dir="${dist.dir}">
-            <include name="${webapplication.name}-*.war"/>
-         </fileset>
-      </move>
-   </target>
-   
-   <target name="clean_all" depends="clean">
-      <delete dir="${dist.dir}"/>
-   </target>
-
-   <target name="compile" depends="init,make_dir,copy_files,maven_dependencies" 
+   <target name="compile" depends="make_dir,copy_files,maven_dependencies" 
       description="Compiles the source files">
       <javac srcdir="${src.dir}" 
              destdir="${build.classes}" 
@@ -300,17 +262,6 @@
            destfile="${dist.dir}/mifos-lib.jar" />
    </target>
 
-   <!-- The lib-x target is only for bootstrapping the API. It should go away soon -->
-   <target name="lib-x" depends="copy_files">
-      <delete file="${dist.dir}/mifos-x.jar"/>
-      <jar basedir="${build.web-inf}/classes"
-          destfile="${dist.dir}/mifos-x.jar"/>
-   </target>
-
-   <target name="api" 
-      depends="compile, copy_files, lib, lib-x" 
-      description="Build mifos API support"/>
-
    <target name="copy_test_files">
       <available file="${conf.dir}/my.HibernateTest.properties"
                 property="my.HibernateTest.properties.present" value="true"/>
@@ -371,73 +322,6 @@
          message="Unit tests failed - Report is available at ${dist.dir}"/>
    </target>
 
-   <target name="run_test_no_compile" 
-      depends="build_test_db" 
-      description="Run tests.">
-      <echo>Using database: ${testdb.name}</echo>
-      <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
-         dir="${basedir}"
-         haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
-         failureproperty="tests.failure">
-         <sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
-         <classpath>
-            <path refid="class.path"/>
-            <pathelement location="${build.classes}"/>
-            <pathelement location="${test.classes}"/>
-            <pathelement location="${test.classes}/org/mifos/config/resources"/>
-         </classpath>
-
-         <formatter type="xml" />
-         <batchtest todir="${dist.dir}" >
-            <fileset dir="${test.classes}">
-               <include name="**/${test.suite}.class" />
-            </fileset>
-         </batchtest>
-         <assertions>
-            <enable />
-         </assertions>
-      </junit>
-      <fail if="tests.failure" 
-         message="Unit tests failed - Report is available at ${dist.dir}"/>
-      <echo>Completed ${test.suite}</echo>
-   </target>
-
-   <target name ="convertTestReportToHTML" description="Convert test report to HTML format">
-      <junitreport todir="${dist.dir}">
-         <fileset dir="${dist.dir}">
-            <include name="TEST-*.xml"/>
-         </fileset>
-         <report format="frames" todir="${dist.dir}/html/"/>
-      </junitreport>
-   </target>
-
-   <!-- Profile our tests with JIP ( http://jiprof.sourceforge.net/ ).  -->
-   <target name="profile_test" 
-      depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
-      description="Profile tests">
-      <junit printsummary="on" fork="true" maxmemory="${profile.memory}" 
-         haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
-         dir="${basedir}"
-         failureproperty="tests.failure">
-         <jvmarg value="-javaagent:${lib.dir}/jiprof-1.1.jar"/>
-         <jvmarg value="-Dprofile.properties=${conf.dir}/profile.properties"/>
-         <classpath>
-            <path refid="class.path"/>
-            <pathelement location="${build.classes}"/>
-            <pathelement location="${test.classes}"/>
-         </classpath>
-
-         <formatter type="xml" />
-         <batchtest todir="${dist.dir}" >
-            <fileset dir="${test.classes}">
-               <include name="**/${test.suite}.class" />
-            </fileset>
-         </batchtest>
-      </junit>
-      <fail if="tests.failure" 
-         message="Unit tests failed - Report is available at ${dist.dir}"/>
-   </target>
-
     <target name="build" depends="compile,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
 
     <target name="war" depends="build">
@@ -451,24 +335,11 @@
       depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
       description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Does not rebuild the production database"
    />
-   
-   <target name="dist-war-rev" 
-         depends="svn-revision,clean,compile,copy_files,compile_test,copy_test_files,run_test,bkp-war,war,deploy" 
-         description="Same as the'dist' target, but appends the revision number from SVN to the war file name">
-      <copy file="${dist.dir}/${webapplication.name}.war"
-           tofile="${dist.dir}/${webapplication.name}-${svn.version}.war" />
-   </target>
 
    <target name="dist_build_db" 
       depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
       description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Rebuilds the production database"
    />
-
-   <!--<target name="test_dist" depends="compile" description="Compiles, runs test cass and prepares the final war for distribution">
-   </target>-->
-
-   <target name="clean_build" depends="check_config,clean_all,dist_build_db" 
-      description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
 
    <target name="build_production_db" description="Builds the application database without custom config data">
       <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
@@ -482,7 +353,6 @@
          <transaction src="${sql.dir}/mifosdroptables.sql" />
          <transaction src="${sql.dir}/latest-schema.sql" />
          <transaction src="${sql.dir}/latest-data.sql" />
-         <!-- <transaction src="${sql.dir}/Index.sql" /> -->
          <transaction src="${sql.dir}/init_mifos_password.sql" />
       </sql>
     </target>
@@ -501,7 +371,6 @@
          <transaction src="${sql.dir}/latest-schema.sql" />
          <transaction src="${sql.dir}/latest-data.sql" />
          <transaction src="${sql.dir}/custom_data.sql" />
-         <!-- <transaction src="${sql.dir}/Index.sql" /> -->
          <transaction src="${sql.dir}/init_mifos_password.sql" />
       </sql>
     </target>
@@ -511,7 +380,6 @@
       <sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
          userid="${testdb.user}" password="${testdb.pwd}"
          classpath="${database.driver.jar}">
-         <!--transaction src="${sql.dir}/create.sql"/-->
          <transaction>
             Drop database if exists ${testdb.name};
             create database ${testdb.name};
@@ -527,81 +395,6 @@
 
          <transaction src="${sql.dir}/testdbinsertionscript.sql" />
       </sql>
-   </target>
-
-    <target name="run_test_parallel_2"
-      depends="compile,copy_files,compile_test,copy_test_files">
-      <parallel>
-         <antcall target="run_test_no_compile">
-            <param name="testdb.name" value="test1"/>
-            <param name="test.suite" value="ApplicationTestSets1and2"/>
-         </antcall>
-         <antcall target="run_test_no_compile">
-            <param name="testdb.name" value="test2"/>
-            <param name="test.suite" value="ApplicationTestSets3and4"/>
-         </antcall>
-      </parallel>
-   </target>
-
-   <target name="run_test_parallel_2x2"
-      depends="compile,copy_files,compile_test,copy_test_files">
-      <parallel>
-         <sequential>
-            <antcall target="run_test_no_compile">
-               <param name="testdb.name" value="test1"/>
-               <param name="test.suite" value="ApplicationTestSet1"/>
-            </antcall>
-            <antcall target="run_test_no_compile">
-               <param name="testdb.name" value="test1"/>
-               <param name="test.suite" value="ApplicationTestSet2"/>
-            </antcall>
-         </sequential>
-         <sequential>
-            <antcall target="run_test_no_compile">
-               <param name="testdb.name" value="test2"/>
-               <param name="test.suite" value="ApplicationTestSet3"/>
-            </antcall>
-            <antcall target="run_test_no_compile">
-               <param name="testdb.name" value="test2"/>
-               <param name="test.suite" value="ApplicationTestSet4"/>
-            </antcall>
-         </sequential>
-      </parallel>
-   </target>
-   
-   <target name="run_test_parallel_4"
-      depends="compile,copy_files,compile_test,copy_test_files">
-      <parallel>
-         <antcall target="run_test_no_compile">
-            <param name="testdb.name" value="test1"/>
-            <param name="test.suite" value="ApplicationTestSet1" />
-         </antcall>
-         <antcall target="run_test_no_compile">
-            <param name="testdb.name" value="test2" />
-            <param name="test.suite" value="ApplicationTestSet2" />
-         </antcall>
-         <antcall target="run_test_no_compile">
-            <param name="testdb.name" value="test3" />
-            <param name="test.suite" value="ApplicationTestSet3" />
-         </antcall>
-         <antcall target="run_test_no_compile">
-            <param name="testdb.name" value="test4" />
-            <param name="test.suite" value="ApplicationTestSet4" />
-         </antcall>
-      </parallel>
-   </target>
-
-   <!-- For example, "ant -Ddowngrade.to=76 downgrade" -->
-   <target name="downgrade" depends="compile" description="Downgrade to revision downgrade.to">
-      <java classname="org.mifos.framework.persistence.Downgrader"
-            classpathref="class.path"
-            fork="yes" failonerror="yes">
-         <arg value="${downgrade.to}"/>
-         <arg value="jdbc:mysql://${db.ip}:${db.port}/${db.name}" />
-         <arg value="${db.driver}" />
-         <arg value="${db.user}"/>
-         <arg value="${db.pwd}"/>
-      </java>
    </target>
 
    <target name="deploy" depends="war">
