@@ -109,7 +109,21 @@ public abstract class CustomerBO extends BusinessObject {
 	private Set<CustomerNoteEntity> customerNotes;
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 	private Set<CustomerBO> children;
-	
+
+    /*
+     * Injected Persistence classes
+     * 
+     * DO NOT ACCESS THESE MEMBERS DIRECTLY!  ALWAYS USE THE GETTER!
+     * 
+     * The Persistence classes below are used by this class
+     * and can be injected via a setter for testing purposes.
+     * In order for this mechanism to work correctly, the getter
+     * must be used to access them because the getter will 
+     * initialize the Persistence class if it has not been injected.
+     * 
+     * Long term these references to Persistence classes should 
+     * probably be eliminated. 
+     */
 	private CustomerPersistence customerPersistence = null;
 	private PersonnelPersistence personnelPersistence = null;
 	private MasterPersistence masterPersistence = null;

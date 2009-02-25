@@ -64,7 +64,21 @@ import org.mifos.framework.util.helpers.Money;
 public class GroupBO extends CustomerBO {
 
 	private GroupPerformanceHistoryEntity groupPerformanceHistory;
-	
+
+    /*
+     * Injected Persistence classes
+     * 
+     * DO NOT ACCESS THESE MEMBERS DIRECTLY!  ALWAYS USE THE GETTER!
+     * 
+     * The Persistence classes below are used by this class
+     * and can be injected via a setter for testing purposes.
+     * In order for this mechanism to work correctly, the getter
+     * must be used to access them because the getter will 
+     * initialize the Persistence class if it has not been injected.
+     * 
+     * Long term these references to Persistence classes should 
+     * probably be eliminated. 
+     */
 	private GroupPersistence groupPersistence = null;
 	private OfficePersistence officePersistence = null;
 
