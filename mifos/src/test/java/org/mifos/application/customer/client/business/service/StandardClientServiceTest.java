@@ -33,7 +33,7 @@ import org.mifos.application.customer.client.business.AttendanceType;
 
 public class StandardClientServiceTest extends TestCase {
 
-    private int client3Id = 123456;
+    private int client1Id = 123456;
     private AttendanceType client1Attendance = AttendanceType.PRESENT;
     private int client2Id = 123457;
     private AttendanceType client2Attendance = AttendanceType.ABSENT;
@@ -45,7 +45,7 @@ public class StandardClientServiceTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
         clientAttendanceDao = new InMemoryClientAttendanceDao();
-        clientAttendanceDao.setAttendance(client3Id, meetingDate, client1Attendance);
+        clientAttendanceDao.setAttendance(client1Id, meetingDate, client1Attendance);
         clientAttendanceDao.setAttendance(client2Id, meetingDate, client2Attendance);
         clientService = new StandardClientService();
         clientService.setClientAttendanceDao(clientAttendanceDao);
@@ -64,25 +64,25 @@ public class StandardClientServiceTest extends TestCase {
 
     public void testGetClientAttendanceOneId() throws Exception {
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-        clientAttendanceDtos.add(getClientAttendanceDto(client3Id, meetingDate, null));
+        clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, null));
         HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService.getClientAttendance(clientAttendanceDtos);
         assertEquals(1, clientAttendance.size());
-        ClientAttendanceDto clientAttendanceDto = clientAttendance.get(client3Id);
+        ClientAttendanceDto clientAttendanceDto = clientAttendance.get(client1Id);
         assertNotNull(clientAttendanceDto);
-        assertEquals(client3Id, (int) clientAttendanceDto.getClientId());
+        assertEquals(client1Id, (int) clientAttendanceDto.getClientId());
         assertEquals(AttendanceType.PRESENT, clientAttendanceDto.getAttendance());
     }
 
 
     public void testGetClientAttendanceTwoIds() throws Exception {
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-        clientAttendanceDtos.add(getClientAttendanceDto(client3Id, meetingDate, null));
+        clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, null));
         clientAttendanceDtos.add(getClientAttendanceDto(client2Id, meetingDate, null));
         HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService.getClientAttendance(clientAttendanceDtos);
         assertEquals(2, clientAttendance.size());
-        assertNotNull(clientAttendance.get(client3Id));
-        assertEquals(client3Id, (int) clientAttendance.get(client3Id).getClientId());
-        assertEquals(client1Attendance, clientAttendance.get(client3Id).getAttendance());
+        assertNotNull(clientAttendance.get(client1Id));
+        assertEquals(client1Id, (int) clientAttendance.get(client1Id).getClientId());
+        assertEquals(client1Attendance, clientAttendance.get(client1Id).getAttendance());
         assertNotNull(clientAttendance.get(client2Id));
         assertEquals(client2Id, (int) clientAttendance.get(client2Id).getClientId());
         assertEquals(client2Attendance, clientAttendance.get(client2Id).getAttendance());
@@ -129,6 +129,18 @@ public class StandardClientServiceTest extends TestCase {
         Assert.assertEquals(meetingDate3, actualClientAttendanceDtos.get(client3Id).getMeetingDate());
         Assert.assertEquals(client4Attendance, actualClientAttendanceDtos.get(client4Id).getAttendance());
         Assert.assertEquals(meetingDate4, actualClientAttendanceDtos.get(client4Id).getMeetingDate());
+    }
+
+    public void testSetClientAttendanceReplaceOneId() throws Exception {
+        int expectedNumberOfRecords = clientAttendanceDao.getNumberOfRecords();
+        List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
+        AttendanceType expectedAttendance = AttendanceType.APPROVED_LEAVE;
+        clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, expectedAttendance));
+        clientService.setClientAttendance(clientAttendanceDtos);
+        int actualNumberOfRecords = clientAttendanceDao.getNumberOfRecords();
+        Assert.assertEquals(expectedNumberOfRecords, actualNumberOfRecords);
+        Map<Integer, ClientAttendanceDto> actualClientAttendanceDtos = clientService.getClientAttendance(clientAttendanceDtos);
+        Assert.assertEquals(expectedAttendance, actualClientAttendanceDtos.get(client1Id).getAttendance());
     }
 
     private ClientAttendanceDto getClientAttendanceDto(int clientId, LocalDate meetingDate, AttendanceType attendance) {
