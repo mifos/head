@@ -111,7 +111,47 @@ public class AccountBO extends BusinessObject {
 	
 	private Integer offsettingAllowable;
 
-	protected AccountBO() {
+	/*
+	 * Injected Persistence classes
+	 * 
+	 * DO NOT ACCESS THESE MEMBERS DIRECTLY!  ALWAYS USE THE GETTER!
+	 * 
+	 * The Persistence classes below are used by this class
+	 * and can be injected via a setter for testing purposes.
+	 * In order for this mechanism to work correctly, the getter
+	 * must be used to access them because the getter will 
+	 * initialize the Persistence class if it has not been injected.
+	 * 
+	 * Long term these references to Persistence classes should 
+	 * probably be eliminated. 
+	 */
+	private AccountPersistence accountPersistence = null;
+	private CustomerPersistence customerPersistence = null;
+
+	
+	public AccountPersistence getAccountPersistence() {
+	    if (null == accountPersistence) {
+	        accountPersistence = new AccountPersistence();
+	    }
+        return accountPersistence;
+    }
+
+    public void setAccountPersistence(AccountPersistence accountPersistence) {
+        this.accountPersistence = accountPersistence;
+    }
+
+    public CustomerPersistence getCustomerPersistence() {
+        if (null == customerPersistence) {
+            customerPersistence = new CustomerPersistence();
+        }
+        return customerPersistence;
+    }
+
+    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
+        this.customerPersistence = customerPersistence;
+    }
+
+    protected AccountBO() {
 		this(null);
 	}
 
@@ -313,7 +353,7 @@ public class AccountBO extends BusinessObject {
 		buildFinancialEntries(accountPayment.getAccountTrxns());
         if (persistChanges) {
             try {
-                (new AccountPersistence()).createOrUpdate(this);
+                getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
@@ -367,7 +407,7 @@ public class AccountBO extends BusinessObject {
 					"Adjustment is possible hence attempting to adjust.");
 			adjustPayment(getLastPmnt(), getLoggedInUser(), adjustmentComment);
 			try {
-				(new AccountPersistence()).createOrUpdate(this);
+				getAccountPersistence().createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new AccountException(
 						AccountExceptionConstants.CANNOTADJUST, e);
@@ -384,7 +424,7 @@ public class AccountBO extends BusinessObject {
 			
 			adjustPayment(getLastPmntToBeAdjusted(), getLoggedInUser(), adjustmentComment);
 			try {
-				(new AccountPersistence()).createOrUpdate(this);
+				getAccountPersistence().createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new AccountException(
 						AccountExceptionConstants.CANNOTADJUST, e);
@@ -414,7 +454,7 @@ public class AccountBO extends BusinessObject {
 			}
 			regenerateFutureInstallments(installmentId);
 			try {
-				(new AccountPersistence()).createOrUpdate(this);
+				getAccountPersistence().createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
@@ -752,7 +792,7 @@ public class AccountBO extends BusinessObject {
 
     public boolean isTrxnDateBeforePreviousMeetingDateAllowed(Date trxnDate) {
         try {
-            Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(
+            Date meetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(
             		getCustomer().getCustomerId());
             
             if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
@@ -816,7 +856,7 @@ public class AccountBO extends BusinessObject {
 	public void update() throws AccountException {
 		setUpdateDetails();
 		try {
-			(new AccountPersistence()).createOrUpdate(this);
+			getAccountPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -1153,7 +1193,7 @@ public class AccountBO extends BusinessObject {
 		for (AccountActionDateEntity accountActionDateEntity : futureInstllments) {
 			accountActionDates.remove(accountActionDateEntity);
 			try {
-				(new AccountPersistence()).delete(accountActionDateEntity);
+				getAccountPersistence().delete(accountActionDateEntity);
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
