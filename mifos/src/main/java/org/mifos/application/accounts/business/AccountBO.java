@@ -81,63 +81,77 @@ public class AccountBO extends BusinessObject {
 
     private final Integer accountId;
 
-	protected String globalAccountNum;
+    protected String globalAccountNum;
 
-	protected final AccountTypeEntity accountType;
+    protected final AccountTypeEntity accountType;
 
-	protected final CustomerBO customer;
+    protected final CustomerBO customer;
 
-	protected final OfficeBO office;
+    protected final OfficeBO office;
 
-	protected PersonnelBO personnel;
+    protected PersonnelBO personnel;
 
-	protected Set<AccountNotesEntity> accountNotes;
+    protected Set<AccountNotesEntity> accountNotes;
 
-	protected Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
+    protected Set<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
 
-	private AccountStateEntity accountState;
+    private AccountStateEntity accountState;
 
-	private Set<AccountFlagMapping> accountFlags;
+    private Set<AccountFlagMapping> accountFlags;
 
-	private Set<AccountFeesEntity> accountFees;
+    private Set<AccountFeesEntity> accountFees;
 
-	private Set<AccountActionDateEntity> accountActionDates;
+    private Set<AccountActionDateEntity> accountActionDates;
 
-	private Set<AccountPaymentEntity> accountPayments;
+    private Set<AccountPaymentEntity> accountPayments;
 
-	private Set<AccountCustomFieldEntity> accountCustomFields;
+    private Set<AccountCustomFieldEntity> accountCustomFields;
 
-	private Date closedDate;
-	
-	private Integer offsettingAllowable;
+    private Date closedDate;
 
-	/*
-	 * Injected Persistence classes
-	 * 
-	 * DO NOT ACCESS THESE MEMBERS DIRECTLY!  ALWAYS USE THE GETTER!
-	 * 
-	 * The Persistence classes below are used by this class
-	 * and can be injected via a setter for testing purposes.
-	 * In order for this mechanism to work correctly, the getter
-	 * must be used to access them because the getter will 
-	 * initialize the Persistence class if it has not been injected.
-	 * 
-	 * Long term these references to Persistence classes should 
-	 * probably be eliminated. 
-	 */
-	private AccountPersistence accountPersistence = null;
-	private CustomerPersistence customerPersistence = null;
+    private Integer offsettingAllowable;
 
-	
-	public AccountPersistence getAccountPersistence() {
-	    if (null == accountPersistence) {
-	        accountPersistence = new AccountPersistence();
-	    }
+    /*
+     * Injected Persistence classes
+     * 
+     * DO NOT ACCESS THESE MEMBERS DIRECTLY!  ALWAYS USE THE GETTER!
+     * 
+     * The Persistence classes below are used by this class
+     * and can be injected via a setter for testing purposes.
+     * In order for this mechanism to work correctly, the getter
+     * must be used to access them because the getter will 
+     * initialize the Persistence class if it has not been injected.
+     * 
+     * Long term these references to Persistence classes should 
+     * probably be eliminated. 
+     */
+    private AccountPersistence accountPersistence = null;
+    private ConfigurationPersistence configurationPersistence = null;
+    private CustomerPersistence customerPersistence = null;
+    private FeePersistence feePersistence = null;
+    private MasterPersistence masterPersistence = null;
+    private PersonnelPersistence personnelPersistence = null;
+
+    public AccountPersistence getAccountPersistence() {
+        if (null == accountPersistence) {
+            accountPersistence = new AccountPersistence();
+        }
         return accountPersistence;
     }
 
     public void setAccountPersistence(AccountPersistence accountPersistence) {
         this.accountPersistence = accountPersistence;
+    }
+    
+    public ConfigurationPersistence getConfigurationPersistence() {
+        if (null == configurationPersistence) {
+            configurationPersistence = new ConfigurationPersistence();
+        }
+        return configurationPersistence;
+    }
+
+    public void setConfigurationPersistence(ConfigurationPersistence configurationPersistence) {
+        this.configurationPersistence = configurationPersistence;
     }
 
     public CustomerPersistence getCustomerPersistence() {
@@ -149,6 +163,39 @@ public class AccountBO extends BusinessObject {
 
     public void setCustomerPersistence(CustomerPersistence customerPersistence) {
         this.customerPersistence = customerPersistence;
+    }
+
+    public FeePersistence getFeePersistence() {
+        if (null == feePersistence) {
+            feePersistence = new FeePersistence();
+        }
+        return feePersistence;
+    }
+
+    public void setFeePersistence(FeePersistence feePersistence) {
+        this.feePersistence = feePersistence;
+    }
+
+    public MasterPersistence getMasterPersistence() {
+        if (null == masterPersistence) {
+            masterPersistence = new MasterPersistence();
+        }
+        return masterPersistence;
+    }
+
+    public void setMasterPersistence(MasterPersistence masterPersistence) {
+        this.masterPersistence = masterPersistence;
+    }
+
+    public PersonnelPersistence getPersonnelPersistence() {
+        if (null == personnelPersistence) {
+            personnelPersistence = new PersonnelPersistence();
+        }
+        return personnelPersistence;
+    }
+
+    public void setPersonnelPersistence(PersonnelPersistence personnelPersistence) {
+        this.personnelPersistence = personnelPersistence;
     }
 
     protected AccountBO() {
