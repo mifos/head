@@ -91,6 +91,5 @@
 	<classpathentry kind="lib" path="mifos/lib/xmlunit-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/cheetah-common-0.0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="mifos/build-lib/maven-ant-tasks-2.0.9.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/spring-modules-cache.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
