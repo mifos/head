@@ -1,448 +1,448 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:artifact="urn:maven-artifact-ant" name="mifos" default="dist" basedir=".">
 
-  <path id="maven-ant-tasks.classpath" path="build-lib/maven-ant-tasks-2.0.9.jar" />
-  <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
-           uri="urn:maven-artifact-ant"
-           classpathref="maven-ant-tasks.classpath" />
-   
-   <property environment="env"/>
-   <property name="build.compiler" value="modern"/>
-   <property name="java.home" value="${env.JAVA_HOME}"/>
-   <property name="src.dir" value="${basedir}/src/main/java"/>
-   <property name="test.dir" value="${basedir}/src/test/java"/>
-   <property name="conf.dir" value="${src.dir}/org/mifos/conf"/>
+    <path id="maven-ant-tasks.classpath" path="build-lib/maven-ant-tasks-2.0.9.jar" />
+    <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+        uri="urn:maven-artifact-ant"
+        classpathref="maven-ant-tasks.classpath" />
 
-   <!-- my.build.properties is your way to override
-      properties which are not supposed to be
-      checked in.  If it doesn't exist, ant
-      will just skip it.  Properties defined
-      there override those defined in build.properties
-      or in this file -->
-   <property file="${conf.dir}/my.build.properties"/>
-   <property file="${conf.dir}/build.properties"/>
+    <property environment="env"/>
+    <property name="build.compiler" value="modern"/>
+    <property name="java.home" value="${env.JAVA_HOME}"/>
+    <property name="src.dir" value="${basedir}/src/main/java"/>
+    <property name="test.dir" value="${basedir}/src/test/java"/>
+    <property name="conf.dir" value="${src.dir}/org/mifos/conf"/>
 
-   <!-- Which suite to run in the run_test an  d profile_test
-        targets.  Normally the whole suite, but can be
-        set to a sub-suite or individual test, for example by specifying
-        -Dtest.suite=FastTests on the ant command line.  -->
-   <property name="test.suite" value="ApplicationTestSuite" />
+    <!-- my.build.properties is your way to override
+    properties which are not supposed to be
+    checked in.  If it doesn't exist, ant
+    will just skip it.  Properties defined
+    there override those defined in build.properties
+    or in this file -->
+    <property file="${conf.dir}/my.build.properties"/>
+    <property file="${conf.dir}/build.properties"/>
 
-   <!-- Probably need about 550M for 64-bit systems 
-        (instead of 350M for 32-bit). -->
-   <property name="test.memory" value="1024M" />
-   <!-- 550M wasn't enough for me, needs more experimentation -->
-   <property name="profile.memory" value="550M" />
+    <!-- Which suite to run in the run_test an  d profile_test
+    targets.  Normally the whole suite, but can be
+    set to a sub-suite or individual test, for example by specifying
+    -Dtest.suite=FastTests on the ant command line.  -->
+    <property name="test.suite" value="ApplicationTestSuite" />
 
-   <property name="lib.dir" value="${basedir}/lib"/>
-   <property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
-   <property name="birt.report.design.dir" value="${basedir}/BirtReportDesign"/>
-   <property name="birt.report.resource.dir" value="${basedir}/BirtReportResource"/>
-   <property name="sql.dir" value="${src.dir}/org/mifos/framework/persistence/sql"/>
-   <property name="build.dir" value="${basedir}/target"/>
-   <property name="dist.dir" value="${basedir}/dist"/>
+    <!-- Probably need about 550M for 64-bit systems 
+    (instead of 350M for 32-bit). -->
+    <property name="test.memory" value="1024M" />
+    <!-- 550M wasn't enough for me, needs more experimentation -->
+    <property name="profile.memory" value="550M" />
 
-   <!--Helper path for building, copying resources etc-->
-   <property name="doc.dir" value="${dist.dir}/docs"/>
-   <property name="build.src.dir" value="${build.dir}/mifos"/>
-   <property name="build.test.dir" value="${build.dir}/test-classes"/>
-   <property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
-   <property name="build.classes" value="${build.web-inf}/classes"/>
-   <property name="build.lib" value="${build.dir}/lib"/>
-   <property name="build.adminReport" value="${build.src.dir}/adminReport"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
+    <property name="birt.report.design.dir" value="${basedir}/BirtReportDesign"/>
+    <property name="birt.report.resource.dir" value="${basedir}/BirtReportResource"/>
+    <property name="sql.dir" value="${src.dir}/org/mifos/framework/persistence/sql"/>
+    <property name="build.dir" value="${basedir}/target"/>
+    <property name="dist.dir" value="${basedir}/dist"/>
 
-   <property name="test.classes" value="${build.test.dir}"/>
+    <!--Helper path for building, copying resources etc-->
+    <property name="doc.dir" value="${dist.dir}/docs"/>
+    <property name="build.src.dir" value="${build.dir}/mifos"/>
+    <property name="build.test.dir" value="${build.dir}/test-classes"/>
+    <property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
+    <property name="build.classes" value="${build.web-inf}/classes"/>
+    <property name="build.lib" value="${build.dir}/lib"/>
+    <property name="build.adminReport" value="${build.src.dir}/adminReport"/>
 
-   <property name="current.release.number" value="1.1.0"/>
-   <property name="current.release.name" value="mifos_v${current.release.number}"/>
-   
-   <property name="db.driver" value="com.mysql.jdbc.Driver"/>
-   <property name="database.driver.jar" 
-      value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
-   
-   <path id="class.path">
-      <fileset dir="${lib.dir}">
-         <include name="**/*.jar"/>
-      </fileset>
-      <pathelement location="${build.src.dir}"/>
-      <pathelement location="${build.classes}"/>
-   </path>
+    <property name="test.classes" value="${build.test.dir}"/>
 
-   <!-- read latest SVN revision number -->
-   <target name="svn-revision">
-   <loadfile property="svn.version" srcFile="${basedir}/.svn/entries" failonerror="true">
-      <filterchain>
-         <headfilter lines="6"/>
-         <tokenfilter>
-            <filetokenizer/>
-            <replaceregex pattern=".*[\r\n]+dir[\r\n]+([0-9]+)[\r\n]+http.*"
-               flags="s" replace="\1"/>                               
-         </tokenfilter>
-      </filterchain>
-   </loadfile>
-   <loadfile property="svn.branch" srcFile="${basedir}/.svn/entries" failonerror="true">
-      <filterchain>
-         <headfilter lines="6"/>
-         <tokenfilter>
-            <filetokenizer/>
-                 <replaceregex pattern=".*[\r\n]+https://mifos\.dev\.java\.net/svn/mifos(/branches|/tags)?/([^/]*)/.*"
-               flags="s" replace="\2"/>                               
-         </tokenfilter>
-      </filterchain>
-   </loadfile>
-   </target>
-   
-   <target name="copy-revision" depends="svn-revision, maven_dependencies" description="Creates revision property file">
-      <copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
-         <filterset>
-            <filter token="revision" value="${svn.version}" />
-            <filter token="branch" value="${svn.branch}" />
-         </filterset>
-      </copy>  
-   </target>
-   
-   <target name="make_dir">
-      <mkdir dir="${dist.dir}"/>
-      <mkdir dir="${build.classes}"/>
-      <mkdir dir="${build.adminReport}"/>
-      <mkdir dir="${build.web-inf}"/>
-      <mkdir dir="${build.web-inf}/services/MifosService/META-INF"/>
-      <mkdir dir="${build.web-inf}/services/MifosService/modules"/>
-      <mkdir dir="${test.classes}"/>
-   </target>
+    <property name="current.release.number" value="1.1.0"/>
+    <property name="current.release.name" value="mifos_v${current.release.number}"/>
 
-   <target name="clean" description="Cleans the temp build directory">
-      <delete dir="${build.dir}"/>
-   </target>
+    <property name="db.driver" value="com.mysql.jdbc.Driver"/>
+    <property name="database.driver.jar" 
+        value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
 
-   <target name="compile" depends="make_dir,copy_files,maven_dependencies" 
-      description="Compiles the source files">
-      <javac srcdir="${src.dir}" 
-             destdir="${build.classes}" 
-             debug="${debug.flag}"
-             target="1.5"
-             includes="**/*.java"
-             excludes="${global.exclude}">
-         <classpath>
-            <path refid="class.path"/>
-            <path refid="maven-dependencies.classpath"/>
-         </classpath>
-      </javac>
-   </target>
+    <path id="class.path">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${build.src.dir}"/>
+        <pathelement location="${build.classes}"/>
+    </path>
 
-   <target name="compile_test" depends="compile,maven_test_dependencies" 
-      description="Compiles the test files">
-      <javac srcdir="${test.dir}" 
-             destdir="${test.classes}" 
-             debug="${debug.flag}"
-             includes="**/*.java"
-             excludes="${global.exclude}">
-         <classpath>
-            <path refid="class.path"/>
-            <pathelement location="{build.classes}"/>
-            <path refid="maven-dependencies.classpath"/>
-            <path refid="test.maven-dependencies.classpath"/>
-         </classpath>
+    <!-- read latest SVN revision number -->
+    <target name="svn-revision">
+        <loadfile property="svn.version" srcFile="${basedir}/.svn/entries" failonerror="true">
+            <filterchain>
+                <headfilter lines="6"/>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replaceregex pattern=".*[\r\n]+dir[\r\n]+([0-9]+)[\r\n]+http.*"
+                        flags="s" replace="\1"/>                               
+                </tokenfilter>
+            </filterchain>
+        </loadfile>
+        <loadfile property="svn.branch" srcFile="${basedir}/.svn/entries" failonerror="true">
+            <filterchain>
+                <headfilter lines="6"/>
+                <tokenfilter>
+                    <filetokenizer/>
+                    <replaceregex pattern=".*[\r\n]+https://mifos\.dev\.java\.net/svn/mifos(/branches|/tags)?/([^/]*)/.*"
+                        flags="s" replace="\2"/>                               
+                </tokenfilter>
+            </filterchain>
+        </loadfile>
+    </target>
 
-      </javac>
-   </target>
-   
-   <!-- task to minify javascript files (remove comments & whitespace for faster downloads) -->
-   <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin.0.2.2.jar"/>
+    <target name="copy-revision" depends="svn-revision, maven_dependencies" description="Creates revision property file">
+        <copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
+            <filterset>
+                <filter token="revision" value="${svn.version}" />
+                <filter token="branch" value="${svn.branch}" />
+            </filterset>
+        </copy>  
+    </target>
 
-   <!--
-   Note that my.hibernate.properties and my.HibernateTest.properties,
-   unlike my.build.properties, entirely override the corresponding
-   file if they are present.
-   -->
-   <target name="copy_files" depends="copy-revision">
-      <available file="${conf.dir}/my.hibernate.properties"
-                property="my.hibernate.properties.present" value="true" />
-      <copy todir="${build.web-inf}/lib">
-         <fileset dir="${lib.dir}" 
-            excludes="easymock*.jar, javax.servlet.jar, jaxb-xjc.jar, jetty*.jar, jsp-api.jar, junit*.jar,
-               mayfly*.jar, servlet-api-2.5-6.0.0.jar, strutstest-2.1.3.jar, trang.jar, trangtask.jar">
-            <exclude name="*.tld"/>
-         </fileset>
-      </copy>
-      <copy todir="${build.web-inf}">
-         <fileset dir="${src.dir}/org/mifos/WEB-INF">
-            <exclude name="web.xml"/>
-         </fileset>
-      </copy>
-      <copy todir="${build.classes}/org/mifos/framework/persistence">
-         <fileset dir="${sql.dir}">
-            <include name="upgrade_to_*.sql" />
-         </fileset>
-      </copy>
-      <copy todir="${build.src.dir}/pages">
-         <fileset dir="${src.dir}/org/mifos/doc-root"/>
-      </copy>
+    <target name="make_dir">
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.adminReport}"/>
+        <mkdir dir="${build.web-inf}"/>
+        <mkdir dir="${build.web-inf}/services/MifosService/META-INF"/>
+        <mkdir dir="${build.web-inf}/services/MifosService/modules"/>
+        <mkdir dir="${test.classes}"/>
+    </target>
 
-      <copy todir="${build.classes}/org/mifos/application">
-         <fileset dir="${src.dir}/org/mifos/application">
-            <exclude name="**/*.java"/>
-         </fileset>
-      </copy>
-      <copy todir="${build.classes}/org/mifos/framework">
-         <fileset dir="${src.dir}/org/mifos/framework">
-            <exclude name="**/*.java"/>
-         </fileset>
-      </copy>
-      <copy todir="${build.classes}/org/mifos/config">
-         <fileset dir="${src.dir}/org/mifos/config">
-            <exclude name="**/*.java"/>
-         </fileset>
-      </copy>
-      <copy tofile="${build.classes}/org/mifos/conf/hibernate.properties" verbose="true">
-         <fileset dir="${conf.dir}">
-            <include name="my.hibernate.properties" 
-                  if="my.hibernate.properties.present" />
-            <include name="hibernate.properties" 
-                  unless="my.hibernate.properties.present" />
-         </fileset>
-      </copy>
-      <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/conf"/>
-      <copy todir="${build.web-inf}/services/MifosService/META-INF">
-         <fileset dir="${src.dir}/org/mifos/api/resources">
-            <include name="services.xml"/>
-            <include name="*.wsdl"/>
-         </fileset>
-      </copy>
-      <copy todir="${build.src.dir}/pages/application/reports/uploads">
-         <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
-            <include name="*.jrxml"/>
-            <include name="*.jasper"/>
-         </fileset>
-      </copy>
-      <copy todir="${build.classes}">
-         <fileset dir="${basedir}/src/main/resources">
-            <include name="**/*.xml"/>
-            <include name="**/*.xsd"/>
-         </fileset>
-      </copy>
-      <copy todir="${test.classes}">
-         <fileset dir="${basedir}/src/test/resources">
-            <include name="**/*.xml"/>
-         </fileset>
-      </copy>
-      <jsmin force="true">
-         <fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
-      </jsmin>
-   </target>
+    <target name="clean" description="Cleans the temp build directory">
+        <delete dir="${build.dir}"/>
+    </target>
 
-   <target name="integrate_birt_web_viewer">
-      <copy todir="${build.src.dir}">
-         <fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
-      </copy>
-      <concat destfile="${build.web-inf}/web.xml" append="no" force="yes" >
-         <fileset dir="${src.dir}/org/mifos/WEB-INF" includes="web.xml"/>
-         <fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
-      </concat>
-      <replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="   &lt;!-- section: birt web viewer --&gt;" />
-   </target>
+    <target name="compile" depends="make_dir,copy_files,maven_dependencies" 
+        description="Compiles the source files">
+        <javac srcdir="${src.dir}" 
+            destdir="${build.classes}" 
+            debug="${debug.flag}"
+            target="1.5"
+            includes="**/*.java"
+            excludes="${global.exclude}">
+            <classpath>
+                <path refid="class.path"/>
+                <path refid="maven-dependencies.classpath"/>
+            </classpath>
+        </javac>
+    </target>
 
-   <target name="copy_birt_reports">
-      <copy todir="${build.src.dir}/report">
-         <fileset dir="${birt.report.design.dir}" />
-      </copy>
-      <copy todir="${build.src.dir}/report/BirtReportResource">
-         <fileset dir="${birt.report.resource.dir}" />
-      </copy>  
-   </target>
+    <target name="compile_test" depends="compile,maven_test_dependencies" 
+        description="Compiles the test files">
+        <javac srcdir="${test.dir}" 
+            destdir="${test.classes}" 
+            debug="${debug.flag}"
+            includes="**/*.java"
+            excludes="${global.exclude}">
+            <classpath>
+                <path refid="class.path"/>
+                <pathelement location="{build.classes}"/>
+                <path refid="maven-dependencies.classpath"/>
+                <path refid="test.maven-dependencies.classpath"/>
+            </classpath>
 
-   <target name="lib" depends="compile" description="Build the mifos library">
-      <mkdir dir="${build.lib}"/>
-      <copy todir="${build.lib}">
-         <fileset dir="${build.classes}">
-            <exclude name="**/struts/**"/>
-         </fileset>
-      </copy>
-      <jar basedir="${build.lib}"
-           destfile="${dist.dir}/mifos-lib.jar" />
-   </target>
+        </javac>
+    </target>
 
-   <target name="copy_test_files">
-      <available file="${conf.dir}/my.HibernateTest.properties"
-                property="my.HibernateTest.properties.present" value="true"/>
-      <copy todir="${test.classes}">
-         <fileset dir="${test.dir}">
-            <exclude name="**/*.java"/>
-         </fileset>
-      </copy>
+    <!-- task to minify javascript files (remove comments & whitespace for faster downloads) -->
+    <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin.0.2.2.jar"/>
 
-      <copy todir="${test.classes}/WEB-INF">
-         <fileset dir="${src.dir}/org/mifos/WEB-INF">
-            <exclude name="**/*.java"/>
-         </fileset>
-      </copy>
-      <copy tofile="${test.classes}/org/mifos/conf/HibernateTest.properties" verbose="true">
-         <fileset dir="${conf.dir}">
-            <include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
-            <include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
-         </fileset>
-      </copy>
-      <copy todir="${test.classes}/org/mifos/config">
-               <fileset dir="${test.dir}/org/mifos/config">
-                  <exclude name="**/*.java"/>
-               </fileset>
-      </copy>
-       
-
-   </target>
-
-   <target name="run_test" 
-      depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
-      description="Run tests.">
-      <echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
-      <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
-         dir="${basedir}"
-         haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
-         failureproperty="tests.failure">
-         <sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
-         <classpath>
-            <path refid="class.path"/>
-            <pathelement location="${build.classes}"/>
-            <pathelement location="${test.classes}"/>
-            <pathelement location="${test.classes}/org/mifos/config/resources"/>
-                                <path refid="test.maven-dependencies.classpath"/>
-         </classpath>
-
-         <formatter type="xml" />
-         <batchtest todir="${dist.dir}" >
-            <fileset dir="${test.classes}">
-               <include name="**/${test.suite}.class" />
+    <!--
+    Note that my.hibernate.properties and my.HibernateTest.properties,
+    unlike my.build.properties, entirely override the corresponding
+    file if they are present.
+    -->
+    <target name="copy_files" depends="copy-revision">
+        <available file="${conf.dir}/my.hibernate.properties"
+            property="my.hibernate.properties.present" value="true" />
+        <copy todir="${build.web-inf}/lib">
+            <fileset dir="${lib.dir}" 
+                excludes="easymock*.jar, javax.servlet.jar, jaxb-xjc.jar, jetty*.jar, jsp-api.jar, junit*.jar,
+                mayfly*.jar, servlet-api-2.5-6.0.0.jar, strutstest-2.1.3.jar, trang.jar, trangtask.jar">
+                <exclude name="*.tld"/>
             </fileset>
-         </batchtest>
-         <assertions>
-            <enable />
-         </assertions>
-      </junit>
-      <fail if="tests.failure" 
-         message="Unit tests failed - Report is available at ${dist.dir}"/>
-   </target>
+        </copy>
+        <copy todir="${build.web-inf}">
+            <fileset dir="${src.dir}/org/mifos/WEB-INF">
+                <exclude name="web.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.classes}/org/mifos/framework/persistence">
+            <fileset dir="${sql.dir}">
+                <include name="upgrade_to_*.sql" />
+            </fileset>
+        </copy>
+        <copy todir="${build.src.dir}/pages">
+            <fileset dir="${src.dir}/org/mifos/doc-root"/>
+        </copy>
+
+        <copy todir="${build.classes}/org/mifos/application">
+            <fileset dir="${src.dir}/org/mifos/application">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.classes}/org/mifos/framework">
+            <fileset dir="${src.dir}/org/mifos/framework">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.classes}/org/mifos/config">
+            <fileset dir="${src.dir}/org/mifos/config">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy tofile="${build.classes}/org/mifos/conf/hibernate.properties" verbose="true">
+            <fileset dir="${conf.dir}">
+                <include name="my.hibernate.properties" 
+                    if="my.hibernate.properties.present" />
+                <include name="hibernate.properties" 
+                    unless="my.hibernate.properties.present" />
+            </fileset>
+        </copy>
+        <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/conf"/>
+        <copy todir="${build.web-inf}/services/MifosService/META-INF">
+            <fileset dir="${src.dir}/org/mifos/api/resources">
+                <include name="services.xml"/>
+                <include name="*.wsdl"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.src.dir}/pages/application/reports/uploads">
+            <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
+                <include name="*.jrxml"/>
+                <include name="*.jasper"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.classes}">
+            <fileset dir="${basedir}/src/main/resources">
+                <include name="**/*.xml"/>
+                <include name="**/*.xsd"/>
+            </fileset>
+        </copy>
+        <copy todir="${test.classes}">
+            <fileset dir="${basedir}/src/test/resources">
+                <include name="**/*.xml"/>
+            </fileset>
+        </copy>
+        <jsmin force="true">
+            <fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
+        </jsmin>
+    </target>
+
+    <target name="integrate_birt_web_viewer">
+        <copy todir="${build.src.dir}">
+            <fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
+        </copy>
+        <concat destfile="${build.web-inf}/web.xml" append="no" force="yes" >
+            <fileset dir="${src.dir}/org/mifos/WEB-INF" includes="web.xml"/>
+            <fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
+        </concat>
+        <replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="   &lt;!-- section: birt web viewer --&gt;" />
+    </target>
+
+    <target name="copy_birt_reports">
+        <copy todir="${build.src.dir}/report">
+            <fileset dir="${birt.report.design.dir}" />
+        </copy>
+        <copy todir="${build.src.dir}/report/BirtReportResource">
+            <fileset dir="${birt.report.resource.dir}" />
+        </copy>  
+    </target>
+
+    <target name="lib" depends="compile" description="Build the mifos library">
+        <mkdir dir="${build.lib}"/>
+        <copy todir="${build.lib}">
+            <fileset dir="${build.classes}">
+                <exclude name="**/struts/**"/>
+            </fileset>
+        </copy>
+        <jar basedir="${build.lib}"
+            destfile="${dist.dir}/mifos-lib.jar" />
+    </target>
+
+    <target name="copy_test_files">
+        <available file="${conf.dir}/my.HibernateTest.properties"
+            property="my.HibernateTest.properties.present" value="true"/>
+        <copy todir="${test.classes}">
+            <fileset dir="${test.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${test.classes}/WEB-INF">
+            <fileset dir="${src.dir}/org/mifos/WEB-INF">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy tofile="${test.classes}/org/mifos/conf/HibernateTest.properties" verbose="true">
+            <fileset dir="${conf.dir}">
+                <include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
+                <include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
+            </fileset>
+        </copy>
+        <copy todir="${test.classes}/org/mifos/config">
+            <fileset dir="${test.dir}/org/mifos/config">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+
+
+    </target>
+
+    <target name="run_test" 
+        depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
+        description="Run tests.">
+        <echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
+        <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+            dir="${basedir}"
+            haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
+            failureproperty="tests.failure">
+            <sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
+            <classpath>
+                <path refid="class.path"/>
+                <pathelement location="${build.classes}"/>
+                <pathelement location="${test.classes}"/>
+                <pathelement location="${test.classes}/org/mifos/config/resources"/>
+                <path refid="test.maven-dependencies.classpath"/>
+            </classpath>
+
+            <formatter type="xml" />
+            <batchtest todir="${dist.dir}" >
+                <fileset dir="${test.classes}">
+                    <include name="**/${test.suite}.class" />
+                </fileset>
+            </batchtest>
+            <assertions>
+                <enable />
+            </assertions>
+        </junit>
+        <fail if="tests.failure" 
+            message="Unit tests failed - Report is available at ${dist.dir}"/>
+    </target>
 
     <target name="build" depends="compile,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
 
     <target name="war" depends="build">
-      <war destfile="${dist.dir}/${webapplication.name}.war" 
-         webxml="${build.web-inf}/web.xml">
-         <fileset dir="${build.src.dir}" excludes="**/web.xml" />
-      </war>
-   </target>
-
-   <target name="dist" 
-      depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
-      description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Does not rebuild the production database"
-   />
-
-   <target name="dist_build_db" 
-      depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
-      description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Rebuilds the production database"
-   />
-
-   <target name="build_production_db" description="Builds the application database without custom config data">
-      <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
-         userid="${db.user}" password="${db.pwd}"
-         classpath="${database.driver.jar}">
-         <transaction>
-            Drop database if exists ${db.name};
-            create database ${db.name};         
-            use ${db.name};
-         </transaction>
-         <transaction src="${sql.dir}/mifosdroptables.sql" />
-         <transaction src="${sql.dir}/latest-schema.sql" />
-         <transaction src="${sql.dir}/latest-data.sql" />
-         <transaction src="${sql.dir}/init_mifos_password.sql" />
-      </sql>
+        <war destfile="${dist.dir}/${webapplication.name}.war" 
+            webxml="${build.web-inf}/web.xml">
+            <fileset dir="${build.src.dir}" excludes="**/web.xml" />
+        </war>
     </target>
 
-   <target name="build_db" description="Builds the application database">
-      <echo>Using database: ${db.name} at ${db.ip} port ${db.port}, user: ${db.user}</echo>
-      <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
-         userid="${db.user}" password="${db.pwd}"
-         classpath="${database.driver.jar}">
-         <transaction>
-            Drop database if exists ${db.name};
-            create database ${db.name};         
-            use ${db.name};
-         </transaction>
-         <transaction src="${sql.dir}/mifosdroptables.sql" />
-         <transaction src="${sql.dir}/latest-schema.sql" />
-         <transaction src="${sql.dir}/latest-data.sql" />
-         <transaction src="${sql.dir}/custom_data.sql" />
-         <transaction src="${sql.dir}/init_mifos_password.sql" />
-      </sql>
+    <target name="dist" 
+        depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
+        description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Does not rebuild the production database"
+        />
+
+    <target name="dist_build_db" 
+        depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
+        description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Rebuilds the production database"
+        />
+
+    <target name="build_production_db" description="Builds the application database without custom config data">
+        <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
+            userid="${db.user}" password="${db.pwd}"
+            classpath="${database.driver.jar}">
+            <transaction>
+                Drop database if exists ${db.name};
+                create database ${db.name};         
+                use ${db.name};
+            </transaction>
+            <transaction src="${sql.dir}/mifosdroptables.sql" />
+            <transaction src="${sql.dir}/latest-schema.sql" />
+            <transaction src="${sql.dir}/latest-data.sql" />
+            <transaction src="${sql.dir}/init_mifos_password.sql" />
+        </sql>
     </target>
 
-   <target name="build_test_db">
-      <echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
-      <sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
-         userid="${testdb.user}" password="${testdb.pwd}"
-         classpath="${database.driver.jar}">
-         <transaction>
-            Drop database if exists ${testdb.name};
-            create database ${testdb.name};
-            use ${testdb.name};
-         </transaction>
-         <!-- The following list of scripts is supposed to
-              be the same as the one in build_db except
-              for testdbinsertionscript.sql.  -->
-         <transaction src="${sql.dir}/mifosdroptables.sql" />
-         <transaction src="${sql.dir}/latest-schema.sql" />
-         <transaction src="${sql.dir}/latest-data.sql" />
-         <transaction src="${sql.dir}/custom_data.sql" />
+    <target name="build_db" description="Builds the application database">
+        <echo>Using database: ${db.name} at ${db.ip} port ${db.port}, user: ${db.user}</echo>
+        <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
+            userid="${db.user}" password="${db.pwd}"
+            classpath="${database.driver.jar}">
+            <transaction>
+                Drop database if exists ${db.name};
+                create database ${db.name};         
+                use ${db.name};
+            </transaction>
+            <transaction src="${sql.dir}/mifosdroptables.sql" />
+            <transaction src="${sql.dir}/latest-schema.sql" />
+            <transaction src="${sql.dir}/latest-data.sql" />
+            <transaction src="${sql.dir}/custom_data.sql" />
+            <transaction src="${sql.dir}/init_mifos_password.sql" />
+        </sql>
+    </target>
 
-         <transaction src="${sql.dir}/testdbinsertionscript.sql" />
-      </sql>
-   </target>
+    <target name="build_test_db">
+        <echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
+        <sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
+            userid="${testdb.user}" password="${testdb.pwd}"
+            classpath="${database.driver.jar}">
+            <transaction>
+                Drop database if exists ${testdb.name};
+                create database ${testdb.name};
+                use ${testdb.name};
+            </transaction>
+            <!-- The following list of scripts is supposed to
+            be the same as the one in build_db except
+            for testdbinsertionscript.sql.  -->
+            <transaction src="${sql.dir}/mifosdroptables.sql" />
+            <transaction src="${sql.dir}/latest-schema.sql" />
+            <transaction src="${sql.dir}/latest-data.sql" />
+            <transaction src="${sql.dir}/custom_data.sql" />
 
-   <target name="deploy" depends="war">
-      <echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
-      <copy file="${dist.dir}/${webapplication.name}.war" 
-         todir="${deploy.destination}"
-      />
-   </target>
+            <transaction src="${sql.dir}/testdbinsertionscript.sql" />
+        </sql>
+    </target>
 
-   <target name="release_package">
-      <echo message="Creating distribution package from war ${dist.dir}/${webapplication.name}.war"/>
-      <zip destfile="${dist.dir}/${current.release.name}.zip">
-         <zipfileset dir="${basedir}" includes="INSTALL,LICENSE" prefix="${current.release.name}"/>
-         <zipfileset dir="${basedir}" includes="sql/create_mifos_db.sql,
-               sql/latest-schema.sql,
-               sql/latest-data.sql,
-               sql/init_mifos_password.sql" prefix="${current.release.name}"/>
-         <zipfileset dir="${basedir}" includes = "dist/mifos.war" fullpath="${current.release.name}/mifos.war" />
+    <target name="deploy" depends="war">
+        <echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
+        <copy file="${dist.dir}/${webapplication.name}.war" 
+            todir="${deploy.destination}"
+            />
+    </target>
+
+    <target name="release_package">
+        <echo message="Creating distribution package from war ${dist.dir}/${webapplication.name}.war"/>
+        <zip destfile="${dist.dir}/${current.release.name}.zip">
+            <zipfileset dir="${basedir}" includes="INSTALL,LICENSE" prefix="${current.release.name}"/>
+            <zipfileset dir="${basedir}" includes="sql/create_mifos_db.sql,
+                sql/latest-schema.sql,
+                sql/latest-data.sql,
+                sql/init_mifos_password.sql" prefix="${current.release.name}"/>
+            <zipfileset dir="${basedir}" includes = "dist/mifos.war" fullpath="${current.release.name}/mifos.war" />
         </zip>    
-   </target>
-   
-   <target name="javadoc">
-      <mkdir dir="${doc.dir}/api"/>
-      <javadoc packagenames="org.*"
-          sourcepath="${src.dir}" 
-          destdir="${doc.dir}/api"
-          author="true" version="true" use="true">
-         <classpath refid="class.path"/>
-      </javadoc>
-   </target>
-   
-   <target name="maven_dependencies">
-      <artifact:dependencies pathId="maven-dependencies.classpath" useScope="runtime">
-         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
-      </artifact:dependencies>
-      <artifact:dependencies filesetId="maven-dependencies.fileset" useScope="runtime">
-         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
-      </artifact:dependencies>
-      <copy todir="${build.web-inf}/lib">
-        <fileset refid="maven-dependencies.fileset" />
-        <mapper type="flatten" />
-      </copy>
-   </target>
+    </target>
 
-   <target name="maven_test_dependencies">
-      <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
-         <artifact:pom id="maven.project.dependencies" file="pom.xml" />
-      </artifact:dependencies>
-   </target>
+    <target name="javadoc">
+        <mkdir dir="${doc.dir}/api"/>
+        <javadoc packagenames="org.*"
+            sourcepath="${src.dir}" 
+            destdir="${doc.dir}/api"
+            author="true" version="true" use="true">
+            <classpath refid="class.path"/>
+        </javadoc>
+    </target>
+
+    <target name="maven_dependencies">
+        <artifact:dependencies pathId="maven-dependencies.classpath" useScope="runtime">
+            <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+        </artifact:dependencies>
+        <artifact:dependencies filesetId="maven-dependencies.fileset" useScope="runtime">
+            <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+        </artifact:dependencies>
+        <copy todir="${build.web-inf}/lib">
+            <fileset refid="maven-dependencies.fileset" />
+            <mapper type="flatten" />
+        </copy>
+    </target>
+
+    <target name="maven_test_dependencies">
+        <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
+            <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+        </artifact:dependencies>
+    </target>
 
 </project>
