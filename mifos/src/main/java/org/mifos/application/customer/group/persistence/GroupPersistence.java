@@ -41,6 +41,7 @@ import java.sql.Statement;
 
 public class GroupPersistence extends Persistence {
     private CenterPersistence centerPersistence = new CenterPersistence();
+    private CustomerPersistence customerPersistence = new CustomerPersistence();
     private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
     public GroupBO createGroup(UserContext userContext, GroupTemplate template)
@@ -175,15 +176,8 @@ public class GroupPersistence extends Persistence {
     }
 
     public GroupBO getGroupByCustomerId(Integer customerId) throws PersistenceException {
-        // NOTE: Incomplete Initialization
         return (GroupBO) getPersistentObject(GroupBO.class, customerId);
     }
-
-    public GroupBO getGroupByGroupId(Integer groupId)
-	throws PersistenceException {
-     // NOTE: Incomplete Initialization
-		return (GroupBO) getPersistentObject(GroupBO.class, groupId);
-	}
     
     // this code is used in the PAR task to improve performance
     public boolean updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(double portfolioAtRisk, Integer groupId)

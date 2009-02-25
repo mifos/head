@@ -29,6 +29,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -62,8 +63,7 @@ public class CenterPersistence extends Persistence {
 	}
 
 	public CenterBO getCenter(Integer customerId) throws PersistenceException {
-	    // NOTE: Incomplete Initialization
-		return (CenterBO) getPersistentObject(CenterBO.class, customerId);
+	    return (CenterBO) getPersistentObject(CenterBO.class, customerId);
 	}
 
 	public CenterBO findBySystemId(String globalCustNum)
@@ -120,7 +120,7 @@ public class CenterPersistence extends Persistence {
                 template.getExternalId(), template.getMfiJoiningDate(), 
                 officePersistence.getOffice(template.getOfficeId()),
                 template.getMeeting(), 
-                personnelPersistence.getPersonnel(template.getLoanOfficerId()));
+                personnelPersistence.getPersonnel(template.getLoanOfficerId()), new CustomerPersistence());
         saveCenter(center);
         return center;
     }

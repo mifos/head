@@ -51,7 +51,6 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-	    // NOTE: Incomplete Initialization
 		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
 		group=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,group.getCustomerId());
 		center=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,center.getCustomerId());

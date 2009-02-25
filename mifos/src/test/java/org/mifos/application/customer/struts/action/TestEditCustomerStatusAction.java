@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -22,16 +21,13 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -241,8 +237,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.center_detail_page.toString());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		assertFalse(center.isActive());
 	}
 
@@ -391,8 +386,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		assertFalse(client.isActive());
 	}
 
@@ -435,8 +429,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		assertTrue(client.isActive());
 		assertFalse(((ClientBO) client).getCustomerAccount()
 				.getAccountActionDates().isEmpty());
@@ -451,11 +444,10 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		TestCustomerBO.setCustomerStatus(client,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_PARTIAL.getValue()));
-		client.update(customerPersistence);
+		client.update();
 		HibernateUtil.commitTransaction();
 
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
 		addRequestParameter("customerId", client.getCustomerId().toString());
@@ -489,8 +481,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		assertTrue(client.isActive());
 	}
 
@@ -530,8 +521,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyActionErrors(new String[] { ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION });
 		verifyForward(ActionForwards.updateStatus_failure.toString());
-        client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+        client = TestObjectFactory.getCustomer(client.getCustomerId());
 		assertFalse(client.isActive());
 	}
 
@@ -539,11 +529,10 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 			throws CustomerException, PageExpiredException {
 		createInitialObjects();
 		loanBO = getLoanAccount(client,"dsafdsfds","12ed");
-		client.update(customerPersistence);
+		client.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
 		addRequestParameter("customerId", client.getCustomerId().toString());
@@ -578,12 +567,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION });
 		verifyForward(ActionForwards.updateStatus_failure.toString());
         HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 	}
@@ -595,7 +581,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				new PositionEntity(Short.valueOf("1")), client, client
 						.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
-		group.update(customerPersistence);
+		group.update();
 		HibernateUtil.commitTransaction();
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
@@ -635,8 +621,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		assertFalse(client.isActive());
 		for (CustomerFlagDetailEntity customerFlagDetailEntity : client
 				.getCustomerFlags()) {
@@ -644,7 +629,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 					.isBlackListed());
 			break;
 		}
-		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
 			assertNull(customerPosition.getCustomer());
@@ -655,7 +640,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	public void testChangeStatusToActiveForClient() throws Exception {
 		createObjectsForClient("Client");
 		TestCustomerBO.setPersonnel(client,null);
-		client.update(customerPersistence);
+		client.update();
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
 		addRequestParameter("customerId", client.getCustomerId().toString());
@@ -869,7 +854,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		assertNull(request.getAttribute(Constants.FLOWMANAGER));
-		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		assertTrue(group.isBlackListed());
 	}
 
@@ -885,7 +870,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		assertNull(request.getAttribute(Constants.FLOWMANAGER));
-		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		assertEquals("ActivationDate should be the current date.", DateUtils
 				.getDateWithoutTimeStamp(new java.util.Date().getTime()),
 				DateUtils.getDateWithoutTimeStamp(group
@@ -896,7 +881,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 			throws CustomerException {
 		createInitialObjects();
 		loanBO = getLoanAccount(group,"dsafdsfsdgfdg","23vf");
-		group.update(customerPersistence);
+		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CLOSED,
@@ -908,12 +893,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		verifyActionErrors(new String[] { CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION });
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 	}
@@ -957,8 +939,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
-				"center is inactive now", customerPersistence, personnelPersistence, new MasterPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence(), new OfficePersistence());
+				"center is inactive now");
 		HibernateUtil.commitTransaction();
 		invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
 		setRequestPathInfo("/editCustomerStatusAction.do");

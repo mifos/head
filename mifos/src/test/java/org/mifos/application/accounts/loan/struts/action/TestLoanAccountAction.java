@@ -78,7 +78,6 @@ import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -413,7 +412,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		((LoanBO) accountBO).setBusinessActivityId(1);
 		accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null,
-				"status changed", new CustomerPersistence());
+				"status changed");
 		accountBO.update();
 
 		HibernateUtil.commitTransaction();
@@ -535,7 +534,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		addRequestParameter("method", "schedulePreview");
 		actionPerform();
 		verifyActionErrors(new String[] { "exception.accounts.changeInLoanMeeting" });
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 
@@ -544,7 +543,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		accountBO.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
-				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed", new CustomerPersistence());
+				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed");
 		accountBO.update();
 		HibernateUtil.commitTransaction();
 		LoanBO loan = (LoanBO) accountBO;
@@ -729,7 +728,6 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				AccountActionTypes.DISBURSAL.getValue(), SessionUtils
 						.getAttribute(AccountConstants.LAST_PAYMENT_ACTION,
 								request));
-		// NOTE: Incomplete Initialization
 		client = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, client.getCustomerId());
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
@@ -944,7 +942,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				.getCurrentDate(((UserContext) request.getSession()
 						.getAttribute("UserContext")).getPreferredLocale()),
 				loanActionForm.getDisbursementDate());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 
@@ -991,7 +989,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 						.getAttribute("UserContext")).getPreferredLocale()),
 				loanActionForm.getDisbursementDate());
 
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 
@@ -1032,7 +1030,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				Constants.BUSINESS_KEY, request);
 		assertNotNull(loan);
 
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 
@@ -1069,7 +1067,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		verifyActionErrors(new String[] { "errors.graceper" });
 		verifyInputForward();
 
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 

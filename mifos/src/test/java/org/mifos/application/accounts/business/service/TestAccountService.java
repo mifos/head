@@ -39,7 +39,6 @@ import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -164,10 +163,8 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestUtils.makeUser();
@@ -181,10 +178,8 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		accountBO = getLoanAccountWithAllTypesOfFees();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestUtils.makeUser();
@@ -219,13 +214,11 @@ public class TestAccountService extends MifosTestCase {
 		incrementInstallmentDate(accountBO, 1, Short.valueOf("1"));
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(
-				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue(),null,"", new CustomerPersistence());
+				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue(),null,"");
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestUtils.makeUser();
@@ -258,8 +251,7 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		UserContext uc = TestUtils.makeUser();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
 				.getAppllicableFees(customerAccountBO.getAccountId(), uc);

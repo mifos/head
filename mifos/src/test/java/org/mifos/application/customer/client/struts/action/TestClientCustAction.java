@@ -47,7 +47,6 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -62,7 +61,6 @@ import org.mifos.application.customer.client.struts.actionforms.ClientCustAction
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -84,7 +82,6 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -244,7 +241,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 		.getSession().getAttribute("clientCustActionForm");
 		assertNull(actionForm.getFormedByPersonnelValue());
-		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		HibernateUtil.closeSession();
@@ -272,7 +268,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
 		assertEquals(0, additionalFees.size());
 		
-		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
@@ -300,7 +295,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
 		assertNotNull(additionalFees);
 		assertEquals(1, additionalFees.size());
-		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
@@ -937,8 +931,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.create_success.toString());
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 				.getSession().getAttribute("clientCustActionForm");
-		client = TestObjectFactory.getObject(ClientBO.class,
-				actionForm.getCustomerIdAsInt());
+		client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
 		assertNotNull(client);
 		assertNotNull(client.getOfferingsAssociatedInCreate());
 		assertEquals(1,client.getOfferingsAssociatedInCreate().size());
@@ -1007,8 +1000,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.create_success.toString());
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 				.getSession().getAttribute("clientCustActionForm");
-		client = TestObjectFactory.getObject(ClientBO.class,
-				actionForm.getCustomerIdAsInt());
+		client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
 		removeFees(feesToRemove);
 	}
 
@@ -1074,8 +1066,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			verifyForward(ActionForwards.create_success.toString());
 			ClientCustActionForm actionForm = (ClientCustActionForm) request
 					.getSession().getAttribute("clientCustActionForm");
-			client = TestObjectFactory.getObject(ClientBO.class,
-					actionForm.getCustomerIdAsInt());
+			client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
 	}
 	
 	public void testGet() throws Exception {
@@ -1099,7 +1090,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		// assertEquals("No of active loan accounts should be
 		// 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
 		HibernateUtil.closeSession();
-		// NOTE: Incomplete Initialization
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
@@ -1247,7 +1237,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
 		assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
 	}
@@ -1303,7 +1293,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue(), DELTA);
 
@@ -1370,13 +1360,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				spouseNameDetailView, clientDetailView, null);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(client.getCustomerId()).intValue());
+		client = TestObjectFactory.getClient(new Integer(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
@@ -1402,7 +1390,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals("123", client.getExternalId());
 		
@@ -1510,9 +1498,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		assertEquals("3", client.getExternalId());
 		assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
@@ -1539,7 +1527,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals("3", client.getExternalId());
 		assertFalse(client.isTrained());
@@ -1567,7 +1555,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals("3", client.getExternalId());
 		assertTrue(client.isTrained());
@@ -1620,7 +1608,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals("3", client.getExternalId());
 		assertTrue(client.isTrained());
@@ -1690,8 +1678,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			verifyForward(ActionForwards.create_success.toString());
 			ClientCustActionForm actionForm = (ClientCustActionForm) request
 					.getSession().getAttribute("clientCustActionForm");
-			client = TestObjectFactory.getObject(ClientBO.class,
-					actionForm.getCustomerIdAsInt());
+			client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1715,13 +1702,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				spouseNameDetailView, clientDetailView, null);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(ClientBO.class,
-				Integer.valueOf(client.getCustomerId()).intValue());
+		client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
@@ -1732,12 +1717,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.createClient(name,
 				CustomerStatus.CLIENT_ACTIVE, group, new Date());
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class,
-				client.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client = TestObjectFactory.getClient(client.getCustomerId());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}

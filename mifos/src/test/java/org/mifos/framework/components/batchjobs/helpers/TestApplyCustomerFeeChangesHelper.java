@@ -93,7 +93,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		((ApplyCustomerFeeChangesHelper) task
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
@@ -104,7 +103,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
 		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 		HibernateUtil.closeSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
@@ -118,7 +116,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		TestCustomerAccountBO.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
@@ -150,7 +147,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
@@ -170,7 +166,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		TestObjectFactory.updateObject(center);
 		HibernateUtil.closeSession();
 		
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
@@ -206,7 +201,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
@@ -251,7 +245,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
@@ -295,7 +288,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
 				.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
@@ -361,7 +353,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
 				.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		// NOTE: Incomplete Initialization
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,

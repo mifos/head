@@ -52,7 +52,6 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -156,7 +155,7 @@ public class CustomerNotesAction extends SearchAction {
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
 		customerBO.addCustomerNotes(customerNote);
 		customerBO.setUserContext(uc);
-		customerBO.update(new CustomerPersistence());
+		customerBO.update();
 		forward = mapping.findForward(getDetailCustomerPage(notesActionForm));
 		customerBO = null;
 		return forward;

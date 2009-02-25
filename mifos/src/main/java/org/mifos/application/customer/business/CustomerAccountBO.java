@@ -50,7 +50,6 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -381,7 +380,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	@Override
 	protected void regenerateFutureInstallments(
-	        Short nextInstallmentId, CustomerPersistence customerPersistence)
+	        Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getCustomer().getCustomerStatus().getId().equals(
 				CustomerStatus.CLIENT_CLOSED.getValue())
@@ -391,7 +390,7 @@ public class CustomerAccountBO extends AccountBO {
 			int installmentSize = getLastInstallmentId();
 			try {
 				getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-				getCustomer().changeUpdatedMeeting(customerPersistence);
+				getCustomer().changeUpdatedMeeting();
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
 						.getAllDates(installmentSize);
 			} catch (MeetingException me) {
@@ -417,11 +416,10 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	protected void resetUpdatedFlag(
-	        CustomerPersistence customerPersistence) throws AccountException {
+	protected void resetUpdatedFlag() throws AccountException {
 		try{
 			getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-			getCustomer().changeUpdatedMeeting(customerPersistence);
+			getCustomer().changeUpdatedMeeting();
 		}catch(CustomerException ce){
 			throw new AccountException(ce);
 		}

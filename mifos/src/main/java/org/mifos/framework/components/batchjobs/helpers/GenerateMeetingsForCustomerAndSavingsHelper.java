@@ -9,7 +9,6 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -73,7 +72,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 						updatedRecordCount++;
 					}
 					else if (accountBO instanceof SavingsBO) {
-						((SavingsBO) accountBO).generateNextSetOfMeetingDates(new CustomerPersistence());
+						((SavingsBO) accountBO).generateNextSetOfMeetingDates();
 						updatedRecordCount++;
 					}
 				}

@@ -342,8 +342,7 @@ public class CustAction extends SearchAction {
 			throws ApplicationException {
 		List<CustomerBO> customerList;
 		customerList = customerBO
-				.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
-				        new CustomerPersistence());
+				.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
 		SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, customerList,
 				request);
 	}

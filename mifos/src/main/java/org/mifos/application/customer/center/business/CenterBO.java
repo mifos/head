@@ -23,9 +23,6 @@ package org.mifos.application.customer.center.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
@@ -44,25 +41,34 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Money;
 
 public class CenterBO extends CustomerBO {
 
-	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
+    private CenterPersistence centerPersistence = null;
+    
+	public CenterPersistence getCenterPersistence() {
+	    if (null == centerPersistence) {
+	        centerPersistence = new CenterPersistence();
+	    }
+        return centerPersistence;
+    }
+
+    public void setCenterPersistence(CenterPersistence centerPersistence) {
+        this.centerPersistence = centerPersistence;
+    }
+
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, String externalId, Date mfiJoiningDate,
-			OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer)
+			OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer, CustomerPersistence customerPersistence)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CENTER,
 				CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,
@@ -71,7 +77,7 @@ public class CenterBO extends CustomerBO {
 		validateFields(displayName, meeting, loanOfficer, office);
 		int count;
 		try {
-			count = new CustomerPersistence().getCustomerCountForOffice(
+			count = customerPersistence.getCustomerCountForOffice(
 					CustomerLevel.CENTER, office.getOfficeId());
 		} catch (PersistenceException pe) {
 			throw new CustomerException(pe);
@@ -99,20 +105,18 @@ public class CenterBO extends CustomerBO {
 		return getStatus() == CustomerStatus.CENTER_ACTIVE;
 	}
 
-    // NOTE: Injected Persistence
 	@Override
-	public void updateMeeting(MeetingBO meeting,
-	        CustomerPersistence customerPersistence) throws CustomerException{
+	public void updateMeeting(MeetingBO meeting) throws CustomerException{
 		logger.debug("In CenterBO::updateMeeting(), customerId: "
 				+ getCustomerId());
-		saveUpdatedMeeting(meeting, customerPersistence);
-		this.update(customerPersistence);
+		saveUpdatedMeeting(meeting);
+		this.update();
 	}
 	
 	private void validateFields(String displayName, MeetingBO meeting,
 			PersonnelBO personnel, OfficeBO office) throws CustomerException {
 		try {
-			if (new CenterPersistence().isCenterExists(displayName)) {
+			if (getCenterPersistence().isCenterExists(displayName)) {
 				throw new CustomerException(
 					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, 
 					new Object[] { displayName });
@@ -125,10 +129,8 @@ public class CenterBO extends CustomerBO {
 		validateOffice(office);
 	}
 
-    // NOTE: Injected Persistence
 	@Override
-	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
+	protected void validateStatusChange(Short newStatusId)
 	throws CustomerException {
 		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
@@ -137,8 +139,7 @@ public class CenterBO extends CustomerBO {
 						CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
 			}
 			if (getChildren(CustomerLevel.GROUP,
-			        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
-			        customerPersistence).size() > 0) {
+			        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
 				throw new CustomerException(
 						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
 						new Object[] { MessageLookup.getInstance().lookupLabel(
@@ -155,16 +156,13 @@ public class CenterBO extends CustomerBO {
 		logger.debug("In CenterBO::validateStatusChange(), successfully validated status, customerId: " + getCustomerId());
 	}
 	
-    // NOTE: Injected Persistence
 	public void update(UserContext userContext, Short loanOfficerId, String externalId, 
 	        Date mfiJoiningDate, Address address,  List<CustomFieldView> customFields, 
-	        List<CustomerPositionView> customerPositions,
-	        CustomerPersistence customerPersistence,
-	        PersonnelPersistence personnelPersistence) throws Exception {
+	        List<CustomerPositionView> customerPositions) throws Exception {
 		validateFieldsForUpdate(loanOfficerId);
 		setMfiJoiningDate(mfiJoiningDate);
-		updateLoanOfficer(loanOfficerId, customerPersistence, personnelPersistence);
-		super.update(userContext, externalId, address, customFields, customerPositions, customerPersistence);
+		updateLoanOfficer(loanOfficerId);
+		super.update(userContext, externalId, address, customFields, customerPositions);
 	}
 	
 	protected void validateFieldsForUpdate(Short loanOfficerId)throws CustomerException{
@@ -183,12 +181,11 @@ public class CenterBO extends CustomerBO {
 		return null;
 	}
 		
-    // NOTE: Injected Persistence
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting, CustomerPersistence customerPersistence)
+	protected void saveUpdatedMeeting(MeetingBO meeting)
 	    throws CustomerException{	
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-		super.saveUpdatedMeeting(meeting, customerPersistence);
-		deleteMeeting(newMeeting, customerPersistence);
+		super.saveUpdatedMeeting(meeting);
+		deleteMeeting(newMeeting);
 	}
 }

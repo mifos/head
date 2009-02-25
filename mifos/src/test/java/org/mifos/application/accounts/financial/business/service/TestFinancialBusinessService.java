@@ -46,7 +46,6 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -366,7 +365,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				accountTrxn = (SavingsTrxnDetailEntity) trxn;
 			savings.setUserContext(TestObjectFactory.getContext());
 			savings.changeStatus(AccountState.SAVINGS_CLOSED.getValue(),
-					AccountStateFlag.SAVINGS_REJECTED.getValue(), "", new CustomerPersistence());
+					AccountStateFlag.SAVINGS_REJECTED.getValue(), "");
 			financialBusinessService.buildAccountingEntries(accountTrxn);
 			Set<FinancialTransactionBO> financialTrxns = accountTrxn
 					.getFinancialTransactions();

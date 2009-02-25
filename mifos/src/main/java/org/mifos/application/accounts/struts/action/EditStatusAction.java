@@ -18,7 +18,6 @@ import org.mifos.application.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.checklist.business.AccountCheckListBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -130,7 +129,7 @@ public class EditStatusAction extends BaseAction {
 			newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
 		checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 		accountBO.changeStatus(newStatusId, flagId, editStatusActionForm
-				.getNotes(), new CustomerPersistence());
+				.getNotes());
 		accountBOInSession = null;
 		accountBO.update();
 		accountBO = null;

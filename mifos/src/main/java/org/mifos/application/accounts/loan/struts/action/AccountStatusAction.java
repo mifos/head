@@ -266,7 +266,7 @@ public class AccountStatusAction extends BaseAction {
 
 				accountNumbers.add(loanBO.getGlobalAccountNum());
 				loanBO.setUserContext(userContext);
-				loanBO.changeStatus(getShortValue(newStatus), null, comments, customerPersistence);
+				loanBO.changeStatus(getShortValue(newStatus), null, comments);
 				loanBO.update();
 			}
 		}

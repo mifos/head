@@ -38,7 +38,6 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -119,7 +118,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		SavingsBO savingsObj = new SavingsBO(userContext, savingsOffering,
 				group, AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), getCustomFieldView(), new CustomerPersistence());
+						.getRecommendedAmount(), getCustomFieldView());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsObj,request);
 		addRequestParameter("selectedPrdOfferingId", savingsOffering
 				.getPrdOfferingId().toString());
@@ -174,7 +173,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd2", "prd2", currentDate);
 		savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
-                new Money("100"), null, new CustomerPersistence());
+                new Money("100"), null);
 		savings.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -710,7 +709,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 				AccountTypes.SAVINGS_ACCOUNT, null);
 		savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL
-				.getValue(), null, "notes", new CustomerPersistence());
+				.getValue(), null, "notes");
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
 				.getAccountState().getId().shortValue());
 

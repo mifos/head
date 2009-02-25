@@ -14,7 +14,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -170,12 +169,12 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 	private void createAccounts() throws Exception {
         savings1 = getSavingsAccount(group, "fsaf6", "ads6");
         savings1.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), AccountStateFlag.SAVINGS_BLACKLISTED
-                .getValue(), "status changed for savings", new CustomerPersistence());
+                .getValue(), "status changed for savings");
         savings1.update();
         loan1 = getLoanAccount(group, "fdsfsdf", "2cvs");
         loan1.update();
         loan1.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_OTHER.getValue(),
-                "status changed for loan", new CustomerPersistence());
+                "status changed for loan");
         HibernateUtil.commitTransaction();
         savings2 = getSavingsAccount(group, "fsaf65", "ads5");
         loan2 = getLoanAccount(client, "rtwetrtwert", "5rre");

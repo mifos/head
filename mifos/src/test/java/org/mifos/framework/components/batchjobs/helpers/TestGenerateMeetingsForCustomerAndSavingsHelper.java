@@ -10,7 +10,6 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -68,8 +67,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		HibernateUtil.closeSession();
 		
 		HibernateUtil.startTransaction();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		
 		int noOfInstallments=center.getCustomerAccount().getAccountActionDates().size();
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
@@ -77,8 +75,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		System.out.println(center.getCustomerAccount().getAccountActionDates().size());
 		assertEquals(noOfInstallments+10,center.getCustomerAccount().getAccountActionDates().size());		
 	}
@@ -124,10 +121,8 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		HibernateUtil.closeSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		assertEquals(noOfInstallments + 10, savings.getAccountActionDates()
 				.size());
 		assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
@@ -144,7 +139,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		// give batch jobs something useful to do
 		// TODO: move this method to a shared util class?
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
-		center.update(new CustomerPersistence());
+		center.update();
 	}
 	
 	

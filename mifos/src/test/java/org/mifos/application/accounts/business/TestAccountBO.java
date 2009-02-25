@@ -54,8 +54,6 @@ import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -463,7 +461,7 @@ public class TestAccountBO extends TestAccount {
 			throws ApplicationException, SystemException {
 		TestObjectFactory.flushandCloseSession();
 		// center initially set up with meeting today
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
@@ -478,11 +476,11 @@ public class TestAccountBO extends TestAccount {
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		TestObjectFactory.updateObject(center);
 		
-		center.getCustomerAccount().handleChangeInMeetingSchedule(new CustomerPersistence());
-		accountBO.handleChangeInMeetingSchedule(new CustomerPersistence());
+		center.getCustomerAccount().handleChangeInMeetingSchedule();
+		accountBO.handleChangeInMeetingSchedule();
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
@@ -562,9 +560,7 @@ public class TestAccountBO extends TestAccount {
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();
-		// NOTE: Incomplete Initialization
-		centerBO = TestObjectFactory.getObject(CenterBO.class,
-				centerBO.getCustomerId());
+		centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
 		for (AccountActionDateEntity actionDate : centerBO.getCustomerAccount()
 				.getAccountActionDates()) {
 			actionDate.setActionDate(offSetCurrentDate(4));
@@ -584,9 +580,7 @@ public class TestAccountBO extends TestAccount {
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();
-		// NOTE: Incomplete Initialization
-		centerBO = TestObjectFactory.getObject(CenterBO.class,
-				centerBO.getCustomerId());
+		centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
 		
 		List<AccountActionDateEntity> allInstallments = centerBO
 		.getCustomerAccount().getAllInstallments();
@@ -628,9 +622,9 @@ public class TestAccountBO extends TestAccount {
 
 		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
 				LoanBO.class, accountBO.getAccountId());
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		assertEquals(1, accountBO.getPerformanceHistory().getNoOfPayments().intValue());
 

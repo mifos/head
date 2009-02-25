@@ -66,7 +66,6 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	private void reloadMembers() {
-	    // NOTE: Incomplete Initialization
 		if (savingsBO != null) {
 			savingsBO = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savingsBO.getAccountId());
 		}
@@ -227,9 +226,9 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	}
 	private void getobjects(){
 		
-		client = TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 	
 	}
 	public void testLoad_Loan() {

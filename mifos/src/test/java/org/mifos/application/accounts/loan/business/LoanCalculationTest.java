@@ -48,7 +48,6 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -178,7 +177,6 @@ public class LoanCalculationTest  {
 	@After
 	public void tearDown() throws Exception {
 		TestObjectFactory.removeObject(loanOffering);
-		// NOTE: Incomplete Initialization
 		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
@@ -556,8 +554,7 @@ public class LoanCalculationTest  {
 		// after all payments are made
 		printLoanScheduleEntities(paymentsArray);
 		// reverse loan
-		((LoanBO)accountBO).reverseLoanDisbursal(personnelBO, "Reverse this loan for testing",
-		        new CustomerPersistence());
+		((LoanBO)accountBO).reverseLoanDisbursal(personnelBO, "Reverse this loan for testing");
 		new TestObjectPersistence().persist(accountBO);
 		actionDateEntities = accountBO.getAccountActionDates();
 		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
@@ -652,8 +649,7 @@ public class LoanCalculationTest  {
 		boolean lastPayment = paymentToReverse == paymentsArray.length;
 		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account(lastPayment));
 		new TestObjectPersistence().persist(loan);
-		((LoanBO)loan).reverseLoanDisbursal(personnelBO, "Test 999 account for loan reversal",
-		        new CustomerPersistence());
+		((LoanBO)loan).reverseLoanDisbursal(personnelBO, "Test 999 account for loan reversal");
 		new TestObjectPersistence().persist(loan);
 		
 		return loan;

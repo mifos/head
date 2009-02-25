@@ -18,6 +18,7 @@ import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -383,8 +384,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		removeInactiveFees(allFeeList);
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		center = TestObjectFactory.getObject(CenterBO.class,
-				actionForm.getCustomerIdAsInt());
+		center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
 	}
 
 	public void testManage() throws Exception {
@@ -508,12 +508,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				new Address(), null, null, null, null, 
 				new OfficePersistence().getOffice(officeId),
 				getMeeting(), 
-				new PersonnelPersistence().getPersonnel(loanOfficerId));
+				new PersonnelPersistence().getPersonnel(loanOfficerId), new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(center.getCustomerId()).intValue());
+		center = TestObjectFactory.getCenter(new Integer(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 
 		createGroupAndClient();
@@ -557,11 +556,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals(positions.size(),center.getCustomerPositions().size());
 		assertEquals("12", center.getExternalId());
@@ -573,8 +572,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter(name,
 				getMeeting());
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(center.getCustomerId()).intValue());
+		center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 	}
 
@@ -614,9 +612,9 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 						ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, request))
 						.size());
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());
@@ -672,8 +670,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		center = TestObjectFactory.getObject(CenterBO.class,
-				actionForm.getCustomerIdAsInt());
+		center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
 		assertEquals(false, fm.isFlowValid(flowKey));
 	}
 
@@ -727,8 +724,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		center = TestObjectFactory.getObject(CenterBO.class,
-				actionForm.getCustomerIdAsInt());
+		center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
 		assertEquals(false, fm.isFlowValid(flowKey));
 
 		setRequestPathInfo("/centerCustAction.do");

@@ -41,7 +41,6 @@ package org.mifos.application.customer.group.struts.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
@@ -49,7 +48,6 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -59,7 +57,6 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -191,14 +188,11 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 				getCustomFields(), null, null, personnel, office, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
-				spouseNameDetailView, clientDetailView, null,
-				new CustomerPersistence(), new ClientPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				spouseNameDetailView, clientDetailView, null);
 		new ClientPersistence().saveClient(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(ClientBO.class,
-				Integer.valueOf(client.getCustomerId()).intValue());
+		client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}

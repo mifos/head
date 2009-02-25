@@ -160,7 +160,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		assertForLoanArrearsAgingEntity(loanAccount1);
 		assertForLoanArrearsAgingEntity(loanAccount2);
 		
-		group=TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+		group=TestObjectFactory.getCustomer(group.getCustomerId());
 		center = group.getParentCustomer();
 	}
 
@@ -269,7 +269,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 				assertTrue(loanAccount2.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
 				assertNull(loanAccount2.getLoanArrearsAgingEntity());
 				
-				group=TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+				group=TestObjectFactory.getCustomer(group.getCustomerId());
 				center = group.getParentCustomer();
 			}
 		

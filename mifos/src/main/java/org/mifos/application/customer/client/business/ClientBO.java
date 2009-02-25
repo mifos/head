@@ -44,7 +44,6 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -52,12 +51,10 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -102,6 +99,25 @@ public class ClientBO extends CustomerBO {
 
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.CLIENTLOGGER);
+	
+	private ClientPersistence clientPersistence = null;
+
+    private SavingsPersistence savingsPersistence = null;
+	
+	private SavingsPrdPersistence savingsPrdPersistence = null;
+
+	private OfficePersistence officePersistence = null;
+
+	public OfficePersistence getOfficePersistence() {
+	    if (null == officePersistence) {
+	        officePersistence = new OfficePersistence();
+	    }
+	    return officePersistence;
+	}
+
+	public void setOfficePersistence(OfficePersistence officePersistence) {
+	    this.officePersistence = officePersistence;
+	}
 
 	public ClientBO(UserContext userContext, String displayName,
 			CustomerStatus customerStatus, String externalId,
@@ -112,16 +128,14 @@ public class ClientBO extends CustomerBO {
 			String governmentId, Short trained, Date trainedDate,
 			Short groupFlag, ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
-			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence, ClientPersistence clientPersistence,
-			SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
+			ClientDetailView clientDetailView, InputStream picture)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedBy, office, parentCustomer, null, null, dateOfBirth,
 				governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture, customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
+				picture);
 	}
 
 	public ClientBO(UserContext userContext, String displayName,
@@ -134,16 +148,14 @@ public class ClientBO extends CustomerBO {
 			Date trainedDate, Short groupFlag,
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
-			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence, ClientPersistence clientPersistence,
-			SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
+			ClientDetailView clientDetailView, InputStream picture)
 			throws CustomerException {
 		this(userContext, displayName, customerStatus, externalId,
 				mfiJoiningDate, address, customFields, fees, offeringsSelected,
 				formedBy, office, null, meeting, loanOfficer,
 				dateOfBirth, governmentId, trained, trainedDate, groupFlag,
 				clientNameDetailView, spouseNameDetailView, clientDetailView,
-				picture, customerPersistence, clientPersistence, savingsPersistence, savingsPrdPersistence);
+				picture);
 	}
 
 	protected ClientBO() {
@@ -164,9 +176,7 @@ public class ClientBO extends CustomerBO {
 			Short trained, Date trainedDate, Short groupFlag,
 			ClientNameDetailView clientNameDetailView,
 			ClientNameDetailView spouseNameDetailView,
-			ClientDetailView clientDetailView, InputStream picture,
-			CustomerPersistence customerPersistence, ClientPersistence clientPersistence,
-			SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
+			ClientDetailView clientDetailView, InputStream picture)
 			throws CustomerException {
 		super(userContext, displayName, CustomerLevel.CLIENT, customerStatus,
 				externalId, mfiJoiningDate, address, customFields, fees,
@@ -194,10 +204,10 @@ public class ClientBO extends CustomerBO {
 		this.addNameDetailSet(new ClientNameDetailEntity(this, null,
 				spouseNameDetailView));
 		this.customerDetail = new ClientDetailEntity(this, clientDetailView);
-		createPicture(picture, clientPersistence);
+		createPicture(picture);
 		offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
 		createAssociatedOfferings(offeringsSelected);
-		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId, clientPersistence);
+		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
 		if (parentCustomer != null) {
 			checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer
@@ -207,10 +217,10 @@ public class ClientBO extends CustomerBO {
 		if (isActive()) {
 			validateFieldsForActiveClient(loanOfficer, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
-			createAccountsForClient(customerPersistence, savingsPersistence, savingsPrdPersistence);
-			createDepositSchedule(customerPersistence);
+			createAccountsForClient();
+			createDepositSchedule();
 		}
-		generateSearchId(customerPersistence);
+		generateSearchId();
 	}
 
 	public Set<ClientNameDetailEntity> getNameDetailSet() {
@@ -340,10 +350,8 @@ public class ClientBO extends CustomerBO {
 		return null;
 	}
 	
-    // NOTE: Injected Persistence
-	// when this method is called from Bulk Entry preview persist will be false
-	public void handleAttendance(Date meetingDate, Short attendance, boolean persist,
-	        CustomerPersistence customerPersistence)
+    // when this method is called from Bulk Entry preview persist will be false
+	public void handleAttendance(Date meetingDate, Short attendance, boolean persist)
 			throws ServiceException, CustomerException {
 		ClientAttendanceBO clientAttendance = getClientAttendanceForMeeting(meetingDate);
 		if (clientAttendance == null) {
@@ -355,70 +363,58 @@ public class ClientBO extends CustomerBO {
 		if (persist)
 		{
 			try {
-				customerPersistence.createOrUpdate(this);
+				getCustomerPersistence().createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
 			}
 		}
 	}
 
-    // NOTE: Injected Persistence
-	public void handleAttendance(Date meetingDate, AttendanceType attendance, CustomerPersistence customerPersistence) 
+	public void handleAttendance(Date meetingDate, AttendanceType attendance) 
 	throws ServiceException, CustomerException {
 		boolean persist = true;
-		handleAttendance(meetingDate, attendance.getValue(), persist, customerPersistence);
+		handleAttendance(meetingDate, attendance.getValue(), persist);
 	}
 
-    // NOTE: Injected Persistence
 	@Override
-	public void changeStatus(Short newStatusId, Short flagId, String comment,
-	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
-	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
+	public void changeStatus(Short newStatusId, Short flagId, String comment)
 			throws CustomerException {
-		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
-		        masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
+		super.changeStatus(newStatusId, flagId, comment);
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
 						.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {
 			resetPositions(getParentCustomer());
 			getParentCustomer().setUserContext(getUserContext());
-			getParentCustomer().update(customerPersistence);
+			getParentCustomer().update();
 			CustomerBO center = getParentCustomer().getParentCustomer();
 			if (center != null) {
 				resetPositions(center);
 				center.setUserContext(getUserContext());
-				center.update(customerPersistence);
+				center.update();
 				center = null;
 			}
 		}
 	}
 	
-    // NOTE: Injected Persistence
 	@Override
-	public void updateMeeting(MeetingBO meeting,
-	        CustomerPersistence customerPersistence) throws CustomerException {
+	public void updateMeeting(MeetingBO meeting) throws CustomerException {
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
 		else
-			saveUpdatedMeeting(meeting, customerPersistence);
-		this.update(customerPersistence);
+			saveUpdatedMeeting(meeting);
+		this.update();
 	}
 
-    // NOTE: Injected Persistence
 	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting,
-	        CustomerPersistence customerPersistence)throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-		super.saveUpdatedMeeting(meeting, customerPersistence);
+		super.saveUpdatedMeeting(meeting);
 		if(getParentCustomer()==null)
-			deleteMeeting(newMeeting, customerPersistence);
+			deleteMeeting(newMeeting);
 	}
 	
-    // NOTE: Injected Persistence
 	@Override
-	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
+	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
 		if (getParentCustomer() != null) {
 			checkIfClientStatusIsLower(newStatusId, getParentCustomer()
@@ -430,7 +426,7 @@ public class ClientBO extends CustomerBO {
 		}
 
 		if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-			checkIfClientCanBeActive(newStatusId, officePersistence);
+			checkIfClientCanBeActive(newStatusId);
 		}
 	}
 
@@ -442,37 +438,30 @@ public class ClientBO extends CustomerBO {
 				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())); 
 	}
 
-    // NOTE: Injected Persistence
 	@Override
-	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
-	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence) throws CustomerException{
-		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence, savingsPersistence,
-		        savingsPrdPersistence);
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId);
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			this.setCustomerActivationDate(new Date());
-			createAccountsForClient(customerPersistence, savingsPersistence, savingsPrdPersistence);
-			savingsPersistence.persistSavingAccounts(this);
-			createDepositSchedule(customerPersistence);
+			createAccountsForClient();
+			getSavingsPersistence().persistSavingAccounts(this);
+			createDepositSchedule();
 		}
 	}
 
-    // NOTE: Injected Persistence
 	public void updatePersonalInfo(String displayname, String governmentId,
-			Date dateOfBirth, CustomerPersistence customerPersistence, ClientPersistence clientPersistence)
-	throws CustomerException {
+			Date dateOfBirth) throws CustomerException {
 		validateForDuplicateNameOrGovtId(displayname, dateOfBirth,
-				governmentId, clientPersistence);
+				governmentId);
 		setDisplayName(displayname);
 		setGovernmentId(governmentId);
 		setDateOfBirth(dateOfBirth);
 		
-		super.update(customerPersistence);
+		super.update();
 	}
 
 
-    // NOTE: Injected Persistence
-	public void updateMfiInfo(PersonnelBO personnel, CustomerPersistence customerPersistence) throws CustomerException {
+	public void updateMfiInfo(PersonnelBO personnel) throws CustomerException {
 		if (isActive() || isOnHold()) {
 			validateLO(personnel);
 		}
@@ -480,11 +469,10 @@ public class ClientBO extends CustomerBO {
 		for (AccountBO account: this.getAccounts()) {
 					account.setPersonnel(this.getPersonnel());
 					}
-		super.update(customerPersistence);
+		super.update();
 	}
 
-    // NOTE: Injected Persistence
-	public void transferToBranch(OfficeBO officeToTransfer, CustomerPersistence customerPersistence)
+	public void transferToBranch(OfficeBO officeToTransfer)
 			throws CustomerException {
 		validateBranchTransfer(officeToTransfer);
 		logger
@@ -498,15 +486,14 @@ public class ClientBO extends CustomerBO {
 
 		makeCustomerMovementEntries(officeToTransfer);
 		this.setPersonnel(null);
-		generateSearchId(customerPersistence);
-		super.update(customerPersistence);
+		generateSearchId();
+		super.update();
 		logger
 				.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :"
 						+ getCustomerId());
 	}
 
-    // NOTE: Injected Persistence
-	public void transferToGroup(GroupBO newParent, CustomerPersistence customerPersistence) throws CustomerException {
+	public void transferToGroup(GroupBO newParent) throws CustomerException {
 		validateGroupTransfer(newParent);
 		logger.debug("In ClientBO::transferToGroup(), transfering customerId: "
 				+ getCustomerId() + "to Group Id : "
@@ -516,23 +503,22 @@ public class ClientBO extends CustomerBO {
 			makeCustomerMovementEntries(newParent.getOffice());
 
 		CustomerBO oldParent = getParentCustomer();
-		changeParentCustomer(newParent, customerPersistence);
+		changeParentCustomer(newParent);
 		resetPositions(oldParent);
 
 		if (oldParent.getParentCustomer() != null) {
 			CustomerBO center = oldParent.getParentCustomer();
 			resetPositions(center);
 			center.setUserContext(getUserContext());
-			center.update(customerPersistence);
+			center.update();
 		}
-		update(customerPersistence);
+		update();
 		logger
 				.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :"
 						+ getCustomerId());
 	}
 
-    // NOTE: Injected Persistence
-	public void handleGroupTransfer(CustomerPersistence customerPersistence) throws CustomerException {
+	public void handleGroupTransfer() throws CustomerException {
 		if (!isSameBranch(getParentCustomer().getOffice())) {
 			makeCustomerMovementEntries(getParentCustomer().getOffice());
 			if (isActive())
@@ -546,7 +532,7 @@ public class ClientBO extends CustomerBO {
 			setPersonnel(getParentCustomer().getPersonnel());
 			setUpdatedMeeting(getParentCustomer().getParentCustomer().getCustomerMeeting().getMeeting());
 		}
-		update(customerPersistence);
+		update();
 	}
 
 	public ClientNameDetailEntity getClientName() {
@@ -574,11 +560,10 @@ public class ClientBO extends CustomerBO {
 
 	}
 
-    // NOTE: Injected Persistence
-	public void updatePicture(InputStream picture, ClientPersistence clientPersistence) throws CustomerException {
+	public void updatePicture(InputStream picture) throws CustomerException {
 		if (customerPicture != null)
 			try {
-				customerPicture.setPicture(clientPersistence
+				customerPicture.setPicture(getClientPersistence()
 						.createBlob(picture));
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
@@ -586,7 +571,7 @@ public class ClientBO extends CustomerBO {
 		else
 			try {
 				this.customerPicture = new CustomerPictureEntity(this,
-						clientPersistence.createBlob(picture));
+						getClientPersistence().createBlob(picture));
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
 			}
@@ -594,12 +579,12 @@ public class ClientBO extends CustomerBO {
 	}
 
 
-	private void createPicture(InputStream picture, ClientPersistence clientPersistence) throws CustomerException {
+	private void createPicture(InputStream picture) throws CustomerException {
 		try {
 			if (picture != null && picture.available() > 0)
 				try {
 					this.customerPicture = new CustomerPictureEntity(this,
-							clientPersistence.createBlob(picture));
+							getClientPersistence().createBlob(picture));
 				} catch (PersistenceException e) {
 					throw new CustomerException(e);
 				}
@@ -680,8 +665,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 
-    // NOTE: Injected Persistence
-	private void generateSearchId(CustomerPersistence customerPersistence) throws CustomerException {
+	private void generateSearchId() throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {
 			childAddedForParent(getParentCustomer());
@@ -689,7 +673,7 @@ public class ClientBO extends CustomerBO {
 					+ getParentCustomer().getMaxChildCount());
 		} else {
 			try {
-				count = customerPersistence.getCustomerCountForOffice(
+				count = getCustomerPersistence().getCustomerCountForOffice(
 						CustomerLevel.CLIENT, getOffice().getOfficeId());
 			} catch (PersistenceException pe) {
 				throw new CustomerException(pe);
@@ -699,12 +683,11 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // NOTE: Injected Persistence
 	private void validateForDuplicateNameOrGovtId(String displayName,
-			Date dateOfBirth, String governmentId, ClientPersistence clientPersistence) throws CustomerException {
+			Date dateOfBirth, String governmentId) throws CustomerException {
 		checkForDuplicates(displayName, dateOfBirth, governmentId,
 				getCustomerId() == null ? Integer.valueOf("0")
-						: getCustomerId(), clientPersistence);
+						: getCustomerId());
 	}
 
 	private void validateFieldsForActiveClient(PersonnelBO loanOfficer,
@@ -717,13 +700,11 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // NOTE: Injected Persistence
 	private void checkForDuplicates(String name, Date dob, String governmentId,
-			Integer customerId, ClientPersistence clientPersistence) throws CustomerException {
-
+			Integer customerId) throws CustomerException {
 		if (!StringUtils.isNullOrEmpty(governmentId)) {
 			try {
-				if (clientPersistence.checkForDuplicacyOnGovtIdForNonClosedClients(governmentId,
+				if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId,
 						customerId) == true) {
 					String label = 
 						MessageLookup.getInstance().lookupLabel(
@@ -741,7 +722,7 @@ public class ClientBO extends CustomerBO {
 			}
 		} else {
 			try {
-				if (clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob,
+				if (getClientPersistence().checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob,
 						customerId) == true) {
 					throw new CustomerException(
 						CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
@@ -801,8 +782,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // NOTE: Injected Persistence
-	private void checkIfClientCanBeActive(Short newStatus, OfficePersistence officePersistence)
+	private void checkIfClientCanBeActive(Short newStatus)
 			throws CustomerException {
 		boolean loanOfficerActive = false;
 		boolean branchInactive = false;
@@ -817,14 +797,15 @@ public class ClientBO extends CustomerBO {
 		}
 		if (getPersonnel() != null) {
 			try {
-				loanOfficerActive = officePersistence.hasActivePeronnel(officeId);
+				loanOfficerActive = getOfficePersistence()
+						.hasActivePeronnel(officeId);
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
 			}
 		}
 
 		try {
-			branchInactive = officePersistence.isBranchInactive(officeId);
+			branchInactive = getOfficePersistence().isBranchInactive(officeId);
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
 		}
@@ -844,22 +825,19 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-    // NOTE: Injected Persistence
-	private void createAccountsForClient(CustomerPersistence customerPersistence,
-	        SavingsPersistence savingsPersistence, SavingsPrdPersistence savingsPrdPersistence)
+	private void createAccountsForClient()
 	throws CustomerException {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
                 try {
-                    SavingsOfferingBO savingsOffering = savingsPrdPersistence.getSavingsProduct(clientOffering
+                    SavingsOfferingBO savingsOffering = getSavingsPrdPersistence().getSavingsProduct(clientOffering
                             .getSavingsOffering().getPrdOfferingId());
                     if (savingsOffering.isActive()) {
-                        List<CustomFieldDefinitionEntity> customFieldDefs = savingsPersistence
+                        List<CustomFieldDefinitionEntity> customFieldDefs = getSavingsPersistence()
                                 .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
                         addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,
                                 savingsOffering.getRecommendedAmount(),
-                                createCustomFieldViewsForClientSavingsAccount(customFieldDefs),
-                                customerPersistence));
+                                createCustomFieldViewsForClientSavingsAccount(customFieldDefs)));
                     }
                 } catch (PersistenceException pe) {
                     throw new CustomerException(pe);
@@ -895,15 +873,12 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 	
-    // NOTE: Injected Persistence
-	private void createDepositSchedule(CustomerPersistence customerPersistence) throws CustomerException{
+	private void createDepositSchedule() throws CustomerException{
 		try{
 			if(getParentCustomer()!=null){
-				List<SavingsBO> savingsList = customerPersistence.retrieveSavingsAccountForCustomer(
-				        getParentCustomer().getCustomerId());
+				List<SavingsBO> savingsList = getCustomerPersistence().retrieveSavingsAccountForCustomer(getParentCustomer().getCustomerId());
 				if(getParentCustomer().getParentCustomer()!=null)
-					savingsList.addAll(customerPersistence.retrieveSavingsAccountForCustomer(
-					        getParentCustomer().getParentCustomer().getCustomerId()));
+					savingsList.addAll(getCustomerPersistence().retrieveSavingsAccountForCustomer(getParentCustomer().getParentCustomer().getCustomerId()));
 				for(SavingsBO savings : savingsList){
 					savings.setUserContext(getUserContext());
 					savings.generateAndUpdateDepositActionsForClient(this);				
@@ -915,12 +890,10 @@ public class ClientBO extends CustomerBO {
 			throw new CustomerException(ae);
 		}
 	}
-
-    // NOTE: Injected Persistence
-	public void updateClientFlag(CustomerPersistence customerPersistence) throws CustomerException,
+	public void updateClientFlag() throws CustomerException,
 			PersistenceException {
 			this.groupFlag = YesNoFlag.NO.getValue();
-			update(customerPersistence);
+			update();
 
 	}
 	
@@ -940,9 +913,7 @@ public class ClientBO extends CustomerBO {
 				: false;
 	}
 	
-    // NOTE: Injected Persistence
-	public void addClientToGroup(GroupBO newParent,
-	        CustomerPersistence customerPersistence) throws CustomerException {
+	public void addClientToGroup(GroupBO newParent) throws CustomerException {
 		validateAddClientToGroup(newParent);
 
 		if (!isSameBranch(newParent.getOffice()))
@@ -950,15 +921,15 @@ public class ClientBO extends CustomerBO {
 		
 		setParentCustomer(newParent);
 		addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-		handleAddClientToGroup(customerPersistence);
+		handleAddClientToGroup();
 		childAddedForParent(newParent);
 		setSearchId(newParent.getSearchId() + "."
 				+ String.valueOf(newParent.getMaxChildCount()));
 		newParent.setUserContext(getUserContext());
-		newParent.update(customerPersistence);
+		newParent.update();
 		
 		groupFlag = YesNoFlag.YES.getValue();
-		update(customerPersistence);
+		update();
 	}
 	
 	private void validateAddClientToGroup(GroupBO toGroup)
@@ -1005,4 +976,37 @@ public class ClientBO extends CustomerBO {
 	public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException {
 		updatePerformanceHistoryOnRepayment(loan,totalAmount);
 	}
+
+    public void setSavingsPersistence(SavingsPersistence savingsPersistence) {
+        this.savingsPersistence = savingsPersistence;
+    }
+
+    public SavingsPersistence getSavingsPersistence() {
+        if (null == savingsPersistence) {
+            savingsPersistence = new SavingsPersistence();
+        }
+        return savingsPersistence;
+    }
+
+    public void setSavingsPrdPersistence(SavingsPrdPersistence savingsPrdPersistence) {
+        this.savingsPrdPersistence = savingsPrdPersistence;
+    }
+
+    public SavingsPrdPersistence getSavingsPrdPersistence() {
+        if (null == savingsPrdPersistence) {
+            savingsPrdPersistence = new SavingsPrdPersistence();
+        }
+        return savingsPrdPersistence;
+    }
+
+    public ClientPersistence getClientPersistence() {
+        if (null == clientPersistence) {
+            clientPersistence = new ClientPersistence();
+        }
+        return clientPersistence;
+    }
+
+    public void setClientPersistence(ClientPersistence clientPersistence) {
+        this.clientPersistence = clientPersistence;
+    }
 }

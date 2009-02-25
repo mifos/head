@@ -24,13 +24,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
-import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -38,7 +36,6 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -46,13 +43,10 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -70,8 +64,34 @@ import org.mifos.framework.util.helpers.Money;
 public class GroupBO extends CustomerBO {
 
 	private GroupPerformanceHistoryEntity groupPerformanceHistory;
+	
+	private GroupPersistence groupPersistence = null;
+	private OfficePersistence officePersistence = null;
 
-	private MifosLogger logger = MifosLogManager
+	public GroupPersistence getGroupPersistence() {
+	    if (null == groupPersistence) {
+	        groupPersistence = new GroupPersistence();
+	    }
+        return groupPersistence;
+    }
+
+    public void setGroupPersistence(GroupPersistence groupPersistence) {
+        this.groupPersistence = groupPersistence;
+    }
+    
+    public OfficePersistence getOfficePersistence() {
+        if (null == officePersistence) {
+            officePersistence = new OfficePersistence();
+        }
+        return officePersistence;
+    }
+
+    public void setOfficePersistence(OfficePersistence officePersistence) {
+        this.officePersistence = officePersistence;
+    }
+
+
+    private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.GROUP_LOGGER);
 
 	
@@ -136,14 +156,11 @@ public class GroupBO extends CustomerBO {
 		this.groupPerformanceHistory = groupPerformanceHistory;
 	}
 
-    // NOTE: Injected Persistence
 	public void update(UserContext userContext, String displayName,
 			Short loanOfficerId, String externalId, Short trained,
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields,
-			List<CustomerPositionView> customerPositions,
-			CustomerPersistence customerPersistence, 
-			PersonnelPersistence personnelPersistence)
+			List<CustomerPositionView> customerPositions)
 			throws Exception {
 		validateFieldsForUpdate(displayName, loanOfficerId);
 		if (trained != null)
@@ -151,14 +168,13 @@ public class GroupBO extends CustomerBO {
 		else
 			setTrained(YesNoFlag.NO.getValue());
 		setTrainedDate(trainedDate);
-		updateLoanOfficer(loanOfficerId, customerPersistence, personnelPersistence);
+		updateLoanOfficer(loanOfficerId);
 		setDisplayName(displayName);
 		super.update(userContext, externalId, address, customFields,
-				customerPositions, customerPersistence);
+				customerPositions);
 	}
 
-    // NOTE: Injected Persistence
-	public void transferToBranch(OfficeBO officeToTransfer, CustomerPersistence customerPersistence)throws CustomerException{
+	public void transferToBranch(OfficeBO officeToTransfer)throws CustomerException{
 		validateNewOffice(officeToTransfer);
 		logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() +  "to branch : "+ officeToTransfer.getOfficeId());
 		validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
@@ -169,18 +185,17 @@ public class GroupBO extends CustomerBO {
 		makeCustomerMovementEntries(officeToTransfer);
 		setPersonnel(null);
 		setSearchId(generateSearchId());
-		update(customerPersistence);
+		update();
 		if(getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				client.setUserContext(getUserContext());
-				((ClientBO)client).handleGroupTransfer(customerPersistence);
+				((ClientBO)client).handleGroupTransfer();
 			}
 		}
 		logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());		
 	}
 	
-    // NOTE: Injected Persistence
-	public void transferToCenter(CenterBO newParent, CustomerPersistence customerPersistence)throws CustomerException{
+	public void transferToCenter(CenterBO newParent)throws CustomerException{
 		validateNewCenter(newParent);
 		logger.debug("In GroupBO::transferToCenter(), transfering customerId: " + getCustomerId() +  "to Center Id : "+ newParent.getCustomerId());
 
@@ -192,92 +207,76 @@ public class GroupBO extends CustomerBO {
 				setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
 		}
 		
-		changeParentCustomer(newParent, customerPersistence);
+		changeParentCustomer(newParent);
 		makeInactive(newParent);
 		
 		addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
-		update(customerPersistence);
+		update();
 		if(getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				client.setUserContext(getUserContext());
-				((ClientBO)client).handleGroupTransfer(customerPersistence);
+				((ClientBO)client).handleGroupTransfer();
 			}
 		}
 	}
 	
-    // NOTE: Injected Persistence
-	@Override
-	protected void saveUpdatedMeeting(MeetingBO meeting,
-	        CustomerPersistence customerPersistence) throws CustomerException{
+	protected void saveUpdatedMeeting(MeetingBO meeting) throws CustomerException{
 		logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: "
 				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-		super.saveUpdatedMeeting(meeting, customerPersistence);
+		super.saveUpdatedMeeting(meeting);
 		if(getParentCustomer()==null)
-			deleteMeeting(newMeeting, customerPersistence);
+			deleteMeeting(newMeeting);
 	}
 	
-    // NOTE: Injected Persistence
 	@Override
-	public void updateMeeting(MeetingBO meeting,
-	        CustomerPersistence customerPersistence) throws CustomerException{
+	public void updateMeeting(MeetingBO meeting) throws CustomerException{
 		logger.debug("In GroupBO::updateMeeting(), customerId: "
 				+ getCustomerId());
 		if(getParentCustomer()==null){			
 			if(getCustomerMeeting()==null){
 				this.setCustomerMeeting(createCustomerMeeting(meeting));
-				updateMeetingForClients(meeting, customerPersistence);
+				updateMeetingForClients(meeting);
 			}
 			else
-				saveUpdatedMeeting(meeting, customerPersistence);
+				saveUpdatedMeeting(meeting);
 		}else
-			saveUpdatedMeeting(meeting, customerPersistence);
-		update(customerPersistence);
+			saveUpdatedMeeting(meeting);
+		update();
 	}
 	
-    // NOTE: Injected Persistence
-	private void updateMeetingForClients(MeetingBO meeting,
-	        CustomerPersistence customerPersistence) throws CustomerException{
+	private void updateMeetingForClients(MeetingBO meeting) throws CustomerException{
 		Set<CustomerBO> clients = getChildren();			
 		if(clients!=null){
 			for(CustomerBO client : clients){
 				client.setUserContext(getUserContext());
-				client.updateMeeting(meeting, customerPersistence);
+				client.updateMeeting(meeting);
 			}
 		}
 	}
 	
-    // NOTE: Injected Persistence
 	@Override
-	public void changeStatus(Short newStatusId, Short flagId, String comment, 
-	        CustomerPersistence customerPersistence, PersonnelPersistence personnelPersistence,
-	        MasterPersistence masterPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence, OfficePersistence officePersistence)
+	public void changeStatus(Short newStatusId, Short flagId, String comment)
 	throws CustomerException {
 		Short oldStatusId = getCustomerStatus().getId();
-		super.changeStatus(newStatusId, flagId, comment, customerPersistence, personnelPersistence,
-		        masterPersistence, savingsPersistence, savingsPrdPersistence, officePersistence);
+		super.changeStatus(newStatusId, flagId, comment);
 		if(oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue()) && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				if(client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())){
 					client.setUserContext(getUserContext());
-					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment,
-					        customerPersistence, personnelPersistence, masterPersistence, savingsPersistence,
-					        savingsPrdPersistence, officePersistence);
+					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment);
 				}
 			}
 		}
 	}
 	
-    // NOTE: Injected Persistence
 	@Override
-	protected void validateStatusChange(Short newStatusId,
-	        CustomerPersistence customerPersistence, OfficePersistence officePersistence)
+	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
 		logger.debug("In GroupBO::validateStatusChange(), customerId: "
 				+ getCustomerId());
 		if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue()))
-			checkIfGroupCanBeClosed(customerPersistence);
+			checkIfGroupCanBeClosed();
 		if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
 			checkIfGroupCanBeActive(newStatusId);
 		if (getCustomerStatus().getId().equals(
@@ -298,13 +297,9 @@ public class GroupBO extends CustomerBO {
 				&& newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()));
 	}
 
-    // NOTE: Injected Persistence
 	@Override
-	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId,
-	        CustomerPersistence customerPersistence, SavingsPersistence savingsPersistence,
-	        SavingsPrdPersistence savingsPrdPersistence) throws CustomerException{
-		super.handleActiveForFirstTime(oldStatusId, newStatusId, customerPersistence, savingsPersistence,
-		        savingsPrdPersistence);
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId);
 		if (isActiveForFirstTime(oldStatusId, newStatusId))
 			this.setCustomerActivationDate(new Date());
 	}
@@ -405,7 +400,7 @@ public class GroupBO extends CustomerBO {
 	private void checkGroupCanBeChangedFromCancelToPartialIfOfficeIsActive()
 	throws CustomerException {
 		try {
-			if (new OfficePersistence().isBranchInactive(getOffice().getOfficeId())) {
+			if (getOfficePersistence().isBranchInactive(getOffice().getOfficeId())) {
 				throw new CustomerException(
 						GroupConstants.BRANCH_INACTIVE,
 						new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
@@ -419,7 +414,7 @@ public class GroupBO extends CustomerBO {
 	private void checkGroupCanBeChangedFromCancelToPartialIfPersonnelActive()
 	throws CustomerException {
 		try {
-			if (new OfficePersistence()
+			if (getOfficePersistence()
 			.hasActivePeronnel(getOffice().getOfficeId())) {
 				throw new CustomerException(
 						GroupConstants.LOANOFFICER_INACTIVE,
@@ -432,16 +427,13 @@ public class GroupBO extends CustomerBO {
 		}
 	}
 
-    // NOTE: Injected Persistence
-	private void checkIfGroupCanBeClosed(
-	        CustomerPersistence customerPersistence) throws CustomerException {
+	private void checkIfGroupCanBeClosed() throws CustomerException {
 		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
 		if (getChildren(CustomerLevel.CLIENT,
-		        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
-		        customerPersistence)
+		        ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
 				.size() > 0)
 			throw new CustomerException(
 					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
@@ -458,7 +450,7 @@ public class GroupBO extends CustomerBO {
 					+ getParentCustomer().getMaxChildCount();
 		} else {
 			try {
-				int customerCount = new CustomerPersistence()
+				int customerCount = getCustomerPersistence()
 						.getCustomerCountForOffice(CustomerLevel.GROUP,
 								getOffice().getOfficeId());
 				searchId = GroupConstants.PREFIX_SEARCH_STRING
@@ -490,7 +482,7 @@ public class GroupBO extends CustomerBO {
 	private void validateForDuplicateName(String displayName, Short officeId)
 			throws CustomerException {
 		try {
-			if (new GroupPersistence().isGroupExists(displayName, officeId))
+			if (getGroupPersistence().isGroupExists(displayName, officeId))
 				throw new CustomerException(
 						CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
 		} catch (PersistenceException e) {
@@ -580,12 +572,10 @@ public class GroupBO extends CustomerBO {
 		updatePerformanceHistoryOnRepayment(loan, totalAmount);
 	}
 	
-    // NOTE: Injected Persistence
-	@Override
-	public void update(CustomerPersistence customerPersistence) throws CustomerException {
+	public void update() throws CustomerException {
 		try {
 			setUpdateDetails();
-			customerPersistence.createOrUpdate(this);
+			getCustomerPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new CustomerException(
 					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);

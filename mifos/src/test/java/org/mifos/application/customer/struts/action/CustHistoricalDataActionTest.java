@@ -8,7 +8,6 @@ import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -78,7 +77,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		customerHistoricalDataEntity.setMfiJoiningDate(offSetCurrentDate(10));
 		Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
 		group.updateHistoricalData(customerHistoricalDataEntity);
-		group.update(new CustomerPersistence());
+		group.update();
 		HibernateUtil.commitTransaction();
 		assertEquals(mfiDate,new Date(group.getMfiJoiningDate().getTime()));
 		setRequestPathInfo("/custHistoricalDataAction.do");
@@ -191,7 +190,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		assertEquals("Test", group.getHistoricalData().getProductName());
 		assertEquals("Test notes", group.getHistoricalData().getNotes());
@@ -216,7 +215,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 				group);
 		group.updateHistoricalData(customerHistoricalDataEntity);
-		group.update(new CustomerPersistence());
+		group.update();
 		HibernateUtil.commitTransaction();
 
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
@@ -238,7 +237,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		assertEquals("Test", group.getHistoricalData().getProductName());
 		assertEquals("Test notes", group.getHistoricalData().getNotes());

@@ -207,11 +207,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				SavingsBO.class, clientSavingsAccount.getAccountId());
 		groupSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, groupSavingsAccount.getAccountId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
 		assertEquals(client.getClientAttendances().size(), 1);
@@ -300,11 +298,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 //				groupAccount.getAccountId());
 //		clientAccount = TestObjectFactory.getObject(LoanBO.class,
 //				clientAccount.getAccountId());
-//		center = TestObjectFactory.getObject(CustomerBO.class,
+//		center = TestObjectFactory.getCustomer(CustomerBO.class,
 //				center.getCustomerId());
-//		group = TestObjectFactory.getObject(CustomerBO.class,
+//		group = TestObjectFactory.getCustomer(CustomerBO.class,
 //				group.getCustomerId());
-//		client = TestObjectFactory.getObject(ClientBO.class, client
+//		client = TestObjectFactory.getClient(ClientBO.class, client
 //				.getCustomerId());
 //
 //		verifyActionErrors(new String[] { "errors.update" });
@@ -349,11 +347,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				SavingsBO.class, clientSavingsAccount.getAccountId());
 		groupSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, groupSavingsAccount.getAccountId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
 	}

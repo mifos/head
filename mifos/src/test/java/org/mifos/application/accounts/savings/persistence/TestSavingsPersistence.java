@@ -214,7 +214,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 			savingsOffering = helper.createSavingsOffering("effwe", "231");
 			savings = new SavingsBO(userContext, savingsOffering, group,
 					AccountState.SAVINGS_ACTIVE, savingsOffering
-							.getRecommendedAmount(), null, customerPersistence);
+							.getRecommendedAmount(), null);
 
 			AccountPaymentEntity payment = helper
 					.createAccountPaymentToPersist(savings, new Money(
@@ -314,7 +314,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
-				null, "", customerPersistence);
+				null, "");
 
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
@@ -361,7 +361,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
-				null, "", customerPersistence);
+				null, "");
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);

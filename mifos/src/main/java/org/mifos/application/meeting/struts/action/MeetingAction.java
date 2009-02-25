@@ -47,7 +47,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -166,7 +165,7 @@ public class MeetingAction extends BaseAction {
 		else
 			getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), getUserContext(request), customer.getOffice()
 							.getOfficeId(), getUserContext(request).getId());
-		customer.updateMeeting(meeting, new CustomerPersistence());
+		customer.updateMeeting(meeting);
 		ActionForwards forward = forwardForUpdate(actionForm.getCustomerLevelValue());
 		return mapping.findForward(forward.toString());
 	}

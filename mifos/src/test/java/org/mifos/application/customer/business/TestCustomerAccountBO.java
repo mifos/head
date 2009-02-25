@@ -28,9 +28,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -152,8 +149,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						TestObjectFactory.getMFICurrency(), "100.0"), null,
 						center.getPersonnel(), "3424324", Short.valueOf("1"),
 						transactionDate, transactionDate);
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
@@ -189,8 +185,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						TestObjectFactory.getMFICurrency(), "100.0"), null,
 						center.getPersonnel(), "3424324", Short.valueOf("1"),
 						transactionDate, transactionDate);
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 
 		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
@@ -327,8 +322,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						customerScheduleEntity.getTotalFeeDueWithMiscFee(),
 						null, center.getPersonnel(), "3424324", Short
 								.valueOf("1"), transactionDate, transactionDate);
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
@@ -345,7 +339,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals(transactionDate, activity.getCreatedDate());
 		}
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		UserContext uc = TestUtils.makeUser();
 		customerAccount = center.getCustomerAccount();
@@ -359,7 +353,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			}
 		}
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		customerAccount.setUserContext(uc);
@@ -377,7 +371,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testWaiveChargeDue() throws Exception {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		userContext = TestUtils.makeUser();
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
@@ -402,13 +396,13 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testWaiveChargeOverDue() throws Exception {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
 		changeFirstInstallmentDateToPreviousDate(customerAccountBO);
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		userContext = TestUtils.makeUser();
 		customerAccountBO = group.getCustomerAccount();
@@ -445,7 +439,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 
 		CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group
@@ -461,7 +455,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 		group.getCustomerAccount().applyPeriodicFees();
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		CustomerScheduleEntity firstInstallment = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
@@ -475,7 +469,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			}
 		}
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 
@@ -490,7 +484,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 
@@ -516,10 +510,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
@@ -559,7 +551,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO.updateAccountActivity(null, null, new Money("222"),
 				null, Short.valueOf("1"), "Mainatnence Fee removed");
 		TestObjectFactory.updateObject(customerAccountBO);
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
@@ -577,7 +569,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		createCenter();
 		java.util.Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
@@ -599,12 +591,12 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		meetingDates = meeting.getAllDates((short) 10);
 		meetingDates.remove(0);
 		center.getCustomerAccount().regenerateFutureInstallments(
-				nextInstallmentId, new CustomerPersistence());
+				nextInstallmentId);
 		TestObjectFactory.updateObject(center);
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		for (AccountActionDateEntity actionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -623,23 +615,23 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testRegenerateFutureInstallmentsForGroup() throws Exception {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 
 		List<java.util.Date> meetingDates = meeting.getAllDates((short) 10);
 		meetingDates.remove(0);
-		group.getCustomerAccount().regenerateFutureInstallments((short) 2, new CustomerPersistence());
+		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.updateObject(group);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		for (AccountActionDateEntity actionDateEntity : group
 				.getCustomerAccount().getAccountActionDates()) {
@@ -659,9 +651,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			throws ApplicationException, SystemException {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		Date installment2ndDate = null;
 		Date installment3ndDate = null;
@@ -678,12 +670,12 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED);
 		TestCustomerBO.setCustomerStatus(group, customerStatusEntity);
-		group.getCustomerAccount().regenerateFutureInstallments((short) 2, new CustomerPersistence());
+		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 
 		for (AccountActionDateEntity actionDateEntity : group
@@ -705,7 +697,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testGenerateMeetingsForNextSet() throws Exception {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		int lastInstallmentId = center.getCustomerAccount()
 				.getAccountActionDates().size();
@@ -739,10 +731,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
@@ -774,10 +764,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
@@ -799,10 +787,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
@@ -842,10 +828,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
@@ -901,10 +885,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PENDING, center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
@@ -960,10 +942,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "20",
@@ -1148,8 +1128,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						TestObjectFactory.getMFICurrency(), "100.0"), null,
 						center.getPersonnel(), "3424324", Short.valueOf("1"),
 						transactionDate, transactionDate);
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
@@ -1171,18 +1150,18 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meetingBO);
 		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(), 14);
-		center.update(new CustomerPersistence());
+		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		java.util.Date nextMeetingDate = center.getCustomerAccount()
 				.getNextMeetingDate();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		for (AccountActionDateEntity actionDateEntity : group
 				.getCustomerAccount().getAccountActionDates()) {
@@ -1200,18 +1179,18 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meetingBO);
 		changeFirstInstallmentDateToPreviousDate(center.getCustomerAccount());
-		center.update(new CustomerPersistence());
+		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		java.util.Date nextMeetingDate = center.getCustomerAccount()
 				.getNextMeetingDate();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		for (AccountActionDateEntity actionDateEntity : group
 				.getCustomerAccount().getAccountActionDates()) {

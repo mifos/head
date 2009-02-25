@@ -84,15 +84,15 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,group.getOpenLoanAccounts().size());
 		assertEquals(1,group.getOpenSavingAccounts().size());
 		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(),group.getCustomerStatus().getId());
-		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).getActiveClientCount(
-		        new CustomerPersistence()).intValue());
+		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).
+		        getActiveClientCount().intValue());
 		HibernateUtil.closeSession();
 		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
 		savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
 		savingsBO2 = TestObjectFactory.getObject(SavingsBO.class, savingsBO2.getAccountId());
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class,	client.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client = TestObjectFactory.getClient(client.getCustomerId());
 	}
 	
 	public void testFailureGetGroupBySystemId() throws Exception {
@@ -127,14 +127,14 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,group.getOpenLoanAccounts().size());
 		assertEquals(1,group.getOpenSavingAccounts().size());
 		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(),group.getCustomerStatus().getId());
-		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).getActiveClientCount(
-		        new CustomerPersistence()).intValue());
+		assertEquals(1,((GroupPerformanceHistoryEntity)group.getPerformanceHistory()).
+		        getActiveClientCount().intValue());
 		HibernateUtil.closeSession();
 		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
 		savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class,	client.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client = TestObjectFactory.getClient(client.getCustomerId());
 	}
 
 	public void testFailureGet() throws Exception {

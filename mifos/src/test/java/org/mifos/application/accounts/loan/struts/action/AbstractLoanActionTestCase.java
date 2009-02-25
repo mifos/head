@@ -118,7 +118,6 @@ public abstract class AbstractLoanActionTestCase extends
 	}
 
 	private void reloadMembers() {
-	    // NOTE: Incomplete Initialization
 		if (accountBO != null) {
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());

@@ -404,8 +404,7 @@ public class AccountBO extends BusinessObject {
 		buildFinancialEntries(new HashSet(reversedTrxns));
 	}
 	
-	public final void handleChangeInMeetingSchedule(
-	        CustomerPersistence customerPersistence) throws AccountException {
+	public final void handleChangeInMeetingSchedule() throws AccountException {
 		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		if (accountActionDateEntity != null) {
@@ -413,33 +412,31 @@ public class AccountBO extends BusinessObject {
 			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
 				installmentId += 1;
 			}
-			regenerateFutureInstallments(installmentId, customerPersistence);
+			regenerateFutureInstallments(installmentId);
 			try {
 				(new AccountPersistence()).createOrUpdate(this);
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
 		}else{
-			resetUpdatedFlag(customerPersistence);
+			resetUpdatedFlag();
 		}
 	}
 
-	protected void resetUpdatedFlag(
-	        CustomerPersistence customerPersistence) throws AccountException{
+	protected void resetUpdatedFlag() throws AccountException{
 	}
 	
-	public void changeStatus(AccountState newStatus, Short flagId, String comment,
-	        CustomerPersistence customerPersistence) throws AccountException {
-        changeStatus(newStatus.getValue(), flagId, comment, customerPersistence);
+	public void changeStatus(AccountState newStatus, Short flagId, String comment) throws AccountException {
+        changeStatus(newStatus.getValue(), flagId, comment);
     }
 
 	public final void changeStatus(Short newStatusId, Short flagId,
-			String comment, CustomerPersistence customerPersistence) throws AccountException {
+			String comment) throws AccountException {
 		try {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"In the change status method of AccountBO:: new StatusId= "
 							+ newStatusId);
-			activationDateHelper(newStatusId, customerPersistence);
+			activationDateHelper(newStatusId);
 			MasterPersistence masterPersistence = new MasterPersistence();
 			AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class, newStatusId);
@@ -1252,7 +1249,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected void regenerateFutureInstallments(
-	        Short nextIntallmentId, CustomerPersistence customerPersistence)
+	        Short nextIntallmentId)
 			throws AccountException {
 	}
 
@@ -1299,8 +1296,7 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 	}
 
-	protected void activationDateHelper(Short newStatusId,
-	        CustomerPersistence customerPersistence)
+	protected void activationDateHelper(Short newStatusId)
 			throws AccountException {
 	}
 

@@ -19,6 +19,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -104,7 +105,7 @@ public class CenterMapper {
 			centerBO = new CenterBO(userContext, center.getName(), address,
 					fields, fees, center.getExternalId(), mfiJoiningDate,
 					new OfficePersistence().getOffice(center.getOfficeId()), 
-					meeting, new PersonnelPersistence().getPersonnel(center.getLoanOfficerId()));
+					meeting, new PersonnelPersistence().getPersonnel(center.getLoanOfficerId()), new CustomerPersistence());
 		}
 		catch (CustomerException e) {
 			throw new RuntimeException(e);

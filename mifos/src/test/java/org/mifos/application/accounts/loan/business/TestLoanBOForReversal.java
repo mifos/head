@@ -35,7 +35,6 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -65,7 +64,6 @@ public class TestLoanBOForReversal extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-	    // NOTE: Incomplete Initialization
 		if (loan != null)
 			loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 					loan.getAccountId());
@@ -153,7 +151,7 @@ public class TestLoanBOForReversal extends MifosTestCase {
 	private void reverseLoan() throws AccountException {
 		loan = retrieveLoanAccount();
 		loan.setUserContext(userContext);
-		loan.reverseLoanDisbursal(group.getPersonnel(), "Loan Disbursal", new CustomerPersistence());
+		loan.reverseLoanDisbursal(group.getPersonnel(), "Loan Disbursal");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 	}

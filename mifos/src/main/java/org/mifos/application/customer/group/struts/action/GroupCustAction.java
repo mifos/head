@@ -65,7 +65,6 @@ import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -324,8 +323,7 @@ public class GroupCustAction extends CustAction {
 		groupBO.update(getUserContext(request),actionForm.getDisplayName(), 
 		        actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),
 		        actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), 
-		        actionForm.getCustomFields(), actionForm.getCustomerPositions(), 
-		        new CustomerPersistence(),new PersonnelPersistence());
+		        actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	
@@ -427,8 +425,7 @@ public class GroupCustAction extends CustAction {
 				savingsAccounts, request);
 		List<CustomerBO> allChildNodes = groupBO.getChildren(
 				CustomerLevel.CLIENT,
-				ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
-				new CustomerPersistence());
+				ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
 
 		// bug #1417 - wrong client sort order. Client sort order on bulk
 		// entry screens should match ordering on group details page.
@@ -579,7 +576,6 @@ public class GroupCustAction extends CustAction {
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 		
-		// NOTE: Incomplete Initialization
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
 				actionForm.getExternalId(), actionForm.isCustomerTrained(), 
 				actionForm.getTrainedDateValue(userContext.getPreferredLocale()),

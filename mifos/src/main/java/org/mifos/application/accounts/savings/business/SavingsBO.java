@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.accounts.savings.business;
 
 import java.sql.Timestamp;
@@ -54,7 +74,6 @@ import org.mifos.application.productdefinition.exceptions.ProductDefinitionExcep
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -115,8 +134,7 @@ public class SavingsBO extends AccountBO {
 	public SavingsBO(UserContext userContext,
 			SavingsOfferingBO savingsOffering, CustomerBO customer,
 			AccountState accountState, Money recommendedAmount,
-			List<CustomFieldView> customFields,
-			CustomerPersistence customerPersistence) throws AccountException {
+			List<CustomFieldView> customFields) throws AccountException {
 		super(userContext, customer, AccountTypes.SAVINGS_ACCOUNT, accountState);
 		savingsActivityDetails = new HashSet<SavingsActivityEntity>();
 		this.setSavingsOffering(savingsOffering);
@@ -132,8 +150,7 @@ public class SavingsBO extends AccountBO {
 		// generated the deposit action dates only if savings account is being
 		// saved in approved state
 		if (isActive())
-			setValuesForActiveState(customerPersistence);
-
+			setValuesForActiveState();
 	}
 	
 	public void populateInstanceForTest(SavingsOfferingBO savingsOffering) {
@@ -954,8 +971,7 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	private void generateDepositAccountActions(
-	        CustomerPersistence customerPersistence) throws AccountException {
+	private void generateDepositAccountActions() throws AccountException {
 		logger.debug("In SavingsBO::generateDepositAccountActions()");
 		// deposit happens on each meeting date of the customer. If for
 		// center/group with individual deposits, insert row for every client
@@ -976,8 +992,7 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.ACTIVE_AND_ONHOLD,
-							customerPersistence);
+							ChildrenStateType.ACTIVE_AND_ONHOLD);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
@@ -1228,10 +1243,9 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	private void setValuesForActiveState(
-	        CustomerPersistence customerPersistence) throws AccountException {
+	private void setValuesForActiveState() throws AccountException {
 		this.setActivationDate(new Date(new java.util.Date().getTime()));
-		this.generateDepositAccountActions(customerPersistence);
+		this.generateDepositAccountActions();
 		try {
 			Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());	
 			this.setNextIntCalcDate(intCalcDate);
@@ -1246,18 +1260,17 @@ public class SavingsBO extends AccountBO {
 	}
 
 	@Override
-	protected void activationDateHelper(Short newStatusId,
-	        CustomerPersistence customerPersistence)
+	protected void activationDateHelper(Short newStatusId)
 			throws AccountException {
 		if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
 			if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PENDINGAPPROVAL
 					&& newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
-				setValuesForActiveState(customerPersistence);
+				setValuesForActiveState();
 			}
 		} else {
 			if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PARTIALAPPLICATION
 					&& newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
-				setValuesForActiveState(customerPersistence);
+				setValuesForActiveState();
 			}
 		}
 	}
@@ -2050,7 +2063,7 @@ public class SavingsBO extends AccountBO {
 
 	@Override
 	protected void regenerateFutureInstallments(
-	        Short nextInstallmentId, CustomerPersistence customerPersistence)
+	        Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_CANCEL)
@@ -2076,8 +2089,7 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.OTHER_THAN_CLOSED,
-							customerPersistence);
+							ChildrenStateType.OTHER_THAN_CLOSED);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
@@ -2191,8 +2203,7 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	public void generateNextSetOfMeetingDates(
-	        CustomerPersistence customerPersistence) throws AccountException {
+	public void generateNextSetOfMeetingDates() throws AccountException {
 		CustomerBO customerBO = getCustomer();
 		if (customerBO.getCustomerMeeting() != null
 				&& customerBO.getCustomerMeeting().getMeeting() != null) {
@@ -2215,8 +2226,7 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.OTHER_THAN_CLOSED,
-							customerPersistence);
+							ChildrenStateType.OTHER_THAN_CLOSED);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
@@ -2263,6 +2273,7 @@ public class SavingsBO extends AccountBO {
 	public boolean isOfProductOffering(SavingsOfferingBO productOffering) {
 		return savingsOffering.equals(productOffering);
 	}
+
     public void setCustomerPersistence(CustomerPersistence customerPersistence) {
         this.customerPersistence = customerPersistence;
     }

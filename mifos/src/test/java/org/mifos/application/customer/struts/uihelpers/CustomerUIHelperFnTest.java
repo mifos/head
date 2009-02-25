@@ -47,7 +47,6 @@ import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.action.EditCustomerStatusAction;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -107,15 +106,12 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(
 				positionEntity, client, client.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
-		group.update(new CustomerPersistence());
+		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
 		for (CustomerPositionEntity customerPositionEntity2 : group
 				.getCustomerPositions()) {
@@ -162,9 +158,8 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		assertFalse(client.isActive());
 		for (CustomerFlagDetailEntity customerFlagDetailEntity : client
 				.getCustomerFlags()) {
@@ -187,15 +182,12 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(
 				positionEntity, client, client.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
-		group.update(new CustomerPersistence());
+		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
 		String positionName = CustomerUIHelperFn.getClientPosition(group
 				.getCustomerPositions(), client);
@@ -238,10 +230,8 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
 
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class, 
-				group.getCustomerId());		
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());		
 		assertFalse(client.isActive());
 		for (CustomerFlagDetailEntity customerFlagDetailEntity : client
 				.getCustomerFlags()) {

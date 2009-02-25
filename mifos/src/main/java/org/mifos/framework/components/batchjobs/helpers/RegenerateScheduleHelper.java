@@ -61,7 +61,7 @@ public class RegenerateScheduleHelper extends TaskHelper {
 		if (accounts != null && !accounts.isEmpty())
 			for (AccountBO account : accounts) {
 				if (!accountList.contains(account.getAccountId())) {
-					account.handleChangeInMeetingSchedule(new CustomerPersistence());
+					account.handleChangeInMeetingSchedule();
 					accountList.add(account.getAccountId());
 				}
 			}

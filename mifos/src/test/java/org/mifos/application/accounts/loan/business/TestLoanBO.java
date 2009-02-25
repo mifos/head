@@ -79,7 +79,6 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -201,7 +200,6 @@ public class TestLoanBO extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		try {
 			TestObjectFactory.removeObject(loanOffering);
-			// NOTE: Incomplete Initialization
 			if (accountBO != null)
 				accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 						AccountBO.class, accountBO.getAccountId());
@@ -1316,7 +1314,7 @@ public class TestLoanBO extends MifosTestCase {
 				"Added note", null, null, false, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(CustomerBO.class, group
+		group = TestObjectFactory.getCustomer(group
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2889,7 +2887,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = meeting.getAllDates(6);
 		((LoanBO) accountBO)
-				.regenerateFutureInstallments(Short.valueOf("3"), new CustomerPersistence());
+				.regenerateFutureInstallments(Short.valueOf("3"));
 		((LoanBO) accountBO).update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -2951,7 +2949,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
-						.getInstallmentId() + 1), new CustomerPersistence());
+						.getInstallmentId() + 1));
 		((LoanBO) accountBO).update();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
@@ -2994,10 +2992,10 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "", customerPersistence);
+		accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
-						.getInstallmentId().intValue() + 1), new CustomerPersistence());
+						.getInstallmentId().intValue() + 1));
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
@@ -3096,7 +3094,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null,
-				"", customerPersistence);
+				"");
 		changeInstallmentDate(accountBO, 14, Short.valueOf("1"));
 		changeInstallmentDate(accountBO, 14, Short.valueOf("2"));
 		TestObjectFactory.updateObject(accountBO);
@@ -3128,7 +3126,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3148,7 +3146,7 @@ public class TestLoanBO extends MifosTestCase {
 				null, "1", uc.getId());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3171,7 +3169,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(totalRepaymentAmount, clientPerfHistory
 				.getLastLoanAmount());
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3181,7 +3179,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3196,7 +3194,7 @@ public class TestLoanBO extends MifosTestCase {
 		loanBO.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3223,7 +3221,7 @@ public class TestLoanBO extends MifosTestCase {
 						.valueOf("1"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3243,7 +3241,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
 				.getAccountId());
@@ -3253,7 +3251,7 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanBO) accountBO).handleArrears();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3269,11 +3267,11 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null,
-				"", customerPersistence);
+				"");
 
 		TestObjectFactory.updateObject(accountBO);
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
 				.getAccountId());
@@ -3285,7 +3283,7 @@ public class TestLoanBO extends MifosTestCase {
 		Integer noOfPayments = loanPerfHistory.getNoOfPayments();
 		accountBO = applyPaymentandRetrieveAccount();
 		LoanBO loan = (LoanBO) accountBO;
-		client = TestObjectFactory.getObject(CustomerBO.class, client
+		client = TestObjectFactory.getCustomer(client
 				.getCustomerId());
 		clientPerfHistory = (ClientPerformanceHistoryEntity) loan.getCustomer()
 				.getPerformanceHistory();
@@ -3307,7 +3305,7 @@ public class TestLoanBO extends MifosTestCase {
 						.valueOf("1"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(CustomerBO.class, group
+		group = TestObjectFactory.getCustomer(group
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3461,7 +3459,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestCustomerBO.setCustomerStatus(group, new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED));
 		TestObjectFactory.updateObject(group);
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 
 		LoanOfferingBO loanOffering = createLoanOffering(false);
@@ -4217,7 +4215,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date firstInstallmentDate = incrementCurrentDate(21);
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "", customerPersistence);
+		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
 
 		LoanBO loanBO = ((LoanBO) accountBO);
 		((LoanBO) accountBO).updateLoan(loanBO
@@ -4228,7 +4226,7 @@ public class TestLoanBO extends MifosTestCase {
 				null, null, false, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(CustomerBO.class, group
+		group = TestObjectFactory.getCustomer(group
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -4257,7 +4255,7 @@ public class TestLoanBO extends MifosTestCase {
 				null, null, false, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(CustomerBO.class, group
+		group = TestObjectFactory.getCustomer(group
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -5195,7 +5193,7 @@ public class TestLoanBO extends MifosTestCase {
 		AccountActionDateEntity accountActionDate2 = loan
 				.getAccountActionDate((short) 2);
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "", customerPersistence);
+		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
 		((LoanScheduleEntity) accountActionDate1)
 				.setActionDate(offSetCurrentDate(21));
 		((LoanScheduleEntity) accountActionDate2)

@@ -23,7 +23,6 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -185,7 +184,7 @@ public class SavingsTestHelper {
 			CustomerBO customer, AccountState accountState, UserContext userContext)
 			throws Exception {
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
-				customer, accountState, new Money("500.0"), null, new CustomerPersistence());
+				customer, accountState, new Money("500.0"), null);
 		savings.save();
 		return savings;
 	}

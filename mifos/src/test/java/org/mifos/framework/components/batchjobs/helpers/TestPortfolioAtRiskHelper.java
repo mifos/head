@@ -83,10 +83,8 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		Task task = insertLoanArrearsTask();
 		createInitialObject();
 
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		for (AccountBO account : group.getAccounts()) {
 			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 				changeFirstInstallmentDate(account, 7);
@@ -112,12 +110,9 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		TestObjectFactory.removeObject(task);
 		
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		account1 = TestObjectFactory.getObject(AccountBO.class,
 				account1.getAccountId());
 		account2 = TestObjectFactory.getObject(AccountBO.class,

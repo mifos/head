@@ -516,7 +516,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		MeetingActionForm actionForm = (MeetingActionForm)request.getSession().getAttribute("meetingActionForm");
 		assertEquals(CustomerLevel.CENTER,actionForm.getCustomerLevelValue());
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 	}
 
 	public void testSuccessfulUpdateMeetingForCenter()throws Exception{
@@ -550,8 +550,8 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.center_detail_page.toString());
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
 
 		MeetingBO updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting();
 		assertTrue(updatedMeeting.isWeekly());
@@ -602,9 +602,9 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.group_detail_page.toString());
 		HibernateUtil.closeSession();
 
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		client1 = TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
-		client2 = TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client1 = TestObjectFactory.getClient(client1.getCustomerId());
+		client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
 		assertNotNull(group.getCustomerMeeting());
 		assertNotNull(client1.getCustomerMeeting());
@@ -635,9 +635,9 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		client2 = createClient("client2", group, CustomerStatus.CLIENT_PENDING);
 		HibernateUtil.closeSession();
 
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		client1 = TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
-		client2 = TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client1 = TestObjectFactory.getClient(client1.getCustomerId());
+		client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
 		assertNotNull(group.getCustomerMeeting());
 		assertNotNull(client1.getCustomerMeeting());
@@ -669,9 +669,9 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.group_detail_page.toString());
 		HibernateUtil.closeSession();
 
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		client1 = TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
-		client2 = TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client1 = TestObjectFactory.getClient(client1.getCustomerId());
+		client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
 		assertTrue(group.getCustomerMeeting().getMeeting().isWeekly());
 		assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
@@ -712,7 +712,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyForward(ActionForwards.center_detail_page.toString());
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		assertNotNull(center.getCustomerMeeting().getMeeting());
 	}
 
@@ -749,7 +749,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.client_detail_page.toString());
 		HibernateUtil.closeSession();
 		
-		client1 = TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client1 = TestObjectFactory.getClient(client1.getCustomerId());
 		
 		assertNotNull(client1.getCustomerMeeting());
 		assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
@@ -789,7 +789,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.client_detail_page.toString());
 		HibernateUtil.closeSession();
 		
-		client1 = TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client1 = TestObjectFactory.getClient(client1.getCustomerId());
 		
 		MeetingBO updatedMeeting = client1.getCustomerMeeting().getUpdatedMeeting();
 		assertTrue(updatedMeeting.isWeekly());

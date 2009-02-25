@@ -110,7 +110,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
 		verifyForward(ActionForwards.transferToBranch_failure.toString());
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());		 
+		group = TestObjectFactory.getGroup(group.getCustomerId());		 
 	}
 	
 	public void testSuccessful_transferToBranch() throws Exception {
@@ -134,7 +134,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 		
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
 		assertEquals(office.getOfficeId(), group.getOffice().getOfficeId());
 		assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
 		
@@ -204,9 +204,9 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_PARENT_TRANSFER});
 		verifyForward(ActionForwards.transferToCenter_failure.toString());
 		
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		center1 = TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		center1 = TestObjectFactory.getCenter(center1.getCustomerId());
 		office = TestObjectFactory.getOffice(office.getOfficeId());
 	}
 	
@@ -230,9 +230,9 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		HibernateUtil.closeSession();
 		
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		center1 = TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		center1 = TestObjectFactory.getCenter(center1.getCustomerId());
 		office = TestObjectFactory.getOffice(office.getOfficeId());
 		
 		assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());

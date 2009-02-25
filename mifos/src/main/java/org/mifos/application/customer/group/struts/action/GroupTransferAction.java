@@ -35,7 +35,6 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -129,7 +128,7 @@ public class GroupTransferAction extends BaseAction {
 		group.setVersionNo(groupInSession.getVersionNo());
 		group.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(group);
-		group.transferToBranch(officeToTransfer, new CustomerPersistence());
+		group.transferToBranch(officeToTransfer);
 		groupInSession = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
@@ -182,7 +181,7 @@ public class GroupTransferAction extends BaseAction {
 		group.setUserContext(getUserContext(request));
 		group.setVersionNo(groupInSession.getVersionNo());
 		setInitialObjectForAuditLogging(group);
-		group.transferToCenter(transferToCenter, new CustomerPersistence());
+		group.transferToCenter(transferToCenter);
 		groupInSession = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
@@ -259,15 +258,14 @@ public class GroupTransferAction extends BaseAction {
 				customerBO.getCustomerId());
 	
 		CustomerPersistence customerPersistence = new CustomerPersistence();
-		client.updateClientFlag(customerPersistence);
+		client.updateClientFlag();
 		setInitialObjectForAuditLogging(customerBO);
 		PersonnelBO personnel=null;
 		if (!StringUtils.isNullOrEmpty(actionForm.getAssignedLoanOfficerId())){
 		personnel = getPersonnelBusinessService().getPersonnel(
 				Short.valueOf(actionForm.getAssignedLoanOfficerId()));
 		}
-		customerBO.removeGroupMemberShip(personnel,actionForm.getComment(), customerPersistence,
-		        new PersonnelPersistence());
+		customerBO.removeGroupMemberShip(personnel,actionForm.getComment());
 		
 		customerBOInSession = null;
 		customerBO = null;

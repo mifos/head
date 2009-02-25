@@ -29,9 +29,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -154,7 +151,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "", new CustomerPersistence());
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -182,7 +179,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "", new CustomerPersistence());
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -210,7 +207,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "", new CustomerPersistence());
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -229,8 +226,8 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyForward("loan_detail_page");
 		
-		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		assertEquals(new Money(), accountBO.getTotalPaymentDue());
 		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
@@ -256,7 +253,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
-				null, "", new CustomerPersistence());
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));

@@ -62,7 +62,6 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	}
 	
 	private void reloadMembers() {
-	    // NOTE: Incomplete Initialization
 		if (savings != null) {
 			savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
 		}

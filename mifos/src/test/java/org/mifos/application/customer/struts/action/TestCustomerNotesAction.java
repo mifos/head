@@ -208,7 +208,6 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.center_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		// NOTE: Incomplete Initialization
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
 		assertEquals(1, center.getCustomerNotes().size());
@@ -358,9 +357,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	private void getobjects(){
-		client = TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		client = TestObjectFactory.getCustomer(client.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 	}
 
 	public void testLoadForGroup() {

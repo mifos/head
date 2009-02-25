@@ -55,7 +55,6 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
@@ -87,7 +86,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -508,8 +506,7 @@ public class ClientCustAction extends CustAction {
 		        DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), 
 		        actionForm.getGroupFlagValue(), actionForm.getClientName(),
 		        actionForm.getSpouseName(), actionForm.getClientDetailView(), 
-		        actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence(),
-		        new SavingsPersistence(), new SavingsPrdPersistence());
+		        actionForm.getCustomerPicture());
 		}
 		else {
 			CustomerBO parentCustomer = getCustomerBusinessService()
@@ -529,8 +526,7 @@ public class ClientCustAction extends CustAction {
 				DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), 
 				actionForm.getGroupFlagValue(), actionForm.getClientName(),
 				actionForm.getSpouseName(), actionForm.getClientDetailView(), 
-				actionForm.getCustomerPicture(),customerPersistence, new ClientPersistence(),
-				new SavingsPersistence(), new SavingsPrdPersistence());
+				actionForm.getCustomerPicture());
 		}
 		new CustomerPersistence().saveCustomer(client);
 		actionForm.setCustomerId(client.getCustomerId().toString());
@@ -733,13 +729,13 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getPicture() != null
 				&& !StringUtils.isNullOrEmpty(actionForm.getPicture()
 						.getFileName())) {
-			client.updatePicture(actionForm.getCustomerPicture(), new ClientPersistence());
+			client.updatePicture(actionForm.getCustomerPicture());
 		}
 		client.setUserContext(getUserContext(request));
 		client.updateClientDetails(actionForm.getClientDetailView());
 		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),
 				actionForm.getGovernmentId(), DateUtils.getDateAsSentFromBrowser(actionForm
-				.getDateOfBirth()), new CustomerPersistence(), new ClientPersistence());
+				.getDateOfBirth()));
 
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
@@ -820,7 +816,7 @@ public class ClientCustAction extends CustAction {
 			personnel = client.getPersonnel();
 		}
 
-		client.updateMfiInfo(personnel, new CustomerPersistence());
+		client.updateMfiInfo(personnel);
 		client.setUserContext(getUserContext(request));
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
 				.toString());

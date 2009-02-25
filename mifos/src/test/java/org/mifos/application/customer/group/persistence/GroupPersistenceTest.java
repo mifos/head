@@ -67,7 +67,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 		boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk
 		(portfolioAtRisk, groupId);
 		assertTrue(result);
-		group = (GroupBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
 		assertEquals(1, group.getUpdatedBy().intValue());
 		java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
 		assertEquals(1, group.getUpdatedBy().intValue());

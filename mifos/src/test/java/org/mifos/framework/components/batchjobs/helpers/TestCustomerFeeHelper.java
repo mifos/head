@@ -20,7 +20,6 @@ import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
-import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -93,15 +92,13 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
 		ApplyCustomerFeeHelper customerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
 				.getTaskHelper();
 		customerFeeHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 
 		Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount()
 				.getAccountFees();
@@ -153,14 +150,12 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		ApplyCustomerFeeHelper customerFeeHelper = new ApplyCustomerFeeHelper(
 				new ApplyCustomerFeeTask());
 		customerFeeHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		Date lastAppliedFeeDate = null;
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {

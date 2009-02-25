@@ -42,7 +42,6 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
@@ -55,8 +54,6 @@ public class ClientPersistence extends Persistence {
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private OfficePersistence officePersistence = new OfficePersistence();
     private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-    private SavingsPersistence savingsPersistence = new SavingsPersistence();
-    private SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
 
     public ClientBO createClient(UserContext userContext, ClientTemplate template)
             throws CustomerException, PersistenceException, ValidationException {
@@ -80,14 +77,16 @@ public class ClientPersistence extends Persistence {
                 template.getTrained(), template.getTrainedDate(),
                 template.getGroupFlag(), template.getClientNameDetailView(),
                 template.getSpouseNameDetailView(),
-                template.getClientDetailView(), template.getPicture(),
-                customerPersistence, this, savingsPersistence, savingsPrdPersistence);
+                template.getClientDetailView(), template.getPicture());
         customerPersistence.saveCustomer(client);
         return client;
     }
 
+    /**
+     * Get a client by Id and inject any required dependencies
+     */
     public ClientBO getClient(Integer customerId) throws PersistenceException{
-		return (ClientBO) getPersistentObject(ClientBO.class,customerId);
+        return (ClientBO) getPersistentObject(ClientBO.class,customerId);
 	}
 	
     // Returns true if another client with same govt id is found with a state other than closed

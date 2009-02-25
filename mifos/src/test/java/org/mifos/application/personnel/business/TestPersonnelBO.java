@@ -255,7 +255,6 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getOfficeId());
 		createInitialObjects(branchOffice.getOfficeId(), personnel
 				.getPersonnelId());
-		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -289,7 +288,6 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getOfficeId());
 		createInitialObjects(branchOffice.getOfficeId(), personnel
 				.getPersonnelId());
-		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -332,7 +330,6 @@ public class TestPersonnelBO extends MifosTestCase {
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		createInitialObjects(branchOffice.getOfficeId(), personnel
 				.getPersonnelId());
-		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -360,7 +357,6 @@ public class TestPersonnelBO extends MifosTestCase {
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		createInitialObjects(branchOffice.getOfficeId(), personnel
 				.getPersonnelId());
-		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
@@ -499,7 +495,6 @@ public class TestPersonnelBO extends MifosTestCase {
 				createNotes("5.Personnel notes created"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,

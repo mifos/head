@@ -47,8 +47,8 @@ public class TestLoanRepayTag extends MifosTestCase {
 			AccountState.LOAN_APPROVED, startDate, 1);
 		HibernateUtil.flushAndCloseSession();
 		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
-		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPreferredLocale();
 		assertContains("100.0",loanRepaymentTag.createInstallmentRow( (LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),false ).toString());
@@ -60,8 +60,8 @@ public class TestLoanRepayTag extends MifosTestCase {
 			AccountState.LOAN_APPROVED, startDate, 1);
 		HibernateUtil.flushAndCloseSession();
 		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
-		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group = TestObjectFactory.getCustomer(group.getCustomerId());
+		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPreferredLocale();
 		assertContains("90.0",loanRepaymentTag.createRunningBalanceRow((LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),new Money("50"),new Money("20"),new Money("20")).toString());

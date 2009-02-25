@@ -64,7 +64,6 @@ public class TestLoanBusinessService extends MifosTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		try {
-		    // NOTE: Incomplete Initialization
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
 			group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,

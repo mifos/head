@@ -15,8 +15,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -46,7 +44,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 
 	public void testWaiveCharges() {
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
@@ -61,9 +59,9 @@ public class TestAccountActionDateEntity extends TestAccount {
 		}
 		assertEquals(new Money("120.0"), chargeWaived);
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
@@ -82,7 +80,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		TestObjectFactory.updateObject(group);
 
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 
 		CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group
@@ -108,7 +106,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		CustomerScheduleEntity firstInstallment = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
@@ -124,7 +122,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 	}
 	

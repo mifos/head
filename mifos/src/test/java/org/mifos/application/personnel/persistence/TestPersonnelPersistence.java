@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -17,7 +16,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeTemplate;
@@ -31,7 +29,6 @@ import org.mifos.application.personnel.business.PersonnelTemplateImpl;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
@@ -179,13 +176,11 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	public void testClosedCustomerUnderLO() throws Exception{
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive", customerPersistence,
-		        personnelPersistence, new MasterPersistence(), new SavingsPersistence(), new SavingsPrdPersistence(),
-		        new OfficePersistence());
-		center.update(customerPersistence);
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
+		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		assertTrue(!personnelPersistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
 	
@@ -193,13 +188,11 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED);
 		assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive", customerPersistence,
-		        personnelPersistence, new MasterPersistence(), new SavingsPersistence(), new SavingsPrdPersistence(),
-		        new OfficePersistence());
-		center.update(customerPersistence);
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
+		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
 	
@@ -223,7 +216,6 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		personnel.addNotes(PersonnelConstants.SYSTEM_USER, personnelNotes);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		// NOTE: Incomplete Initialization
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,

@@ -909,8 +909,7 @@ public class LoanAccountAction extends AccountAppAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 	
 		loan.changeStatus(AccountState.LOAN_APPROVED, null,
-						"Automatic Status Update (Redo Loan)",
-						customerPersistence);
+						"Automatic Status Update (Redo Loan)");
 		
 
 		PersonnelBO personnel = getPersonnel(request);

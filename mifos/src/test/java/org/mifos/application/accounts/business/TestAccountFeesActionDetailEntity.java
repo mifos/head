@@ -8,8 +8,6 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -60,7 +58,7 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 
 	public void testWaiveCharges() {
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
 
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
@@ -73,8 +71,8 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 		}
 		assertEquals(new Money("100"), chargeWaived);
 		HibernateUtil.closeSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		accountBO=TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 	}
 
@@ -98,7 +96,6 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 	protected void tearDown() throws Exception {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-        // NOTE: Incomplete Initialization
 		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
 				group.getCustomerId());
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
@@ -34,7 +33,6 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
@@ -110,12 +108,11 @@ public class CenterBOTest extends MifosTestCase {
 		center.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.update(TestUtils.makeUser(), personnelId,
-				externalId, mfiJoiningDate, address, null, null,
-				new CustomerPersistence(),new PersonnelPersistence());
+				externalId, mfiJoiningDate, address, null, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
@@ -154,7 +151,7 @@ public class CenterBOTest extends MifosTestCase {
 		}
 
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		TestObjectFactory.cleanUpChangeLog();
 	}
@@ -163,7 +160,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestUtils.makeUser(), "", null,
-					null, null, null, null, officeBo, meeting, personnelBo);
+					null, null, null, null, officeBo, meeting, personnelBo, new CustomerPersistence());
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -176,7 +173,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, officeBo, meeting, null);
+					null, null, null, null, null, officeBo, meeting, null, new CustomerPersistence());
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -188,7 +185,7 @@ public class CenterBOTest extends MifosTestCase {
 	public void testCreateWithoutMeeting() throws Exception {
 		try {
 			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, officeBo, meeting, personnelBo);
+					null, null, null, null, null, officeBo, meeting, personnelBo, new CustomerPersistence());
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -200,7 +197,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			meeting = getMeeting();
 			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, null, meeting, personnelBo);
+					null, null, null, null, null, null, meeting, personnelBo, new CustomerPersistence());
 			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
@@ -213,11 +210,11 @@ public class CenterBOTest extends MifosTestCase {
 		String name = "Center1";
 		meeting = getMeeting();
 		center = new CenterBO(TestUtils.makeUser(), name, null,
-				null, null, null, null, officeBo, meeting, personnelBo);
+				null, null, null, null, officeBo, meeting, personnelBo, new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		assertEquals(name, center.getDisplayName());
 		assertEquals(officeId, center.getOffice().getOfficeId());
@@ -228,11 +225,11 @@ public class CenterBOTest extends MifosTestCase {
 		meeting = getMeeting();
 		center = new CenterBO(TestUtils.makeUser(), name, null,
 				getCustomFields(), null, null, null, officeBo, meeting,
-				personnelBo);
+				personnelBo, new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		assertEquals(name, center.getDisplayName());
 		assertEquals(officeId, center.getOffice().getOfficeId());
@@ -252,7 +249,7 @@ public class CenterBOTest extends MifosTestCase {
 		try {
 			center = new CenterBO(TestUtils.makeUser(), name,
 					null, null, fees, externalId, mfiJoiningDate, officeBo,
-					meeting, personnelBo);
+					meeting, personnelBo, new CustomerPersistence());
 			fail();
 		} catch (CustomerException e) {
 			assertEquals(
@@ -274,7 +271,7 @@ public class CenterBOTest extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			center = new CenterBO(userContext, name, null, null, null,
-					externalId, mfiJoiningDate, officeBo, meeting, personnelBo);
+					externalId, mfiJoiningDate, officeBo, meeting, personnelBo, new CustomerPersistence());
 			fail();
 		} catch (CustomerException e) {
 			assertTrue(true);
@@ -293,11 +290,11 @@ public class CenterBOTest extends MifosTestCase {
 				getCustomFields(), fees, externalId, mfiJoiningDate, 
 				new OfficePersistence().getOffice(officeId),
 				meeting, 
-				new PersonnelPersistence().getPersonnel(personnelId));
+				new PersonnelPersistence().getPersonnel(personnelId), new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		assertEquals(name, center.getDisplayName());
 		assertEquals(externalId, center.getExternalId());
@@ -319,8 +316,7 @@ public class CenterBOTest extends MifosTestCase {
 		createCustomers();
 		try {
 			center.update(TestUtils.makeUser(), null, "1234",
-					null, null, null, null, 
-					new CustomerPersistence(),new PersonnelPersistence());
+					null, null, null, null);
 			fail();
 		} catch (CustomerException ce) {
 			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
@@ -338,12 +334,11 @@ public class CenterBOTest extends MifosTestCase {
 		address.setLine1(addressLine1);
 
 		center.update(TestUtils.makeUser(), personnelId,
-				externalId, mfiJoiningDate, address, null, null,
-				new CustomerPersistence(),new PersonnelPersistence());
+				externalId, mfiJoiningDate, address, null, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 
 		assertEquals(city, center.getCustomerAddressDetail().getAddress()
@@ -360,49 +355,42 @@ public class CenterBOTest extends MifosTestCase {
 			throws Exception {
 	    CustomerPersistence customerPersistence = new CustomerPersistence();
 	    PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-	    SavingsPersistence savingsPersistence = new SavingsPersistence();
-	    SavingsPrdPersistence savingsPrdPersistence = new SavingsPrdPersistence();
-	    OfficePersistence officePersistence = new OfficePersistence();
 		createCustomers();
 		client.changeStatus(CustomerStatus.CLIENT_CANCELLED, 
 				CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW, 
-				"client cancelled", customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence, officePersistence);
-		client.update(customerPersistence);
+				"client cancelled");
+		client.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
-				"group cancelled",customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence, officePersistence);
-		group.update(customerPersistence);
+				"group cancelled");
+		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
-				"Center_Inactive",customerPersistence, personnelPersistence, masterPersistence,
-				savingsPersistence, savingsPrdPersistence, officePersistence);
-		center.update(customerPersistence);
+				"Center_Inactive");
+		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 
 		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), null, center
 				.getExternalId(), center.getMfiJoiningDate(), center
-				.getAddress(), null, null,customerPersistence,
-				new PersonnelPersistence());
+				.getAddress(), null, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
 		assertNull(center.getPersonnel());
@@ -421,15 +409,14 @@ public class CenterBOTest extends MifosTestCase {
 		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), newLO
 				.getPersonnelId(), center.getExternalId(), center
-				.getMfiJoiningDate(), center.getAddress(), null, null,
-				new CustomerPersistence(),new PersonnelPersistence());
+				.getMfiJoiningDate(), center.getAddress(), null, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		assertEquals(newLO.getPersonnelId(), center.getPersonnel()
 				.getPersonnelId());
@@ -449,18 +436,18 @@ public class CenterBOTest extends MifosTestCase {
 				.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		center.setUserContext(TestObjectFactory.getContext());
-		center.updateMeeting(newMeeting, new CustomerPersistence());
+		center.updateMeeting(newMeeting);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
 		assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting()
@@ -496,14 +483,14 @@ public class CenterBOTest extends MifosTestCase {
 		testUpdateMeeting_SaveToUpdateLater();
 		Integer updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting()
 				.getMeetingId();
-		center.changeUpdatedMeeting(new CustomerPersistence());
+		center.changeUpdatedMeeting();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
 		assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getMeeting()
@@ -550,18 +537,18 @@ public class CenterBOTest extends MifosTestCase {
 		center = new CenterBO(TestUtils.makeUser(), 
 			"center1", null, null, null, null, startDate, 
 			branch1, meeting,
-			systemUser);
+			systemUser, new CustomerPersistence());
 		HibernateUtil.getSessionTL().save(center);
 
 		CenterBO center2 = new CenterBO(TestUtils.makeUser(), 
 				"center2", null, null, null, null, startDate, 
 				new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), 
-				    meeting, systemUser);
+				    meeting, systemUser, new CustomerPersistence());
 		
 		CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), 
 				"sameBranch", null, null, null, null, startDate, 
 				branch1, meeting,
-				systemUser);
+				systemUser, new CustomerPersistence());
 		HibernateUtil.getSessionTL().save(center);
 		HibernateUtil.commitTransaction();
 		

@@ -211,7 +211,7 @@ public class CenterCustAction extends CustAction {
 				getDateFromString(actionForm.getMfiJoiningDate(), 
 				userContext.getPreferredLocale()), 
 				new OfficePersistence().getOffice(actionForm.getOfficeIdValue()),
-				meeting, new PersonnelPersistence().getPersonnel(actionForm.getLoanOfficerIdValue()));
+				meeting, new PersonnelPersistence().getPersonnel(actionForm.getLoanOfficerIdValue()), new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
 		actionForm.setCustomerId(center.getCustomerId().toString());
 		actionForm.setGlobalCustNum(center.getGlobalCustNum());
@@ -297,8 +297,7 @@ public class CenterCustAction extends CustAction {
 		centerBO.update(getUserContext(request), actionForm
 				.getLoanOfficerIdValue(), actionForm.getExternalId(),
 				mfiJoiningDate, actionForm.getAddress(), actionForm
-						.getCustomFields(), actionForm.getCustomerPositions(),
-						new CustomerPersistence(),new PersonnelPersistence());
+						.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
@@ -388,8 +387,7 @@ public class CenterCustAction extends CustAction {
 				getUserContext(request).getLocaleId());
 		SessionUtils.setCollectionAttribute(CenterConstants.GROUP_LIST, centerBO
 				.getChildren(CustomerLevel.GROUP,
-						ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED,
-						new CustomerPersistence()),
+						ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
 				request);
 
 		CenterPerformanceHistory centerPerformanceHistory = customerBusinessService

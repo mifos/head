@@ -186,7 +186,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		removeFees(fees);	
 	}
 	
@@ -212,7 +212,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		removeFees(fees);
 	}
 	
@@ -231,7 +231,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadMeeting_success.toString());
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 	}
 	
 	public void testPreviewFailure_With_Name_Null()throws Exception{
@@ -247,7 +247,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		assertEquals("Group Name", 1, getErrorSize(CustomerConstants.NAME));
 		verifyInputForward();
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		center = TestObjectFactory.getCenter(center.getCustomerId());		
 	}
 
 	public void testPreviewFailure_TrainedWithoutTrainedDate()throws Exception{
@@ -277,7 +277,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		assertEquals("Trained Date", 1, getErrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
 		verifyInputForward();
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		center = TestObjectFactory.getCenter(center.getCustomerId());		
 	}
 	
 	public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception{
@@ -319,8 +319,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
 			verifyForward(ActionForwards.preview_success.toString());
 		}
-		center = TestObjectFactory.getObject(CenterBO.class,
-			center.getCustomerId());		
+		center = TestObjectFactory.getCenter(center.getCustomerId());		
 	}
 	
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
@@ -345,7 +344,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		verifyInputForward();
 		removeFees(feesToRemove);
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		center = TestObjectFactory.getCenter(center.getCustomerId());		
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
@@ -368,7 +367,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		verifyInputForward();
 		removeFees(feesToRemove);
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		center = TestObjectFactory.getCenter(center.getCustomerId());		
 	}
 
 	public void testSuccessfulPreview() throws Exception{
@@ -408,7 +407,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		removeFees(feesToRemove);
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,request));
-		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
+		center = TestObjectFactory.getCenter(center.getCustomerId());		
 	}
 	
 	public void testSuccessfulPrevious() throws Exception {
@@ -456,8 +455,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		
-		group = TestObjectFactory.getObject(GroupBO.class, actionForm.getCustomerIdAsInt());
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = TestObjectFactory.getGroup(actionForm.getCustomerIdAsInt());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		actionForm.setParentCustomer(null);
 	}
 	
@@ -498,8 +497,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		
-		group = TestObjectFactory.getObject(GroupBO.class, actionForm.getCustomerIdAsInt());
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = TestObjectFactory.getGroup(actionForm.getCustomerIdAsInt());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		actionForm.setParentCustomer(null);
 	}
 	
@@ -533,8 +532,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_DUPLICATE_CUSTOMER});
 		verifyForward(ActionForwards.create_failure.toString());
-		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
-		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		actionForm.setParentCustomer(null);
@@ -547,7 +546,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		group.addCustomerPosition(customerPositionEntity);
 		savingsBO = getSavingsAccount("fsaf6","ads6");
 		loanBO = getLoanAccount();
-		group.update(new CustomerPersistence());
+		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -560,12 +559,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.get_success.toString());
 
-		center = TestObjectFactory.getObject(CenterBO.class,
-				center.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class,
-				group.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class,
-				client.getCustomerId());
+		center = TestObjectFactory.getCenter(center.getCustomerId());
+		group = TestObjectFactory.getGroup(group.getCustomerId());
+		client = TestObjectFactory.getClient(client.getCustomerId());
 		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
 		savingsBO = (SavingsBO) new AccountPersistence()
@@ -591,12 +587,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		}
 		TestObjectFactory.removeCustomerFromPosition(group);
 		HibernateUtil.closeSession();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(center.getCustomerId()).intValue());
-		group = TestObjectFactory.getObject(GroupBO.class,
-				Integer.valueOf(group.getCustomerId()).intValue());
-		client = TestObjectFactory.getObject(ClientBO.class,
-				Integer.valueOf(client.getCustomerId()).intValue());
+		center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
+		group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
+		client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
 		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
 		savingsBO = (SavingsBO) new AccountPersistence()
@@ -840,7 +833,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(group.getCustomerId()).intValue());
+		group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
 		assertTrue(group.isTrained());
 		assertEquals(newDisplayName ,group.getDisplayName());
 	}
@@ -881,7 +874,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(group.getCustomerId()).intValue());
+		group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
 		assertTrue(group.isTrained());
 		assertEquals(newDisplayName ,group.getDisplayName());
 		TestObjectFactory.cleanUpChangeLog();
@@ -985,10 +978,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	private void createGroupWithCenterAndSetInSession() throws Exception {
 		createGroupWithCenter();
-		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(center.getCustomerId()).intValue());
-		group = TestObjectFactory.getObject(GroupBO.class,
-				Integer.valueOf(group.getCustomerId()).intValue());
+		center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
+		group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 	}
 
@@ -1015,7 +1006,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		meeting = new MeetingBO(WeekDay.MONDAY, EVERY_WEEK, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		center  = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, 
 		        TestObjectFactory.getBranchOffice(), meeting, 
-		        TestObjectFactory.getTestUser());
+		        TestObjectFactory.getTestUser(), new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
 		HibernateUtil.commitTransaction();
 	}

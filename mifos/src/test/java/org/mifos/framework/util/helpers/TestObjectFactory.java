@@ -56,7 +56,6 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -150,7 +149,6 @@ import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntit
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
@@ -306,7 +304,7 @@ public class TestObjectFactory {
 		try {
 			center = new CenterBO(TestUtils.makeUserWithLocales(),
 					customerName, null, null, fees, null, null, new OfficePersistence().getOffice(officeId),
-					meeting, new PersonnelPersistence().getPersonnel(personnelId));
+					meeting, new PersonnelPersistence().getPersonnel(personnelId), new CustomerPersistence());
 			new CenterPersistence().saveCenter(center);
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
@@ -477,8 +475,7 @@ public class TestObjectFactory {
 					new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE),
 					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
-					new SavingsPersistence(), new SavingsPrdPersistence());
+					spouseNameDetailView, clientDetailView, null);
 			new ClientPersistence().saveClient(client);
 		}
 		catch (CustomerException e) {
@@ -522,8 +519,7 @@ public class TestObjectFactory {
                     systemUser, 
 					new Date(), null,
 					null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
-					spouseNameDetailView, clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
-					new SavingsPersistence(), new SavingsPrdPersistence());
+					spouseNameDetailView, clientDetailView, null);
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
 		}
@@ -573,9 +569,7 @@ public class TestObjectFactory {
 						clientNameDetailView, // ClientNameDetailView
 						spouseNameDetailView, // ClientNameDetailView
 						clientDetailView, // ClientDetailView
-						null // InputStream picture
-						, new CustomerPersistence(), new ClientPersistence(),
-						new SavingsPersistence(), new SavingsPrdPersistence());
+						null); // InputStream picture
 			else
 				client = new ClientBO(TestUtils.makeUserWithLocales(),
 						clientNameDetailView.getDisplayName(), status, null, null,
@@ -584,8 +578,7 @@ public class TestObjectFactory {
 						parentCustomer.getOffice(), parentCustomer, null,
 						null, null, null, YesNoFlag.YES.getValue(),
 						clientNameDetailView, spouseNameDetailView,
-						clientDetailView, null, new CustomerPersistence(), new ClientPersistence(),
-						new SavingsPersistence(), new SavingsPrdPersistence());
+						clientDetailView, null);
 
 			new ClientPersistence().saveClient(client);
 			HibernateUtil.commitTransaction();
@@ -985,10 +978,10 @@ public class TestObjectFactory {
 				.getMeeting());
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
 				customer, AccountState.SAVINGS_PARTIAL_APPLICATION,
-				new Money(currency, "300.0"), null, new CustomerPersistence());
+				new Money(currency, "300.0"), null);
 		savings.save();
 		savings.setUserContext(TestObjectFactory.getContext());
-		savings.changeStatus(accountStateId, null, "", new CustomerPersistence());
+		savings.changeStatus(accountStateId, null, "");
 		TestSavingsBO.setActivationDate(savings, new Date(System
 				.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
@@ -1025,7 +1018,7 @@ public class TestObjectFactory {
 		userContext = TestUtils.makeUserWithLocales();
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
 				customer, state, savingsOffering.getRecommendedAmount(),
-				getCustomFieldView(), new CustomerPersistence());
+				getCustomFieldView());
 		savings.save();
 		TestSavingsBO.setActivationDate(savings, new Date(System
 				.currentTimeMillis()));
@@ -1722,6 +1715,7 @@ public class TestObjectFactory {
 		return activityContext;
 	}
 
+	// FIXME: why is this here?
 	private static final ThreadLocal<TestObjectsHolder> threadLocal = new ThreadLocal<TestObjectsHolder>();
 
 	public static Object addObject(Object obj) {
@@ -1763,6 +1757,22 @@ public class TestObjectFactory {
 	public static void flushandCloseSession() {
 		testObjectPersistence.flushandCloseSession();
 	}
+	
+	public static CustomerBO getCustomer(Integer customerId) {
+	    return testObjectPersistence.getCustomer(customerId);
+	}
+	
+	public static GroupBO getGroup(Integer groupId) {
+        return testObjectPersistence.getGroup(groupId);
+    }
+
+    public static ClientBO getClient(Integer clientId) {
+        return testObjectPersistence.getClient(clientId);
+    }
+
+    public static CenterBO getCenter(Integer centerId) {
+        return testObjectPersistence.getCenter(centerId);
+    }
 
 	public static <T> T getObject(Class<T> clazz, Integer pk) {
 		T object = testObjectPersistence.getObject(clazz, pk);
@@ -2259,7 +2269,7 @@ public class TestObjectFactory {
 			for (CustomerPositionEntity customerPositionEntity : customer
 					.getCustomerPositions())
 				customerPositionEntity.setCustomer(null);
-			customer.update(new CustomerPersistence());
+			customer.update();
 			HibernateUtil.commitTransaction();
 		}
 	}

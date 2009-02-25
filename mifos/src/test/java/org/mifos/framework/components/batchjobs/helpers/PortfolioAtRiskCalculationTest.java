@@ -141,9 +141,9 @@ public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 	public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
 		createInitialObject();
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		
 		for (AccountBO account : group.getAccounts()) {
@@ -159,17 +159,17 @@ public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 			}
 		}
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group.getOffice().getOfficeId(), 
 				     group.getOffice().getSearchId());
 		assertEquals(1.0, portfolioAtRisk, DELTA);
 				
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		account1 = TestObjectFactory.getObject(AccountBO.class,
 				account1.getAccountId());
@@ -180,9 +180,9 @@ public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 	public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
 		createInitialObject();
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		
 		for (AccountBO account : group.getAccounts()) {
@@ -200,17 +200,17 @@ public class PortfolioAtRiskCalculationTest extends MifosTestCase{
 			}
 		}
 		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group.getOffice().getOfficeId(), 
 			     group.getOffice().getSearchId());
 		assertEquals(0.5, portfolioAtRisk, DELTA);
 		
-		center = TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 		account1 = TestObjectFactory.getObject(AccountBO.class,
 				account1.getAccountId());
