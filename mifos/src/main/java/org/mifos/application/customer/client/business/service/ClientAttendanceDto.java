@@ -20,43 +20,48 @@
 
 package org.mifos.application.customer.client.business.service;
 
+import java.util.Date;
+
 import org.joda.time.LocalDate;
 import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class ClientAttendanceDto {
+public class ClientAttendanceDto implements DataTransferObject {
 
-    private Integer clientId;
-    private AttendanceType attendance;
-    private LocalDate meetingDate;
-
+    private final Integer clientId;
+    private final AttendanceType attendance;
+    private final LocalDate meetingDate;
+	
+	public ClientAttendanceDto(Integer customerId, Short attendance, Date meetingDate) {
+        this.attendance = AttendanceType.fromShort(attendance);
+        this.meetingDate = new LocalDate(meetingDate);
+        this.clientId = customerId;
+    }
+	
     public ClientAttendanceDto(Integer clientId, LocalDate meetingDate, AttendanceType attendance) {
         this.clientId = clientId;
         this.attendance = attendance;
         this.meetingDate = meetingDate;
     }
     
-    public Integer getClientId() {
-        return this.clientId;
+	public Short getAttendanceId() {
+		return attendance.getValue();
+	}
+
+    public Date getActionDate() {
+        return meetingDate.toDateMidnight().toDate();
     }
 
-    public void setClientId(Integer clientId) {
-        this.clientId = clientId;
+    public Integer getClientId() {
+        return clientId;
     }
 
     public AttendanceType getAttendance() {
         return this.attendance;
     }
 
-    public void setAttendance(AttendanceType attendance) {
-        this.attendance = attendance;
-    }
-    
     public LocalDate getMeetingDate() {
         return this.meetingDate;
     }
-
-    public void setMeetingDate(LocalDate meetingDate) {
-        this.meetingDate = meetingDate;
-    }
-
+    
 }

@@ -12,11 +12,11 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryClientAttendanceView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -203,7 +203,7 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceView = bulkEntryPersistance
+		List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistance
 				.getBulkEntryClientAttendanceActionView(meetingDate, client
 						.getOffice().getOfficeId());
 

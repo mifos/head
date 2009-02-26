@@ -35,6 +35,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -44,8 +45,8 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntryView extends View {
 
@@ -365,16 +366,16 @@ public class CollectionSheetEntryView extends View {
 	}
     public void populateClientAttendance(Integer customerId,
             Date transactionDate,
-            List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceViews) {
+            List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
         if (customerDetail.isCustomerCenter())
             return;
-        for (CollectionSheetEntryClientAttendanceView clientAttendanceView : collectionSheetEntryClientAttendanceViews) {
+        for (ClientAttendanceDto clientAttendanceView : collectionSheetEntryClientAttendanceViews) {
             logger.debug("populateClientAttendance");
-            logger.debug("clientAttendanceView.getCustomerId() " +clientAttendanceView.getCustomerId());
+            logger.debug("clientAttendanceView.getCustomerId() " +clientAttendanceView.getClientId());
             logger.debug("customerId " + customerId);
             logger.debug("customerDetail.getCustomerId() " + customerDetail.getCustomerId());
-            if (clientAttendanceView.getCustomerId().compareTo(customerId)== 0) {
-                setAttendence(clientAttendanceView.getAttendance());
+            if (clientAttendanceView.getClientId().compareTo(customerId)== 0) {
+                setAttendence(clientAttendanceView.getAttendanceId());
             }
         }
     }

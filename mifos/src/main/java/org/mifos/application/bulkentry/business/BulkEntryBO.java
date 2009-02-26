@@ -39,7 +39,6 @@ package org.mifos.application.bulkentry.business;
 
 import java.sql.Date;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -48,6 +47,7 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeView;
@@ -210,7 +210,7 @@ public class BulkEntryBO extends BusinessObject {
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
 						AccountTypes.CUSTOMER_ACCOUNT);
-        List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceViews = bulkEntryPersistanceService
+        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews = bulkEntryPersistanceService
                 .getBulkEntryClientAttendanceActionView(
                         transactionDate, office.getOfficeId() );
         

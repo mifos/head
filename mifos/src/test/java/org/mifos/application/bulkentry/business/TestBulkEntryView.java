@@ -19,6 +19,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -277,7 +278,7 @@ public class TestBulkEntryView extends MifosTestCase {
         HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
          
-        List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceView = bulkEntryPersistanceService
+        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistanceService
             .getBulkEntryClientAttendanceActionView(meetingDate, center.getOffice().getOfficeId() );
          
         CollectionSheetEntryView collectionSheetEntryView = new CollectionSheetEntryView(getCustomerView(client));

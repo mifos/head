@@ -25,6 +25,16 @@
          clientAttendance.customer.customerId = :CUSTOMER_ID and clientAttendance.meetingDate = :MEETING_DATE ]]>
     </query>   
    
-   
+    <query name="ClientAttendance.getAttendanceForOffice">
+	    <![CDATA[select new org.mifos.application.customer.client.business.service.ClientAttendanceDto( client.customerId,
+			clientAttendance.attendance, clientAttendance.meetingDate)   
+			from org.mifos.application.customer.client.business.ClientBO client,
+			org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance
+			where 
+			client.customerId = clientAttendance.customer.customerId
+			and client.office.officeId = :OFFICE_ID
+			and clientAttendance.meetingDate = date(:MEETING_DATE)	]]>
+    </query>				      	  
+     
 </hibernate-mapping>
 

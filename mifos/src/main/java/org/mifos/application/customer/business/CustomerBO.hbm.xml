@@ -318,17 +318,6 @@
 	    client.customerId !=:customerId)]]>
  -->	    
   </query>
-    <query name="Customer.getAttedanceForOffice">
-	    <![CDATA[select new org.mifos.application.bulkentry.business. CollectionSheetEntryClientAttendanceView( client.customerId,
-			clientAttendance.attendance, clientAttendance.meetingDate)   
-			from org.mifos.application.customer.client.business.ClientBO client,
-			org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance
-			where 
-			client.customerId = clientAttendance.customer.customerId
-			and client.office.officeId = :OFFICE_ID
-			and clientAttendance.meetingDate = date(:MEETING_DATE)	]]>
-    </query>				      	  
-  
     
     <query name="Customer.getLOForCustomer">
 	    <![CDATA[select customer.personnel.personnelId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>

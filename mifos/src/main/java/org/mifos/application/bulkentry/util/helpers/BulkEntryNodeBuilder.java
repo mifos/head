@@ -43,11 +43,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryClientAttendanceView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 
 public class BulkEntryNodeBuilder {
 
@@ -57,7 +57,7 @@ public class BulkEntryNodeBuilder {
 			List<CollectionSheetEntryInstallmentView> bulkEntryCustomerViews,
 			List<CollectionSheetEntryAccountFeeActionView> bulkEntryLoanFeeViews,
 			List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeViews,
-            List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceViews) {
+            List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
 		CustomerBO parentCustomer = getCustomer(parentCustomerView
 				.getCustomerId(), allCustomers);
 		return buildBulkEntry(allCustomers, parentCustomer, parentCustomerView,
@@ -82,7 +82,7 @@ public class BulkEntryNodeBuilder {
 	}
     public static void buildBulkEntryClientAttendance(CollectionSheetEntryView parentNode,
             Date transactionDate,
-            List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceViews) {
+            List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
         List<CollectionSheetEntryView> immediateChildren = parentNode
                 .getCollectionSheetEntryChildren();
         if (immediateChildren != null && immediateChildren.size() != 0) {
@@ -103,7 +103,7 @@ public class BulkEntryNodeBuilder {
 			List<CollectionSheetEntryInstallmentView> bulkEntryCustomerViews,
 			List<CollectionSheetEntryAccountFeeActionView> bulkEntryLoanFeeViews,
 			List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeViews,
-            List<CollectionSheetEntryClientAttendanceView> collectionSheetEntryClientAttendanceViews) {
+            List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
 		CollectionSheetEntryView parentNode = new CollectionSheetEntryView(parentCustomerView);
 		List<CustomerBO> immediateChildren = getImmediateCustomers(parentNode
 				.getCustomerDetail().getCustomerId(), allCustomers);

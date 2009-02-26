@@ -20,7 +20,7 @@ public enum AttendanceType {
 		return value;
 	}
 
-	public static AttendanceType fromInt(short target) {
+	public static AttendanceType fromShort(short target) {
 		for (AttendanceType candidate : values()) {
 			if (candidate.getValue() == target) {
 				return candidate;

@@ -46,8 +46,8 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryClientAttendanceView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -141,21 +141,19 @@ public class BulkEntryPersistence extends Persistence {
 	}
     
     
-    public List<CollectionSheetEntryClientAttendanceView> 
+    public List<ClientAttendanceDto> 
         getBulkEntryClientAttendanceActionView(Date meetingDate, Short officeId) 
     throws PersistenceException {
         
         logger.debug("persistence "+ meetingDate);
         logger.debug("persistence "+ officeId);
         
-        List<CollectionSheetEntryClientAttendanceView> queryResult = null;
+        List<ClientAttendanceDto> queryResult = null;
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("OFFICE_ID", officeId);
         
-       queryResult = executeNamedQuery(
-                    "Customer.getAttedanceForOffice",
-                    queryParameters);
+       queryResult = executeNamedQuery("ClientAttendance.getAttendanceForOffice", queryParameters);
         
         
         return queryResult;

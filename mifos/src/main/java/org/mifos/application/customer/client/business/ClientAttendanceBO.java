@@ -50,7 +50,7 @@ public class ClientAttendanceBO extends BusinessObject {
 	}
 	
 	public AttendanceType getAttendanceAsEnum() {
-		return AttendanceType.fromInt(attendance);
+		return AttendanceType.fromShort(attendance);
 	}
 
 	public void setAttendance(Short attendance) {

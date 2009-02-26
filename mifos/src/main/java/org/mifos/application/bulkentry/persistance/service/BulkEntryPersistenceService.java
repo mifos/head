@@ -50,11 +50,11 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryClientAttendanceView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -83,7 +83,7 @@ public class BulkEntryPersistenceService {
 				meetingDate, searchString, officeId, accountType);
 	}
 
-	public List<CollectionSheetEntryClientAttendanceView> getBulkEntryClientAttendanceActionView(
+	public List<ClientAttendanceDto> getBulkEntryClientAttendanceActionView(
 			Date meetingDate, Short officeId) throws PersistenceException {
 		return new BulkEntryPersistence()
 				.getBulkEntryClientAttendanceActionView(meetingDate, officeId);

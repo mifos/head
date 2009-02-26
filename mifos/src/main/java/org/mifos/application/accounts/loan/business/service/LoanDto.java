@@ -21,12 +21,13 @@
 package org.mifos.application.accounts.loan.business.service;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * Loan Data Transfer Object (DTO)
  *
  */
-public class LoanDto {
+public class LoanDto implements DataTransferObject {
     private String globalAccountNumber;
     private Integer accountId;
     
