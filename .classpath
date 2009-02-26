@@ -8,6 +8,12 @@
 	<classpathentry excluding="org/mifos/doc-root/" kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main/java"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="mifos/lib/commons-collections-3.2.jar"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="lib" path="mifos/lib/activation.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/annogen-0.1.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/antlr-2.7.6.jar"/>
@@ -22,10 +28,15 @@
 	<classpathentry kind="lib" path="mifos/lib/backport-util-concurrent-2.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/c3p0-0.9.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/cglib-2.1.3.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/commons-beanutils-1.7.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/commons-configuration-1.4.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/commons-digester-1.7.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-httpclient-3.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-javaflow-20060411.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-validator.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymock.jar"/>
@@ -77,6 +88,5 @@
 	<classpathentry kind="lib" path="mifos/lib/XmlSchema-1.0.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/xmlunit-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/build-lib/maven-ant-tasks-2.0.9.jar"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
