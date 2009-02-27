@@ -33,9 +33,7 @@ import org.mifos.framework.persistence.SqlUpgrade;
 public class DatabaseSetup {
 	
 	private static final String DEFAULT_HIBERNATE_TEST_PROPERTIES =
-		"org/mifos/conf/HibernateTest.properties";
-	private static final String LOCAL_HIBERNATE_TEST_PROPERTIES =
-		"org/mifos/conf/my.HibernateTest.properties";
+		"HibernateTest.properties";
 
 	private static DataStore standardMayflyStore;
 	
@@ -52,23 +50,9 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
-		if (resourceExists(LOCAL_HIBERNATE_TEST_PROPERTIES)) {
-			initializeHibernate(LOCAL_HIBERNATE_TEST_PROPERTIES);
-		} else {
 			initializeHibernate(DEFAULT_HIBERNATE_TEST_PROPERTIES);
-		}
 	}
 	
-	private static boolean resourceExists(String resourcePath) {
-        URI uri;
-        try {
-            uri = ClasspathResource.getURI(resourcePath);
-        } catch (URISyntaxException e) {
-            return false;
-        }
-        return (null != uri);
-	}
-
 	public static void initializeHibernate(String hibernatePropertiesFileName) {
 		DatabaseSetup.configureLogging();
 

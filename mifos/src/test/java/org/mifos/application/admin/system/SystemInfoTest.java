@@ -69,8 +69,9 @@ public class SystemInfoTest {
 
 	@Test
 	public void testDatabaseInfos() throws Exception {
-		info.setInfoSource(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE);
-		assertFalse(info.getInfoSource().equals(FilePaths.DEFAULTMIFOSDBPROPERTIESFILE));
+	    String infoSourceValue = "test";
+		info.setInfoSource(infoSourceValue);
+		assertEquals(info.getInfoSource(),infoSourceValue);
 		URI full = new URI("jdbc:mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
 		URI mysqlSpecific = new URI(full.getSchemeSpecificPart());
 		info.setInfoURL(mysqlSpecific);

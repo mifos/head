@@ -20,6 +20,7 @@
 package org.mifos.application.admin.system;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.sql.DatabaseMetaData;
@@ -29,6 +30,7 @@ import javax.servlet.ServletContext;
 
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.FilePaths;
 
 /**
@@ -69,10 +71,13 @@ public class SystemInfo implements Serializable {
 
 	public SystemInfo(boolean getInfoSource) {
 		if (getInfoSource) {
-			this.infoSource = ApplicationInitializer.getHibernateProperties();
-			if (! this.infoSource.equals(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE)) {
-				this.infoSource = FilePaths.DEFAULTMIFOSDBPROPERTIESFILE;
-			}
+			try {
+                this.infoSource = new ConfigurationLocator().getFileHandle(
+                        FilePaths.HIBERNATE_PROPERTIES_FILENAME).getAbsolutePath();
+            } catch (IOException e) {
+                this.infoSource = "Unable to determine configuration source.";
+            }
+
 		}
 		setJavaVendor(System.getProperty("java.vendor"));
 		setJavaVersion(System.getProperty("java.version"));

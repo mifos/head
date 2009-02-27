@@ -62,6 +62,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.core.ClasspathResource;
@@ -102,20 +103,15 @@ public class ApplicationInitializer implements ServletContextListener,
 	}
 
 	private static String getDatabaseConnectionInfo() {
-		String info = "";
-		if (isHibernateConfigOverride()) {
-			info += "Using custom Mifos database connection settings since "
-					+ FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE
-					+ " was found on application server classpath.";
-		}
-		else {
-			info += "Mifos database connection using default settings.";
-		}
+	    ConfigurationLocator configurationLocator = new ConfigurationLocator();
 		Properties hibernateCfg = new Properties();
+		File configFile = null;
 		try {
-			URI uri = ClasspathResource.getURI(getHibernateProperties());
-			if (null != uri)
-				hibernateCfg.load(new FileInputStream(new File(uri)));
+	        configFile = configurationLocator.getFileHandle(
+	                FilePaths.HIBERNATE_PROPERTIES_FILENAME);
+			if (null != configFile) {
+				hibernateCfg.load(new FileInputStream(configFile));
+			}
 		}
 		catch (Exception e) {
 			/*
@@ -125,6 +121,15 @@ public class ApplicationInitializer implements ServletContextListener,
 			 */
 			e.printStackTrace();
 		}
+        String info = "";
+        if (configurationLocator.isLastFileHandleFromClassPath()) {
+            info += "Mifos database connection using settings from classpath";
+        }
+        else {
+            info += "Using custom Mifos database connection settings";
+        }
+        info += " from file: " + configFile.getAbsolutePath();
+        
 		info += " Connection URL="
 				+ hibernateCfg.getProperty("hibernate.connection.url");
 		info += ". Username="
@@ -335,33 +340,13 @@ public class ApplicationInitializer implements ServletContextListener,
         xml.text("\n");
     }
 
-	public static boolean isHibernateConfigOverride() {
-		try {
-			if (ClasspathResource.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null) {
-				return true;
-			}
-		}
-		catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-		return false;
-	}
-
-	public static String getHibernateProperties() {
-		if (isHibernateConfigOverride()) {
-			return FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE;
-		} else {
-		    return FilePaths.HIBERNATE_PROPERTIES;
-		}
-	}
-
 	/**
 	 * Initializes Hibernate by making it read the hibernate.cfg file and also
 	 * setting the same with hibernate session factory.
 	 */
 	public static void initializeHibernate() throws AppNotConfiguredException {
 		try {
-			HibernateStartUp.initialize(getHibernateProperties());
+			HibernateStartUp.initialize(FilePaths.HIBERNATE_PROPERTIES_FILENAME);
 		}
 		catch (HibernateStartUpException e) {
 			throw new AppNotConfiguredException(e);

@@ -28,6 +28,7 @@ import java.util.Properties;
 import org.hibernate.cfg.Configuration;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.core.ClasspathResource;
 
@@ -71,18 +72,7 @@ public class ConfigureSession
 			// TODO: factor this out instead of repeating it in ApplicationInitializer
 			Properties hibernateProperties = new Properties();
 
-			URI uri = ClasspathResource.getURI(hibernatePropertiesPath);
-			File propertiesFile;
-			if (uri == null) {
-				// Look for it in the current directory.
-				// This is how we currently find it when running
-				// tests directly from an IDE.
-				propertiesFile = new File(hibernatePropertiesPath);
-			} else {
-				// We found it in the classpath.  The normal case
-				// for when we have run an "ant copy_files" 
-				propertiesFile = new File(uri);
-			}
+			File propertiesFile = new ConfigurationLocator().getFileHandle(hibernatePropertiesPath);
 			hibernateProperties.load(new FileInputStream(propertiesFile));
 			config.setProperties(hibernateProperties);
 			// Allow database to be specified dynamically for testing

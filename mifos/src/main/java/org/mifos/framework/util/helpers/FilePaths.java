@@ -56,16 +56,13 @@ public interface FilePaths {
 		"org/mifos/framework/util/resources/menuresources/menu.xsd";
 	public static final String JAXBPACKAGEPATH = 
 		"org.mifos.framework.util.jaxb.";
-	public static final String HIBERNATE_PROPERTIES = 
-		"org/mifos/conf/hibernate.properties";
+	public static final String HIBERNATE_PROPERTIES_FILENAME = 
+		"hibernate.properties";
 	public static final String HIBERNATECFGFILE = 
 		"org/mifos/framework/util/resources/hibernate.cfg.xml";
 	public static final String CUSTOMTABLETAGXSD = 
 		"org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
-	public static final String CONFIGURABLEMIFOSDBPROPERTIESFILE = 
-		"deploymifosDB.properties";
-	public static final String DEFAULTMIFOSDBPROPERTIESFILE = 
-		"hibernate.properties";
+
 	/**
 	 * Main Spring configuration file. This is a relative path, meant to be
 	 * resolved by something that walks the classpath.

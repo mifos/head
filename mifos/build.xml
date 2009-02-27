@@ -12,6 +12,7 @@
     <property name="src.dir" value="${basedir}/src/main/java"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
     <property name="conf.dir" value="${src.dir}/org/mifos/conf"/>
+    <property name="resources.dir" value="${src.dir}/org/mifos/config/resources"/>
 
     <!-- my.build.properties is your way to override
     properties which are not supposed to be
@@ -156,8 +157,6 @@
     file if they are present.
     -->
     <target name="copy_files" depends="copy-revision">
-        <available file="${conf.dir}/my.hibernate.properties"
-            property="my.hibernate.properties.present" value="true" />
         <copy todir="${build.web-inf}/lib">
             <fileset dir="${lib.dir}" 
                 excludes="easymock*.jar, javax.servlet.jar, jaxb-xjc.jar, jetty*.jar, jsp-api.jar, junit*.jar,
@@ -192,14 +191,7 @@
         <copy todir="${build.classes}/org/mifos/config">
             <fileset dir="${src.dir}/org/mifos/config">
                 <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-        <copy tofile="${build.classes}/org/mifos/conf/hibernate.properties" verbose="true">
-            <fileset dir="${conf.dir}">
-                <include name="my.hibernate.properties" 
-                    if="my.hibernate.properties.present" />
-                <include name="hibernate.properties" 
-                    unless="my.hibernate.properties.present" />
+                <exclude name="**/HibernateTest.properties"/>
             </fileset>
         </copy>
         <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/conf"/>
@@ -263,8 +255,6 @@
     </target>
 
     <target name="copy_test_files">
-        <available file="${conf.dir}/my.HibernateTest.properties"
-            property="my.HibernateTest.properties.present" value="true"/>
         <copy todir="${test.classes}">
             <fileset dir="${test.dir}">
                 <exclude name="**/*.java"/>
@@ -276,10 +266,9 @@
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-        <copy tofile="${test.classes}/org/mifos/conf/HibernateTest.properties" verbose="true">
-            <fileset dir="${conf.dir}">
-                <include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
-                <include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
+        <copy tofile="${test.classes}/org/mifos/config/resources/HibernateTest.properties" verbose="true">
+            <fileset dir="${resources.dir}">
+                <include name="HibernateTest.properties"/>
             </fileset>
         </copy>
         <copy todir="${test.classes}/org/mifos/config">

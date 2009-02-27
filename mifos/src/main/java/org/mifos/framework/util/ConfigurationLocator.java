@@ -37,40 +37,51 @@ public class ConfigurationLocator {
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
     
+    private boolean lastFileHandleFromClassPath = true;
+    
     public File getFileHandle(String filename) throws IOException {
         String systemPropertyDirectory = System.getProperty(LOCATOR_SYSTEM_PROPERTY_NAME);
         String envPropertyDirectory = System.getenv(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
         String homeDirectory = System.getProperty(HOME_PROPERTY_NAME);
 
         File fileToReturn = null;
+        lastFileHandleFromClassPath = true;
         
         if (StringUtils.isNotBlank(systemPropertyDirectory)) {
             File file = new File(systemPropertyDirectory,filename);
             System.out.println("Checking system property path: " + file.getAbsolutePath());
             if (file.exists()) {
                 fileToReturn = file;
+                lastFileHandleFromClassPath = false;
             }
         } else if (StringUtils.isNotBlank(envPropertyDirectory)) {
             File file = new File(envPropertyDirectory,filename);
             System.out.println("Checking environment path: " + file.getAbsolutePath());
             if (file.exists()) {
                 fileToReturn = file;
+                lastFileHandleFromClassPath = false;
             }
         } else if (new File(homeDirectory,MIFOS_USER_CONFIG_DIRECTORY_NAME).exists()) {
             File file = new File(homeDirectory + "/" + MIFOS_USER_CONFIG_DIRECTORY_NAME,filename);
             System.out.println("Checking home directory path: " + file.getAbsolutePath());
             if (file.exists()) {
                 fileToReturn = file;
+                lastFileHandleFromClassPath = false;
             }
         } 
         
         if (fileToReturn == null) {
             filename = DEFAULT_CONFIGURATION_PATH + filename;
-            System.out.println(new ClassPathResource(filename).getPath());
+            System.out.println("Using classpath resource: " + new ClassPathResource(filename).getPath());
             fileToReturn = new ClassPathResource(filename).getFile();
         }
         
         return fileToReturn;
-        
     }
+
+    public boolean isLastFileHandleFromClassPath() {
+        return lastFileHandleFromClassPath;
+    }
+    
+    
 }
