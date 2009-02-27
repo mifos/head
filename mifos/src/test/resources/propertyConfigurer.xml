@@ -10,8 +10,8 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath:org/mifos/conf/HibernateTest.properties</value>
-                <value>classpath:org/mifos/conf/my.HibernateTest.properties</value>
+                <value>classpath:org/mifos/config/resources/HibernateTest.properties</value>
+                <value>classpath:org/mifos/config/resources/my.HibernateTest.properties</value>
             </list>
         </property>
     </bean>
