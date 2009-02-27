@@ -27,7 +27,9 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryC
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
@@ -47,6 +49,10 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     private static final String CUSTOMER_ACCOUNT_ACTIVITY = "CUSTOMER_ACCOUNT_ACTIVITY";
     private static final String CUSTOMER_TRXN_DETAIL = "CUSTOMER_TRXN_DETAIL";
 
+    private static final double[] BASIC_CUSTOMER_ACCT_VALUES = new double[] {  17.0, 77.0, 123.0, 217.0, 44.0 };
+    private static final double[] FIRST_PARTIAL_CUSTOMER_ACCT_VALUES = new double[] { 17.0, 0.0, 123.0, 0.0, 44.0 };
+
+
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -60,18 +66,62 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void clientAccountFeesSavedToDatabase() throws Exception {
-         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-     
+        SubmitFormParameters formParameters = getFormParametersForTestOffice();   
         dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
-        
+        enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
+        verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void previousPaidFeeNotDisplayedOnSecondCollectionSheetEntry() throws Exception {
+        SubmitFormParameters formParameters = getFormParametersForTestOffice();
+        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
+        //navigate back to collection sheet entry
+        HomePage homePage = confirmationPage.navigateToHomePage();
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
+        selectPage.verifyPage();
+        //enter same search data and inspect displayed client account (A/C Collection) values
+        CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
+        enterDataPage.verifyCustomerAccountValue(0, 6, 0.0);
+        enterDataPage.verifyCustomerAccountValue(1, 6, 0.0);
+        enterDataPage.verifyCustomerAccountValue(2, 6, 0.0);
+        enterDataPage.verifyCustomerAccountValue(3, 6, 0.0);
+        enterDataPage.verifyCustomerAccountValue(4, 6, 0.0);
+        enterDataPage.cancel();
+
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void unpaidFeeDisplayedOnSecondCollectionSheetEntryAndSaved() throws Exception {
+        SubmitFormParameters formParameters = getFormParametersForTestOffice();
+        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountData(formParameters, FIRST_PARTIAL_CUSTOMER_ACCT_VALUES);
+        //navigate back to collection sheet entry
+        HomePage homePage = confirmationPage.navigateToHomePage();
+        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        CollectionSheetEntrySelectPage selectPage = clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
+        selectPage.verifyPage();
+        //enter same search data and inspect displayed client account (A/C Collection) values
+        CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
+        enterDataPage.verifyCustomerAccountValue(0, 6, 0.0);
+        enterDataPage.verifyCustomerAccountValue(1, 6, 77.0);
+        enterDataPage.verifyCustomerAccountValue(2, 6, 0.0);
+        enterDataPage.verifyCustomerAccountValue(3, 6, 217.0);
+        enterDataPage.verifyCustomerAccountValue(4, 6, 0.0);
+        enterDataPage.cancel();
+
+    }
+
+    private CollectionSheetEntryConfirmationPage enterAndSubmitCustomerAccountData(SubmitFormParameters formParameters, double[] customerAcctValues) {
         CollectionSheetEntrySelectPage selectPage = 
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
-        CollectionSheetEntryEnterDataPage enterDataPage = 
-            selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
-        enterDataPage.verifyPage();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
 
-        enterAllCustomerAccountValues(enterDataPage);
+        enterFirstGroupCustomerAccountValues(enterDataPage, customerAcctValues);
+        enterGenericCustomerAccountValues(enterDataPage);
         
         CollectionSheetEntryPreviewDataPage previewPage = 
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
@@ -79,34 +129,45 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         CollectionSheetEntryConfirmationPage confirmationPage = 
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
-        
-        verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
+        return confirmationPage;
     }
 
 
-    private void enterAllCustomerAccountValues(CollectionSheetEntryEnterDataPage enterDataPage) {
+    private CollectionSheetEntryEnterDataPage selectCenterAndContinue(SubmitFormParameters formParameters,
+            CollectionSheetEntrySelectPage selectPage) {
+        CollectionSheetEntryEnterDataPage enterDataPage = 
+            selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterDataPage.verifyPage();
+        return enterDataPage;
+    }
+
+
+    private void enterFirstGroupCustomerAccountValues(CollectionSheetEntryEnterDataPage enterDataPage, double[] customerAcctValues) {
         // first Group's information...
         enterDataPage.enterAccountValue(0,0,0.0);
         enterDataPage.enterAccountValue(0,1,183.0);
         enterDataPage.enterDepositAccountValue(0,2,0.0);
-        enterDataPage.enterCustomerAccountValue(0, 6, 17.0);
-   
+        enterDataPage.enterCustomerAccountValue(0, 6, customerAcctValues[0]);
+        
         enterDataPage.enterAccountValue(1,0,0.0);
         enterDataPage.enterAccountValue(1,1,183.0);
         enterDataPage.enterDepositAccountValue(1,2,0.0);
-        enterDataPage.enterCustomerAccountValue(1, 6, 77.0);
+        enterDataPage.enterCustomerAccountValue(1, 6, customerAcctValues[1]);
 
         enterDataPage.enterAccountValue(2,0,0.0);
         enterDataPage.enterAccountValue(2,1,183.0);
         enterDataPage.enterDepositAccountValue(2,2,0.0);
-        enterDataPage.enterCustomerAccountValue(2, 6, 123.0);
+        enterDataPage.enterCustomerAccountValue(2, 6, customerAcctValues[2]);
 
         enterDataPage.enterAccountValue(3,0,0.0);
         enterDataPage.enterAccountValue(3,1,183.0);
         enterDataPage.enterDepositAccountValue(3,2,0.0);
-        enterDataPage.enterCustomerAccountValue(3, 6, 217.0);
+        enterDataPage.enterCustomerAccountValue(3, 6, customerAcctValues[3]);
 
-        enterDataPage.enterCustomerAccountValue(4, 6, 44.0);
+        enterDataPage.enterCustomerAccountValue(4, 6, customerAcctValues[4]);
+    }
+    
+    private void enterGenericCustomerAccountValues(CollectionSheetEntryEnterDataPage enterDataPage) {
 
         // second Group's information...
         enterDataPage.enterAccountValue(5,0,0.0);
