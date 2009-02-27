@@ -13,6 +13,11 @@
 	</parent>
 
    <repositories>
+		<repository>
+			<id>maven-repository.mifos.org</id>
+			<name>Mifos Maven Repository</name>
+			<url>http://neem.mifos.org/maven/</url>
+		</repository>
       <repository>
          <id>maven2-repository.dev.java.net</id>
          <name>Java.net Repository for Maven</name>
