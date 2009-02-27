@@ -11,29 +11,29 @@
     <property name="java.home" value="${env.JAVA_HOME}"/>
     <property name="src.dir" value="${basedir}/src/main/java"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
-    <property name="conf.dir" value="${src.dir}/org/mifos/conf"/>
-    <property name="resources.dir" value="${src.dir}/org/mifos/config/resources"/>
+    <property name="conf.dir" value="${src.dir}/org/mifos/config/resources"/>
 
-    <!-- my.build.properties is your way to override
-    properties which are not supposed to be
-    checked in.  If it doesn't exist, ant
-    will just skip it.  Properties defined
-    there override those defined in build.properties
-    or in this file -->
-    <property file="${conf.dir}/my.build.properties"/>
+    <!--
+    Simulate functionality in ConfigurationLocator used to find the build
+    configuration file. Note that, unlike ConfigurationLocator, Ant will
+    combine properties from any/all of the below files which exist. The last
+    definition of each property wins.
+    -->
+    <property file="${mifos.conf}/build.properties"/>
+    <property file="${env.MIFOS_CONF}/build.properties"/>
+    <property file="${user.home}/.mifos/build.properties"/>
     <property file="${conf.dir}/build.properties"/>
 
-    <!-- Which suite to run in the run_test an  d profile_test
-    targets.  Normally the whole suite, but can be
-    set to a sub-suite or individual test, for example by specifying
-    -Dtest.suite=FastTests on the ant command line.  -->
+    <!--
+    Which suite to run in the run_test target. Normally the whole suite,
+    but can be set to a sub-suite or individual test, for example by specifying
+    -Dtest.suite=FastTests on the ant command line.
+    -->
     <property name="test.suite" value="ApplicationTestSuite" />
 
     <!-- Probably need about 550M for 64-bit systems 
     (instead of 350M for 32-bit). -->
     <property name="test.memory" value="1024M" />
-    <!-- 550M wasn't enough for me, needs more experimentation -->
-    <property name="profile.memory" value="550M" />
 
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
@@ -152,8 +152,8 @@
     <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin.0.2.2.jar"/>
 
     <!--
-    Note that my.hibernate.properties and my.HibernateTest.properties,
-    unlike my.build.properties, entirely override the corresponding
+    Note that hibernate.properties and HibernateTest.properties,
+    unlike build.properties, entirely override the corresponding
     file if they are present.
     -->
     <target name="copy_files" depends="copy-revision">
@@ -194,7 +194,7 @@
                 <exclude name="**/HibernateTest.properties"/>
             </fileset>
         </copy>
-        <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/conf"/>
+        <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/config"/>
         <copy todir="${build.web-inf}/services/MifosService/META-INF">
             <fileset dir="${src.dir}/org/mifos/api/resources">
                 <include name="services.xml"/>
@@ -267,7 +267,7 @@
             </fileset>
         </copy>
         <copy tofile="${test.classes}/org/mifos/config/resources/HibernateTest.properties" verbose="true">
-            <fileset dir="${resources.dir}">
+            <fileset dir="${conf.dir}">
                 <include name="HibernateTest.properties"/>
             </fileset>
         </copy>

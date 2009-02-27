@@ -6,7 +6,7 @@
 	<bean id="cacheManager"
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation">
-			<value>classpath:org/mifos/conf/ehcache.xml</value>
+			<value>classpath:org/mifos/config/ehcache.xml</value>
 		</property>
 	</bean>
 	<bean id="cacheProviderFacade"
