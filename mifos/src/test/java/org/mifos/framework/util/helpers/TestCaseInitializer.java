@@ -26,6 +26,8 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.ActivityMapper;
@@ -33,40 +35,47 @@ import org.mifos.framework.security.util.ActivityMapper;
 /**
  * Many tests initialize themselves via this class.
  * 
- * However, the fact that it is a static block, and initializes
- * more than it may need to for a given test, means that it might 
- * be desirable
- * to call {@link DatabaseSetup} directly in some cases,
- * or to avoid everything here in others (that is, those
- * tests written to not need the database).
+ * However, the fact that it is a static block, and initializes more than it may
+ * need to for a given test, means that it might be desirable to call
+ * {@link DatabaseSetup} directly in some cases, or to avoid everything here in
+ * others (that is, those tests written to not need the database).
  */
 public class TestCaseInitializer {
-	static {
-		try {
-			DatabaseSetup.configureLogging();
-			DatabaseSetup.initializeHibernate();
-			//	add this because it is added to Application Initializer
-			Localization.getInstance().init(); 
-			/* initializeSpring needs to come before AuditConfiguration.init
-			 * in order for MasterDataEntity data to be loaded.
-			 */
-			
-			/* shouldn't we have other initialization from ApplicationInitializer in here ? */
-			
-			Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
-			
-			TestUtils.initializeSpring();
-			// Spring must be initialized before FinancialInitializer
-			FinancialInitializer.initialize();
-			ActivityMapper.getInstance().init();
-			AuthorizationManager.getInstance().init();
-			HierarchyManager.getInstance().init();
-			
-			MifosConfiguration.getInstance().init();
-			AuditConfigurtion.init(Localization.getInstance().getMainLocale());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Error("Failed to start up", e);
-		}
-	}
+
+    private static Boolean initialized = false;
+
+    public TestCaseInitializer() {
+        // do nothing
+    }
+
+    public synchronized void initialize() throws SystemException, ApplicationException {
+        if (initialized == false) {
+            initialized = true;
+            DatabaseSetup.configureLogging();
+            DatabaseSetup.initializeHibernate();
+            // add this because it is added to Application Initializer
+            Localization.getInstance().init();
+            /*
+             * initializeSpring needs to come before AuditConfiguration.init in
+             * order for MasterDataEntity data to be loaded.
+             */
+
+            /*
+             * shouldn't we have other initialization from
+             * ApplicationInitializer in here ?
+             */
+
+            Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+
+            TestUtils.initializeSpring();
+            // Spring must be initialized before FinancialInitializer
+            FinancialInitializer.initialize();
+            ActivityMapper.getInstance().init();
+            AuthorizationManager.getInstance().init();
+            HierarchyManager.getInstance().init();
+
+            MifosConfiguration.getInstance().init();
+            AuditConfigurtion.init(Localization.getInstance().getMainLocale());
+        }
+    }
 }

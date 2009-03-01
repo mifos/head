@@ -29,6 +29,8 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -36,7 +38,11 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsIntPostingHelper extends MifosTestCase {
-	private static final double DELTA = 0.000001;
+	public TestSavingsIntPostingHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.000001;
 
     private UserContext userContext;
 

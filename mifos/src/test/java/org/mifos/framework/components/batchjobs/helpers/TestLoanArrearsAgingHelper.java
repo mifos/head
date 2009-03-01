@@ -41,13 +41,19 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanArrearsAgingHelper extends MifosTestCase {
-	private LoanArrearsAgingHelper loanArrearsAgingHelper;
+	public TestLoanArrearsAgingHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanArrearsAgingHelper loanArrearsAgingHelper;
 
 	private CustomerBO center;
 

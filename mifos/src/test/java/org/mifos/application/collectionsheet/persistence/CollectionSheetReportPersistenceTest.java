@@ -9,11 +9,17 @@ import java.util.List;
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetReportPersistenceTest extends MifosTestCase {
 
-	private static final Integer CENTER_ID = Integer.valueOf("2");
+	public CollectionSheetReportPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Integer CENTER_ID = Integer.valueOf("2");
 	private static final Integer PERSONNEL_ID = Integer.valueOf("1");
 	private static final Date MEETING_DATE = DateUtils.getDate(2007,
 			Calendar.JUNE, 22);

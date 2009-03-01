@@ -37,6 +37,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -46,7 +47,11 @@ import org.mifos.config.FiscalCalendarRules;
 
 public class TestHolidayUtils extends MifosTestCase {
 	
-	private MeetingBO meeting;
+	public TestHolidayUtils() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private MeetingBO meeting;
 	private Short recurAfter = Short.valueOf("1"); // recur After January
 	private Date startDate;
 	private  ConfigurationManager configMgr = null;

@@ -15,12 +15,18 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCheckListBO extends MifosTestCase {
 
-	private CustomerCheckListBO customerCheckList = null;
+	public TestCheckListBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CustomerCheckListBO customerCheckList = null;
 
 	private AccountCheckListBO accountCheckList = null;
 

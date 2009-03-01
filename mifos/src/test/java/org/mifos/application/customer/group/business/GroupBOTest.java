@@ -71,6 +71,8 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskCalculation;
 import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -79,7 +81,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupBOTest extends MifosTestCase {
 
-	private AccountBO account1 = null;
+	public GroupBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private AccountBO account1 = null;
 
 	private AccountBO account2 = null;
 

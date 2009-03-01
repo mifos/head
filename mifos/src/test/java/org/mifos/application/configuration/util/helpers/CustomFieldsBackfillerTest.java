@@ -57,7 +57,7 @@ public class CustomFieldsBackfillerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		new TestCaseInitializer();
+		new TestCaseInitializer().initialize();
 	}
 
 	@AfterClass

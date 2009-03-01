@@ -8,12 +8,18 @@ import java.util.Set;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAuditPersistence extends MifosTestCase {
 
-	public void testSave() {
+	public TestAuditPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testSave() {
 		AuditLog auditLog = new AuditLog(Integer.valueOf("1"), Short
 				.valueOf("2"), "Mifos", new Date(System.currentTimeMillis()),
 				Short.valueOf("3"));

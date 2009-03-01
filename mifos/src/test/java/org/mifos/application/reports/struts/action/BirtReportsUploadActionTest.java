@@ -17,7 +17,9 @@ import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPers
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
@@ -26,7 +28,11 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
-	@Override
+	public BirtReportsUploadActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

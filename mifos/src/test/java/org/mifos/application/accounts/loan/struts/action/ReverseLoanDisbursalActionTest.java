@@ -17,7 +17,9 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -27,7 +29,11 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 
-	private UserContext userContext;
+	public ReverseLoanDisbursalActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	private LoanBO loan = null;
 

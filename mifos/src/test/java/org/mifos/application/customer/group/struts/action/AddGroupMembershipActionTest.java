@@ -62,6 +62,8 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -71,7 +73,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 
-	private CenterBO center;
+	public AddGroupMembershipActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CenterBO center;
 	private GroupBO group;
 	private ClientBO client;
 	private MeetingBO meeting;

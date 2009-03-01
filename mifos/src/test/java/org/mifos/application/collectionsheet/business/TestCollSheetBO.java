@@ -55,7 +55,11 @@ import static org.easymock.classextension.EasyMock.createMock;
 
 public class TestCollSheetBO extends MifosTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public TestCollSheetBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     protected AccountBO accountBO = null;
 

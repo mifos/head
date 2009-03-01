@@ -2,12 +2,18 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 
 public class FlowManagerHelperTest extends MifosMockStrutsTestCase {
 
-	private FlowManagerHelper flowManagerHelper = null;
+	public FlowManagerHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private FlowManagerHelper flowManagerHelper = null;
 
 	private String flowKey = "";
 

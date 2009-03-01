@@ -7,10 +7,16 @@ import static org.easymock.classextension.EasyMock.verify;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class GroupPerformanceHistoryUpdaterTest extends MifosTestCase {
 	
-	public void testShouldMatchClientsWithParentAccounts() throws Exception {
+	public GroupPerformanceHistoryUpdaterTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testShouldMatchClientsWithParentAccounts() throws Exception {
 		LoanBO parentLoanMock1 = createMock(LoanBO.class);
 		expect(parentLoanMock1.getAccountId()).andReturn(1).times(3);
 		

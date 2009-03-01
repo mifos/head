@@ -5,10 +5,16 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestHibernateHelper extends MifosTestCase {
 
-	public void testDTOBuilderCapitalize() {
+	public TestHibernateHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testDTOBuilderCapitalize() {
 		DTOBuilder dtoBuilder = new DTOBuilder();
 		assertEquals("String", dtoBuilder.capitalize("string"));
 		assertEquals("", dtoBuilder.capitalize(""));

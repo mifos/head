@@ -44,12 +44,18 @@ import org.mifos.application.reports.business.service.BranchReportConfigService;
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.BranchReportTestCase;
 import org.mifos.application.reports.business.service.IBranchReportService;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class BranchReportLoanArrearsAgingHelperTest extends
 		BranchReportTestCase {
-	private IBranchReportService branchReportServiceMock;
+	public BranchReportLoanArrearsAgingHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private IBranchReportService branchReportServiceMock;
 	private List<LoanArrearsAgingPeriod> expectedPeriods;
 	private BranchReportConfigService branchReportConfigServiceMock;
 

@@ -44,7 +44,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBusinessService extends MifosTestCase {
 
-	protected AccountBO accountBO = null;
+	public TestLoanBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected AccountBO accountBO = null;
 
 	protected CustomerBO center = null;
 

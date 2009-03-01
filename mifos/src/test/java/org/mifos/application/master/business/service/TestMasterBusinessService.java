@@ -23,15 +23,21 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestMasterBusinessService extends MifosTestCase {
 
-	MasterDataService masterService;
+	public TestMasterBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    MasterDataService masterService;
 
 	@Override
 	public void setUp() throws Exception {

@@ -9,6 +9,8 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class TestFinancialInitializer {
@@ -17,8 +19,8 @@ public class TestFinancialInitializer {
 	}
 	
 	@BeforeClass
-	public static void setUpBeforeClass() {
-		new TestCaseInitializer();
+	public static void setUpBeforeClass() throws SystemException, ApplicationException {
+		new TestCaseInitializer().initialize();
 	}
 
 	@Test

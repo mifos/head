@@ -9,10 +9,16 @@ import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestActivityTag extends MifosTestCase {
 	
-	public void testPopulateLocaleID()throws Exception{
+	public TestActivityTag() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testPopulateLocaleID()throws Exception{
 		List<ActivityEntity> activities = getActivities();
 		new ActivityTag().populateLocaleID(activities,Short.valueOf("1"));
 		assertEquals(Short.valueOf("1"),activities.get(0).getLocaleId());

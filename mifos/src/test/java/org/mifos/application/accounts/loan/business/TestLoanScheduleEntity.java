@@ -9,12 +9,18 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
 
 public class TestLoanScheduleEntity extends TestAccount {
 
-	private static final double DELTA = 0.00000001;
+	public TestLoanScheduleEntity() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     public void testGetPrincipalDue() {
 		LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO

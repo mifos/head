@@ -18,13 +18,19 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAuditInterceptor extends MifosTestCase {
 
-	protected AccountBO accountBO = null;
+	public TestAuditInterceptor() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected AccountBO accountBO = null;
 
 	protected CustomerBO center = null;
 

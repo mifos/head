@@ -13,12 +13,18 @@ import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class ReportsPersistenceTest extends MifosTestCase {
 
-	private ReportsPersistence reportsPersistence;
+	public ReportsPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private ReportsPersistence reportsPersistence;
 
 	@Override
 	protected void setUp() throws Exception {

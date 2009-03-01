@@ -2,12 +2,18 @@ package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestConfigurationKeyValueInteger extends MifosTestCase {
-	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+	public TestConfigurationKeyValueInteger() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 	private final int TEST_VALUE = 100;
 	private final int TEST_VALUE_2 = 200;
 	private final String TEST_KEY = "test.key";

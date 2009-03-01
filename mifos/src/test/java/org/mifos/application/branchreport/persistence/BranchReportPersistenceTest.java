@@ -48,14 +48,20 @@ import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.reports.business.service.BranchReportTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportPersistenceTest extends BranchReportTestCase {
 
-	private static final Short LOAN_OFFICER_ID_SHORT = Short.valueOf("3");
+	public BranchReportPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Short LOAN_OFFICER_ID_SHORT = Short.valueOf("3");
 	private static final String TOTAL_STAFF_ROLENAME_STR = "Total Staff";
 	private static final Short BRANCH_ID = Short.valueOf("1");
 	private Session session;

@@ -5,9 +5,15 @@ import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
-	@Override
+	public ReportsCategoryActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

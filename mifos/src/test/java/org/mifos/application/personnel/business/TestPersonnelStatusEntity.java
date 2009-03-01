@@ -2,11 +2,17 @@ package org.mifos.application.personnel.business;
 
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelStatusEntity extends MifosTestCase {
 
-	public void testGetPersonnelStatusEntity() throws Exception {
+	public TestPersonnelStatusEntity() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetPersonnelStatusEntity() throws Exception {
 		MasterPersistence masterPersistenceService = new MasterPersistence();
 		PersonnelStatusEntity personnelStatusEntity = (PersonnelStatusEntity)
 			masterPersistenceService.getPersistentObject(

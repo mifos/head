@@ -1,11 +1,17 @@
 package org.mifos.framework.components.logger;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 
 public class TestMessage extends MifosTestCase {
 
-	@Override
+	public TestMessage() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

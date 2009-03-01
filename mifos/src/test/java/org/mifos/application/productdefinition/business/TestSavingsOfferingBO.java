@@ -66,7 +66,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsOfferingBO extends MifosTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public TestSavingsOfferingBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     private SavingsOfferingBO savingsProduct;
 

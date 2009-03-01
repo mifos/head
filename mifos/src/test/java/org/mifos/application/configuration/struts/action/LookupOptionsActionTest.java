@@ -25,7 +25,11 @@ import org.mifos.framework.util.helpers.FilePaths;
 
 public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
-	private UserContext userContext;
+	public LookupOptionsActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 	private String flowKey;
 
 	private final Short DEFAULT_LOCALE = 1;

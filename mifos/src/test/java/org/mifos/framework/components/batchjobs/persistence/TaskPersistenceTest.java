@@ -9,13 +9,19 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TaskPersistenceTest extends MifosTestCase {
 
-	@Override
+	public TaskPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

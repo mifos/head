@@ -19,13 +19,19 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountActionDateEntity extends TestAccount {
 
-	private static final double DELTA = 0.00000001;
+	public TestAccountActionDateEntity() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     public static void addAccountActionDate(
 			AccountActionDateEntity accountAction, AccountBO account) {

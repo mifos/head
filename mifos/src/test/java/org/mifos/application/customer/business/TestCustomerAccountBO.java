@@ -53,7 +53,11 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerAccountBO extends MifosTestCase {
-	private static final double DELTA = 0.00000001;
+	public TestCustomerAccountBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     protected CustomerAccountBO customerAccountBO = null;
 

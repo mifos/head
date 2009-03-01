@@ -16,12 +16,18 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
 
 public class GroupPerformanceHistoryEntityTest extends MifosTestCase{
 	
-	private LoanBO loan;
+	public GroupPerformanceHistoryEntityTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanBO loan;
 	private ConfigurationBusinessService configServiceMock;
 	private AccountBusinessService accountBusinessServiceMock;
 	private LoanOfferingBO loanOffering;

@@ -4,10 +4,16 @@ import org.mifos.application.ApplicationTestSuite;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestFieldConfigurationHelper extends MifosTestCase {
 	
-	/** TODO: These tests only pass when run as part of
+	public TestFieldConfigurationHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    /** TODO: These tests only pass when run as part of
 	 * {@link ApplicationTestSuite}, not when run by themselves
 	 * on a fresh test database.
 	 * There must be some state which is left around or set up

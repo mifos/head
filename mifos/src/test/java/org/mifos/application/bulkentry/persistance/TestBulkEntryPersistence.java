@@ -22,7 +22,9 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -30,7 +32,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryPersistence extends MifosTestCase {
 
-	private AccountPersistence accountPersistence;
+	public TestBulkEntryPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private AccountPersistence accountPersistence;
 
 	private CustomerBO center;
 
@@ -42,7 +48,7 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 
 	private ClientAttendanceBO clientAttendance;
 
-	private BulkEntryPersistence bulkEntryPersistance;
+	private BulkEntryPersistence bulkEntryPersistence;
 
 	private CustomerPersistence customerPersistence;
 
@@ -50,7 +56,7 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		accountPersistence = new AccountPersistence();
-		bulkEntryPersistance = new BulkEntryPersistence();
+		bulkEntryPersistence = new BulkEntryPersistence();
 		customerPersistence = new CustomerPersistence();
 	}
 
@@ -189,40 +195,4 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 
 	}
 
-	public void testGetBulkEntryClientAttendanceActionView()
-			throws PersistenceException {
-
-		createInitialObjects();
-		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-
-		clientAttendance = new ClientAttendanceBO();
-		clientAttendance.setAttendance(AttendanceType.PRESENT);
-		clientAttendance.setMeetingDate(meetingDate);
-		((ClientBO) client).addClientAttendance(clientAttendance);
-		customerPersistence.createOrUpdate(client);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
-		List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistance
-				.getBulkEntryClientAttendanceActionView(meetingDate, client
-						.getOffice().getOfficeId());
-
-		assertEquals(collectionSheetEntryClientAttendanceView.size(), 1);
-
-	}
-
-	private void createInitialObjects() {
-
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-
-		.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center",
-				meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-
-		HibernateUtil.closeSession();
-
-	}
 }

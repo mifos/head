@@ -29,14 +29,20 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConfigServiceInitializationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
 
 public class ReportProductOfferingServiceTest extends MifosTestCase {
 
-	private static final Short SAVINGS_OFFERING_2_ID = Short.valueOf("2");
+	public ReportProductOfferingServiceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Short SAVINGS_OFFERING_2_ID = Short.valueOf("2");
 	private static final Short SAVINGS_OFFERING_1_ID = Short.valueOf("1");
 	private static final Short LOAN_OFFERING_2_ID = Short.valueOf("2");
 	private static final Short LOAN_OFFERING_1_ID = Short.valueOf("1");

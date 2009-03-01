@@ -11,10 +11,16 @@ import static org.mifos.application.reports.ui.SelectionItem.SELECT_LOAN_OFFICER
 import java.text.ParseException;
 
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class CollectionSheetReportParametersTest extends AbstractReportParametersTest {
 
-	private static final String VALID_REPORT_DATE = "07/03/2007 12:00:00 AM";	
+	public CollectionSheetReportParametersTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final String VALID_REPORT_DATE = "07/03/2007 12:00:00 AM";	
 	
 	public void testValidatorReturnsErrorIfBranchIdIsSelect() throws Exception {
 		reportParams = new CollectionSheetReportParameterForm(String

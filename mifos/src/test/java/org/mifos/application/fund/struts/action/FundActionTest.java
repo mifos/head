@@ -9,6 +9,8 @@ import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -18,7 +20,11 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FundActionTest extends MifosMockStrutsTestCase {
-	private String flowKey;
+	public FundActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private String flowKey;
 	private FundBO fund;
 	private FundBO fundBO;
 	private UserContext userContext = null;

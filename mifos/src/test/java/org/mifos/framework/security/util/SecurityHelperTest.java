@@ -5,10 +5,16 @@ import java.util.Set;
 
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class SecurityHelperTest extends MifosTestCase {
 
-	public void testGetUserRoles() throws Exception{
+	public SecurityHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetUserRoles() throws Exception{
 		Set<RoleBO> userRoles= SecurityHelper.getUserRoles((short)1);
 		assertEquals(1,userRoles.size());
 	}

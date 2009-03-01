@@ -8,6 +8,8 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -17,7 +19,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
 public class TestConfiguration extends MifosTestCase{
-	private Configuration configuration ;
+	public TestConfiguration() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private Configuration configuration ;
 	
 	@Override
 	protected void setUp() throws Exception {

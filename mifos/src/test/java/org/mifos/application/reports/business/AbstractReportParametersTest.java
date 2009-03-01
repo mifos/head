@@ -24,6 +24,8 @@ import static org.easymock.classextension.EasyMock.createMock;
 
 import org.mifos.application.reports.business.validator.Errors;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public abstract class AbstractReportParametersTest extends MifosTestCase {
 
@@ -33,7 +35,7 @@ public abstract class AbstractReportParametersTest extends MifosTestCase {
 	protected AbstractReportParameterForm reportParams;
 
 
-	public AbstractReportParametersTest() {
+	public AbstractReportParametersTest() throws SystemException, ApplicationException {
 		super();
 	}
 

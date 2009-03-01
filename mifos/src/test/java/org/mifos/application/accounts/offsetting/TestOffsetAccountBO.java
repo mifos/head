@@ -16,12 +16,18 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestOffsetAccountBO extends MifosTestCase {
 	
-	protected LoanBO accountBO=null;
+	public TestOffsetAccountBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected LoanBO accountBO=null;
 	protected CustomerBO center=null;
 	protected CustomerBO group=null;
 	protected AccountPersistence accountPersistence;

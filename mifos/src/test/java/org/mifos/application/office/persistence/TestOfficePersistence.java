@@ -14,14 +14,20 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficePersistence extends MifosTestCase {
-	private OfficePersistence officePersistence;
+	public TestOfficePersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private OfficePersistence officePersistence;
 
 	@Override
 	public void setUp() throws Exception {

@@ -17,8 +17,10 @@ import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -32,7 +34,11 @@ import static org.easymock.classextension.EasyMock.verify;
 
 public class ProductMixBusinessServiceTest  extends MifosTestCase {
 	
-	private SavingsOfferingBO savingsOffering;
+	public ProductMixBusinessServiceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private SavingsOfferingBO savingsOffering;
 	private SavingsOfferingBO secondSavingsOffering;
 	private LoanOfferingBO loanOffering;
 	private LoanOfferingBO loanOffering2;

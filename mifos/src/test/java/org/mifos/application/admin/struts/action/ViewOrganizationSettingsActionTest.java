@@ -22,6 +22,8 @@ package org.mifos.application.admin.struts.action;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -29,7 +31,11 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class ViewOrganizationSettingsActionTest extends MifosMockStrutsTestCase {
-	private String flowKey;
+	public ViewOrganizationSettingsActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private String flowKey;
 
 	@Override
 	protected void setUp() throws Exception {

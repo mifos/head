@@ -10,13 +10,19 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAuditBusinessService extends MifosTestCase{
 
 	
-	public void testGetAuditLogRecords() throws Exception {
+	public TestAuditBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetAuditLogRecords() throws Exception {
 		AuditLog auditLog = new AuditLog(1, (short)2, "Mifos", 
 				new Date(System.currentTimeMillis()), (short)3);
 		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();

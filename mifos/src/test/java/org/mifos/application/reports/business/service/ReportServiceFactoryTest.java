@@ -20,9 +20,15 @@
 package org.mifos.application.reports.business.service;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class ReportServiceFactoryTest extends MifosTestCase {
-	public void testInitializingServiceFactoryDoesNotThrowAnyErrors()
+	public ReportServiceFactoryTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testInitializingServiceFactoryDoesNotThrowAnyErrors()
 			throws Exception {
 		try {
 			ReportServiceFactory.getCacheEnabledCollectionSheetReportService();

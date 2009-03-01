@@ -6,11 +6,17 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class PrdCategoryStatusEntityTest extends MifosTestCase {
 	
-	private PrdCategoryStatusEntity prdCategoryStatusEntity;
+	public PrdCategoryStatusEntityTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private PrdCategoryStatusEntity prdCategoryStatusEntity;
 	private Session session;
 
 	@Override

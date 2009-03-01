@@ -9,6 +9,8 @@ import java.util.Locale;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
@@ -18,7 +20,11 @@ import org.mifos.framework.util.helpers.ConversionError;
 
 public class TestBaseActionForm extends MifosTestCase {
 
-	public void testGetDateFromString() throws Exception {
+	public TestBaseActionForm() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetDateFromString() throws Exception {
 		UserContext userContext = TestObjectFactory.getContext();
 		BaseActionForm baseActionForm = new BaseActionForm();
 		SimpleDateFormat shortFormat = (SimpleDateFormat)DateFormat.

@@ -9,12 +9,18 @@ import javax.servlet.ServletResponse;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 
 import servletunit.HttpServletRequestSimulator;
 import servletunit.HttpServletResponseSimulator;
 
 public class LoginFilterTest extends MifosMockStrutsTestCase {
+
+    public LoginFilterTest() throws SystemException, ApplicationException {
+        super();
+    }
 
     private static final String TEST_ATTRIBUTE = "executedFilterChain";
     

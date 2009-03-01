@@ -56,14 +56,20 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeeBOTest extends MifosTestCase {
 
-	private FeeBO fee;
+	public FeeBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private FeeBO fee;
 
 	@Override
 	protected void tearDown() throws Exception {

@@ -52,6 +52,8 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -61,7 +63,10 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsAction extends MifosMockStrutsTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public TestSavingsAction() throws SystemException, ApplicationException {
+        super();
+    }
+    private static final double DELTA = 0.00000001;
 
     private UserContext userContext;
 

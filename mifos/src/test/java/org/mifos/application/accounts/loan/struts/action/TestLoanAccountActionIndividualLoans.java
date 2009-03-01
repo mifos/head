@@ -16,12 +16,18 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHe
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 
 public class TestLoanAccountActionIndividualLoans extends MifosTestCase {
 
 
-	public void testShouldCallCreateMethodIfNewMembersSelected()
+	public TestLoanAccountActionIndividualLoans() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testShouldCallCreateMethodIfNewMembersSelected()
 			throws Exception {
 		GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
 		LoanAccountAction loanAccountAction = new LoanAccountAction(

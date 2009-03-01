@@ -51,14 +51,20 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
 
 public class TestBirtAdminDocumentUploadAction extends MifosMockStrutsTestCase {
 
-	@Override
+	public TestBirtAdminDocumentUploadAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @Override
 	protected void setUp() throws Exception {
 
 		super.setUp();

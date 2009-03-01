@@ -120,8 +120,10 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -139,7 +141,11 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestLoanAccountAction extends AbstractLoanActionTestCase {
-	private static final double DELTA = 0.00000001;
+	public TestLoanAccountAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
     private String flowKey1;
 	private HashMap<String, String> schedulePreviewPageParams;
 	private HashMap<String, String> prdOfferingPageParams;
@@ -1428,7 +1434,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 
 	private LoanOfferingBO getLoanOfferingFromLastLoan(String name,
 			String shortName, ApplicableTo applicableTo,
-			RecurrenceType meetingFrequency, short recurAfter) {
+			RecurrenceType meetingFrequency, short recurAfter) throws SystemException, ApplicationException {
 		LoanOfferingBOTest loanOfferingBO = new LoanOfferingBOTest();
 		LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -1469,7 +1475,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 
 	private LoanOfferingBO getLoanOfferingFromLoanCycle(String name,
 			String shortName, ApplicableTo applicableTo,
-			RecurrenceType meetingFrequency, short recurAfter) {
+			RecurrenceType meetingFrequency, short recurAfter) throws SystemException, ApplicationException {
 		LoanOfferingBOTest loanOfferingBO = new LoanOfferingBOTest();
 		LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory

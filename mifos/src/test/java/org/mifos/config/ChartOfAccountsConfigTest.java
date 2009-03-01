@@ -53,7 +53,7 @@ public class ChartOfAccountsConfigTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		// initialize Spring, Hibernate, etc.
-		new TestCaseInitializer();
+		new TestCaseInitializer().initialize();
 	}
 
 	@AfterClass

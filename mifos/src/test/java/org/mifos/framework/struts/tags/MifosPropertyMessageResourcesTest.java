@@ -17,6 +17,7 @@ public class MifosPropertyMessageResourcesTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestCaseInitializer initializer = new TestCaseInitializer();
+		initializer.initialize();
 	}
 
 	@Before

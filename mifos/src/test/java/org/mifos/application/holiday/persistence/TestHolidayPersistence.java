@@ -9,12 +9,19 @@ import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayPersistence extends MifosTestCase {
 
-	private HolidayBO holidayEntity;
+	public TestHolidayPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+
+    private HolidayBO holidayEntity;
 
 	@Override
 	protected void setUp() throws Exception {

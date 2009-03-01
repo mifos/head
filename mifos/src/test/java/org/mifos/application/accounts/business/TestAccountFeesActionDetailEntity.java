@@ -15,13 +15,19 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 
-	protected AccountBO accountBO = null;
+	public TestAccountFeesActionDetailEntity() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected AccountBO accountBO = null;
 
 	protected CustomerBO center = null;
 

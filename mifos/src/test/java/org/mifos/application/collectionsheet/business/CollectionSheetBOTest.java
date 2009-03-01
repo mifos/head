@@ -10,11 +10,17 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetBOTest extends MifosTestCase {
-	public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting()
+	public CollectionSheetBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting()
 			throws Exception {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = session.beginTransaction();

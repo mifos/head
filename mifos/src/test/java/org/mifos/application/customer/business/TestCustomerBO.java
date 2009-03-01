@@ -58,7 +58,9 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -71,7 +73,11 @@ import static org.easymock.classextension.EasyMock.verify;
 
 
 public class TestCustomerBO extends MifosTestCase {
-	private AccountBO accountBO;
+	public TestCustomerBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private AccountBO accountBO;
 
 	private CenterBO center;
 

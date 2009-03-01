@@ -42,7 +42,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryView extends MifosTestCase {
 
-	private CustomerBO center;
+	public TestBulkEntryView() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CustomerBO center;
 
 	private CustomerBO group;
 

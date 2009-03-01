@@ -16,6 +16,8 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
@@ -25,7 +27,11 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class TestQuestionsAction extends MifosMockStrutsTestCase {
 
-	private TestDatabase database;
+	public TestQuestionsAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private TestDatabase database;
 	ActionMapping moduleMapping;
 
 	@Override

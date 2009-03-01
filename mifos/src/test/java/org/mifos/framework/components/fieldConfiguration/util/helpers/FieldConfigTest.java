@@ -10,11 +10,17 @@ import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfig
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class FieldConfigTest extends MifosTestCase{
 	
-	private FieldConfigurationPersistence persistence =
+	public FieldConfigTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+
+    private FieldConfigurationPersistence persistence =
 		new FieldConfigurationPersistence();
 	
 	private FieldConfig fieldConfig = FieldConfig.getInstance();

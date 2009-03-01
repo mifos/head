@@ -23,12 +23,18 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.reports.ui.DateSelectionItem;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.application.reports.ui.SelectionItemFixture;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CascadingReportParameterServiceTest extends AbstractCollectionSheetTestCase {
-	private PersonnelBusinessService personnelBusinessServiceMock;
+	public CascadingReportParameterServiceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private PersonnelBusinessService personnelBusinessServiceMock;
 	private IReportsParameterService reportsParameterServiceMock;
 	private CustomerBusinessService customerBusinessServiceMock;
 	private CascadingReportParameterService cascadingReportParameterService;

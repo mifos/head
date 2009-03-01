@@ -2,11 +2,17 @@ package org.mifos.application.rolesandpermission.business;
 
 import org.hibernate.Query;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class TestRoleActivityEntity extends MifosTestCase {
 
-	public void testGetRoleActivity(){
+	public TestRoleActivityEntity() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetRoleActivity(){
 		RoleActivityEntity roleActivityEntity = getRoleActivity((short)1,(short)1);
 		assertNull(roleActivityEntity);
 		roleActivityEntity = getRoleActivity(Short.valueOf("1"),Short.valueOf("3"));

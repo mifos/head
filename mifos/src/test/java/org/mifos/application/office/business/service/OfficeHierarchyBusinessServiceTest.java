@@ -41,7 +41,9 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -49,7 +51,7 @@ public class OfficeHierarchyBusinessServiceTest extends MifosTestCase {
 
 	private static final int OFFICE_LEVELS = 5;
 
-	public OfficeHierarchyBusinessServiceTest() {
+	public OfficeHierarchyBusinessServiceTest() throws SystemException, ApplicationException {
 		super();
 	}
 

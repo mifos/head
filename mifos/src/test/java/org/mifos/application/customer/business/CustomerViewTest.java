@@ -39,10 +39,16 @@
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class CustomerViewTest extends MifosTestCase {
 
-	public void testCustomerView() throws Exception {
+	public CustomerViewTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testCustomerView() throws Exception {
 		CustomerView customerView = new CustomerView(Integer.valueOf("1"),
 				"Customer", "001global", Short.valueOf("2"));
 

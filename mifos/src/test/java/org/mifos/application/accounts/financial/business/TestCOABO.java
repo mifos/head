@@ -7,11 +7,17 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
 public class TestCOABO extends MifosTestCase {
-	public void testGetCOAHead() throws FinancialException {
+	public TestCOABO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetCOAHead() throws FinancialException {
 		String interestOnLoansGlCode = "31101";
 		COABO coaInterestLoans = ChartOfAccountsCache.get(interestOnLoansGlCode);
 		COABO coaHead = coaInterestLoans.getCOAHead();

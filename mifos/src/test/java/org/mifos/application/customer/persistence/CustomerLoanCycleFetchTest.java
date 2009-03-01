@@ -3,10 +3,16 @@ package org.mifos.application.customer.persistence;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class CustomerLoanCycleFetchTest extends MifosTestCase {
 	
-	public void testFetchLoanCountersForGroupQueryIsValid() throws Exception {
+	public CustomerLoanCycleFetchTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testFetchLoanCountersForGroupQueryIsValid() throws Exception {
 		try {
 			new CustomerPersistence().fetchLoanCycleCounter(new GroupBO(){
 				@Override

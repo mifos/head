@@ -16,7 +16,7 @@ public class TestFinancialRules {
 	@BeforeClass
 	public static void init() throws Exception {
 		// initialize Spring, Hibernate, etc.
-		new TestCaseInitializer();
+		new TestCaseInitializer().initialize();
 	}
 
 	@Test

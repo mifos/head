@@ -3,10 +3,16 @@ package org.mifos.framework.components.batchjobs;
 import java.util.List;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class MifosSchedulerTest extends MifosTestCase {
 
-	@Override
+	public MifosSchedulerTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

@@ -42,7 +42,9 @@ import java.util.List;
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -50,7 +52,7 @@ public class OfficeHierarchyPersistenceTest extends MifosTestCase {
 
 	private static final int OFFICE_LEVELS = 5;
 
-	public OfficeHierarchyPersistenceTest() {
+	public OfficeHierarchyPersistenceTest() throws SystemException, ApplicationException {
 		super();
 	}
 

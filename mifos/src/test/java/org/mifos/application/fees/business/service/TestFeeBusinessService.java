@@ -7,13 +7,19 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeeBusinessService extends MifosTestCase {
 
-	private FeeBO fee1;
+	public TestFeeBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private FeeBO fee1;
 	private FeeBO fee2;
 
 	@Override

@@ -30,7 +30,9 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -39,7 +41,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountPersistenceTest extends TestAccount {
 
-	private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
+	public AccountPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
 	private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
 	private AccountPersistence accountPersistence = new AccountPersistence();
 

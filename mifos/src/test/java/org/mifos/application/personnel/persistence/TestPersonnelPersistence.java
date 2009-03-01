@@ -34,6 +34,8 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -42,7 +44,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelPersistence extends MifosTestCase {
 	
-	private static final Short OFFICE_WITH_BRANCH_MANAGER = Short.valueOf("3");
+	public TestPersonnelPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Short OFFICE_WITH_BRANCH_MANAGER = Short.valueOf("3");
 
 	private MeetingBO meeting;
 

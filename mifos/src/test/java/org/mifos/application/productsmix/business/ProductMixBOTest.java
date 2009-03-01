@@ -4,14 +4,20 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixBOTest extends MifosTestCase {
 	
 
-	private SavingsOfferingBO savingsOffering;
+	public ProductMixBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private SavingsOfferingBO savingsOffering;
 	private SavingsTestHelper helper = new SavingsTestHelper();
 	private ProductMixBO prdMix; 
 	

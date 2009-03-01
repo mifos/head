@@ -93,7 +93,9 @@ import org.mifos.config.AccountingRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -106,7 +108,11 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	
-	/* Setting this to true fixes the printing of stack traces to
+	public TestBulkEntryAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    /* Setting this to true fixes the printing of stack traces to
 	   standard out, but seems to cause failures (MySQL threw a
 	   "Deadlock found when trying to get lock; try restarting transaction"
 	   exception) only if 

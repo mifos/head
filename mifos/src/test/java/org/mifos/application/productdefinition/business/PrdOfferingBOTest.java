@@ -3,9 +3,15 @@ package org.mifos.application.productdefinition.business;
 import junit.framework.Assert;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class PrdOfferingBOTest extends MifosTestCase {
-	public void testReturnTrueForEqualsIfPrdOfferingIdIsSame() {
+	public PrdOfferingBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testReturnTrueForEqualsIfPrdOfferingIdIsSame() {
 		LoanOfferingBO loanOfferingBO = LoanOfferingBO
 				.createInstanceForTest(Short.valueOf("1234"));
 		Assert.assertTrue(loanOfferingBO.equals(LoanOfferingBO

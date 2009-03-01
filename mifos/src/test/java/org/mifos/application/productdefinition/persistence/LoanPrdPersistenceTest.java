@@ -9,13 +9,19 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanPrdPersistenceTest extends MifosTestCase {
 
-	private LoanOfferingBO loanOffering1;
+	public LoanPrdPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanOfferingBO loanOffering1;
 	private LoanOfferingBO loanOffering2;
 	private LoanOfferingBO loanOffering3;
 

@@ -1,10 +1,16 @@
 package org.mifos.framework.struts.tags;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class RawButtonTest extends MifosTestCase {
 
-	public void testRawButton(){
+	public RawButtonTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testRawButton(){
 		RawButton rawButton = new RawButton();
 		rawButton.setDisabled("disabled");
 		rawButton.setId("id");

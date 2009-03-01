@@ -42,6 +42,8 @@ import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -49,7 +51,11 @@ public class OfficeLevelEntityTest extends MifosTestCase {
 
 	
 	
-	public void testUpdateLevelFailureIfOfficePresent() throws Exception {
+	public OfficeLevelEntityTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testUpdateLevelFailureIfOfficePresent() throws Exception {
 		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
 				OfficeLevel.REGIONALOFFICE, parent, "Office_Regional", "OFB");

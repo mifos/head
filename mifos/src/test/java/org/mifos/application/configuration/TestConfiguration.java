@@ -6,10 +6,16 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelKey;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestConfiguration extends MifosTestCase {
 
-	MifosConfiguration configuration;
+	public TestConfiguration() throws SystemException, ApplicationException {
+        super();
+    }
+
+    MifosConfiguration configuration;
 
 	@Override
 	protected void setUp() throws Exception {

@@ -11,7 +11,7 @@
         <property name="locations">
             <list>
                 <value>classpath:org/mifos/config/resources/HibernateTest.properties</value>
-                <value>classpath:org/mifos/config/resources/my.HibernateTest.properties</value>
+                <value>file:${user.home}/.mifos/HibernateTest.properties</value>
             </list>
         </property>
     </bean>

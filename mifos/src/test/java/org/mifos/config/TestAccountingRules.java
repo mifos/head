@@ -7,6 +7,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import junit.framework.JUnit4TestAdapter;
@@ -16,7 +18,11 @@ import org.mifos.application.master.business.MifosCurrency;
 
 public class TestAccountingRules  extends MifosTestCase {
 	
-	public static junit.framework.Test suite() {
+	public TestAccountingRules() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestAccountingRules.class);
 	}
 	

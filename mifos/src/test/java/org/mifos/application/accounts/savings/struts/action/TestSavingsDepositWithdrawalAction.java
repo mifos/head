@@ -25,6 +25,8 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -35,7 +37,11 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
-	private UserContext userContext;
+	public TestSavingsDepositWithdrawalAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 	private CustomerBO group;
 	private CustomerBO center;
 	private SavingsBO savings;

@@ -5,13 +5,19 @@ import java.util.List;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FundPersistenceTest extends MifosTestCase {
 
-	public void testGetFundNameCountWithoutData() throws PersistenceException {
+	public FundPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetFundNameCountWithoutData() throws PersistenceException {
 		assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund1"));
 	}
 

@@ -95,7 +95,9 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -152,8 +154,8 @@ public class TestLoanBORedoDisbursal {
     }
 
 	@BeforeClass
-	public static void init() {
-		new TestCaseInitializer();
+	public static void init() throws SystemException, ApplicationException {
+		new TestCaseInitializer().initialize();
 	}
 
     @Before

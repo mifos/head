@@ -9,14 +9,20 @@ import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestProductCategoryBusinessService extends MifosTestCase {
 
-	private ProductCategoryBusinessService productCategoryBusinessService=null;
+	public TestProductCategoryBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private ProductCategoryBusinessService productCategoryBusinessService=null;
 	
 	private UserContext userContext=null;
 	

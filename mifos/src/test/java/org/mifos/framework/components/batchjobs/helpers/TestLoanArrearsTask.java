@@ -20,12 +20,18 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanArrearsTask extends MifosTestCase {
 
-	private LoanArrearsTask loanArrearTask;
+	public TestLoanArrearsTask() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanArrearsTask loanArrearTask;
 
 	CustomerBO center = null;
 

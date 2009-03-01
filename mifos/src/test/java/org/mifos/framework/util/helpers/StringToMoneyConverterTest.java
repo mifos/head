@@ -39,14 +39,16 @@ package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 /**
  * This class is used to test StringToMoneyConverter.
  */
 public class StringToMoneyConverterTest extends MifosTestCase {
 	
-	public StringToMoneyConverterTest(){
-		
+	public StringToMoneyConverterTest() throws SystemException, ApplicationException {
+		super();
 	}
 	
 	/**

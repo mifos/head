@@ -2,6 +2,9 @@
 
 
 import junit.framework.JUnit4TestAdapter;
+
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.config.Localization;
@@ -12,7 +15,11 @@ import org.mifos.config.AccountingRules;
 
 public class TestLocalizationConverter extends MifosTestCase{
 	
-	public static junit.framework.Test suite() {
+	public TestLocalizationConverter() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestLocalizationConverter.class);
 	}
 	

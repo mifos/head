@@ -87,7 +87,11 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanOfferingBOTest extends MifosTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public LoanOfferingBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     private LoanOfferingBO product;
 

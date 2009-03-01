@@ -70,14 +70,20 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestClientBO extends MifosTestCase {
-	private AccountBO accountBO;
+	public TestClientBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private AccountBO accountBO;
 	private CustomerBO center;
 	private CenterBO center1;
 	private CustomerBO group;

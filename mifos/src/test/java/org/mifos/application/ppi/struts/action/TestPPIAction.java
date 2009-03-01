@@ -14,6 +14,8 @@ import org.mifos.config.GeneralConfig;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
@@ -23,7 +25,11 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class TestPPIAction extends MifosMockStrutsTestCase {
 	
-	private TestDatabase database; 
+	public TestPPIAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private TestDatabase database; 
 	private Session session;
 	
 	@Override

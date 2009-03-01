@@ -6,10 +6,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class AddReportUpgradeTest extends MifosTestCase {
-	private static final short ACTIVITY_ID = 1;
+
+    public AddReportUpgradeTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final short ACTIVITY_ID = 1;
 	private static final int HIGHER_UPGRADE_VERSION = 185;
 	private static final short REPORT_CATEGORY_ID = (short) 6;
 	private static final short TEST_REPORT_ID = (short) 4;

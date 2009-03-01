@@ -29,13 +29,19 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIPersistenceTest extends MifosTestCase {
-	private static final double DELTA = 0.00000001;
+	public PPIPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
     private TestDatabase database;
 	private PPIPersistence persistence;
 	

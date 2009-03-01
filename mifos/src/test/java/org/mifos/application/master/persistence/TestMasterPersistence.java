@@ -15,13 +15,19 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestMasterPersistence extends MifosTestCase {
-	final private static short DEFAULT_LOCALE = (short)1;
+	public TestMasterPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    final private static short DEFAULT_LOCALE = (short)1;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

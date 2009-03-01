@@ -25,15 +25,20 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public abstract class AbstractLoanActionTestCase extends
-		MifosMockStrutsTestCase {
-	protected UserContext userContext;
+public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase {
+	public AbstractLoanActionTestCase() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected UserContext userContext;
 	protected CustomerBO center = null;
 	protected CustomerBO group = null;
 	protected CustomerBO client = null;

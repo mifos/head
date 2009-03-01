@@ -35,8 +35,10 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -44,7 +46,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestBulkEntryBusinessService extends MifosTestCase {
-	private BulkEntryBusinessService bulkEntryBusinessService;
+	public TestBulkEntryBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private BulkEntryBusinessService bulkEntryBusinessService;
 
 	private CustomerBO center;
 

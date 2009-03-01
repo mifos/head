@@ -29,12 +29,18 @@ import org.mifos.application.productdefinition.business.AmountRange;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
 public class LoanAccountActionFormTest extends MifosTestCase {
 
-	private LoanAccountActionForm form;
+	public LoanAccountActionFormTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanAccountActionForm form;
 	private PaymentDataTemplate paymentMock;
 	private ActionErrors actionErrors;
 	private static final String INTEREST_ERROR_KEY = "interest.invalid";

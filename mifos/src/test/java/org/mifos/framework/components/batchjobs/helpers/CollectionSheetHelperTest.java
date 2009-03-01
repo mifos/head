@@ -29,12 +29,18 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollectionSheetHelperTest extends MifosTestCase {
 
-	private CenterBO center;
+	public CollectionSheetHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CenterBO center;
 	private GroupBO group;
 	private MeetingBO meeting;
 	private SavingsTestHelper helper = new SavingsTestHelper();

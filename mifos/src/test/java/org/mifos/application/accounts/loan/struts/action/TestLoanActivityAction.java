@@ -9,6 +9,8 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -17,7 +19,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 
-	private UserContext userContext;
+	public TestLoanActivityAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	protected AccountBO accountBO = null;
 

@@ -70,7 +70,9 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -78,7 +80,11 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientPersistenceTest extends MifosTestCase {
-	private static final Integer UNKNOWN_CUSTOMER_ID = Integer.valueOf(0);
+	public ClientPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Integer UNKNOWN_CUSTOMER_ID = Integer.valueOf(0);
 
 	private static final String DEFAULT_CLIENT_NAME = "Active Client";
 

@@ -73,7 +73,9 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -87,7 +89,11 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
-	private LoanOfferingBO loanOffering;
+	public LoanPrdActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanOfferingBO loanOffering;
 
 	private String flowKey;
 

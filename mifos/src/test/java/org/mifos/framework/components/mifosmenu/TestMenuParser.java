@@ -1,10 +1,16 @@
 package org.mifos.framework.components.mifosmenu;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestMenuParser extends MifosTestCase {
 
-	public void testParse() {
+	public TestMenuParser() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testParse() {
 		// TODO: we probably want two tests, one for the live
 		// menu.xml, and one (or more) which passes in XML from the test.
 

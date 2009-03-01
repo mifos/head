@@ -16,6 +16,8 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -25,7 +27,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestChkListAction extends MifosMockStrutsTestCase {
 
-	private String flowKey;
+	public TestChkListAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private String flowKey;
 
 	@Override
 	protected void setUp() throws Exception {

@@ -20,7 +20,9 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -28,7 +30,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryPersistenceService extends MifosTestCase {
 
-	private CustomerBO center;
+	public TestBulkEntryPersistenceService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CustomerBO center;
 
 	private CustomerBO group;
 

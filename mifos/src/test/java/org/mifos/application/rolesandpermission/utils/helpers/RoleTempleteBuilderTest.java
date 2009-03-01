@@ -8,12 +8,18 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.util.helpers.RoleTempleteBuilder;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityChangeEvent;
 import org.mifos.framework.security.util.RoleChangeEvent;
 
 public class RoleTempleteBuilderTest extends MifosTestCase {
 
-	public void testLocaleId() {
+	public RoleTempleteBuilderTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testLocaleId() {
 		RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();
 		roleTempleteBuilder.setLocaleId(Short.valueOf("1"));
 		assertEquals(Short.valueOf("1"), roleTempleteBuilder.getLocaleId());

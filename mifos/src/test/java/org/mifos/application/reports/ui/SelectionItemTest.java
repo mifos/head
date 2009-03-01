@@ -12,12 +12,18 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.reports.persistence.SelectionItemPersistence;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 public class SelectionItemTest extends MifosTestCase {
-	private static final Short LOAN_OFFICER_ID = Short.valueOf("2");
+	public SelectionItemTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Short LOAN_OFFICER_ID = Short.valueOf("2");
 	private static final Short STATUS_FLAG = Short.valueOf("2");
 	private static final Short CUST_LEVEL = Short.valueOf("3");
 	private static final Integer CUST_ID = Integer.valueOf(1);

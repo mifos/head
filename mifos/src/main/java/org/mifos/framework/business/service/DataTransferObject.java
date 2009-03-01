@@ -20,6 +20,8 @@
 
 package org.mifos.framework.business.service;
 
-public interface DataTransferObject {
+import java.io.Serializable;
+
+public interface DataTransferObject extends Serializable {
 
 }

@@ -40,7 +40,7 @@ public class AddActivityTest {
 	 */
 	@BeforeClass
 	public static void init() throws SystemException, ApplicationException {
-		new TestCaseInitializer();
+		new TestCaseInitializer().initialize();
 	}
 	
 	@Test

@@ -17,7 +17,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestProductCategoryBO extends MifosTestCase {
 
-	public void testCreateProductCategory() 
+	public TestProductCategoryBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testCreateProductCategory() 
 	throws SystemException, ApplicationException {
 		UserContext userContext=TestUtils.makeUser();
 		List<ProductTypeEntity> productTypeList=new ProductCategoryBusinessService().getProductTypes();

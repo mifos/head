@@ -28,6 +28,8 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -37,7 +39,11 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
-	private UserContext userContext;
+	public TestSavingsClosureAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	private CustomerBO group;
 

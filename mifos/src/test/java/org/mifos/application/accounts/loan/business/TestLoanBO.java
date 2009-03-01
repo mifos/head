@@ -138,7 +138,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBO extends MifosTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public TestLoanBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     private static final double DEFAULT_LOAN_AMOUNT = 300.0;
 

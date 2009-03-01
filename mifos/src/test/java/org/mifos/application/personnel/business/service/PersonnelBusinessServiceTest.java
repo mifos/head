@@ -14,14 +14,20 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelBusinessServiceTest extends MifosTestCase {
 
-	private OfficeBO office;
+	public PersonnelBusinessServiceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private OfficeBO office;
 
 	private PersonnelBO personnel;
 

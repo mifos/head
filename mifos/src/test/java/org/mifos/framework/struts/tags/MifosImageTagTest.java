@@ -5,9 +5,15 @@ import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import org.dom4j.DocumentException;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class MifosImageTagTest extends MifosTestCase{
-	public void testRender() throws JspException, DocumentException{
+	public MifosImageTagTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testRender() throws JspException, DocumentException{
 		MifosImageTag mifosImageTag = new MifosImageTag();
 		String path = "customer";
 		mifosImageTag.setModuleName(path);

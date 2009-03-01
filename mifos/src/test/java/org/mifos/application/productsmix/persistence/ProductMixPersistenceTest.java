@@ -6,13 +6,19 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.util.ProductMixTestHelper;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixPersistenceTest extends MifosTestCase {
 
-	MeetingBO meeting;
+	public ProductMixPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    MeetingBO meeting;
 	MeetingBO meeting1;
 	SavingsOfferingBO saving1;
 	SavingsOfferingBO saving2;

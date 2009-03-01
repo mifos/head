@@ -8,14 +8,20 @@ import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceUnavailableException;
 import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountStateMachine extends MifosTestCase {
 
-	private AccountBusinessService service;
+	public TestAccountStateMachine() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private AccountBusinessService service;
 
 	@Override
 	protected void setUp() throws Exception {

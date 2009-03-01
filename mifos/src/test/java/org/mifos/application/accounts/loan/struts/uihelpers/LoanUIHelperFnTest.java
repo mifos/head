@@ -12,6 +12,8 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -26,7 +28,11 @@ import static org.easymock.classextension.EasyMock.verify;
 
 public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
-	private UserContext userContext;
+	public LoanUIHelperFnTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	@Override
 	protected void tearDown() throws Exception {

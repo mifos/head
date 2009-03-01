@@ -67,7 +67,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerPersistence extends MifosTestCase {
 
-	private MeetingBO meeting;
+	public TestCustomerPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private MeetingBO meeting;
 
 	private CustomerBO center;
 

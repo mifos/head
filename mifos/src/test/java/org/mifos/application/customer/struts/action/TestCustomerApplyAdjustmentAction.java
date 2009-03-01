@@ -22,6 +22,8 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -30,7 +32,11 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
-	private AccountBO accountBO = null;
+	public TestCustomerApplyAdjustmentAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private AccountBO accountBO = null;
 
 	private UserContext userContext;
 

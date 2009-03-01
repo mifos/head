@@ -6,12 +6,18 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.group.util.helpers.GroupSearchResults;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerHelpers extends MifosTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public TestCustomerHelpers() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
     private CustomerBO center;
 
 	@Override

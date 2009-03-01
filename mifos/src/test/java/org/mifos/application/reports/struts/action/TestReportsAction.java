@@ -6,6 +6,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -13,7 +15,11 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 public class TestReportsAction extends MifosMockStrutsTestCase {
-	private UserContext userContext;
+	public TestReportsAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	@Override
 	protected void setUp() throws Exception {

@@ -28,11 +28,18 @@ import org.mifos.framework.business.service.DataTransferObject;
 
 public class ClientAttendanceDto implements DataTransferObject {
 
+    private static final long serialVersionUID = 3244750316398063102L;
     private final Integer clientId;
     private final AttendanceType attendance;
     private final LocalDate meetingDate;
 	
-	public ClientAttendanceDto(Integer customerId, Short attendance, Date meetingDate) {
+    public ClientAttendanceDto(Integer customerId, Date meetingDate) {
+        this.attendance = AttendanceType.PRESENT;
+        this.meetingDate = new LocalDate(meetingDate);
+        this.clientId = customerId;
+    }
+    
+	public ClientAttendanceDto(Integer customerId, Date meetingDate, Short attendance) {
         this.attendance = AttendanceType.fromShort(attendance);
         this.meetingDate = new LocalDate(meetingDate);
         this.clientId = customerId;

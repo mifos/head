@@ -8,12 +8,18 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficeBusinessService extends MifosTestCase {
-	private OfficeBusinessService officeBusinessService = new OfficeBusinessService();
+	public TestOfficeBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private OfficeBusinessService officeBusinessService = new OfficeBusinessService();
 	private String officeSearchId;
 	private PersonnelBO personnel;
 

@@ -95,8 +95,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class LoanCalculationTest  {
 	
 	@BeforeClass
-	public static void init() {
-		new TestCaseInitializer();
+	public static void init() throws SystemException, ApplicationException {
+		new TestCaseInitializer().initialize();
 	}
 	
 	// these constants for parsing the spreadsheet

@@ -34,13 +34,19 @@ import org.mifos.application.reports.business.service.BranchReportConfigService;
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.springframework.core.io.Resource;
 
 public class BranchReportClientSummaryHelperTest extends MifosTestCase {
-	private static final Short THREE_SHORT = Short.valueOf("3");
+	public BranchReportClientSummaryHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Short THREE_SHORT = Short.valueOf("3");
 	private static final String ONE_STRING = "1";
 	private static final Integer ONE = new Integer(1);
 	private static final Integer TEN = new Integer(10);

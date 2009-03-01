@@ -77,7 +77,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountBO extends TestAccount {
 
-	private static final double DELTA = 0.00000001;
+	public TestAccountBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     public static void addAccountFlag(AccountStateFlagEntity flagDetail,
 			AccountBO account) {

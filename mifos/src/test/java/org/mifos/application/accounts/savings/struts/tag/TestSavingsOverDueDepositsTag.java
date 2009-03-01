@@ -13,6 +13,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -20,7 +22,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 	
-	CenterBO center;
+	public TestSavingsOverDueDepositsTag() throws SystemException, ApplicationException {
+        super();
+    }
+
+    CenterBO center;
 	GroupBO group;
 	SavingsOfferingBO savingsOffering;
 	SavingsBO savings;

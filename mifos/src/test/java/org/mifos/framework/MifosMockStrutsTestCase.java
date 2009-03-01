@@ -25,24 +25,30 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
 import servletunit.struts.MockStrutsTestCase;
 
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
-	static {
-		new TestCaseInitializer();
-	}
+
+    public MifosMockStrutsTestCase() throws SystemException, ApplicationException {
+        super();
+        new TestCaseInitializer().initialize();
+    }
 
     private boolean strutsConfigSet = false;
 

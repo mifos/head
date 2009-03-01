@@ -20,13 +20,19 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestProductStatusHelper extends MifosTestCase {
 
-	LoanOfferingBO product;
+	public TestProductStatusHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    LoanOfferingBO product;
 
 	ProductStatusHelper productStatusHelper;
 

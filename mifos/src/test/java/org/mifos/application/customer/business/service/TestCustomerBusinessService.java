@@ -94,7 +94,11 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerBusinessService extends MifosTestCase {
-	private static final Integer TWO = Integer.valueOf(2);
+	public TestCustomerBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Integer TWO = Integer.valueOf(2);
 
 	private static final Integer THREE = Integer.valueOf(3);
 

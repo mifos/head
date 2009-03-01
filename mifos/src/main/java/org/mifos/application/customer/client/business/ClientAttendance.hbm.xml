@@ -27,7 +27,7 @@
    
     <query name="ClientAttendance.getAttendanceForOffice">
 	    <![CDATA[select new org.mifos.application.customer.client.business.service.ClientAttendanceDto( client.customerId,
-			clientAttendance.attendance, clientAttendance.meetingDate)   
+			clientAttendance.meetingDate, clientAttendance.attendance)   
 			from org.mifos.application.customer.client.business.ClientBO client,
 			org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance
 			where 

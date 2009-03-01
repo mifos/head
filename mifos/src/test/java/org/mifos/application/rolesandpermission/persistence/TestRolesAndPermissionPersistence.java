@@ -6,10 +6,16 @@ import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestRolesAndPermissionPersistence extends MifosTestCase {
 
-	public void testGetRole() throws Exception {
+	public TestRolesAndPermissionPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetRole() throws Exception {
 		RoleBO role = new RolesPermissionsPersistence().getRole("Admin");
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE,
 			role.getActivities().size());

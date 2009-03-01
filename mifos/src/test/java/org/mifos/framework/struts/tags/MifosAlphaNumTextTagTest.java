@@ -4,11 +4,17 @@ import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import org.dom4j.DocumentException;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class MifosAlphaNumTextTagTest extends MifosTestCase {
 	
-	
-	public void testRenderFieldHiddenMandatory() throws DocumentException{
+	public MifosAlphaNumTextTagTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+
+    public void testRenderFieldHiddenMandatory() throws DocumentException{
 		MifosAlphaNumTextTag mifosAlphaNumTextTag = new MifosAlphaNumTextTag();
 		mifosAlphaNumTextTag.setKeyhm("test1");
 		mifosAlphaNumTextTag.setPropertyExpr("test2");

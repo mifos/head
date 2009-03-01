@@ -24,10 +24,16 @@ import static org.easymock.classextension.EasyMock.verify;
 import static org.mifos.application.reports.ui.SelectionItem.SELECT_BRANCH_OFFICE_SELECTION_ITEM;
 
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class BranchReportParameterFormTest extends AbstractReportParametersTest {
 
-	private static final String VALID_BRANCH_REPORT_DATE = "21/01/2007";
+	public BranchReportParameterFormTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final String VALID_BRANCH_REPORT_DATE = "21/01/2007";
 	private static final String INVALID_BRANCH_REPORT_DATE = "01/21/2007";
 
 	public void testValidatorReturnsErrorIfBranchIdIsSelect() throws Exception {

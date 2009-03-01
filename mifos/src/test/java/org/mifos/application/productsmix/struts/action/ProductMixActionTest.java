@@ -46,7 +46,9 @@ import org.mifos.application.productsmix.struts.actionforms.ProductMixActionForm
 import org.mifos.application.productsmix.util.ProductMixTestHelper;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
@@ -58,7 +60,10 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class ProductMixActionTest extends MifosMockStrutsTestCase {
 
-	private LoanOfferingBO loanOffering;
+	public ProductMixActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+    private LoanOfferingBO loanOffering;
 	private LoanOfferingBO loanOffering1;
 	private SavingsOfferingBO savingProduct;
 	private SavingsOfferingBO savingProduct2;

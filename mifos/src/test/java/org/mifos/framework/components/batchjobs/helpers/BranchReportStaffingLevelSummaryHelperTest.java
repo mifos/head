@@ -30,11 +30,17 @@ import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportStaffingLevelSummaryHelperTest extends MifosTestCase {
-	public static final Short BRANCH_ID = Short.valueOf("2");
+	public BranchReportStaffingLevelSummaryHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public static final Short BRANCH_ID = Short.valueOf("2");
 
 	public void testPopulateStaffingLevelSummary() throws BatchJobException,
 			ServiceException {

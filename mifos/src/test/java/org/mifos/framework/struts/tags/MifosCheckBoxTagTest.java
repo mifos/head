@@ -2,9 +2,16 @@ package org.mifos.framework.struts.tags;
 
 import org.dom4j.DocumentException;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
+
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 public class MifosCheckBoxTagTest extends MifosTestCase {
-	public void testRenderInputsForhidden() throws DocumentException{
+	public MifosCheckBoxTagTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testRenderInputsForhidden() throws DocumentException{
 		MifosCheckBoxTag mifosCheckBoxTag = new MifosCheckBoxTag();
 		mifosCheckBoxTag.setKeyhm("test1");
 		mifosCheckBoxTag.setPropertyExpr("test2");

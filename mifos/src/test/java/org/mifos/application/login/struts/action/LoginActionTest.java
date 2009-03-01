@@ -23,6 +23,8 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.batchjobs.MifosTask;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -32,7 +34,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoginActionTest extends MifosMockStrutsTestCase {
 
-	private OfficeBO office;
+	public LoginActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private OfficeBO office;
 
 	private PersonnelBO personnel;
 	

@@ -36,6 +36,8 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReport
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.reports.business.service.BranchReportTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
@@ -45,7 +47,11 @@ import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmatio
 
 public class BranchCashConfirmationReportPersistenceTest extends
 		BranchReportTestCase {
-	@SuppressWarnings("unused")
+	public BranchCashConfirmationReportPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    @SuppressWarnings("unused")
 	private static final int DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB = 3;
 	private static final List<Short> DISBURSEMENT_PRODUCT_OFFERING_IDS = Arrays
 			.asList(new Short[] { 1, 2 });

@@ -33,7 +33,9 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
@@ -47,10 +49,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * tests don't need everything which is there).
  */
 public class MifosTestCase extends TestCase {
-	static {
-		new TestCaseInitializer();
-	}
 
+	public MifosTestCase() throws SystemException, ApplicationException {
+        new TestCaseInitializer().initialize();
+	}
+	
     private StatisticsService statisticsService;
 
     public void assertEquals(String s , Money one , Money two)

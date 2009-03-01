@@ -8,11 +8,17 @@ import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class MeetingPersistenceTest extends MifosTestCase{
 
-	public void testGetWeekDaysList() throws Exception{
+	public MeetingPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetWeekDaysList() throws Exception{
 		List<WeekDay> weekDaysList = new MeetingPersistence().getWorkingDays();
 		assertNotNull(weekDaysList);
 		//assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());

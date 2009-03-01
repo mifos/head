@@ -16,12 +16,18 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanArrearsHelper extends MifosTestCase {
 
-	private LoanArrearsHelper loanArrearHelper;
+	public TestLoanArrearsHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private LoanArrearsHelper loanArrearHelper;
 
 	CustomerBO center = null;
 

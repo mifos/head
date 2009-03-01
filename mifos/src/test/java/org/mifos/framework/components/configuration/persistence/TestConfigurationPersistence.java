@@ -6,13 +6,19 @@ import java.util.List;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class TestConfigurationPersistence extends MifosTestCase {
 
-	private ConfigurationPersistence configurationPersistence;
+	public TestConfigurationPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private ConfigurationPersistence configurationPersistence;
 
 	@Override
 	protected void setUp() throws Exception {

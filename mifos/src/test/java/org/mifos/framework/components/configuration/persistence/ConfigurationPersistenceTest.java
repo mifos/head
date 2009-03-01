@@ -19,18 +19,19 @@
  */
 package org.mifos.framework.components.configuration.persistence;
 
-import org.apache.commons.configuration.ConfigurationKey;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class ConfigurationPersistenceTest extends MifosTestCase {
 	
-	public void testGetCurrencyForCurrencyId() throws Exception {
+	public ConfigurationPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetCurrencyForCurrencyId() throws Exception {
 		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		MifosCurrency currency = (MifosCurrency) configurationPersistence
 				.getPersistentObject(MifosCurrency.class, Short.valueOf("2"));

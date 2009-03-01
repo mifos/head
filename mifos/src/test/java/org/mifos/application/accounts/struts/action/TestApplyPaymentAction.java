@@ -36,6 +36,8 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -46,7 +48,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
-	protected AccountBO accountBO;
+	public TestApplyPaymentAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected AccountBO accountBO;
 	private CustomerBO center;
 	private CustomerBO group;
 	private UserContext userContext ;

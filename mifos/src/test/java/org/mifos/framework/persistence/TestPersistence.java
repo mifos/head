@@ -7,12 +7,18 @@ import org.hibernate.classic.Session;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class TestPersistence extends MifosTestCase {
 
-	public void testConnection() {
+	public TestPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testConnection() {
 		LoanPersistence loanPersistance = new LoanPersistence();
 		assertNotNull(loanPersistance.getConnection());
 		HibernateUtil.closeSession();

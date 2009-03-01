@@ -42,12 +42,19 @@ import java.util.List;
 
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 
 
 public class TestAdminDocumentPersistence extends MifosTestCase {
 
-	private AdminDocumentPersistence reportsPersistence;
+	public TestAdminDocumentPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+
+    private AdminDocumentPersistence reportsPersistence;
 
 	@Override
 	protected void setUp() throws Exception {

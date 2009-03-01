@@ -19,14 +19,14 @@
  */
 package org.mifos.application.reports.business.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
 
 import java.util.ArrayList;
 import java.util.List;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -39,10 +39,13 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
 
-public class BranchCashConfirmationReportServiceTest extends
-		BranchReportTestCase {
+public class BranchCashConfirmationReportServiceTest extends BranchReportTestCase {
 
-	private BranchCashConfirmationReportPersistence persistenceMock;
+	public BranchCashConfirmationReportServiceTest() throws Exception {
+        super();
+    }
+
+    private BranchCashConfirmationReportPersistence persistenceMock;
 	private BranchCashConfirmationReportService service;
 
 	public void testGetCenterIssues() throws ServiceException {

@@ -72,7 +72,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestRegenerateScheduleHelper extends MifosTestCase {
 
-	private MeetingBO meeting;
+	public TestRegenerateScheduleHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private MeetingBO meeting;
 
 	private CustomerBO center;
 

@@ -16,6 +16,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.TestDatabase;
@@ -27,7 +29,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestNotesAction extends MifosMockStrutsTestCase {
 
-	private SavingsBO savingsBO;
+	public TestNotesAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private SavingsBO savingsBO;
 
 	private LoanBO loanBO;
 

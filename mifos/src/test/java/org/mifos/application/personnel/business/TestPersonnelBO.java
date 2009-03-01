@@ -33,7 +33,9 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -43,7 +45,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelBO extends MifosTestCase {
 
-	private OfficeBO office;
+	public TestPersonnelBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private OfficeBO office;
 
 	private OfficeBO branchOffice;
 

@@ -31,6 +31,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
@@ -42,7 +44,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class MultipleLoanAccountsCreationActionTest extends
 		MifosMockStrutsTestCase {
 
-	private UserContext userContext;
+	public MultipleLoanAccountsCreationActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	protected AccountBO accountBO = null;
 

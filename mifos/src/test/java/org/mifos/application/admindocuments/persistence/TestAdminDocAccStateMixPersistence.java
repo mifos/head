@@ -43,12 +43,19 @@ import java.util.List;
 
 import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 
 
 public class TestAdminDocAccStateMixPersistence extends MifosTestCase {
 
-	private AdminDocAccStateMixPersistence reportsPersistence;
+	public TestAdminDocAccStateMixPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+
+    private AdminDocAccStateMixPersistence reportsPersistence;
 
 	@Override
 	protected void setUp() throws Exception {

@@ -15,11 +15,17 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class ProductMixValidatorTest extends MifosTestCase {
 
-	private ConfigurationBusinessService configServiceMock;
+	public ProductMixValidatorTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private ConfigurationBusinessService configServiceMock;
 	private ProductMixBusinessService productMixBusinessServiceMock;
 	private LoanBO loanMock;
 	private CustomerBO customerMock;

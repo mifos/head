@@ -4,11 +4,17 @@ import java.util.Locale;
 
 import org.mifos.config.Localization;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class MifosDoubleConverterTest extends MifosTestCase {
 
-	private MifosDoubleConverter mifosDoubleConverter = null;
+	public MifosDoubleConverterTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private MifosDoubleConverter mifosDoubleConverter = null;
 
 	public void testConvert() {
 		mifosDoubleConverter = new MifosDoubleConverter();

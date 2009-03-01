@@ -14,11 +14,17 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsHelper extends MifosTestCase {
-	private static final short EVERY_FOUR_MONTHS = 4;
+	public TestSavingsHelper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final short EVERY_FOUR_MONTHS = 4;
 	SavingsHelper helper = new SavingsHelper();
 
 	public void testCalculateDays() throws Exception {

@@ -7,7 +7,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -29,8 +28,8 @@ public class AddAccountStateFlagTest {
 	 * message cache in MifosConfiguration.
 	 */
 	@BeforeClass
-	public static void init() {
-		new TestCaseInitializer();
+	public static void init() throws SystemException, ApplicationException {
+		new TestCaseInitializer().initialize();
 	}
 	
 	/*@Before public void setUp() throws SystemException, ApplicationException {

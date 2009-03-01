@@ -19,12 +19,18 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 public class AbstractCollectionSheetTestCase extends MifosTestCase {
 
-	protected static final Integer ANY_ID = new Integer("1");
+	public AbstractCollectionSheetTestCase() throws SystemException, ApplicationException {
+        super();
+    }
+
+    protected static final Integer ANY_ID = new Integer("1");
 	protected static final Short ANY_SHORT_ID = NumberUtils
 			.convertIntegerToShort(ANY_ID);
 	protected static final Integer BRANCH_ID = Integer.valueOf(400);

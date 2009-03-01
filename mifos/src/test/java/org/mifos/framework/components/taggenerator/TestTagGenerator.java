@@ -20,13 +20,19 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestTagGenerator extends MifosTestCase {
-	private CustomerBO group;
+	public TestTagGenerator() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CustomerBO group;
 
 	private CustomerBO center;
 

@@ -19,8 +19,10 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -30,7 +32,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 
-	private UserContext userContext;
+	public AcceptedPaymentTypeActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 	private final Short DEFAULT_LOCALE = 1;
 	private String flowKey;
 	String[] EXPECTED_ALL_PAYMENT_TYPES = {"Cash", "Voucher", "Cheque"};

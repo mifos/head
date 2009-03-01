@@ -12,6 +12,8 @@ import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionC
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -21,7 +23,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 
-	UserContext userContext = null;
+	public TestRolesPermissionsAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+
+    UserContext userContext = null;
 
 	private String flowKey;
 

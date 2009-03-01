@@ -10,12 +10,18 @@ import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 
 public class AcceptedPaymentTypePersistenceTest extends TestAccount {
 
-	private List<TransactionAcceptedPaymentTypes> currentAcceptedPaymentTypes = null;
+	public AcceptedPaymentTypePersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private List<TransactionAcceptedPaymentTypes> currentAcceptedPaymentTypes = null;
 	private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence = null;
 	private List<TransactionAcceptedPaymentTypes> allAcceptedPaymentTypes = null;
 	private Short DEFAULT_LOCALE_ID = 1;

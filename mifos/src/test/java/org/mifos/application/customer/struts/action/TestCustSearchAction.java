@@ -21,6 +21,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
@@ -30,7 +32,10 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	
-	private UserContext userContext;
+	public TestCustSearchAction() throws SystemException, ApplicationException {
+        super();
+    }
+    private UserContext userContext;
 	private String flowKey;
 	private CenterBO center;
 	private GroupBO group;

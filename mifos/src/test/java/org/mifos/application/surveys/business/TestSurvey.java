@@ -31,6 +31,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -39,7 +40,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSurvey extends MifosTestCase {
 	
-	private static final double DELTA = 0.00000001;
+	public TestSurvey() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     @Override
 	public void setUp() throws Exception {

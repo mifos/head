@@ -11,6 +11,8 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -19,7 +21,11 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  */
 public class AccountActionEntityTest extends MifosTestCase {
 
-	public void testBasics() throws Exception {
+	public AccountActionEntityTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testBasics() throws Exception {
 		DatabaseSetup.initializeHibernate();
 		TestDatabase database = TestDatabase.makeStandard();
 		

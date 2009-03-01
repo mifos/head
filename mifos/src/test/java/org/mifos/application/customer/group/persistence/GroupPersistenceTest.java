@@ -22,7 +22,9 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -32,7 +34,11 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupPersistenceTest extends MifosTestCase {
-	private MeetingBO meeting;
+	public GroupPersistenceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private MeetingBO meeting;
 
 	private CustomerBO center;
 

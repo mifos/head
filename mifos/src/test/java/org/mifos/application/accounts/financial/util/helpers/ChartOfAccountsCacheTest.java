@@ -10,6 +10,8 @@ import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class ChartOfAccountsCacheTest {
@@ -18,9 +20,9 @@ public class ChartOfAccountsCacheTest {
 	}
 	
 	@BeforeClass
-	public static void setUpBeforeClass() {
+	public static void setUpBeforeClass() throws SystemException, ApplicationException {
 		// initialize Spring, Hibernate, etc.
-		new TestCaseInitializer();
+		new TestCaseInitializer().initialize();
 	}
 
 	private static final Short GL_CODE_ENTITY_ID = 197;

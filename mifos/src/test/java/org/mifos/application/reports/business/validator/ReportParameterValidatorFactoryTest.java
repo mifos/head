@@ -21,10 +21,16 @@ package org.mifos.application.reports.business.validator;
 
 import org.mifos.application.reports.business.ReportParameterForm;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class ReportParameterValidatorFactoryTest extends MifosTestCase {
 
-	private static final String COLLECTION_SHEET_REPORT_FILENAME = "report/CollectionSheetReport.rptdesign";
+	public ReportParameterValidatorFactoryTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final String COLLECTION_SHEET_REPORT_FILENAME = "report/CollectionSheetReport.rptdesign";
 	private static final String DETAILED_AGING_PORTFOLIO_REPORT_FILENAME = "report/DetailedAgingPortfolioAtRisk.rptdesign";
 	private static final String BATCH_COLLECTION_SHEET_REPORT_FILENAME = "report/BatchCollectionSheetReport.rptdesign";
 	private static final String ACTIVE_LOANS_BY_LOAN_OFFICER_REPORT_FILENAME = "report/ActiveLoansByLoanOfficer.rptdesign";

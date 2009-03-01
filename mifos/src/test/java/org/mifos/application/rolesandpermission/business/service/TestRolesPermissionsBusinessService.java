@@ -3,13 +3,19 @@ package org.mifos.application.rolesandpermission.business.service;
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestRolesPermissionsBusinessService extends MifosTestCase {
 
-	RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
+	public TestRolesPermissionsBusinessService() throws SystemException, ApplicationException {
+        super();
+    }
+
+    RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
 
 	@Override
 	protected void tearDown() throws Exception {

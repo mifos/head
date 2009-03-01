@@ -15,13 +15,19 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPe
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import static org.easymock.classextension.EasyMock.*;
 
 public class CollectionSheetServiceTest extends AbstractCollectionSheetTestCase {
-	private Session session;
+	public CollectionSheetServiceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private Session session;
 	private Transaction transaction;
 	HashSet<CollSheetCustBO> generatedCollectionSheets;
 	private Date meetingDate;

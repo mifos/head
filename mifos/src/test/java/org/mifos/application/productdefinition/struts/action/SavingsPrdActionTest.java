@@ -23,7 +23,9 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -37,7 +39,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
-	private static final double DELTA = 0.00000001;
+	public SavingsPrdActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final double DELTA = 0.00000001;
 
     private SavingsOfferingBO product;
 

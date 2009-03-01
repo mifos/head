@@ -80,6 +80,8 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
@@ -91,7 +93,11 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WE
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class GroupActionTest extends MifosMockStrutsTestCase {
-	private CenterBO center;
+	public GroupActionTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private CenterBO center;
 
 	private GroupBO group;
 

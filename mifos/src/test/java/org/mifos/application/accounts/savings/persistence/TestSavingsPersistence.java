@@ -54,7 +54,9 @@ import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -63,7 +65,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsPersistence extends MifosTestCase {
 
-	private UserContext userContext;
+	public TestSavingsPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	private SavingsPersistence savingsPersistence;
 

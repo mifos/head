@@ -11,13 +11,19 @@ import org.mifos.application.rolesandpermission.exceptions.RolesPermissionExcept
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestRoleBO extends MifosTestCase {
 
-	public void testGetRole() throws Exception {
+	public TestRoleBO() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public void testGetRole() throws Exception {
 		RolesPermissionsPersistence persistence = 
 			new RolesPermissionsPersistence();
 		RoleBO roleBO = persistence.getRole("Admin");

@@ -11,12 +11,17 @@ import org.junit.Test;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class ConfigurationBusinessServiceTest extends MifosTestCase{
 	
 	
-	private ConfigurationPersistence configPersistenceMock;
+	public ConfigurationBusinessServiceTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private ConfigurationPersistence configPersistenceMock;
 
 	@Override
 	protected void setUp() throws Exception {

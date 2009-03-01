@@ -31,13 +31,19 @@ import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.springframework.core.io.Resource;
 
 public class BranchReportStaffSummaryHelperTest extends MifosTestCase {
 
-	private static final Date RUN_DATE = DateUtils.currentDate();
+	public BranchReportStaffSummaryHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Date RUN_DATE = DateUtils.currentDate();
 	private static final Short BRANCH_ID_SHORT = Short.valueOf("2");
 
 	@Test

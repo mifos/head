@@ -6,11 +6,17 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 
 public class TestFieldConfigurationPersistence extends MifosTestCase {
 	
-	private FieldConfigurationPersistence fieldConfigurationPersistence=
+	public TestFieldConfigurationPersistence() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private FieldConfigurationPersistence fieldConfigurationPersistence=
 		new FieldConfigurationPersistence();
 	
 	public void testGetEntityMasterList() throws PersistenceException {

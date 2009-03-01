@@ -28,8 +28,8 @@ public class AddInterestCalcRuleTest {
 	 * message cache in MifosConfiguration.
 	 */
 	@BeforeClass
-	public static void init() {
-		new TestCaseInitializer();
+	public static void init() throws SystemException, ApplicationException {
+		new TestCaseInitializer().initialize();
 	}
 	
 

@@ -2,6 +2,8 @@ package org.mifos.application.accounts.business;
 
 import org.hibernate.Session;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
@@ -9,7 +11,11 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  */
 public class TestAccountActionEntity extends MifosTestCase {	
 	
-	private Session session;
+	public TestAccountActionEntity() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private Session session;
 	private AccountActionEntity accountActionEntity;
 
 	@Override

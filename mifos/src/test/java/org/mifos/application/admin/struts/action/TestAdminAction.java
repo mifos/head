@@ -2,13 +2,19 @@ package org.mifos.application.admin.struts.action;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 public class TestAdminAction extends MifosMockStrutsTestCase {
-	private UserContext userContext;
+	public TestAdminAction() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private UserContext userContext;
 
 	@Override
 	protected void setUp() throws Exception {

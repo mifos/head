@@ -6,12 +6,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class TestJDBCAppender extends MifosTestCase {
 
-	private String message = "";
+	public TestJDBCAppender() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private String message = "";
 
 	@Override
 	protected void setUp() throws Exception {

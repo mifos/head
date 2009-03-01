@@ -53,11 +53,17 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class MeetingBOTest extends MifosTestCase{
-	private static final Short ONE = Short.valueOf("1");
+	public MeetingBOTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final Short ONE = Short.valueOf("1");
 	private static final Short TWO = Short.valueOf("2");
 	private static final Short THREE = Short.valueOf("3");
 	private static final Short FIVE = Short.valueOf("5");

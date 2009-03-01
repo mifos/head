@@ -42,13 +42,19 @@ import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.BranchReportTestCase;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class BranchReportHelperTest extends BranchReportTestCase {
 
-	private BranchReportHelper branchReportHelper;
+	public BranchReportHelperTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private BranchReportHelper branchReportHelper;
 	private Session session;
 	private Transaction transaction;
 
