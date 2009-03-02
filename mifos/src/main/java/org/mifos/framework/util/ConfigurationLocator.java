@@ -39,34 +39,40 @@ public class ConfigurationLocator {
     
     private boolean lastFileHandleFromClassPath = true;
     
+    public String getSpringFilePath(String filename) throws IOException {
+        return "file:" + getFileHandle(filename).getAbsolutePath();
+    }
+    
+    public String getFilePath(String filename) throws IOException {
+        return getFileHandle(filename).getAbsolutePath();
+    }
+    
     public File getFileHandle(String filename) throws IOException {
         String systemPropertyDirectory = System.getProperty(LOCATOR_SYSTEM_PROPERTY_NAME);
         String envPropertyDirectory = System.getenv(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
         String homeDirectory = System.getProperty(HOME_PROPERTY_NAME);
 
         File fileToReturn = null;
-        lastFileHandleFromClassPath = true;
+        lastFileHandleFromClassPath = false;
         
         if (StringUtils.isNotBlank(systemPropertyDirectory)) {
             File file = new File(systemPropertyDirectory,filename);
             System.out.println("Checking system property path: " + file.getAbsolutePath());
             if (file.exists()) {
+                System.out.println("Found system property path: " + file.getAbsolutePath());
                 fileToReturn = file;
-                lastFileHandleFromClassPath = false;
             }
         } else if (StringUtils.isNotBlank(envPropertyDirectory)) {
             File file = new File(envPropertyDirectory,filename);
             System.out.println("Checking environment path: " + file.getAbsolutePath());
             if (file.exists()) {
                 fileToReturn = file;
-                lastFileHandleFromClassPath = false;
             }
         } else if (new File(homeDirectory,MIFOS_USER_CONFIG_DIRECTORY_NAME).exists()) {
             File file = new File(homeDirectory + "/" + MIFOS_USER_CONFIG_DIRECTORY_NAME,filename);
             System.out.println("Checking home directory path: " + file.getAbsolutePath());
             if (file.exists()) {
                 fileToReturn = file;
-                lastFileHandleFromClassPath = false;
             }
         } 
         
@@ -74,6 +80,7 @@ public class ConfigurationLocator {
             filename = DEFAULT_CONFIGURATION_PATH + filename;
             System.out.println("Using classpath resource: " + new ClassPathResource(filename).getPath());
             fileToReturn = new ClassPathResource(filename).getFile();
+            lastFileHandleFromClassPath = true;
         }
         
         return fileToReturn;

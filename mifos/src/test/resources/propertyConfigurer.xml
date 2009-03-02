@@ -5,16 +5,18 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans 
            classpath:xsd/spring-beans-2.5.xsd"> 
 
+    <bean id="configurationLocator"
+        class="org.mifos.framework.util.ConfigurationLocator"/>
+
+    <bean id="pathToProperties" factory-bean="configurationLocator"
+	   factory-method="getSpringFilePath">
+        <constructor-arg value="HibernateTest.properties" />
+    </bean>
+
     <bean id="propertyConfigurer" 
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
-        <property name="locations">
-            <list>
-                <value>classpath:org/mifos/config/resources/HibernateTest.properties</value>
-                <value>file:${user.home}/.mifos/HibernateTest.properties</value>
-            </list>
-        </property>
+        <property name="locations" ref="pathToProperties"/>
     </bean>
 
 </beans>
-    
