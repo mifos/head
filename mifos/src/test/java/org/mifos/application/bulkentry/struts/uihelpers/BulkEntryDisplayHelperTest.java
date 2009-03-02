@@ -9,6 +9,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import junitx.framework.StringAssert;
@@ -25,6 +26,7 @@ import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomValueListElement;
@@ -143,9 +145,11 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		}
 		assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
 		
+		HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+		
 		new BulkEntryDisplayHelper().buildForCenter(bulkEntry
 				.getBulkEntryParent(), bulkEntry.getLoanProducts(), bulkEntry
-				.getSavingsProducts(), attendanceTypesCustomValueList, builder, Methods.get
+				.getSavingsProducts(), clientAttendance, attendanceTypesCustomValueList, builder, Methods.get
 				.toString(), TestObjectFactory.getContext(), (short) 1);
 		String result = builder.toString();
 

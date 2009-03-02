@@ -51,6 +51,10 @@ public class Flow implements Serializable {
         sessionData.put(key, value);
     }
 
+    public void addMapToSession(String key, Map<? extends Serializable, ? extends Serializable> value) {
+        sessionData.put(key, value);
+    }
+
     public boolean isKeyPresent(String key) {
         return sessionData.containsKey(key);
     }

@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
@@ -52,6 +53,9 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
+import org.mifos.application.customer.client.business.service.ClientService;
+import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -71,6 +75,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -89,6 +94,8 @@ public class BulkEntryAction extends BaseAction {
 
     private MasterDataService masterService;
 
+    private ClientService clientService;
+
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
     private static Hashtable processedCenterList = new Hashtable<Integer, LockInfo>();
@@ -98,6 +105,8 @@ public class BulkEntryAction extends BaseAction {
         masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
         allowedLockingTime = getAllowedLockingTime();
+        clientService = new StandardClientService();
+        clientService.setClientAttendanceDao(new StandardClientAttendanceDao());
     }
 
     @Override
@@ -336,6 +345,8 @@ public class BulkEntryAction extends BaseAction {
                 MasterConstants.ATTENDENCETYPES, userContext.getLocaleId(),
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements(), request);
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService.getClientAttendance(meetingDate, bulkEntry.getOffice().getOfficeId());
+        SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
 
         return mapping.findForward(BulkEntryConstants.GETSUCCESS);
     }
@@ -365,6 +376,7 @@ public class BulkEntryAction extends BaseAction {
             if (bulkEntrySavingsCache.getYesNoFlag().equals(YesNoFlag.YES))
                 savingsAccounts.add(bulkEntrySavingsCache.getAccount());
         }
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = getClientAttendance(clients, meetingDate);
 
         SessionUtils.setCollectionAttribute(BulkEntryConstants.CLIENTS, clients, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.SAVINGS, savingsAccounts, request);
@@ -373,6 +385,7 @@ public class BulkEntryAction extends BaseAction {
         SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORCLIENTS, customerNames, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT, savingsDepNames, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW, savingsWithNames, request);
+        SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
         return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
     }
 
@@ -392,6 +405,22 @@ public class BulkEntryAction extends BaseAction {
         customerAccViews.add(parent.getCustomerAccountDetails());
     }
 
+    private HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<ClientBO> clients, Date meetingDate) {
+        ArrayList<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
+        for (ClientBO client : clients ) {
+            ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(client.getCustomerId(), meetingDate);
+            clientAttendanceDtos.add(clientAttendanceDto);
+        }
+        HashMap<Integer, ClientAttendanceDto> result;
+        try {
+            result = clientService.getClientAttendance(clientAttendanceDtos);
+        } catch (ServiceException e) {
+            logger.error("Unexpected error getting Client Attendance.", e);
+            result = null;
+        }
+        return result;
+    }    
+    
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {

@@ -132,33 +132,11 @@ public class BulkEntryPersistence extends Persistence {
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString);
 		queryParameters.put("OFFICE_ID", officeId);
-		queryResult = executeNamedQuery(
-				NamedQueryConstants.CUSTOMER_FEE_SCHEDULE_DETAILS,
-				queryParameters);
+		queryResult = executeNamedQuery(NamedQueryConstants.CUSTOMER_FEE_SCHEDULE_DETAILS, queryParameters);
 		initializeFees(queryResult);
 		return queryResult;
 
 	}
-    
-    
-    public List<ClientAttendanceDto> 
-        getBulkEntryClientAttendanceActionView(Date meetingDate, Short officeId) 
-    throws PersistenceException {
-        
-        logger.debug("persistence "+ meetingDate);
-        logger.debug("persistence "+ officeId);
-        
-        List<ClientAttendanceDto> queryResult = null;
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("MEETING_DATE", meetingDate);
-        queryParameters.put("OFFICE_ID", officeId);
-        
-       queryResult = executeNamedQuery("ClientAttendance.getAttendanceForOffice", queryParameters);
-        
-        
-        return queryResult;
-
-    }
 
 	private void initializeFees(
 			List<CollectionSheetEntryAccountFeeActionView> actionViewList) {

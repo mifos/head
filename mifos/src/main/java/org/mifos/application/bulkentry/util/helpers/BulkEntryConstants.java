@@ -89,6 +89,7 @@ public interface BulkEntryConstants {
     public String LOANS = "loans";
     public String SAVINGS = "savings";
     public String CLIENTS = "clients";
+    public String CLIENT_ATTENDANCE = "clientAttendance";
     public String CUSTOMERACCOUNTS = "customeraccounts";
     public String ERRORCLIENTS = "errorclients";
     public String ERRORLOANS = "errorloans";

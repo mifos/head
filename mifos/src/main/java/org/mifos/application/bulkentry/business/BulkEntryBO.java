@@ -210,14 +210,11 @@ public class BulkEntryBO extends BusinessObject {
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
 						AccountTypes.CUSTOMER_ACCOUNT);
-        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews = bulkEntryPersistanceService
-                .getBulkEntryClientAttendanceActionView(
-                        transactionDate, office.getOfficeId() );
+        List<ClientAttendanceDto> clientAttendance = bulkEntryPersistanceService
+                .getClientAttendance(transactionDate, office.getOfficeId());
         
-        logger.debug("bulkEntryClientAttendanceViews" + collectionSheetEntryClientAttendanceViews.size());
+        logger.debug("bulkEntryClientAttendanceViews" + clientAttendance.size());
         
-        // bug #1417 - wrong client sort order. Client sort order on bulk
-        // entry screens should match ordering on group details page.
         Collections.sort(allChildNodes, CustomerBO.searchIdComparator());
         
 		totalCustomers = allChildNodes.size();
@@ -225,11 +222,11 @@ public class BulkEntryBO extends BusinessObject {
 				parentCustomer, transactionDate, bulkEntryLoanScheduleViews,
 				bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews,
 				bulkEntryCustomerFeeScheduleViews,
-                collectionSheetEntryClientAttendanceViews); //adde  
+                clientAttendance); 
 		BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent,
 				transactionDate, bulkEntrySavingsScheduleViews);
         BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent,
-               transactionDate, collectionSheetEntryClientAttendanceViews);
+               transactionDate, clientAttendance);
 	}
 
 	private List<CustomerBO> retrieveActiveCustomersUnderParent(

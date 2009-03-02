@@ -131,8 +131,8 @@ public void testGetBulkEntryClientAttendanceActionView() throws PersistenceExcep
         HibernateUtil.closeSession();
         
         List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = 
-            bulkEntryPersistanceService.getBulkEntryClientAttendanceActionView(
-                meetingDate, client.getOffice().getOfficeId());
+            bulkEntryPersistanceService
+                .getClientAttendance(meetingDate, client.getOffice().getOfficeId());
         assertEquals(collectionSheetEntryClientAttendanceView.size(),1);
     }
     

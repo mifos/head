@@ -121,6 +121,15 @@ public abstract class MifosLogger {
 	}
 
 	/**
+	 * Log statements with level ERROR
+	 * @param message Message to be printed
+	 * @param throwable Exception to log
+	 */
+	public void error(String message, Throwable throwable) {
+        logMessage(Level.ERROR, message, false, null, throwable);
+    }
+
+	/**
 	 * Log statements with level FATAL
 	 * @param key Key present in the resource bundle. If asString parameter is false 
 	 * 			   then this is treated as the string to be displayed

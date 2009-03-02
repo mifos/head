@@ -46,6 +46,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -55,10 +56,13 @@ import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
+import org.mifos.application.customer.client.business.service.ClientService;
+import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 /**
@@ -83,11 +87,16 @@ public class BulkEntryPersistenceService {
 				meetingDate, searchString, officeId, accountType);
 	}
 
-	public List<ClientAttendanceDto> getBulkEntryClientAttendanceActionView(
-			Date meetingDate, Short officeId) throws PersistenceException {
-		return new BulkEntryPersistence()
-				.getBulkEntryClientAttendanceActionView(meetingDate, officeId);
-	}
+	public List<ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId)
+            throws PersistenceException {
+	    ClientService clientService = new StandardClientService();
+	    clientService.setClientAttendanceDao(new StandardClientAttendanceDao());
+        try {
+            return clientService.getClientAttendanceList(meetingDate, officeId);
+        } catch (ServiceException e) {
+            throw new PersistenceException(e);
+        }
+    }
 
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(
 			Integer accountId) throws PersistenceException {

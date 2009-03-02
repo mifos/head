@@ -25,6 +25,7 @@ import static org.mifos.application.util.helpers.ValidationConstants.MIFOS_WARNI
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -224,12 +225,28 @@ public class SessionUtils {
      */
     public static void setCollectionAttribute(String key, Collection<? extends Serializable> value,
             HttpServletRequest request) throws PageExpiredException {
+        Flow flow = getFlow(key, request);
+        flow.addCollectionToSession(key, value);
+    }
+
+    /**
+     * Save a Map of Serializable objects into the HttpSession via a
+     * FlowManager.
+     */
+    public static void setMapAttribute(String key, HashMap<? extends Serializable, ? extends Serializable> value,
+            HttpServletRequest request) throws PageExpiredException {
+        Flow flow = getFlow(key, request);
+        flow.addMapToSession(key, value);
+    }
+
+    private static Flow getFlow(String key, HttpServletRequest request) throws PageExpiredException {
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
                 "An attribute being set in the session with key being " + key);
         String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         HttpSession session = request.getSession();
         FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
-        flowManager.addCollectionToFlow(currentFlowKey, key, value);
+        Flow flow = flowManager.getFlowWithValidation(currentFlowKey);
+        return flow;
     }
 
     public static Object getAttribute(String key, HttpServletRequest request) throws PageExpiredException {

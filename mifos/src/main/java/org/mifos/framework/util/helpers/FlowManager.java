@@ -75,12 +75,6 @@ public class FlowManager implements Serializable {
         flow.addObjectToSession(key, value);
     }
 
-    public void addCollectionToFlow(String flowKey, String key, Collection<? extends Serializable> value)
-            throws PageExpiredException {
-        Flow flow = getFlowWithValidation(flowKey);
-        flow.addCollectionToSession(key, value);
-    }
-
     public Object getFromFlow(String flowKey, String key) throws PageExpiredException {
         if (!isFlowValid(flowKey)) {
             throw new PageExpiredException();

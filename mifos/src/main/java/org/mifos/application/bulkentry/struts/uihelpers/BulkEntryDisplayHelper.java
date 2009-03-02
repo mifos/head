@@ -20,6 +20,7 @@
 
 package org.mifos.application.bulkentry.struts.uihelpers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -31,6 +32,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.MessageLookup;
@@ -140,7 +142,7 @@ public class BulkEntryDisplayHelper {
 	public Double[] buildForGroup(CollectionSheetEntryView parent,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
-			List<CustomValueListElement> custAttTypes, StringBuilder builder,
+			HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> custAttTypes, StringBuilder builder,
 			String method, UserContext userContext, Short officeId) throws JspException {
 		int rowIndex = 0;
 		int totalProductsSize = (2 * (loanProducts.size() + savingsProducts
@@ -160,7 +162,7 @@ public class BulkEntryDisplayHelper {
 					.getCollectionSheetEntryChildren().size(), 0, rowIndex, groupTotals,
 					centerTotals, child.getCustomerDetail().getDisplayName(),
 					builder, method, 1, currency, officeId);
-			generateAttendence(builder, custAttTypes, rowIndex, child, method);
+			generateAttendance(builder, clientAttendance, custAttTypes, rowIndex, child, method);
 			BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 			rowIndex++;
 		}
@@ -179,7 +181,7 @@ public class BulkEntryDisplayHelper {
 	public Double[] buildForCenter(CollectionSheetEntryView parent,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
-			List<CustomValueListElement> custAttTypes, StringBuilder builder,
+			HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> custAttTypes, StringBuilder builder,
 			String method, UserContext userContext, Short officeId) throws JspException {
 
 		int rowIndex = 0;
@@ -212,7 +214,7 @@ public class BulkEntryDisplayHelper {
 						groupTotals, centerTotals, subChild.getCustomerDetail()
 								.getDisplayName(), builder, method, 1,
 						currency, officeId);
-				generateAttendence(builder, custAttTypes, rowIndex, subChild,
+				generateAttendance(builder, clientAttendance, custAttTypes, rowIndex, subChild,
 						method);
 				BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 				rowIndex++;
@@ -412,20 +414,21 @@ public class BulkEntryDisplayHelper {
 		}
 	}
 
-	private void generateAttendence(StringBuilder builder,
-			List<CustomValueListElement> custAttTypes, int rows,
+	private void generateAttendance(StringBuilder builder,
+			HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> custAttTypes, int rows,
 			CollectionSheetEntryView collectionSheetEntryView, String method) {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendanceSelected[" + rows
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
-			for (CustomValueListElement attendence : custAttTypes) {
-				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
-                if (collectionSheetEntryView.getAttendence() != null && (attendence.getAssociatedId().intValue()== collectionSheetEntryView.getAttendence().intValue()))
-                {
+			for (CustomValueListElement attendance : custAttTypes) {
+				builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
+                Integer customerId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
+                ClientAttendanceDto clientAttendanceDto = clientAttendance.get(customerId);
+                if (clientAttendanceDto != null && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
                     builder.append(" selected=\"selected\"");
                 }
-                builder.append( ">" 	+ attendence.getLookUpValue() + "</option>");
+                builder.append( ">" 	+ attendance.getLookUpValue() + "</option>");
 			}
 			builder.append("</select>");
 			builder.append("</td>");

@@ -20,6 +20,7 @@
 
 package org.mifos.application.customer.client.business.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,6 +69,18 @@ public class StandardClientService implements ClientService {
         return clientAttendance;
     }
     
+    public HashMap<Integer, ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws ServiceException {
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+        try {
+            for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDao.getClientAttendance(meetingDate, officeId)) {
+                clientAttendance.put(clientAttendanceDto.getClientId(), clientAttendanceDto);
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+        return clientAttendance;
+    }
+    
     public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException {
         for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDtos) {
             try {
@@ -78,6 +91,13 @@ public class StandardClientService implements ClientService {
         }
     }
 
+    public List<ClientAttendanceDto> getClientAttendanceList(Date meetingDate, Short officeId) throws ServiceException {
+        try {
+            return clientAttendanceDao.getClientAttendance(meetingDate, officeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
     public ClientDao getClientDao() {
         return this.clientDao;
     }

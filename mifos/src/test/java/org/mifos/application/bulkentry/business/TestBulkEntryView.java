@@ -261,7 +261,7 @@ public class TestBulkEntryView extends MifosTestCase {
 
     public void testPopulateAttendance() 
     throws SystemException, ApplicationException{
-        BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
+        BulkEntryPersistenceService bulkEntryPersistenceService = new BulkEntryPersistenceService();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
                     .getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("Center", meeting);
@@ -282,8 +282,8 @@ public class TestBulkEntryView extends MifosTestCase {
         HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
          
-        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistanceService
-            .getBulkEntryClientAttendanceActionView(meetingDate, center.getOffice().getOfficeId() );
+        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistenceService
+            .getClientAttendance(meetingDate, center.getOffice().getOfficeId() );
          
         CollectionSheetEntryView collectionSheetEntryView = new CollectionSheetEntryView(getCustomerView(client));
         collectionSheetEntryView.populateClientAttendance(client.getCustomerId(), sqlMeetingDate, collectionSheetEntryClientAttendanceView);

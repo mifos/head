@@ -36,8 +36,20 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.mifos.test.framework.util.SimpleDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +123,34 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         Assert.assertEquals(expectedAttendance, actualClientAttendanceDtos.get(client1Id).getAttendance());
         databaseTestUtils.verifyTable(getReplacedAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
     }
+    
+    @SuppressWarnings("unchecked")
+    public void testGetBulkEntryClientAttendanceActionView() throws PersistenceException, ServiceException {
+
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        CenterBO center = TestObjectFactory.createCenter("Center", meeting);
+        GroupBO group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        ClientBO client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        HibernateUtil.closeSession();
+
+        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
+
+        ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
+        clientAttendance.setAttendance(AttendanceType.PRESENT);
+        clientAttendance.setMeetingDate(meetingDate);
+        ((ClientBO) client).addClientAttendance(clientAttendance);
+        CustomerPersistence customerPersistence = new CustomerPersistence();
+        customerPersistence.createOrUpdate(client);
+        HibernateUtil.commitTransaction();
+        HibernateUtil.closeSession();
+
+        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = (List<ClientAttendanceDto>) clientService.getClientAttendance(
+                meetingDate, client.getOffice().getOfficeId());
+
+        Assert.assertEquals(collectionSheetEntryClientAttendanceView.size(), 1);
+
+    }
+
     
     private ClientAttendanceDto getClientAttendanceDto(int clientId, LocalDate meetingDate, AttendanceType attendance) {
         return new ClientAttendanceDto(clientId, meetingDate, attendance);

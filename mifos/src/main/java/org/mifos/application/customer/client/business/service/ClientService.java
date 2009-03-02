@@ -20,6 +20,7 @@
 
 package org.mifos.application.customer.client.business.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,8 @@ import org.mifos.framework.exceptions.ServiceException;
 public interface ClientService extends Service {
 
     public HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException;
+    public HashMap<Integer, ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws ServiceException;
+    public List<ClientAttendanceDto> getClientAttendanceList(Date meetingDate, Short officeId) throws ServiceException;
     public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException;
     public ClientDao getClientDao();
     public void setClientDao(ClientDao clientDao);
