@@ -7,6 +7,9 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="PreviewCustomerNotes"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  <script language="javascript">
@@ -45,7 +48,7 @@
             </tr>
           </table>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
-            <logic:messagesPresent><tr><td><font class="fontnormalRedBold"><html-el:errors bundle="CustomerUIResources" /></font></td></tr></logic:messagesPresent>
+            <logic:messagesPresent><tr><td><font class="fontnormalRedBold"><span id="previewCustomerNotes.error.message"><html-el:errors bundle="CustomerUIResources" /></span></font></td></tr></logic:messagesPresent>
                 <tr>
                   <td><br>
                       <span class="fontnormal">
@@ -84,7 +87,7 @@
                 </tr>
                 <tr>
                   <td align="left" valign="top">
-                  <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage(this.form)">
+                  <html-el:button styleId="previewCustomerNotes.button.edit" property="btn" styleClass="insidebuttn" onclick="goToEditPage(this.form)">
                   <mifos:mifoslabel name="Customer.EditLabel"></mifos:mifoslabel>
                   </html-el:button>
                   </td>
@@ -100,11 +103,11 @@
                 <tr>
                   <td align="center">
                   
-				<html-el:submit styleClass="buttn">
+				<html-el:submit styleId="previewCustomerNotes.button.submit" styleClass="buttn">
 					<mifos:mifoslabel name="Customer.submit" />
 				</html-el:submit>
                     &nbsp;&nbsp;
-                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
+                    <html-el:button styleId="previewCustomerNotes.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
 	                    <mifos:mifoslabel name="Customer.cancel" />
                     </html-el:button>
 				</td>

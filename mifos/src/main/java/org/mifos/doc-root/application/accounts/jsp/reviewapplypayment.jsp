@@ -45,6 +45,9 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ReviewApplyPayment"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 
 	<tiles:put name="body" type="string">
@@ -74,7 +77,7 @@
 						<c:when test="${param.input == 'loan'}">
 						</c:when>
 						<c:otherwise>
-							<html-el:link href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}">
+							<html-el:link styleId="reviewapplypayment.link.viewCharges" href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}">
 					          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	          						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          					</c:if>
@@ -98,7 +101,7 @@
 						name="accounts.reviewtransaction" /></td>
 				</tr>
 				<tr>
-					<td><font class="fontnormalRedBold"> <html-el:errors
+					<td><font class="fontnormalRedBold"> <span id="reviewapplypayment.error.message"><html-el:errors
 						bundle="accountsUIResources" /> </font></td>
 				</tr>
 
@@ -151,7 +154,7 @@
 					<td height="3" colspan="2" align="center">&nbsp;</td>
 				</tr>
 				<tr>
-					<td height="3" colspan="2"><html-el:button property="Cancel"
+					<td height="3" colspan="2"><html-el:button styleId="reviewapplypayment.button.editTransaction" property="Cancel"
 						styleClass="insidebuttn"
 						onclick="goToPrevious(this.form)">
 						<mifos:mifoslabel name="accounts.edittrxn"></mifos:mifoslabel>
@@ -166,20 +169,20 @@
 			</table>
 			<table width="96%" border="0" cellspacing="0" cellpadding="1">
 				<tr>
-					<td align="center"><html-el:submit styleClass="buttn"
+					<td align="center"><html-el:submit styleId="reviewapplypayment.button.submit" styleClass="buttn"
 						property="Preview">
 						<mifos:mifoslabel name="accounts.submit">
 						</mifos:mifoslabel>
 					</html-el:submit> &nbsp; <c:choose>
 								<c:when test="${param.input == 'loan'}">
-									<html-el:button styleClass="cancelbuttn" property="Cancel"
+									<html-el:button styleId="reviewapplypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
 										onclick="ViewLoanDetails(this.form)">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 
 								</c:when>
 								<c:otherwise>
-									<html-el:button styleClass="cancelbuttn" property="Cancel"
+									<html-el:button styleId="reviewapplypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
 										onclick="ViewDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>

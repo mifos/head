@@ -5,6 +5,9 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="BranchStatus"/>
+
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -53,7 +56,7 @@
 												name="CustomerSearch.search" /> </span></td>
 										</tr>
 										<tr class="fontnormal">
-											<td height="26" colspan="2"><mifos:mifoslabel
+											<td height="26" colspan="2"><span id="branch_search.label.search"><mifos:mifoslabel
 												name="CustomerSearch.searchinstruction1" />&nbsp; <mifos:mifoslabel
 												name="${ConfigurationConstants.CLIENT}" />,&nbsp; <c:choose>
 												<c:when test="${isCenterHeirarchyExists eq true}">
@@ -65,15 +68,15 @@
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
 	                  			</c:otherwise>
 											</c:choose> <mifos:mifoslabel
-												name="CustomerSearch.searchnamesysid" />&nbsp;</td>
+												name="CustomerSearch.searchnamesysid" /></span>&nbsp;</td>
 										</tr>
 
-										<font class="fontnormalRedBold"><html-el:errors
-											bundle="CustomerSearchUIResources" /> </font>
+										<font class="fontnormalRedBold"><span id="branch_search.error.message"><html-el:errors
+											bundle="CustomerSearchUIResources" /></span> </font>
 										<tr class="fontnormal">
-											<td height="26" colspan="2"><html-el:text
+											<td height="26" colspan="2"><html-el:text styleId="branch_search.input.search"
 												property="searchString" maxlength="200" /> <html-el:submit
-												styleClass="buttn">
+												styleId="branch_search.button.search" styleClass="buttn">
 												<mifos:mifoslabel name="CustomerSearch.search" />
 											</html-el:submit></td>
 										</tr>
@@ -111,7 +114,7 @@
 										<c:when test="${ not empty LoanOfficerslist }">
 
 											<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
-											<html-el:link
+											<html-el:link styleId="branch_search.link.selectLoanOfficer"
 											action="custSearchAction.do?method=get&officeId=${custSearchActionForm.officeId}&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<c:out value="${loanOfficer.displayName}" />
 											</html-el:link>

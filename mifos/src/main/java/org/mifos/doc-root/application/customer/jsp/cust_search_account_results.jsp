@@ -48,6 +48,8 @@
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 
+<input type="hidden" id="page.id" value="CustSearchAccountResults"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
     <c:choose>
@@ -240,7 +242,7 @@
 												</span></td>
 								</tr>
 								<tr><logic:messagesPresent>
-								<td><br><font class="fontnormalRedBold"><html-el:errors bundle="accountsUIResources" /></font></td>
+								<td><br><font class="fontnormalRedBold"><span id="cust_search_account_results.error.message"><html-el:errors bundle="accountsUIResources" /></span></font></td>
 								</logic:messagesPresent>
 								</tr>
 							</table>
@@ -250,7 +252,7 @@
 									<td class="fontnormal"><mifos:mifoslabel
 										name="accounts.search_for" />:&nbsp; <html-el:text
 										styleId="111" property="searchString" maxlength="200"/> &nbsp;
-									<html-el:submit property="searchButton" styleClass="buttn">
+									<html-el:submit styleId="cust_search_account_results.button.search" property="searchButton" styleClass="buttn">
 										<mifos:mifoslabel name="accounts.search" />
 									</html-el:submit></td>
 								</tr>
@@ -271,7 +273,7 @@
 							</table><br>
 							<table width="96%" border="0" cellspacing="0" cellpadding="0">
 								<tr>
-									<td align="center"><html-el:button property="cancelButton"
+									<td align="center"><html-el:button styleId="cust_search_account_results.button.cancel" property="cancelButton"
 										styleClass="cancelbuttn"
 										onclick="javascript:fun_cancel(this.form)">
 										<mifos:mifoslabel name="accounts.cancel" />

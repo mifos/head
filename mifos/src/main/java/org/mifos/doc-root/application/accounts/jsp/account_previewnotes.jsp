@@ -8,6 +8,9 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="AccountPreviewNotes"/>
+
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  <script language="javascript">
@@ -48,7 +51,7 @@
             </tr>
           </table>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
-            <logic:messagesPresent><tr><td><font class="fontnormalRedBold"><html-el:errors bundle="accountsUIResources" /></font></td></tr></logic:messagesPresent>
+            <logic:messagesPresent><tr><td><font class="fontnormalRedBold"><span id="account_previewnotes.error.message"><html-el:errors bundle="accountsUIResources" /></span></font></td></tr></logic:messagesPresent>
                 <tr>
                   <td><br>
                       <span class="fontnormal">
@@ -79,7 +82,7 @@
                 </tr>
                 <tr>
                   <td align="left" valign="top">
-                  <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
+                  <html-el:button styleId="account_previewnotes.button.edit" property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
                   <mifos:mifoslabel name="Account.EditLabel" bundle="accountsUIResources"></mifos:mifoslabel>
                   </html-el:button>
                   </td>
@@ -95,11 +98,11 @@
                 <tr>
                   <td align="center">
 
-				<html-el:submit styleClass="buttn">
+				<html-el:submit styleId="account_previewnotes.button.submit" styleClass="buttn">
 					<mifos:mifoslabel name="loan.submit" />
 				</html-el:submit>
                     &nbsp;&nbsp;
-                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+                    <html-el:button styleId="account_previewnotes.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="loan.cancel" />
                     </html-el:button>
 				</td>

@@ -54,6 +54,9 @@
   
  
 </script>
+
+<input type="hidden" id="page.id" value="AcceptedPaymentType"/>
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/logic.js"></SCRIPT>
@@ -62,7 +65,7 @@
 				<tr>
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt">
-							<html-el:link href="acceptedPaymentTypeAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link styleId="acceptedpaymenttype.link.admin" href="acceptedPaymentTypeAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="acceptedPaymentType.admin" />
 							</html-el:link> 
 						</span> / <span class="fontnormal8ptbold"><mifos:mifoslabel name="acceptedPaymentType.defineacceptedpaymenttype" /> </span>
@@ -229,11 +232,11 @@
                     <table cellspacing="0" cellpadding="0" width="98%" border="0">
                         <tbody>
                             <tr>
-                                <td align="center">&nbsp; <html-el:submit property="submitBtn"
+                                <td align="center">&nbsp; <html-el:submit styleId="acceptedpaymenttype.button.submit" property="submitBtn"
 										styleClass="buttn" onclick="transferData(this.form.fees);transferData(this.form.disbursements);transferData(this.form.repayments);transferData(this.form.deposits);transferData(this.form.withdrawals);">
 										<mifos:mifoslabel name="acceptedPaymentType.Submit">
 											</mifos:mifoslabel>
-									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
+									</html-el:submit> &nbsp; <html-el:button styleId="acceptedpaymenttype.button.cancel" property="cancelBtn"
 										styleClass="cancelbuttn" 
 										onclick="location.href='acceptedPaymentTypeAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 										<mifos:mifoslabel name="acceptedPaymentType.Cancel">

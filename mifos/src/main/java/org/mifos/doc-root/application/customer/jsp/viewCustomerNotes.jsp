@@ -7,6 +7,9 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ViewCustomerNotes"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
 <html-el:form action="notesAction.do">
@@ -32,14 +35,14 @@
 						<mifos:mifoslabel name="Customer.addnoteheading"></mifos:mifoslabel>
 					</td>
               		<td width="17%" align="right" class="fontnormal">
-						<a href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.customerNotesActionForm.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<a id="viewCustomerNotes.link.addNote" href="customerNotesAction.do?method=load&customerId=<c:out value="${sessionScope.customerNotesActionForm.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Customer.addnoteheading" ></mifos:mifoslabel></a>
 				 	</td>
             	</tr>
             	<tr>
 					<logic:messagesPresent>
-					<td><br><font class="fontnormalRedBold"><html-el:errors
-							bundle="accountsUIResources" /></font></td>
+					<td><br><font class="fontnormalRedBold"><span id="viewCustomerNotes.error.message"><html-el:errors
+							bundle="accountsUIResources" /></span></font></td>
 						</logic:messagesPresent>
 				</tr>
 

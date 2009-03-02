@@ -7,6 +7,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="CustPreviewHistoricalData"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -34,8 +36,8 @@
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td><font class="fontnormalRedBold"><html-el:errors
-						bundle="CustomerUIResources" /></font></td>
+					<td><font class="fontnormalRedBold"><span id="cust_previewhistoricaldata.error.message"><html-el:errors
+						bundle="CustomerUIResources" /></span></font></td>
 				</tr>
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15">
@@ -97,7 +99,7 @@
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td style="padding-top:5px;"><html-el:button
+							<td style="padding-top:5px;"><html-el:button styleId="cust_previewhistoricaldata.button.edit"
 								onclick="goToEditPage()" property="btn" styleClass="insidebuttn">
 								<mifos:mifoslabel name="label.edithistoricaldata"
 									bundle="CustomerUIResources"></mifos:mifoslabel>
@@ -110,11 +112,11 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit property="submitBtn"
+							<td align="center"><html-el:submit styleId="cust_previewhistoricaldata.button.submit" property="submitBtn"
 								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="CustomerUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="cust_previewhistoricaldata.button.cancel"
 								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"

@@ -51,6 +51,9 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ApplyCharges"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -137,7 +140,7 @@
 									</c:when>
 									<c:otherwise>
 										<customtags:headerLink selfLink="false"/>
-										<html-el:link href="customerAccountAction.do?method=load">
+										<html-el:link styleId="applyCharges.link.viewCharges" href="customerAccountAction.do?method=load">
 								          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	        			  						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          								</c:if>
@@ -180,7 +183,7 @@
 					<logic:messagesPresent>
 						<table width="93%" border="0" cellpadding="3" cellspacing="0"><tr><td>
 									<font class="fontnormalRedBold">
-										<html-el:errors bundle="accountsUIResources" />
+										<span id="applyCharges.error.message"><html-el:errors bundle="accountsUIResources" /></span>
 									</font></td></tr>
 						</table><br>
 					</logic:messagesPresent>
@@ -196,9 +199,10 @@
 
 							</mifos:select>
 							</td>
-							<td width="10%" align="left" class="fontnormal"><mifos:mifoslabel
-								name="accounts.amount_(Rs)"></mifos:mifoslabel></td>
+							<td width="10%" align="left" class="fontnormal"><span id="applyCharges.label.amount"><mifos:mifoslabel
+								name="accounts.amount_(Rs)"></mifos:mifoslabel></span></td>
 							<td width="10%" class="fontnormal" align="left"><mifos:mifosdecimalinput
+								styleId="applyCharges.input.amount"
 								property="chargeAmount"></mifos:mifosdecimalinput></td>
 							<td  width="40%" class="fontnormal" align="left">
 							<SPAN id="formula"></SPAN>
@@ -228,10 +232,10 @@
 						<tr>
 
 
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="applyCharges.button.submit" styleClass="buttn">
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;
-							 <html-el:button property="btn"  styleClass="cancelbuttn"
+							 <html-el:button styleId="applyCharges.button.cancel" property="btn"  styleClass="cancelbuttn"
 								onclick="javascript:fun_cancel(this.form)">
 								<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 							</html-el:button></td>

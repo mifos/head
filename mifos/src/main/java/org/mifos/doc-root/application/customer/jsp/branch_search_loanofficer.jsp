@@ -5,6 +5,9 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="BranchSearchLoanofficer"/>
+
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form action="custSearchAction.do">
@@ -53,7 +56,7 @@
 												name="CustomerSearch.search" /> </span></td>
 										</tr>
 										<tr class="fontnormal">
-											<td height="26" colspan="2"><mifos:mifoslabel
+											<td height="26" colspan="2"><span id="branch_search_loanofficer.label.search"><mifos:mifoslabel
 												name="CustomerSearch.searchinstruction1" />&nbsp; <mifos:mifoslabel
 												name="${ConfigurationConstants.CLIENT}" />,&nbsp; <c:choose>
 												<c:when test="${isCenterHeirarchyExists=='true'}">
@@ -65,13 +68,13 @@
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
 	                  			</c:otherwise>
 											</c:choose> <mifos:mifoslabel
-												name="CustomerSearch.searchnamesysid" />&nbsp;</td>
+												name="CustomerSearch.searchnamesysid" /></span>&nbsp;</td>
 										</tr>
-										<font class="fontnormalRedBold"><html-el:errors
-											bundle="CustomerSearchUIResources" /> </font>
+										<font class="fontnormalRedBold"><span id="branch_search_loanofficer.error.message"><html-el:errors
+											bundle="CustomerSearchUIResources" /></span> </font>
 										<tr class="fontnormal">
-											<td height="26" colspan="2"><html-el:text
-												property="searchString" maxlength="200" /> <html-el:submit
+											<td height="26" colspan="2"><html-el:text styleId="branch_search_loanofficer.input.search"
+												property="searchString" maxlength="200" /> <html-el:submit styleId="branch_search_loanofficer.button.search"
 												 styleClass="buttn">
 												<mifos:mifoslabel name="CustomerSearch.search" />
 											</html-el:submit></td>
@@ -111,14 +114,14 @@
 												var="customer">
 												<c:choose>
 													<c:when test='${isCenterHeirarchyExists eq true}'>
-														<html-el:link
+														<html-el:link styleId="branch_search_loanofficer.link.selectCenter"
 															href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 															<c:out value="${customer.displayName}" />
 														</html-el:link>
 														<br>
 													</c:when>
 													<c:otherwise>
-														<html-el:link
+														<html-el:link styleId="branch_search_loanofficer.link.selectGroup"
 															href='groupCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 															<c:out value="${customer.displayName}" />
 														</html-el:link>
@@ -167,7 +170,7 @@
 										<c:choose>
 										<c:when test="${ not empty LoanOfficerslist }">
 										<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
-										<html-el:link
+										<html-el:link styleId="branch_search_loanofficer.link.selectLoanOfficer"
 											action="custSearchAction.do?method=get&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<c:out value="${loanOfficer.displayName}" />
 										</html-el:link>
@@ -223,14 +226,14 @@
 										var="customer">
 										<c:choose>
 											<c:when test='${isCenterHeirarchyExists eq true}'>
-												<html-el:link
+												<html-el:link styleId="branch_search_loanofficer.link.selectCenter"
 													href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 													<c:out value="${customer.displayName}" />
 												</html-el:link>
 												<br>
 											</c:when>
 											<c:otherwise>
-												<html-el:link
+												<html-el:link styleId="branch_search_loanofficer.link.selectGroup"
 													href='groupCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 													<c:out value="${customer.displayName}" />
 												</html-el:link>

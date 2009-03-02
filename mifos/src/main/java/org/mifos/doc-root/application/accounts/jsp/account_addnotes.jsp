@@ -7,6 +7,8 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
+<input type="hidden" id="page.id" value="AccountAddNotes"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -41,8 +43,8 @@ function goToCancelPage(){
 						</tr>
 						<tr>
 							<logic:messagesPresent>
-								<td><br><font class="fontnormalRedBold"><html-el:errors
-									bundle="accountsUIResources" /></font></td>
+								<td><br><font class="fontnormalRedBold"><span id="account_addnotes.error.message"><html-el:errors
+									bundle="accountsUIResources" /></span></font></td>
 							</logic:messagesPresent>
 						</tr>
 					</table>
@@ -69,9 +71,9 @@ function goToCancelPage(){
 
 						<tr>
 							<td width="7%" align="left" valign="top" class="fontnormalbold">
-							<mifos:mifoslabel name="Account.Note"
-								bundle="accountsUIResources" mandatory="yes"></mifos:mifoslabel></td>
-							<td width="93%" align="left" valign="top"><html-el:textarea
+							<span id="account_addnotes.label.note"><mifos:mifoslabel name="Account.Note"
+								bundle="accountsUIResources" mandatory="yes"></mifos:mifoslabel></span></td>
+							<td width="93%" align="left" valign="top"><html-el:textarea styleId="account_addnotes.input.note"
 								property="comment" cols="37" style="width:320px; height:110px;">
 							</html-el:textarea></td>
 						</tr>
@@ -85,10 +87,10 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="account_addnotes.button.preview" styleClass="buttn">
 								<mifos:mifoslabel name="accounts.preview"
 									bundle="accountsUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="account_addnotes.button.cancel"
 								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="accounts.cancel"

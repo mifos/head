@@ -51,6 +51,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="GetAllClosedAccounts"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -103,7 +105,7 @@
 											class="fontnormal"> </span>
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
-												<td width="50%"><span class="fontnormal"> <html-el:link
+												<td width="50%"><span class="fontnormal"> <html-el:link styleId="getallclosedaccounts.link.viewLoanAccount"
 													href="loanAccountAction.do?method=get&globalAccountNum=${closedAccount.globalAccountNum}">
 													<c:out
 														value="${closedAccount.loanOffering.prdOfferingName}" />,&nbsp;
@@ -157,7 +159,7 @@
 											class="fontnormal"> </span>
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
-												<td width="50%"><span class="fontnormal"> <html-el:link
+												<td width="50%"><span class="fontnormal"> <html-el:link styleId="getallclosedaccounts.link.viewSavingsAccount"
 													href="savingsAction.do?method=get&globalAccountNum=${closedSavingsAccount.globalAccountNum}">
 													<c:out
 														value="${closedSavingsAccount.savingsOffering.prdOfferingName}" />,&nbsp;
@@ -202,7 +204,7 @@
 					</c:if> <br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="cancel"
+							<td align="center"><html-el:button styleId="getallclosedaccounts.button.cancel" property="cancel"
 								styleClass="buttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="client.butbachdetpage"

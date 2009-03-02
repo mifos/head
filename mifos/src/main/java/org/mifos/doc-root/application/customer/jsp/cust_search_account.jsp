@@ -5,6 +5,8 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 
+<input type="hidden" id="page.id" value="CustSearchAccount"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
         <c:choose>
@@ -196,7 +198,7 @@
 								<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="CustomerSearchUIResources" /> 
+											<span id="cust_search_account.error.message"><html-el:errors bundle="CustomerSearchUIResources" /></span> 
 										</font>
 									</td>
 								</tr>
@@ -212,10 +214,10 @@
 								<tr class="fontnormal">
 									<td width="30%">&nbsp;</td>
 									<td width="70%"><br>
-									<html-el:submit property="searchButton" styleClass="buttn">
+									<html-el:submit styleId="cust_search_account.button.search" property="searchButton" styleClass="buttn">
 										<mifos:mifoslabel name="accounts.search" />
 									</html-el:submit>&nbsp;
-                                    <html-el:button property="cancelButton"
+                                    <html-el:button styleId="cust_search_account.button.cancel" property="cancelButton"
                                         onclick="javascript:fun_cancel(this.form)"
                                         styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="accounts.cancel" />

@@ -44,6 +44,9 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+
+<input type="hidden" id="page.id" value="ApplyPayment"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
@@ -77,7 +80,7 @@
 						</c:when>
 						<c:otherwise>
 
-							<html-el:link href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}" >
+							<html-el:link styleId="applypayment.link.viewCharges" href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}" >
 					          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	          						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          					</c:if>
@@ -108,8 +111,8 @@
 					<br>
 					<table width="95%" border="0" cellspacing="0" cellpadding="3">
 						<tr>
-							<td colspan="2"><font class="fontnormalRedBold"> <html-el:errors
-								bundle="accountsUIResources" /> </font></td>
+							<td colspan="2"><font class="fontnormalRedBold"> <span id="applypayment.error.message"><html-el:errors
+								bundle="accountsUIResources" /></span> </font></td>
 						</tr>
 						<tr>
 							<td colspan="2" class="fontnormal"><mifos:mifoslabel
@@ -123,16 +126,18 @@
 							<td class="fontnormal"><date:datetag renderstyle="simple" property="transactionDate" /></td>
 						</tr>
 						<tr>
-							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
-								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></td>
+							<td width="24%" align="right" class="fontnormal"><span id="applypayment.label.amount"><mifos:mifoslabel
+								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></span></td>
 							<td width="76%">
 							<c:choose>
 								<c:when test="${BusinessKey.accountType.accountTypeId==1}">
 								<mifos:mifosdecimalinput property="amount"
+								styleId="applypayment.input.amount"
 								name="applyPaymentActionForm" />
 								</c:when>
 								<c:otherwise>
 								<mifos:mifosdecimalinput property="amount"
+								styleId="applypayment.input.amount"
 								disabled="true" name="applyPaymentActionForm" />
 								</c:otherwise>
 							</c:choose>
@@ -150,9 +155,10 @@
 							</mifos:select></td>
 						</tr>
 						<tr>
-							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.receiptid" isColonRequired="Yes" /></td>
+							<td align="right" class="fontnormal"><span id="applypayment.label.receiptId"><mifos:mifoslabel
+								name="accounts.receiptid" isColonRequired="Yes" /></span></td>
 							<td class="fontnormal"><mifos:mifosalphanumtext
+								styleId="applypayment.input.receiptId"
 								property="receiptId" name="applyPaymentActionForm" maxlength="25"/></td>
 						</tr>
 						<tr>
@@ -172,28 +178,28 @@
 							<td align="center"><c:choose>
 								<c:when
 									test="${(BusinessKey.accountType.accountTypeId!=1) && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
-									<html-el:submit styleClass="buttn" disabled="true"
+									<html-el:submit styleId="applypayment.button.submit" styleClass="buttn" disabled="true"
 										property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" property="Preview">
+									<html-el:submit styleId="applypayment.button.reviewTransaction" styleClass="buttn" property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:otherwise>
 							</c:choose> &nbsp; <c:choose>
 								<c:when test="${param.input == 'loan'}">
-									<html-el:button styleClass="cancelbuttn" property="Cancel"
+									<html-el:button styleId="applypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
 										onclick="ViewLoanDetails(this.form)">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 
 								</c:when>
 								<c:otherwise>
-									<html-el:button styleClass="cancelbuttn" property="Cancel"
+									<html-el:button styleId="applypayment.button.cancel" styleClass="cancelbuttn" property="Cancel"
 										onclick="ViewDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>

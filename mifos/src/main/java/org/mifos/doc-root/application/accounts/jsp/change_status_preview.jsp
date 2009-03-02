@@ -8,6 +8,9 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ChangeStatusPreview"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -53,7 +56,7 @@
 							</c:if></span></td>
 						</tr>
 						<tr><logic:messagesPresent>
-							<td><br><font class="fontnormalRedBold"><html-el:errors bundle="accountsUIResources" /></font></td>
+							<td><br><font class="fontnormalRedBold"><span id="change_status_preview.error.message"><html-el:errors bundle="accountsUIResources" /></font></td>
 							</logic:messagesPresent>
 						</tr>
 						<tr>
@@ -107,7 +110,7 @@
 					</c:if>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td style="padding-top:5px;"><html-el:button property="editInfo"
+							<td style="padding-top:5px;"><html-el:button styleId="change_status_preview.button.edit" property="editInfo"
 								styleClass="insidebuttn"
 								onclick="GoToEditPage(this.form)">
 								<mifos:mifoslabel name="accounts.EditStatus"
@@ -121,10 +124,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit property="btn"
+							<td align="center"><html-el:submit styleId="change_status_preview.button.submit" property="btn"
 								styleClass="buttn">
 								<mifos:mifoslabel name="accounts.submit" bundle="accountsUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="change_status_preview.button.cancel" property="btn"
 								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="accounts.cancel" bundle="accountsUIResources"></mifos:mifoslabel>

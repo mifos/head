@@ -51,6 +51,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="ApplyAdjustment"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT>
@@ -68,7 +70,7 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-					<a href="customerAccountAction.do?method=load"> <!--  html-el:link href="javascript:ViewDetails()" -->/
+					<a id="applyadjustment.link.viewDetails" href="customerAccountAction.do?method=load"> <!--  html-el:link href="javascript:ViewDetails()" -->/
 					<c:if test="${param.input == 'ViewCenterCharges'}">
 						<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 					</c:if> <c:if test="${param.input == 'ViewGroupCharges'}">
@@ -100,8 +102,8 @@
 					<logic:messagesPresent>
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
-								<td><font class="fontnormalRedBold"> <html-el:errors
-									bundle="CustomerUIResources" /> </font></td>
+								<td><font class="fontnormalRedBold"> <span id="applyadjustment.error.message"><html-el:errors
+									bundle="CustomerUIResources" /></span> </font></td>
 							</tr>
 						</table>
 						<br>
@@ -142,10 +144,11 @@
 						<c:choose>
 							<c:when
 								test="${requestScope.method=='loadAdjustment' && sessionScope.custApplyAdjustmentActionForm.adjustcheckbox=='true'}">
-								<input type="checkbox" name="adjustcheckbox" value="true"
+								<input id="applyadjustment.input.revertLastPayment" type="checkbox" name="adjustcheckbox" value="true"
 									checked="true">
+								<span id="applyadjustment.label.revertLastPayment">
 								<mifos:mifoslabel name="Customer.chk_revert_last_pmnt"
-									mandatory="yes" />
+									mandatory="yes" /></span>
 								<br>
 								<br>
 								</td>
@@ -153,9 +156,10 @@
 							</c:when>
 							<c:when
 								test="${requestScope.method=='loadAdjustment'&& sessionScope.custApplyAdjustmentActionForm.adjustcheckbox=='false'}">
-								<input type="checkbox" name="adjustcheckbox" value="true">
+								<input id="applyadjustment.input.revertLastPayment" type="checkbox" name="adjustcheckbox" value="true">
+								<span id="applyadjustment.label.revertLastPayment">
 								<mifos:mifoslabel name="Customer.chk_revert_last_pmnt"
-									mandatory="yes" />
+									mandatory="yes" /></span>
 								<br>
 								<br>
 								</td>
@@ -165,10 +169,10 @@
 						<c:choose>
 							<c:when test="${requestScope.method=='loadAdjustment'}">
 								<tr>
-									<td width="5%" valign="top" align="right" class="fontnormal"><mifos:mifoslabel
-										name="Customer.Notes" mandatory="yes" />: <br>
+									<td width="5%" valign="top" align="right" class="fontnormal"><span id="applyadjustment.input.note"><mifos:mifoslabel
+										name="Customer.Notes" mandatory="yes" /></span>: <br>
 									</td>
-									<td width="95%" class="fontnormal"><html-el:textarea
+									<td width="95%" class="fontnormal"><html-el:textarea styleId="applyadjustment.input.note"
 										property="adjustmentNote" cols="37"
 										style="width:320px; height:110px;">
 									</html-el:textarea></td>
@@ -195,14 +199,14 @@
 								<c:when test="${requestScope.method=='loadAdjustment'}">
 									<c:choose>
 										<c:when test="${requestScope.isDisabled}">
-											<html-el:submit styleClass="buttn"
+											<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn"
 												property="submit_btn" disabled="true">
 												<mifos:mifoslabel name="Customer.btn_reviewAdjustment">
 												</mifos:mifoslabel>
 											</html-el:submit>
 										</c:when>
 										<c:otherwise>
-											<html-el:submit styleClass="buttn"
+											<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn"
 												property="submit_btn">
 												<mifos:mifoslabel name="Customer.btn_reviewAdjustment">
 												</mifos:mifoslabel>
@@ -211,13 +215,13 @@
 									</c:choose>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn"
+									<html-el:submit styleId="applyadjustment.button.submit" styleClass="buttn"
 										property="submit_btn">
 										<mifos:mifoslabel name="Customer.submit">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:otherwise>
-							</c:choose> &nbsp; <html-el:button styleClass="cancelbuttn"
+							</c:choose> &nbsp; <html-el:button styleId="applyadjustment.button.cancel" styleClass="cancelbuttn"
 								onclick="javascript:fun_cancel(this.form)"
 								property="cancel">
 								<mifos:mifoslabel name="Customer.cancel">

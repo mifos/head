@@ -7,6 +7,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="CustHistoricalData"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -35,15 +37,15 @@
 							<td width="41%" class="headingorange"><span class="heading"> <c:out
 								value="${BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
 								name="label.historicaldata" bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td width="42%" align="right" class="fontnormal"><html-el:link
+							<td width="42%" align="right" class="fontnormal"><html-el:link styleId="cust_historicaldata.link.addEditHistoricalData"
 								action="custHistoricalDataAction.do?method=loadHistoricalData&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="label.add_edit_hd"
 									bundle="CustomerUIResources"></mifos:mifoslabel>
 							</html-el:link></td>
 						</tr>
 						<tr>
-							<td colspan="2"><font class="fontnormalRedBold"><html-el:errors
-								bundle="CustomerUIResources" /></font></td>
+							<td colspan="2"><font class="fontnormalRedBold"><span id="cust_historicaldata.error.message"><html-el:errors
+								bundle="CustomerUIResources" /></span></font></td>
 						</tr>
 
 					</table>
@@ -107,7 +109,7 @@
 					<br>
 			<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="btn"
+							<td align="center"><html-el:button styleId="cust_historicaldata.button.cancel" property="btn"
 								styleClass="buttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="label.backtodetailpage"

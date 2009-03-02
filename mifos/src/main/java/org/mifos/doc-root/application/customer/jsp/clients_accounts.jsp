@@ -5,6 +5,9 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ClientsAccounts"/>
+
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form action="custSearchAction.do">
@@ -47,19 +50,19 @@
 										class="heading"> <mifos:mifoslabel
 										name="CustomerSearch.search" /> </span></td>
 								</tr>
-								<font class="fontnormalRedBold"><html-el:errors
-									bundle="CustomerSearchUIResources" /> </font>
+								<font class="fontnormalRedBold"><span id="clients_accounts.error.message"><html-el:errors
+									bundle="CustomerSearchUIResources" /></span> </font>
 							</table>
 							<table width="90%" border="0" cellspacing="0" cellpadding="4">
 								<tr>
-									<td class="paddingbottom03"><span class="fontnormal"> <mifos:mifoslabel
+									<td class="paddingbottom03"><span class="fontnormal" id="clients_accounts.label.search"> <mifos:mifoslabel
 										name="CustomerSearch.searchstring" /> </span></td>
 								</tr>
 							</table>
 
 							<table border="0" cellpadding="4" cellspacing="0">
 								<tr>
-									<td><html-el:text property="searchString" maxlength="200" /></td>
+									<td><html-el:text styleId="clients_accounts.input.search" property="searchString" maxlength="200" /></td>
 									<td class="paddingleft05notop"><html-el:select
 										style="width:136px;" property="officeId">
 										<html-el:option value="0">
@@ -72,7 +75,7 @@
 								<tr>
 									<td>&nbsp;</td>
 									<td align="right" class="paddingleft05notop"><html-el:submit
-										styleClass="buttn">
+										styleId="clients_accounts.button.search" styleClass="buttn">
 										<mifos:mifoslabel name="CustomerSearch.search" />
 									</html-el:submit></td>
 								</tr>
@@ -100,7 +103,7 @@
 							
 							 <c:forEach
 								items="${OfficesList}" var="office">
-								<html-el:link action="custSearchAction.do?method=preview&officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}"
+								<html-el:link styleId="client_accounts.link.selectBranchOffice" action="custSearchAction.do?method=preview&officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}"
 									>
 									<c:out value="${office.officeName}" />
 								</html-el:link>

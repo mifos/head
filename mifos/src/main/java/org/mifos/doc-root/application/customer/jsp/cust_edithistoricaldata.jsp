@@ -7,6 +7,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="CustEditHistoricalData"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
@@ -40,8 +42,8 @@
 								name="label.edithistoricaldata" bundle="CustomerUIResources"></mifos:mifoslabel></td>
 						</tr>
 						<tr>
-							<td><font class="fontnormalRedBold"><html-el:errors
-								bundle="CustomerUIResources" /></font></td>
+							<td><font class="fontnormalRedBold"><span id="cust_edithistoricaldata.error.message"><html-el:errors
+								bundle="CustomerUIResources" /></span></font></td>
 						</tr>
 
 					</table>
@@ -53,73 +55,73 @@
 							<td width="73%"><date:datetag property="mfiJoiningDate" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
+							<td align="right"><span id="cust_edithistoricaldata.label.loanCycleNumber"><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
-								name="label.loancyclenumber" bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosnumbertext
+								name="label.loancyclenumber" bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosnumbertext styleId="cust_edithistoricaldata.input.loanCycleNumber"
 								name="customerHistoricalDataActionForm"
 								property="loanCycleNumber"
 								value="${sessionScope.custHistoricalDataActionForm.loanCycleNumber}" maxlength="4"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="label.productname"
-								bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext
+							<td align="right"><span id="cust_edithistoricaldata.label.productName"><mifos:mifoslabel name="label.productname"
+								bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="cust_edithistoricaldata.input.productName"
 								name="customerHistoricalDataActionForm" property="productName"
 								value="${sessionScope.custHistoricalDataActionForm.productName}" maxlength="100"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="label.amountof"
+							<td align="right"><span id="cust_edithistoricaldata.label.loanAmount"><mifos:mifoslabel name="label.amountof"
 								bundle="CustomerUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-								name="label.colon" bundle="CustomerUIResources" /></td>
-							<td><mifos:mifosdecimalinput
+								name="label.colon" bundle="CustomerUIResources" /></span></td>
+							<td><mifos:mifosdecimalinput styleId="cust_edithistoricaldata.input.loanAmount"
 								name="customerHistoricalDataActionForm" property="loanAmount"
 								value="${sessionScope.custHistoricalDataActionForm.loanAmount}" />
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="label.totalamountpaid"
-								bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosdecimalinput
+							<td align="right"><span id="cust_edithistoricaldata.label.totalAmountPaid"><mifos:mifoslabel name="label.totalamountpaid"
+								bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosdecimalinput styleId="cust_edithistoricaldata.input.totalAmountPaid"
 								name="customerHistoricalDataActionForm"
 								property="totalAmountPaid"
 								value="${sessionScope.custHistoricalDataActionForm.totalAmountPaid}" />
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
+							<td align="right"><span id="cust_edithistoricaldata.label.interestPaid"><mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="label.interestpaid" bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosdecimalinput
+								name="label.interestpaid" bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosdecimalinput styleId="cust_edithistoricaldata.input.interestPaid"
 								name="customerHistoricalDataActionForm" property="interestPaid"
 								value="${sessionScope.custHistoricalDataActionForm.interestPaid}" />
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
-								name="label.numberofmissedpayments" bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosnumbertext
+							<td align="right"><span id="cust_edithistoricaldata.label.numberOfMissedPayments"><mifos:mifoslabel
+								name="label.numberofmissedpayments" bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosnumbertext styleId="cust_edithistoricaldata.input.numberOfMissedPayments"
 								name="customerHistoricalDataActionForm"
 								property="missedPaymentsCount"
 								value="${sessionScope.custHistoricalDataActionForm.missedPaymentsCount}" maxlength="4"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
-								name="label.totalnumberofpayments" bundle="CustomerUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosnumbertext
+							<td align="right"><span id="cust_edithistoricaldata.label.totalNumberOfPayments"><mifos:mifoslabel
+								name="label.totalnumberofpayments" bundle="CustomerUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosnumbertext styleId="cust_edithistoricaldata.input.totalNumberOfPayments"
 								name="customerHistoricalDataActionForm"
 								property="totalPaymentsCount"
 								value="${sessionScope.custHistoricalDataActionForm.totalPaymentsCount}" maxlength="4"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right" valign="top"><mifos:mifoslabel
-								name="label.notes" bundle="CustomerUIResources"></mifos:mifoslabel>:</td>
-							<td><span class="fontnormal"> <html-el:textarea
+							<td align="right" valign="top"><span id="cust_edithistoricaldata.label.notes"><mifos:mifoslabel
+								name="label.notes" bundle="CustomerUIResources"></mifos:mifoslabel></span>:</td>
+							<td><span class="fontnormal"> <html-el:textarea styleId="cust_edithistoricaldata.input.notes"
 								property="commentNotes" cols="37"
 								style="width:320px; height:110px;"
 								value="${sessionScope.custHistoricalDataActionForm.commentNotes}" /> </span>
@@ -134,10 +136,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="cust_edithistoricaldata.button.preview" styleClass="buttn">
 								<mifos:mifoslabel name="button.preview"
 									bundle="CustomerUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="cust_edithistoricaldata.button.cancel"
 								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"

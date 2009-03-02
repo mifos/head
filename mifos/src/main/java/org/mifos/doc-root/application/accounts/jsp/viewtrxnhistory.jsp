@@ -45,6 +45,9 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ViewTransactionHistory"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 <SCRIPT >
@@ -69,7 +72,7 @@
 	          	<c:when test="${param.input == 'LoanDetails'}">
 	          	</c:when>
 	          	<c:otherwise>
-	          	<html-el:link href="customerAccountAction.do?method=load">
+	          	<html-el:link styleId="viewtrxhistory.link.viewCharges" href="customerAccountAction.do?method=load">
 	          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	          		<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
 	          	</c:if>
@@ -119,14 +122,14 @@
 
 					<c:choose>
 					<c:when test="${param.input == 'LoanDetails'}">
-					<html-el:button property="returnToAccountDetailsbutton"
+					<html-el:button styleId="viewtrxnhistory.button.back" property="returnToAccountDetailsbutton"
 					       onclick="javascript:ViewLoanDetails(this.form)"
 						     styleClass="buttn">
 								<mifos:mifoslabel name="accounts.returndetails" />
 						</html-el:button>
 					</c:when>
 					<c:otherwise>
-					   <html-el:button property="returnToAccountDetailsbutton"
+					   <html-el:button styleId="viewtrxnhistory.button.back" property="returnToAccountDetailsbutton"
 					       onclick="javascript:ViewDetails()"
 						     styleClass="buttn">
 								<mifos:mifoslabel name="accounts.backtocharges" />

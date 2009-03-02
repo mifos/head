@@ -7,6 +7,9 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="AddCustomerNotes"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -39,15 +42,15 @@ function goToCancelPage(){
 						</tr>
 						<tr>
 							<logic:messagesPresent>
-								<td><br><font class="fontnormalRedBold"><html-el:errors
-									bundle="CustomerUIResources" /></font></td>
+								<td><br><font class="fontnormalRedBold"><span id="addCustomerNotes.error.message"><html-el:errors
+									bundle="CustomerUIResources" /></span></font></td>
 							</logic:messagesPresent>
 						</tr>
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td><br>
-							<span class="fontnormal">
+							<span class="fontnormal" id="addCustomerNotes.label.note">
 								<mifos:mifoslabel name="Customer.EnterANote" ></mifos:mifoslabel>
 								<mifos:mifoslabel name="Customer.ClickPreview" ></mifos:mifoslabel>
 								<mifos:mifoslabel name="Customer.ClickCancel1" />
@@ -74,8 +77,9 @@ function goToCancelPage(){
 
 						<tr>
 							<td width="7%" align="left" valign="top" class="fontnormalbold">
-							<mifos:mifoslabel name="Customer.Note" mandatory="yes"></mifos:mifoslabel></td>
-							<td width="93%" align="left" valign="top"><html-el:textarea
+							<span id="addCustomerNotes.label.note"
+							<mifos:mifoslabel name="Customer.Note" mandatory="yes"></mifos:mifoslabel></span></td>
+							<td width="93%" align="left" valign="top"><html-el:textarea styleId="addCustomerNotes.input.note"
 								property="comment" cols="37" style="width:320px; height:110px;">
 							</html-el:textarea></td>
 						</tr>
@@ -89,9 +93,9 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="addCustomerNotes.button.preview" styleClass="buttn">
 								<mifos:mifoslabel name="Customer.preview"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="addCustomerNotes.button.cancel"
 								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="Customer.cancel"></mifos:mifoslabel>

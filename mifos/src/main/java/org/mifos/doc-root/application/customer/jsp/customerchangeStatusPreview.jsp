@@ -9,6 +9,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="CustomerChangeStatusPreview"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -52,7 +54,7 @@
 							</c:if></span></td>
 						</tr>
 						<tr><logic:messagesPresent>
-							<td><br><font class="fontnormalRedBold"><html-el:errors bundle="CustomerUIResources" /></font></td>
+							<td><br><font class="fontnormalRedBold"><span id="customerchangeStatusPreview.error.message"><html-el:errors bundle="CustomerUIResources" /></span></font></td>
 							</logic:messagesPresent>
 						</tr>
 						<tr>
@@ -114,7 +116,7 @@
 					
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td style="padding-top:5px;"><html-el:button property="editInfo"
+							<td style="padding-top:5px;"><html-el:button styleId="customerchangeStatusPreview.button.edit" property="editInfo"
 								styleClass="insidebuttn"
 								onclick="GoToEditPage(this.form)">
 								<mifos:mifoslabel name="Customer.EditStatus"></mifos:mifoslabel>
@@ -127,10 +129,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit property="btn"
+							<td align="center"><html-el:submit styleId="customerchangeStatusPreview.button.submit" property="btn"
 								styleClass="buttn">
 								<mifos:mifoslabel name="Customer.submit"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="customerchangeStatusPreview.button.cancel" property="btn"
 								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="Customer.cancel"></mifos:mifoslabel>

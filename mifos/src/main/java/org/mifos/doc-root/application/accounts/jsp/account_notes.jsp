@@ -7,6 +7,9 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="AccountNotes"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
 <html-el:form action="notesAction.do">
@@ -38,14 +41,14 @@
 						<mifos:mifoslabel name="Account.Notes" bundle="accountsUIResources"></mifos:mifoslabel>
 					</td>
               		<td width="17%" align="right" class="fontnormal">
-						<a href="notesAction.do?method=load&globalAccountNum=<c:out value="${sessionScope.notesActionForm.globalAccountNum}"/>&currentFlowKey=${requestScope.currentFlowKey}">
+						<a id="account_notes.link.AddNewNote" href="notesAction.do?method=load&globalAccountNum=<c:out value="${sessionScope.notesActionForm.globalAccountNum}"/>&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Account.AddNewNote" bundle="accountsUIResources"></mifos:mifoslabel></a>
 				 	</td>
             	</tr>
             	<tr>
 					<logic:messagesPresent>
-					<td><br><font class="fontnormalRedBold"><html-el:errors
-							bundle="accountsUIResources" /></font></td>
+					<td><br><font class="fontnormalRedBold"><span id="account_notes.error.message"><html-el:errors
+							bundle="accountsUIResources" /></span></font></td>
 						</logic:messagesPresent>
 				</tr>
 

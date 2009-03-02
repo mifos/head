@@ -28,6 +28,9 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<input type="hidden" id="page.id" value="ChangeStatus"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -79,7 +82,7 @@ explanation of the license and how it is applied.
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>
-							<td><br><font class="fontnormalRedBold"><html-el:errors bundle="accountsUIResources" /></font></td>
+							<td><br><font class="fontnormalRedBold"><span id="change_status.error.message"><html-el:errors bundle="accountsUIResources" /></span></font></td>
 							</logic:messagesPresent>
 						</tr>
 						<tr>
@@ -114,10 +117,10 @@ explanation of the license and how it is applied.
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
 									<tr class="fontnormal">
-										<td width="2%" align="center"><html-el:radio
+										<td width="2%" align="center"><html-el:radio styleId="change_status.input.status"
 											property="newStatusId" value="${status.id}"
 											onclick="manageFlag(${status.id})" /></td>
-										<td width="98%"><c:out value="${status.name}" /></td>
+										<td width="98%"><span id="change_status.label.status"><c:out value="${status.name}" /></span></td>
 									</tr>
 								</c:forEach>
 								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}">
@@ -152,11 +155,11 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td width="7%" align="left" valign="top" class="fontnormalbold">
-
+							<span id="change_status.label.note">
 							<mifos:mifoslabel name="accounts.note" mandatory="yes"
-								bundle="accountsUIResources"></mifos:mifoslabel></td>
+								bundle="accountsUIResources"></mifos:mifoslabel></span></td>
 							<td width="93%" align="left" valign="top"
-								style="padding-left:4px;"><html-el:textarea
+								style="padding-left:4px;"><html-el:textarea styleId="change_status.input.note"
 								property="notes" style="width:320px; height:110px;" /></td>
 						</tr>
 					</table>
@@ -168,9 +171,9 @@ explanation of the license and how it is applied.
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="change_status.button.submit" styleClass="buttn">
 								<mifos:mifoslabel name="accounts.preview" />
-							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="change_status.button.cancel" property="btn"
 								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="accounts.cancel" />
