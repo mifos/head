@@ -16,19 +16,19 @@
     <!--
     Simulate functionality in ConfigurationLocator used to find the build
     configuration file. Note that, unlike ConfigurationLocator, Ant will
-    combine properties from any/all of the below files which exist. The last
+    combine properties from any/all of the below files which exist. The first
     definition of each property wins.
     -->
-    <property file="${mifos.conf}/build.properties"/>
-    <property file="${env.MIFOS_CONF}/build.properties"/>
     <property file="${user.home}/.mifos/build.properties"/>
+    <property file="${env.MIFOS_CONF}/build.properties"/>
+    <property file="${mifos.conf}/build.properties"/>
     <property file="${conf.dir}/build.properties"/>
 
     <!-- Temporary support for HibernateTest (will be removed with the
     completion of story 1405) -->
-    <property file="${mifos.conf}/HibernateTest.properties"/>
-    <property file="${env.MIFOS_CONF}/HibernateTest.properties"/>
     <property file="${user.home}/.mifos/HibernateTest.properties"/>
+    <property file="${env.MIFOS_CONF}/HibernateTest.properties"/>
+    <property file="${mifos.conf}/HibernateTest.properties"/>
     <property file="${conf.dir}/HibernateTest.properties"/>
 
     <!--
