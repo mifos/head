@@ -118,6 +118,10 @@
             <version>0.8a</version>
             <exclusions>
                 <exclusion>
+                    <groupId>ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>gigaspaces</groupId>
                     <artifactId>gigaspaces-ce</artifactId>
                 </exclusion>
