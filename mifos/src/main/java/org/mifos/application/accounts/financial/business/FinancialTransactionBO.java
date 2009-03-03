@@ -44,6 +44,7 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class FinancialTransactionBO extends BusinessObject {
@@ -101,7 +102,7 @@ public class FinancialTransactionBO extends BusinessObject {
 		this.financialAction = financialAction;
 		this.glcode = glcode;
 		this.actionDate = actionDate;
-		this.postedDate = new Date(System.currentTimeMillis());
+		this.postedDate = new DateTimeService().getCurrentJavaDateTime();
 		this.postedBy = postedBy;
 		this.accountingUpdated = accountingUpdated;
 		this.postedAmount = postedAmount;

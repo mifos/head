@@ -17,6 +17,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -181,7 +182,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
 					boolean dueInstallments = false;
 					if (!installment.isPaid()
-							&& installment.getActionDate().getTime() <= new java.util.Date()
+							&& installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
 									.getTime())
 						dueInstallments = true;
 
@@ -193,7 +194,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						html1.endTag("tr");
 						while (index < list.size() - 1
 								&& !installment.isPaid()
-								&& installment.getActionDate().getTime() <= new java.util.Date()
+								&& installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
 										.getTime()) {
 							index++;
 							html1.append(createInstallmentRow(installment,
@@ -204,7 +205,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
 					boolean futureInstallments = false;
 					if (!installment.isPaid()
-							&& installment.getActionDate().getTime() > new java.util.Date()
+							&& installment.getActionDate().getTime() > new DateTimeService().getCurrentJavaDateTime()
 									.getTime())
 						futureInstallments = true;
 					if (futureInstallments) {

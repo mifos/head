@@ -13,6 +13,7 @@ import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class CheckListBO extends BusinessObject {
@@ -36,7 +37,7 @@ public abstract class CheckListBO extends BusinessObject {
 	protected CheckListBO(String checkListName, Short checkListStatus,
 			List<String> details, Short localeId, Short userId)
 			throws CheckListException {
-		setCreateDetails(userId, new Date());
+		setCreateDetails(userId, new DateTimeService().getCurrentJavaDateTime());
 		this.checklistId = null;
 
 		if (details.size() > 0) {

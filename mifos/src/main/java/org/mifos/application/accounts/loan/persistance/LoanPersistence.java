@@ -71,6 +71,10 @@ public class LoanPersistence extends Persistence {
 	public List<Integer> getLoanAccountsInArrearsInGoodStanding(
 			Short latenessDays) throws PersistenceException {
 
+	    /* TODO: refactor to use Joda Time
+	     * This code appears to be trying to just get a date 
+	     * that is "latenessDays" before the current date.
+	     */
 		String systemDate = DateUtils.getCurrentDate();
 		Date localDate = DateUtils.getLocaleDate(systemDate);
 		Calendar currentDate = new GregorianCalendar();

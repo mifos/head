@@ -69,6 +69,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyFactory;
@@ -424,7 +425,7 @@ public abstract class CustomerBO extends BusinessObject {
 			CustomerStatusFlagEntity customerStatusFlagEntity) {
 		CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
 				this, customerStatusFlagEntity, this.getUserContext().getId(),
-				new Date());
+				new DateTimeService().getCurrentJavaDateTime());
 		this.customerFlags.add(customerFlag);
 	}
 
@@ -1095,7 +1096,7 @@ public abstract class CustomerBO extends BusinessObject {
 		currentCustomerMovement.makeInactive(userContext.getId());
 		this.setOffice(officeToTransfer);
 		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(
-				this, new Date());
+				this, new DateTimeService().getCurrentJavaDateTime());
 		this.addCustomerMovement(newCustomerMovement);
 	}
 

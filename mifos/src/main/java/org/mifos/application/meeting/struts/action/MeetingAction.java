@@ -65,6 +65,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -240,7 +241,7 @@ public class MeetingAction extends BaseAction {
 	private MeetingBO createMeeting(MeetingActionForm form)
 			throws MeetingException {
 		MeetingBO meeting = null;
-		Date startDate = new Date();
+		Date startDate = new DateTimeService().getCurrentJavaDateTime();
 		if (form.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
 			meeting = new MeetingBO(form.getWeekDayValue(), form
 					.getRecurWeekValue(), startDate,

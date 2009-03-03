@@ -52,6 +52,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 
 /*
  * For Hibernate 3.2.2 or so, we'd just extend EmptyInterceptor.
@@ -96,7 +97,7 @@ public class AuditInterceptor extends EmptyInterceptor {
 			auditLog = new AuditLog(interceptHelper.getEntityId(), EntityType
 					.getEntityValue(interceptHelper.getEntityName().toUpperCase()),
 					userContext.getName(),
-					new Date(System.currentTimeMillis()), userContext.getId());
+					new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), userContext.getId());
 			Set<AuditLogRecord> auditLogRecords = createAuditLogRecord();
 			auditLog.addAuditLogRecords(auditLogRecords);
 			if (!auditLogRecords.isEmpty()) {

@@ -8,6 +8,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.migration.generated.MonthlyMeeting;
 import org.mifos.migration.generated.WeekDayChoice;
 import org.mifos.migration.generated.WeekDayOccurence;
@@ -33,7 +34,7 @@ public class MeetingMapper {
 	
 	public static MeetingBO mapMonthlyMeetingToMeetingBO(MonthlyMeeting meeting) {
 		short monthsBetweenMeetings = meeting.getMonthsBetweenMeetings();
-		Date startDate = new Date();
+		Date startDate = new DateTimeService().getCurrentJavaDateTime();
 		MeetingType meetingType = MeetingType.CUSTOMER_MEETING;
 		String location = meeting.getLocation();
 	
@@ -67,7 +68,7 @@ public class MeetingMapper {
 
 	public static MeetingBO mapWeeklyMeetingToMeetingBO(WeeklyMeeting meeting) {
 		short weeksBetweenMeetings = meeting.getWeeksBetweenMeetings();
-		Date startDate = new Date();
+		Date startDate = new DateTimeService().getCurrentJavaDateTime();
 		MeetingType meetingType = MeetingType.CUSTOMER_MEETING;
 		String location = meeting.getLocation();
 	

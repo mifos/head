@@ -3,6 +3,7 @@ package org.mifos.application.personnel.business;
 import java.util.Date;
 
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.DateTimeService;
 
 public class PersonnelNotesEntity extends PersistentObject {
 
@@ -23,7 +24,7 @@ public class PersonnelNotesEntity extends PersistentObject {
 		this.officer = officer;
 		this.personnel = personnel;
 		this.commentId = null;
-		this.commentDate = new Date(System.currentTimeMillis());
+		this.commentDate = new DateTimeService().getCurrentJavaDateTime();
 	}
 
 	protected PersonnelNotesEntity() {

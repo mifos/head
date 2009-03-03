@@ -67,6 +67,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -453,7 +454,7 @@ public class ClientBO extends CustomerBO {
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
 		super.handleActiveForFirstTime(oldStatusId, newStatusId);
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
-			this.setCustomerActivationDate(new Date());
+			this.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 			createAccountsForClient();
 			getSavingsPersistence().persistSavingAccounts(this);
 			createDepositSchedule();

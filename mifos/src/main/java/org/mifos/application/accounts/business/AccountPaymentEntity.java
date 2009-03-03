@@ -52,6 +52,7 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -87,7 +88,7 @@ public class AccountPaymentEntity extends PersistentObject {
 	private MifosLogger logger;
 
 	protected AccountPaymentEntity() {
-		this(null, null, null, null, null, new Date(System.currentTimeMillis()));
+		this(null, null, null, null, null, new DateTimeService().getCurrentJavaDateTime());
 	}
 
 	public AccountPaymentEntity(AccountBO account, Money amount,

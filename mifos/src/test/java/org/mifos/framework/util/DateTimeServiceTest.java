@@ -62,7 +62,7 @@ public class DateTimeServiceTest {
         dateTimeService.setCurrentDateTime(someDateTime);
         // The date that comes back should be as set
         Assert.assertEquals(someDateTime.toLocalDate(), dateTimeService.getCurrentDateTime().toLocalDate());
-        Thread.sleep(1);
+        Thread.sleep(10);
         // Some time should have passed since setting the time on the dateTimeService
         Assert.assertTrue(dateTimeService.getCurrentDateTime().getMillis() > someDateTime.getMillis());
     }

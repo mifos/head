@@ -53,6 +53,7 @@ import org.mifos.application.customer.client.struts.actionforms.ClientCustAction
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 
 
@@ -546,7 +547,7 @@ public class DateUtils {
 	}
 
 	public static String makeDateAsSentFromBrowser() {
-		Date date = new Date();
+		Date date = new DateTimeService().getCurrentJavaDateTime();
 		return makeDateAsSentFromBrowser(date);
 	}
 

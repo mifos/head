@@ -39,6 +39,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -157,9 +158,9 @@ public class SavingsPrdAction extends BaseAction {
 				new MeetingBO(RecurrenceType.fromInt(savingsprdForm
 						.getRecurTypeFortimeForInterestCaclValue()),
 						savingsprdForm.getTimeForInterestCalcValue(),
-						new Date(), MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD),
+						new DateTimeService().getCurrentJavaDateTime(), MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD),
 				new MeetingBO(RecurrenceType.MONTHLY, savingsprdForm
-						.getFreqOfInterestValue(), new Date(),
+						.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
 						MeetingType.SAVINGS_INTEREST_POSTING), savingsprdForm
 						.getRecommendedAmountValue(), savingsprdForm
 						.getMaxAmntWithdrawlValue(), savingsprdForm
@@ -303,10 +304,10 @@ public class SavingsPrdAction extends BaseAction {
 										.fromInt(savingsprdForm
 												.getRecurTypeFortimeForInterestCaclValue()),
 								savingsprdForm.getTimeForInterestCalcValue(),
-								new Date(),
+								new DateTimeService().getCurrentJavaDateTime(),
 								MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD),
 						new MeetingBO(RecurrenceType.MONTHLY, savingsprdForm
-								.getFreqOfInterestValue(), new Date(),
+								.getFreqOfInterestValue(), new DateTimeService().getCurrentJavaDateTime(),
 								MeetingType.SAVINGS_INTEREST_POSTING),
 						savingsprdForm.getRecommendedAmountValue(),
 						savingsprdForm.getMaxAmntWithdrawlValue(),

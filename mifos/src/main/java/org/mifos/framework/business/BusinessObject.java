@@ -3,6 +3,7 @@ package org.mifos.framework.business;
 import java.util.Date;
 
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 
 public abstract class BusinessObject extends PersistentObject {
 
@@ -25,7 +26,7 @@ public abstract class BusinessObject extends PersistentObject {
 	}
 
 	protected void setCreateDetails() {
-		setCreatedDate(new Date());
+		setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
 		setCreatedBy(userContext.getId());
 	}
 
@@ -35,7 +36,7 @@ public abstract class BusinessObject extends PersistentObject {
 	}
 
 	protected void setUpdateDetails() {
-		setUpdatedDate(new Date());
+		setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 		if (userContext != null)
 			setUpdatedBy(userContext.getId());
 		else
@@ -43,7 +44,7 @@ public abstract class BusinessObject extends PersistentObject {
 	}
 
 	protected void setUpdateDetails(Short userId) {
-		setUpdatedDate(new Date());
+		setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 		setUpdatedBy(userId);
 	}
 

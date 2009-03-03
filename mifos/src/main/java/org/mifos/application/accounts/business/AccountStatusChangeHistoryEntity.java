@@ -42,6 +42,7 @@ import java.util.Locale;
 
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class AccountStatusChangeHistoryEntity extends PersistentObject {
@@ -73,7 +74,7 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject {
 		this.newStatus = newStatus;
 		this.personnel = personnel;
 		this.account = account;
-		this.setCreatedDate(new Date(System.currentTimeMillis()));
+		this.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
 	}
 
 	public AccountBO getAccount() {

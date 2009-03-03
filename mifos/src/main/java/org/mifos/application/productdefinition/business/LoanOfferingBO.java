@@ -60,6 +60,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 
@@ -1297,7 +1298,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			GLCodeEntity interestGLcode) throws ProductDefinitionException {
 		LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, prdOfferingName,
 								prdOfferingShortName, prdCategory, prdApplicableMaster,
-								new Date(), endDate, description, gracePeriodType,
+								new DateTimeService().getCurrentJavaDateTime(), endDate, description, gracePeriodType,
 								gracePeriodDuration, interestTypes, minLoanAmount,
 								maxLoanAmount, defaultLoanAmount, maxInterestRate,
 								minInterestRate, defInterestRate, maxNoInstallments,

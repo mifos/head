@@ -37,6 +37,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -103,7 +104,7 @@ public class PersonnelBO extends BusinessObject {
 			Address address, Short createdBy)
             throws PersistenceException, ValidationException {
 		super();
-		setCreateDetails(createdBy, new Date());
+		setCreateDetails(createdBy, new DateTimeService().getCurrentJavaDateTime());
 		logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
 		this.displayName = name.getDisplayName();
 		verifyFields(userName, governmentIdNumber, dob);
@@ -449,7 +450,7 @@ public class PersonnelBO extends BusinessObject {
 		Date dateOfJoiningBranch = null;
 		if (!this.office.getOfficeId().equals(office.getOfficeId())) {
 			makePersonalMovementEntries(office, updatedById);
-			dateOfJoiningBranch = new Date();
+			dateOfJoiningBranch = new DateTimeService().getCurrentJavaDateTime();
 		}
 		try {
 		PersonnelStatusEntity personnelStatus = (PersonnelStatusEntity) masterPersistence
@@ -656,7 +657,7 @@ public class PersonnelBO extends BusinessObject {
 		currentPersonnelMovement.makeInActive(updatedById);
 		this.office = newOffice;
 		PersonnelMovementEntity newPersonnelMovement = new PersonnelMovementEntity(
-				this, new Date());
+				this, new DateTimeService().getCurrentJavaDateTime());
 		this.addPersonnelMovement(newPersonnelMovement);
 	}
 
@@ -694,7 +695,7 @@ public class PersonnelBO extends BusinessObject {
 		this.setEncriptedPassword(encryptedPassword);
 		this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
 		if (this.getLastLogin() == null) {
-			this.setLastLogin(new Date());
+			this.setLastLogin(new DateTimeService().getCurrentJavaDateTime());
 		}
 		try {
 			setUpdateDetails(updatedById);
@@ -711,7 +712,7 @@ public class PersonnelBO extends BusinessObject {
         this.setEncriptedPassword(encryptedPassword);
         this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
         if (this.getLastLogin() == null) {
-			this.setLastLogin(new Date());
+			this.setLastLogin(new DateTimeService().getCurrentJavaDateTime());
 		}
         setUpdateDetails(updatedById);
 		new PersonnelPersistence().createOrUpdate(this);
@@ -775,7 +776,7 @@ public class PersonnelBO extends BusinessObject {
 	private void updateLastPersonnelLoggedin() throws PersonnelException {
 		logger.info("Updating lastLogin");
 		try{
-			this.lastLogin = new Date();
+			this.lastLogin = new DateTimeService().getCurrentJavaDateTime();
 			new PersonnelPersistence().createOrUpdate(this);
 		} catch (PersistenceException pe) {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);

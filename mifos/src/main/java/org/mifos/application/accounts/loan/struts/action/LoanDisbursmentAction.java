@@ -39,6 +39,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -80,7 +81,7 @@ public class LoanDisbursmentAction extends BaseAction {
 
 		productMixValidator.checkIfProductsOfferingCanCoexist(getLoan(loanDisbursmentActionForm));
 		
-		Date currentDate = new Date(System.currentTimeMillis());
+		Date currentDate = new DateTimeService().getCurrentJavaDateTime();
 		LoanBO loan = getLoan(loanDisbursmentActionForm);
 		setProposedDisbursementDate(request, currentDate, loan);
 		loanDisbursmentActionForm.setTransactionDate(getUserLocaleDate(getUserContext(request).getPreferredLocale(),

@@ -107,6 +107,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1059,7 +1060,7 @@ public class LoanBO extends AccountBO {
 		if (null == accountPaymentEntity) {
 			accountPaymentEntity = new AccountPaymentEntity(this,
 					this.loanAmount, recieptNum, transactionDate,
-					new PaymentTypeEntity(paymentTypeId), new Date(System.currentTimeMillis()));
+					new PaymentTypeEntity(paymentTypeId), new DateTimeService().getCurrentJavaDateTime());
 		}
 		else {
 			accountPaymentEntity.setAmount(this.loanAmount
@@ -1127,10 +1128,10 @@ public class LoanBO extends AccountBO {
 			PersonnelBO currentUser = new PersonnelPersistence()
 					.getPersonnel(personnelId);
 			this.setUpdatedBy(personnelId);
-			this.setUpdatedDate(new Date(System.currentTimeMillis()));
+			this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 			AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 					this, totalAmount, receiptNumber, recieptDate,
-					new PaymentTypeEntity(Short.valueOf(paymentTypeId)), new Date(System.currentTimeMillis()));
+					new PaymentTypeEntity(Short.valueOf(paymentTypeId)), new DateTimeService().getCurrentJavaDateTime());
 			addAccountPayment(accountPaymentEntity);
 
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
@@ -1160,7 +1161,7 @@ public class LoanBO extends AccountBO {
 			setAccountState((AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class,
 							AccountStates.LOANACC_OBLIGATIONSMET));
-			setClosedDate(new Date(System.currentTimeMillis()));
+			setClosedDate(new DateTimeService().getCurrentJavaDateTime());
 
 			// Client performance entry
 			updateCustomerHistoryOnRepayment(totalAmount);
@@ -1222,10 +1223,10 @@ public class LoanBO extends AccountBO {
 					.getPersonnel(personnelId);
 
 			this.setUpdatedBy(personnelId);
-			this.setUpdatedDate(new Date(System.currentTimeMillis()));
+			this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 			AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 					this, getEarlyClosureAmount(), null, null,
-					new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
+					new PaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
 			this.addAccountPayment(accountPaymentEntity);
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_WRITTEN_OFF,
@@ -1253,10 +1254,10 @@ public class LoanBO extends AccountBO {
 			PersonnelBO currentUser = new PersonnelPersistence()
 			.getPersonnel(personnelId);
 			this.setUpdatedBy(personnelId);
-			this.setUpdatedDate(new Date(System.currentTimeMillis()));
+			this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 			AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 					this, getEarlyClosureAmount(), null, null,
-					new PaymentTypeEntity(Short.valueOf("1")),new Date(System.currentTimeMillis()));
+					new PaymentTypeEntity(Short.valueOf("1")),new DateTimeService().getCurrentJavaDateTime());
 			this.addAccountPayment(accountPaymentEntity);
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_RESCHEDULED,
@@ -1588,7 +1589,7 @@ public class LoanBO extends AccountBO {
 					&& accountPaymentData.isPaid()) {
 				changeLoanStatus(AccountState.LOAN_CLOSED_OBLIGATIONS_MET,
 						paymentData.getPersonnel());
-				this.setClosedDate(new Date(System.currentTimeMillis()));
+				this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
 				// Client performance entry
 				updateCustomerHistoryOnLastInstlPayment(paymentData
 						.getTotalAmount());
@@ -2259,8 +2260,7 @@ public class LoanBO extends AccountBO {
 			throws AccountException {
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
 		AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge,
-				FeeStatus.ACTIVE.getValue(), new Date(System
-						.currentTimeMillis()), null);
+				FeeStatus.ACTIVE.getValue(), new DateTimeService().getCurrentJavaDateTime(), null);
 		Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
 		accountFeeSet.add(accountFee);
 		populateAccountFeeAmount(accountFeeSet, loanSummary
@@ -2771,7 +2771,7 @@ public class LoanBO extends AccountBO {
 
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				this, totalPayment, recieptNum, recieptDate,
-				new PaymentTypeEntity(paymentTypeId), new Date(System.currentTimeMillis()));
+				new PaymentTypeEntity(paymentTypeId), new DateTimeService().getCurrentJavaDateTime());
 
 		LoanTrxnDetailEntity loanTrxnDetailEntity = null;
 
@@ -2981,8 +2981,7 @@ public class LoanBO extends AccountBO {
 								.getPersistentObject(AccountActionEntity.class,
 										accountActionTypes.getValue()),
 						loanSchedule.getInstallmentId(), loanSchedule
-								.getActionDate(), currentUser, new Date(System
-								.currentTimeMillis()), totalAmt, comments,
+								.getActionDate(), currentUser, new DateTimeService().getCurrentJavaDateTime(), totalAmt, comments,
 						null, principal, interest, loanSchedule.getPenalty()
 								.subtract(loanSchedule.getPenaltyPaid()),
 						loanSchedule.getMiscFeeDue(), loanSchedule
@@ -3034,8 +3033,7 @@ public class LoanBO extends AccountBO {
 								.getPersistentObject(AccountActionEntity.class,
 										accountActionTypes.getValue()),
 						loanSchedule.getInstallmentId(), loanSchedule
-								.getActionDate(), currentUser, new Date(System
-								.currentTimeMillis()), principal, comments,
+								.getActionDate(), currentUser, new DateTimeService().getCurrentJavaDateTime(), principal, comments,
 						null, principal, new Money(), new Money(), new Money(),
 						new Money(), null);
 			}

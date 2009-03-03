@@ -5,6 +5,7 @@ import java.util.Date;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.util.helpers.Status;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.DateTimeService;
 
 public class PersonnelMovementEntity extends PersistentObject {
 
@@ -62,7 +63,7 @@ public class PersonnelMovementEntity extends PersistentObject {
 	void makeInActive(Short updatedBy) {
 		updateStatus(Status.INACTIVE);
 		setUpdatedBy(updatedBy);
-		setUpdatedDate(new Date());
-		setEndDate(new Date());
+		setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+		setEndDate(new DateTimeService().getCurrentJavaDateTime());
 	}
 }

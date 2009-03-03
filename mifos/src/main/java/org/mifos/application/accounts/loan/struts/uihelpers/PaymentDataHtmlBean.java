@@ -26,6 +26,7 @@ import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstall
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -43,7 +44,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.personnel = personnel;
         this.paymentTypeId = PaymentTypes.CASH.getValue();
 
-        long currentTime = new java.util.Date().getTime();
+        long currentTime = new DateTimeService().getCurrentJavaDateTime().getTime();
         this.date = DateUtils.getUserLocaleDate(locale, installment.getDueDate().toString());
         if (installment.getDueDate().getTime() <= currentTime) {
             this.amount = installment.getTotal().toString();

@@ -51,6 +51,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -184,7 +185,7 @@ public class PersonAction extends SearchAction {
 				personActionForm.getGovernmentIdNumber(), dob,
 				getIntegerValue(personActionForm.getMaritalStatus()),
 				getIntegerValue(personActionForm.getGender()),
-				dateOfJoiningMFI, new Date(), personActionForm.getAddress(),
+				dateOfJoiningMFI, new DateTimeService().getCurrentJavaDateTime(), personActionForm.getAddress(),
 				userContext.getId());
 		personnelBO.save();
 		request.setAttribute("displayName", personnelBO.getDisplayName());

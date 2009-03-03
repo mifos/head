@@ -85,6 +85,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -359,7 +360,7 @@ public class SurveyInstanceAction extends BaseAction {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		actionForm.clear();
 		actionForm.setValue("officerName", getUserContext(request).getName());
-		actionForm.setDateValue("dateSurveyed", new Date());
+		actionForm.setDateValue("dateSurveyed", new DateTimeService().getCurrentJavaDateTime());
 		
 		SurveysPersistence persistence = new SurveysPersistence();
 		int surveyId = (Integer) results.get("value(surveyId)");
@@ -599,7 +600,7 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		actionForm.clear();
 		actionForm.setValue("officerName", getUserContext(request).getName());
-		actionForm.setDateValue("dateSurveyed", new Date());
+		actionForm.setDateValue("dateSurveyed", new DateTimeService().getCurrentJavaDateTime());
 		BusinessObject businessObject =
 			(BusinessObject)request.getSession().getAttribute(
 					Constants.BUSINESS_KEY);

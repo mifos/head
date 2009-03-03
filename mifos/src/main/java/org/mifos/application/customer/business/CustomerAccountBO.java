@@ -73,6 +73,7 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 
 /**
@@ -154,7 +155,7 @@ public class CustomerAccountBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				paymentData.getTotalAmount(), paymentData.getRecieptNum(),
 				paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
-						.getPaymentTypeId()), new Date(System.currentTimeMillis()));
+						.getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 		for (AccountPaymentData accountPaymentData : paymentData
 				.getAccountPayments()) {
 			CustomerScheduleEntity accountAction = (CustomerScheduleEntity) getAccountActionDate(accountPaymentData
@@ -339,7 +340,7 @@ public class CustomerAccountBO extends AccountBO {
 						.getPersonnel(personnelId);
 			}
 			return new CustomerActivityEntity(this, personnel, amount,
-					description, new Date(System.currentTimeMillis()));
+					description, new DateTimeService().getCurrentJavaDateTime());
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -552,15 +553,14 @@ public class CustomerAccountBO extends AccountBO {
 		if ((fee.isPeriodic() && !isFeeAlreadyApplied(fee))
 				|| !fee.isPeriodic()) {
 			accountFee = new AccountFeesEntity(this, fee, charge,
-					FeeStatus.ACTIVE.getValue(), new Date(System
-							.currentTimeMillis()), null);
+					FeeStatus.ACTIVE.getValue(), new DateTimeService().getCurrentJavaDateTime(), null);
 			addAccountFees(accountFee);
 		} else {
 			accountFee = getAccountFees(fee.getFeeId());
 			accountFee.setFeeAmount(charge);
 			accountFee.setFeeStatus(FeeStatus.ACTIVE);
 			accountFee
-					.setStatusChangeDate(new Date(System.currentTimeMillis()));
+					.setStatusChangeDate(new DateTimeService().getCurrentJavaDateTime());
 		}
 	}
 
@@ -590,8 +590,7 @@ public class CustomerAccountBO extends AccountBO {
 			throws AccountException {
 		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 		AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge
-				.getAmountDoubleValue(), FeeStatus.ACTIVE.getValue(), new Date(
-				System.currentTimeMillis()), null);
+				.getAmountDoubleValue(), FeeStatus.ACTIVE.getValue(), new DateTimeService().getCurrentJavaDateTime(), null);
 		List<AccountActionDateEntity> customerScheduleList = new ArrayList<AccountActionDateEntity>();
 		customerScheduleList.add(customerScheduleEntity);
 		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
@@ -626,18 +625,16 @@ public class CustomerAccountBO extends AccountBO {
 							.valueOf(AccountConstants.MISC_PENALTY)))
 				customerActivityEntity = new CustomerActivityEntity(this,
 						personnel, charge,
-						AccountConstants.MISC_PENALTY_APPLIED, new Date(System
-								.currentTimeMillis()));
+						AccountConstants.MISC_PENALTY_APPLIED, new DateTimeService().getCurrentJavaDateTime());
 			else if (chargeType != null
 					&& chargeType.equals(Short
 							.valueOf(AccountConstants.MISC_FEES)))
 				customerActivityEntity = new CustomerActivityEntity(this,
 						personnel, charge, AccountConstants.MISC_FEES_APPLIED,
-						new Date(System.currentTimeMillis()));
+						new DateTimeService().getCurrentJavaDateTime());
 			else
 				customerActivityEntity = new CustomerActivityEntity(this,
-						personnel, charge, comments, new Date(System
-								.currentTimeMillis()));
+						personnel, charge, comments, new DateTimeService().getCurrentJavaDateTime());
 			addCustomerActivity(customerActivityEntity);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
@@ -841,7 +838,7 @@ public class CustomerAccountBO extends AccountBO {
 						// generate repayment schedule and enable fee
 						updateAccountFee(fee, feeBO);
 						fee.changeFeesStatus(FeeStatus.ACTIVE,
-								new Date(System.currentTimeMillis()));
+								new DateTimeService().getCurrentJavaDateTime());
 						addTonextInstallment(fee);
 					}
 
@@ -852,7 +849,7 @@ public class CustomerAccountBO extends AccountBO {
 
 					} else {
 						fee.changeFeesStatus(FeeStatus.ACTIVE,
-								new Date(System.currentTimeMillis()));
+								new DateTimeService().getCurrentJavaDateTime());
 						addTonextInstallment(fee);
 					}
 
@@ -885,8 +882,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	private void updateAccountFee(AccountFeesEntity fee, FeeBO feeBO) {
-		fee.changeFeesStatus(FeeStatus.INACTIVE, new Date(System
-				.currentTimeMillis()));
+		fee.changeFeesStatus(FeeStatus.INACTIVE, new DateTimeService().getCurrentJavaDateTime());
 		fee.setFeeAmount(((AmountFeeBO) feeBO).getFeeAmount()
 				.getAmountDoubleValue());
 		fee.setAccountFeeAmount(((AmountFeeBO) feeBO).getFeeAmount());
@@ -900,8 +896,7 @@ public class CustomerAccountBO extends AccountBO {
 			((CustomerFeeScheduleEntity) accountFeesActionDetail)
 					.setFeeAmount(fee.getAccountFeeAmount());
 			accountFeesActionDetail.setUpdatedBy(Short.valueOf("1"));
-			accountFeesActionDetail.setUpdatedDate(new Date(System
-					.currentTimeMillis()));
+			accountFeesActionDetail.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 		}
 	}
 
@@ -919,8 +914,7 @@ public class CustomerAccountBO extends AccountBO {
 			addCustomerActivity(new CustomerActivityEntity(
 					this,
 					new PersonnelPersistence().getPersonnel(Short.valueOf("1")),
-					fee.getAccountFeeAmount(), description, new Date(System
-							.currentTimeMillis())));
+					fee.getAccountFeeAmount(), description, new DateTimeService().getCurrentJavaDateTime()));
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}

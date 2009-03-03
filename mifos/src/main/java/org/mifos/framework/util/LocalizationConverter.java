@@ -325,7 +325,7 @@ public class LocalizationConverter {
 		
 		String separator = "";
 		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
-		String now = format.format(new java.util.Date());
+		String now = format.format(new DateTimeService().getCurrentJavaDateTime());
 		char chArray[] = now.toCharArray();
 		for (int i = 0; i < chArray.length; i++) 
 		{

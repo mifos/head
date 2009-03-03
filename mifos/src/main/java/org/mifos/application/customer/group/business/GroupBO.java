@@ -54,6 +54,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -315,7 +316,7 @@ public class GroupBO extends CustomerBO {
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
 		super.handleActiveForFirstTime(oldStatusId, newStatusId);
 		if (isActiveForFirstTime(oldStatusId, newStatusId))
-			this.setCustomerActivationDate(new Date());
+			this.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 	}
 	
 	protected void validateFieldsForUpdate(String displayName,

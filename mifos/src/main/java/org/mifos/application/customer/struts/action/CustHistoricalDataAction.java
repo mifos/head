@@ -29,6 +29,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -153,10 +154,10 @@ public class CustHistoricalDataAction extends BaseAction {
 					customerBO);
 			customerHistoricalDataEntity.setCreatedBy(customerBO
 					.getUserContext().getId());
-			customerHistoricalDataEntity.setCreatedDate(new java.util.Date());
+			customerHistoricalDataEntity.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
 		} else {
 			//oldLoanCycleNo = customerHistoricalDataEntity.getLoanCycleNumber();
-			customerHistoricalDataEntity.setUpdatedDate(new java.util.Date());
+			customerHistoricalDataEntity.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 			customerHistoricalDataEntity.setUpdatedBy(customerBO
 					.getUserContext().getId());
 		}

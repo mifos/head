@@ -49,6 +49,7 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public abstract class AccountTrxnEntity extends PersistentObject {
@@ -82,8 +83,8 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	private final AccountTrxnEntity relatedTrxn;
 
 	protected AccountTrxnEntity() {
-		createdDate = new Date(System.currentTimeMillis());
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		createdDate = new DateTimeService().getCurrentJavaDateTime();
+		trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
 		// Note: the GK mifos branch is using a TreeSet instead of HashSet here.
 		// Is there a good reason to use a TreeSet rather than HashSet?
 		financialTransactions = new HashSet<FinancialTransactionBO>();
@@ -105,8 +106,8 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 			Date dueDate, PersonnelBO personnel, CustomerBO customer,
 			Date actionDate, Money amount, String comments,
 			AccountTrxnEntity relatedTrxn) {
-		createdDate = new Date(System.currentTimeMillis());
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		createdDate = new DateTimeService().getCurrentJavaDateTime();
+		trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
 		financialTransactions = new HashSet<FinancialTransactionBO>();
 		this.account = accountPayment.getAccount();
 		this.accountActionEntity = accountActionEntity;

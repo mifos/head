@@ -76,6 +76,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.DateTimeService;
 
 public class AccountBO extends BusinessObject {
 
@@ -131,6 +132,19 @@ public class AccountBO extends BusinessObject {
     private FeePersistence feePersistence = null;
     private MasterPersistence masterPersistence = null;
     private PersonnelPersistence personnelPersistence = null;
+    private DateTimeService dateTimeService = null;
+
+
+    public DateTimeService getDateTimeService() {
+        if (null == dateTimeService) {
+            dateTimeService = new DateTimeService();
+        }
+        return dateTimeService;
+    }
+
+    public void setDateTimeService(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
+    }
 
     public AccountPersistence getAccountPersistence() {
         if (null == accountPersistence) {
@@ -363,7 +377,7 @@ public class AccountBO extends BusinessObject {
 	protected void addAccountFlag(AccountStateFlagEntity flagDetail) {
 		AccountFlagMapping flagMap = new AccountFlagMapping();
 		flagMap.setCreatedBy(this.getUserContext().getId());
-		flagMap.setCreatedDate(new Date());
+		flagMap.setCreatedDate(getDateTimeService().getCurrentJavaDateTime());
 		flagMap.setFlag(flagDetail);
 		this.accountFlags.add(flagMap);
 	}
@@ -554,7 +568,7 @@ public class AccountBO extends BusinessObject {
 							.getValue())
 					|| newStatusId.equals(AccountState.SAVINGS_CANCELLED
 							.getValue()))
-				this.setClosedDate(new Date(System.currentTimeMillis()));
+				this.setClosedDate(getDateTimeService().getCurrentJavaDateTime());
 			if(newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF
 					.getValue())) {
 				writeOff();
@@ -583,7 +597,7 @@ public class AccountBO extends BusinessObject {
 		AccountFeesEntity accountFees = getAccountFees(feeId);
 		if (accountFees != null) {
 			accountFees.changeFeesStatus(FeeStatus.INACTIVE,
-					new Date(System.currentTimeMillis()));
+					getDateTimeService().getCurrentJavaDateTime());
 			accountFees.setLastAppliedDate(null);
 		}
 	}
@@ -757,7 +771,7 @@ public class AccountBO extends BusinessObject {
 		// calculate the next date based on the customer's meeting object
 		CustomerMeetingEntity customerMeeting = customer.getCustomerMeeting();
 		if (customerMeeting != null) {
-			Date nextMeetingDate = customerMeeting.getMeeting().getFirstDate(new Date());
+			Date nextMeetingDate = customerMeeting.getMeeting().getFirstDate(getDateTimeService().getCurrentJavaDateTime());
 			return new java.sql.Date(nextMeetingDate.getTime());
 		} 
 		return new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime());
@@ -1035,7 +1049,7 @@ public class AccountBO extends BusinessObject {
 			accountFee.setFeeAmount(charge);
 			accountFee.setFeeStatus(FeeStatus.ACTIVE);
 			accountFee
-					.setStatusChangeDate(new Date(System.currentTimeMillis()));
+					.setStatusChangeDate(getDateTimeService().getCurrentJavaDateTime());
 		} else {
 			accountFee = new AccountFeesEntity(this, fee, charge,
 					FeeStatus.ACTIVE.getValue(), null, null);

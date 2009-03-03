@@ -58,6 +58,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -209,7 +210,7 @@ public class SavingsHelper {
 				customer, installmentId, new java.sql.Date(date.getTime()),
 				PaymentStatus.UNPAID, amount);
 		actionDate.setCreatedBy(userId);
-		actionDate.setCreatedDate(new Date());
+		actionDate.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
 		return actionDate;
 	}
 
@@ -227,7 +228,7 @@ public class SavingsHelper {
 			Money amount, PaymentTypeEntity paymentTypeEntity,
 			PersonnelBO createdBy) {
 		AccountPaymentEntity payment = new AccountPaymentEntity(account,
-				amount, null, null, paymentTypeEntity, new Date(System.currentTimeMillis()));
+				amount, null, null, paymentTypeEntity, new DateTimeService().getCurrentJavaDateTime());
 		if (createdBy != null)
 			payment.setCreatedBy(createdBy.getPersonnelId());
 		payment.setCreatedDate(getCurrentDate());

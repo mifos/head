@@ -51,6 +51,7 @@ import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
@@ -270,7 +271,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
 			setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
 			setPaymentStatus(PaymentStatus.PAID);
-			setPaymentDate(new Date(System.currentTimeMillis()));
+			setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
@@ -284,7 +285,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			setMiscFee(getMiscFeePaid());
 			setMiscPenalty(getMiscPenaltyPaid());
 			setPaymentStatus(PaymentStatus.PAID);
-			setPaymentDate(new Date(System.currentTimeMillis()));
+			setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {

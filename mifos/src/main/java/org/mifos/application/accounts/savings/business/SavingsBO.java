@@ -81,6 +81,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.config.AccountingRules;
@@ -394,7 +395,7 @@ public class SavingsBO extends AccountBO {
 			List<CustomFieldView> customFields) throws AccountException {
 		logger.debug("In SavingsBO::update(), accountId: " + getAccountId());
 		this.setUpdatedBy(userContext.getId());
-		this.setUpdatedDate(new Date());
+		this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
 		if (isDepositScheduleBeRegenerated()) {
 			if (this.recommendedAmount != null
 					&& recommendedAmount != null
@@ -668,7 +669,7 @@ public class SavingsBO extends AccountBO {
 			this.setInterIntCalcDate(null);
 			this.setSavingsBalance(new Money());
 			this.setInterestToBePosted(new Money());
-			this.setClosedDate(new Date(System.currentTimeMillis()));
+			this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
 			this
 					.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 							accountState, this.getAccountState(), loggedInUser,
@@ -1064,7 +1065,7 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				totalAmount, paymentData.getRecieptNum(), paymentData
 						.getRecieptDate(), new PaymentTypeEntity(paymentData
-						.getPaymentTypeId()), new Date(System.currentTimeMillis()));
+						.getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 		if (this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_INACTIVE))
 			try {
@@ -1197,7 +1198,7 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				totalAmount, accountPaymentData.getRecieptNum(),
 				accountPaymentData.getRecieptDate(), new PaymentTypeEntity(
-						accountPaymentData.getPaymentTypeId()), new Date(System.currentTimeMillis()));
+						accountPaymentData.getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
 		SavingsTrxnDetailEntity accountTrxnBO;
 		try {
 			accountTrxnBO = new SavingsTrxnDetailEntity(
@@ -1241,7 +1242,7 @@ public class SavingsBO extends AccountBO {
 	}
 
 	private void setValuesForActiveState() throws AccountException {
-		this.setActivationDate(new Date(new java.util.Date().getTime()));
+		this.setActivationDate(new DateTimeService().getCurrentJavaDateTime());
 		this.generateDepositAccountActions();
 		try {
 			Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());	
@@ -1438,7 +1439,7 @@ public class SavingsBO extends AccountBO {
 			}
 			addSavingsActivityDetails(buildSavingsActivity(lastPayment
 					.getAmount(), getSavingsBalance(),
-					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), new Date(),
+					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), new DateTimeService().getCurrentJavaDateTime(),
 					personnel));
 			logger
 					.debug("transaction count before adding reversal transactions: "
@@ -1624,7 +1625,7 @@ public class SavingsBO extends AccountBO {
 				accountAction.setPaymentStatus(PaymentStatus.UNPAID);
 			}
 			accountAction
-					.setPaymentDate(new java.sql.Date(new Date().getTime()));
+					.setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
 			getSavingsPerformance().setTotalDeposits(
 					getSavingsPerformance().getTotalDeposits().add(
 							accountTrxn.getDepositAmount()));
@@ -1731,8 +1732,7 @@ public class SavingsBO extends AccountBO {
 										accountTrxn.getDepositAmount()));
 						accountAction.setPaymentStatus(PaymentStatus.UNPAID);
 					}
-					accountAction.setPaymentDate(new java.sql.Date(new Date()
-							.getTime()));
+					accountAction.setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
 					getSavingsPerformance().setTotalDeposits(
 							getSavingsPerformance().getTotalDeposits().add(
 									accountTrxn.getDepositAmount()));
@@ -2010,7 +2010,7 @@ public class SavingsBO extends AccountBO {
 					.getPersonnel(getUserContext().getId());
 			addSavingsActivityDetails(buildSavingsActivity(
 					getTotalAmountDueForNextInstallment(), getSavingsBalance(),
-					AccountActionTypes.WAIVEOFFDUE.getValue(), new Date(), personnel));
+					AccountActionTypes.WAIVEOFFDUE.getValue(), new DateTimeService().getCurrentJavaDateTime(), personnel));
 			List<AccountActionDateEntity> nextInstallments = getNextInstallment();
 			for (AccountActionDateEntity accountActionDate : nextInstallments) {
 				((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
@@ -2028,7 +2028,7 @@ public class SavingsBO extends AccountBO {
 					.getPersonnel(getUserContext().getId());
 			addSavingsActivityDetails(buildSavingsActivity(
 					getTotalAmountInArrears(), getSavingsBalance(),
-					AccountActionTypes.WAIVEOFFOVERDUE.getValue(), new Date(),
+					AccountActionTypes.WAIVEOFFOVERDUE.getValue(), new DateTimeService().getCurrentJavaDateTime(),
 					personnel));
 			List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
 			for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
