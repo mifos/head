@@ -24,6 +24,13 @@
     <property file="${user.home}/.mifos/build.properties"/>
     <property file="${conf.dir}/build.properties"/>
 
+    <!-- Temporary support for HibernateTest (will be removed with the
+    completion of story 1405) -->
+    <property file="${mifos.conf}/HibernateTest.properties"/>
+    <property file="${env.MIFOS_CONF}/HibernateTest.properties"/>
+    <property file="${user.home}/.mifos/HibernateTest.properties"/>
+    <property file="${conf.dir}/HibernateTest.properties"/>
+
     <!--
     Which suite to run in the run_test target. Normally the whole suite,
     but can be set to a sub-suite or individual test, for example by specifying
