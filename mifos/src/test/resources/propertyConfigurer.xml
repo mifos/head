@@ -15,7 +15,6 @@
 
     <bean id="propertyConfigurer" 
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations" ref="pathToProperties"/>
     </bean>
 
