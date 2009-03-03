@@ -52,6 +52,8 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="ViewChangeLog"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<script>
@@ -80,7 +82,7 @@
 						<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="GroupUIResources" /> 
+											<span id="viewChangeLog.error.message"><html-el:errors bundle="GroupUIResources" /></span>  
 										</font>
 									</td>
 						</tr>
@@ -106,7 +108,7 @@
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
+							<td align="center"><html-el:button styleId="viewChangeLog.button.back" property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
 								styleClass="buttn" >
 								<mifos:mifoslabel name="Center.backtodetailspage"

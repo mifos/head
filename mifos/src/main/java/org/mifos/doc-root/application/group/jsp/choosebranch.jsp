@@ -51,6 +51,8 @@
   }
 </script>
 
+<input type="hidden" id="page.id" value="GroupChooseBranch"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -115,7 +117,7 @@
               <tr>
                 <td align="center">
 					  <html-el:submit   styleClass="cancelbuttn" >
-						  <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
+						  <mifos:mifoslabel styleId="choosebranch.button.cancel" name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 					  </html-el:submit>
                 </td></tr>
             </table>

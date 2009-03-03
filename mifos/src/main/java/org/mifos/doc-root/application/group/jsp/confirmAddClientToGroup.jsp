@@ -47,6 +47,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<input type="hidden" id="page.id" value="ConfirmAddClientToGroup"/>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -103,8 +104,8 @@
 						</tr>
 					</table>
 
-					<font class="fontnormalRedBold"><html-el:errors
-						bundle="ClientUIResources" /></font>
+					<font class="fontnormalRedBold"><span id="confirmAddClientToGroup.error.message"><html-el:errors
+						bundle="ClientUIResources" /></span></font>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><br>
@@ -127,11 +128,11 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center">&nbsp; <html-el:submit property="submitButton"
+							<td align="center">&nbsp; <html-el:submit styleId="confirmAddClientToGroup.button.submit" property="submitButton"
 								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="confirmAddClientToGroup.button.cancel"
 								onclick="goToCancelPage();" property="cancelButton"
 								styleClass="cancelbuttn" >
 								<mifos:mifoslabel name="button.cancel"

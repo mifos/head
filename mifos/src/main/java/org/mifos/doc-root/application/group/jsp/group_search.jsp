@@ -43,6 +43,9 @@
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<input type="hidden" id="page.id" value="GroupSearch"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -116,8 +119,8 @@ function goToCancelPage()
             </table>
               <table width="98%" border="0" cellspacing="0" cellpadding="0">
               <tr><logic:messagesPresent>
-					<td><br><font class="fontnormalRedBold"><html-el:errors
-						bundle="GroupUIResources" /></font><br></td>
+					<td><br><font class="fontnormalRedBold"><span id="group_search.error.message"><html-el:errors
+						bundle="GroupUIResources" /></span></font><br></td>
 					</logic:messagesPresent>
 				</tr>
                </table>                            
@@ -138,21 +141,22 @@ function goToCancelPage()
                 </tr>
                 <tr class="fontnormal">
                   <td align="right">
+                  	<span id="group_search.label.search"
                   	<fmt:message key="Group.groupname">
                   		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
-                  	</fmt:message></td>
+                  	</fmt:message></span></td>
                   <td>
-                  	<html-el:text property="searchString" maxlength="200"/>
+                  	<html-el:text styleId="group_search.input.search" property="searchString" maxlength="200"/>
                   </td>
                 </tr>
                 <tr class="fontnormal">
                   <td width="28%">&nbsp; </td>
                   <td width="72%">      
-      <html-el:submit styleClass="buttn">
+      <html-el:submit  styleId="group_search.button.proceed" styleClass="buttn">
 	      <mifos:mifoslabel name="button.proceed" bundle="GroupUIResources"></mifos:mifoslabel>
       </html-el:submit>
 &nbsp;
-      <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+      <html-el:button styleId="group_search.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
             <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
       </html-el:button>
                   </td>
@@ -164,7 +168,7 @@ function goToCancelPage()
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupHierarchyRequired')}" />
                   
                   <c:if test="${groupHierarchyRequired eq 'No'}">
-                   <a href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0&amp;currentFlowKey=${requestScope.currentFlowKey}"> 
+                   <a id="group_search.link.membershipNotRequired" href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0&amp;currentFlowKey=${requestScope.currentFlowKey}"> 
                   <br>
                   	<fmt:message key="Group.membershipNotRequired">
                     	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param> 

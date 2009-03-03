@@ -41,6 +41,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+
+<input type="hidden" id="page.id" value="PreviewEditGroupDetails"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
@@ -102,7 +105,7 @@ function meetingpopup(){
               </tr>
               <tr>
    				<td>
-   				<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources"/></font>
+   				<font class="fontnormalRedBold"><span id="preview_editgroupdetails.error.message"><html-el:errors bundle="GroupUIResources"/></span></font>
 				</td>
 			</tr>
             </table>
@@ -275,7 +278,7 @@ function meetingpopup(){
     			</c:forEach> 
 		      <br>
 		      </c:if>
-	<html-el:button property="editInfo" styleClass="insidebuttn"  onclick="GoToEditPage()">
+	<html-el:button styleId="preview_editgroupdetails.button.edit" property="editInfo" styleClass="insidebuttn"  onclick="GoToEditPage()">
 		<fmt:message key="Group.editInformation">
 				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 				</fmt:message> 
@@ -292,10 +295,10 @@ function meetingpopup(){
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit property="submitBtn"  styleClass="buttn">
+                <html-el:submit  styleId="preview_editgroupdetails.button.submit" property="submitBtn"  styleClass="buttn">
 			       <mifos:mifoslabel name="button.submit" bundle="GroupUIResources"></mifos:mifoslabel>
                 </html-el:submit>
-                <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
+                <html-el:button styleId="preview_editgroupdetails.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
 	                   <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                 </html-el:button>
                 </td>

@@ -50,6 +50,9 @@
 </script>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
+
+<input type="hidden" id="page.id" value="GroupBranchList"/>
+
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
 <html-el:form action="groupCustAction.do?method=preview">
@@ -128,7 +131,7 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+                    <html-el:button styleId="branchlist.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                     </html-el:button>
                   </td>

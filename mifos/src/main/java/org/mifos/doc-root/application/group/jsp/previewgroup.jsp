@@ -44,6 +44,9 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<input type="hidden" id="page.id" value="PreviewGroup"/>
+
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -154,7 +157,7 @@
                 </tr>
                 <tr>
    					<td>
-   					<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources"/></font>
+   					<font class="fontnormalRedBold"><span id="previewgroup.error.message"><html-el:errors bundle="GroupUIResources"/></span></font>
 					</td>
 				</tr>
               </table>
@@ -441,7 +444,7 @@
 					</c:forEach>
 				<br>  <br>                  
                       
-              <html-el:button property="editInfo" styleClass="insidebuttn"  onclick="GoToEditPage()">
+              <html-el:button styleId="previewgroup.button.edit" property="editInfo" styleClass="insidebuttn"  onclick="GoToEditPage()">
 					<fmt:message key="Group.editInformation">
 				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 				</fmt:message>
@@ -458,24 +461,24 @@
                 </tr>
                 <tr>
                  <td align="center">
-                  <html-el:submit property="submitBtn1" onclick="setGroupStatus('${CustomerStatus.GROUP_PARTIAL.value}')"  styleClass="buttn">
+                  <html-el:submit  styleId="previewgroup.button.saveForLater" property="submitBtn1" onclick="setGroupStatus('${CustomerStatus.GROUP_PARTIAL.value}')"  styleClass="buttn">
                   	<mifos:mifoslabel name="button.saveforlater" bundle="GroupUIResources"></mifos:mifoslabel>
                   </html-el:submit>
 &nbsp;
 			<c:choose>
 		    	<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined') == true}">
-				 <html-el:button property="submitBtn2" styleClass="buttn"   onclick="setGroupStatus('${CustomerStatus.GROUP_PENDING.value}')" >
+				 <html-el:button styleId="previewgroup.button.submitForApproval" property="submitBtn2" styleClass="buttn"   onclick="setGroupStatus('${CustomerStatus.GROUP_PENDING.value}')" >
 				 	<mifos:mifoslabel name="button.submitforapproval" bundle="GroupUIResources"></mifos:mifoslabel>
 				 </html-el:button>
 				</c:when>
 				<c:otherwise>	 
-				 <html-el:button property="submitBtn2" styleClass="buttn"  onclick="setGroupStatus('${CustomerStatus.GROUP_ACTIVE.value}')" >
+				 <html-el:button styleId="previewgroup.button.approve" property="submitBtn2" styleClass="buttn"  onclick="setGroupStatus('${CustomerStatus.GROUP_ACTIVE.value}')" >
 				 	<mifos:mifoslabel name="button.approved" bundle="GroupUIResources"></mifos:mifoslabel>
 				 </html-el:button>
 				</c:otherwise>		
 			</c:choose>					 
 				 &nbsp;
-                 <html-el:button property="cancelBtn"  styleClass="cancelbuttn"  onclick="goToCancelPage()">
+                 <html-el:button styleId="previewgroup.button.cancel" property="cancelBtn"  styleClass="cancelbuttn"  onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                  </html-el:button>
                   </td></tr>

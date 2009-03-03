@@ -44,6 +44,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<input type="hidden" id="page.id" value="ConfirmBranchTransfer"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
@@ -86,8 +87,7 @@
               </tr>
              <tr>
    				<td>
-   				<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources"/></font>
-				</td>
+<font class="fontnormalRedBold"><span id="confirmbranchtransfer.error.message"><html-el:errors bundle="GroupUIResources"/></span></font>				</td>
 			</tr>
               
             </table>
@@ -120,11 +120,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-	                <html-el:submit property="submitBtn" styleClass="buttn" >
+	                <html-el:submit styleId="confirmbranchtransfer.button.submit" property="submitBtn" styleClass="buttn" >
 		                <mifos:mifoslabel name="button.submit" bundle="GroupUIResources"></mifos:mifoslabel>
 	                </html-el:submit>
         	        	&nbsp; &nbsp;
-    	            <html-el:button property="cancelBtn"  styleClass="cancelbuttn"  onclick="goToCancelPage()">
+    	            <html-el:button styleId="confirmbranchtransfer.button.cancel" property="cancelBtn"  styleClass="cancelbuttn"  onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                     </html-el:button>
                 </td></tr>

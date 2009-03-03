@@ -52,6 +52,9 @@ function goToCancelPage()
     groupCustActionForm.submit();
 }
 </script>
+
+<input type="hidden" id="page.id" value="GroupSearchResults"/>
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -143,15 +146,16 @@ function goToCancelPage()
 						height="6"></td>
 				</tr>
 				<tr><logic:messagesPresent>
-					<td><font class="fontnormalRedBold"><html-el:errors
-						bundle="GroupUIResources" /></font></td>
+					<td><font class="fontnormalRedBold"><span id="group_search_results.error.message"><html-el:errors
+						bundle="GroupUIResources" /></span></font></td>
 					</logic:messagesPresent>
 				</tr>
 			</table><br>
 			<table width="96%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td><span class="fontnormal"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />  <mifos:mifoslabel name="Group.name" /></span> <html-el:text
-						property="searchString" maxlength="200"/>  <html-el:submit
+					<td><span class="fontnormal" id="group_search_results.label.search"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />  <mifos:mifoslabel name="Group.name" /></span> <html-el:text
+						styleId="group_search_results.input.search"
+						property="searchString" maxlength="200"/>  <html-el:submit styleId="group_search_results.button.search"
 						styleClass="buttn" >
 						<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>
 					</html-el:submit></td>
@@ -165,7 +169,7 @@ function goToCancelPage()
 			<br>
 			<table width="96%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td align="center"><html-el:button property="cancelBtn"
+					<td align="center"><html-el:button styleId="group_search_results.button.cancel" property="cancelBtn"
 						styleClass="cancelbuttn"
 						onclick="goToCancelPage()">
 						<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>

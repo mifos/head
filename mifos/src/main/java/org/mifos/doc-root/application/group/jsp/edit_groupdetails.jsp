@@ -47,6 +47,8 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<input type="hidden" id="page.id" value="EditGroupDetails"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -103,7 +105,7 @@
 							</tr>
 							<tr>
 								<td>
-									<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources" /></font>
+									<font class="fontnormalRedBold"><span id="edit_groupdetails.error.message"><html-el:errors bundle="GroupUIResources" /></span></font>
 								</td>
 							</tr>
 						</table>
@@ -120,10 +122,12 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="25%" align="right">
+									<span id="edit_groupdetails.label.displayName">
 									<mifos:mifoslabel name="Group.name" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
+									</span>
 								</td>
 								<td width="75%">
-									<mifos:mifosalphanumtext property="displayName" />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.displayName" property="displayName" />
 								</td>
 							</tr>
 							<c:set var ="CenterHierarchy" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" />
@@ -149,7 +153,9 @@
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="28%">
-												<mifos:mifosalphanumtext property="externalId" keyhm="Group.ExternalId" />
+												<span id="edit_groupdetails.label.externalId">
+												<mifos:mifosalphanumtext styleId="edit_groupdetails.input.externalId" property="externalId" keyhm="Group.ExternalId" />
+												</span>
 											</td>
 											<td width="72%" class="fontnormal8pt">
 												<mifos:mifoslabel keyhm="Group.ExternalId" name="Center.ExternalIdInfo" />
@@ -276,66 +282,82 @@
 
 							<tr class="fontnormal">
 								<td width="25%" align="right">
+									<span id="edit_groupdetails.label.address1">
 									<mifos:mifoslabel keyhm="Group.Address1" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS1}" />
+									</span>
 								</td>
 								<td width="75%">
-									<mifos:mifosalphanumtext keyhm="Group.Address1" name="groupCustActionForm" property="address.line1" />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.address1" keyhm="Group.Address1" name="groupCustActionForm" property="address.line1" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.address2">
 									<mifos:mifoslabel keyhm="Group.Address2" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS2}" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.Address2" name="groupCustActionForm" property="address.line2"  />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.address2" keyhm="Group.Address2" name="groupCustActionForm" property="address.line2"  />
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.address3">
 									<mifos:mifoslabel keyhm="Group.Address3" isColonRequired="Yes" name="${ConfigurationConstants.ADDRESS3}" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.Address3" name="groupCustActionForm" property="address.line3" />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.address3" keyhm="Group.Address3" name="groupCustActionForm" property="address.line3" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.city">
 									<mifos:mifoslabel keyhm="Group.City" isColonRequired="Yes" name="${ConfigurationConstants.CITY}" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.City" name="groupCustActionForm" property="address.city"/>
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.city" keyhm="Group.City" name="groupCustActionForm" property="address.city"/>
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.state">
 									<mifos:mifoslabel keyhm="Group.State" isColonRequired="Yes" name="${ConfigurationConstants.STATE}" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.State" name="groupCustActionForm" property="address.state" />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.state" keyhm="Group.State" name="groupCustActionForm" property="address.state" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.country">
 									<mifos:mifoslabel keyhm="Group.Country" name="Group.country" bundle="GroupUIResources" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.Country" name="groupCustActionForm" property="address.country" />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.country" keyhm="Group.Country" name="groupCustActionForm" property="address.country" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.postalCode">
 									<mifos:mifoslabel keyhm="Group.PostalCode" isColonRequired="Yes" name="${ConfigurationConstants.POSTAL_CODE}" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.PostalCode" name="groupCustActionForm" property="address.zip" />
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.postalCode" keyhm="Group.PostalCode" name="groupCustActionForm" property="address.zip" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
+									<span id="edit_groupdetails.label.telephone">
 									<mifos:mifoslabel keyhm="Group.PhoneNumber" name="Group.telephone" bundle="GroupUIResources" />
+									</span>
 								</td>
 								<td>
-									<mifos:mifosalphanumtext keyhm="Group.PhoneNumber" name="groupCustActionForm" property="address.phoneNumber"/>
+									<mifos:mifosalphanumtext styleId="edit_groupdetails.input.telephone" keyhm="Group.PhoneNumber" name="groupCustActionForm" property="address.phoneNumber"/>
 								</td>
 							</tr>
 
@@ -362,15 +384,15 @@
 									<c:if test="${cfdef.fieldId==cf.fieldId}">
 										<tr class="fontnormal">
 											<td width="25%" align="right">
-												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources" isColonRequired="Yes"></mifos:mifoslabel>
+												<span id="edit_groupdetails.label.customField"><mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources" isColonRequired="Yes"></mifos:mifoslabel></span>
 												
 											</td>
 											<td width="75%">
 												<c:if test="${cfdef.fieldType == 1}">
-													<mifos:mifosnumbertext name="groupCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
+													<mifos:mifosnumbertext styleId="edit_groupdetails.input.customField" name="groupCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 												</c:if>
 												<c:if test="${cfdef.fieldType == 2}">
-													<mifos:mifosalphanumtext name="groupCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
+													<mifos:mifosalphanumtext styleId="edit_groupdetails.input.customField" name="groupCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 												</c:if>
 												<c:if test="${cfdef.fieldType == 3}">
 													<date:datetag property="customField[${ctr}].fieldValue" />
@@ -398,11 +420,11 @@
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit  styleClass="buttn" >
+									<html-el:submit styleId="edit_groupdetails.button.preview" styleClass="buttn" >
 										<mifos:mifoslabel name="button.preview" bundle="GroupUIResources"></mifos:mifoslabel>
 									</html-el:submit>
 									&nbsp; &nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
+									<html-el:button styleId="edit_groupdetails.button.cancel" property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
 										<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 									</html-el:button>
 								</td>

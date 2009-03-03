@@ -43,6 +43,9 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<input type="hidden" id="page.id" value="GroupSearchAddMember"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -106,23 +109,24 @@
 							<td colspan="2" align="right">&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan="2"><font class="fontnormalRedBold"><html-el:errors
-								bundle="GroupUIResources" /></font></td>
+							<td colspan="2"><font class="fontnormalRedBold"><span id="group_search_addMember.error.message"><html-el:errors
+								bundle="GroupUIResources" /></span></font></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right">
+								<span id="group_search_addMember.label.search">
 								<fmt:message key="Group.groupname">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
-								</fmt:message>:</td>
-							<td><html-el:text property="searchString" maxlength="200" />
+								</fmt:message></span>:</td>
+							<td><html-el:text styleId="group_search_addMember.input.search" property="searchString" maxlength="200" />
 							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td width="20%">&nbsp;</td>
 							<td width="80%"><br>
-							<html-el:submit styleClass="buttn" >
+							<html-el:submit styleId="group_search_addMember.button.search" styleClass="buttn" >
 								<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
+							</html-el:submit> &nbsp; <html-el:button styleId="group_search_addMember.button.cancel" property="cancelBtn"
 								styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>

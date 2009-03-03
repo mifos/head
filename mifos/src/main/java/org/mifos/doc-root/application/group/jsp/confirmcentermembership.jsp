@@ -44,6 +44,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<input type="hidden" id="page.id" value="ConfirmCenterMembership"/>
 
 <tiles:insert definition=".withmenu">
  <tiles:put name="body" type="string">
@@ -93,7 +94,7 @@
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
    					<td>
-   					<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources"/></font>
+   					<font class="fontnormalRedBold"><span id="confirmcentermembership.error.message"><html-el:errors bundle="GroupUIResources"/></span></font>
 					</td>
 				</tr>
                 <tr>
@@ -117,11 +118,11 @@
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
                 <tr class="fontnormal">
                   <td width="80%" align="center"><br>
-                    <html-el:submit property="submitBtn" styleClass="buttn" >
+                    <html-el:submit styleId="confirmcentermembership.button.submit" property="submitBtn" styleClass="buttn" >
 		                <mifos:mifoslabel name="button.submit" bundle="GroupUIResources"></mifos:mifoslabel>
 	                </html-el:submit>
         	        	&nbsp; &nbsp;
-    	            <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+    	            <html-el:button styleId="confirmcentermembership.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                     </html-el:button>
                   </td>

@@ -51,6 +51,9 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<input type="hidden" id="page.id" value="DeleteGroupMembership"/>
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script>
@@ -101,8 +104,8 @@
 					</tr>
 				<tr>
 					<logic:messagesPresent>
-					<td><br><font class="fontnormalRedBold"><html-el:errors
-							bundle="GroupUIResources" /></font></td>
+					<td><br><font class="fontnormalRedBold"><span id="deletegroupmembership.error.message"><html-el:errors
+							bundle="GroupUIResources" /></span></font></td>
 					</logic:messagesPresent>
 				</tr>
 				
@@ -133,9 +136,10 @@
 
 						<tr>
 							<td width="7%" align="left" valign="top" class="fontnormalbold">
+							<span id="deletegroupmembership.label.note">
 							<mifos:mifoslabel name="Group.note"
-								bundle="GroupUIResources"></mifos:mifoslabel></td>
-							<td width="93%" align="left" valign="top"><html-el:textarea
+								bundle="GroupUIResources"></mifos:mifoslabel></span></td>
+							<td width="93%" align="left" valign="top"><html-el:textarea styleId="deletegroupmembership.input.note"
 								property="comment" cols="37" style="width:320px; height:110px;">
 							</html-el:textarea></td>
 						</tr>
@@ -161,10 +165,10 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="deletegroupmembership.button.submit" styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button onclick="goToCancelPage();"
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="deletegroupmembership.button.cancel" onclick="goToCancelPage();"
 								property="cancelButton" styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>

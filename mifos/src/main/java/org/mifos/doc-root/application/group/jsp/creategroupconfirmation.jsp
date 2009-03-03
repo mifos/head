@@ -42,6 +42,9 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<input type="hidden" id="page.id" value="CreateGroupConfirmation"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -60,7 +63,7 @@
 						</fmt:message>                
                 <br><br>
                 <font class="fontnormalRedBold">
-   					<html-el:errors bundle="PersonnelUIResources"/>
+   					<span id="creategroupconfirmation.error.message"><html-el:errors bundle="PersonnelUIResources"/></span>
    				</font>
                   
                 </span></td>
@@ -92,7 +95,7 @@
                         </c:otherwise>
                      </c:choose>
                    
-	           		<a href="groupCustAction.do?method=get&globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+	           		<a id="creategroupconfirmation.link.viewGroupDetail" href="groupCustAction.do?method=get&globalCustNum=${sessionScope.groupCustActionForm.globalCustNum}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
 	                    <fmt:message key="Group.viewGroupDetail">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 						</fmt:message>
@@ -111,14 +114,14 @@
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 								</fmt:message>
                          <span class="fontnormal"><br>
-                            <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+                            <html-el:link styleId="creategroupconfirmation.link.newSavingsAccount" href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
                             	
                             	<fmt:message key="Group.createAnAccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>
                              </html-el:link><br>                             
                              <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
-	                            <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
+	                            <html-el:link styleId="creategroupconfirmation.link.newLoanAccount" href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.groupCustActionForm.customerId}&recordOfficeId=${branchId}&recordLoanOfficerId=${userId}&randomNUm=${sessionScope.randomNUm}">
 	                            	
 	                            	<fmt:message key="Group.createAnAccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
@@ -129,7 +132,7 @@
                          </span>
                       </c:if>
                       <span class="fontnormal">
-                          <a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+                          <a id="creategroupconfirmation.link.createNewAccount" href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
                      
                             	<fmt:message key="Group.createNewAccount">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>

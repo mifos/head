@@ -44,6 +44,8 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
+<input type="hidden" id="page.id" value="GroupSearchAddClient"/>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -105,11 +107,12 @@
                 </tr>
                 <tr class="fontnormal">
                   <td width="20%" align="right">
+                  <span id="group_search_add_client.label.search">
                   <fmt:message key="Group.groupname">
                   	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
-                  </fmt:message></td>
-                  <td width="80%"><html-el:text property="searchString" maxlength="200"/>
-	                  <html-el:submit styleClass="buttn" >
+                  </fmt:message></span></td>
+                  <td width="80%"><html-el:text styleId="group_search_add_client.input.search" property="searchString" maxlength="200"/>
+	                  <html-el:submit styleId="group_search_add_client.button.search" styleClass="buttn" >
 	                  	<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>
 	                  </html-el:submit>
 				  </td>
@@ -120,7 +123,7 @@
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
    					<td>
-   						<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources"/></font>
+   						<font class="fontnormalRedBold"><span id="group_search_add_client.error.message"><html-el:errors bundle="GroupUIResources"/></span></font>
 					</td>
 				</tr>
                 <tr>
@@ -133,7 +136,7 @@
               <table width="96%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center">
-                  <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+                  <html-el:button styleId="group_search_add_client.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	    	        <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 		    	  </html-el:button>
                   </td>
