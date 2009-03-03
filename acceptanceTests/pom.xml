@@ -276,7 +276,7 @@
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetahTestFramework</artifactId>
+            <artifactId>cheetah-testFramework</artifactId>
             <version>0.0.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
