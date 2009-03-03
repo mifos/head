@@ -15,12 +15,12 @@ import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionF
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
 
-public class TestLoanAccountActionIndividualLoans extends MifosTestCase {
+public class TestLoanAccountActionIndividualLoans extends MifosIntegrationTest {
 
 
 	public TestLoanAccountActionIndividualLoans() throws SystemException, ApplicationException {

@@ -52,7 +52,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -72,7 +72,7 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
 
-public class TestCustomerBO extends MifosTestCase {
+public class TestCustomerBO extends MifosIntegrationTest {
 	public TestCustomerBO() throws SystemException, ApplicationException {
         super();
     }

@@ -12,7 +12,7 @@ import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -22,7 +22,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestOfficePersistence extends MifosTestCase {
+public class TestOfficePersistence extends MifosIntegrationTest {
 	public TestOfficePersistence() throws SystemException, ApplicationException {
         super();
     }

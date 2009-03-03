@@ -3,7 +3,7 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
@@ -13,7 +13,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
-public class FieldConfigTest extends MifosTestCase{
+public class FieldConfigTest extends MifosIntegrationTest{
 	
 	public FieldConfigTest() throws SystemException, ApplicationException {
         super();

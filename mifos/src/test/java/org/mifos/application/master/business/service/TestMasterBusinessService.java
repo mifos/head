@@ -22,7 +22,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -31,7 +31,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestMasterBusinessService extends MifosTestCase {
+public class TestMasterBusinessService extends MifosIntegrationTest {
 
 	public TestMasterBusinessService() throws SystemException, ApplicationException {
         super();

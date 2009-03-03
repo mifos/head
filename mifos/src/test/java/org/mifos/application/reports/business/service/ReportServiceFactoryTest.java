@@ -19,11 +19,11 @@
  */
 package org.mifos.application.reports.business.service;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class ReportServiceFactoryTest extends MifosTestCase {
+public class ReportServiceFactoryTest extends MifosIntegrationTest {
 	public ReportServiceFactoryTest() throws SystemException, ApplicationException {
         super();
     }

@@ -33,7 +33,7 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -45,7 +45,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.config.FiscalCalendarRules;
 
-public class TestHolidayUtils extends MifosTestCase {
+public class TestHolidayUtils extends MifosIntegrationTest {
 	
 	public TestHolidayUtils() throws SystemException, ApplicationException {
         super();

@@ -11,14 +11,14 @@ import org.hibernate.Transaction;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.reports.persistence.SelectionItemPersistence;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
-public class SelectionItemTest extends MifosTestCase {
+public class SelectionItemTest extends MifosIntegrationTest {
 	public SelectionItemTest() throws SystemException, ApplicationException {
         super();
     }

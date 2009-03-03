@@ -17,7 +17,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -27,7 +27,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class GroupBusinessServiceTest extends MifosTestCase {
+public class GroupBusinessServiceTest extends MifosIntegrationTest {
 	public GroupBusinessServiceTest() throws SystemException, ApplicationException {
         super();
     }

@@ -5,13 +5,13 @@ import java.util.Locale;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.group.util.helpers.GroupSearchResults;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCustomerHelpers extends MifosTestCase {
+public class TestCustomerHelpers extends MifosIntegrationTest {
 
 	public TestCustomerHelpers() throws SystemException, ApplicationException {
         super();

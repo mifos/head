@@ -31,7 +31,7 @@ import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -40,7 +40,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
-public class TestBulkEntryView extends MifosTestCase {
+public class TestBulkEntryView extends MifosIntegrationTest {
 
 	public TestBulkEntryView() throws SystemException, ApplicationException {
         super();

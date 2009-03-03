@@ -19,7 +19,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
@@ -29,7 +29,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestPortfolioAtRiskHelper extends MifosTestCase {
+public class TestPortfolioAtRiskHelper extends MifosIntegrationTest {
 
 	public TestPortfolioAtRiskHelper() throws SystemException, ApplicationException {
         super();

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
@@ -15,7 +15,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TaskPersistenceTest extends MifosTestCase {
+public class TaskPersistenceTest extends MifosIntegrationTest {
 
 	public TaskPersistenceTest() throws SystemException, ApplicationException {
         super();

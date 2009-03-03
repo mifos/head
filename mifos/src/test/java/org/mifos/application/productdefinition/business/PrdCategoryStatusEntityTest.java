@@ -5,12 +5,12 @@ import java.util.Set;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class PrdCategoryStatusEntityTest extends MifosTestCase {
+public class PrdCategoryStatusEntityTest extends MifosIntegrationTest {
 	
 	public PrdCategoryStatusEntityTest() throws SystemException, ApplicationException {
         super();

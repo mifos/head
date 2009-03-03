@@ -1,7 +1,7 @@
 package org.mifos.framework.struts.tags;
 
 import org.dom4j.DocumentException;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -9,7 +9,7 @@ import org.mifos.framework.exceptions.SystemException;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
-public class MifosLabelTagTest extends MifosTestCase {
+public class MifosLabelTagTest extends MifosIntegrationTest {
 	
 	public MifosLabelTagTest() throws SystemException, ApplicationException {
         super();

@@ -4,11 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestHibernateHelper extends MifosTestCase {
+public class TestHibernateHelper extends MifosIntegrationTest {
 
 	public TestHibernateHelper() throws SystemException, ApplicationException {
         super();

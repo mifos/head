@@ -2,11 +2,11 @@ package org.mifos.application.customer.persistence;
 
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class CustomerLoanCycleFetchTest extends MifosTestCase {
+public class CustomerLoanCycleFetchTest extends MifosIntegrationTest {
 	
 	public CustomerLoanCycleFetchTest() throws SystemException, ApplicationException {
         super();

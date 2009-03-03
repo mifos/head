@@ -4,11 +4,11 @@ import javax.servlet.jsp.JspException;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import org.dom4j.DocumentException;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class MifosImageTagTest extends MifosTestCase{
+public class MifosImageTagTest extends MifosIntegrationTest{
 	public MifosImageTagTest() throws SystemException, ApplicationException {
         super();
     }

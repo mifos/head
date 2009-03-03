@@ -21,11 +21,11 @@ package org.mifos.framework.components.configuration.persistence;
 
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class ConfigurationPersistenceTest extends MifosTestCase {
+public class ConfigurationPersistenceTest extends MifosIntegrationTest {
 	
 	public ConfigurationPersistenceTest() throws SystemException, ApplicationException {
         super();

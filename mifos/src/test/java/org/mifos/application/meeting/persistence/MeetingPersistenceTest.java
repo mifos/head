@@ -7,12 +7,12 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class MeetingPersistenceTest extends MifosTestCase{
+public class MeetingPersistenceTest extends MifosIntegrationTest{
 
 	public MeetingPersistenceTest() throws SystemException, ApplicationException {
         super();

@@ -4,14 +4,14 @@ import java.io.FileNotFoundException;
 
 import junitx.framework.ObjectAssert;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class HibernateTest extends MifosTestCase {
+public class HibernateTest extends MifosIntegrationTest {
 
 	public HibernateTest() throws SystemException, ApplicationException {
         super();

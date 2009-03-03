@@ -20,14 +20,14 @@
 package org.mifos.application.reports.business.service;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
-public class BranchReportConfigServiceTest extends MifosTestCase {
+public class BranchReportConfigServiceTest extends MifosIntegrationTest {
 
 	public BranchReportConfigServiceTest() throws SystemException, ApplicationException {
         super();

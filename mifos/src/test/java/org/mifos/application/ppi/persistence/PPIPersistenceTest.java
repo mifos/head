@@ -26,7 +26,7 @@ import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -36,7 +36,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PPIPersistenceTest extends MifosTestCase {
+public class PPIPersistenceTest extends MifosIntegrationTest {
 	public PPIPersistenceTest() throws SystemException, ApplicationException {
         super();
     }

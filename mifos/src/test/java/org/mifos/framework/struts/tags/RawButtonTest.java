@@ -1,10 +1,10 @@
 package org.mifos.framework.struts.tags;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class RawButtonTest extends MifosTestCase {
+public class RawButtonTest extends MifosIntegrationTest {
 
 	public RawButtonTest() throws SystemException, ApplicationException {
         super();

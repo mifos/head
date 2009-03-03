@@ -1,11 +1,11 @@
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class TestFieldConfigurationEntity extends MifosTestCase{
+public class TestFieldConfigurationEntity extends MifosIntegrationTest{
 
 	public TestFieldConfigurationEntity() throws SystemException, ApplicationException {
         super();

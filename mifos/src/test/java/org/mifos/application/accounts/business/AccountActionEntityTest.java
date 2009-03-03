@@ -10,7 +10,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.TestDatabase;
@@ -19,7 +19,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 /**
  * Also see {@link TestAccountActionEntity}.
  */
-public class AccountActionEntityTest extends MifosTestCase {
+public class AccountActionEntityTest extends MifosIntegrationTest {
 
 	public AccountActionEntityTest() throws SystemException, ApplicationException {
         super();

@@ -20,11 +20,11 @@
 package org.mifos.application.reports.business.validator;
 
 import org.mifos.application.reports.business.ReportParameterForm;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class ReportParameterValidatorFactoryTest extends MifosTestCase {
+public class ReportParameterValidatorFactoryTest extends MifosIntegrationTest {
 
 	public ReportParameterValidatorFactoryTest() throws SystemException, ApplicationException {
         super();

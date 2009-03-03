@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class FundBusinessServiceTest extends MifosTestCase {
+public class FundBusinessServiceTest extends MifosIntegrationTest {
 
 	public FundBusinessServiceTest() throws SystemException, ApplicationException {
         super();

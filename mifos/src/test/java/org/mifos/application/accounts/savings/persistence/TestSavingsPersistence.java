@@ -51,7 +51,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -63,7 +63,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestSavingsPersistence extends MifosTestCase {
+public class TestSavingsPersistence extends MifosIntegrationTest {
 
 	public TestSavingsPersistence() throws SystemException, ApplicationException {
         super();

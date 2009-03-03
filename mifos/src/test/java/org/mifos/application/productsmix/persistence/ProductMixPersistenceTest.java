@@ -5,14 +5,14 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.util.ProductMixTestHelper;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class ProductMixPersistenceTest extends MifosTestCase {
+public class ProductMixPersistenceTest extends MifosIntegrationTest {
 
 	public ProductMixPersistenceTest() throws SystemException, ApplicationException {
         super();

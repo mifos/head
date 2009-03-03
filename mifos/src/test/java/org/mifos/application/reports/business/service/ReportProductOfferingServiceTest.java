@@ -28,7 +28,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConfigServiceInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -36,7 +36,7 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
 
-public class ReportProductOfferingServiceTest extends MifosTestCase {
+public class ReportProductOfferingServiceTest extends MifosIntegrationTest {
 
 	public ReportProductOfferingServiceTest() throws SystemException, ApplicationException {
         super();

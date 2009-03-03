@@ -3,14 +3,14 @@ package org.mifos.framework.components.fieldConfiguration.persistence;
 import java.util.List;
 
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestFieldConfigurationPersistence extends MifosTestCase {
+public class TestFieldConfigurationPersistence extends MifosIntegrationTest {
 	
 	public TestFieldConfigurationPersistence() throws SystemException, ApplicationException {
         super();

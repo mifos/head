@@ -1,12 +1,12 @@
 package org.mifos.application.personnel.business;
 
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestPersonnelStatusEntity extends MifosTestCase {
+public class TestPersonnelStatusEntity extends MifosIntegrationTest {
 
 	public TestPersonnelStatusEntity() throws SystemException, ApplicationException {
         super();

@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
-public class TestConfigurationPersistence extends MifosTestCase {
+public class TestConfigurationPersistence extends MifosIntegrationTest {
 
 	public TestConfigurationPersistence() throws SystemException, ApplicationException {
         super();

@@ -29,7 +29,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.config.Localization;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -43,7 +43,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestPersonnelBO extends MifosTestCase {
+public class TestPersonnelBO extends MifosIntegrationTest {
 
 	public TestPersonnelBO() throws SystemException, ApplicationException {
         super();

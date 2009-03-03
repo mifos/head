@@ -1,7 +1,7 @@
 package org.mifos.application.accounts.business;
 
 import org.hibernate.Session;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -9,7 +9,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 /**
  * Also see {@link AccountActionEntityTest}.
  */
-public class TestAccountActionEntity extends MifosTestCase {	
+public class TestAccountActionEntity extends MifosIntegrationTest {	
 	
 	public TestAccountActionEntity() throws SystemException, ApplicationException {
         super();

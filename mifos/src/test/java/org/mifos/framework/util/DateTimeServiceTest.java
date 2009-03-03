@@ -46,13 +46,13 @@ public class DateTimeServiceTest {
     
 
     @Test
-    public void testGetCurrentDateTime() {
+    public void testGetCurrentJavaDateTime() {
         DateTimeService dateTimeService = new DateTimeService();
         DateTime systemDateTime = new DateTime(System.currentTimeMillis());
         DateTime timeServiceDateTime = new DateTime(dateTimeService.getCurrentJavaDateTime()); 
         Duration duration = new Duration(systemDateTime,timeServiceDateTime);
         // the dates returned should be equal or very close
-        Assert.assertTrue(duration.getMillis() < ONE_SECOND);
+        Assert.assertTrue("Expected the java date time returned by DateTimeService to be equal or close to the actual system time", duration.getMillis() < ONE_SECOND);
     }
 
     @Test 
@@ -62,9 +62,11 @@ public class DateTimeServiceTest {
         dateTimeService.setCurrentDateTime(someDateTime);
         // The date that comes back should be as set
         Assert.assertEquals(someDateTime.toLocalDate(), dateTimeService.getCurrentDateTime().toLocalDate());
+        // do something to make sure that a measurable about of time passes
         Thread.sleep(10);
         // Some time should have passed since setting the time on the dateTimeService
-        Assert.assertTrue(dateTimeService.getCurrentDateTime().getMillis() > someDateTime.getMillis());
+        Assert.assertTrue("After setting a date, the current time returned by the DateTimeService should continue advancing.",
+                dateTimeService.getCurrentDateTime().getMillis() > someDateTime.getMillis());
     }
     
     public static junit.framework.Test suite() {

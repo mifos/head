@@ -7,7 +7,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -18,7 +18,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
-public class TestConfiguration extends MifosTestCase{
+public class TestConfiguration extends MifosIntegrationTest{
 	public TestConfiguration() throws SystemException, ApplicationException {
         super();
     }

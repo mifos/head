@@ -1,13 +1,13 @@
 package org.mifos.framework.struts.tags;
 
 import org.dom4j.DocumentException;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
-public class MifosFileTagTest extends MifosTestCase{
+public class MifosFileTagTest extends MifosIntegrationTest{
 	public MifosFileTagTest() throws SystemException, ApplicationException {
         super();
     }

@@ -5,13 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class TestJDBCAppender extends MifosTestCase {
+public class TestJDBCAppender extends MifosIntegrationTest {
 
 	public TestJDBCAppender() throws SystemException, ApplicationException {
         super();

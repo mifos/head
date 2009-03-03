@@ -9,14 +9,14 @@ import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class LoanPrdBusinessServiceTest extends MifosTestCase {
+public class LoanPrdBusinessServiceTest extends MifosIntegrationTest {
 
 	public LoanPrdBusinessServiceTest() throws SystemException, ApplicationException {
         super();

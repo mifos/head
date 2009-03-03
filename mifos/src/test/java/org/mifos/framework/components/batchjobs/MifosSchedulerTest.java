@@ -2,11 +2,11 @@ package org.mifos.framework.components.batchjobs;
 
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class MifosSchedulerTest extends MifosTestCase {
+public class MifosSchedulerTest extends MifosIntegrationTest {
 
 	public MifosSchedulerTest() throws SystemException, ApplicationException {
         super();

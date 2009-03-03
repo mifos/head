@@ -38,7 +38,7 @@ import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionF
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.surveys.business.QuestionTest;
 import org.mifos.application.ui.DispatcherTest;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.ProperlyAdaptedJUnit4Test;
 import org.mifos.framework.components.batchjobs.business.TaskTest;
 import org.mifos.framework.components.configuration.cache.TestKey;
@@ -73,7 +73,7 @@ import org.mifos.framework.util.helpers.StringUtilsTest;
  * 
  * Test setup should also be fast (say, <1-2 seconds).
  * This currently means that a fast test cannot inherit from
- * {@link MifosTestCase}, call Hibernate, or other things
+ * {@link MifosIntegrationTest}, call Hibernate, or other things
  * which take many seconds to start up.
  * 
  * It is also true that tests here do not depend on the MySQL
@@ -81,7 +81,7 @@ import org.mifos.framework.util.helpers.StringUtilsTest;
  * for speed, partly for isolation from other test runs and the
  * like).
  * 
- * If your only reason for wanting {@link MifosTestCase} is logging,
+ * If your only reason for wanting {@link MifosIntegrationTest} is logging,
  * you can call {@link DatabaseSetup#configureLogging()} (this seems
  * fast enough).  Another choice is to pass around a {@link TestLogger}
  * (see {@link RoleActivityEntityTest} for an example) - this does a

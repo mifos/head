@@ -2,12 +2,12 @@ package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import org.mifos.application.ApplicationTestSuite;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestFieldConfigurationHelper extends MifosTestCase {
+public class TestFieldConfigurationHelper extends MifosIntegrationTest {
 	
 	public TestFieldConfigurationHelper() throws SystemException, ApplicationException {
         super();

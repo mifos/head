@@ -6,14 +6,14 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestFeeBusinessService extends MifosTestCase {
+public class TestFeeBusinessService extends MifosIntegrationTest {
 
 	public TestFeeBusinessService() throws SystemException, ApplicationException {
         super();

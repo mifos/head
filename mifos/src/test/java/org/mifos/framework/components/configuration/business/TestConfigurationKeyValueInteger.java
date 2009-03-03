@@ -1,6 +1,6 @@
 package org.mifos.framework.components.configuration.business;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -8,7 +8,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestConfigurationKeyValueInteger extends MifosTestCase {
+public class TestConfigurationKeyValueInteger extends MifosIntegrationTest {
 	public TestConfigurationKeyValueInteger() throws SystemException, ApplicationException {
         super();
     }

@@ -38,11 +38,11 @@
 
 package org.mifos.application.customer.business;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class CustomerViewTest extends MifosTestCase {
+public class CustomerViewTest extends MifosIntegrationTest {
 
 	public CustomerViewTest() throws SystemException, ApplicationException {
         super();

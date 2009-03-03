@@ -5,12 +5,12 @@ import java.sql.Connection;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.reports.business.ReportsBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class AddReportUpgradeTest extends MifosTestCase {
+public class AddReportUpgradeTest extends MifosIntegrationTest {
 
     public AddReportUpgradeTest() throws SystemException, ApplicationException {
         super();

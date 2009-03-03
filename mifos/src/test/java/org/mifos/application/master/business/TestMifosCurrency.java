@@ -38,11 +38,11 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestMifosCurrency extends MifosTestCase {
+public class TestMifosCurrency extends MifosIntegrationTest {
 
 	public TestMifosCurrency() throws SystemException, ApplicationException {
         super();

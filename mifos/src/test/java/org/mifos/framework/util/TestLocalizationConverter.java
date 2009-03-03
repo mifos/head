@@ -9,11 +9,11 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.config.Localization;
 import java.util.Locale;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.config.AccountingRules;
 
-public class TestLocalizationConverter extends MifosTestCase{
+public class TestLocalizationConverter extends MifosIntegrationTest{
 	
 	public TestLocalizationConverter() throws SystemException, ApplicationException {
         super();

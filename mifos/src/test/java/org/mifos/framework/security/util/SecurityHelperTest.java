@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class SecurityHelperTest extends MifosTestCase {
+public class SecurityHelperTest extends MifosIntegrationTest {
 
 	public SecurityHelperTest() throws SystemException, ApplicationException {
         super();

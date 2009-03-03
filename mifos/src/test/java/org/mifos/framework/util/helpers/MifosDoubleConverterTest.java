@@ -3,12 +3,12 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 
 import org.mifos.config.Localization;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.LocalizationConverter;
 
-public class MifosDoubleConverterTest extends MifosTestCase {
+public class MifosDoubleConverterTest extends MifosIntegrationTest {
 
 	public MifosDoubleConverterTest() throws SystemException, ApplicationException {
         super();

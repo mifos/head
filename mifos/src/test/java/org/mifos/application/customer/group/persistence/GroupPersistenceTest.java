@@ -20,7 +20,7 @@ import org.mifos.application.office.business.OfficeTemplateImpl;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class GroupPersistenceTest extends MifosTestCase {
+public class GroupPersistenceTest extends MifosIntegrationTest {
 	public GroupPersistenceTest() throws SystemException, ApplicationException {
         super();
     }

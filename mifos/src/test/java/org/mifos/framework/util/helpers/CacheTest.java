@@ -5,14 +5,14 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultDTOImpl;
 
-public class CacheTest extends MifosTestCase {
+public class CacheTest extends MifosIntegrationTest {
 
 	public CacheTest() throws SystemException, ApplicationException {
         super();

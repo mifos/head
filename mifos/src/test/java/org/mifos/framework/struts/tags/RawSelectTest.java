@@ -3,11 +3,11 @@ package org.mifos.framework.struts.tags;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class RawSelectTest extends MifosTestCase {
+public class RawSelectTest extends MifosIntegrationTest {
 
 	public RawSelectTest() throws SystemException, ApplicationException {
         super();

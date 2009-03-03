@@ -7,14 +7,14 @@ import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 
-public class TestProductCategoryPersistence extends MifosTestCase {
+public class TestProductCategoryPersistence extends MifosIntegrationTest {
 
 	public TestProductCategoryPersistence() throws SystemException, ApplicationException {
         super();

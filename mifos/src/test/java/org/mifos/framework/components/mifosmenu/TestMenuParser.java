@@ -1,10 +1,10 @@
 package org.mifos.framework.components.mifosmenu;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestMenuParser extends MifosTestCase {
+public class TestMenuParser extends MifosIntegrationTest {
 
 	public TestMenuParser() throws SystemException, ApplicationException {
         super();

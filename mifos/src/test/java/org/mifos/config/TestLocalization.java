@@ -2,7 +2,7 @@ package org.mifos.config;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import org.mifos.config.Localization;
 
-public class TestLocalization extends MifosTestCase {
+public class TestLocalization extends MifosIntegrationTest {
 	
 	public TestLocalization() throws SystemException, ApplicationException {
         super();

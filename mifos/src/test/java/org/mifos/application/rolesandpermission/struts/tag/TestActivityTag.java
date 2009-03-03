@@ -8,11 +8,11 @@ import java.util.Set;
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestActivityTag extends MifosTestCase {
+public class TestActivityTag extends MifosIntegrationTest {
 	
 	public TestActivityTag() throws SystemException, ApplicationException {
         super();

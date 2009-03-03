@@ -4,13 +4,13 @@ import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class MeetingHelperTest extends MifosTestCase{
+public class MeetingHelperTest extends MifosIntegrationTest{
 	public MeetingHelperTest() throws SystemException, ApplicationException {
         super();
     }

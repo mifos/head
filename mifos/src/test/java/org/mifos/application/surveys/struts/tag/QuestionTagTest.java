@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -13,7 +13,7 @@ import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
-public class QuestionTagTest extends MifosTestCase {
+public class QuestionTagTest extends MifosIntegrationTest {
 	
 	public QuestionTagTest() throws SystemException, ApplicationException {
         super();

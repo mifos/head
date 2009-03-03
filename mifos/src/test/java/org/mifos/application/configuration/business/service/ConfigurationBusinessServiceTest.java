@@ -8,13 +8,13 @@ import static org.easymock.classextension.EasyMock.verify;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class ConfigurationBusinessServiceTest extends MifosTestCase{
+public class ConfigurationBusinessServiceTest extends MifosIntegrationTest{
 	
 	
 	public ConfigurationBusinessServiceTest() throws SystemException, ApplicationException {

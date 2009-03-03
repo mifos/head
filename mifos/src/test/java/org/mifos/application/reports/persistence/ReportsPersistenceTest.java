@@ -12,13 +12,13 @@ import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 
-public class ReportsPersistenceTest extends MifosTestCase {
+public class ReportsPersistenceTest extends MifosIntegrationTest {
 
 	public ReportsPersistenceTest() throws SystemException, ApplicationException {
         super();

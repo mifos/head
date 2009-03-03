@@ -17,7 +17,7 @@ import org.mifos.application.office.business.OfficeTemplateImpl;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -28,7 +28,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestCenterPersistence extends MifosTestCase{
+public class TestCenterPersistence extends MifosIntegrationTest{
 	public TestCenterPersistence() throws SystemException, ApplicationException {
         super();
     }

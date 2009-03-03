@@ -6,12 +6,12 @@ import java.util.Set;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class TestFinancialBO extends MifosTestCase {
+public class TestFinancialBO extends MifosIntegrationTest {
 
 	public TestFinancialBO() throws SystemException, ApplicationException {
         super();

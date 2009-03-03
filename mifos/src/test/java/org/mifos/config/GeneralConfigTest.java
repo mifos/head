@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import org.apache.commons.configuration.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -15,7 +15,7 @@ import org.mifos.framework.util.helpers.FilePaths;
 import junit.framework.JUnit4TestAdapter;
 import org.mifos.config.GeneralConfig;
 
-public class GeneralConfigTest extends MifosTestCase{
+public class GeneralConfigTest extends MifosIntegrationTest{
 	
 	public GeneralConfigTest() throws SystemException, ApplicationException {
         super();

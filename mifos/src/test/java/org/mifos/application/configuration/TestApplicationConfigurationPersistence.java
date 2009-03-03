@@ -17,7 +17,7 @@ import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -25,7 +25,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 
 
-public class TestApplicationConfigurationPersistence extends MifosTestCase {
+public class TestApplicationConfigurationPersistence extends MifosIntegrationTest {
 	
 	public TestApplicationConfigurationPersistence() throws SystemException, ApplicationException {
         super();

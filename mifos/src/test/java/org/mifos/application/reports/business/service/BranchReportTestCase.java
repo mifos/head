@@ -25,7 +25,7 @@ import java.util.Date;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 
-public class BranchReportTestCase extends MifosTestCase {
+public class BranchReportTestCase extends MifosIntegrationTest {
 
 	protected static final Date FIRST_JAN_2008 = DateUtils.getDate(2008,
 			Calendar.JANUARY, 1);

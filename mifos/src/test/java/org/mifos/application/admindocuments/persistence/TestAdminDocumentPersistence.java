@@ -41,13 +41,13 @@ package org.mifos.application.admindocuments.persistence;
 import java.util.List;
 
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
 
-public class TestAdminDocumentPersistence extends MifosTestCase {
+public class TestAdminDocumentPersistence extends MifosIntegrationTest {
 
 	public TestAdminDocumentPersistence() throws SystemException, ApplicationException {
         super();

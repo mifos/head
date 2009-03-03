@@ -2,11 +2,11 @@ package org.mifos.application.productdefinition.business;
 
 import junit.framework.Assert;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class PrdOfferingBOTest extends MifosTestCase {
+public class PrdOfferingBOTest extends MifosIntegrationTest {
 	public PrdOfferingBOTest() throws SystemException, ApplicationException {
         super();
     }

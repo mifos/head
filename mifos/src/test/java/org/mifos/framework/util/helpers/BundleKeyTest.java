@@ -2,11 +2,11 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class BundleKeyTest extends MifosTestCase {
+public class BundleKeyTest extends MifosIntegrationTest {
 
 	public BundleKeyTest() throws SystemException, ApplicationException {
         super();

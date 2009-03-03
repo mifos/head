@@ -18,7 +18,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -28,7 +28,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PrdOfferingPersistenceTest extends MifosTestCase {
+public class PrdOfferingPersistenceTest extends MifosIntegrationTest {
 
 	public PrdOfferingPersistenceTest() throws SystemException, ApplicationException {
         super();

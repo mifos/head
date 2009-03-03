@@ -2,11 +2,11 @@ package org.mifos.framework.util.helpers;
 
 import java.util.HashMap;
 
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class MifosNodeTest extends MifosTestCase {
+public class MifosNodeTest extends MifosIntegrationTest {
 	public MifosNodeTest() throws SystemException, ApplicationException {
         super();
     }

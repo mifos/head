@@ -11,7 +11,7 @@ import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -19,7 +19,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class SurveysPersistenceTest extends MifosTestCase {
+public class SurveysPersistenceTest extends MifosIntegrationTest {
 	public SurveysPersistenceTest() throws SystemException, ApplicationException {
         super();
     }

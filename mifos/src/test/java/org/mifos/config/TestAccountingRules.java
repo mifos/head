@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import org.apache.commons.configuration.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -16,7 +16,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.application.master.business.MifosCurrency;
 
 
-public class TestAccountingRules  extends MifosTestCase {
+public class TestAccountingRules  extends MifosIntegrationTest {
 	
 	public TestAccountingRules() throws SystemException, ApplicationException {
         super();

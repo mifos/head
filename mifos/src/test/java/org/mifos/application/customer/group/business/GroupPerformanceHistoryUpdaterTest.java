@@ -6,11 +6,11 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class GroupPerformanceHistoryUpdaterTest extends MifosTestCase {
+public class GroupPerformanceHistoryUpdaterTest extends MifosIntegrationTest {
 	
 	public GroupPerformanceHistoryUpdaterTest() throws SystemException, ApplicationException {
         super();

@@ -13,13 +13,13 @@ import java.util.Set;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestSavingsHelper extends MifosTestCase {
+public class TestSavingsHelper extends MifosIntegrationTest {
 	public TestSavingsHelper() throws SystemException, ApplicationException {
         super();
     }

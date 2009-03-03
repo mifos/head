@@ -23,11 +23,11 @@ package org.mifos.application.reports.business;
 import static org.easymock.classextension.EasyMock.createMock;
 
 import org.mifos.application.reports.business.validator.Errors;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public abstract class AbstractReportParametersTest extends MifosTestCase {
+public abstract class AbstractReportParametersTest extends MifosIntegrationTest {
 
 	public static final String VALID_ID = "0";	
 	

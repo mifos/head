@@ -18,13 +18,13 @@ import org.mifos.application.personnel.business.CustomerFixture;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
 import org.mifos.application.reports.ui.SelectionItem;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
-public class AbstractCollectionSheetTestCase extends MifosTestCase {
+public class AbstractCollectionSheetTestCase extends MifosIntegrationTest {
 
 	public AbstractCollectionSheetTestCase() throws SystemException, ApplicationException {
         super();

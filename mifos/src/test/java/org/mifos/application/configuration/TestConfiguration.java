@@ -5,11 +5,11 @@ import java.util.Map;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelKey;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class TestConfiguration extends MifosTestCase {
+public class TestConfiguration extends MifosIntegrationTest {
 
 	public TestConfiguration() throws SystemException, ApplicationException {
         super();

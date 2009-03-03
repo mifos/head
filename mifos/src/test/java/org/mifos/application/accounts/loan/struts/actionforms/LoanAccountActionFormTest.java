@@ -28,13 +28,13 @@ import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.productdefinition.business.AmountRange;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
-import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
-public class LoanAccountActionFormTest extends MifosTestCase {
+public class LoanAccountActionFormTest extends MifosIntegrationTest {
 
 	public LoanAccountActionFormTest() throws SystemException, ApplicationException {
         super();
