@@ -568,7 +568,7 @@ public class DateUtils {
 	}
 
 	private static long getCurrentTime() {
-		return currentTime  == null ? System.currentTimeMillis() : currentTime;
+		return currentTime  == null ? new DateTimeService().getCurrentDateTime().getMillis() : currentTime;
 	}
 
 	public static Date getDateWithoutTimeStamp(long timeInMills) {

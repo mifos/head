@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.WordUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.DateTimeService;
 
 /**
  * This class has got utility functions for string which would be required
@@ -133,7 +134,7 @@ public class StringUtils {
 	// add test case
 	public static String generateLookupName(String type, String newElementText)
 	{
-		String name = type + "." + camelCase(newElementText) + "." + System.currentTimeMillis();
+		String name = type + "." + camelCase(newElementText) + "." + new DateTimeService().getCurrentDateTime().getMillis();
 		if (name.length() > LookUpNameLength)
 			name = name.substring(0, LookUpNameLength);
 		return name;

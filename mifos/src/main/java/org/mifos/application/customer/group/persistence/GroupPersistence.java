@@ -33,6 +33,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 
 import java.sql.Connection;
@@ -192,7 +193,7 @@ public class GroupPersistence extends Persistence {
 	    	connection.setAutoCommit(false);
 	    	Statement statement = connection.createStatement();
 	    	short userId = 1; // this is bach job, so no user
-	    	java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+	    	java.sql.Date currentDate = new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis());
 	    
 			int rows = statement.executeUpdate("UPDATE CUSTOMER SET UPDATED_BY = " + userId + 
 					", UPDATED_DATE='" + currentDate + "' WHERE CUSTOMER_ID=" + groupId.toString());

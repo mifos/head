@@ -15,6 +15,7 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.config.GeneralConfig;
 
@@ -27,17 +28,17 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
 		System.out.println("GenerateMeetingsForCustomerAndSavings starts ");
-		long taskStartTime = System.currentTimeMillis();
+		long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
 		AccountPersistence accountPersistence = new AccountPersistence();
 		List<Integer> customerAccountIds;
 		int accountCount = 0;
 		
 		try {
-			long time1 = System.currentTimeMillis();
+			long time1 = new DateTimeService().getCurrentDateTime().getMillis();
 			customerAccountIds = accountPersistence
 					.getActiveCustomerAndSavingsAccounts();
 			accountCount = customerAccountIds.size();
-			long duration = System.currentTimeMillis() - time1;
+			long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
 			System.out.println("Time to execute the query " + duration + " . Got " + accountCount + " accounts.");
 			if (accountCount == 0)
 			{
@@ -51,7 +52,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 		int i = 0;
 		int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
 		int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
-		long startTime = System.currentTimeMillis();
+		long startTime = new DateTimeService().getCurrentDateTime().getMillis();
 		Integer currentAccountId = null;
 		int updatedRecordCount = 0;
 		try 
@@ -90,7 +91,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 					}
 					if (updatedRecordCount % 1000 == 0)
 					{
-						long time = System.currentTimeMillis();
+						long time = new DateTimeService().getCurrentDateTime().getMillis();
 						System.out.println("out of " + i + " accounts processed, " + updatedRecordCount +
 								" accounts updated. The last 1000 updated in " + (time - startTime) + 
 								" milliseconds. There are " + (accountCount -i) + " more accounts to be processed.");
@@ -123,7 +124,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 		
 		if (errorList.size() > 0)
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-		System.out.println("GenerateMeetingsForCustomerAndSavings ends successfully. Ran in " +  (System.currentTimeMillis()-taskStartTime));
+		System.out.println("GenerateMeetingsForCustomerAndSavings ends successfully. Ran in " +  (new DateTimeService().getCurrentDateTime().getMillis()-taskStartTime));
 		
 	}
 

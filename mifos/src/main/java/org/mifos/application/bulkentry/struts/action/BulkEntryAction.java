@@ -80,6 +80,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -249,7 +250,7 @@ public class BulkEntryAction extends BaseAction {
     // the wait time < allowedLockingTime
     private LockInfo startProcessingCenter(String centerIdStr, String userId) {
         LockInfo previousLockInfo = null;
-        long currentTime = System.currentTimeMillis();
+        long currentTime = new DateTimeService().getCurrentDateTime().getMillis();
         Integer centerId = Integer.parseInt(centerIdStr);
         synchronized (processedCenterList) {
             // there is a lock on this center, so check the locking time to see

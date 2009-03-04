@@ -20,6 +20,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class PortfolioAtRiskHelper extends TaskHelper {
@@ -33,7 +34,7 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 	public void execute(long timeInMillis) throws BatchJobException {
 
 		System.out.println("PortfolioAtRiskTask starts");
-		long time1 = System.currentTimeMillis();
+		long time1 = new DateTimeService().getCurrentDateTime().getMillis();
 		List<BasicGroupInfo> groupInfos = null;
 		List<String> errorList = new ArrayList<String>();
 		
@@ -49,7 +50,7 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 			
 			int groupCount = groupInfos.size();
 			System.out.println("PortfolioAtRisk: got " + groupCount + " groups to process.");
-			long startTime = System.currentTimeMillis();
+			long startTime = new DateTimeService().getCurrentDateTime().getMillis();
 			int i=1;
 			Integer groupId = null;
 			GroupPersistence groupPersistence = new GroupPersistence();
@@ -70,7 +71,7 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 						}
 						if (i % 500 == 0)
 						{
-							long time = System.currentTimeMillis();
+							long time = new DateTimeService().getCurrentDateTime().getMillis();
 							System.out.println("500 groups updated in " + (time - startTime) + 
 									" milliseconds. There are " + (groupCount -i) + " more groups to be updated.");
 							startTime = time;
@@ -96,7 +97,7 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 				}
 			}
 		
-		long time2 = System.currentTimeMillis();
+		long time2 = new DateTimeService().getCurrentDateTime().getMillis();
 		System.out.println("PortfolioAtRiskTask ran in " + (time2 - time1) + " milliseconds");
 
 		if (errorList.size() > 0)

@@ -236,7 +236,7 @@ public class SavingsClosureAction extends BaseAction {
 				+ savings.getAccountId());
 		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
 		AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(
-				System.currentTimeMillis()), actionForm.getNotes(),
+		        new DateTimeService().getCurrentDateTime().getMillis()), actionForm.getNotes(),
 				(new PersonnelPersistence()).getPersonnel(getUserContext(
 						request).getId()), savings);
 		CustomerBO customer = searchForCustomer(request, actionForm

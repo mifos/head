@@ -553,7 +553,7 @@ public class AccountBO extends BusinessObject {
 			AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 					this.getAccountState(), accountStateEntity, personnel, this);
 			AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
-					new java.sql.Date(System.currentTimeMillis()), comment,
+					new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), comment,
 					personnel, this);
 			this.addAccountStatusChangeHistory(historyEntity);
 			this.setAccountState(accountStateEntity);

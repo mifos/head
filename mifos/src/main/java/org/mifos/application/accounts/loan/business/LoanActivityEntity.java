@@ -6,6 +6,7 @@ import java.util.Date;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanActivityEntity extends PersistentObject {
@@ -72,7 +73,7 @@ public class LoanActivityEntity extends PersistentObject {
 	}
 	
 	public LoanActivityEntity(AccountBO account,PersonnelBO personnel,Money principal,Money interest,Money fee,Money penalty,LoanSummaryEntity loanSummary,String comments) {
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
 		this.id = null;
 		this.principal=principal;
 		this.interest=interest;

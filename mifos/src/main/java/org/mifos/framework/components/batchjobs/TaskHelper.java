@@ -51,6 +51,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 
 public abstract class TaskHelper {
 
@@ -85,7 +86,7 @@ public abstract class TaskHelper {
 			task.setTask(mifosTask.name);
 			task.setStatus(TaskStatus.INCOMPLETE);
 			if (timeInMillis == 0) {
-				task.setStartTime(new Timestamp(System.currentTimeMillis()));
+				task.setStartTime(new Timestamp(new DateTimeService().getCurrentDateTime().getMillis()));
 			} else {
 				task.setStartTime(new Timestamp(timeInMillis));
 			}
@@ -107,7 +108,7 @@ public abstract class TaskHelper {
 			task.setDescription(description);
 			task.setStatus(status);
 			if (timeInMillis == 0) {
-				task.setEndTime(new Timestamp(System.currentTimeMillis()));
+				task.setEndTime(new Timestamp(new DateTimeService().getCurrentDateTime().getMillis()));
 			} else {
 				task.setEndTime(new Timestamp(timeInMillis));
 			}
@@ -127,14 +128,14 @@ public abstract class TaskHelper {
 	 */
 	public final void executeTask() {
 		if (!isTaskAllowedToRun()) {
-			while ((System.currentTimeMillis() - timeInMillis)
+			while ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis)
 					/ (1000 * 60 * 60 * 24) != 1) {
 				perform(timeInMillis + (1000 * 60 * 60 * 24));
 				timeInMillis +=  (1000 * 60 * 60 * 24);
 			}
 		} else {
 			if (timeInMillis == 0) {
-				timeInMillis = System.currentTimeMillis();
+				timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();
 			}
 			//System.out.println(mifosTask.name + "started");
 			perform(timeInMillis);
@@ -169,15 +170,15 @@ public abstract class TaskHelper {
 					SchedulerConstants.FINISHED_SUCCESSFULLY);
 			if (query.uniqueResult() == null) {
 				// When schedular starts for the first time
-				timeInMillis = System.currentTimeMillis();
+				timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();
 				return true;
 			} else {
 				timeInMillis = ((Timestamp) query.uniqueResult()).getTime();
 			}
 			HibernateUtil.commitTransaction();
-			if ((System.currentTimeMillis() - timeInMillis)
+			if ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis)
 					/ (1000 * 60 * 60 * 24) <= 1) {
-				timeInMillis = System.currentTimeMillis();
+				timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();
 				return true;
 			}
 			return false;

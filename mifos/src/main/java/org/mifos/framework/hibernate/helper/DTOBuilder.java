@@ -44,6 +44,7 @@ import org.hibernate.type.Type;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.util.DateTimeService;
 
 /**
  * This is returned on a search operation. Search would typically 
@@ -155,10 +156,10 @@ public class DTOBuilder {
 			else if (dataType.equals("CHAR"))
 				params[0] = Character.TYPE;
 			else if (dataType.equals("TIMESTAMP"))
-				params[0] = new java.sql.Timestamp(System.currentTimeMillis())
+				params[0] = new java.sql.Timestamp(new DateTimeService().getCurrentDateTime().getMillis())
 						.getClass();
 			else if (dataType.equals("TIME"))
-				params[0] = new java.sql.Time(System.currentTimeMillis())
+				params[0] = new java.sql.Time(new DateTimeService().getCurrentDateTime().getMillis())
 						.getClass();
 			else return null;
 		}

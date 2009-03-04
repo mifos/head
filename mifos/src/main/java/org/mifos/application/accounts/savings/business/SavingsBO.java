@@ -1864,7 +1864,7 @@ public class SavingsBO extends AccountBO {
 			throws AccountException {
 		try {
 			AccountNotesEntity accountNotes = new AccountNotesEntity(
-					new java.sql.Date(System.currentTimeMillis()), comment,
+					new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), comment,
 					(new PersonnelPersistence()).getPersonnel(userContext
 							.getId()), this);
 			return accountNotes;

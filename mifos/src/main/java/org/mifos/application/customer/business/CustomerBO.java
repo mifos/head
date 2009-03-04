@@ -1207,7 +1207,7 @@ public abstract class CustomerBO extends BusinessObject {
 			throws CustomerException {
 		try {
 			return new CustomerNoteEntity(comment,
-					new java.sql.Date(System.currentTimeMillis()),
+					new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()),
 					getPersonnelPersistence().getPersonnel(getUserContext()
 							.getId()), this);
 		} catch (PersistenceException ae) {
@@ -1303,7 +1303,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public void removeGroupMemberShip(PersonnelBO personnel, String comment) throws PersistenceException, CustomerException {
 		PersonnelBO user = getPersonnelPersistence().getPersonnel(getUserContext().getId());
 		CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment,
-				new java.sql.Date(System.currentTimeMillis()), user,
+				new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), user,
 				this);
 			this.addCustomerNotes(accountNotesEntity);		
 			

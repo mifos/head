@@ -25,6 +25,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -76,7 +77,7 @@ public class NotesAction extends SearchAction {
 		AccountBO account = new AccountBusinessService()
 				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
-				new java.sql.Date(System.currentTimeMillis()), notesActionForm
+				new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), notesActionForm
 						.getComment(), personnel, account);
 		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes, request);
 		return mapping.findForward(ActionForwards.preview_success.toString());

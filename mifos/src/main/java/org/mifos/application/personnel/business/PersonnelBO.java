@@ -127,7 +127,7 @@ public class PersonnelBO extends BusinessObject {
 		this.personnelMovements = new HashSet<PersonnelMovementEntity>();
 		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
 		this.personnelId = null;
-		this.globalPersonnelNum = new Long(System.currentTimeMillis()).toString();
+		this.globalPersonnelNum = new Long(new DateTimeService().getCurrentDateTime().getMillis()).toString();
 		if (customFields != null)
 			for (CustomFieldView view : customFields) {
 				this.customFields.add(new PersonnelCustomFieldEntity(view

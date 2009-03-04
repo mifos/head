@@ -32,6 +32,7 @@ import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.config.GeneralConfig;
 
 public class LoanArrearsHelper extends TaskHelper {
@@ -43,7 +44,7 @@ public class LoanArrearsHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
-		long time1 = System.currentTimeMillis();
+		long time1 = new DateTimeService().getCurrentDateTime().getMillis();
 		System.out.println("LoanArrearsTask starts");
 		AccountPersistence accountPersistence = new AccountPersistence();
 		List<String> errorList = new ArrayList<String>();
@@ -52,10 +53,10 @@ public class LoanArrearsHelper extends TaskHelper {
 		try {
 			Short latenessDays = new LoanPrdPersistence()
 					.retrieveLatenessForPrd();
-			long time3 = System.currentTimeMillis();
+			long time3 = new DateTimeService().getCurrentDateTime().getMillis();
 			listAccountIds = new LoanPersistence()
 					.getLoanAccountsInArrearsInGoodStanding(latenessDays);
-			long duration2 = System.currentTimeMillis() - time3;
+			long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
 			accountNumber = listAccountIds.size();
 			System.out.println("LoanArrearsTask: getLoanAccountsInArrearsInGoodStanding ran in " + 
 					duration2 + " milliseconds" + " got " + accountNumber + " accounts to update.");
@@ -69,7 +70,7 @@ public class LoanArrearsHelper extends TaskHelper {
 		
 		try
 		{
-			long startTime = System.currentTimeMillis();
+			long startTime = new DateTimeService().getCurrentDateTime().getMillis();
 			for (Integer accountId : listAccountIds) {
 					loanBO = (LoanBO) accountPersistence
 							.getAccount(accountId);
@@ -88,7 +89,7 @@ public class LoanArrearsHelper extends TaskHelper {
 					}
 					if (i % 1000 == 0)
 					{
-						long time = System.currentTimeMillis();
+						long time = new DateTimeService().getCurrentDateTime().getMillis();
 						System.out.println("1000 accounts updated in " + (time - startTime) + 
 								" milliseconds. There are " + (accountNumber -i) + " more accounts to be updated.");
 						startTime = time;
@@ -112,7 +113,7 @@ public class LoanArrearsHelper extends TaskHelper {
 				
 				HibernateUtil.closeSession();
 			}
-		long time2 = System.currentTimeMillis();
+		long time2 = new DateTimeService().getCurrentDateTime().getMillis();
 		long duration = time2 - time1;
 		getLogger().info("Time to run LoanArrearsTask " + duration);
 		System.out.println("LoanArrearsTask ran in " + duration + " milliseconds");

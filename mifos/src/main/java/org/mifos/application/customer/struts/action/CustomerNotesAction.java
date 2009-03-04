@@ -69,6 +69,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -152,7 +153,7 @@ public class CustomerNotesAction extends SearchAction {
 					customerBO.getLevel(), uc, customerBO.getOffice()
 							.getOfficeId(), uc.getId());
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
-		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
+		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()),personnelBO,customerBO);
 		customerBO.addCustomerNotes(customerNote);
 		customerBO.setUserContext(uc);
 		customerBO.update();

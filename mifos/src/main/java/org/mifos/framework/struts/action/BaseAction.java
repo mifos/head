@@ -68,6 +68,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 
 public abstract class BaseAction extends DispatchAction {
@@ -167,7 +168,7 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	private void createToken(HttpServletRequest request) throws PageExpiredException{
-		String flowKey = String.valueOf(System.currentTimeMillis());
+		String flowKey = String.valueOf(new DateTimeService().getCurrentDateTime().getMillis());
 		FlowManager flowManager = (FlowManager) request.getSession()
 				.getAttribute(Constants.FLOWMANAGER);
 		if(flowManager == null) {
