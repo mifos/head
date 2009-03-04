@@ -9,16 +9,25 @@
 
     <import resource="propertyConfigurer.xml"/>
 
+    <bean id="testDatabaseUrlDecorator"
+        class="org.mifos.framework.util.DatabaseUrlDecorator"/>
+
+    <bean id="databaseUrl" factory-bean="testDatabaseUrlDecorator"
+        factory-method="getDecoratedDatabaseUrl">
+        <constructor-arg value="${hibernate.connection.url}" />
+        <constructor-arg value="sessionVariables=FOREIGN_KEY_CHECKS=0" />
+    </bean>
+
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${hibernate.connection.driver_class}" />
-        <property name="url" value="${hibernate.connection.url}&amp;sessionVariables=FOREIGN_KEY_CHECKS=0" />
+        <property name="url" ref="databaseUrl" />
         <property name="username" value="${hibernate.connection.username}" />
         <property name="password" value="${hibernate.connection.password}" />
     </bean>
 
     <bean id="transactionManager" 
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
 
