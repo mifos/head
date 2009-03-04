@@ -51,6 +51,8 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -132,6 +134,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -302,7 +305,7 @@ public class TestLoanBO extends MifosIntegrationTest {
 	
 	public void testApplyPeriodicFeeWithHoliday() throws Exception {
 		Date startDate = DateUtils.getDate(2008, Calendar.MAY, 23);
-		DateUtils.setCurrentTime(startDate.getTime());
+	    new DateTimeService().setCurrentDateTime(new DateTime(startDate));
 		
 		accountBO = getLoanAccount(startDate, AccountState.LOAN_APPROVED);
 		
@@ -382,14 +385,14 @@ public class TestLoanBO extends MifosIntegrationTest {
 		} finally {
 			// make sure that we don't leave any persistent changes that could
 			// affect subsequent tests
-			DateUtils.setCurrentTime(null);
+		    new DateTimeService().resetToCurrentSystemDateTime();
 			deleteHoliday(holiday);
 		}
 	}
 	
 	public void testPeriodicFeeWithHoliday() throws Exception {
 		Date startDate = DateUtils.getDate(2008, Calendar.MAY, 23);
-		DateUtils.setCurrentTime(startDate.getTime());
+        new DateTimeService().setCurrentDateTime(new DateTime(startDate));
 		
 		accountBO = getLoanAccount(startDate, AccountState.LOAN_APPROVED);
 		
@@ -453,7 +456,7 @@ public class TestLoanBO extends MifosIntegrationTest {
 		} finally {
 			// make sure that we don't leave any persistent changes that could
 			// affect subsequent tests
-			DateUtils.setCurrentTime(null);
+			new DateTimeService().resetToCurrentSystemDateTime();
 			deleteHoliday(holiday);
 		}
 	}

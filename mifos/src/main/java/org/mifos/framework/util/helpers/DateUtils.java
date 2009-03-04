@@ -69,8 +69,6 @@ public class DateUtils {
 
 	private final static String dbFormat = "yyyy-MM-dd";
 	
-	private static Long currentTime = null;
-	
 	//	this configured locale is not used for 1.1 but later
 	//  private final static Locale internalLocale = Localization.getInstance()
 	//		.getMainLocale();
@@ -568,7 +566,7 @@ public class DateUtils {
 	}
 
 	private static long getCurrentTime() {
-		return currentTime  == null ? new DateTimeService().getCurrentDateTime().getMillis() : currentTime;
+		return new DateTimeService().getCurrentDateTime().getMillis();
 	}
 
 	public static Date getDateWithoutTimeStamp(long timeInMills) {
@@ -757,11 +755,6 @@ public class DateUtils {
 	
 	public static String format(Date date, DateFormat dateFormat) {
 		return dateFormat.format(date);
-	}
-	
-	// for tests
-	public static void setCurrentTime(Long currentTime) {
-		DateUtils.currentTime = currentTime;
 	}
 	
     public static WeekDay getWeekDayForDate(Date date) {
