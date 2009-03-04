@@ -34,7 +34,7 @@ public class GroupViewDetailsPage extends MifosPage {
     }
     
     public GroupViewDetailsPage verifyPage() {
-        verifyPage("GroupViewDetails");
+        verifyPage("ViewGroupDetails");
         return this;
     }
 }

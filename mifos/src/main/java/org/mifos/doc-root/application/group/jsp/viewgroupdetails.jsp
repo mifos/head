@@ -29,11 +29,9 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="ViewGroupDetails"/>
-
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="GroupViewDetails"/>
+	<input type="hidden" id="page.id" value="ViewGroupDetails"/>
 	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupCustAction.do">
