@@ -77,7 +77,7 @@ public class NotesAction extends SearchAction {
 		AccountBO account = new AccountBusinessService()
 				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
-				new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), notesActionForm
+				new DateTimeService().getCurrentJavaSqlDate(), notesActionForm
 						.getComment(), personnel, account);
 		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes, request);
 		return mapping.findForward(ActionForwards.preview_success.toString());

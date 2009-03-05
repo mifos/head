@@ -526,7 +526,7 @@ public class CustomerAccountBO extends AccountBO {
 	public Date getUpcomingChargesDate() {
 		AccountActionDateEntity nextAccountAction = getNextUnpaidDueInstallment();
 		return nextAccountAction != null ? nextAccountAction.getActionDate()
-				: new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis());
+				: new DateTimeService().getCurrentJavaSqlDate();
 	}
 
 	@Override

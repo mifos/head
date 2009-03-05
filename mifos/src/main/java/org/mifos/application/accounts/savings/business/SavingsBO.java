@@ -1625,7 +1625,7 @@ public class SavingsBO extends AccountBO {
 				accountAction.setPaymentStatus(PaymentStatus.UNPAID);
 			}
 			accountAction
-					.setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
+					.setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
 			getSavingsPerformance().setTotalDeposits(
 					getSavingsPerformance().getTotalDeposits().add(
 							accountTrxn.getDepositAmount()));
@@ -1732,7 +1732,7 @@ public class SavingsBO extends AccountBO {
 										accountTrxn.getDepositAmount()));
 						accountAction.setPaymentStatus(PaymentStatus.UNPAID);
 					}
-					accountAction.setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
+					accountAction.setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
 					getSavingsPerformance().setTotalDeposits(
 							getSavingsPerformance().getTotalDeposits().add(
 									accountTrxn.getDepositAmount()));
@@ -1864,7 +1864,7 @@ public class SavingsBO extends AccountBO {
 			throws AccountException {
 		try {
 			AccountNotesEntity accountNotes = new AccountNotesEntity(
-					new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), comment,
+					new DateTimeService().getCurrentJavaSqlDate(), comment,
 					(new PersonnelPersistence()).getPersonnel(userContext
 							.getId()), this);
 			return accountNotes;

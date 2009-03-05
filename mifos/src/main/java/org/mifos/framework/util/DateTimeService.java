@@ -43,4 +43,12 @@ public class DateTimeService {
         return new DateTime();
     }
 
+    public void setCurrentDateTimeFixed(DateTime dateTime) {
+        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());        
+    }
+
+    public java.sql.Date getCurrentJavaSqlDate() {
+        return new java.sql.Date(new DateTime().getMillis());
+    }
+
 }

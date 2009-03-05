@@ -193,7 +193,7 @@ public class GroupPersistence extends Persistence {
 	    	connection.setAutoCommit(false);
 	    	Statement statement = connection.createStatement();
 	    	short userId = 1; // this is bach job, so no user
-	    	java.sql.Date currentDate = new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis());
+	    	java.sql.Date currentDate = new DateTimeService().getCurrentJavaSqlDate();
 	    
 			int rows = statement.executeUpdate("UPDATE CUSTOMER SET UPDATED_BY = " + userId + 
 					", UPDATED_DATE='" + currentDate + "' WHERE CUSTOMER_ID=" + groupId.toString());

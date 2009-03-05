@@ -153,7 +153,7 @@ public class CustomerNotesAction extends SearchAction {
 					customerBO.getLevel(), uc, customerBO.getOffice()
 							.getOfficeId(), uc.getId());
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
-		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()),personnelBO,customerBO);
+		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new DateTimeService().getCurrentJavaSqlDate(),personnelBO,customerBO);
 		customerBO.addCustomerNotes(customerNote);
 		customerBO.setUserContext(uc);
 		customerBO.update();

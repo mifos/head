@@ -44,7 +44,17 @@ public class DateTimeServiceTest {
         new DateTimeService().resetToCurrentSystemDateTime();
     }
     
-
+    @Test
+    public void testSetCurrentTimeFixed() throws InterruptedException {
+        DateTime dateTime = new DateTime(2007,1,2,0,0,0,0);
+        DateTimeService dateTimeService = new DateTimeService();
+        dateTimeService.setCurrentDateTimeFixed(dateTime);
+        // do something to make sure that a measurable about of time passes
+        Thread.sleep(10);
+        DateTime newDateTime = dateTimeService.getCurrentDateTime();
+        Assert.assertEquals("After setting a frozen date time, time should not advance",dateTime, newDateTime);
+    }
+    
     @Test
     public void testGetCurrentJavaDateTime() {
         DateTimeService dateTimeService = new DateTimeService();
@@ -67,6 +77,15 @@ public class DateTimeServiceTest {
         // Some time should have passed since setting the time on the dateTimeService
         Assert.assertTrue("After setting a date, the current time returned by the DateTimeService should continue advancing.",
                 dateTimeService.getCurrentDateTime().getMillis() > someDateTime.getMillis());
+    }
+    
+    @Test
+    public void testGetCurrentJavaSqlDate() {
+        DateTimeService dateTimeService = new DateTimeService();
+        DateTime dateTime = new DateTime(2008,1,1,12,0,0,0);
+        dateTimeService.setCurrentDateTimeFixed(dateTime);
+        DateTime javaSqlDateTime = new DateTime(dateTimeService.getCurrentJavaSqlDate().getTime());
+        Assert.assertEquals("Dates should be equal", dateTime.toLocalDate(), javaSqlDateTime.toLocalDate());
     }
     
     public static junit.framework.Test suite() {

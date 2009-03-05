@@ -97,7 +97,7 @@ public class AuditInterceptor extends EmptyInterceptor {
 			auditLog = new AuditLog(interceptHelper.getEntityId(), EntityType
 					.getEntityValue(interceptHelper.getEntityName().toUpperCase()),
 					userContext.getName(),
-					new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()), userContext.getId());
+					new DateTimeService().getCurrentJavaSqlDate(), userContext.getId());
 			Set<AuditLogRecord> auditLogRecords = createAuditLogRecord();
 			auditLog.addAuditLogRecords(auditLogRecords);
 			if (!auditLogRecords.isEmpty()) {

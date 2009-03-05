@@ -271,7 +271,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
 			setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
 			setPaymentStatus(PaymentStatus.PAID);
-			setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
+			setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
@@ -285,7 +285,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			setMiscFee(getMiscFeePaid());
 			setMiscPenalty(getMiscPenaltyPaid());
 			setPaymentStatus(PaymentStatus.PAID);
-			setPaymentDate(new java.sql.Date(new DateTimeService().getCurrentDateTime().getMillis()));
+			setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {

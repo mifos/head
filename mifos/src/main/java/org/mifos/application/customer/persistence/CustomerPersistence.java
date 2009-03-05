@@ -89,6 +89,7 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -218,8 +219,7 @@ public class CustomerPersistence extends Persistence {
 	public Date getLastMeetingDateForCustomer(Integer customerId)
 			throws PersistenceException {
 		Date meetingDate = null;
-		Date actionDate = new java.sql.Date(Calendar.getInstance().getTime()
-				.getTime());
+		Date actionDate = new DateTimeService().getCurrentJavaSqlDate();
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("CUSTOMER_ID", customerId);
 		queryParameters.put("ACTION_DATE", actionDate);
