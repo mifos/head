@@ -315,7 +315,8 @@
             </assertions>
         </junit>
         <fail if="tests.failure" 
-            message="Unit tests failed - Report is available at ${dist.dir}"/>
+            message="Unit tests failed - Report is available at ${dist.dir}"
+            status="1"/>
     </target>
 
     <target name="build" depends="compile,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
