@@ -35,7 +35,7 @@ public class TestLocalization extends MifosIntegrationTest {
 	
 	@BeforeClass
 	public static void init() throws Exception {
-		MifosLogManager.configure(FilePaths.LOGFILE);
+		MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
 	}
 	
 	private void restoreConfigSetup(Localization localization, ConfigLocale savedConfigLocale)

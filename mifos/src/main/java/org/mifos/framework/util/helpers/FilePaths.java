@@ -48,8 +48,7 @@ public interface FilePaths {
 		"org/mifos/framework/util/resources/Initialization.xml"; 
 	public static final String DEPENDENCYFILE = 
 		"org/mifos/framework/util/resources/Dependency.xml";
-	public static final String LOGFILE = 
-		"org/mifos/framework/util/resources/loggerresources/loggerconfiguration.xml";
+	public static final String LOG_CONFIGURATION_FILE = "loggerconfiguration.xml";
 	public static final String MENUPATH =
 		"org/mifos/framework/util/resources/menuresources/menu.xml";
 	public static final String MENUSCHEMA =

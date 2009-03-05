@@ -45,7 +45,7 @@ public class DatabaseSetup {
 	 */
 	public static void configureLogging() {
 		if (!MifosLogManager.isConfigured()) {
-			MifosLogManager.configure(FilePaths.LOGFILE);
+			MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
 		}
 	}
 

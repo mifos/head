@@ -50,7 +50,7 @@ public class ReportsDataServiceTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		MifosLogManager.configure(FilePaths.LOGFILE);
+		MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
 		
 		loanPrdBusinessServiceMock = createMock(LoanPrdBusinessService.class);
 		personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);

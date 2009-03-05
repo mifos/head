@@ -32,7 +32,7 @@ public class MifosService {
     
     void init() throws LoggerConfigurationException, HibernateStartUpException, 
     AppNotConfiguredException {
-	    MifosLogManager.configure(FilePaths.LOGFILE);
+	    MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
 	    MifosLogger logger = MifosLogManager.getLogger("org.mifos.logger");
 	    logger.info("Logger initialized", false, null);
 	    

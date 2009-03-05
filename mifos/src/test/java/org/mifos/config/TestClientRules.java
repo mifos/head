@@ -42,7 +42,7 @@ public class TestClientRules {
 	
 	@BeforeClass
 	public static void init() throws Exception {
-		MifosLogManager.configure(FilePaths.LOGFILE);
+		MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
 		DatabaseSetup.initializeHibernate();
 		
 	}
