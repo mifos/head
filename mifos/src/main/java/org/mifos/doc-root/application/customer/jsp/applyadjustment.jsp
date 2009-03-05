@@ -51,10 +51,10 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ApplyAdjustment"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ApplyAdjustment"/>
 		<SCRIPT>
 	function ViewDetails(){
 		closedaccsearchactionform.submit();

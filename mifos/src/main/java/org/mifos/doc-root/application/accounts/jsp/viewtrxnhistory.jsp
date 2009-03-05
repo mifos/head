@@ -46,10 +46,11 @@
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ViewTransactionHistory"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ViewTransactionHistory"/>
+
 <SCRIPT >
 	function ViewDetails(){
 		customerAccountActionForm.action="customerAccountAction.do?method=load";

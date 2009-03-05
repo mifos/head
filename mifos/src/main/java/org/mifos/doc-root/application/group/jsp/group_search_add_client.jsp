@@ -44,10 +44,10 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="GroupSearchAddClient"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="GroupSearchAddClient"/>
 
 <script language="javascript">
   function goToCancelPage(){

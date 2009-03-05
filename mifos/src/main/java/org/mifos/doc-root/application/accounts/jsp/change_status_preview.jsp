@@ -9,10 +9,10 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ChangeStatusPreview"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ChangeStatusPreview"/>
 		<script language="javascript">
 			  function goToCancelPage(form){
 				form.action="editStatusAction.do?method=cancel";

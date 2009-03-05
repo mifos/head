@@ -52,7 +52,6 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="ViewGroupChargesDetail"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
@@ -61,6 +60,7 @@
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivities')}"
 			   var="recentActivities" />
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ViewGroupChargesDetail"/>
 	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">

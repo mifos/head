@@ -47,10 +47,9 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="ConfirmAddClientToGroup"/>
-
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ConfirmAddClientToGroup"/>
 
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">

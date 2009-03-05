@@ -46,10 +46,10 @@
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="CreateGroup"/>
-
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="CreateGroup"/>
+
 
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>

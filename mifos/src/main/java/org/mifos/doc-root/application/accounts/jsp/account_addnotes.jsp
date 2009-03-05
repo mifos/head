@@ -7,11 +7,11 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
-<input type="hidden" id="page.id" value="AccountAddNotes"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-
+    <input type="hidden" id="page.id" value="AccountAddNotes"/>
+     
 		<script language="javascript">
 
 function goToCancelPage(){

@@ -46,11 +46,12 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ReviewApplyPayment"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ReviewApplyPayment"/>
+
 		<SCRIPT>
 	function ViewDetails(){
 			customerAccountActionForm.action="customerAccountAction.do?method=load";

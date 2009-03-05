@@ -51,10 +51,10 @@
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 
-<input type="hidden" id="page.id" value="GroupBranchList"/>
-
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="GroupBranchList"/>
+
 <html-el:form action="groupCustAction.do?method=preview">
 
    <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">

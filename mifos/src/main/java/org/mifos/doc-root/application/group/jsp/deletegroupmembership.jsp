@@ -52,10 +52,11 @@
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="DeleteGroupMembership"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="DeleteGroupMembership"/>
+
 		<script>
 		function goToCancelPage(){
 		groupTransferActionForm.action="clientTransferAction.do?method=cancel";

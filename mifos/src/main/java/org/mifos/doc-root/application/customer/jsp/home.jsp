@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".homePage">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="Home"/>
 		<html-el:form action="/custSearchAction.do">
 			
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">

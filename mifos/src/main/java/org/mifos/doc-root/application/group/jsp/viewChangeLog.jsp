@@ -52,10 +52,10 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ViewChangeLog"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ViewChangeLog"/>
 	<script>
 	function returnToDetails(){
 		groupCustActionForm.action="groupCustAction.do?method=cancelChangeLog";

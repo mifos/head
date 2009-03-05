@@ -51,10 +51,9 @@
   }
 </script>
 
-<input type="hidden" id="page.id" value="GroupChooseBranch"/>
-
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="GroupChooseBranch"/>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupTransferAction.do?method=cancel" >

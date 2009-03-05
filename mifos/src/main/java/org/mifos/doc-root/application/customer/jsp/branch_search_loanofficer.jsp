@@ -6,10 +6,10 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="BranchSearchLoanofficer"/>
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="BranchSearchLoanofficer"/>
 		<html-el:form action="custSearchAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<c:set var="Office"

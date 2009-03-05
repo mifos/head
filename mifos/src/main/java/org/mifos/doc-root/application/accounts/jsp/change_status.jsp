@@ -29,10 +29,10 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ChangeStatus"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ChangeStatus"/>	
 		<script language="javascript">
 			function goToCancelPage(form){
 				form.action="editStatusAction.do?method=cancel";

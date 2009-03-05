@@ -44,10 +44,10 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="ConfirmCenterMembership"/>
-
 <tiles:insert definition=".withmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="ConfirmCenterMembership"/>
+
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
   function goToCancelPage(){

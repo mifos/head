@@ -5,11 +5,10 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 
-<input type="hidden" id="page.id" value="CustSearchAccount"/>
-
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-        <c:choose>
+	<input type="hidden" id="page.id" value="CustSearchAccount"/>
+    <c:choose>
             <c:when test="${requestScope.perspective == 'redoLoan'}">
                 <script>
                 function fun_cancel(form)

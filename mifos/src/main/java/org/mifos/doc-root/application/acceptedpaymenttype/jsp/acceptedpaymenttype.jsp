@@ -55,10 +55,10 @@
  
 </script>
 
-<input type="hidden" id="page.id" value="AcceptedPaymentType"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="AcceptedPaymentType"/>
 		<SCRIPT SRC="pages/framework/js/logic.js"></SCRIPT>
 		<html-el:form action="acceptedPaymentTypeAction"  >
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

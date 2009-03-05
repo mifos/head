@@ -42,7 +42,6 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
-<input type="hidden" id="page.id" value="PreviewEditGroupDetails"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
@@ -50,6 +49,7 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="PreviewEditGroupDetails"/>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
 function meetingpopup(){

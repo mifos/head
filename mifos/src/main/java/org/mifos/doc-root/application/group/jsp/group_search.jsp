@@ -44,10 +44,10 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="GroupSearch"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="GroupSearch"/>
 
 <script type="text/javascript">
 

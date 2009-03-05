@@ -48,10 +48,10 @@
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 
-<input type="hidden" id="page.id" value="CustSearchAccountResults"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="CustSearchAccountResults"/>
     <c:choose>
         <c:when test="${requestScope.perspective == 'redoLoan'}">
             <script>

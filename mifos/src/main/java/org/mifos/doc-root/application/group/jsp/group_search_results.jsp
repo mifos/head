@@ -53,10 +53,11 @@ function goToCancelPage()
 }
 </script>
 
-<input type="hidden" id="page.id" value="GroupSearchResults"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="GroupSearchResults"/>
+	
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupCustAction.do">

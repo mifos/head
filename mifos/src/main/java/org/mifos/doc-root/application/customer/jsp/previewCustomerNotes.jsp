@@ -8,10 +8,9 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="PreviewCustomerNotes"/>
-
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="PreviewCustomerNotes"/>
  <script language="javascript">
   function goToEditPage(form){
 	form.action="customerNotesAction.do?method=previous";

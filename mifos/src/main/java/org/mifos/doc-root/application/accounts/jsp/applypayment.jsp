@@ -45,12 +45,12 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
-<input type="hidden" id="page.id" value="ApplyPayment"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ApplyPayment"/>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
 		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>

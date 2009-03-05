@@ -8,9 +8,9 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ViewCustomerNotes"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
+ <input type="hidden" id="page.id" value="ViewCustomerNotes"/>
  <tiles:put name="body" type="string">
 <html-el:form action="notesAction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

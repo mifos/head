@@ -51,10 +51,9 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="ApplyAdjustment"/>
-
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ApplyAdjustment"/>
 		<SCRIPT SRC="pages/application/accounts/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">

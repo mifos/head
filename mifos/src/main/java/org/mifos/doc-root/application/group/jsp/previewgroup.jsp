@@ -45,10 +45,10 @@
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<input type="hidden" id="page.id" value="PreviewGroup"/>
 
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="PreviewGroup"/>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
 	 function setGroupStatus(statusValue){	
