@@ -274,23 +274,22 @@ public class TestBulkEntryView extends MifosIntegrationTest {
          
         java.sql.Date sqlMeetingDate = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
          
-        ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
-        clientAttendance.setAttendance(AttendanceType.ABSENT);
-        clientAttendance.setMeetingDate(meetingDate);
-        client.addClientAttendance(clientAttendance );
+        ClientAttendanceBO expectedClientAttendance = new ClientAttendanceBO();
+        expectedClientAttendance.setAttendance(AttendanceType.ABSENT);
+        expectedClientAttendance.setMeetingDate(meetingDate);
+        client.addClientAttendance(expectedClientAttendance );
         customerPersistence.createOrUpdate(client);
         HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
          
-        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistenceService
-            .getClientAttendance(meetingDate, center.getOffice().getOfficeId() );
+        List<ClientAttendanceDto> clientAttendanceList = bulkEntryPersistenceService.getClientAttendance(meetingDate,
+                center.getOffice().getOfficeId());
          
         CollectionSheetEntryView collectionSheetEntryView = new CollectionSheetEntryView(getCustomerView(client));
-        collectionSheetEntryView.populateClientAttendance(client.getCustomerId(), sqlMeetingDate, collectionSheetEntryClientAttendanceView);
+        collectionSheetEntryView.populateClientAttendance(client.getCustomerId(), sqlMeetingDate, clientAttendanceList);
          
-        assertEquals(
-                "Attendance was set",
-                    clientAttendance.getAttendance().toString(), collectionSheetEntryView.getAttendence().toString());
+        assertEquals("Attendance was set", expectedClientAttendance.getAttendance().toString(),
+                collectionSheetEntryView.getAttendence().toString());
              
         BulkEntryBO bulkEntry = new BulkEntryBO();
         bulkEntry.setOffice(getOfficeView(center.getOffice()));
@@ -311,7 +310,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
          
         assertEquals(
              "Testing BulkEntryBO.buildBulkEntryView",
-             clientAttendance.getAttendance().toString(), 
+             expectedClientAttendance.getAttendance().toString(), 
              clientBulkEntryView.getAttendence().toString());
          
          HibernateUtil.closeSession();

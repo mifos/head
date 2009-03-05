@@ -1,39 +1,21 @@
-/**
-
- * BulkEntryActionForm.java    version: 1.0
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied.  
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
 
 package org.mifos.application.bulkentry.struts.actionforms;
@@ -71,498 +53,388 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class BulkEntryActionForm extends BaseActionForm {
-    
+
+    private static final long serialVersionUID = 5558673873893675965L;
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
-    
+    private String customerId;
+    private String loanOfficerId;
+    private String paymentId;
+    private String receiptId;
+    private String receiptDateDD;
+    private String receiptDateMM;
+    private String receiptDateYY;
+    private String transactionDateDD;
+    private String transactionDateMM;
+    private String transactionDateYY;
+    private String officeId;
 
-	private static final long serialVersionUID = 1L;
+    public String getCustomerId() {
+        return customerId;
+    }
 
-	private String customerId;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
-	private String loanOfficerId;
+    public String getLoanOfficerId() {
+        return loanOfficerId;
+    }
 
-	private String paymentId;
+    public void setLoanOfficerId(String loanOfficerId) {
+        this.loanOfficerId = loanOfficerId;
+    }
 
-	private String receiptId;
+    public String getOfficeId() {
+        return officeId;
+    }
 
-	private String receiptDateDD;
-	private String receiptDateMM;
-	private String receiptDateYY;
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
 
-	private String transactionDateDD;
-	private String transactionDateMM;
-	private String transactionDateYY;
+    public String getPaymentId() {
+        return paymentId;
+    }
 
-	private String officeId;
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
 
-	public String getCustomerId() {
-		return customerId;
-	}
+    public String getReceiptDate() {
+        if (StringUtils.isNullOrEmpty(getReceiptDateDD()) || StringUtils.isNullOrEmpty(getReceiptDateMM())
+                || StringUtils.isNullOrEmpty(getReceiptDateYY()))
+            return null;
+        return getReceiptDateDD() + "/" + getReceiptDateMM() + "/" + getReceiptDateYY();
+    }
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
+    public void setReceiptDate(String s) {
+        if (!StringUtils.isNullOrEmpty(s))
+            setReceiptDate(DateUtils.getDate(s));
+    }
 
-	public String getLoanOfficerId() {
-		return loanOfficerId;
-	}
+    public void setReceiptDate(java.util.Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        // note that Calendar retrieves 0-based month, so increment month field
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH) + 1;
+        int year = c.get(Calendar.YEAR);
+        setReceiptDateDD(Integer.toString(day));
+        setReceiptDateMM(Integer.toString(month));
+        setReceiptDateYY(Integer.toString(year));
+    }
 
-	public void setLoanOfficerId(String loanOfficerId) {
-		this.loanOfficerId = loanOfficerId;
-	}
+    public void setReceiptDateDD(String receiptDateDD) {
+        this.receiptDateDD = receiptDateDD;
+    }
 
-	public String getOfficeId() {
-		return officeId;
-	}
+    public String getReceiptDateDD() {
+        return receiptDateDD;
+    }
 
-	public void setOfficeId(String officeId) {
-		this.officeId = officeId;
-	}
+    public void setReceiptDateMM(String receiptDateMM) {
+        this.receiptDateMM = receiptDateMM;
+    }
 
-	public String getPaymentId() {
-		return paymentId;
-	}
+    public String getReceiptDateMM() {
+        return receiptDateMM;
+    }
 
-	public void setPaymentId(String paymentId) {
-		this.paymentId = paymentId;
-	}
+    public void setReceiptDateYY(String receiptDateYY) {
+        this.receiptDateYY = receiptDateYY;
+    }
 
-	public String getReceiptDate() {
-		if (StringUtils.isNullOrEmpty(getReceiptDateDD()) ||
-				StringUtils.isNullOrEmpty(getReceiptDateMM()) ||
-				StringUtils.isNullOrEmpty(getReceiptDateYY()))
-			return null;
-		return getReceiptDateDD() + "/" + getReceiptDateMM() + "/" + getReceiptDateYY();
-	}
+    public String getReceiptDateYY() {
+        return receiptDateYY;
+    }
 
-	public void setReceiptDate(String s) {
-		if (!StringUtils.isNullOrEmpty(s))
-			setReceiptDate(DateUtils.getDate(s));
-	}
-	
-	public void setReceiptDate(java.util.Date date) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		// note that Calendar retrieves 0-based month, so increment month field
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int month = c.get(Calendar.MONTH) + 1;
-		int year = c.get(Calendar.YEAR);
-		setReceiptDateDD(Integer.toString(day));
-		setReceiptDateMM(Integer.toString(month));
-		setReceiptDateYY(Integer.toString(year));
-	}
+    public String getReceiptId() {
+        return receiptId;
+    }
 
-	public void setReceiptDateDD(String receiptDateDD) {
-		this.receiptDateDD = receiptDateDD;
-	}
+    public void setReceiptId(String receiptId) {
+        this.receiptId = receiptId;
+    }
 
-	public String getReceiptDateDD() {
-		return receiptDateDD;
-	}
+    public String getTransactionDate() {
+        if (StringUtils.isNullOrEmpty(transactionDateDD) || StringUtils.isNullOrEmpty(transactionDateMM)
+                || StringUtils.isNullOrEmpty(transactionDateYY))
+            return null;
+        return transactionDateDD + "/" + transactionDateMM + "/" + transactionDateYY;
+    }
 
-	public void setReceiptDateMM(String receiptDateMM) {
-		this.receiptDateMM = receiptDateMM;
-	}
+    public void setTransactionDate(String s) {
+        setTransactionDate(DateUtils.getDate(s));
+    }
 
-	public String getReceiptDateMM() {
-		return receiptDateMM;
-	}
+    public void setTransactionDate(java.util.Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        // note that Calendar retrieves 0-based month, so increment month field
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH) + 1;
+        int year = c.get(Calendar.YEAR);
+        setTransactionDateDD(Integer.toString(day));
+        setTransactionDateMM(Integer.toString(month));
+        setTransactionDateYY(Integer.toString(year));
+    }
 
-	public void setReceiptDateYY(String receiptDateYY) {
-		this.receiptDateYY = receiptDateYY;
-	}
+    public void setTransactionDateDD(String transactionDateDD) {
+        this.transactionDateDD = transactionDateDD;
+    }
 
-	public String getReceiptDateYY() {
-		return receiptDateYY;
-	}
+    public String getTransactionDateDD() {
+        return transactionDateDD;
+    }
 
-	public String getReceiptId() {
-		return receiptId;
-	}
+    public void setTransactionDateMM(String transactionDateMM) {
+        this.transactionDateMM = transactionDateMM;
+    }
 
-	public void setReceiptId(String receiptId) {
-		this.receiptId = receiptId;
-	}
+    public String getTransactionDateMM() {
+        return transactionDateMM;
+    }
 
-	public String getTransactionDate() {
-		if (StringUtils.isNullOrEmpty(transactionDateDD) ||
-				StringUtils.isNullOrEmpty(transactionDateMM) 
-				|| StringUtils.isNullOrEmpty(transactionDateYY))
-				return null;
-		return transactionDateDD + "/" + transactionDateMM + "/" + transactionDateYY;
-	}
-	
-	public void setTransactionDate(String s) {
-		setTransactionDate(DateUtils.getDate(s));
-	}
-	
-	public void setTransactionDate(java.util.Date date) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		// note that Calendar retrieves 0-based month, so increment month field
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		int month = c.get(Calendar.MONTH) + 1;
-		int year = c.get(Calendar.YEAR);
-		setTransactionDateDD(Integer.toString(day));
-		setTransactionDateMM(Integer.toString(month));
-		setTransactionDateYY(Integer.toString(year));
-	}
+    public void setTransactionDateYY(String transactionDateYY) {
+        this.transactionDateYY = transactionDateYY;
+    }
 
-	public void setTransactionDateDD(String transactionDateDD) {
-		this.transactionDateDD = transactionDateDD;
-	}
+    public String getTransactionDateYY() {
+        return transactionDateYY;
+    }
 
-	public String getTransactionDateDD() {
-		return transactionDateDD;
-	}
-
-	public void setTransactionDateMM(String transactionDateMM) {
-		this.transactionDateMM = transactionDateMM;
-	}
-
-	public String getTransactionDateMM() {
-		return transactionDateMM;
-	}
-
-	public void setTransactionDateYY(String transactionDateYY) {
-		this.transactionDateYY = transactionDateYY;
-	}
-
-	public String getTransactionDateYY() {
-		return transactionDateYY;
-	}
-
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
         logger.debug("BulkEntryActionForm.reset");
-		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
-				BulkEntryConstants.PREVIEWMETHOD)) {
-			request.setAttribute(Constants.CURRENTFLOWKEY, request
-					.getParameter(Constants.CURRENTFLOWKEY));
-			try {
-				BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils
-						.getAttribute(BulkEntryConstants.BULKENTRY, request);
+        if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(BulkEntryConstants.PREVIEWMETHOD)) {
+            request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+            try {
+                BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
 
-				int customers = bulkEntry.getTotalCustomers();
-				int loanProductsSize = bulkEntry.getLoanProducts().size();
-				int savingsProductSize = bulkEntry.getSavingsProducts().size();
-				BulkEntryDataView bulkEntryDataView = new BulkEntryDataView();
-				String enteredAmount[][] = new String[customers + 1][loanProductsSize];
-				String disBurtialAmount[][] = new String[customers + 1][loanProductsSize];
-				String depositAmountEntered[][] = new String[customers + 1][savingsProductSize];
-				String withDrawalAmountEntered[][] = new String[customers + 1][savingsProductSize];
-				String attendance[] = new String[customers + 1];
-				String customerAccountAmountEntered[] = new String[customers + 1];
+                int customers = bulkEntry.getTotalCustomers();
+                int loanProductsSize = bulkEntry.getLoanProducts().size();
+                int savingsProductSize = bulkEntry.getSavingsProducts().size();
+                BulkEntryDataView bulkEntryDataView = new BulkEntryDataView();
+                String enteredAmount[][] = new String[customers + 1][loanProductsSize];
+                String disbursalAmount[][] = new String[customers + 1][loanProductsSize];
+                String depositAmountEntered[][] = new String[customers + 1][savingsProductSize];
+                String withdrawalAmountEntered[][] = new String[customers + 1][savingsProductSize];
+                String attendance[] = new String[customers + 1];
+                String customerAccountAmountEntered[] = new String[customers + 1];
 
-				for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
-					attendance[rowIndex] = request
-							.getParameter("attendanceSelected[" + rowIndex
-									+ "]");
-					for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
-						enteredAmount[rowIndex][columnIndex] = request
-								.getParameter("enteredAmount[" + rowIndex
-										+ "][" + columnIndex + "]");
-						disBurtialAmount[rowIndex][columnIndex] = request
-								.getParameter("enteredAmount["
-										+ rowIndex
-										+ "]["
-										+ (loanProductsSize
-												+ savingsProductSize + columnIndex)
-										+ "]");
+                for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
+                    attendance[rowIndex] = request.getParameter("attendanceSelected[" + rowIndex + "]");
+                    for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
+                        enteredAmount[rowIndex][columnIndex] = request.getParameter("enteredAmount[" + rowIndex + "]["
+                                + columnIndex + "]");
+                        disbursalAmount[rowIndex][columnIndex] = request.getParameter("enteredAmount[" + rowIndex
+                                + "][" + (loanProductsSize + savingsProductSize + columnIndex) + "]");
 
-					}
-					for (int columnIndex = 0; columnIndex < savingsProductSize; columnIndex++) {
-						depositAmountEntered[rowIndex][columnIndex] = request
-								.getParameter("depositAmountEntered["
-										+ rowIndex + "]["
-										+ (loanProductsSize + columnIndex)
-										+ "]");
-						withDrawalAmountEntered[rowIndex][columnIndex] = request
-								.getParameter("withDrawalAmountEntered["
-										+ rowIndex
-										+ "]["
-										+ ((2 * loanProductsSize)
-												+ savingsProductSize + columnIndex)
-										+ "]");
-					}
-					customerAccountAmountEntered[rowIndex] = request
-							.getParameter("customerAccountAmountEntered["
-									+ rowIndex
-									+ "]["
-									+ (2 * (loanProductsSize + savingsProductSize))
-									+ "]");
-				}
-				bulkEntryDataView
-						.setDisbursementAmountEntered(disBurtialAmount);
-				bulkEntryDataView.setLoanAmountEntered(enteredAmount);
+                    }
+                    for (int columnIndex = 0; columnIndex < savingsProductSize; columnIndex++) {
+                        depositAmountEntered[rowIndex][columnIndex] = request.getParameter("depositAmountEntered["
+                                + rowIndex + "][" + (loanProductsSize + columnIndex) + "]");
+                        withdrawalAmountEntered[rowIndex][columnIndex] = request
+                                .getParameter("withDrawalAmountEntered[" + rowIndex + "]["
+                                        + ((2 * loanProductsSize) + savingsProductSize + columnIndex) + "]");
+                    }
+                    customerAccountAmountEntered[rowIndex] = request.getParameter("customerAccountAmountEntered["
+                            + rowIndex + "][" + (2 * (loanProductsSize + savingsProductSize)) + "]");
+                }
+                bulkEntryDataView.setDisbursementAmountEntered(disbursalAmount);
+                bulkEntryDataView.setLoanAmountEntered(enteredAmount);
 
-				bulkEntryDataView
-						.setWithDrawalAmountEntered(withDrawalAmountEntered);
-				bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
-				bulkEntryDataView
-						.setCustomerAccountAmountEntered(customerAccountAmountEntered);
-				bulkEntryDataView.setAttendance(attendance);
-				bulkEntry.setBulkEntryDataView(bulkEntryDataView);
-			} catch (PageExpiredException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+                bulkEntryDataView.setWithDrawalAmountEntered(withdrawalAmountEntered);
+                bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
+                bulkEntryDataView.setCustomerAccountAmountEntered(customerAccountAmountEntered);
+                bulkEntryDataView.setAttendance(attendance);
+                bulkEntry.setBulkEntryDataView(bulkEntryDataView);
+            } catch (PageExpiredException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         logger.debug("BulkEntryActionForm.validate");
-		request.setAttribute(Constants.CURRENTFLOWKEY, request
-				.getParameter(Constants.CURRENTFLOWKEY));
-		ActionErrors errors = new ActionErrors();
-		UserContext userContext = getUserContext(request);
-		Locale locale = userContext.getPreferredLocale();
-		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
-				BulkEntryConstants.PREVIEWMETHOD)) {
-			try {
-				BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils
-						.getAttribute(BulkEntryConstants.BULKENTRY, request);
-				return validatePopulatedData(bulkEntry.getBulkEntryParent(),
-						errors, locale);
-			} catch (PageExpiredException e) {
-				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-						new ActionMessage(
-								ExceptionConstants.PAGEEXPIREDEXCEPTION));
-			}
+        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        ActionErrors errors = new ActionErrors();
+        UserContext userContext = getUserContext(request);
+        Locale locale = userContext.getPreferredLocale();
+        if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(BulkEntryConstants.PREVIEWMETHOD)) {
+            try {
+                BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
+                return validatePopulatedData(bulkEntry.getBulkEntryParent(), errors, locale);
+            } catch (PageExpiredException e) {
+                errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
+                        ExceptionConstants.PAGEEXPIREDEXCEPTION));
+            }
 
-		} else if (request.getParameter(BulkEntryConstants.METHOD)
-				.equalsIgnoreCase(BulkEntryConstants.GETMETHOD)) {
-			java.sql.Date meetingDate = null;
-			try {
-				meetingDate = (Date) SessionUtils.getAttribute(
-						"LastMeetingDate", request);
+        } else if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(BulkEntryConstants.GETMETHOD)) {
+            java.sql.Date meetingDate = null;
+            try {
+                meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate", request);
 
-			} catch (PageExpiredException e) {
-				throw new RuntimeException(e);
-			}
-			try {
-				short isCenterHeirarchyExists = (Short) SessionUtils
-						.getAttribute(
-								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
-								request);
-				return mandatoryCheck(meetingDate, getUserContext(request),
-						isCenterHeirarchyExists);
-			} catch (PageExpiredException e) {
-				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-						new ActionMessage(
-								ExceptionConstants.PAGEEXPIREDEXCEPTION));
-			}
-		}
-		return errors;
-	}
+            } catch (PageExpiredException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                short isCenterHeirarchyExists = (Short) SessionUtils.getAttribute(
+                        BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, request);
+                return mandatoryCheck(meetingDate, getUserContext(request), isCenterHeirarchyExists);
+            } catch (PageExpiredException e) {
+                errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
+                        ExceptionConstants.PAGEEXPIREDEXCEPTION));
+            }
+        }
+        return errors;
+    }
 
-	private ActionErrors validatePopulatedData(CollectionSheetEntryView parent,
-			ActionErrors errors, Locale locale) {
+    private ActionErrors validatePopulatedData(CollectionSheetEntryView parent, ActionErrors errors, Locale locale) {
         logger.debug("validatePopulatedData");
-		List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
+        List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 
-		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-		String acCollections = resources.getString(BulkEntryConstants.AC_COLLECTION);
-		if (null != children) {
-			for (CollectionSheetEntryView collectionSheetEntryView : children) {
-				validatePopulatedData(collectionSheetEntryView, errors, locale);
-			}
-		}
-		for (LoanAccountsProductView accountView : parent
-				.getLoanAccountDetails()) {
-			if (accountView.isDisburseLoanAccountPresent() || accountView.getLoanAccountViews().size() > 1) {
-				Double enteredAmount = 0.0;
-				if (null != accountView.getEnteredAmount()
-						&& accountView.isValidAmountEntered())
-					enteredAmount = getDoubleValue(accountView
-							.getEnteredAmount());
-				Double enteredDisbursalAmount = 0.0;
-				if (null != accountView.getDisBursementAmountEntered()
-						&& accountView.isValidDisbursementAmount())
-					enteredDisbursalAmount = getDoubleValue(accountView
-							.getDisBursementAmountEntered());
-				Double totalDueAmount = accountView.getTotalAmountDue();
-				Double totalDisburtialAmount = accountView
-						.getTotalDisburseAmount();
-				if (totalDueAmount.doubleValue() <= 0.0
-						&& totalDisburtialAmount > 0.0) {
-					if (!accountView.isValidDisbursementAmount()
-							|| (!enteredDisbursalAmount
-									.equals(totalDisburtialAmount) && !enteredDisbursalAmount
-									.equals(0.0)))
-						errors
-								.add(
-										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-										new ActionMessage(
-												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-												accountView
-														.getPrdOfferingShortName(),
-												parent.getCustomerDetail()
-														.getDisplayName()));
-				}
-				if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
-					if (!accountView.isValidAmountEntered()
-							|| (!enteredAmount.equals(totalDueAmount) && !enteredAmount
-									.equals(0.0)))
-						errors
-								.add(
-										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-										new ActionMessage(
-												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-												accountView
-														.getPrdOfferingShortName(),
-												parent.getCustomerDetail()
-														.getDisplayName()));
-				}
-				if (totalDueAmount.doubleValue() > 0.0
-						&& totalDisburtialAmount > 0.0) {
-					if (!accountView.isValidAmountEntered()
-							|| !accountView.isValidDisbursementAmount()
-							|| (accountView.getEnteredAmount() == null)
-							|| (accountView.getDisBursementAmountEntered() == null)
-							|| (enteredAmount.equals(0.0) && !enteredDisbursalAmount
-									.equals(0.0))
-							|| (enteredDisbursalAmount.equals(0.0) && !enteredAmount
-									.equals(0.0))
-							|| (enteredDisbursalAmount
-									.equals(totalDisburtialAmount) && !enteredAmount
-									.equals(totalDueAmount))
-							|| (enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
-									.equals(totalDisburtialAmount))
-							|| (!enteredAmount.equals(totalDueAmount)
-									&& !enteredDisbursalAmount
-											.equals(totalDisburtialAmount)
-									&& !enteredDisbursalAmount.equals(0.0) && !enteredAmount
-									.equals(0.0)))
-						errors
-								.add(
-										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-										new ActionMessage(
-												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-												accountView
-														.getPrdOfferingShortName(),
-												parent.getCustomerDetail()
-														.getDisplayName()));
-				}
-				if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
-					if (!accountView.isValidAmountEntered()
-							|| !accountView.isValidDisbursementAmount()
-							|| !enteredDisbursalAmount.equals(0.0) || !enteredAmount
-									.equals(0.0))
-						errors
-								.add(
-										BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-										new ActionMessage(
-												BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-												accountView
-														.getPrdOfferingShortName(),
-												parent.getCustomerDetail()
-														.getDisplayName()));
-				}
-			}
-		}
-		for (SavingsAccountView savingsAccountView : parent
-				.getSavingsAccountDetails()) {
-			if (!savingsAccountView.isValidDepositAmountEntered()
-					|| !savingsAccountView.isValidWithDrawalAmountEntered()) {
-				errors.add(BulkEntryConstants.ERRORINVALIDAMOUNT,
-						new ActionMessage(
-								BulkEntryConstants.ERRORINVALIDAMOUNT,
-								savingsAccountView.getSavingsOffering()
-										.getPrdOfferingShortName(), parent
-										.getCustomerDetail().getDisplayName()));
-			}
-		}
-		CustomerAccountView customerAccountView = parent
-				.getCustomerAccountDetails();
-		Double customerAccountAmountEntered = 0.0;
-		if (null != customerAccountView.getCustomerAccountAmountEntered()
-				&& customerAccountView.isValidCustomerAccountAmountEntered())
-			customerAccountAmountEntered = getDoubleValue(customerAccountView
-					.getCustomerAccountAmountEntered());
-		if (!customerAccountView.isValidCustomerAccountAmountEntered()
-				|| ((!customerAccountAmountEntered.equals(customerAccountView
-						.getTotalAmountDue().getAmountDoubleValue())) && (!customerAccountAmountEntered
-						.equals(0.0)))) {
-			errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-					new ActionMessage(
-							BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
-							acCollections, parent.getCustomerDetail()
-									.getDisplayName()));
-		}
-		return errors;
-	}
-	
-	private ActionErrors receiptDateValidate(ActionErrors errors, Locale locale) {
-		if (!StringUtils.isNullOrEmpty(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
-			ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-			String rcptdate = resources.getString(BulkEntryConstants.RECEIPTDATE);
-			errors.add(BulkEntryConstants.INVALID_RECEIPT_DATE,
-					new ActionMessage(BulkEntryConstants.INVALID_RECEIPT_DATE, rcptdate));
-		}
-		return errors;
-	}
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
+        String acCollections = resources.getString(BulkEntryConstants.AC_COLLECTION);
+        if (null != children) {
+            for (CollectionSheetEntryView collectionSheetEntryView : children) {
+                validatePopulatedData(collectionSheetEntryView, errors, locale);
+            }
+        }
+        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
+            if (accountView.isDisburseLoanAccountPresent() || accountView.getLoanAccountViews().size() > 1) {
+                Double enteredAmount = 0.0;
+                if (null != accountView.getEnteredAmount() && accountView.isValidAmountEntered())
+                    enteredAmount = getDoubleValue(accountView.getEnteredAmount());
+                Double enteredDisbursalAmount = 0.0;
+                if (null != accountView.getDisBursementAmountEntered() && accountView.isValidDisbursementAmount())
+                    enteredDisbursalAmount = getDoubleValue(accountView.getDisBursementAmountEntered());
+                Double totalDueAmount = accountView.getTotalAmountDue();
+                Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
+                if (totalDueAmount.doubleValue() <= 0.0 && totalDisburtialAmount > 0.0) {
+                    if (!accountView.isValidDisbursementAmount()
+                            || (!enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredDisbursalAmount
+                                    .equals(0.0)))
+                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                                parent.getCustomerDetail().getDisplayName()));
+                }
+                if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
+                    if (!accountView.isValidAmountEntered()
+                            || (!enteredAmount.equals(totalDueAmount) && !enteredAmount.equals(0.0)))
+                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                                parent.getCustomerDetail().getDisplayName()));
+                }
+                if (totalDueAmount.doubleValue() > 0.0 && totalDisburtialAmount > 0.0) {
+                    if (!accountView.isValidAmountEntered()
+                            || !accountView.isValidDisbursementAmount()
+                            || (accountView.getEnteredAmount() == null)
+                            || (accountView.getDisBursementAmountEntered() == null)
+                            || (enteredAmount.equals(0.0) && !enteredDisbursalAmount.equals(0.0))
+                            || (enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0))
+                            || (enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredAmount
+                                    .equals(totalDueAmount))
+                            || (enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
+                                    .equals(totalDisburtialAmount))
+                            || (!enteredAmount.equals(totalDueAmount)
+                                    && !enteredDisbursalAmount.equals(totalDisburtialAmount)
+                                    && !enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)))
+                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                                parent.getCustomerDetail().getDisplayName()));
+                }
+                if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
+                    if (!accountView.isValidAmountEntered() || !accountView.isValidDisbursementAmount()
+                            || !enteredDisbursalAmount.equals(0.0) || !enteredAmount.equals(0.0))
+                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                                parent.getCustomerDetail().getDisplayName()));
+                }
+            }
+        }
+        for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
+            if (!savingsAccountView.isValidDepositAmountEntered()
+                    || !savingsAccountView.isValidWithDrawalAmountEntered()) {
+                errors.add(BulkEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
+                        BulkEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView.getSavingsOffering()
+                                .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
+            }
+        }
+        CustomerAccountView customerAccountView = parent.getCustomerAccountDetails();
+        Double customerAccountAmountEntered = 0.0;
+        if (null != customerAccountView.getCustomerAccountAmountEntered()
+                && customerAccountView.isValidCustomerAccountAmountEntered())
+            customerAccountAmountEntered = getDoubleValue(customerAccountView.getCustomerAccountAmountEntered());
+        if (!customerAccountView.isValidCustomerAccountAmountEntered()
+                || ((!customerAccountAmountEntered.equals(customerAccountView.getTotalAmountDue()
+                        .getAmountDoubleValue())) && (!customerAccountAmountEntered.equals(0.0)))) {
+            errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                    BulkEntryConstants.BULKENTRYINVALIDAMOUNT, acCollections, parent.getCustomerDetail()
+                            .getDisplayName()));
+        }
+        return errors;
+    }
 
-	private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext,
-			short isCenterHeirarchyExists) {
-		Locale locale = userContext.getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-		String loanOfficer = resources.getString(BulkEntryConstants.LOANOFFICERS);
-		String modeOfPayment = resources.getString(BulkEntryConstants.MODE_OF_PAYMENT);
-		String dateOfTransaction = resources.getString(BulkEntryConstants.DATEOFTRXN);
-		ActionErrors errors = receiptDateValidate(new ActionErrors(), locale);
-		java.sql.Date currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils.getCurrentDate(userContext.getPreferredLocale()));
-		java.sql.Date trxnDate = null;
-		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
-				: ConfigurationConstants.GROUP;
-		if (getTransactionDate() != null && !getTransactionDate().equals("")) {
-			trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
-		}
-		if (officeId == null || "".equals(officeId.trim())) {
-			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
-					BulkEntryConstants.MANDATORYFIELDS, getMessageText(
-							ConfigurationConstants.BRANCHOFFICE, userContext)));
-		}
-		if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {
-			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
-					BulkEntryConstants.MANDATORYFIELDS,
-					loanOfficer));
-		}
-		if (customerId == null || "".equals(customerId.trim())) {
-			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
-					BulkEntryConstants.MANDATORYFIELDS, getLabel(customerLabel,
-							userContext)));
-		}
-		if (paymentId == null || "".equals(paymentId.trim())) {
-			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
-					BulkEntryConstants.MANDATORYFIELDS,
-					modeOfPayment));
-		}
-		if (getTransactionDate() == null || "".equals(getTransactionDate().trim())) {
-			errors.add(BulkEntryConstants.MANDATORYENTER, new ActionMessage(
-					BulkEntryConstants.MANDATORYENTER,
-					dateOfTransaction));
-		} else if (!DateUtils.isValidDate(getTransactionDate())) {
-			errors.add(BulkEntryConstants.INVALID_TRANSACTION_DATE,
-					new ActionMessage(BulkEntryConstants.INVALID_TRANSACTION_DATE));
-		}
-		if (currentDate != null
-				&& meetingDate != null
-				&& trxnDate != null
-				&& (meetingDate.compareTo(trxnDate) > 0 || trxnDate
-						.compareTo(currentDate) > 0)) {
-			errors.add(BulkEntryConstants.INVALIDENDDATE, new ActionMessage(
-					BulkEntryConstants.INVALIDENDDATE,
-					dateOfTransaction));
-		} else if (meetingDate == null && trxnDate != null
-				&& trxnDate.compareTo(currentDate) != 0) {
-			errors.add(BulkEntryConstants.MEETINGDATEEXCEPTION,
-					new ActionMessage(BulkEntryConstants.MEETINGDATEEXCEPTION,
-							dateOfTransaction));
-		}
-		
-		return errors;
-	}
+    private ActionErrors receiptDateValidate(ActionErrors errors, Locale locale) {
+        if (!StringUtils.isNullOrEmpty(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
+            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
+            String rcptdate = resources.getString(BulkEntryConstants.RECEIPTDATE);
+            errors.add(BulkEntryConstants.INVALID_RECEIPT_DATE, new ActionMessage(
+                    BulkEntryConstants.INVALID_RECEIPT_DATE, rcptdate));
+        }
+        return errors;
+    }
+
+    private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext, short isCenterHeirarchyExists) {
+        Locale locale = userContext.getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
+        String loanOfficer = resources.getString(BulkEntryConstants.LOANOFFICERS);
+        String modeOfPayment = resources.getString(BulkEntryConstants.MODE_OF_PAYMENT);
+        String dateOfTransaction = resources.getString(BulkEntryConstants.DATEOFTRXN);
+        ActionErrors errors = receiptDateValidate(new ActionErrors(), locale);
+        java.sql.Date currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils
+                .getCurrentDate(userContext.getPreferredLocale()));
+        java.sql.Date trxnDate = null;
+        String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
+                : ConfigurationConstants.GROUP;
+        if (getTransactionDate() != null && !getTransactionDate().equals("")) {
+            trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
+        }
+        if (officeId == null || "".equals(officeId.trim())) {
+            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+                    getMessageText(ConfigurationConstants.BRANCHOFFICE, userContext)));
+        }
+        if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {
+            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+                    loanOfficer));
+        }
+        if (customerId == null || "".equals(customerId.trim())) {
+            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+                    getLabel(customerLabel, userContext)));
+        }
+        if (paymentId == null || "".equals(paymentId.trim())) {
+            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+                    modeOfPayment));
+        }
+        if (getTransactionDate() == null || "".equals(getTransactionDate().trim())) {
+            errors.add(BulkEntryConstants.MANDATORYENTER, new ActionMessage(BulkEntryConstants.MANDATORYENTER,
+                    dateOfTransaction));
+        } else if (!DateUtils.isValidDate(getTransactionDate())) {
+            errors.add(BulkEntryConstants.INVALID_TRANSACTION_DATE, new ActionMessage(
+                    BulkEntryConstants.INVALID_TRANSACTION_DATE));
+        }
+        if (currentDate != null && meetingDate != null && trxnDate != null
+                && (meetingDate.compareTo(trxnDate) > 0 || trxnDate.compareTo(currentDate) > 0)) {
+            errors.add(BulkEntryConstants.INVALIDENDDATE, new ActionMessage(BulkEntryConstants.INVALIDENDDATE,
+                    dateOfTransaction));
+        } else if (meetingDate == null && trxnDate != null && trxnDate.compareTo(currentDate) != 0) {
+            errors.add(BulkEntryConstants.MEETINGDATEEXCEPTION, new ActionMessage(
+                    BulkEntryConstants.MEETINGDATEEXCEPTION, dateOfTransaction));
+        }
+
+        return errors;
+    }
 
 }

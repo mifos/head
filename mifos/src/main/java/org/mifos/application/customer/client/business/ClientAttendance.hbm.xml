@@ -26,12 +26,11 @@
     </query>   
    
     <query name="ClientAttendance.getAttendanceForOffice">
-	    <![CDATA[select new org.mifos.application.customer.client.business.service.ClientAttendanceDto( client.customerId,
-			clientAttendance.meetingDate, clientAttendance.attendance)   
-			from org.mifos.application.customer.client.business.ClientBO client,
-			org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance
+	    <![CDATA[ select new org.mifos.application.customer.client.business.ClientAttendanceBO(client.customerId, clientAttendance.meetingDate, clientAttendance.attendance)
+         from org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance,
+			org.mifos.application.customer.client.business.ClientBO client
 			where 
-			client.customerId = clientAttendance.customer.customerId
+			clientAttendance.customer.customerId = client.customerId
 			and client.office.officeId = :OFFICE_ID
 			and clientAttendance.meetingDate = date(:MEETING_DATE)	]]>
     </query>				      	  

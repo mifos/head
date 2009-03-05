@@ -20,6 +20,7 @@
 
 package org.mifos.application.customer.client.business.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,9 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.application.accounts.loan.persistance.ClientDao;
+import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
+import org.mifos.application.accounts.loan.persistance.StandardClientDao;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 
@@ -44,7 +48,8 @@ public class StandardClientService implements ClientService {
     private ClientAttendanceDao clientAttendanceDao;
     
     public StandardClientService() {
-        // for use with setter dependency injection
+        this.clientDao = new StandardClientDao();
+        this.clientAttendanceDao = new StandardClientAttendanceDao();
     }
     
     public StandardClientService(ClientDao clientDao, ClientAttendanceDao clientAttendanceDao) {
@@ -72,8 +77,9 @@ public class StandardClientService implements ClientService {
     public HashMap<Integer, ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws ServiceException {
         HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
         try {
-            for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDao.getClientAttendance(meetingDate, officeId)) {
-                clientAttendance.put(clientAttendanceDto.getClientId(), clientAttendanceDto);
+            for (ClientAttendanceBO clientAttendanceBO : clientAttendanceDao.getClientAttendance(meetingDate, officeId)) {
+                ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(clientAttendanceBO.getId(), clientAttendanceBO.getMeetingDate(), clientAttendanceBO.getAttendance()); 
+                clientAttendance.put(clientAttendanceBO.getId(), clientAttendanceDto);
             }
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -81,6 +87,20 @@ public class StandardClientService implements ClientService {
         return clientAttendance;
     }
     
+    public List<ClientAttendanceDto> getClientAttendanceList(Date meetingDate, Short officeId) throws ServiceException {
+        List<ClientAttendanceBO> clientAttendanceBos = null;
+        try {
+            clientAttendanceBos = clientAttendanceDao.getClientAttendance(meetingDate, officeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+        ArrayList<ClientAttendanceDto> result = new ArrayList<ClientAttendanceDto>();
+        for (ClientAttendanceBO clientAttendanceBo : clientAttendanceBos) {
+            result.add(new ClientAttendanceDto(clientAttendanceBo.getId(), clientAttendanceBo.getMeetingDate(), clientAttendanceBo.getAttendance()));
+        }
+        return result;
+    }
+
     public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException {
         for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDtos) {
             try {
@@ -91,13 +111,6 @@ public class StandardClientService implements ClientService {
         }
     }
 
-    public List<ClientAttendanceDto> getClientAttendanceList(Date meetingDate, Short officeId) throws ServiceException {
-        try {
-            return clientAttendanceDao.getClientAttendance(meetingDate, officeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
     public ClientDao getClientDao() {
         return this.clientDao;
     }

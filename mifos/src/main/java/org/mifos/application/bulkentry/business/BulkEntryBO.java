@@ -1,40 +1,23 @@
-/**
-
- * BulkEntryBO.java    version: 1.0
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied.  
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
  */
+
 package org.mifos.application.bulkentry.business;
 
 import java.sql.Date;
@@ -48,6 +31,8 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
+import org.mifos.application.customer.client.business.service.ClientService;
+import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeView;
@@ -64,38 +49,30 @@ import org.mifos.framework.security.util.UserContext;
 
 public class BulkEntryBO extends BusinessObject {
 
-	private CustomerPersistence customerDbService;
-
+    private CustomerPersistence customerPersistenceService;
+    private ClientService clientService;
 	private PersonnelView loanOfficer;
-
 	private OfficeView office;
-
 	private PaymentTypeView paymentType;
-
 	private CollectionSheetEntryView bulkEntryParent;
-
 	private String receiptId;
-
 	private Date receiptDate;
-
 	private Date transactionDate;
-
 	private List<PrdOfferingBO> loanProducts;
-
 	private List<PrdOfferingBO> savingsProducts;
-
 	private int totalCustomers;
-    
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
+
 
 	public BulkEntryBO() {
 		super();
-		customerDbService = new CustomerPersistence();
+		customerPersistenceService = new CustomerPersistence();
+		clientService = new StandardClientService();
 	}
 
 	public BulkEntryBO(UserContext userContext) {
 		super(userContext);
-		customerDbService = new CustomerPersistence();
+		customerPersistenceService = new CustomerPersistence();
 	}
 
 	public CollectionSheetEntryView getBulkEntryParent() {
@@ -185,54 +162,45 @@ public class BulkEntryBO extends BusinessObject {
 	 * page.
 	 * 
 	 */
-	public void buildBulkEntryView(CustomerView parentCustomer)
-			throws SystemException, ApplicationException {
-		BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
-		List<CustomerBO> allChildNodes = retrieveActiveCustomersUnderParent(
-				parentCustomer.getCustomerSearchId(), office.getOfficeId());
-		List<CollectionSheetEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistanceService
-				.getBulkEntryActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.LOAN_ACCOUNT);
-		List<CollectionSheetEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistanceService
-				.getBulkEntryActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.SAVINGS_ACCOUNT);
-		List<CollectionSheetEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistanceService
-				.getBulkEntryActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.CUSTOMER_ACCOUNT);
-		List<CollectionSheetEntryAccountFeeActionView> bulkEntryLoanFeeScheduleViews = bulkEntryPersistanceService
-				.getBulkEntryFeeActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.LOAN_ACCOUNT);
-		List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistanceService
-				.getBulkEntryFeeActionView(transactionDate, parentCustomer
-						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.CUSTOMER_ACCOUNT);
-        List<ClientAttendanceDto> clientAttendance = bulkEntryPersistanceService
-                .getClientAttendance(transactionDate, office.getOfficeId());
-        
+	public void buildBulkEntryView(CustomerView parentCustomer) throws SystemException, ApplicationException {
+        BulkEntryPersistenceService bulkEntryPersistenceService = new BulkEntryPersistenceService();
+        List<CustomerBO> allChildNodes = retrieveActiveCustomersUnderParent(parentCustomer.getCustomerSearchId(),
+                office.getOfficeId());
+        List<CollectionSheetEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistenceService
+                .getBulkEntryActionView(transactionDate, parentCustomer.getCustomerSearchId(), office.getOfficeId(),
+                        AccountTypes.LOAN_ACCOUNT);
+        List<CollectionSheetEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistenceService
+                .getBulkEntryActionView(transactionDate, parentCustomer.getCustomerSearchId(), office.getOfficeId(),
+                        AccountTypes.SAVINGS_ACCOUNT);
+        List<CollectionSheetEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistenceService
+                .getBulkEntryActionView(transactionDate, parentCustomer.getCustomerSearchId(), office.getOfficeId(),
+                        AccountTypes.CUSTOMER_ACCOUNT);
+        List<CollectionSheetEntryAccountFeeActionView> bulkEntryLoanFeeScheduleViews = bulkEntryPersistenceService
+                .getBulkEntryFeeActionView(transactionDate, parentCustomer.getCustomerSearchId(), office.getOfficeId(),
+                        AccountTypes.LOAN_ACCOUNT);
+        List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistenceService
+                .getBulkEntryFeeActionView(transactionDate, parentCustomer.getCustomerSearchId(), office.getOfficeId(),
+                        AccountTypes.CUSTOMER_ACCOUNT);
+        List<ClientAttendanceDto> clientAttendance = bulkEntryPersistenceService.getClientAttendance(transactionDate,
+                office.getOfficeId());
+
         logger.debug("bulkEntryClientAttendanceViews" + clientAttendance.size());
-        
+
         Collections.sort(allChildNodes, CustomerBO.searchIdComparator());
-        
-		totalCustomers = allChildNodes.size();
-		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
-				parentCustomer, transactionDate, bulkEntryLoanScheduleViews,
-				bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews,
-				bulkEntryCustomerFeeScheduleViews,
-                clientAttendance); 
-		BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent,
-				transactionDate, bulkEntrySavingsScheduleViews);
-        BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent,
-               transactionDate, clientAttendance);
-	}
+
+        totalCustomers = allChildNodes.size();
+        bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes, parentCustomer, transactionDate,
+                bulkEntryLoanScheduleViews, bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews,
+                bulkEntryCustomerFeeScheduleViews, clientAttendance);
+        BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent, transactionDate,
+                bulkEntrySavingsScheduleViews);
+        BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent, transactionDate, clientAttendance);
+    }
 
 	private List<CustomerBO> retrieveActiveCustomersUnderParent(
 			String searchId, Short officeId) throws SystemException,
 			ApplicationException {
-		return customerDbService.getCustomersUnderParent(searchId, officeId);
+		return customerPersistenceService.getCustomersUnderParent(searchId, officeId);
 	}
 
 	public void setBulkEntryDataView(BulkEntryDataView bulkEntryDataView) {
@@ -358,5 +326,20 @@ public class BulkEntryBO extends BusinessObject {
 		}
 	}
 
+    public CustomerPersistence getCustomerPersistenceService() {
+        return this.customerPersistenceService;
+    }
+
+    public void setCustomerPersistenceService(CustomerPersistence customerPersistenceService) {
+        this.customerPersistenceService = customerPersistenceService;
+    }
+
+    public ClientService getClientService() {
+        return this.clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
 }

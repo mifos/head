@@ -1,5 +1,6 @@
 package org.mifos.application.customer.client.business.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -7,13 +8,15 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
 
     private HashMap<String, AttendanceType> attendance = new HashMap<String, AttendanceType>();
     private HashMap<String, LocalDate> meetingDate = new HashMap<String, LocalDate>();
-
+    private List<ClientAttendanceBO> attendanceByOfficeIdAndMeetingDate = new ArrayList<ClientAttendanceBO>();
+    
     @Override
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) {
         return attendance.get(getKey(clientId, meetingDate));
@@ -26,9 +29,17 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
         this.meetingDate.put(key, meetingDate);
     }
 
+    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance, Short officeId){
+        ClientAttendanceBO clientAttendanceBO = new ClientAttendanceBO();
+        clientAttendanceBO.setId(clientId);
+        clientAttendanceBO.setMeetingDate(meetingDate.toDateMidnight().toDate());
+        clientAttendanceBO.setAttendance(attendance);
+        attendanceByOfficeIdAndMeetingDate.add(clientAttendanceBO);
+    }
+    
     @Override
-    public List<ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
-        return null;
+    public List<ClientAttendanceBO> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
+        return attendanceByOfficeIdAndMeetingDate;
     }
 
     private String getKey(Integer clientId, LocalDate meetingDate) {

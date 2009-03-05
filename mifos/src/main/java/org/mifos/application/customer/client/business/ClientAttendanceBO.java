@@ -31,17 +31,28 @@ import org.mifos.framework.business.BusinessObject;
  */
 public class ClientAttendanceBO extends BusinessObject {
 
-	private Integer id;
+    private static final long serialVersionUID = -6373550605583206363L;
+    private Integer id;
 	private Date meetingDate;
 	private CustomerBO customer;
 	private Short attendance;
 
-	public Integer getId() {
+    public ClientAttendanceBO() {
+        super();
+    }
+
+	public ClientAttendanceBO(Integer id, Date meetingDate, Short attendance) {
+        super();
+        this.id = id;
+        this.attendance = attendance;
+        this.meetingDate = meetingDate;
+    }
+
+    public Integer getId() {
 		return id;
 	}
 
-	@SuppressWarnings("unused")
-	private void setId(Integer id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

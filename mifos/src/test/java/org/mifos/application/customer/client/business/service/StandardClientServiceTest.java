@@ -33,6 +33,7 @@ import org.mifos.application.customer.client.business.AttendanceType;
 
 public class StandardClientServiceTest extends TestCase {
 
+    private static final Short OFFICE1_ID = 1;
     private int client1Id = 123456;
     private AttendanceType client1Attendance = AttendanceType.PRESENT;
     private int client2Id = 123457;
@@ -88,6 +89,20 @@ public class StandardClientServiceTest extends TestCase {
         assertEquals(client2Attendance, clientAttendance.get(client2Id).getAttendance());
     }
 
+    public void testGetClientAttendanceListTwoIds() throws Exception {
+        clientAttendanceDao.setAttendance(client1Id, meetingDate, client1Attendance, OFFICE1_ID);
+        clientAttendanceDao.setAttendance(client2Id, meetingDate, client2Attendance, OFFICE1_ID);
+        List<ClientAttendanceDto> clientAttendance = clientService.getClientAttendanceList(meetingDate.toDateMidnight().toDate(), OFFICE1_ID);
+        assertEquals(2, clientAttendance.size());
+        assertNotNull(clientAttendance.get(0));
+        assertEquals(client1Id, (int) clientAttendance.get(0).getClientId());
+        assertEquals(client1Attendance, clientAttendance.get(0).getAttendance());
+        assertNotNull(clientAttendance.get(1));
+        assertEquals(client2Id, (int) clientAttendance.get(1).getClientId());
+        assertEquals(client2Attendance, clientAttendance.get(1).getAttendance());
+    }
+    
+    
     public void testSetClientAttendanceNoIds() throws Exception {
         int expectedNumberOfRecords = clientAttendanceDao.getNumberOfRecords();
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();

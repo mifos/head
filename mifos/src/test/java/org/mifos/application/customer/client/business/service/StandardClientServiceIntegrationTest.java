@@ -35,6 +35,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.AttendanceType;
@@ -44,11 +45,13 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.config.Localization;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.mifos.test.framework.util.SimpleDataSet;
@@ -124,9 +127,10 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         databaseTestUtils.verifyTable(getReplacedAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
     }
     
-    @SuppressWarnings("unchecked")
-    public void testGetBulkEntryClientAttendanceActionView() throws PersistenceException, ServiceException {
+    @Test
+    public void testGetBulkEntryClientAttendance() throws SystemException, ApplicationException {
 
+        new TestCaseInitializer().initialize();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         CenterBO center = TestObjectFactory.createCenter("Center", meeting);
         GroupBO group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -144,10 +148,10 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
 
-        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = (List<ClientAttendanceDto>) clientService.getClientAttendance(
+        List<ClientAttendanceDto> clientAttendanceDtos = (List<ClientAttendanceDto>) clientService.getClientAttendanceList(
                 meetingDate, client.getOffice().getOfficeId());
 
-        Assert.assertEquals(collectionSheetEntryClientAttendanceView.size(), 1);
+        Assert.assertEquals(clientAttendanceDtos.size(), 1);
 
     }
 

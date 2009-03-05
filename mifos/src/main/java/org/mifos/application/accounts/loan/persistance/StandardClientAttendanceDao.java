@@ -29,7 +29,6 @@ import org.joda.time.LocalDate;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -67,6 +66,14 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         HibernateUtil.commitTransaction();
     }
 
+    @SuppressWarnings("unchecked")
+    public List<ClientAttendanceBO> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("MEETING_DATE", meetingDate);
+        queryParameters.put("OFFICE_ID", officeId);
+        return (List<ClientAttendanceBO>) getMasterPersistence().executeNamedQuery("ClientAttendance.getAttendanceForOffice", queryParameters);
+    }
+    
     private ClientAttendanceBO getClientAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
         ClientAttendanceBO result;
         try {
@@ -78,15 +85,6 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         } catch (NumberFormatException e) {
             throw new PersistenceException(e);
         }
-    }
-    
-    
-    @SuppressWarnings("unchecked")
-    public List<ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("MEETING_DATE", meetingDate);
-        queryParameters.put("OFFICE_ID", officeId);
-        return (List<ClientAttendanceDto>) getMasterPersistence().executeNamedQuery("ClientAttendance.getAttendanceForOffice", queryParameters);
     }
     
     private CustomerPersistence getCustomerPersistence() {

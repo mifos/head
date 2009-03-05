@@ -1104,9 +1104,8 @@ public class TestObjectFactory {
 			RecurrenceType meetingFrequency, Short recurAfter) {
 		FeeBO fee;
 		try {
-			fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt,
-					meetingFrequency, recurAfter, TestObjectFactory
-							.getUserContext());
+			fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter,
+                    TestObjectFactory.getUserContext());
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -1119,9 +1118,8 @@ public class TestObjectFactory {
 			RecurrenceType meetingFrequency, Short recurAfter) {
 		FeeBO fee;
 		try {
-			fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt,
-					meetingFrequency, recurAfter, TestUtils
-							.makeUserWithLocales());
+			fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter, 
+			        TestUtils.makeUserWithLocales());
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);

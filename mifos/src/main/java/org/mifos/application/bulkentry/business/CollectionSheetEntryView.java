@@ -364,18 +364,19 @@ public class CollectionSheetEntryView extends View {
 			}
 		}
 	}
-    public void populateClientAttendance(Integer customerId,
-            Date transactionDate,
+	
+    public void populateClientAttendance(Integer customerId, Date transactionDate,
             List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
         if (customerDetail.isCustomerCenter())
             return;
         for (ClientAttendanceDto clientAttendanceView : collectionSheetEntryClientAttendanceViews) {
             logger.debug("populateClientAttendance");
-            logger.debug("clientAttendanceView.getCustomerId() " +clientAttendanceView.getClientId());
+            logger.debug("clientAttendanceView.getCustomerId() " + clientAttendanceView.getClientId());
             logger.debug("customerId " + customerId);
             logger.debug("customerDetail.getCustomerId() " + customerDetail.getCustomerId());
-            if (clientAttendanceView.getClientId().compareTo(customerId)== 0) {
-                setAttendence(clientAttendanceView.getAttendanceId());
+            if (clientAttendanceView.getClientId().compareTo(customerId) == 0) {
+                Short attendanceId = clientAttendanceView.getAttendanceId();
+                setAttendence(attendanceId);
             }
         }
     }
