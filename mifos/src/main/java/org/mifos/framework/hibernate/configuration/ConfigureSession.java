@@ -69,9 +69,7 @@ public class ConfigureSession
 		}
 
 		try {
-			// TODO: factor this out instead of repeating it in ApplicationInitializer
 			Properties hibernateProperties = new Properties();
-
 			File propertiesFile = new ConfigurationLocator().getFileHandle(hibernatePropertiesPath);
 			hibernateProperties.load(new FileInputStream(propertiesFile));
 			config.setProperties(hibernateProperties);
