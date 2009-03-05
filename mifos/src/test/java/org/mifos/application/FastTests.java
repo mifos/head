@@ -56,6 +56,7 @@ import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.ConfigurationLocatorTest;
+import org.mifos.framework.util.DatabaseUrlDecoratorTest;
 import org.mifos.framework.util.DateTimeServiceTest;
 import org.mifos.framework.util.LocalizationConverterTest;
 import org.mifos.framework.util.helpers.ChapterNumSortTest;
@@ -143,6 +144,7 @@ public class FastTests extends TestSuite {
 		suite.addTest(ChapterNumSortTest.suite());
 		suite.addTest(ProperlyAdaptedJUnit4Test.suite());
 		suite.addTest(LocalizationConverterTest.suite());
+		suite.addTest(DatabaseUrlDecoratorTest.suite());
 		return suite;
 	}
 
