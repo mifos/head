@@ -49,6 +49,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.DateTime;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
@@ -222,11 +223,8 @@ public class DateUtils {
 	}
 
 	private static Calendar getCurrentDateCalendar() {
-		Calendar currentCalendar = new GregorianCalendar();
-		int year = currentCalendar.get(Calendar.YEAR);
-		int month = currentCalendar.get(Calendar.MONTH);
-		int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
-		currentCalendar = new GregorianCalendar(year, month, day);
+        DateTime currentDateTime = new DateTimeService().getCurrentDateTime();
+        Calendar currentCalendar = currentDateTime.toGregorianCalendar();
 		return currentCalendar;
 	}
 
@@ -481,8 +479,7 @@ public class DateUtils {
 		fromDateCal.setTime(fromDate);
 
 		// Create a calendar object with today's date
-		Calendar today = new GregorianCalendar();
-		// Calendar today = Calendar.getInstance();
+		Calendar today = getCurrentDateCalendar();
 		// Get age based on year
 		int age = today.get(Calendar.YEAR) - fromDateCal.get(Calendar.YEAR);
 		int monthDiff = (today.get(Calendar.MONTH) + 1)
@@ -584,10 +581,10 @@ public class DateUtils {
 	}
 
 	public static Date getLastDayOfCurrentYear() {
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = getCurrentDateCalendar();
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
-		Calendar cal1 = Calendar.getInstance();
+		Calendar cal1 = getCurrentDateCalendar();
 		cal1.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
 				.get(Calendar.DATE), 0, 0, 0);
 		return new Date(cal1.getTimeInMillis());
@@ -604,27 +601,27 @@ public class DateUtils {
 	}
 
 	public static Date getLastDayOfNextYear() {
-		Calendar cal = GregorianCalendar.getInstance();
+		Calendar cal = getCurrentDateCalendar();
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
-		Calendar cal1 = Calendar.getInstance();
+		Calendar cal1 = getCurrentDateCalendar();
 		cal1.set(cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH), cal
 				.get(Calendar.DATE), 0, 0, 0);
 		return cal1.getTime();
 	}
 
 	public static Calendar getLastDayOfYearAfterNextYear() {
-		Calendar cal = GregorianCalendar.getInstance();
+		Calendar cal = getCurrentDateCalendar();
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
-		Calendar cal1 = Calendar.getInstance();
+		Calendar cal1 = getCurrentDateCalendar();
 		cal1.set(cal.get(Calendar.YEAR) + 2, cal.get(Calendar.MONTH), cal
 				.get(Calendar.DATE), 0, 0, 0);
 		return cal1;
 	}
 
 	public static Date getCurrentDateOfNextYearWithOutTimeStamp() {
-		Calendar currentDateCalendar = new GregorianCalendar();
+		Calendar currentDateCalendar = getCurrentDateCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
@@ -633,28 +630,25 @@ public class DateUtils {
 	}
 
 	public static Calendar getFistDayOfYearAfterNextYear() {
-		Calendar cal = GregorianCalendar.getInstance();
+		Calendar cal = getCurrentDateCalendar();
 		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DATE));
-		Calendar cal1 = Calendar.getInstance();
+		Calendar cal1 = getCurrentDateCalendar();
 		cal1.set(cal.get(Calendar.YEAR) + 2, cal.get(Calendar.MONTH), cal
 				.get(Calendar.DATE), 0, 0, 0);
 		return cal1;
 	}
 
-	/**
-	 * Not sure why this is just copying over the year, month, and day.
-	 * Also see {@link #getCalendarDate(long)}.
-	 */
+
 	public static Calendar getCalendar(Date date) {
-		Calendar calendar = new GregorianCalendar();
+		Calendar calendar = getCurrentDateCalendar();
 		calendar.setTime(org.apache.commons.lang.time.DateUtils.truncate(date, Calendar.DATE));
 		return calendar;
 	}
 
 	public static long getNumberOfDaysBetweenTwoDates(Date date1, Date date2) {
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
+		Calendar cal1 = getCurrentDateCalendar();
+		Calendar cal2 = getCurrentDateCalendar();
 		cal1.setTime(getDateWithoutTimeStamp(date1));
 		cal2.setTime(getDateWithoutTimeStamp(date2));
 
@@ -667,7 +661,7 @@ public class DateUtils {
 	}
 
 	public static Calendar getCalendarAsOn(int year, int month, int date) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = getCurrentDateCalendar();
 		calendar.set(year, month, date, 0, 0, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar;
@@ -690,7 +684,7 @@ public class DateUtils {
 	}
 
 	public static java.sql.Date sqlToday() {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = getCurrentDateCalendar();
 		Calendar calendarAsOnToday = getCalendarAsOn(calendar
 				.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
 				.get(Calendar.DATE));
@@ -758,7 +752,7 @@ public class DateUtils {
 	}
 	
     public static WeekDay getWeekDayForDate(Date date) {
-        Calendar calendar = GregorianCalendar.getInstance();
+        Calendar calendar = getCurrentDateCalendar();
         calendar.setTime(date);
         return WeekDay.getWeekDay(calendar.get(Calendar.DAY_OF_WEEK));
     }
