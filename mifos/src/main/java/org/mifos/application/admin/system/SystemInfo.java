@@ -72,8 +72,7 @@ public class SystemInfo implements Serializable {
 	public SystemInfo(boolean getInfoSource) {
 		if (getInfoSource) {
 			try {
-                this.infoSource = new ConfigurationLocator().getFileHandle(
-                        FilePaths.HIBERNATE_PROPERTIES_FILENAME).getAbsolutePath();
+                this.infoSource = new ConfigurationLocator().getFilePath(FilePaths.HIBERNATE_PROPERTIES_FILENAME);
             } catch (IOException e) {
                 this.infoSource = "Unable to determine configuration source.";
             }

@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -65,7 +63,6 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.core.ClasspathResource;
 
 /**
  * This class should prepare all the sub-systems that are required by the app.

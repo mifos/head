@@ -1,28 +1,25 @@
-/**
- * MifosLogManager.java version:1.0
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
- * Apache License
- * Copyright (c) 2005-2006 Grameen Foundation USA
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the
- * License.
- *
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
- * and how it is applied.
- *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
+
 package org.mifos.framework.components.logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -34,31 +31,37 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
 import org.mifos.config.Localization;
-import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.ConfigurationLocator;
 
-/**	
- *  A class with static methods to obtain instances of the logger. It also keeps a HashMap of the actual logger instances per module
+/**
+ * A class with static methods to obtain instances of the logger. It also keeps
+ * a HashMap of the actual logger instances per module
  */
 public class MifosLogManager {
 
-	/**Contains all the loggers that have been created.
-	 * Key is the name of the logger and the value is logger instance
-	 */
+	/**
+     * Contains all the loggers that have been created. Key is the name of the
+     * logger and the value is logger instance
+     */
 	private static HashMap <String, MifosLogger> loggerRepository;
 
 	public static boolean isConfigured() {
 		return loggerRepository != null;
 	}
 
+
 	/**
-	 * Method to initialize the loggerRepository and configure the root logger from the loggerconfiguration.xml
-	 * A root logger instance is also created and the resource bundle for the locale of the MFI is associated with the logger
-	 * @param fileName The loggerconfiguration xml file
-	 * @throws  LoggerConfigurationException
-	 */
+     * Method to initialize the loggerRepository and configure the root logger
+     * from the loggerconfiguration.xml A root logger instance is also created
+     * and the resource bundle for the locale of the MFI is associated with the
+     * logger
+     * 
+     * @param fileName
+     *            The loggerconfiguration xml file
+     * @throws LoggerConfigurationException
+     */
 	public static void configure(String fileName)
 	throws LoggerConfigurationException {
 		//Initialises a logger with the name com.mifos which acts as the 
@@ -90,33 +93,45 @@ public class MifosLogManager {
 	}
 
 	/**
-	 * Function to obtain an instance of the mifos logger.
-	 * @param name The name the logger will be associated with
-	 */
+     * Function to obtain an instance of the mifos logger.
+     * 
+     * @param name
+     *            The name the logger will be associated with
+     */
 	public static MifosLogger getLogger(String name) {
 		return getLogger(name, null);
 	}
 	
 	/**
-	 * Function to obtain an instance of the mifos logger. This calls a helper method to create the logger
-	 * A resource bundle can aslo be associated with this logger
-	 * @param name The name the logger will be associated with
-	 * @param resourceBundleName The name of the resource bundle from where the logger takes its log statements
-	 * @return An instance of the MifosLogger
-	 */
+     * Function to obtain an instance of the mifos logger. This calls a helper
+     * method to create the logger A resource bundle can aslo be associated with
+     * this logger
+     * 
+     * @param name
+     *            The name the logger will be associated with
+     * @param resourceBundleName
+     *            The name of the resource bundle from where the logger takes
+     *            its log statements
+     * @return An instance of the MifosLogger
+     */
 	public static MifosLogger getLogger(String name, String resourceBundleName) {
 		return getLoggerHelper(name,resourceBundleName);
-	}//end-method getLogger
+	}
 
 	/**
-	 * Function to obtain an instance of the mifos logger. If it is already present it is retrieved from
-	 * the logger repository, else it is created and added to the repository. A resource bundle can also be associated
-	 * with this logger
-	 * @param name The name the logger will be associated with
-	 * @param resourceBundleName The name of the resource bundle from where the logger takes its log statements.
-	 * 							 If it is null then the logger is created using the name
-	 * @return An instance of the MifosLogger
-	 */
+     * Function to obtain an instance of the mifos logger. If it is already
+     * present it is retrieved from the logger repository, else it is created
+     * and added to the repository. A resource bundle can also be associated
+     * with this logger
+     * 
+     * @param name
+     *            The name the logger will be associated with
+     * @param resourceBundleName
+     *            The name of the resource bundle from where the logger takes
+     *            its log statements. If it is null then the logger is created
+     *            using the name
+     * @return An instance of the MifosLogger
+     */
 	public static MifosLogger getLoggerHelper(String name,
 			String resourceBundleName) {
 
@@ -160,9 +175,9 @@ public class MifosLogManager {
 
 
 	/**
-	 * Obtains the Resource bundle for a particular MFI Locale
-	 */
-	public static ResourceBundle getResourceBundle(String resourceBundleName)
+     * Obtains the Resource bundle for a particular MFI Locale
+     */
+	protected static ResourceBundle getResourceBundle(String resourceBundleName)
 	throws ResourceBundleNotFoundException {
 		Locale mfiLocale = getMFILocale();
 		ResourceBundleFactory resourceBundleFactory =
@@ -172,11 +187,10 @@ public class MifosLogManager {
 	}
 
 	/**
-	 * Configures the root logger from the loggerconfiguration.xml
-	 * A root logger instance is also created and the resource bundle 
-	 * for the locale of the MFI is associated
-	 * with the logger
-	 */
+     * Configures the root logger from the loggerconfiguration.xml A root logger
+     * instance is also created and the resource bundle for the locale of the
+     * MFI is associated with the logger
+     */
 	private static void readConfiguration(String loggerConfigurationAbsolutePath)
 	throws MalformedURLException, URISyntaxException {
 		File configFile = new File(loggerConfigurationAbsolutePath);
@@ -185,7 +199,7 @@ public class MifosLogManager {
 			configFile.getAbsolutePath() , LoggerConstants.DELAY);
 	}
 
-	public static Locale getMFILocale(){
+	private static Locale getMFILocale(){
 		//return ApplicationConfig.getMFILocale();
 		return Localization.getInstance().getMainLocale();
 	}
