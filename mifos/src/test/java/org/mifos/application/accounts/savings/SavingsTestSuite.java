@@ -11,7 +11,7 @@ import org.mifos.application.accounts.savings.struts.action.TestSavingsApplyAdju
 import org.mifos.application.accounts.savings.struts.action.TestSavingsClosureAction;
 import org.mifos.application.accounts.savings.struts.action.TestSavingsDepositWithdrawalAction;
 import org.mifos.application.accounts.savings.struts.tag.TestSavingsOverDueDepositsTag;
-import org.mifos.application.accounts.savings.util.helpers.TestSavingsHelper;
+import org.mifos.application.accounts.savings.util.helpers.SavingsHelperIntegrationTest;
 
 public class SavingsTestSuite extends TestSuite {
 
@@ -26,7 +26,7 @@ public class SavingsTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestSavingsAction.class);
 		testSuite.addTestSuite(TestSavingsBO.class);
 		testSuite.addTestSuite(TestSavingsClosureAction.class);
-		testSuite.addTestSuite(TestSavingsHelper.class);
+		testSuite.addTestSuite(SavingsHelperIntegrationTest.class);
 		testSuite.addTestSuite(TestSavingsApplyAdjustmentAction.class);
 		testSuite.addTestSuite(TestSavingsDepositWithdrawalAction.class);
 		testSuite.addTestSuite(TestSavingsOverDueDepositsTag.class);

@@ -22,6 +22,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.DateTimeService;
 
 /** Helper methods related to holidays logic 
  */
@@ -32,7 +33,7 @@ public class HolidayUtils {
 	}
 
 	static HolidayBO inHoliday(Calendar pday, List<HolidayBO> holidays) {
-		Calendar day = Calendar.getInstance();
+		Calendar day = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		day.setTimeInMillis(0);
 		day.set(pday.get(Calendar.YEAR), pday.get(Calendar.MONTH), pday
 				.get(Calendar.DAY_OF_MONTH));

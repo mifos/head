@@ -24,6 +24,7 @@ package org.mifos.framework.util;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.junit.After;
@@ -65,6 +66,16 @@ public class DateTimeServiceTest {
         Assert.assertTrue("Expected the java date time returned by DateTimeService to be equal or close to the actual system time", duration.getMillis() < ONE_SECOND);
     }
 
+    @Test
+    public void testGetCurrentDateMidnight() {
+        DateTimeService dateTimeService = new DateTimeService();
+        DateTime dateTime = dateTimeService.getCurrentDateTime();
+        dateTimeService.setCurrentDateTimeFixed(dateTime);
+        DateMidnight dateMidnight = dateTimeService.getCurrentDateMidnight();
+        Assert.assertEquals("DateMidnight portions should be equal",
+                dateTime.toDateMidnight(), dateMidnight);
+    }
+    
     @Test 
     public void testSetCurrentTime() throws InterruptedException {
         DateTimeService dateTimeService = new DateTimeService();

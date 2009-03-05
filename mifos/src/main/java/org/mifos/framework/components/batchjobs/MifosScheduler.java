@@ -48,6 +48,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.mifos.core.ClasspathResource;
+import org.mifos.framework.util.DateTimeService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -147,7 +148,7 @@ public class MifosScheduler extends Timer {
 	public Date parseInitialTime(String initialTime) {
 		int firstIndex = initialTime.indexOf(":");
 		int lastIndex = initialTime.indexOf(":", firstIndex);
-		Calendar time = Calendar.getInstance();
+		Calendar time = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		int hourOfTheDay = Integer.parseInt(initialTime
 				.substring(0, firstIndex));
 		int minutes = Integer.parseInt(initialTime.substring(firstIndex + 1,

@@ -91,6 +91,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -164,7 +165,7 @@ public class CenterCustAction extends CustAction {
 		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING,
 				request);
 		loadCreateMasterData(actionForm, request);
-		Calendar c = Calendar.getInstance();
+		Calendar c = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		// note that Calendar retrieves 0-based month, so increment month field
 		actionForm.setMfiJoiningDate(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
 				c.get(Calendar.YEAR));

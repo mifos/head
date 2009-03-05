@@ -1383,7 +1383,7 @@ public class LoanBO extends AccountBO {
 		for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
 			Calendar actionDate = new GregorianCalendar();
 			actionDate.setTime(accountActionDateEntity.getActionDate());
-			long diffInTermsOfDay = (Calendar.getInstance().getTimeInMillis() - actionDate
+			long diffInTermsOfDay = (new DateTimeService().getCurrentDateTime().getMillis() - actionDate
 					.getTimeInMillis())
 					/ (24 * 60 * 60 * 1000);
 			if (diffInTermsOfDay > 30) {
@@ -1864,8 +1864,9 @@ public class LoanBO extends AccountBO {
 	}
 
 	private long getMFITime(Date date) {
-		Calendar cal1 = Calendar.getInstance(Configuration.getInstance()
-				.getSystemConfig().getMifosTimeZone());
+		Calendar cal1 = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
+		cal1.setTimeZone(Configuration.getInstance()
+                .getSystemConfig().getMifosTimeZone());
 		cal1.setTime(date);
 		return date.getTime() + cal1.get(Calendar.ZONE_OFFSET)
 				+ cal1.get(Calendar.DST_OFFSET);

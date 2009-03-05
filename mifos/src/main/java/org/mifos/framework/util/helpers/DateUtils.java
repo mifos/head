@@ -594,7 +594,7 @@ public class DateUtils {
 		cal.roll(Calendar.YEAR, 1);
 		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DATE));
-		Calendar cal1 = Calendar.getInstance();
+		Calendar cal1 = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		cal1.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
 				.get(Calendar.DATE), 0, 0, 0);
 		return cal1;

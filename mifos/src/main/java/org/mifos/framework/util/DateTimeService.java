@@ -22,6 +22,7 @@ package org.mifos.framework.util;
 
 import java.util.Date;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 
@@ -49,6 +50,10 @@ public class DateTimeService {
 
     public java.sql.Date getCurrentJavaSqlDate() {
         return new java.sql.Date(new DateTime().getMillis());
+    }
+
+    public DateMidnight getCurrentDateMidnight() {
+        return new DateMidnight();
     }
 
 }

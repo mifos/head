@@ -63,8 +63,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
-	private Calendar cal;
-
 	// TODO: pick from configuration
 	/** I assume the hardcoding of 1 Jan 2006 is trying to say 
 	   that the default fiscal year is January 1 to December 31.
@@ -80,15 +78,7 @@ public class SavingsHelper {
 		}
 	}
 
-	private int getFiscalStartDayNumber() {
-		Calendar cal = getCalendar();
-		cal.setTime(getFiscalStartDate());
-		return cal.get(Calendar.DAY_OF_MONTH);
-	}
-
 	public SavingsHelper() {
-		cal = Calendar.getInstance();
-		cal.setTime(getFiscalStartDate());
 	}
 	
 	/**
@@ -184,23 +174,16 @@ public class SavingsHelper {
 	}
 
 	private long getMFITime(Date date) {
-		Calendar cal1 = Calendar.getInstance(Configuration.getInstance()
-				.getSystemConfig().getMifosTimeZone());
+		Calendar cal1 = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
+		cal1.setTimeZone(Configuration.getInstance()
+                .getSystemConfig().getMifosTimeZone());
 		cal1.setTime(date);
 		return date.getTime() + cal1.get(Calendar.ZONE_OFFSET)
 				+ cal1.get(Calendar.DST_OFFSET);
 	}
 
-	private Calendar getCalendar() {
-		return Calendar.getInstance(Configuration.getInstance()
-				.getSystemConfig().getMifosTimeZone());
-	}
-
 	public Date getCurrentDate() {
-		cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
-				.get(Calendar.DATE), 0, 0, 0);
-		return cal.getTime();
+	    return new DateTimeService().getCurrentDateMidnight().toDate();
 	}
 
 	public AccountActionDateEntity createActionDateObject(AccountBO account,

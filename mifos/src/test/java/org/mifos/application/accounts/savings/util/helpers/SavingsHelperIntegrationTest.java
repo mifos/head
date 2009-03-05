@@ -19,8 +19,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestSavingsHelper extends MifosIntegrationTest {
-	public TestSavingsHelper() throws SystemException, ApplicationException {
+public class SavingsHelperIntegrationTest extends MifosIntegrationTest {
+	public SavingsHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
