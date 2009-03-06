@@ -49,6 +49,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -223,9 +224,7 @@ public class DateUtils {
 	}
 
 	private static Calendar getCurrentDateCalendar() {
-        DateTime currentDateTime = new DateTimeService().getCurrentDateTime();
-        Calendar currentCalendar = currentDateTime.toGregorianCalendar();
-		return currentCalendar;
+		return new DateTimeService().getCurrentDateMidnight().toGregorianCalendar();
 	}
 
 	public static Date currentDate() {

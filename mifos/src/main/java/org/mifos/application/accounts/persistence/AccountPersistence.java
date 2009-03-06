@@ -48,6 +48,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
@@ -97,7 +98,7 @@ public class AccountPersistence extends Persistence {
 	public List<Integer> getAccountsWithYesterdaysInstallment()
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		Calendar currentDateCalendar = new GregorianCalendar();
+		Calendar currentDateCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);

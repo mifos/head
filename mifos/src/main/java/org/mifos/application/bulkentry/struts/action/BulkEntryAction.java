@@ -291,7 +291,7 @@ public class BulkEntryAction extends BaseAction {
     private void buildErrorMessage(String centerName, HttpServletRequest request, LockInfo info) {
 
         ActionErrors actionErrors = new ActionErrors();
-        GregorianCalendar currentCalendar = new GregorianCalendar();
+        GregorianCalendar currentCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
         long currentTime = currentCalendar.getTimeInMillis();
         long waitTime = currentTime - info.getLockTime();
         long timeLeftToWait = allowedLockingTime - waitTime;

@@ -22,6 +22,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -528,7 +529,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
 	private void validateStartDateAgainstNextYearDate(ActionErrors errors,
 			Date changedStartDate) {
-		Calendar currentDateCalendar = new GregorianCalendar();
+		Calendar currentDateCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);

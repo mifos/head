@@ -32,6 +32,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -103,7 +104,7 @@ public class LoanPersistence extends Persistence {
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 
-		Calendar currentDate = new GregorianCalendar();
+		Calendar currentDate = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 		currentDate.add(Calendar.DAY_OF_MONTH, -latenessDays);
 
 		currentDate = new GregorianCalendar(currentDate.get(Calendar.YEAR),

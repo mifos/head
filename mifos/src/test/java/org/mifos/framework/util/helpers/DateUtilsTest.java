@@ -6,9 +6,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -208,6 +210,13 @@ public class DateUtilsTest extends TestCase {
 		assertEquals(WeekDay.THURSDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("05/06/2008")));
 		assertEquals(WeekDay.FRIDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("06/06/2008")));
 		assertEquals(WeekDay.SATURDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("07/06/2008")));
+	}
+	
+	public void testCurrentDate() {
+	    DateTime dateTime = new DateTime(DateUtils.currentDate());
+        Assert.assertEquals(0, dateTime.getHourOfDay());
+        Assert.assertEquals(0, dateTime.getMinuteOfHour());
+        Assert.assertEquals(0, dateTime.getSecondOfMinute());	    
 	}
 	
 	private Date getDate (int year, int month, int day) {

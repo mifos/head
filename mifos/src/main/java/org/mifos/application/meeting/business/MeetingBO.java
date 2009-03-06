@@ -55,6 +55,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -83,7 +84,7 @@ public class MeetingBO extends BusinessObject {
 	/* TODO: This looks like it should be a local variable in
 	   each of the places which uses it.  I don't see it being
 	   used outside a single method. */
-	private GregorianCalendar gc = new GregorianCalendar();
+	private GregorianCalendar gc = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 	
 	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, 
 			Date startDate, MeetingType meetingType)
