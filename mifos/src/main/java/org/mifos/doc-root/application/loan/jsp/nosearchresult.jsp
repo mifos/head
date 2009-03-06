@@ -9,6 +9,7 @@
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="LoanNoSearchResult"/>
 
 	<script>
 
@@ -52,7 +53,7 @@
                 </table>				
 						
 						
-                  		<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+                  		<font class="fontnormalRedBold"> <span id="nosearchresult.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
                   
                   
 				
@@ -120,7 +121,7 @@
 						<tr>							
 							<td></td>
 							<td align="left">
-								<html-el:button 
+								<html-el:button  styleId="nosearchresult.button.search"
 
 									property="cancel" 
 									styleClass="buttn" 

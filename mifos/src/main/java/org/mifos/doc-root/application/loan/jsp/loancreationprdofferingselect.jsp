@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-
+		<input type="hidden" id="page.id" value="LoanCreationPrdOfferingSelect"/>
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
         <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
         <c:if test="${requestScope.perspective == 'redoLoan'}">
@@ -159,7 +159,7 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr>
 											<td>
-												<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+												<font class="fontnormalRedBold"> <span id="loancreationprdofferingselect.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 											</td>
 										</tr>
 										<tr>
@@ -202,12 +202,12 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit property="continueBtn" styleClass="buttn" >
+												<html-el:submit styleId="loancreationprdofferingselect.button.continue" property="continueBtn" styleClass="buttn" >
 													<mifos:mifoslabel name="loan.continue" />
 												</html-el:submit>
 												&nbsp;
 
-												<html-el:button property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
+												<html-el:button styleId="loancreationprdofferingselect.button.cancel" property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
 													<mifos:mifoslabel name="loan.cancel" />
 												</html-el:button>
 											</td>

@@ -51,11 +51,12 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="UndoLoanDisbursalSearch"/>
 		<html-el:form action="/reverseloandisbaction">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
+						<span class="fontnormal8pt"><html-el:link styleId="undoloandisbursalsearch.link.admin" href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.admin" />
 							</html-el:link> / </span> <span class="fontnormal8ptbold"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /></span>
 					</td>
@@ -72,7 +73,7 @@
 							</tr>
 						</table>
 						<br>
-						<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+						<font class="fontnormalRedBold"> <span id="undoloandisbursalsearch.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 						<table width="95%" border="0" cellpadding="2" cellspacing="0">
 							<tr class="fontnormal">
 								<td colspan="2">
@@ -84,11 +85,11 @@
 							</tr>
 							<tr class="fontnormal8pt">
 								<td width="17%">
-									<mifos:mifosalphanumtext property="searchString" />
+									<mifos:mifosalphanumtext styleId="undoloandisbursalsearch.input.search" property="searchString" />
 								</td>
 								<td width="83%">
 									&nbsp;
-									<html-el:submit property="continueButton" styleClass="buttn" >
+									<html-el:submit styleId="undoloandisbursalsearch.button.search" property="continueButton" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.search" />
 									</html-el:submit>
 								</td>

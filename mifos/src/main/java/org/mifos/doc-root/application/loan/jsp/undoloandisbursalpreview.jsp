@@ -52,12 +52,13 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="UndoLoanDisbursalPreview"/>
 		<html-el:form action="/reverseloandisbaction">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
+						<span class="fontnormal8pt"><html-el:link styleId="undoloandisbursalpreview.link.admin" href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.admin" />
 							</html-el:link> / </span> <span class="fontnormal8ptbold"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /></span>
 					</td>
@@ -82,7 +83,7 @@
 											name="loan.ifyouclicksubmit" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.account" /> <mifos:mifoslabel name="loan.statuschanged" /> <mifos:mifoslabel name="loan.clickcanceladmin" /></font>
 								</td>
 							</tr>
-							<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+							<font class="fontnormalRedBold"> <span id="undoloandisbursalpreview.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 							<tr>
 								<td width="100%" valign="top" class="drawtablerow">
 									<p>
@@ -180,12 +181,12 @@
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="continueButton" styleClass="buttn" >
+									<html-el:submit styleId="undoloandisbursalpreview.button.submit" property="continueButton" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.submit" />
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" >
+									<html-el:button styleId="undoloandisbursalpreview.button.cancel" property="cancelButton" onclick="location.href='reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

@@ -10,6 +10,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="LoanRepayment"/>	
 	<script>
 			function fun_return(form)
 					{
@@ -44,8 +45,8 @@
 						</tr>
 						            	<tr>
 					<logic:messagesPresent>
-					<td><br><font class="fontnormalRedBold"><html-el:errors
-							bundle="accountsUIResources" /></font></td>
+					<td><br><font class="fontnormalRedBold"><span id="loanRepayment.error.message"><html-el:errors
+							bundle="accountsUIResources" /></span></font></td>
 						</logic:messagesPresent>
 				</tr>
 						
@@ -67,21 +68,21 @@
 									<mifos:mifoslabel name="loan.apply_trans" />
 								</span>&nbsp;&nbsp;&nbsp;&nbsp;
 								<c:if test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9')}">
-									<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									<html-el:link styleId="loanRepayment.link.applyPayment" href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${param.prdOfferingName}&globalAccountNum=${param.globalAccountNum}&accountId=${param.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&recordOfficeId=${param.recordOfficeId}&recordLoanOfficerId=${param.recordLoanOfficerId}&accountStateId=${param.accountStateId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="loan.apply_payment" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								</c:if>
 								<c:if test="${param.lastPaymentAction != '10'}">
 									<c:choose>
 										<c:when test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9'}">
-											<html-el:link href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
+											<html-el:link styleId="loanRepayment.link.applyAdjustment" href="applyAdjustment.do?method=loadAdjustment&accountId=${param.accountId}&globalAccountNum=${param.globalAccountNum}&prdOfferingName=${param.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
 												<mifos:mifoslabel name="loan.apply_adjustment" />
 											</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										</c:when>
 									</c:choose>
 								</c:if>
 							
-								<html-el:link href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								<html-el:link styleId="loanRepayment.link.applyCharges" href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.apply_charges" />
 								</html-el:link>
 							</td>
@@ -99,7 +100,7 @@
                     </table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
+							<td align="center"><html-el:button styleId="loanRepayment.button.return" property="returnToAccountDetailsbutton"
 								onclick="javascript:fun_return(this.form);"
 								styleClass="buttn" >
 								<mifos:mifoslabel name="loan.returnToAccountDetails"

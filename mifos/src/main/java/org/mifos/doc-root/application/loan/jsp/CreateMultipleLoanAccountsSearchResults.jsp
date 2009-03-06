@@ -29,10 +29,10 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="CreateMultipleLoanAccountsSearchResults"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="CreateMultipleLoanAccountsSearchResults"/>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
@@ -159,13 +159,13 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									</table>
-									<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+									<font class="fontnormalRedBold">  <span id="CreateMultipleLoanAccountsSearchResults.error.message"> <html-el:errors bundle="loanUIResources" /> </span></font>
 									<br>
 									<!-- begin search results list -->
 									<table width="96%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td width="5%" valign="top" class="drawtablerowboldnolinebg">
-												<input type="checkbox" onclick="selectAll(this)" name="selectAll1">
+												<input id="CreateMultipleLoanAccountsSearchResults.input.selectAll" type="checkbox" onclick="selectAll(this)" name="selectAll1">
 											</td>
 											<td width="29%" class="drawtablerowboldnolinebg">
 												<mifos:mifoslabel name="loan.acc_owner" />
@@ -186,7 +186,7 @@ explanation of the license and how it is applied.
 										<c:forEach var="clientDetail" varStatus="loopStatus" items="${sessionScope.multipleloansactionform.clientDetails}" >
 										<tr>
 											<td valign="top" class="drawtablerow">
-												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)" styleId="CreateMultipleLoanAccountsSearchResults.checkbox.${loopStatus.index}"/>
+												<html-el:checkbox styleId="CreateMultipleLoanAccountsSearchResults.input.select" property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)" styleId="CreateMultipleLoanAccountsSearchResults.checkbox.${loopStatus.index}"/>
 											</td>
 											<td width="29%" valign="top" class="drawtablerow">
 												<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" isColonRequired="Yes"/></span> 
@@ -198,7 +198,9 @@ explanation of the license and how it is applied.
 												<c:out value="${clientDetail.client.office.officeName}"/> / <c:out value="${clientDetail.client.parentCustomer.parentCustomer.displayName}"/> / <c:out value="${clientDetail.client.parentCustomer.displayName}"/>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
-												<mifos:mifosdecimalinput property="clientDetails[${loopStatus.index}].loanAmount"/>
+												<mifos:mifosdecimalinput 
+												styleId="CreateMultipleLoanAccountsSearchResults.input.loanAmount"
+												property="clientDetails[${loopStatus.index}].loanAmount"/>
 											</td>
 											<td width="15%" valign="top" class="drawtablerow">
 												<c:out value="${clientDetail.minLoanAmount}" /> &nbsp; - &nbsp; 
@@ -228,25 +230,25 @@ explanation of the license and how it is applied.
 									<table width="96%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:button property="saveForLaterButton" styleClass="buttn"  onclick="javascript:fun_saveForLater(this.form)">
+												<html-el:button styleId="CreateMultipleLoanAccountsSearchResults.button.saveForLater" property="saveForLaterButton" styleClass="buttn"  onclick="javascript:fun_saveForLater(this.form)">
 													<mifos:mifoslabel name="loan.saveForLater" />
 												</html-el:button>
 												&nbsp;
 												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
 												<c:choose>
 													<c:when test='${PendingApproval == true}'>
-														<html-el:button property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)" styleId="CreateMultipleLoanAccountsSearchResults.button.submit">
+														<html-el:button styleId="CreateMultipleLoanAccountsSearchResults.button.submitForApproval" property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)" styleId="CreateMultipleLoanAccountsSearchResults.button.submit">
 															<mifos:mifoslabel name="loan.submitForApproval" />
 														</html-el:button>
 													</c:when>
 													<c:otherwise>
-														<html-el:button property="approvedButton" styleClass="buttn" onclick="javascript:fun_approved(this.form)">
+														<html-el:button styleId="CreateMultipleLoanAccountsSearchResults.button.approve" property="approvedButton" styleClass="buttn" onclick="javascript:fun_approved(this.form)">
 															<mifos:mifoslabel name="loan.approved" />
 														</html-el:button>
 													</c:otherwise>
 												</c:choose>
 												&nbsp;
-												<html-el:button property="cancelButton" styleClass="cancelbuttn"  onclick="location.href='multipleloansaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
+												<html-el:button styleId="CreateMultipleLoanAccountsSearchResults.button.cancel" property="cancelButton" styleClass="cancelbuttn"  onclick="location.href='multipleloansaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 													<mifos:mifoslabel name="loan.cancel" />
 												</html-el:button>
 											</td>

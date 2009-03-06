@@ -33,6 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="LoanCreationDetail"/>
 		<SCRIPT type="text/javascript" SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
@@ -196,8 +197,8 @@ explanation of the license and how it is applied.
 										name="loan.asterisk" /></td>
 								</tr>
 								<tr>
-									<td><font class="fontnormalRedBold"> <html-el:errors
-										bundle="loanUIResources" /> </font></td>
+									<td><font class="fontnormalRedBold"> <span id="loancreationdetails.error.message"><html-el:errors
+										bundle="loanUIResources" /></span> </font></td>
 								</tr>
 								<tr>
 									<td class="fontnormal"><br>
@@ -300,8 +301,8 @@ explanation of the license and how it is applied.
 								</tr>
 							    <c:if test="${loanaccountownerisagroup != 'yes'}">
 									<tr class="fontnormal">
-											<td align="right" class="fontnormal" width="30%"><mifos:mifoslabel
-												name="loan.amount" mandatory="yes"   />:</td>
+											<td align="right" class="fontnormal" width="30%"><span id="loancreationdetails.label.loanAmount"><mifos:mifoslabel
+												name="loan.amount" mandatory="yes"   /></span>:</td>
 											<td valign="top"><mifos:mifosdecimalinput
 												property="loanAmount" readonly="false" styleId="sumLoanAmount"/> <mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
@@ -318,6 +319,7 @@ explanation of the license and how it is applied.
 												name="${ConfigurationConstants.INTEREST}"/></fmt:param>
 										</fmt:message>:</td>
 									<td width="70%" valign="top"><mifos:mifosdecimalinput
+										styleId="loancreationdetails.input.interestRate"
 										property="interestRate" decimalFmt="10.5" />
 										<fmt:message key="loan.allowedInterest">
 											<fmt:param><mifos:mifoslabel
@@ -328,9 +330,9 @@ explanation of the license and how it is applied.
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" class="fontnormal"><span
-										class="mandatorytext"></span> <mifos:mifoslabel
-										name="loan.no_of_inst" mandatory="yes" />:</td>
-									<td valign="top"><mifos:mifosnumbertext
+										class="mandatorytext"></span> <span id="loancreationdetails.label.numberOfInstallments"><mifos:mifoslabel
+										name="loan.no_of_inst" mandatory="yes" /></span>:</td>
+									<td valign="top"><mifos:mifosnumbertext styleId="loancreationdetails.input.numberOfInstallments"
 										property="noOfInstallments" /> <mifos:mifoslabel
 										name="loan.allowed_no_of_inst" /> &nbsp; <c:out
 										value="${loanAccountActionForm.minNoInstallments}" /> &nbsp; - &nbsp;
@@ -358,12 +360,12 @@ explanation of the license and how it is applied.
 									<table width="98%" border="0" cellspacing="0" cellpadding="2">
 										<tr valign="top" class="fontnormal">
 
-											<td width="24%"><html-el:radio property="frequency" value="1"
-												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /></td>
-											<td width="55%"><html-el:radio property="frequency" value="2"
-												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+											<td width="24%"><html-el:radio styleId="loancreationdetails.input.frequencyWeeks" property="frequency" value="1"
+												onclick="showMeetingFrequency();" /> <span id="loancreationdetails.label.frequencyWeeks"><mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" /></span></td>
+											<td width="55%"><html-el:radio styleId="loancreationdetails.input.frequencyMonths" property="frequency" value="2"
+												onclick="showMeetingFrequency();" /> <span id="loancreationdetails.label.frequencyMonths"><mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
 										</tr>
 									</table>
 									</td>
@@ -384,8 +386,8 @@ explanation of the license and how it is applied.
 												name="meeting.labelRecurEvery" bundle="MeetingResources" />
 
 
-											<mifos:mifosnumbertext property="recurWeek" size="3"  maxlength="3"/> <mifos:mifoslabel
-												name="meeting.labelWeeks" bundle="MeetingResources" /> 
+											<mifos:mifosnumbertext styleId="loancreationdetails.input.weekFrequency" property="recurWeek" size="3"  maxlength="3"/> <span id="loancreationdetails.label.weekFrequency"><mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" /></span> 
 												<mifos:select property="weekDay">
 													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
@@ -399,17 +401,17 @@ explanation of the license and how it is applied.
 									<br>
 									<table border="0" cellspacing="0" cellpadding="2">
 										<tr class="fontnormal">
-											<td><html-el:radio property="monthType" value="1" /></td>
-											<td><mifos:mifoslabel name="meeting.labelDay"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
+											<td><html-el:radio styleId="loancreationdetails.input.monthType1" property="monthType" value="1" /></td>
+											<td><span id="loancreationdetails.label.dayOfMonth"><mifos:mifoslabel name="meeting.labelDay"
+												bundle="MeetingResources" /></span> <mifos:mifosnumbertext styleId="loancreationdetails.input.dayOfMonth"
 												property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
-												 <mifos:mifoslabel name="meeting.labelOfEvery"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3" disabled="true"/> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+												<mifos:mifoslabel name="meeting.labelOfEvery"
+												bundle="MeetingResources" /> <mifos:mifosnumbertext styleId="loancreationdetails.input.monthFrequency1"
+												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3" disabled="true"/> <span id="loancreationdetails.label.monthFrequency1"><mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
 										</tr>
 										<tr class="fontnormal">
-											<td><html-el:radio property="monthType" value="2" /></td>
+											<td><html-el:radio styleId="loancreationdetails.input.monthType2" property="monthType" value="2" /></td>
 											<td><mifos:mifoslabel name="meeting.labelThe"
 												bundle="MeetingResources" /> 
 												<mifos:select	property="monthRank" onfocus="checkMonthType2()">
@@ -422,9 +424,10 @@ explanation of the license and how it is applied.
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 												</c:forEach>
 											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
-												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3" disabled="true"/> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+												bundle="MeetingResources" /> <mifos:mifosnumbertext styleId="loancreationdetails.input.monthFrequency2"
+												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3" disabled="true"/> 
+												<span id="loancreationdetails.label.monthFrequency2"><mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></span></td>
 										</tr>
 									</table>
 									</div>
@@ -465,9 +468,9 @@ explanation of the license and how it is applied.
 
 								<tr class="fontnormal">
 									<td align="right" class="fontnormal"><span
-										class="mandatorytext"></span> <mifos:mifoslabel
-										name="loan.grace_period" mandatory="yes" isColonRequired="yes"/></td>
-									<td valign="top"><mifos:mifosnumbertext
+										class="mandatorytext"></span> <span id="loancreationdetails.label.gracePeriod"><mifos:mifoslabel
+										name="loan.grace_period" mandatory="yes" isColonRequired="yes"/></span></td>
+									<td valign="top"><mifos:mifosnumbertext styleId="loancreationdetails.input.gracePeriod"
 										property="gracePeriodDuration" /> <mifos:mifoslabel
 										name="loan.inst" /></td>
 								</tr>
@@ -541,21 +544,21 @@ explanation of the license and how it is applied.
 										</bean:define>
 
 										<tr class="fontnormal">
-											<td width="30%" align="right"><mifos:mifoslabel
+											<td width="30%" align="right"><span id="loancreationdetails.label.customField"><mifos:mifoslabel
 												name="${cf.lookUpEntity.entityType}"
 												mandatory="${cf.mandatoryStringValue}"
-												bundle="loanUIResources"></mifos:mifoslabel>:</td>
+												bundle="loanUIResources"></mifos:mifoslabel></span>:</td>
 											<td width="70%"><c:if
 												test="${cf.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">
-												<mifos:mifosnumbertext name="loanAccountActionForm"
+												<mifos:mifosnumbertext styleId="loancreationdetails.input.customField" name="loanAccountActionForm"
 													property='customField[${ctr}].fieldValue' maxlength="200" />
 											</c:if> <c:if
 												test="${cf.fieldType == MasterConstants.CUSTOMFIELD_ALPHANUMBER}">
-												<mifos:mifosalphanumtext name="loanAccountActionForm"
+												<mifos:mifosalphanumtext styleId="loancreationdetails.input.customField" name="loanAccountActionForm"
 													property='customField[${ctr}].fieldValue' maxlength="200" />
 											</c:if> <c:if
 												test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
-												<mifos:mifosalphanumtext name="loanAccountActionForm"
+												<mifos:mifosalphanumtext styleId="loancreationdetails.input.customField" name="loanAccountActionForm"
 													property='customField[${ctr}].fieldValue' maxlength="200" />
 											</c:if> <html-el:hidden property='customField[${ctr}].fieldId'
 												value="${cf.fieldId}"></html-el:hidden></td>
@@ -579,8 +582,8 @@ explanation of the license and how it is applied.
 										<c:out value="${loopStatus1.index}" />
 									</bean:define>
 									<tr>
-										<td width="30%" align="right" class="fontnormal"><c:out
-											value="${adminFees.feeName}" />:</td>
+										<td width="30%" align="right" class="fontnormal"><span id="loancreationdetails.label.defaultAmount"><c:out
+											value="${adminFees.feeName}" /></span>:</td>
 										<td width="70%" class="fontnormal">
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<!-- Fee amount display as label or text field -->
@@ -591,6 +594,7 @@ explanation of the license and how it is applied.
 													</c:when>
 													<c:otherwise>
 														<mifos:mifosdecimalinput
+															styleId="loancreationdetails.input.defaultFeeAmount"
 															property="defaultFee[${ctr1}].amount"
 															value="${adminFees.amount}" style="width:135px;" />
 													</c:otherwise>
@@ -608,8 +612,9 @@ explanation of the license and how it is applied.
 														value="${adminFees.feeFormula}" /></SPAN>
 												</c:if></td>
 												<td width="30%" align="center"><html-el:checkbox
+													styleId="loancreationdetails.input.remove"
 													property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
-												<mifos:mifoslabel name="loan.checkToRemove" /></td>
+												<span id="loancreationdetails.label.remove"><mifos:mifoslabel name="loan.checkToRemove" /></span></td>
 											</tr>
 										</table>
 										</td>
@@ -641,9 +646,10 @@ explanation of the license and how it is applied.
 												<html-el:option value="${additionalFee.feeId}">${additionalFee.feeName}</html-el:option>
 											</c:forEach>
 										</mifos:select></td>
-										<td align="left" width="6%" class="fontnormal"><mifos:mifoslabel
-											name="loan.amount" />:</td>
+										<td align="left" width="6%" class="fontnormal"><span id="loancreationdetails.label.feeAmount"><mifos:mifoslabel
+											name="loan.amount" /></span>:</td>
 										<td align="left" class="fontnormal"><mifos:mifosdecimalinput
+											styleId="loancreationdetails.input.feeAmount"
 											property='selectedFee[${ctr2}].amount' decimalFmt="10.5"
 											style="width:70px;" /></td>
 										<td><SPAN id="feeFormulaSpan${loopStatus2.index}"
@@ -669,10 +675,10 @@ explanation of the license and how it is applied.
 
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit
+									<td align="center"><html-el:submit styleId="loancreationdetails.button.continue"
 										property="continueButton" styleClass="buttn">
 										<mifos:mifoslabel name="loan.continue" />
-									</html-el:submit> &nbsp; <html-el:button property="cancelButton"
+									</html-el:submit> &nbsp; <html-el:button styleId="loancreationdetails.button.cancel" property="cancelButton"
 										onclick="javascript:fun_cancel(this.form)"
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="loan.cancel" />

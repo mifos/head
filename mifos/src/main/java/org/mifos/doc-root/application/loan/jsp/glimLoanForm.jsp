@@ -19,6 +19,7 @@
 		<table width="96%" border="0" cellpadding="3" cellspacing="0">
 			<tr>
 				<td width="5%" valign="top" class="drawtablerowboldnolinebg"><input
+					id="glimLoanForm.input.selectAll"
 					type="checkbox"
 					onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);"
 					onclick="for(var i=0,l=this.form.length; i<l;
@@ -48,13 +49,13 @@
 					<td valign="top" class="drawtablerow">
 					    <c:choose>
 					        <c:when test="${loanfn:isDisabledWhileEditingGlim('clientDetails.clientId',accountState)}">
-    							<html:checkbox
+    							<html:checkbox styleId="glimLoanForm.input.select"
 								property="clients[${indice}]"
 								value="${client.customerId}"
 								onclick="return false;"/>
 					        </c:when>
 					        <c:otherwise>
-								<html:checkbox
+								<html:checkbox styleId="glimLoanForm.input.select"
 									property="clients[${indice}]"
 									value="${client.customerId}"
 									onclick="iselectAllCheck(this)" 						
@@ -79,14 +80,15 @@
 					</c:if>										
 					</td>
 					<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
+						styleId="glimLoanForm.input.loanAmount"
 						property="clientDetails[${indice}].loanAmount" readonly="${loanfn:isDisabledWhileEditingGlim('clientDetails.loanAmount',accountState)}"
 						 onchange="CalculateTotalLoanAmount(CLIENTS_COUNT);"/></td>
 					<td width="35%" valign="top" class="drawtablerow">
 					
 					   <c:choose>
 					       <c:when test="${loanfn:isDisabledWhileEditingGlim('clientDetails.purposeOfLoan',accountState)}">
-						       <mifos:mifosalphanumtext readonly="true" property="clientDetails[${indice}].businessActivityName" />
-						       <mifos:mifosalphanumtext style="display:none;" property="clientDetails[${indice}].businessActivity" />
+						       <mifos:mifosalphanumtext styleId="glimLoanForm.input.businessActivityName" readonly="true" property="clientDetails[${indice}].businessActivityName" />
+						       <mifos:mifosalphanumtext styleId="glimLoanForm.input.businessActivity" style="display:none;" property="clientDetails[${indice}].businessActivity" />
 					       </c:when>
 					       
 					       <c:otherwise>
@@ -108,8 +110,8 @@
 			<table align="right" width="93%" border="0" cellpadding="3"
 				cellspacing="0">
 				<tr>
-					<td align="right" class="fontnormalbold" width="28%"><mifos:mifoslabel
-						name="loan.totalamount" />:</td>
+					<td align="right" class="fontnormalbold" width="28%"><span id="glimLoanForm.label.totalAmount"><mifos:mifoslabel
+						name="loan.totalamount" /></span>:</td>
 					<td valign="top" class="fontnormal"><mifos:mifosdecimalinput
 						property="loanAmount" value="0.0" readonly="true"  styleId="sumLoanAmount"  />
 					<mifos:mifoslabel

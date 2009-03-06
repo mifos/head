@@ -29,10 +29,10 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="CreateMultipleLoanAccounts"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="CreateMultipleLoanAccounts"/>
 		<script language="javascript">
 		<!--
 			function fnLoadLoanOfficers(form) {
@@ -117,7 +117,7 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									</table>
-									<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+									<font class="fontnormalRedBold"> <span id="CreateMultipleLoanAccounts.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 									<br>
 									<table width="100%" border="0" cellpadding="0" cellspacing="0">
 										<tr>

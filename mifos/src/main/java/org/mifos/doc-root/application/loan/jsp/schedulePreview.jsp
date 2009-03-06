@@ -49,6 +49,7 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="SchedulePreview"/>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
 		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
@@ -184,7 +185,7 @@
 										</tr>
 										<tr>
 											<td>
-												<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+												<font class="fontnormalRedBold"> <span id="schedulePreview.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 											</td>
 										</tr>
 										<tr>
@@ -305,7 +306,7 @@
                                                                 <c:out value="${paymentDataBeans.installment.total}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <mifos:mifosdecimalinput name="paymentDataBeans" indexed="true" property="amount" size="10" />
+                                                                <mifos:mifosdecimalinput styleId="schedulePreview.input.loanAmount" name="paymentDataBeans" indexed="true" property="amount" size="10" />
                                                             </td>
                                                         </tr>
                                                         </c:forEach>
@@ -324,11 +325,11 @@
 									<br>
 										<tr>
 											<td align="center">
-												<html-el:submit property="previewBtn" styleClass="buttn" >
+												<html-el:submit styleId="schedulePreview.button.preview" property="previewBtn" styleClass="buttn" >
 													<mifos:mifoslabel name="loan.preview" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
+												<html-el:button styleId="schedulePreview.button.cancel" property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
 													<mifos:mifoslabel name="loan.cancel" />
 												</html-el:button>
 											</td>

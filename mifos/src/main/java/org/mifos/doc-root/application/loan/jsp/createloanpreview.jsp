@@ -50,6 +50,7 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="CreateLoanPreview"/>
 
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -197,7 +198,7 @@
 										</tr>
 										<tr>
 											<td>
-												<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+												<font class="fontnormalRedBold"> <span id="createloanpreview.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 											</td>
 										</tr>
 										<tr>
@@ -451,7 +452,7 @@
 														</td>
 													</tr>
 												</table>
-												<span class="fontnormal"> <br> <br> <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
+												<span class="fontnormal"> <br> <br> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
 														<mifos:mifoslabel name="loan.edit_loan_acc" />
 													</html-el:button> </span>
 											</td>
@@ -471,23 +472,23 @@
 											<td align="center">
 												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
 												<c:if test="${requestScope.perspective == 'redoLoan'}">
-                                                    <html-el:button property="submitForApprovalButton" styleClass="buttn" onclick="javascript:fun_submitForApproval(this.form)">
+                                                    <html-el:button styleId="createloanpreview.button.submitForApproval" property="submitForApprovalButton" styleClass="buttn" onclick="javascript:fun_submitForApproval(this.form)">
                                                         <mifos:mifoslabel name="loan.submit" />
                                                     </html-el:button>
                                                 </c:if>
                                                 <c:if test="${requestScope.perspective != 'redoLoan'}">
-                                                    <html-el:button property="saveForLaterButton" styleClass="buttn"  onclick="javascript:fun_saveForLater(this.form)">
+                                                    <html-el:button styleId="createloanpreview.button.saveForLater" property="saveForLaterButton" styleClass="buttn"  onclick="javascript:fun_saveForLater(this.form)">
                                                         <mifos:mifoslabel name="loan.saveForLater" />
                                                     </html-el:button>
                                                     &nbsp;
                                                     <c:choose>
                                                         <c:when test='${PendingApproval == true}'>
-                                                            <html-el:button property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)">
+                                                            <html-el:button styleId="createloanpreview.button.submitForApproval" property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)">
                                                                 <mifos:mifoslabel name="loan.submitForApproval" />
                                                             </html-el:button>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <html-el:button property="approvedButton" styleClass="buttn"  onclick="javascript:fun_approved(this.form)">
+                                                            <html-el:button styleId="createloanpreview.button.approve" property="approvedButton" styleClass="buttn"  onclick="javascript:fun_approved(this.form)">
                                                                 <mifos:mifoslabel name="loan.approved" />
                                                             </html-el:button>
                                                         </c:otherwise>
@@ -495,7 +496,7 @@
                                                 </c:if>
 												&nbsp;
 
-												<html-el:button property="cancelButton" styleClass="cancelbuttn"  onclick="javascript:fun_cancel(this.form)">
+												<html-el:button styleId="createloanpreviews.button.cancel" property="cancelButton" styleClass="cancelbuttn"  onclick="javascript:fun_cancel(this.form)">
 													<mifos:mifoslabel name="loan.cancel" />
 												</html-el:button>
 											</td>

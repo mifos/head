@@ -52,12 +52,13 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="UndoLoanDisbursal"/>
 		<html-el:form action="/reverseloandisbaction">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
+						<span class="fontnormal8pt"><html-el:link styleId="undoloandisbursal.link.admin" href="reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.admin" />
 							</html-el:link> / </span> <span class="fontnormal8ptbold"><mifos:mifoslabel name="loan.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.disbursal" /></span>
 					</td>
@@ -98,7 +99,7 @@
 									&nbsp;
 								</td>
 							</tr>
-							<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+							<font class="fontnormalRedBold"> <span id="undoloandisbursal.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 							<tr>
 								<td width="100%" valign="top" class="fontnormal">
 									<p>
@@ -202,7 +203,7 @@
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" >
+									<html-el:button styleId="undoloandisbursal.button.cancel" property="cancelButton" onclick="location.href='reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

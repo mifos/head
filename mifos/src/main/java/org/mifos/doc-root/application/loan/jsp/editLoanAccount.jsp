@@ -33,6 +33,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="EditLoanAccount"/>	
 		<SCRIPT SRC="pages/application/loan/js/EditLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -154,8 +155,8 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<br>
-					<font class="fontnormalRedBold"> <html-el:errors
-						bundle="loanUIResources" /> </font>
+					<font class="fontnormalRedBold"> <span id="editLoanAccount.error.message"><html-el:errors
+						bundle="loanUIResources" /></span> </font>
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td colspan="2" class="fontnormalbold">
@@ -185,10 +186,13 @@ explanation of the license and how it is applied.
 							<tr class="fontnormal">
 									<td width="30%" align="right" class="fontnormal">
 										<font color="#FF0000">*</font>
+										<span id="editLoanAccount.label.loanAmount">
 										<fmt:message key="loan.loanAmount">
 											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-										</fmt:message>:&nbsp;</td>
-									<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
+										</fmt:message></span>:&nbsp;</td>
+									<td valign="top"><mifos:mifosdecimalinput 
+										styleId="editLoanAccount.input.loanAmount"
+										property="loanAmount"
 										value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
 										name="loan.allowed_amount" />&nbsp; <c:out
 										value="${sessionScope.loanAccountActionForm.minLoanAmount}" />
@@ -202,10 +206,12 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal">
 							<td width="30%" align="right" class="fontnormal">
 								<font color="#FF0000">*</font>
+								<span id="editLoanAccount.label.interestRate">
 								<fmt:message key="loan.interestRate">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-								</fmt:message>:&nbsp;</td>
+								</fmt:message></span>:&nbsp;</td>
 							<td width="70%" valign="top"><mifos:mifosdecimalinput
+								styleId="editLoanAccount.input.interestRate"
 								property="interestRate" readonly="${loanfn:isDisabledWhileEditingGlim('interestRate',accountState)}"
 								value="${sessionScope.loanAccountActionForm.interestRate}"
 								decimalFmt="10.5" /> 
@@ -219,9 +225,9 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
-							<mifos:mifoslabel name="loan.no_of_inst" mandatory="yes" />:&nbsp;
+							<span id="editLoanAccount.label.numberOfInstallments"><mifos:mifoslabel name="loan.no_of_inst" mandatory="yes" /></span>:&nbsp;
 							</td>
-							<td valign="top"><mifos:mifosnumbertext
+							<td valign="top"><mifos:mifosnumbertext styleId="editLoanAccount.input.numberOfInstallments"
 								name="loanAccountActionForm" property="noOfInstallments" 
 								readonly="${loanfn:isDisabledWhileEditingGlim('noOfInstallments',accountState)}"
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
@@ -297,8 +303,8 @@ explanation of the license and how it is applied.
 										</mifos:select> 
 									</c:otherwise>
 								  </c:choose>								
-								<mifos:mifoslabel name="meeting.labelOfEvery" bundle="MeetingResources" />
-								<mifos:mifosnumbertext property="recurMonth" size="3" maxlength="3" disabled="true" />
+								<span id="editLoanAccount.label.monthFrequency"><mifos:mifoslabel name="meeting.labelOfEvery" bundle="MeetingResources" /></span>
+								<mifos:mifosnumbertext styleId="editLoanAccount.input.monthFrequency" property="recurMonth" size="3" maxlength="3" disabled="true" />
 								<c:out value="${recurrenceName}" />
 								</td>
 							</tr>
@@ -306,9 +312,9 @@ explanation of the license and how it is applied.
 										
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
-							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;</td>
+							<span id="editLoanAccount.label.gracePeriod"><mifos:mifoslabel name="loan.grace_period" /></span>:&nbsp;</td>
 							<td valign="top">
-								<mifos:mifosnumbertext property="gracePeriod"  disabled="${loanfn:isDisabledWhileEditingGlim('gracePeriod',accountState)}" onchange="setGracePeriodDurationValue();"/></td>
+								<mifos:mifosnumbertext styleId="editLoanAccount.input.gracePeriod" property="gracePeriod"  disabled="${loanfn:isDisabledWhileEditingGlim('gracePeriod',accountState)}" onchange="setGracePeriodDurationValue();"/></td>
 						</tr>
 						<html-el:hidden property="inheritedGracePeriodDuration"
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
@@ -381,17 +387,17 @@ explanation of the license and how it is applied.
 
 						<tr class="fontnormal">
 			                <td width="30%" align="right">
-								<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="loanUIResources"></mifos:mifoslabel>:
+								<span id="editLoanAccount.label.customField"><mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="loanUIResources"></mifos:mifoslabel></span>:
 							</td>
 			                <td width="70%">
 								<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">
-				                	<mifos:mifosnumbertext  name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"  readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
+				                	<mifos:mifosnumbertext styleId="editLoanAccount.input.customField"  name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"  readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 				                </c:if>
 				               	<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_ALPHANUMBER}">
-				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
+				                	<mifos:mifosalphanumtext styleId="editLoanAccount.input.customField" name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 								</c:if>
 				                <c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
-				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
+				                	<mifos:mifosalphanumtext styleId="editLoanAccount.input.customField" name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 				                </c:if>
 				                <html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
 				                <html-el:hidden property='customField[${ctr}].fieldType' value='${cf.fieldType}' />
@@ -408,10 +414,10 @@ explanation of the license and how it is applied.
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit property="editDetailsBtn"
+							<td align="center"><html-el:submit styleId="editLoanAccount.button.preview" property="editDetailsBtn"
 								styleClass="buttn" >
 								<mifos:mifoslabel name="loan.preview" />
-							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
+							</html-el:submit> &nbsp; <html-el:button styleId="editLoanAccount.button.cancel" property="cancelButton"
 								onclick="javascript:fun_cancel(this.form)"
 								styleClass="cancelbuttn" >
 								<mifos:mifoslabel name="loan.cancel" />

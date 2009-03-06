@@ -16,6 +16,7 @@
 </script>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="ViewLoanStatusHistory"/>
 		<html-el:form action="loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -45,7 +46,7 @@
 						passLocale="true" /> <br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="btn"
+							<td align="center"><html-el:button styleId="viewLoanStatusHistory.button.return" property="btn"
 								onclick="fun_return(this.form);" styleClass="buttn">
 								<mifos:mifoslabel name="Account.returnToAccountDetails"
 									bundle="accountsUIResources" />

@@ -49,6 +49,8 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value<="CreateMultipleLoanAccounts"/>
+
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	<script src="pages/framework/js/conversion.js"></script>
 	<script src="pages/framework/js/con_en.js"></script>
@@ -113,8 +115,8 @@
 					<br>
 					<table width="95%" border="0" cellspacing="0" cellpadding="3">
 
-						<font class="fontnormalRedBold"> <html-el:errors
-							bundle="loanUIResources" /> </font>
+						<font class="fontnormalRedBold"> <span id="DisburseLoan.error.message"><html-el:errors
+							bundle="loanUIResources" /></span> </font>
 						<tr>
 							<td colspan="2" align="right" class="fontnormal"><img
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
@@ -130,9 +132,10 @@
 							 							 
 						</tr>
 						<tr>
-							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="loan.receiptId" />:&nbsp;</td>
+							<td align="right" class="fontnormal"><span id="DisburseLoan.label.receiptId"><mifos:mifoslabel
+								name="loan.receiptId" /></span>:&nbsp;</td>
 							<td class="fontnormal"><mifos:mifosalphanumtext
+								styleId="DisburseLoan.input.receiptId"
 								maxlength="25" property="receiptId" /></td>
 						</tr>
 						<tr>
@@ -146,11 +149,12 @@
 						</tr>
 						<tr>
 							<td width="29%" align="right" class="fontnormal">
+								<span id="DisburseLoan.label.disbursementAmount">
 								<fmt:message key="loan.loanAmount">
 									<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message>:&nbsp;</td>
-							<td width="71%"><mifos:mifosdecimalinput
+								</fmt:message></span>:&nbsp;</td>
+							<td width="71%"><mifos:mifosdecimalinput styleId="DisburseLoan.input.disbursementAmount"
 								property="loanAmount" name="loanDisbursmentActionForm"
 								disabled="true" /></td>
 						</tr>
@@ -176,9 +180,9 @@
 								name="loan.paymentdetails" /></td>
 						</tr>
 						<tr>
-							<td width="29%" align="right" class="fontnormal"><mifos:mifoslabel
-								name="loan.amount" />:&nbsp;</td>
-							<td width="71%"><mifos:mifosdecimalinput property="amount"
+							<td width="29%" align="right" class="fontnormal"><span id="DisburseLoan.label.paymentAmount"><mifos:mifoslabel
+								name="loan.amount" /></span>:&nbsp;</td>
+							<td width="71%"><mifos:mifosdecimalinput styleId="DisburseLoan.input.paymentAmount" property="amount"
 								name="loanDisbursmentActionForm" disabled="true" /></td>
 						</tr>
 						<tr>
@@ -215,9 +219,9 @@
 							<td align="center">&nbsp;</td>
 						</tr>
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="DisburseLoan.button.reviewTransaction" styleClass="buttn">
 								<mifos:mifoslabel name="loan.reviewtransaction" />
-							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
+							</html-el:submit> &nbsp; <html-el:button styleId="DisburseLoan.button.cancel" property="cancelButton"
 								styleClass="cancelbuttn"
 								onclick="javascript:fun_return(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />

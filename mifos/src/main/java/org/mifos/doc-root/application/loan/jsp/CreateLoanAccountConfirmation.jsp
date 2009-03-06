@@ -48,6 +48,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="CreateLoanAccountConfirmation"/>
 
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
@@ -79,7 +80,7 @@
 							</tr>
 							<tr>
 								<td>
-									<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+									<font class="fontnormalRedBold"> <span id="CreateLoanAccountConfirmation.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 								</td>
 							</tr>
 							<tr>
@@ -91,7 +92,7 @@
 											<fmt:param><c:out value='${customer.displayName}' /></fmt:param>
 											<fmt:param><c:out value='${requestScope.globalAccountNum}' /></fmt:param>
 										</fmt:message><br> <br> <br> </span>
-									<html-el:link href="loanAccountAction.do?method=get
+									<html-el:link styleId="CreateLoanAccountConfirmation.link.viewLoanDetails" href="loanAccountAction.do?method=get
 									&customerId=${customer.customerId}
 									&globalAccountNum=${requestScope.globalAccountNum}
 									&recordOfficeId=${requestScope.loan.office.officeId}
@@ -110,11 +111,11 @@
 												<img src="pages/framework/images/trans.gif" width="15" height="10">
 											</td>
 											<td width="98%">
-												<span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+												<span class="fontnormal"><html-el:link styleId="CreateLoanAccountConfirmation.link.newSavingsAccount" href="savingsAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<fmt:message key="loan.openNewSavingsAccount" >
 															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 														</fmt:message>
-													</html-el:link> <br> <html-el:link href="loanAccountAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+													</html-el:link> <br> <html-el:link styleId="CreateLoanAccountConfirmation.link.newLoanAccount" href="loanAccountAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<fmt:message key="loan.openNewLoanAccount" >
 															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 														</fmt:message>

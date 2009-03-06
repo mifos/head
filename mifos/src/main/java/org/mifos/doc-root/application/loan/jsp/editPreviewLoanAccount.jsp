@@ -48,6 +48,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="EditPreviewLoanAccount"/>	
 		<SCRIPT SRC="pages/application/loan/js/PreviewLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"
@@ -92,8 +93,8 @@
 								name="loan.reviewaccountinformation3" /></td>
 						</tr>
 						<tr>
-							<td><font class="fontnormalRedBold"> <html-el:errors
-								bundle="loanUIResources" /> </font></td>
+							<td><font class="fontnormalRedBold"> <span id="editPreviewLoanAccount.error.message"><html-el:errors
+								bundle="loanUIResources" /></span> </font></td>
 						</tr>
 					</table>
 					<br>
@@ -204,7 +205,7 @@
 					  			</c:forEach>
 							<br>
 							</c:if>
-							<html-el:button property="editButton" styleClass="insidebuttn"
+							<html-el:button styleId="editPreviewLoanAccount.button.edit" property="editButton" styleClass="insidebuttn"
 								onclick="fnEdit(this.form)">
 								<mifos:mifoslabel name="loan.edit_loan_acc" />
 							</html-el:button> </td>
@@ -218,10 +219,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit property="previewDetailsBtn"
+							<td align="center"><html-el:submit styleId="editPreviewLoanAccount.button.submit" property="previewDetailsBtn"
 								styleClass="buttn" >
 								<mifos:mifoslabel name="loan.submit" />
-							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
+							</html-el:submit> &nbsp; <html-el:button styleId="editPreviewLoanAccount.button.cancel" property="cancelButton"
 								styleClass="cancelbuttn" 
 								onclick="javascript:fun_cancel(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />

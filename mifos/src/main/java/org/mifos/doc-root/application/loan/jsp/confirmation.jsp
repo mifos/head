@@ -8,7 +8,8 @@
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-
+	<input type="hidden" id="page.id" value="LoanConfirmation"/>
+	
 	
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -31,7 +32,7 @@
 					<tr class="fontnormal">
 						<td valign="top">
 							<span class="fontnormal">
-								<html-el:link href="loanAccountAction.do?method=get&globalAccountNum=${account}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link styleId="confirmation.link.viewLoanAccount" href="loanAccountAction.do?method=get&globalAccountNum=${account}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="accountStatus.account" />
 									<c:out value="${account}" />
 								</html-el:link>

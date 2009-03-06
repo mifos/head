@@ -54,6 +54,8 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ViewChangeLog"/>
+	
 	<script>
 	function returnToDetails(){
 		loanAccountActionForm.action="loanAccountAction.do?method=cancelChangeLog";
@@ -80,7 +82,7 @@
 						<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="loanUIResources" /> 
+											<span id="viewChangeLog.error.message"><html-el:errors bundle="loanUIResources" /></span> 
 										</font>
 									</td>
 						</tr>
@@ -106,7 +108,7 @@
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
+							<td align="center"><html-el:button styleId="viewChangeLog.button.return" property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
 								styleClass="buttn">
 								<mifos:mifoslabel name="loan.returnToAccountDetails"

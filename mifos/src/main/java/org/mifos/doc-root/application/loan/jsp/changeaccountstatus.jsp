@@ -9,6 +9,7 @@
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ChangeAccountStatus"/>
 
 		<script>
 
@@ -32,7 +33,7 @@
 			<table width="100%" border="0" cellpadding="2" cellspacing="0" class="paddingleftmain">
 				<tr>
 					<td>
-						<span class="headingorange"> <mifos:mifoslabel name="accountStatus.changeaccountstatus" /> <br> <br>
+						<span class="headingorange"> <mifos:mifoslabel name="accountStatus.changeaccountstatus" /><br> <br> 
 					</td>
 				</tr>
 			</table>
@@ -53,7 +54,7 @@
 						</table>
 				<tr>
 					<td>
-						<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+						<font class="fontnormalRedBold"> <span id="changeaccountstatus.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 					</td>
 				</tr>
 
@@ -121,7 +122,7 @@
 							<tr>
 								<td></td>
 								<td align="left">
-									<html-el:button property="cancel" styleClass="buttn"  onclick="submitData(this.form);">
+									<html-el:button styleId="changeaccountstatus.button.search" property="cancel" styleClass="buttn"  onclick="submitData(this.form);">
 										<mifos:mifoslabel name="accountStatus.search" />
 									</html-el:button>
 								</td>

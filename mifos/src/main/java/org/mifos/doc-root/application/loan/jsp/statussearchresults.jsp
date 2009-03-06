@@ -11,6 +11,7 @@
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="StatusSearchResults"/>
 
 		<script>
   	function submitData(form) {
@@ -69,7 +70,7 @@
 				<!--  here -->
 				<tr>
 					<td valign="middle">
-						<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+						<font class="fontnormalRedBold"> <span id="statussearchresults.error.message"><html-el:errors bundle="loanUIResources" /></span> </font>
 					</td>
 				</tr>
 				<tr>
@@ -79,7 +80,7 @@
 
 							<tr class="bglightblue" valign="middle" height="35">
 								<td width="5%" class="drawtablerowboldnolinebg">
-									<input type="checkbox" onclick="selectAll(this)" name="selectAll1" />
+									<input id="statussearchresults.input.selectAll" type="checkbox" onclick="selectAll(this)" name="selectAll1" />
 								</td>
 
 								<td width="15%" class="drawtablerowboldnolinebg">
@@ -111,7 +112,7 @@
 
 								<tr>
 									<td width="5%" valign="top" class="drawtablerow">
-										<html-el:checkbox property="accountRecords[${ctr1}]" value="${loan.accountId}" onclick="selectAllCheck(this)" />
+										<html-el:checkbox styleId="statussearchresults.input.select" property="accountRecords[${ctr1}]" value="${loan.accountId}" onclick="selectAllCheck(this)" />
 									</td>
 
 									<td width="15%" valign="top" class="drawtablerow">
@@ -120,7 +121,7 @@
 									</td>
 
 									<td width="15%" valign="top" class="drawtablerow">
-										<html-el:link href="loanAccountAction.do?method=get&globalAccountNum=${loan.globalAccountNum}">
+										<html-el:link styleId="statussearchresults.link.viewLoanAccount" href="loanAccountAction.do?method=get&globalAccountNum=${loan.globalAccountNum}">
 											<mifos:mifoslabel name="accountStatus.account" />
 											<c:out value="${loan.globalAccountNum}" />
 										</html-el:link>
@@ -189,10 +190,11 @@
 							</tr>
 							<tr>
 								<td align="right" valign="top" width="11%" class="fontnormal">
-									<mifos:mifoslabel name="accountStatus.note" mandatory="yes" />
+									<span id="statussearchresults.label.note">
+									<mifos:mifoslabel name="accountStatus.note" mandatory="yes" /></span>
 								</td>
 								<td>
-									<html-el:textarea style="width:320px; height:110px;" property="comments">
+									<html-el:textarea styleId="statussearchresults.input.note" style="width:320px; height:110px;" property="comments">
 									</html-el:textarea>
 								</td>
 							</tr>
@@ -215,7 +217,7 @@
 				<tr>
 
 					<td align="center">
-						<html-el:button property="cancel" styleClass="buttn"  onclick="submitData(this.form);">
+						<html-el:button styleId="statussearchresults.button.submit" property="cancel" styleClass="buttn"  onclick="submitData(this.form);">
 							<mifos:mifoslabel name="accountStatus.submit" />
 						</html-el:button>
 					</td>

@@ -49,7 +49,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-
+	<input type="hidden" id="page.id" value="ReviewRepayLoan"/>
 		<script>
 			function fun_return(form){
 					form.action="loanAccountAction.do?method=get";
@@ -72,7 +72,7 @@
 			</table>
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 								<font class="fontnormalRedBold">
-									<html-el:errors bundle="loanUIResources" /> 
+									<span id="Review_RepayLoan.error.message"><html-el:errors bundle="loanUIResources" /> 
 								</font>
 					<tr>
 						<td width="70%" height="24" align="left" valign="top"
@@ -154,7 +154,7 @@
 				            </tr>
 				            <tr align="center">
 				                <td height="3" colspan="2" align="left">
-				                	<html-el:button property="editButton" styleClass="insidebuttn" 
+				                	<html-el:button styleId="Review_RepayLoan.button.edit" property="editButton" styleClass="insidebuttn" 
 										onclick="javascript:fun_edit(this.form)">
 										<mifos:mifoslabel name="loan.editTrxn" />
 									</html-el:button>
@@ -169,9 +169,9 @@
 							</table>
 	            			<table width="96%" border="0" cellspacing="0" cellpadding="1">
 								<tr>
-									<td align="center"><html-el:submit styleClass="buttn">
+									<td align="center"><html-el:submit styleId="Review_RepayLoan.button.submit" styleClass="buttn">
 										<mifos:mifoslabel name="loan.submit" />
-									</html-el:submit> &nbsp; <html-el:button property="cancelButton" styleClass="cancelbuttn" 
+									</html-el:submit> &nbsp; <html-el:button styleId="Review_RepayLoan.button.cancel" property="cancelButton" styleClass="cancelbuttn" 
 										onclick="javascript:fun_return(this.form)">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button></td>

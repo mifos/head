@@ -47,10 +47,10 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="CreateMultipleLoanAccountsConfirm"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="CreateMultipleLoanAccountsConfirm"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="left" valign="top" class="paddingL15T15">
@@ -64,20 +64,20 @@
 								<br>
 							</td>
 						</tr>
-						<font class="fontnormalRedBold"> <html-el:errors bundle="loanUIResources" /> </font>
+						<font class="fontnormalRedBold"> <span id="CreateMultipleLoanAccountsConfirm.error.message"> <html-el:errors bundle="loanUIResources" /></span> </font>
 						<tr>
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="loan.plz_note" />
 								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accs" /> <mifos:mifoslabel name="loan.withfollid" isColonRequired="Yes" /> <br> <br> </span>
 								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" varStatus="status" >
-								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
+								<html-el:link styleId="CreateMultipleLoanAccountsConfirmation.link.viewLoanAccount" href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get" styleId="CreateMultipleLoanAccountsConfirm.link.account.${status.index}"><mifos:mifoslabel name="loan.accountNumber" />${loanGlobalNum}</html-el:link>
 								<br>
 								</c:forEach>
 								<br>
 								<br>
 								<span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span>
 								<br>
-								<span class="fontnormal"> <html-el:link href="multipleloansaction.do?method=load">
+								<span class="fontnormal"> <html-el:link styleId="CreateMultipleLoanAccountsConfirmation.link.createMultipleLoanAccounts" href="multipleloansaction.do?method=load">
 										<mifos:mifoslabel name="loan.create" />
 										<mifos:mifoslabel name="loan.multiple" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
