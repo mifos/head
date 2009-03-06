@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
+ */
+
 package org.mifos.migration.mapper;
 
 import java.io.File;
@@ -11,24 +31,32 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import junit.framework.TestCase;
-
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.migration.MifosValidationEventHandler;
 import org.mifos.migration.generated.Center;
 import org.mifos.migration.generated.MifosDataExchange;
 
-public class TestCenterMapper extends TestCase {
-	private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
+/**
+ * We really don't need or want to hit the database for these tests, but
+ * creating a MeetingBO object requires it.
+ */
+public class TestCenterMapper extends MifosIntegrationTest {
+	public TestCenterMapper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
 	private static final String MIFOS_DATA_EXCHANGE_SCHEMA_PATH = "src/org/mifos/migration/schemas/generated/MifosDataExchange.xsd";
 
 	private JAXBContext  jaxbContext;
@@ -42,10 +70,6 @@ public class TestCenterMapper extends TestCase {
 	
 	@Override
 	public void setUp() throws Exception {
-		// We really don't need or want to hit the database for these tests, 
-		// but creating a MeetingBO object requires it.
-		DatabaseSetup.initializeHibernate();
-
 		jaxbContext = JAXBContext.newInstance( GENERATED_CLASS_PACKAGE );
 
 		marshaller = jaxbContext.createMarshaller();

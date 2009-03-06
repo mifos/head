@@ -1,4 +1,27 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
+ */
+
 package org.mifos.application.ppi.persistence;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,38 +49,19 @@ import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosInMemoryIntegrationTest;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PPIPersistenceTest extends MifosIntegrationTest {
-	public PPIPersistenceTest() throws SystemException, ApplicationException {
-        super();
-    }
-
+public class PPIPersistenceTest extends MifosInMemoryIntegrationTest {
     private static final double DELTA = 0.00000001;
-    private TestDatabase database;
 	private PPIPersistence persistence;
-	
-	@Override
+
 	@Before
 	public void setUp() {
-		DatabaseSetup.initializeHibernate();
-		database = TestDatabase.makeStandard();
-		database.installInThreadLocal();
+	    super.setUp();
 		persistence = new PPIPersistence();
-	}
-
-	@Override
-	@Before
-	public void tearDown() {
-		HibernateUtil.resetDatabase();
 	}
 	
 	@Test

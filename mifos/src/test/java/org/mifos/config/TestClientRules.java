@@ -17,34 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.config;
 
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DatabaseSetup;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.util.helpers.FilePaths;
 import junit.framework.JUnit4TestAdapter;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 
-
-public class TestClientRules {
+public class TestClientRules extends MifosIntegrationTest {
 	
-	public static junit.framework.Test suite() {
+	public TestClientRules() throws SystemException, ApplicationException {
+        super();
+    }
+
+    public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestClientRules.class);
-	}
-	
-	@BeforeClass
-	public static void init() throws Exception {
-		MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
-		DatabaseSetup.initializeHibernate();
-		
 	}
 	
 	@Test 

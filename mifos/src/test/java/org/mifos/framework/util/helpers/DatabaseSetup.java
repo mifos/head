@@ -65,21 +65,24 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
-			initializeHibernate(DEFAULT_HIBERNATE_TEST_PROPERTIES);
+			initializeHibernate(false);
 	}
 	
-	public static void initializeHibernate(String hibernatePropertiesFileName) {
+	public static void initializeHibernate(boolean useInMemoryDatabase) {
+        initializeHibernate(DEFAULT_HIBERNATE_TEST_PROPERTIES, useInMemoryDatabase);
+    }
+	
+	public static void initializeHibernate(String hibernatePropertiesFileName, boolean useInMemoryDatabase) {
 		DatabaseSetup.configureLogging();
 
 		if (HibernateSessionFactory.isConfigured()) {
 			return;
 		}
 
-		boolean testAgainstMysql = true;
-		if (testAgainstMysql) {
-			setMysql(hibernatePropertiesFileName);
+		if (useInMemoryDatabase) {
+		    setMayfly();
 		} else {
-			setMayfly();
+			setMysql(hibernatePropertiesFileName);
 		}
 	}
 

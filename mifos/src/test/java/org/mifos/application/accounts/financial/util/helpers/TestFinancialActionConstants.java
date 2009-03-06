@@ -6,17 +6,19 @@ import junit.framework.JUnit4TestAdapter;
 import org.hibernate.Query;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class TestFinancialActionConstants {
+public class TestFinancialActionConstants extends MifosIntegrationTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		DatabaseSetup.initializeHibernate();
-	}
+	public TestFinancialActionConstants() throws SystemException, ApplicationException {
+        super();
+    }
 
-	/*
+    /*
 	 * Verify that the number of elements in the enum 
 	 * {@link FinancialActionConstants} matches 
 	 * the number of elements in the corresponding table

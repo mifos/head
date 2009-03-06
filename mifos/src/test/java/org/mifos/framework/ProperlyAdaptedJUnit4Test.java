@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.framework;
 
 import java.io.BufferedReader;
@@ -64,7 +65,7 @@ public class ProperlyAdaptedJUnit4Test {
 	}
 
 	@Test
-	public void properlyAdapted() throws IOException {
+	public void testAllAreProperlyAdapted() throws IOException {
 		// recursively find .java files in test dir
 		List<String> javaTestSourceFiles = getJavaTestSourceFiles();
 		assertTrue("no java source files were found", javaTestSourceFiles

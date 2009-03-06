@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
+ */
+
 package org.mifos.migration.mapper;
 
 import java.io.File;
@@ -11,11 +31,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import junit.framework.TestCase;
-
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.migration.MifosValidationEventHandler;
 import org.mifos.migration.generated.Center;
 import org.mifos.migration.generated.MifosDataExchange;
@@ -23,8 +43,16 @@ import org.mifos.migration.generated.MonthlyMeeting;
 import org.mifos.migration.generated.WeekDayChoice;
 import org.mifos.migration.generated.WeeklyMeeting;
 
-public class TestMeetingMapper extends TestCase {
-	private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
+/**
+ * We really don't need or want to hit the database for these tests, but
+ * creating a MeetingBO object requires it.
+ */
+public class TestMeetingMapper extends MifosIntegrationTest {
+	public TestMeetingMapper() throws SystemException, ApplicationException {
+        super();
+    }
+
+    private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
 	private static final String MIFOS_DATA_EXCHANGE_SCHEMA_PATH = "src/org/mifos/migration/schemas/generated/MifosDataExchange.xsd";
 
 	private JAXBContext  jaxbContext;
@@ -34,10 +62,6 @@ public class TestMeetingMapper extends TestCase {
 	
 	@Override
 	public void setUp() throws Exception {
-		// We really don't need or want to hit the database for these tests, 
-		// but creating a MeetingBO object requires it.
-		DatabaseSetup.initializeHibernate();
-
 		jaxbContext = JAXBContext.newInstance( GENERATED_CLASS_PACKAGE );
 
 		marshaller = jaxbContext.createMarshaller();

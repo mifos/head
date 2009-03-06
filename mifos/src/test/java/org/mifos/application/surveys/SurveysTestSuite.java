@@ -19,7 +19,7 @@ public class SurveysTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestQuestionsAction.class);
 		testSuite.addTestSuite(TestSurveyInstanceAction.class);
 		testSuite.addTestSuite(QuestionTagTest.class);
-		testSuite.addTestSuite(SurveysPersistenceTest.class);
+		testSuite.addTest(SurveysPersistenceTest.suite());
 		return testSuite;
 	}
 }

@@ -1,6 +1,24 @@
-package org.mifos.framework.security.activity;
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.    
+ */
 
-import junit.framework.TestCase;
+package org.mifos.framework.security.activity;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -12,21 +30,20 @@ import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.util.helpers.DatabaseSetup;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class ActivityGeneratorTest extends TestCase {
+public class ActivityGeneratorTest extends MifosIntegrationTest {
 
-	public void testShouldInsertSuccessActivity() throws Exception {
+	public ActivityGeneratorTest() throws SystemException, ApplicationException {
+        super();
+    }
 
-		DatabaseSetup.configureLogging();
-		DatabaseSetup.initializeHibernate();
-		Class.forName(TestCaseInitializer.class.getName());
-
-
+    public void testShouldInsertSuccessActivity() throws Exception {
 		Session session = HibernateUtil.getSessionTL();
 
 		ActivityGenerator activityGenerator = new ActivityGenerator();

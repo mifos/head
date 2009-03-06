@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.config;
 
 import static org.junit.Assert.assertFalse;
@@ -24,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -33,13 +33,19 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 /**
  * Validate configuration override logic for optional process flow states.
  */
 public class TestProcessFlowRules {
+    public TestProcessFlowRules() throws SystemException, ApplicationException {
+        new TestCaseInitializer().initialize();
+    }
+
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestProcessFlowRules.class);
 	}
@@ -66,11 +72,6 @@ public class TestProcessFlowRules {
 	@Test(expected = ConfigurationException.class)
 	public void testInvalidOverride() throws Exception {
 		ProcessFlowRules.needsOverride(true, false);
-	}
-
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		DatabaseSetup.initializeHibernate();
 	}
 
 	@AfterClass
