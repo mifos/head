@@ -35,7 +35,6 @@
 	<classpathentry kind="lib" path="mifos/lib/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-httpclient-3.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-javaflow-20060411.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-lang-2.3.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-validator.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/dom4j-1.6.1.jar"/>

@@ -7,12 +7,13 @@ This file describes how to install Mifos for use in a production environment.
    the software packages below. Please see their respective web
    sites for details on how to install each package.  
 
-     * Sun Microsystems Java - JDK/JRE 1.5.0_12 (see Note)
+     * Sun Microsystems Java - JDK/JRE 1.6 (see Note)
      * MySQL - Community Edition 5.0.51b
      * Apache Tomcat - 6.0.16
     
-   Note: Java 6 is not supported in Mifos version 1.2. Also, while most Mifos
-   testing has been done using the JDK, only the JRE is needed to run Mifos.
+   Note: Java 1.6 is not supported in earlier versions of Mifos including 
+   Mifos 1.2.  Also, while most Mifos testing has been done using the JDK, 
+   only the JRE is needed to run Mifos.
 
 2. Configuring MySQL
     2.1. Setting Database Parameters 
