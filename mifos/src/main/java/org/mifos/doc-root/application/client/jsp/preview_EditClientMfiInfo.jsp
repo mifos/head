@@ -51,7 +51,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-
+	<input type="hidden" id="page.id" value="PreviewEditClientMfiInfo"/>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
 
@@ -100,8 +100,8 @@
 					<br>
 
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
-						<font class="fontnormalRedBold"><html-el:errors
-							bundle="ClientUIResources" /> </font>
+						<font class="fontnormalRedBold"><span id="preview_EditClientMfiInfo.error.message"><html-el:errors
+							bundle="ClientUIResources" /></span> </font>
 						<tr>
 							<td width="50%" height="23" class="fontnormalboldorange"><mifos:mifoslabel
 								name="client.MfiInformationLabel" bundle="ClientUIResources"></mifos:mifoslabel></td>
@@ -180,7 +180,7 @@
 						<tr>
 							<td class="fontnormalbold">
 	   	 					<span class="fontnormal"><br>
-							</span> <!-- Edit MFI Detail Button --> <html-el:button
+							</span> <!-- Edit MFI Detail Button --> <html-el:button styleId="preview_EditClientMfiInfo.button.editMfiInfo"
 								onclick="goToMfiPage()" property="editButton"
 								styleClass="insidebuttn">
 								<mifos:mifoslabel name="button.previousMFIInfo"
@@ -198,11 +198,11 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center">&nbsp; <html-el:submit property="submitButton"
+							<td align="center">&nbsp; <html-el:submit styleId="preview_EditClientMfiInfo.button.submit" property="submitButton"
 								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="preview_EditClientMfiInfo.button.cancel"
 								onclick="goToCancelPage();" property="cancelButton"
 								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"

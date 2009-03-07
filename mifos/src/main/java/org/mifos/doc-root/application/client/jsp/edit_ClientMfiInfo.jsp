@@ -53,6 +53,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="EditClientMfiInfo"/>	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script>
 
@@ -97,8 +98,8 @@
 					</table>
 					<br>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
-						<font class="fontnormalRedBold"><html-el:errors
-							bundle="ClientUIResources" /> </font>
+						<font class="fontnormalRedBold"><span id="edit_ClientMfiInfo.error.message"><html-el:errors
+							bundle="ClientUIResources" /></span> </font>
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 								name="client.MfiInformationLabel" bundle="ClientUIResources"></mifos:mifoslabel><br>
@@ -131,10 +132,11 @@
 						</tr>
 						<tr class="fontnormal">
 							<td width="17%" height="23" align="right" class="fontnormal">
+							<span id="edit_ClientMfiInfo.label.externalId">
 							<mifos:mifoslabel keyhm="Client.ExternalId" isColonRequired="yes"
-								name="${ConfigurationConstants.EXTERNALID}"></mifos:mifoslabel></td>
+								name="${ConfigurationConstants.EXTERNALID}"></mifos:mifoslabel></span></td>
 							<td width="83%">
-								<mifos:mifosalphanumtext keyhm="Client.ExternalId" property="externalId" maxlength="50" />
+								<mifos:mifosalphanumtext styleId="edit_ClientMfiInfo.input.externalId" keyhm="Client.ExternalId" property="externalId" maxlength="50" />
 							</td>
 						</tr>
 						<%-- Trained and Training date.. If the client is already trained then the date appears as label else option allowed to choose training --%>
@@ -194,10 +196,10 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="edit_ClientMfiInfo.button.preview" styleClass="buttn">
 								<mifos:mifoslabel name="button.preview"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="edit_ClientMfiInfo.button.cancel"
 								onclick="goToCancelPage();" property="cancelButton"
 								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"

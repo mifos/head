@@ -52,7 +52,7 @@
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
-
+	<input type="hidden" id="page.id" value="ConfirmBranchTransfer"/>	
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
   
@@ -99,8 +99,8 @@
 
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<font class="fontnormalRedBold"><html-el:errors
-								bundle="ClientUIResources" /></font>
+							<font class="fontnormalRedBold"><span id="confirmbranchtransfer.error.message"><html-el:errors
+								bundle="ClientUIResources" /></span></font>
 							<td class="fontnormalbold"><span class="fontnormal"><br>
 							</span><mifos:mifoslabel name="client.EditBranchMembershipLink" bundle="ClientUIResources"></mifos:mifoslabel>: <span class="fontnormal"><c:out
 								value="${sessionScope.clientTransferActionForm.officeName}" /> <br>
@@ -117,11 +117,11 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center">&nbsp; <html-el:submit property="submitButton"
+							<td align="center">&nbsp; <html-el:submit styleId="confirmbranchtransfer.button.submit" property="submitButton"
 								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="confirmbranchtransfer.button.cancel"
 								onclick="goToCancelPage();" property="cancelButton"
 								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"

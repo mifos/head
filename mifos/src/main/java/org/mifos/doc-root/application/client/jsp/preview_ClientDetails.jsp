@@ -34,6 +34,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="PreviewClientPersonalInfo"/>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
 
@@ -169,7 +170,7 @@ explanation of the license and how it is applied.
 								</tr>
 								<!-- Error Messages -->
 								<tr>
-									<td><font class="fontnormalRedBold"><html-el:errors
+									<td><font class="fontnormalRedBold"><span id="preview_ClientDetails.error.message"><html-el:errors
 										bundle="ClientUIResources" /></font></td>
 								</tr>
 							</table>
@@ -377,7 +378,7 @@ explanation of the license and how it is applied.
 									<br>
 									</span> </td></tr>
 									<tr><td>									
-										<!-- Edit Button --> <html-el:button
+										<!-- Edit Button --> <html-el:button styleId="preview_ClientDetails.button.editPersonalInformation"
 											onclick="goToPersonalPage()" property="editButton"
 											styleClass="insidebuttn">
 											<mifos:mifoslabel name="button.previousPersonalInfo"
@@ -554,7 +555,7 @@ explanation of the license and how it is applied.
 										</c:forEach>
 									<br>
 									<!-- Additional Fees preview end --> <!-- Edit MFI Detail Button -->
-									<html-el:button onclick="goToMfiPage()" property="editButton"
+									<html-el:button styleId="preview_ClientDetails.button.editMfiInfo" onclick="goToMfiPage()" property="editButton"
 										styleClass="insidebuttn">
 										<mifos:mifoslabel name="button.previousMFIInfo"
 											bundle="ClientUIResources"></mifos:mifoslabel>
@@ -572,7 +573,7 @@ explanation of the license and how it is applied.
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center">&nbsp; <html-el:button
+									<td align="center">&nbsp; <html-el:button styleId="preview_ClientDetails.button.saveForLater"
 										property="submitButton1" styleClass="buttn"
 										onclick="setClientStatus('1');">
 										<mifos:mifoslabel name="button.SaveForLater"
@@ -580,20 +581,20 @@ explanation of the license and how it is applied.
 									</html-el:button> &nbsp; &nbsp;
 									<c:choose>
 										<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined') eq 'Yes'}">
-											<html-el:button property="submitButton" styleClass="buttn"
+											<html-el:button styleId="preview_ClientDetails.button.submitForApproval" property="submitButton" styleClass="buttn"
 												onclick="setClientStatus('2');">
 												<mifos:mifoslabel name="button.SubmitForApproval"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:button>
 										</c:when>
 										<c:otherwise>
-											<html-el:button property="submitButton" styleClass="buttn"
+											<html-el:button styleId="preview_ClientDetails.button.approve" property="submitButton" styleClass="buttn"
 												onclick="setClientStatus('3');">
 												<mifos:mifoslabel name="button.Approved"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:button>
 										</c:otherwise>
-									</c:choose> &nbsp; &nbsp; <html-el:button
+									</c:choose> &nbsp; &nbsp; <html-el:button styleId="preview_ClientDetails.button.cancel"
 										onclick="goToCancelPage();" property="cancelButton"
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="button.cancel"

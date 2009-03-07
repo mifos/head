@@ -51,6 +51,7 @@
 <!-- Inserting tile defintion for header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ClientCreationConfirmation"/>	
 		<!-- Body Begins -->
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -83,10 +84,10 @@
 						</span> <!-- Link to view the center details -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.parentGroup.office.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.parentGroup.office.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}">
 						</c:when>
 						<c:otherwise>
-						<a href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
 						</c:otherwise>
 						</c:choose>
 
@@ -107,7 +108,7 @@
 							<br>
 						</c:if> <span class="fontnormal"> <!-- Link to create a new savings  account link -->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
-							<html-el:link
+							<html-el:link styleId="client_creationConfirmation.link.createNewSavingsAccount"
 								href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<fmt:message key="client.CreateNewClientLink">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
@@ -116,7 +117,7 @@
 							<br>
 						</c:if> <!-- Link to create a new loan  account link --> <!-- bug id 29352. Added if condition to show link to open accounts if only client is active-->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
-							<html-el:link
+							<html-el:link styleId="client_creationConfirmation.link.createNewLoanAccount"
 								href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">
 								<fmt:message key="client.CreateNewClientLink">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
@@ -126,17 +127,17 @@
 						</c:if> <!-- Link to create a new group -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a	href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
+						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
 						</c:when>
 						<c:otherwise>
-						<a	href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
+						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
 						</c:otherwise>
 						</c:choose>
 
-						<fmt:message key="client.createNewClient">
+						<fmt:message key="client.createNewGroup">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 						</fmt:message> </a> <br>
-						<!-- Link to create a new client --> <a
+						<!-- Link to create a new client --> <a id="client_creationConfirmation.link.createNewClient"
 							href="groupCustAction.do?method=loadSearch&input=createClient&recordOfficeId=0&recordLoanOfficerId=0" />
 						<fmt:message key="client.createNewClient">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>

@@ -58,6 +58,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="ViewClientActivity"/>
 
 	<script>
 		function fun_cancel(){
@@ -71,7 +72,7 @@
         <table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
-				<html-el:link href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+				<html-el:link styleId="viewClientActivity.link.viewCharges" href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 					<fmt:message key="client.clientcharges">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 					</fmt:message>
@@ -82,7 +83,7 @@
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" height="24" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
-              <font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources" /></font>
+              <font class="fontnormalRedBold"><span id="viewClientActivity.error.message"><html-el:errors bundle="CenterUIResources" /></span></font>
               <tr>
 	            <td width="70%" class="headingorange">
 	            	<span class="heading">
@@ -103,18 +104,18 @@
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
 	                &nbsp;&nbsp;&nbsp;&nbsp;
-	                	<html-el:link href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                	<html-el:link styleId="viewClientActivity.link.applyPayment" href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="accounts.apply_payment" />
 	                    </html-el:link>
 	                <c:if test="${param.statusId == 3 || param.statusId == 4}">
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                    <html-el:link styleId="viewClientActivity.link.applyAdjustment" href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                 </c:if>
 		             <c:if test="${param.statusId == 1 || param.statusId == 2 || param.statusId == 3 || param.statusId == 4}">
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="applyChargeAction.do?method=load&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                    <html-el:link styleId="viewClientActivity.link.applyCharges" href="applyChargeAction.do?method=load&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewClientCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="Center.ApplyCharges" />
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -129,7 +130,7 @@
              <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="center">
-					   <html-el:button property="returnToAccountDetailsbutton"
+					   <html-el:button styleId="viewClientActivity.button.return" property="returnToAccountDetailsbutton"
 					       onclick="fun_cancel();"
 						     styleClass="buttn">
 						<mifos:mifoslabel name="label.backtodetailspage" bundle="CustomerUIResources"/>

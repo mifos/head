@@ -11,7 +11,7 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-
+	<input type="hidden" id="page.id" value="ChooseOffice"/>
 
 		<script language="javascript">
 
@@ -116,7 +116,7 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="cancelBtn"
+							<td align="center"><html-el:button styleId="chooseoffice.button.cancel" property="cancelBtn"
 								styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"

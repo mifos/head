@@ -35,6 +35,7 @@ explanation of the license and how it is applied.
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="CreateClientMfiInfo"/>	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
@@ -193,8 +194,8 @@ explanation of the license and how it is applied.
 									</c:choose></td>
 								</tr>
 								<tr>
-									<td><font class="fontnormalRedBold"><html-el:errors
-										bundle="ClientUIResources" /></font></td>
+									<td><font class="fontnormalRedBold"><span id="create_ClientMfiInfo.error.message"><html-el:errors
+										bundle="ClientUIResources" /></span></font></td>
 								</tr>
 							</table>
 							<br>
@@ -223,7 +224,7 @@ explanation of the license and how it is applied.
 									<tr class="fontnormal">
 										<td align="right"><mifos:mifoslabel
 											name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></td>
-										<td><html-el:link href="javascript:loadMeeting()">
+										<td><html-el:link styleId="create_ClientMfiInfo.link.meetingSchedule" href="javascript:loadMeeting()">
 											<mifos:mifoslabel name="client.MeetingScheduleLink"
 												bundle="ClientUIResources"></mifos:mifoslabel>
 										</html-el:link></td>
@@ -244,9 +245,9 @@ explanation of the license and how it is applied.
 								</tr>
 								<%-- External Id --%>
 								<tr class="fontnormal">
-									<td width="27%" align="right"><mifos:mifoslabel keyhm="Client.ExternalId" isColonRequired="yes"
-										name="${ConfigurationConstants.EXTERNALID}"></mifos:mifoslabel></td>
-									<td><mifos:mifosalphanumtext keyhm="Client.ExternalId" property="externalId"
+									<td width="27%" align="right"><span id="create_ClientMfiInfo.label.externalId"><mifos:mifoslabel keyhm="Client.ExternalId" isColonRequired="yes"
+										name="${ConfigurationConstants.EXTERNALID}"></mifos:mifoslabel></span></td>
+									<td><mifos:mifosalphanumtext styleId="create_ClientMfiInfo.input.externalId" keyhm="Client.ExternalId" property="externalId"
 										maxlength="50" /></td>
 								</tr>
 								<%-- Trained --%>
@@ -296,10 +297,10 @@ explanation of the license and how it is applied.
 															<c:otherwise>
 																<c:choose>
 																	<c:when test="${param.method eq 'next'}">
-																		<td width="20%"><mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" /></td>
+																		<td width="20%"><mifos:mifosdecimalinput styleId="create_ClientMfiInfo.input.defaultAmount" property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" /></td>
 																	</c:when>
 																	<c:otherwise>
-																		<td width="20%"><mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount"  style="width:135px;" /></td>
+																		<td width="20%"><mifos:mifosdecimalinput styleId="create_ClientMfiInfo.input.defaultAmount" property="defaultFee[${ctr1}].amount"  style="width:135px;" /></td>
 																	</c:otherwise>
 																</c:choose>
 															</c:otherwise>
@@ -314,8 +315,8 @@ explanation of the license and how it is applied.
 																</c:otherwise>
 															</c:choose>
 														</td>
-														<td width="25%"><html-el:checkbox
-															property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox><mifos:mifoslabel name="client.CheckToRemove" bundle="ClientUIResources" /></td>
+														<td width="25%"><html-el:checkbox styleId="create_ClientMfiInfo.input.remove"
+															property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox><span id="create_ClientMfiInfo.label.remove"><mifos:mifoslabel name="client.CheckToRemove" bundle="ClientUIResources" /></span></td>
 													<%-- <c:out value="${adminFees.checkedFee}" /> --%>
 													</tr>
 												</table>
@@ -353,7 +354,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="client.Amount" bundle="ClientUIResources"/>
 											</td>
 											<td width="48%" class="fontnormal">
-												<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' />
+												<mifos:mifosdecimalinput styleId="create_ClientMfiInfo.input.amount" property='selectedFee[${ctr2}].amount' />
 											</td>
 											<c:if test="${ctr2 == 0}">
 												<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
@@ -411,10 +412,10 @@ explanation of the license and how it is applied.
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit styleClass="buttn">
+									<td align="center"><html-el:submit styleId="create_ClientMfiInfo.button.preview" styleClass="buttn">
 										<mifos:mifoslabel name="button.preview"
 											bundle="ClientUIResources"></mifos:mifoslabel>
-									</html-el:submit> &nbsp; &nbsp; <html-el:button
+									</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="create_ClientMfiInfo.button.cancel"
 										onclick="goToCancelPage();" property="cancelButton"
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="button.cancel"

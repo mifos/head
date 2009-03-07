@@ -52,6 +52,7 @@
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="PreviewEditClientPersonalInfo"/>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 
 		<script language="javascript">
@@ -105,8 +106,8 @@
 						</tr>
 						<!-- Error Messages -->
 						<tr>
-							<td><font class="fontnormalRedBold"><html-el:errors 
-								bundle="ClientUIResources" /></font></td>
+							<td><font class="fontnormalRedBold"><span id="preview_EditClientPersonalInfo.error.message"><html-el:errors 
+								bundle="ClientUIResources" /></span></font></td>
 						</tr>
 					</table>
 					<br>
@@ -325,7 +326,7 @@
 									</c:if>
 								</c:forEach>
 							</c:forEach><br>
-							<!-- Edit Button --> <html-el:button onclick="goToPersonalPage()"
+							<!-- Edit Button --> <html-el:button styleId="preview_EditClientPersonalInfo.button.editPersonalInformation" onclick="goToPersonalPage()"
 								property="editButton" styleClass="insidebuttn">
 								<mifos:mifoslabel name="button.previousPersonalInfo"
 									bundle="ClientUIResources"></mifos:mifoslabel>
@@ -342,11 +343,11 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center">&nbsp; <html-el:submit property="submitButton"
+							<td align="center">&nbsp; <html-el:submit styleId="preview_EditClientPersonalInfo.button.submit" property="submitButton"
 								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="preview_EditClientPersonalInfo.button.cancel"
 								onclick="goToCancelPage();" property="cancelButton"
 								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"

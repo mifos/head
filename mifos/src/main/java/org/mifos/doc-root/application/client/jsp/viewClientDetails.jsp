@@ -54,6 +54,7 @@
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ViewClientDetails"/>
 		<script language="javascript">
   function photopopup(custId , custName, currentFlow){
 	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
@@ -85,7 +86,7 @@
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${BusinessKey.customerStatus.id != 6}">
-								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
+								<a id="viewClientDetails.link.editStatus" href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
 									<fmt:message key="client.editStatus">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 									</fmt:message>
@@ -94,8 +95,8 @@
 							</span></td>
 						</tr>
 						<tr>
-							<td colspan="2"><font class="fontnormalRedBold"><html-el:errors
-								bundle="ClientUIResources" /> </font></td>
+							<td colspan="2"><font class="fontnormalRedBold"><span id="viewClientDetails.error.message"><html-el:errors
+								bundle="ClientUIResources" /></span> </font></td>
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
@@ -131,7 +132,7 @@
 							<%-- <c:out value="pic val;ue: "/>
 							<c:out value="${pic}"/> --%>
 							<c:if test="${pic eq 'No'}">
-								<a href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')"><mifos:mifoslabel
+								<a id="viewClientDetails.link.seePhoto" href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')"><mifos:mifoslabel
 								name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
 							</c:if> </span><br>
 							</td>
@@ -148,10 +149,10 @@
 						<c:if test="${BusinessKey.customerStatus.id == 3}">
 							<tr align="right">
 								<td class="headingorange"><span class="fontnormal"><mifos:mifoslabel
-									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; <html-el:link
+									name="client.AccountsLink" bundle="ClientUIResources"/>&nbsp; <html-el:link styleId="viewClientDetails.link.newLoanAccount"
 									href="loanAccountAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-								</html-el:link> &nbsp;|&nbsp; <html-el:link
+								</html-el:link> &nbsp;|&nbsp; <html-el:link styleId="viewClientDetails.link.newSavingsAccount"
 									href="savingsAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</html-el:link> </span></td>
@@ -180,7 +181,7 @@
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link
+													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewLoanAccount"
 														href="loanAccountAction.do?globalAccountNum=${loan.globalAccountNum}&customerId=${BusinessKey.customerId}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${loan.loanOffering.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${loan.globalAccountNum}" />
@@ -239,7 +240,7 @@
 											<table width="100%" border="0" cellspacing="0"
 												cellpadding="0">
 												<tr>
-													<td width="65%"><span class="fontnormal"> <html-el:link
+													<td width="65%"><span class="fontnormal"> <html-el:link styleId="viewClientDetails.link.viewSavingsAccount"
 														href="savingsAction.do?globalAccountNum=${savings.globalAccountNum}&method=get&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${savings.savingsOffering.prdOfferingName}" />, <mifos:mifoslabel name="client.acc" bundle="ClientUIResources" /><c:out
 															value="${savings.globalAccountNum}" />
@@ -283,7 +284,7 @@
 									<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="53%"><span class="fontnormal"> <a
+											<td width="53%"><span class="fontnormal"> <a id="viewClientDetails.link.viewDetails"
 												href="customerAccountAction.do?method=load&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>">
 											<mifos:mifoslabel name="client.viewdetails"
 												bundle="ClientUIResources" /> </a> </span></td>
@@ -309,7 +310,7 @@
 							<td width="69%" align="right" class="fontnormal">
 							<span class="fontnormal">
 								<c:if test="${BusinessKey.customerStatus.id !=1 && BusinessKey.customerStatus.id !=2}">
-									<html-el:link href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<html-el:link styleId="viewClientDetails.link.viewAllClosedAccounts" href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
                   						<mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" />
                   					</html-el:link>
                   				</c:if>
@@ -329,7 +330,7 @@
 						<tr>
 							<td width="63%" height="23" class="headingorange"><mifos:mifoslabel
 								name="client.MFIInformationHeading" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td width="37%" align="right" class="fontnormal"><html-el:link
+							<td width="37%" align="right" class="fontnormal"><html-el:link styleId="viewClientDetails.link.editMfiInformation"
 								action="clientCustAction.do?method=editMfiInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="client.EditMfiInformationLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
@@ -412,7 +413,7 @@
 									<td width="39%" align="right" valign="top"><!-- Editing group or branch membership based on whether client belongs to group or not -->
 									<c:choose>
 										<c:when test="${BusinessKey.clientUnderGroup}">
-											<html-el:link
+											<html-el:link styleId="viewClientDetails.link.editRemoveGroupMembership"
 												action="clientTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<fmt:message key="client.EditRemoveMembership">
 													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
@@ -422,7 +423,7 @@
 										</c:when>
 										<c:otherwise>
 											<%--<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'configurationLSM')} eq 'No'}">--%>
-												<html-el:link
+												<html-el:link styleId="viewClientDetails.link.editBranchOfficeMembership"
 													action="clientTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 													<fmt:message key="client.editMembership">
 														<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
@@ -430,7 +431,7 @@
 												</html-el:link>
 											<%--</c:if>--%>
 											<br>
-											<html-el:link
+											<html-el:link styleId="viewClientDetails.link.editMeetingScheduleAddGroup"
 												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
 												<mifos:mifoslabel name="client.EditMeetingLink" bundle="ClientUIResources"/>
 												<mifos:mifoslabel name="client.Separator" bundle="ClientUIResources"/>
@@ -456,7 +457,7 @@
 							<td width="50%" height="23" class="headingorange"><mifos:mifoslabel
 								name="client.PersonalInformationHeading"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td width="50%" align="right" class="fontnormal"><html-el:link
+							<td width="50%" align="right" class="fontnormal"><html-el:link styleId="viewClientDetails.link.editPersonalInformation"
 								action="clientCustAction.do?method=editPersonalInfo&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="client.EditPersonalInformationLink"
 									bundle="ClientUIResources"></mifos:mifoslabel>
@@ -641,10 +642,10 @@
 							<span class="fontnormal">							
 							<!-- Bug Id 27210. Added code to pass the created date as parameter-->
 
-							<a href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
+							<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
-							<html-el:link href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link styleId="viewClientDetails.link.viewChangeLog" href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
 							</html-el:link> <br>
 							</span> </td>
@@ -750,7 +751,7 @@
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
+                    <a id="viewClientDetails.link.survey" href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
                       <c:out value="${surveyInstance.survey.name}"/>
                     </a>
                   </span>
@@ -765,10 +766,10 @@
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=client">
+                  <a id="viewClientDetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=client">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
-                  <a href="surveysAction.do?method=mainpage">
+                  <a id="viewClientDetails.link.viewAllSurveys" href="surveysAction.do?method=mainpage">
                     <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
                   </a>
           </table>
@@ -817,13 +818,13 @@
 							<td align="right" class="paddingleft05">
                 <span class="fontnormal8pt"> 
                   <c:if test="${!empty BusinessKey.customerNotes}">
-                    <html-el:link
+                    <html-el:link styleId="viewClientDetails.link.seeAllNotes"
                     href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
                       <mifos:mifoslabel name="client.SeeAllNotesLink" bundle="ClientUIResources"/>
                     </html-el:link>
 								    <br/>
 							    </c:if> 
-                  <a href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                  <a id="viewClientDetails.link.notesLink" href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							      <mifos:mifoslabel name="client.NotesLink" bundle="ClientUIResources"/> 
                   </a> 
                 </span>

@@ -36,6 +36,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="EditClientPersonalInfo"/>
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript" SRC="pages/framework/js/conversion.js"></script>
                 <script language="javascript" src="pages/application/client/js/client.js"></script>
@@ -84,8 +85,8 @@ explanation of the license and how it is applied.
 					</table>
 					<br>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
-						<font class="fontnormalRedBold"><html-el:errors
-							bundle="ClientUIResources" /> </font>
+						<font class="fontnormalRedBold"><span id="edit_ClientPersonalInfo.error.message"><html-el:errors
+							bundle="ClientUIResources" /></span> </font>
 						<tr>
 							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 								name="client.PersonalInformationHeading"
@@ -108,29 +109,29 @@ explanation of the license and how it is applied.
 						</tr>
 						<%-- First Name --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="client.FirstName"
-								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext name="clientCustActionForm" property="clientName.firstName" maxlength="200" /></td>
+							<td align="right"><span id="edit_ClientPersonalInfo.label.firstName"><mifos:mifoslabel name="client.FirstName"
+								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.firstName" name="clientCustActionForm" property="clientName.firstName" maxlength="200" /></td>
 						</tr>
 						<%-- Middle Name --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.MiddleName" name="client.MiddleName"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.MiddleName" name="clientCustActionForm"	property="clientName.middleName" maxlength="200" /></td>
+							<td align="right"><span id="edit_ClientPersonalInfo.label.middleName"><mifos:mifoslabel keyhm="Client.MiddleName" name="client.MiddleName"
+								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.middleName" keyhm="Client.MiddleName" name="clientCustActionForm"	property="clientName.middleName" maxlength="200" /></td>
 						</tr>
 						<%-- Second Last Name --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.SecondLastName" name="client.SecondLastName"
-								isColonRequired="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.SecondLastName" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.secondLastName"><mifos:mifoslabel keyhm="Client.SecondLastName" name="client.SecondLastName"
+								isColonRequired="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.secondLastName" keyhm="Client.SecondLastName" name="clientCustActionForm"
 								 property="clientName.secondLastName" maxlength="200" />
 							</td>
 						</tr>
 						<%-- Last Name --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="client.LastName"
-								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext name="clientCustActionForm" property="clientName.lastName" maxlength="200" /></td>
+							<td align="right"><span id="edit_ClientPersonalInfo.label.lastName"><mifos:mifoslabel name="client.LastName"
+								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.lastName" name="clientCustActionForm" property="clientName.lastName" maxlength="200" /></td>
 						</tr>
 						<html-el:hidden property="clientName.nameType" value="3" />
 
@@ -141,9 +142,11 @@ explanation of the license and how it is applied.
 								<%-- Government Id --%>
 								<tr class="fontnormal">
 									<td align="right">
+									<span id="edit_ClientPersonalInfo.label.governmentId">
 									<mifos:mifoslabel	keyhm="Client.GovernmentId" name="${ConfigurationConstants.GOVERNMENT_ID}" isColonRequired="yes"/>
+									</span>
 										</td>
-									<td><mifos:mifosalphanumtext keyhm="Client.GovernmentId" name="clientCustActionForm"
+									<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.governmentId" keyhm="Client.GovernmentId" name="clientCustActionForm"
 										property="governmentId" maxlength="50" /></td>
 								</tr>
 								<%-- Date Of  Birth  --%>
@@ -198,9 +201,9 @@ explanation of the license and how it is applied.
 						</tr>
 						<%-- Number Of Children--%>
 						<tr class="fontnormal">
-							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosnumbertext name="clientCustActionForm"	property="clientDetailView.numChildren" maxlength="5" size="10" /></td>
+							<td align="right" class="fontnormal"><span id="edit_ClientPersonalInfo.label.customField"><mifos:mifoslabel
+								name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" name="clientCustActionForm"	property="clientDetailView.numChildren" maxlength="5" size="10" /></td>
 						</tr>
 						<%-- Citizenship --%>
 						<tr class="fontnormal">
@@ -281,9 +284,9 @@ explanation of the license and how it is applied.
 
 						<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:file keyhm="Client.Photo" property="picture" maxlength="200"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.file"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
+								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
 								onkeypress="return onKeyPressForFileComponent(this);" /></td>
 						</tr>
 						<%-- Spouse/Father details --%>
@@ -306,14 +309,16 @@ explanation of the license and how it is applied.
 										<table border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td class="paddingL10">
+													<span id="edit_ClientPersonalInfo.label.spouseFirstName">
 													<mifos:mifoslabel name="client.SpouseFirstName" mandatory="yes"
 														bundle="ClientUIResources">
 													</mifos:mifoslabel>
+													</span>
 												</td>
 											</tr>
 											<tr class="fontnormal">
 												<td class="paddingL10">
-													<mifos:mifosalphanumtext property="spouseName.firstName" maxlength="200"	style="width:100px;" />
+													<mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseFirstName" property="spouseName.firstName" maxlength="200"	style="width:100px;" />
 												</td>
 											</tr>
 										</table>
@@ -321,13 +326,15 @@ explanation of the license and how it is applied.
 										<table border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td class="paddingL10">
+													<span id="edit_ClientPersonalInfo.label.spouseMiddleName">
 													<mifos:mifoslabel keyhm="Client.SpouseFatherMiddleName" name="client.SpouseMiddleName" bundle="ClientUIResources">
 													</mifos:mifoslabel>
+													</span>
 												</td>
 											</tr>
 											<tr class="fontnormal">
 												<td class="paddingL10">
-												  <mifos:mifosalphanumtext keyhm="Client.SpouseFatherMiddleName" property="spouseName.middleName" maxlength="200" style="width:100px;" />
+												  <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseMiddleName" keyhm="Client.SpouseFatherMiddleName" property="spouseName.middleName" maxlength="200" style="width:100px;" />
 												</td>
 											</tr>
 										</table>
@@ -336,6 +343,7 @@ explanation of the license and how it is applied.
 										<table border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td class="paddingL10">
+													<span id="edit_ClientPersonalInfo.label.spouseSecondLastName">
 													<mifos:mifoslabel keyhm="Client.SpouseFatherSecondLastName"
 														name="client.SpouseSecondLastName" bundle="ClientUIResources">
 													</mifos:mifoslabel>
@@ -343,7 +351,7 @@ explanation of the license and how it is applied.
 											</tr>
 											<tr class="fontnormal">
 												<td class="paddingL10">
-													<mifos:mifosalphanumtext keyhm="Client.SpouseFatherSecondLastName"
+													<mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseSecondLastName" keyhm="Client.SpouseFatherSecondLastName"
 																property="spouseName.secondLastName"
 																	maxlength="200" style="width:100px;" />
 												</td>
@@ -354,14 +362,16 @@ explanation of the license and how it is applied.
 										<table border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
 												<td class="paddingL10">
+													<span id="edit_ClientPersonalInfo.label.spouseLastName">
 													<mifos:mifoslabel name="client.SpouseLastName"
 													   mandatory="yes"	bundle="ClientUIResources">
 													   </mifos:mifoslabel>
+													</span>
 												</td>
 											</tr>
 											<tr class="fontnormal">
 												<td class="paddingL10">
-												   <mifos:mifosalphanumtext property="spouseName.lastName" maxlength="200"
+												   <mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.spouseLastName" property="spouseName.lastName" maxlength="200"
 																style="width:100px;" />
 												</td>
 											</tr>
@@ -383,59 +393,59 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td width="17%" align="right"><mifos:mifoslabel keyhm="Client.Address1" isColonRequired="yes"
-								name="${ConfigurationConstants.ADDRESS1}"></mifos:mifoslabel></td>
-							<td width="83%"><mifos:mifosalphanumtext keyhm="Client.Address1"
+							<td width="17%" align="right"><span id="edit_ClientPersonalInfo.label.address1"><mifos:mifoslabel keyhm="Client.Address1" isColonRequired="yes"
+								name="${ConfigurationConstants.ADDRESS1}"></mifos:mifoslabel></span></td>
+							<td width="83%"><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address1" keyhm="Client.Address1"
 								name="clientCustActionForm"
 								property="address.line1"
 								maxlength="200" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Address2" isColonRequired="yes"
-								name="${ConfigurationConstants.ADDRESS2}"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.Address2" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.address2"><mifos:mifoslabel keyhm="Client.Address2" isColonRequired="yes"
+								name="${ConfigurationConstants.ADDRESS2}"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address2" keyhm="Client.Address2" name="clientCustActionForm"
 								property="address.line2"
 								maxlength="200" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Address3" isColonRequired="yes"
-								name="${ConfigurationConstants.ADDRESS3}"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.Address3" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.address3"><mifos:mifoslabel keyhm="Client.Address3" isColonRequired="yes"
+								name="${ConfigurationConstants.ADDRESS3}"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.address3" keyhm="Client.Address3" name="clientCustActionForm"
 								property="address.line3"
 								maxlength="200" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.City" isColonRequired="yes"
-								name="${ConfigurationConstants.CITY}"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.City" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.city"><mifos:mifoslabel keyhm="Client.City" isColonRequired="yes"
+								name="${ConfigurationConstants.CITY}"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.city" keyhm="Client.City" name="clientCustActionForm"
 								property="address.city"
 								maxlength="100" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.State" isColonRequired="yes"
-								name="${ConfigurationConstants.STATE}"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext  keyhm="Client.State" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.state"><mifos:mifoslabel keyhm="Client.State" isColonRequired="yes"
+								name="${ConfigurationConstants.STATE}"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.state"  keyhm="Client.State" name="clientCustActionForm"
 								property="address.state"
 								maxlength="100" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.Country" name="client.Country"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.Country" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.country"><mifos:mifoslabel keyhm="Client.Country" name="client.Country"
+								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.country" keyhm="Client.Country" name="clientCustActionForm"
 								property="address.country"
 								maxlength="100" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.PostalCode" isColonRequired="yes"
-								name="${ConfigurationConstants.POSTAL_CODE}"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.PostalCode" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.postalCode"><mifos:mifoslabel keyhm="Client.PostalCode" isColonRequired="yes"
+								name="${ConfigurationConstants.POSTAL_CODE}"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.postalCode" keyhm="Client.PostalCode" name="clientCustActionForm"
 								property="address.zip"
 								maxlength="20" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel keyhm="Client.PhoneNumber" name="client.Telephone"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
-							<td><mifos:mifosalphanumtext keyhm="Client.PhoneNumber" name="clientCustActionForm"
+							<td align="right"><span id="edit_ClientPersonalInfo.label.telephone"><mifos:mifoslabel keyhm="Client.PhoneNumber" name="client.Telephone"
+								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.telephone" keyhm="Client.PhoneNumber" name="clientCustActionForm"
 								property="address.phoneNumber"
 								maxlength="20" /></td>
 						</tr>
@@ -462,15 +472,15 @@ explanation of the license and how it is applied.
 								items="${sessionScope.clientCustActionForm.customFields}">
 								<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 									<tr class="fontnormal">
-										<td width="17%" align="right"><mifos:mifoslabel
+										<td width="17%" align="right"><span id="edit_ClientPersonalInfo.label.customField"><mifos:mifoslabel
 											name="${customFieldDef.lookUpEntity.entityType}"
 											mandatory="${customFieldDef.mandatoryStringValue}"
-											bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></td>
+											bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span></td>
 										<td width="83%"><c:if test="${customFieldDef.fieldType == CustomFieldType.NUMERIC.value}">
-											<mifos:mifosnumbertext name="clientCustActionForm"
+											<mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" name="clientCustActionForm"
 												property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 										</c:if> <c:if test="${customFieldDef.fieldType == CustomFieldType.ALPHA_NUMERIC.value}">
-											<mifos:mifosalphanumtext name="clientCustActionForm"
+											<mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.customField" name="clientCustActionForm"
 												property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 										</c:if> <c:if test="${customFieldDef.fieldType == CustomFieldType.DATE.value}">
 											<date:datetag property="customField[${ctr}].fieldValue"	/>
@@ -494,10 +504,10 @@ explanation of the license and how it is applied.
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="edit_ClientPersonalInfo.button.preview" styleClass="buttn">
 								<mifos:mifoslabel name="button.preview"
 									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp; &nbsp; <html-el:button
+							</html-el:submit> &nbsp; &nbsp; <html-el:button styleId="edit_ClientPersonalInfo.button.cancel"
 								onclick="goToCancelPage();" property="cancelButton"
 								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"

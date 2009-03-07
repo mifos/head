@@ -54,6 +54,7 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ClientViewChangeLog"/>
 	<script>
 	function returnToDetails(){
 		clientCustActionForm.action="clientCustAction.do?method=cancelChangeLog";
@@ -80,7 +81,7 @@
 						<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="ClientUIResources" /> 
+											<span id="viewChangeLog.error.message"><html-el:errors bundle="ClientUIResources" /></span> 
 										</font>
 									</td>
 						</tr>
@@ -106,7 +107,7 @@
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
+							<td align="center"><html-el:button styleId="viewChangeLog.button.return" property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
 								styleClass="buttn">
 								<mifos:mifoslabel name="client.backtodetailspage"

@@ -13,6 +13,7 @@
 
 <tiles:insert definition=".withmenu">
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="ChooseBranch"/>	
 		<script language="javascript">
   
    function goToCancelPage(){
@@ -73,7 +74,7 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button onclick="goToCancelPage();"
+							<td align="center"><html-el:button styleId="choosebranch.button.cancel" onclick="goToCancelPage();"
 								property="cancelButton" styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>
