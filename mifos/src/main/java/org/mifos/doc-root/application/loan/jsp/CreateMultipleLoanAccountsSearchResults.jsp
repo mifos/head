@@ -186,7 +186,7 @@ explanation of the license and how it is applied.
 										<c:forEach var="clientDetail" varStatus="loopStatus" items="${sessionScope.multipleloansactionform.clientDetails}" >
 										<tr>
 											<td valign="top" class="drawtablerow">
-												<html-el:checkbox styleId="CreateMultipleLoanAccountsSearchResults.input.select" property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)" styleId="CreateMultipleLoanAccountsSearchResults.checkbox.${loopStatus.index}"/>
+												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)" styleId="CreateMultipleLoanAccountsSearchResults.checkbox.${loopStatus.index}"/>
 											</td>
 											<td width="29%" valign="top" class="drawtablerow">
 												<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" isColonRequired="Yes"/></span> 
@@ -237,7 +237,7 @@ explanation of the license and how it is applied.
 												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
 												<c:choose>
 													<c:when test='${PendingApproval == true}'>
-														<html-el:button styleId="CreateMultipleLoanAccountsSearchResults.button.submitForApproval" property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)" styleId="CreateMultipleLoanAccountsSearchResults.button.submit">
+														<html-el:button property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)" styleId="CreateMultipleLoanAccountsSearchResults.button.submit">
 															<mifos:mifoslabel name="loan.submitForApproval" />
 														</html-el:button>
 													</c:when>
