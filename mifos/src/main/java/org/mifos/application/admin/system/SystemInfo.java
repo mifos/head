@@ -25,12 +25,18 @@ import java.io.Serializable;
 import java.net.URI;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
 
 /**
@@ -46,6 +52,8 @@ public class SystemInfo implements Serializable {
 	
 	private DatabaseMetaData databaseMetaData;
 	private ServletContext context;
+	private Locale locale;
+	
 	private String javaVendor;
 	private String javaVersion;
 	private SvnRevision svnRevision;
@@ -59,9 +67,9 @@ public class SystemInfo implements Serializable {
 	private String infoUserName;
 	
 	// Note: make sure to close the connection that got the metadata!
-	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, boolean getInfoSource) 
+	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource) 
 	throws Exception {
-		this(getInfoSource);
+		this(locale, getInfoSource);
 		this.databaseMetaData = databaseMetaData; 
 		URI mysqlOnly = new URI(databaseMetaData.getURL());
 		this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
@@ -69,15 +77,15 @@ public class SystemInfo implements Serializable {
 		this.context = context;
 	}
 
-	public SystemInfo(boolean getInfoSource) {
+	public SystemInfo(Locale locale, boolean getInfoSource) {
 		if (getInfoSource) {
 			try {
                 this.infoSource = new ConfigurationLocator().getFilePath(FilePaths.HIBERNATE_PROPERTIES_FILENAME);
             } catch (IOException e) {
-                this.infoSource = "Unable to determine configuration source.";
+                this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }
-
 		}
+		this.locale = locale;
 		setJavaVendor(System.getProperty("java.vendor"));
 		setJavaVersion(System.getProperty("java.version"));
 		setSvnRevision(new SvnRevision());
@@ -232,5 +240,14 @@ public class SystemInfo implements Serializable {
 	public void setInfoUserName(String infoUserName) {
 		this.infoUserName = infoUserName;
 	}
+
+    public DateTime getDateTime() {
+        return new DateTimeService().getCurrentDateTime();
+    }
+    
+    public String getDateTimeString() {
+        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(locale);
+        return formatter.print(getDateTime().getMillis());
+    }
 
 }

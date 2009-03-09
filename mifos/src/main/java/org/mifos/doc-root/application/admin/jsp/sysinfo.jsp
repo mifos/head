@@ -84,10 +84,14 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.name" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databaseName}"/></span></td>
 					</tr>
-					<tr>
-						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.user" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
-					</tr>
+                    <tr>
+                        <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.user" bundle="adminUIResources" /></span></td>
+                        <td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.datetime" bundle="adminUIResources" /></span></td>
+                        <td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.dateTimeString}"/></span></td>
+                    </tr>
 				</table>
 			</td>
 		</html-el:form>

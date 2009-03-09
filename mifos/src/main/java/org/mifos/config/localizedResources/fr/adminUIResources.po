@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-16 09:18-0700\n"
+"POT-Creation-Date: 2009-03-09 15:53-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -284,6 +284,10 @@ msgstr ""
 msgid "Database Vendor / Version"
 msgstr "Fournisseur base de donnée/ Version"
 
+#: admin.sysinfo.datetime
+msgid "Date and Time"
+msgstr ""
+
 #: admin.sysinfo.driver
 msgid "Database Driver / Version"
 msgstr "Pilote de base de donnée / Version"
@@ -335,6 +339,10 @@ msgstr "Utilisateurs Système"
 #: admin.templates
 msgid "templates"
 msgstr "modèles"
+
+#: admin.unableToDetermineConfigurationSource
+msgid "Unable to determine configuration source."
+msgstr ""
 
 #: admin.upload
 msgid "upload"

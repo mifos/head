@@ -24,14 +24,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.net.URI;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.config.Localization;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
 
 import servletunit.ServletContextSimulator;
@@ -47,7 +52,7 @@ public class SystemInfoTest {
 	public void setUp() throws Exception {
 		ServletContext servletContext = new ServletContextSimulator();
 		MockDatabaseMetaData metaData = new MockDatabaseMetaData();
-		info = new SystemInfo(metaData, servletContext, false);
+		info = new SystemInfo(metaData, servletContext, Locale.US, false);
 		info.setJavaVendor("Sun");
 		info.setJavaVersion("1.5");
 		info.setSvnRevision(new MockSvnRevision());
@@ -101,5 +106,19 @@ public class SystemInfoTest {
 	@Test(expected = RuntimeException.class)
 	public void testGetSubversionRevisionFromMissingFile() throws Exception {
 		info.setSvnRevision(new SvnRevision("non-existant.file"));
+	}
+	
+	@Test
+	public void testGetDateTime() {
+	    DateTime referenceDateTime = new DateTime(2008,12,5,1,10,0,0); 
+	    DateTimeService dateTimeService = new DateTimeService();
+	    try {
+	        // set a fixed datetime which is what SystemInfo should get back
+	        dateTimeService.setCurrentDateTimeFixed(referenceDateTime);
+	        assertEquals("System info date time should be from the DateTimeService", 
+	                referenceDateTime, info.getDateTime());
+	    } finally {
+	        dateTimeService.resetToCurrentSystemDateTime();
+	    }
 	}
 }

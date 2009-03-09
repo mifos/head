@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admin.business.service.SystemInfoService;
 import org.mifos.application.admin.system.SystemInfo;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.Localization;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -47,7 +48,7 @@ public class SystemInfoAction extends BaseAction {
 		try {
 			DatabaseMetaData metaData = HibernateUtil.getSessionTL().connection().getMetaData();
 			ServletContext context = request.getSession().getServletContext();
-			SystemInfo systemInfo = new SystemInfo(metaData, context, true);
+			SystemInfo systemInfo = new SystemInfo(metaData, context, Localization.getInstance().getMainLocale(), true);
 			SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
 			return mapping.findForward(ActionForwards.load_success.toString());
 		} finally {
