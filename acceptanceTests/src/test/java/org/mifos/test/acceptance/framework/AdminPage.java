@@ -116,5 +116,12 @@ public class AdminPage extends MifosPage {
         DefineNewLoanProductConfirmationPage confirmationPage = previewPage.submit();
         confirmationPage.verifyPage();    
     }
+
+    public SystemInfoPage navigateToSystemInfoPage() {
+        selenium.click("admin.link.viewSystemInfo");
+        waitForPageToLoad();
+        return new SystemInfoPage(selenium);
+
+    }
   
 }
