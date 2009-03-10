@@ -46,12 +46,18 @@ public class ConfigurationLocator {
      * used to find files in cases where we don't care if the file cannot be
      * found.
      */
+    @SuppressWarnings({"PMD.EmptyCatchBlock", // see comment in empty catch block, below
+                      "PMD.AvoidThrowingRawExceptionTypes"}) // being lazy; RuntimeException should be rare
     public String getSpringFilePath(String filename) {
         String returnValue = null;
         try {
             returnValue = "file:" + getFilePath(filename);
         } catch (FileNotFoundException e) {
-            System.err.println("getSpringFilePath: " + filename + " not found or other IO error.");
+            /*
+             * Ignore so we can allow Spring to refer to "optional" files. This
+             * may not be the correct approach--we may want to instead allow
+             * this behavior (ignoring the exception) to be configurable.
+             */
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -71,31 +77,24 @@ public class ConfigurationLocator {
 
         if (StringUtils.isNotBlank(systemPropertyDirectory)) {
             File file = new File(systemPropertyDirectory, filename);
-            System.out.println("Checking system property path: " + file.getAbsolutePath());
             if (file.exists()) {
-                System.out.println("Found on system property path: " + file.getAbsolutePath());
                 fileToReturn = file;
             }
         } else if (StringUtils.isNotBlank(envPropertyDirectory)) {
             File file = new File(envPropertyDirectory, filename);
-            System.out.println("Checking environment path: " + file.getAbsolutePath());
             if (file.exists()) {
-                System.out.println("Found on environment path: " + file.getAbsolutePath());
                 fileToReturn = file;
             }
         } else if (new File(homeDirectory, MIFOS_USER_CONFIG_DIRECTORY_NAME).exists()) {
             File file = new File(homeDirectory + "/" + MIFOS_USER_CONFIG_DIRECTORY_NAME, filename);
-            System.out.println("Checking home directory path: " + file.getAbsolutePath());
             if (file.exists()) {
-                System.out.println("Found on home directory path: " + file.getAbsolutePath());
                 fileToReturn = file;
             }
         }
 
         if (fileToReturn == null) {
-            filename = DEFAULT_CONFIGURATION_PATH + filename;
-            System.out.println("Using classpath resource: " + new ClassPathResource(filename).getPath());
-            fileToReturn = new ClassPathResource(filename).getFile();
+            String fallback = DEFAULT_CONFIGURATION_PATH + filename;
+            fileToReturn = new ClassPathResource(fallback).getFile();
         }
 
         return fileToReturn;
