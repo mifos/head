@@ -5,7 +5,7 @@
     <artifactId>gazelle-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.0.3-SNAPSHOT</version>
-    <name>Mifos Gazelle Parent</name>
+    <name>Mifos - Gazelle Parent</name>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -17,6 +17,10 @@
     </scm>
 
     <modules>
+        <module>common</module>
+        <module>testFramework</module>
+        <module>serviceInterfaces</module>
+        <module>userInterface</module>
         <module>mifos</module>
         <module>acceptanceTests</module>
     </modules>

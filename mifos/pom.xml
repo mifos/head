@@ -5,7 +5,7 @@
     <artifactId>gazelle</artifactId>
     <packaging>pom</packaging>
     <version>0.0.3-SNAPSHOT</version>
-    <name>Mifos Gazelle Application</name>
+    <name>Mifos - Gazelle Application</name>
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>gazelle-parent</artifactId>

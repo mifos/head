@@ -1,0 +1,90 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-18 16:47-0700\n"
+"PO-Revision-Date: 2008-08-18 17:15-0800\n"
+"Last-Translator: Van Mittal-Henkle <vanmh@grameenfoundation.org>\n"
+"Language-Team: Icelandic <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.1.1\n"
+"X-Accelerator-Marker: &\n"
+
+#: title
+msgid "SpringApp"
+msgstr "@@@SpringApp###"
+
+#: heading
+msgid "Hello :: SpringApp"
+msgstr "@@@Hello :: SpringApp###"
+
+#: greeting
+msgid "Greetings, it is now"
+msgstr "@@@Greetings, it is now###"
+
+#: priceincrease.heading
+msgid "Price Increase :: SpringApp"
+msgstr "@@@Price Increase :: SpringApp###"
+
+#: error.not-specified
+msgid "Percentage not specified!"
+msgstr "@@@Percentage not specified!###"
+
+#: error.too-low
+msgid "You have to specify a percentage higher than {0}!"
+msgstr "@@@You have to specify a percentage higher than {0}!###"
+
+#: error.too-high
+msgid "Don''t be greedy - you can''t raise prices by more than {0}%!"
+msgstr "@@@Don''t be greedy - you can''t raise prices by more than {0}%!###"
+
+#: required
+msgid "Entry required."
+msgstr "@@@Entry required.###"
+
+#: typeMismatch
+msgid "Invalid data."
+msgstr "@@@Invalid data.###"
+
+#: typeMismatch.percentage
+msgid "That is not a number!"
+msgstr "@@@That is not a number!###"
+
+#: ID
+msgid "ID"
+msgstr "@@@ID###"
+
+#: Description
+msgid "Description"
+msgstr "@@@Description###"
+
+#: Price
+msgid "Price"
+msgstr "@@@Price###"
+
+#: UserName
+msgid "UserName"
+msgstr "@@@UserName###"
+
+#: Products
+msgid "Products"
+msgstr "@@@Products###"
+
+#: chineseText
+msgid "chineseTextGoesHere"
+msgstr "	问候大家"
+
+#: arabicText
+msgid "arabicTextGoesHere"
+msgstr "تحياتي للجميع"
+
+#: hindiText
+msgid "hindiTextGoesHere"
+msgstr "	अभिवादन करने के लिए हर कोई"
+
+#: frenchText
+msgid "frenchTextGoesHere"
+msgstr "Salutations à tout le monde"
+
