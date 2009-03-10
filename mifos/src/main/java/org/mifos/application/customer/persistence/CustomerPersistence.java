@@ -157,6 +157,17 @@ public class CustomerPersistence extends Persistence {
 		return queryResult.get(0);
 	}
 
+    public List<CustomerBO> getClientsUnderParent(String searchId,
+            Short officeId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", searchId + ".%");
+        queryParameters.put("OFFICE_ID", officeId);
+        List<CustomerBO> queryResult = executeNamedQuery(
+                "Customer.getAllClientChildren",
+                queryParameters);
+        return queryResult;
+    }
+
 	public List<CustomerBO> getCustomersUnderParent(String searchId,
 			Short officeId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();

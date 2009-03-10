@@ -1,6 +1,5 @@
 package org.mifos.application.customer.client.business;
 
-import org.mifos.application.master.MessageLookup;
 
 /*
  * Encapsulates valid id values for {@link CustomerAttendanceType} class.

@@ -197,11 +197,16 @@ public class BulkEntryBO extends BusinessObject {
         BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent, transactionDate, clientAttendance);
     }
 
-	private List<CustomerBO> retrieveActiveCustomersUnderParent(
-			String searchId, Short officeId) throws SystemException,
-			ApplicationException {
-		return customerPersistenceService.getCustomersUnderParent(searchId, officeId);
-	}
+    public List<CustomerBO> retrieveActiveClientsUnderParent(String searchId) throws SystemException,
+            ApplicationException {
+        return customerPersistenceService.getClientsUnderParent(searchId, office.getOfficeId());
+    }
+
+    private List<CustomerBO> retrieveActiveCustomersUnderParent(
+            String searchId, Short officeId) throws SystemException,
+            ApplicationException {
+        return customerPersistenceService.getCustomersUnderParent(searchId, officeId);
+    }
 
 	public void setBulkEntryDataView(BulkEntryDataView bulkEntryDataView) {
 		if (null == bulkEntryParent || null == bulkEntryDataView) {

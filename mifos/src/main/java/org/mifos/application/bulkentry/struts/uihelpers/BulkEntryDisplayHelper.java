@@ -42,7 +42,6 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.ClientRules;
-import org.mifos.config.Localization;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -415,18 +414,19 @@ public class BulkEntryDisplayHelper {
 	}
 
 	private void generateAttendance(StringBuilder builder,
-			HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> custAttTypes, int rows,
+			HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> custAttTypes, int row,
 			CollectionSheetEntryView collectionSheetEntryView, String method) {
+        Integer customerId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
+        ClientAttendanceDto clientAttendanceDto = clientAttendance.get(customerId);
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
-			builder.append("<select name=\"attendanceSelected[" + rows
+			builder.append("<select name=\"attendanceSelected[" + row
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendance : custAttTypes) {
 				builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
-                Integer customerId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
-                ClientAttendanceDto clientAttendanceDto = clientAttendance.get(customerId);
-                if (clientAttendanceDto != null && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
+                if (null != clientAttendanceDto && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
                     builder.append(" selected=\"selected\"");
+                    clientAttendanceDto.setRow(row);
                 }
                 builder.append( ">" 	+ attendance.getLookUpValue() + "</option>");
 			}
@@ -434,16 +434,13 @@ public class BulkEntryDisplayHelper {
 			builder.append("</td>");
 		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
-			for (CustomValueListElement attendence : custAttTypes) {
-
-				if (null != collectionSheetEntryView.getAttendence()
-						&& attendence.getAssociatedId().equals(
-								Integer.valueOf(collectionSheetEntryView.getAttendence()))) {
+			for (CustomValueListElement attendance : custAttTypes) {
+			    if (null != clientAttendanceDto && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
 					if (!collectionSheetEntryView.getAttendence().toString().equals("1")) {
 						builder.append("<font color=\"#FF0000\">"
-								+ attendence.getLookUpValue() + "</font>");
+								+ attendance.getLookUpValue() + "</font>");
 					} else {
-						builder.append(attendence.getLookUpValue());
+						builder.append(attendance.getLookUpValue());
 					}
 				}
 			}
@@ -452,7 +449,7 @@ public class BulkEntryDisplayHelper {
 		} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
-			builder.append("<select name=\"attendanceSelected[" + rows
+			builder.append("<select name=\"attendanceSelected[" + row
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");

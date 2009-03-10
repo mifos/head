@@ -20,12 +20,18 @@
 
 package org.mifos.application.bulkentry.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -45,6 +51,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -55,8 +62,6 @@ import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -79,6 +84,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -86,7 +92,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	
@@ -128,6 +133,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 			TestObjectFactory.cleanUp(client);
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
+			
 		} catch (Exception e) {
 			// Throwing here may mask earlier failures.
 			e.printStackTrace();
@@ -136,7 +142,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		userContext = TestUtils.makeUser();
@@ -150,14 +157,39 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulCreate() throws Exception {
+	    TestDatabase.resetMySQLDatabase();
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		Calendar meetinDateCalendar = new GregorianCalendar();
-		int year = meetinDateCalendar.get(Calendar.YEAR);
-		int month = meetinDateCalendar.get(Calendar.MONTH);
-		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		Calendar meetingDateCalendar = new GregorianCalendar();
+		int year = meetingDateCalendar.get(Calendar.YEAR);
+		int month = meetingDateCalendar.get(Calendar.MONTH);
+		int day = meetingDateCalendar.get(Calendar.DAY_OF_MONTH);
+		meetingDateCalendar = new GregorianCalendar(year, month, day);
 
-		preview(bulkEntry, year, month, day);
+	    Date meetingDate = new Date(meetingDateCalendar.getTimeInMillis());
+	    HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+	    clientAttendance.put(1, getClientAttendanceDto(1, meetingDate, AttendanceType.ABSENT, 0));
+	    clientAttendance.put(2, getClientAttendanceDto(2, meetingDate, AttendanceType.ABSENT, 1));
+	    clientAttendance.put(3, getClientAttendanceDto(3, meetingDate, AttendanceType.ABSENT, 2));
+
+	    request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+	    SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
+        addRequestParameter("attendanceSelected[0]", "2");
+		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+        		request);
+        setRequestPathInfo("/bulkentryaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestDateParameter("transactionDate", 
+        		day + "/" + (month + 1) + "/" + year);
+        
+        if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
+        	addParametersForEnteredAmount();
+        	addParametersForDisbursalEnteredAmount();
+        }
+        
+        performNoErrors();
 
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/bulkentryaction.do");
@@ -189,33 +221,20 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.getClient(client
 				.getCustomerId());
 
-		assertEquals(client.getClientAttendances().size(), 1);
+		assertEquals(1, client.getClientAttendances().size());
 		assertEquals(AttendanceType.ABSENT, 
 				client.getClientAttendanceForMeeting(
-				new java.sql.Date(meetinDateCalendar.getTimeInMillis()))
+				new java.sql.Date(meetingDateCalendar.getTimeInMillis()))
 				.getAttendanceAsEnum());
+      TestDatabase.resetMySQLDatabase();
 	}
 
-	private void preview(BulkEntryBO bulkEntry, 
-			int year, int zeroBasedMonth, int day) 
-	throws PageExpiredException {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestDateParameter("transactionDate", 
-				day + "/" + (zeroBasedMonth + 1) + "/" + year);
-
-		if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
-			addParametersForEnteredAmount();
-			addParametersForDisbursalEnteredAmount();
-		}
-
-		performNoErrors();
-	}
-
+	private ClientAttendanceDto getClientAttendanceDto(Integer clientId, Date meetingDate, AttendanceType attendanceType, Integer row) {
+        ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(clientId, meetingDate, AttendanceType.ABSENT.getValue());
+        clientAttendanceDto.setRow(0);
+        return clientAttendanceDto;
+    }
+    
 	private void addParametersForEnteredAmount() {
 		for (int i = 0; i < 4; ++i) {
 			addRequestParameter("enteredAmount[" + i + "][0]", "300.0");
@@ -230,60 +249,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		}
 	}
 
-	/*
-	 * Not sure if it is useful to test the effect of a closed session.
-	 * This test no longer generates errors, so it fails because the 
-	 * expected errors do not occur.
-	 * TODO: decide whether or not to retain this test
-	 */
-//	public void testFailureCreate() throws Exception {
-//		BulkEntryBO bulkEntry = getFailureBulkEntry();
-//		Calendar meetinDateCalendar = new GregorianCalendar();
-//		int year = meetinDateCalendar.get(Calendar.YEAR);
-//		int zeroBasedMonth = meetinDateCalendar.get(Calendar.MONTH);
-//		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-//		meetinDateCalendar = new GregorianCalendar(year, zeroBasedMonth, day);
-//		
-//		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-//		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-//				request);
-//		setRequestPathInfo("/bulkentryaction.do");
-//		addRequestParameter("method", "preview");
-//		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-//		addRequestDateParameter("transactionDate", 
-//				day + "/" + (zeroBasedMonth + 1) + "/" + year);
-//		if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
-//			addParametersForEnteredAmount();
-//			addParametersForDisbursalEnteredAmount();
-//		}
-//		TestObjectFactory.simulateInvalidConnection();
-//		actionPerform();
-//
-//		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-//		setRequestPathInfo("/bulkentryaction.do");
-//		addRequestParameter("method", "create");
-//		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-//		addRequestParameter("attendanceSelected[0]", "2");
-//		addRequestDateParameter("transactionDate", day + "/" + (zeroBasedMonth + 1) + "/"
-//				+ year);
-//
-//		
-//		actionPerform();
-//		HibernateUtil.closeSession();
-//
-//		groupAccount = TestObjectFactory.getObject(LoanBO.class,
-//				groupAccount.getAccountId());
-//		clientAccount = TestObjectFactory.getObject(LoanBO.class,
-//				clientAccount.getAccountId());
-//		center = TestObjectFactory.getCustomer(CustomerBO.class,
-//				center.getCustomerId());
-//		group = TestObjectFactory.getCustomer(CustomerBO.class,
-//				group.getCustomerId());
-//		client = TestObjectFactory.getClient(ClientBO.class, client
-//				.getCustomerId());
-//
-//		verifyActionErrors(new String[] { "errors.update" });
-//	}
+
 
 	public void testSuccessfulPreview() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();

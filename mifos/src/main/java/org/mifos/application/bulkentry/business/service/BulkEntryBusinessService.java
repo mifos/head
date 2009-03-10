@@ -256,7 +256,7 @@ public class BulkEntryBusinessService implements BusinessService {
 		Thread threadCustomerAccount = new Thread(
 				bulkEntryCustomerAccountThread);
 		threadCustomerAccount.start();
-		saveAttendance(clients, customerNames);
+		//saveAttendance(clients, customerNames);  //TODO: take out when everything is converted to ClientService (adamf)
 		saveSavingsAccount(savings, savingsNames);
 
 		/* We probably could just join the threads here (but what do

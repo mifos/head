@@ -21,6 +21,7 @@
 package org.mifos.application.bulkentry.struts.actionforms;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -38,19 +39,20 @@ import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class BulkEntryActionForm extends BaseActionForm {
 
@@ -67,6 +69,7 @@ public class BulkEntryActionForm extends BaseActionForm {
     private String transactionDateMM;
     private String transactionDateYY;
     private String officeId;
+    private List<AttendanceType> attendance;
 
     public String getCustomerId() {
         return customerId;
@@ -98,6 +101,14 @@ public class BulkEntryActionForm extends BaseActionForm {
 
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
+    }
+
+    public List<AttendanceType> getAttendance() {
+        return this.attendance;
+    }
+
+    public void setAttendance(List<AttendanceType> attendance) {
+        this.attendance = attendance;
     }
 
     public String getReceiptDate() {
@@ -210,7 +221,7 @@ public class BulkEntryActionForm extends BaseActionForm {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
             try {
                 BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
-
+                
                 int customers = bulkEntry.getTotalCustomers();
                 int loanProductsSize = bulkEntry.getLoanProducts().size();
                 int savingsProductSize = bulkEntry.getSavingsProducts().size();
@@ -248,10 +259,23 @@ public class BulkEntryActionForm extends BaseActionForm {
                 bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
                 bulkEntryDataView.setCustomerAccountAmountEntered(customerAccountAmountEntered);
                 bulkEntryDataView.setAttendance(attendance);
+                setAttendance(attendance);
                 bulkEntry.setBulkEntryDataView(bulkEntryDataView);
             } catch (PageExpiredException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private void setAttendance(String[] attendancesFromForm) {
+        this.attendance = new ArrayList<AttendanceType>();
+        int index = 0;
+        for (String attendance : attendancesFromForm) {
+            String attendanceFromForm = attendancesFromForm[index];
+            if (null != attendanceFromForm) {
+                this.attendance.add(AttendanceType.fromShort(Short.valueOf(attendanceFromForm)));
+            }
+            index++;
         }
     }
 

@@ -30,8 +30,9 @@ public class ClientAttendanceDto implements DataTransferObject {
 
     private static final long serialVersionUID = 3244750316398063102L;
     private final Integer clientId;
-    private final AttendanceType attendance;
     private final LocalDate meetingDate;
+    private AttendanceType attendance;
+    private int row;
 	
     public ClientAttendanceDto(Integer customerId, Date meetingDate) {
         this.attendance = AttendanceType.PRESENT;
@@ -63,12 +64,25 @@ public class ClientAttendanceDto implements DataTransferObject {
         return clientId;
     }
 
+    public LocalDate getMeetingDate() {
+        return this.meetingDate;
+    }
+
     public AttendanceType getAttendance() {
         return this.attendance;
     }
 
-    public LocalDate getMeetingDate() {
-        return this.meetingDate;
+    public void setAttendance(AttendanceType attendance) {
+        this.attendance = attendance;
     }
+
+    public int getRow() {
+        return this.row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     
 }

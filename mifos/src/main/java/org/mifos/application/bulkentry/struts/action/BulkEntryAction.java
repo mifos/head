@@ -51,7 +51,9 @@ import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.client.business.service.ClientService;
@@ -318,10 +320,10 @@ public class BulkEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+        BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         CustomerView parentCustomer = getSelectedCustomer(request, form);
         UserContext userContext = getUserContext(request);
-        String centerId = bulkEntryForm.getCustomerId();
+        String centerId = bulkEntryActionForm.getCustomerId();
         String userId = userContext.getName();
         LockInfo info = startProcessingCenter(centerId, userId);
         if (info != null) {
@@ -346,7 +348,11 @@ public class BulkEntryAction extends BaseAction {
                 MasterConstants.ATTENDENCETYPES, userContext.getLocaleId(),
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements(), request);
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService.getClientAttendance(meetingDate, bulkEntry.getOffice().getOfficeId());
+
+        bulkEntry.buildBulkEntryView(parentCustomer);
+
+        List<CustomerBO> customers = bulkEntry.retrieveActiveClientsUnderParent(parentCustomer.getCustomerSearchId());
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = getClientAttendance(customers, meetingDate);
         SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
 
         return mapping.findForward(BulkEntryConstants.GETSUCCESS);
@@ -355,6 +361,8 @@ public class BulkEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
+
         BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
 
         List<ClientBO> clients = new ArrayList<ClientBO>();
@@ -365,9 +373,10 @@ public class BulkEntryAction extends BaseAction {
         Map<Integer, BulkEntrySavingsCache> savingsCache = new HashMap<Integer, BulkEntrySavingsCache>();
         List<LoanAccountsProductView> loanAccprdViews = new ArrayList<LoanAccountsProductView>();
         List<CustomerAccountView> customerAccViews = new ArrayList<CustomerAccountView>();
-        Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(((BulkEntryActionForm) form).getTransactionDate(),
+        Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(bulkEntryActionForm.getTransactionDate(),
                 "dd/MM/yyyy"));
         List<CollectionSheetEntryView> customerViews = new ArrayList<CollectionSheetEntryView>();
+
         setData(bulkEntry.getBulkEntryParent(), loanAccprdViews, customerAccViews, customerViews);
         new BulkEntryBusinessService().setData(customerViews, savingsCache, clients, savingsDepNames, savingsWithNames,
                 customerNames, getUserContext(request).getId(), bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
@@ -377,7 +386,10 @@ public class BulkEntryAction extends BaseAction {
             if (bulkEntrySavingsCache.getYesNoFlag().equals(YesNoFlag.YES))
                 savingsAccounts.add(bulkEntrySavingsCache.getAccount());
         }
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = getClientAttendance(clients, meetingDate);
+
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
+                .getAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, request);
+        setClientAttendanceFromForm(clients, meetingDate, clientAttendance, bulkEntryActionForm);
 
         SessionUtils.setCollectionAttribute(BulkEntryConstants.CLIENTS, clients, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.SAVINGS, savingsAccounts, request);
@@ -386,7 +398,7 @@ public class BulkEntryAction extends BaseAction {
         SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORCLIENTS, customerNames, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT, savingsDepNames, request);
         SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW, savingsWithNames, request);
-        SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
+
         return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
     }
 
@@ -406,22 +418,6 @@ public class BulkEntryAction extends BaseAction {
         customerAccViews.add(parent.getCustomerAccountDetails());
     }
 
-    private HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<ClientBO> clients, Date meetingDate) {
-        ArrayList<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-        for (ClientBO client : clients ) {
-            ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(client.getCustomerId(), meetingDate);
-            clientAttendanceDtos.add(clientAttendanceDto);
-        }
-        HashMap<Integer, ClientAttendanceDto> result;
-        try {
-            result = clientService.getClientAttendance(clientAttendanceDtos);
-        } catch (ServiceException e) {
-            logger.error("Unexpected error getting Client Attendance.", e);
-            result = null;
-        }
-        return result;
-    }    
-    
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -458,6 +454,10 @@ public class BulkEntryAction extends BaseAction {
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         logger.debug("create ");
+        BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
+        Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(bulkEntryActionForm.getTransactionDate(),
+                "dd/MM/yyyy"));
+
         UserContext userContext = getUserContext(request);
 
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
@@ -499,6 +499,12 @@ public class BulkEntryAction extends BaseAction {
             // remove lock on the center
             removeLock(form);
         }
+
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
+                .getAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, request);
+        clientService.setClientAttendance(setClientAttendanceFromForm(clients, meetingDate, clientAttendance,
+                bulkEntryActionForm));
+
         request.setAttribute(BulkEntryConstants.CENTER, bulkEntry.getBulkEntryParent().getCustomerDetail()
                 .getDisplayName());
         if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
@@ -517,6 +523,42 @@ public class BulkEntryAction extends BaseAction {
         // TO clear bulk entry cache in persistence service
         bulkEntryService = null;
         return mapping.findForward(BulkEntryConstants.CREATESUCCESS);
+    }
+
+    private HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<? extends CustomerBO> clients,
+            Date meetingDate) {
+        ArrayList<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
+        for (CustomerBO client : clients) {
+            ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(client.getCustomerId(), meetingDate);
+            clientAttendanceDtos.add(clientAttendanceDto);
+        }
+        HashMap<Integer, ClientAttendanceDto> result;
+        try {
+            result = clientService.getClientAttendance(clientAttendanceDtos);
+        } catch (ServiceException e) {
+            logger.error("Unexpected error getting Client Attendance.", e);
+            result = new HashMap<Integer, ClientAttendanceDto>();
+            for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDtos) {
+                result.put(clientAttendanceDto.getClientId(), clientAttendanceDto);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<ClientAttendanceDto> setClientAttendanceFromForm(List<? extends CustomerBO> clients,
+            Date meetingDate, HashMap<Integer, ClientAttendanceDto> clientAttendance, BulkEntryActionForm form) {
+        List<AttendanceType> attendanceFromForm = form.getAttendance();
+        ArrayList<ClientAttendanceDto> result = new ArrayList<ClientAttendanceDto>();
+        HashMap<Integer, ClientAttendanceDto> clientAttendanceFromForm = clientAttendance;
+        if (null == clientAttendance || 0 == clientAttendance.size()) {
+            clientAttendanceFromForm = getClientAttendance(clients, meetingDate);
+        }
+        for (ClientAttendanceDto clientAttendanceDto : clientAttendanceFromForm.values()) {
+            AttendanceType attendance = attendanceFromForm.get(clientAttendanceDto.getRow());
+            clientAttendanceDto.setAttendance(attendance);
+            result.add(clientAttendanceDto);
+        }
+        return result;
     }
 
     private void getErrorString(StringBuilder builder, List<String> accountNums, String message) {
