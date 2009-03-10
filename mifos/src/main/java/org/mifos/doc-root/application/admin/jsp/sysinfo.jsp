@@ -39,55 +39,55 @@ explanation of the license and how it is applied.
 					<tr><td colspan="2">&nbsp;</td></tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.operatingSystem" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.operationSystem><c:out value="${sessionScope.systemInfo.osName} / ${sessionScope.systemInfo.osArch} / ${sessionScope.systemInfo.osVersion}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.operationSystem"><c:out value="${sessionScope.systemInfo.osName} / ${sessionScope.systemInfo.osArch} / ${sessionScope.systemInfo.osVersion}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.java" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.javaVendor><c:out value="${sessionScope.systemInfo.javaVendor} / ${sessionScope.systemInfo.javaVersion}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.javaVendor"><c:out value="${sessionScope.systemInfo.javaVendor} / ${sessionScope.systemInfo.javaVersion}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.database" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.databaseVendor><c:out value="${sessionScope.systemInfo.databaseVendor} / ${sessionScope.systemInfo.databaseVersion}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.databaseVendor"><c:out value="${sessionScope.systemInfo.databaseVendor} / ${sessionScope.systemInfo.databaseVersion}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.driver" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.driverName><c:out value="${sessionScope.systemInfo.driverName} / ${sessionScope.systemInfo.driverVersion}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.driverName"><c:out value="${sessionScope.systemInfo.driverName} / ${sessionScope.systemInfo.driverVersion}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.appserver" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.applicationServerInfo><c:out value="${sessionScope.systemInfo.applicationServerInfo}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.applicationServerInfo"><c:out value="${sessionScope.systemInfo.applicationServerInfo}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.applicationversion" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.applicationVersion><c:out value="${sessionScope.systemInfo.applicationVersion}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.applicationVersion"><c:out value="${sessionScope.systemInfo.applicationVersion}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.svnrevision" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.svnRevision><c:out value="${sessionScope.systemInfo.svnBranch}"/>@<c:out value="${sessionScope.systemInfo.svnRevision}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.svnRevision"><c:out value="${sessionScope.systemInfo.svnBranch}"/>@<c:out value="${sessionScope.systemInfo.svnRevision}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.customreportsdir" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.customReportsDir><c:out value="${sessionScope.systemInfo.customReportsDir}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.customReportsDir"><c:out value="${sessionScope.systemInfo.customReportsDir}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.source" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.infoSource><c:out value="${sessionScope.systemInfo.infoSource}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.infoSource"><c:out value="${sessionScope.systemInfo.infoSource}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.server" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.datebaseServer><c:out value="${sessionScope.systemInfo.databaseServer}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.datebaseServer"><c:out value="${sessionScope.systemInfo.databaseServer}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.port" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.databasePort><c:out value="${sessionScope.systemInfo.databasePort}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.databasePort"><c:out value="${sessionScope.systemInfo.databasePort}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.name" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.datebaseName><c:out value="${sessionScope.systemInfo.databaseName}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.datebaseName"><c:out value="${sessionScope.systemInfo.databaseName}"/></span></td>
 					</tr>
                     <tr>
                         <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.user" bundle="adminUIResources" /></span></td>
-                        <td><span class="fontnormal" id="sysinfo.text.databaseUser><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
+                        <td><span class="fontnormal" id="sysinfo.text.databaseUser"><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
                     </tr>
                     <tr>
                         <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.datetime" bundle="adminUIResources" /></span></td>
