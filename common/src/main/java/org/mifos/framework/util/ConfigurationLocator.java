@@ -21,6 +21,7 @@
 package org.mifos.framework.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +30,9 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * Encapsulates logic for determining which directory to look in for
  * configuration files.
+ * <p>
+ * Does not use MifosLogger since this requires prior initialization, but this
+ * particular class is used to find the file used to configure the logger.
  */
 public class ConfigurationLocator {
     private static final String LOCATOR_SYSTEM_PROPERTY_NAME = "mifos.conf";
@@ -37,10 +41,21 @@ public class ConfigurationLocator {
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
 
-    private boolean lastFileHandleFromClassPath = true;
-
-    public String getSpringFilePath(String filename) throws IOException {
-        return "file:" + getFilePath(filename);
+    /**
+     * Will not throw an exception if the file is not found. This method may be
+     * used to find files in cases where we don't care if the file cannot be
+     * found.
+     */
+    public String getSpringFilePath(String filename) {
+        String returnValue = null;
+        try {
+            returnValue = "file:" + getFilePath(filename);
+        } catch (FileNotFoundException e) {
+            System.err.println("getSpringFilePath: " + filename + " not found or other IO error.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return returnValue;
     }
 
     public String getFilePath(String filename) throws IOException {
@@ -53,7 +68,6 @@ public class ConfigurationLocator {
         String homeDirectory = System.getProperty(HOME_PROPERTY_NAME);
 
         File fileToReturn = null;
-        lastFileHandleFromClassPath = false;
 
         if (StringUtils.isNotBlank(systemPropertyDirectory)) {
             File file = new File(systemPropertyDirectory, filename);
@@ -82,14 +96,9 @@ public class ConfigurationLocator {
             filename = DEFAULT_CONFIGURATION_PATH + filename;
             System.out.println("Using classpath resource: " + new ClassPathResource(filename).getPath());
             fileToReturn = new ClassPathResource(filename).getFile();
-            lastFileHandleFromClassPath = true;
         }
 
         return fileToReturn;
-    }
-
-    public boolean isLastFileHandleFromClassPath() {
-        return lastFileHandleFromClassPath;
     }
 
 }
