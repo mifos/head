@@ -14,7 +14,7 @@
 
     <parent>
         <groupId>org.mifos</groupId>
-        <artifactId>cheetah-parent</artifactId>
+        <artifactId>gazelle-parent</artifactId>
         <version>0.0.3-SNAPSHOT</version>
     </parent>
 
@@ -37,7 +37,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>cheetah-common</finalName>
+        <finalName>gazelle-common</finalName>
         <defaultGoal>jar</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <outputDirectory>target/classes</outputDirectory>

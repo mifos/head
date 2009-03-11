@@ -14,7 +14,7 @@
    
    <parent>
      <groupId>org.mifos</groupId>
-     <artifactId>cheetah-parent</artifactId>
+     <artifactId>gazelle-parent</artifactId>
      <version>0.0.3-SNAPSHOT</version>
    </parent>
      
