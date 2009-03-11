@@ -1,3 +1,3 @@
-DROP DATABASE IF EXISTS ${jdbc.database};
-CREATE DATABASE ${jdbc.database};
-USE ${jdbc.database};
+DROP DATABASE IF EXISTS ${acceptance.database};
+CREATE DATABASE ${acceptance.database};
+USE ${acceptance.database};

@@ -20,8 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -39,17 +37,13 @@ import org.hibernate.cfg.Configuration;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.HibernateStartUp;
+import org.mifos.framework.hibernate.configuration.ConfigureSession;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
 public class DatabaseSetup {
-	
-	private static final String DEFAULT_HIBERNATE_TEST_PROPERTIES =
-		"HibernateTest.properties";
-
 	private static DataStore standardMayflyStore;
 	
 	private static SessionFactory mayflySessionFactory;
@@ -69,11 +63,12 @@ public class DatabaseSetup {
 	}
 	
 	public static void initializeHibernate(boolean useInMemoryDatabase) {
-        initializeHibernate(DEFAULT_HIBERNATE_TEST_PROPERTIES, useInMemoryDatabase);
-    }
-	
-	public static void initializeHibernate(String hibernatePropertiesFileName, boolean useInMemoryDatabase) {
 		DatabaseSetup.configureLogging();
+
+        // Make sure TestService is aware that we're running integration tests.
+        // This is for integration test cases that use a database, but could
+        // also apply to other "black box" tests.
+        System.setProperty("mifos.test.mode", "integration");
 
 		if (HibernateSessionFactory.isConfigured()) {
 			return;
@@ -82,12 +77,12 @@ public class DatabaseSetup {
 		if (useInMemoryDatabase) {
 		    setMayfly();
 		} else {
-			setMysql(hibernatePropertiesFileName);
+			setMysql();
 		}
 	}
 
-	public static void setMysql(String hibernatePropertiesFileName) {
-		HibernateStartUp.initialize(hibernatePropertiesFileName);
+	public static void setMysql() {
+	    ConfigureSession.configure();
 	}
 
 	public static Configuration getHibernateConfiguration() {
@@ -198,15 +193,6 @@ public class DatabaseSetup {
 		        );
 	    	}
 	    }
-	}
-
-	private static Reader openFile(String name) {
-		try {
-			return new FileReader(name);
-		}
-        catch (FileNotFoundException e) {
-	    	throw new RuntimeException(e);
-		}
 	}
 
 }

@@ -12,24 +12,33 @@
     <property name="src.dir" value="${basedir}/src/main/java"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
     <property name="conf.dir" value="${src.dir}/org/mifos/config/resources"/>
+    <property name="test.conf.dir" value="${test.dir}/org/mifos/config/resources"/>
 
     <!--
-    Simulate functionality in ConfigurationLocator used to find the build
-    configuration file. Note that, unlike ConfigurationLocator, Ant will
-    combine properties from any/all of the below files which exist. The first
-    definition of each property wins.
+    Simulate functionality in ConfigurationLocator used to find the Mifos
+    database (and other miscellaneous settings) configuration file. Note that,
+    unlike ConfigurationLocator, Ant will _combine_ properties from any/all of
+    the below files which exist. The first definition of each property wins.
     -->
-    <property file="${user.home}/.mifos/build.properties"/>
-    <property file="${env.MIFOS_CONF}/build.properties"/>
-    <property file="${mifos.conf}/build.properties"/>
-    <property file="${conf.dir}/build.properties"/>
+    <property file="${user.home}/.mifos/local.properties"/>
+    <property file="${env.MIFOS_CONF}/local.properties"/>
+    <property file="${mifos.conf}/local.properties"/>
+    <!--
+    Don't search System.getProperty("conf.dir") for local.properties; no need.
+    It is only used to override settings in acceptanceDatabase.properties.
+    -->
 
-    <!-- Temporary support for HibernateTest (will be removed with the
-    completion of story 1405) -->
-    <property file="${user.home}/.mifos/HibernateTest.properties"/>
-    <property file="${env.MIFOS_CONF}/HibernateTest.properties"/>
-    <property file="${mifos.conf}/HibernateTest.properties"/>
-    <property file="${conf.dir}/HibernateTest.properties"/>
+    <!--
+    Finally, pull in default settings.
+    -->
+    <property file="${conf.dir}/build.properties"/>
+    <property file="${conf.dir}/mainDatabase.properties"/>
+    <property file="${test.conf.dir}/integrationDatabase.properties"/>
+
+    <property name="main.database.url"
+        value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params}"/>
+    <property name="integration.database.url"
+        value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params}"/>
 
     <!--
     Which suite to run in the run_test target. Normally the whole suite,
@@ -64,7 +73,7 @@
     <property name="current.release.number" value="1.1.0"/>
     <property name="current.release.name" value="mifos_v${current.release.number}"/>
 
-    <property name="db.driver" value="com.mysql.jdbc.Driver"/>
+    <property name="database.driver" value="com.mysql.jdbc.Driver"/>
     <property name="database.driver.jar" 
         value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
 
@@ -101,7 +110,7 @@
     </target>
 
     <target name="copy-revision" depends="svn-revision, maven_dependencies" description="Creates revision property file">
-        <copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
+        <copy file="${conf.dir}/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
             <filterset>
                 <filter token="revision" value="${svn.version}" />
                 <filter token="branch" value="${svn.branch}" />
@@ -158,11 +167,6 @@
     <!-- task to minify javascript files (remove comments & whitespace for faster downloads) -->
     <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin.0.2.2.jar"/>
 
-    <!--
-    Note that hibernate.properties and HibernateTest.properties,
-    unlike build.properties, entirely override the corresponding
-    file if they are present.
-    -->
     <target name="copy_files" depends="copy-revision">
         <copy todir="${build.web-inf}/lib">
             <fileset dir="${lib.dir}" 
@@ -198,7 +202,7 @@
         <copy todir="${build.classes}/org/mifos/config">
             <fileset dir="${src.dir}/org/mifos/config">
                 <exclude name="**/*.java"/>
-                <exclude name="**/HibernateTest.properties"/>
+                <exclude name="**/integrationDatabase.properties"/>
             </fileset>
         </copy>
         <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/config"/>
@@ -273,9 +277,9 @@
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-        <copy tofile="${test.classes}/org/mifos/config/resources/HibernateTest.properties" verbose="true">
-            <fileset dir="${conf.dir}">
-                <include name="HibernateTest.properties"/>
+        <copy todir="${test.classes}/org/mifos/config/resources/">
+            <fileset dir="${test.conf.dir}">
+                <include name="integrationDatabase.properties"/>
             </fileset>
         </copy>
         <copy todir="${test.classes}/org/mifos/config">
@@ -290,12 +294,12 @@
     <target name="run_test" 
         depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
         description="Run tests.">
-        <echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
+        <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
         <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
             dir="${basedir}"
             haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
             failureproperty="tests.failure">
-            <sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
+            <sysproperty key="mifos.test.mode" value="integration"/>
             <classpath>
                 <path refid="class.path"/>
                 <pathelement location="${build.classes}"/>
@@ -338,14 +342,18 @@
         description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Rebuilds the production database"
         />
 
+    <property name="main.database.url"
+        value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params}"/>
+
     <target name="build_production_db" description="Builds the application database without custom config data">
-        <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
-            userid="${db.user}" password="${db.pwd}"
+        <echo>Using database: ${main.database} at ${main.database.host} port ${main.database.port}, user: ${main.database.user}</echo>
+        <sql driver="${database.driver}" url="${main.database.url}" 
+            userid="${main.database.user}" password="${main.database.password}"
             classpath="${database.driver.jar}">
             <transaction>
-                Drop database if exists ${db.name};
-                create database ${db.name};         
-                use ${db.name};
+                Drop database if exists ${main.database};
+                create database ${main.database};         
+                use ${main.database};
             </transaction>
             <transaction src="${sql.dir}/mifosdroptables.sql" />
             <transaction src="${sql.dir}/latest-schema.sql" />
@@ -355,14 +363,14 @@
     </target>
 
     <target name="build_db" description="Builds the application database">
-        <echo>Using database: ${db.name} at ${db.ip} port ${db.port}, user: ${db.user}</echo>
-        <sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
-            userid="${db.user}" password="${db.pwd}"
+        <echo>Using database: ${main.database} at ${main.database.host} port ${main.database.port}, user: ${main.database.user}</echo>
+        <sql driver="${database.driver}" url="${main.database.url}" 
+            userid="${main.database.user}" password="${main.database.password}"
             classpath="${database.driver.jar}">
             <transaction>
-                Drop database if exists ${db.name};
-                create database ${db.name};         
-                use ${db.name};
+                Drop database if exists ${main.database};
+                create database ${main.database};         
+                use ${main.database};
             </transaction>
             <transaction src="${sql.dir}/mifosdroptables.sql" />
             <transaction src="${sql.dir}/latest-schema.sql" />
@@ -373,14 +381,14 @@
     </target>
 
     <target name="build_test_db">
-        <echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}, user: ${testdb.user}</echo>
-        <sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
-            userid="${testdb.user}" password="${testdb.pwd}"
+        <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
+        <sql driver="${database.driver}" url="${integration.database.url}" 
+            userid="${integration.database.user}" password="${integration.database.password}"
             classpath="${database.driver.jar}">
             <transaction>
-                Drop database if exists ${testdb.name};
-                create database ${testdb.name};
-                use ${testdb.name};
+                Drop database if exists ${integration.database};
+                create database ${integration.database};
+                use ${integration.database};
             </transaction>
             <!-- The following list of scripts is supposed to
             be the same as the one in build_db except

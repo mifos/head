@@ -9,10 +9,10 @@
 
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}" />
-        <property name="url" value="${jdbc.url}?sessionVariables=FOREIGN_KEY_CHECKS=0" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
+        <property name="driverClassName" value="${acceptance.database.driver}" />
+        <property name="url" value="jdbc:mysql://${acceptance.database.host}:${acceptance.database.port}/${acceptance.database}?${acceptance.database.params}" />
+        <property name="username" value="${acceptance.database.user}" />
+        <property name="password" value="${acceptance.database.password}" />
     </bean>
 
     <bean id="transactionManager" 

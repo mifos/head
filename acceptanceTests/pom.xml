@@ -19,12 +19,17 @@
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/jdbc.properties</database.properties.file>
+        <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/org/mifos/config/resources/acceptanceDatabase.properties</database.properties.file>
         <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/java/org/mifos/framework/persistence/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
-        <!-- This must be set to something known to exist. Override this
-        property in M2_REPO/settings.xml to allow local settings. -->
-        <local.property.overrides>${database.properties.file}</local.property.overrides> 
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf> 
+        <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
+        <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+        <!--
+        Don't search System.getProperty("conf.dir") for local.properties; no
+        need. It is only used to override settings in
+        acceptanceDatabase.properties.
+        -->
 
     </properties>
 
@@ -326,14 +331,17 @@
                             <goal>read-project-properties</goal>
                         </goals>
                         <configuration>
+                            <quiet>true</quiet>
                             <files>
                                 <file>${database.properties.file}</file>
-                                <file>${local.property.overrides}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                                <file>${mifos.overrides.home}</file>
                             </files>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>  
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
@@ -347,9 +355,9 @@
                 </dependencies>
                 <configuration>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url><![CDATA[jdbc:mysql://localhost:3306?useUnicode=true&characterEncoding=UTF-8]]></url>
-                    <username>${jdbc.username}</username>
-                    <password>${jdbc.password}</password>
+                    <url>jdbc:mysql://${acceptance.database.host}:${acceptance.database.port}/${acceptance.database}?${acceptance.database.params}</url>
+                    <username>${acceptance.database.user}</username>
+                    <password>${acceptance.database.password}</password>
                     <autocommit>true</autocommit>
                 </configuration>
                 <executions>
@@ -475,6 +483,9 @@
                         <log>${basedir}/target/logs/${container.name}.log</log>
                         <output>${basedir}/target/logs/${container.name}.out</output>
                         <timeout>600000</timeout>
+                        <systemProperties>
+                            <mifos.test.mode>acceptance</mifos.test.mode>
+                        </systemProperties>
                     </container>
                     <configuration>
                         <properties>

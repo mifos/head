@@ -54,11 +54,9 @@ import org.mifos.framework.persistence.UpgradeTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
-import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.framework.util.ConfigurationLocatorTest;
-import org.mifos.framework.util.DatabaseUrlDecoratorTest;
 import org.mifos.framework.util.DateTimeServiceTest;
 import org.mifos.framework.util.LocalizationConverterTest;
+import org.mifos.framework.util.TestingServiceTest;
 import org.mifos.framework.util.helpers.ChapterNumSortTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -95,7 +93,6 @@ public class FastTests extends TestSuite {
 	public static Test suite() throws Exception {
 		TestSuite suite = new FastTests();
 		suite.addTest(DateTimeServiceTest.suite());
-		suite.addTest(ConfigurationLocatorTest.suite());
 		suite.addTest(MoneyTest.suite());
 		suite.addTestSuite(MifosCurrencyTest.class);
 		suite.addTestSuite(DateUtilsTest.class);
@@ -144,7 +141,7 @@ public class FastTests extends TestSuite {
 		suite.addTest(ChapterNumSortTest.suite());
 		suite.addTest(ProperlyAdaptedJUnit4Test.suite());
 		suite.addTest(LocalizationConverterTest.suite());
-		suite.addTest(DatabaseUrlDecoratorTest.suite());
+		suite.addTest(TestingServiceTest.suite());
 		return suite;
 	}
 

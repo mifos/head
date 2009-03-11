@@ -20,68 +20,60 @@
 
 package org.mifos.framework.hibernate.configuration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URI;
-import java.util.Properties;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
+import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
-import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.helper.HibernateConstants;
-import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.core.ClasspathResource;
+import org.mifos.framework.exceptions.HibernateStartUpException;
+import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.TestingService;
+import org.mifos.framework.util.helpers.FilePaths;
 
 /**
-	Create the hibernate configuration object from the 
-	defined hibernate mapping files
-*/
+ * Create the hibernate configuration object from the defined hibernate mapping
+ * and properties files.
+ */
+public class ConfigureSession {
+    private static Configuration config = null;
 
-public class ConfigureSession
-{
-	private static Configuration config = null;
+    /**
+     * This method returns the hibernate configuration object configured during
+     * system start up
+     */
+    public static Configuration getConfiguration() throws HibernateStartUpException {
+        return config;
+    }
 
+    /**
+     * On System start up this method creates the hibernate configuration
+     * object, which is configured with the hibernate configuration files
+     * containing the mapping information and also the database connection
+     * related parameters required for hibernate for database access.
+     */
+    public static void configure() throws HibernateStartUpException {
+        config = new Configuration();
 
-	/**
-		This method returns the hibernate configuration object configured 
-		during system start up
-	*/
+        try {
+            config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
+        } catch (HibernateException e) {
+            throw new HibernateStartUpException(e);
+        } catch (MalformedURLException e) {
+            throw new HibernateStartUpException(e);
+        } catch (URISyntaxException e) {
+            throw new HibernateStartUpException(e);
+        }
 
-	public static Configuration getConfiguration() throws HibernateStartUpException
-	{
-		return config;
-	}
+        try {
+            config.setProperties(new TestingService().getDatabaseConnectionSettings());
+        } catch (IOException e) {
+            throw new HibernateStartUpException(e);
+        }
 
-	/**
-	 * On System start up this method creates the hibernate configuration object,
-	 * which is configured with the hibernate configuration files containing the
-	 * mapping information and also the database connection related parameters
-	 * required for hibernate for database access.
-	 */
-    public static void configure(String hibernatePropertiesPath)
-			throws HibernateStartUpException {
-		config = new Configuration();
-		try {
-			config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
-		} catch (Exception e) {
-			throw new HibernateStartUpException(
-					HibernateConstants.CFGFILENOTFOUND, e);
-		}
-
-		try {
-			Properties hibernateProperties = new Properties();
-			File propertiesFile = new ConfigurationLocator().getFileHandle(hibernatePropertiesPath);
-			hibernateProperties.load(new FileInputStream(propertiesFile));
-			config.setProperties(hibernateProperties);
-			// Allow database to be specified dynamically for testing
-			if (System.getProperty("hibernate.connection.url") != null) {
-				config.setProperty("hibernate.connection.url", System.getProperty("hibernate.connection.url"));
-			}
-		} catch (Exception e) {
-			throw new HibernateStartUpException(
-					HibernateConstants.HIBERNATEPROPNOTFOUND, e);
-		}
-	}
-
+        HibernateSessionFactory.setConfiguration(ConfigureSession.getConfiguration());
+    }
 
 }

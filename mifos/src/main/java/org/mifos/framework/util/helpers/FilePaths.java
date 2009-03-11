@@ -1,40 +1,23 @@
-/**
-
- * FilePaths.java    version: 1.0
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
+
 package org.mifos.framework.util.helpers;
 
 /**
@@ -55,8 +38,26 @@ public interface FilePaths {
 		"org/mifos/framework/util/resources/menuresources/menu.xsd";
 	public static final String JAXBPACKAGEPATH = 
 		"org.mifos.framework.util.jaxb.";
-	public static final String HIBERNATE_PROPERTIES_FILENAME = 
-		"hibernate.properties";
+    /**
+     * Default database settings for production/deployment/runtime.
+     */
+    public static final String DATABASE_CONFIGURATION = "mainDatabase.properties";
+
+    /**
+     * Default database settings for integration tests.
+     */
+    public static final String INTEGRATION_DATABASE_CONFIGURATION = "integrationDatabase.properties";
+
+    /**
+     * Default database settings for acceptance tests.
+     */
+    public static final String ACCEPTANCE_DATABASE_CONFIGURATION = "acceptanceDatabase.properties";
+
+    /**
+     * Contains overrides for database (and other) properties. 
+     */
+    public static final String LOCAL_CONFIGURATION_OVERRIDES = "local.properties";
+
 	public static final String HIBERNATECFGFILE = 
 		"org/mifos/framework/util/resources/hibernate.cfg.xml";
 	public static final String CUSTOMTABLETAGXSD = 

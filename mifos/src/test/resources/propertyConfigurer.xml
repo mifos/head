@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:schemaLocation="http://www.springframework.org/schema/beans 
-           classpath:xsd/spring-beans-2.5.xsd"> 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    classpath:xsd/spring-beans-2.5.xsd"> 
 
     <bean id="configurationLocator"
         class="org.mifos.framework.util.ConfigurationLocator"/>
 
-    <bean id="pathToProperties" factory-bean="configurationLocator"
-	   factory-method="getSpringFilePath">
-        <constructor-arg value="HibernateTest.properties" />
+    <bean id="defaultIntegrationTestProperties" factory-bean="configurationLocator"
+        factory-method="getSpringFilePath">
+        <constructor-arg value="integrationDatabase.properties" />
+    </bean>
+
+    <bean id="customIntegrationTestProperties" factory-bean="configurationLocator"
+        factory-method="getSpringFilePath">
+        <constructor-arg value="local.properties" />
     </bean>
 
     <bean id="propertyConfigurer" 
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" ref="pathToProperties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <ref bean="defaultIntegrationTestProperties"/>
+                <ref bean="customIntegrationTestProperties"/>
+            </list>
+        </property>
     </bean>
 
 </beans>

@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:schemaLocation="http://www.springframework.org/schema/beans 
-           classpath:xsd/spring-beans-2.5.xsd"> 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    classpath:xsd/spring-beans-2.5.xsd"> 
+
+    <bean id="configurationLocator"
+        class="org.mifos.framework.util.ConfigurationLocator"/>
+
+    <bean id="defaultAcceptanceTestProperties" factory-bean="configurationLocator"
+        factory-method="getSpringFilePath">
+        <constructor-arg value="acceptanceDatabase.properties" />
+    </bean>
+
+    <bean id="defaultAcceptanceTestNonDatabaseProperties" factory-bean="configurationLocator"
+        factory-method="getSpringFilePath">
+        <constructor-arg value="acceptanceTest.properties" />
+    </bean>
+
+    <bean id="customAcceptanceTestProperties" factory-bean="configurationLocator"
+        factory-method="getSpringFilePath">
+        <constructor-arg value="local.properties" />
+    </bean>
 
     <bean id="propertyConfigurer" 
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath:jdbc.properties</value>
-                <value>classpath:acceptanceTest.properties</value>
-                <value>file:${user.home}/.mifos/local.properties</value>
+                <ref bean="defaultAcceptanceTestProperties"/>
+                <ref bean="defaultAcceptanceTestNonDatabaseProperties"/>
+                <ref bean="customAcceptanceTestProperties"/>
             </list>
         </property>
     </bean>

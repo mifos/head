@@ -9,21 +9,12 @@
 
     <import resource="propertyConfigurer.xml"/>
 
-    <bean id="testDatabaseUrlDecorator"
-        class="org.mifos.framework.util.DatabaseUrlDecorator"/>
-
-    <bean id="databaseUrl" factory-bean="testDatabaseUrlDecorator"
-        factory-method="getDecoratedDatabaseUrl">
-        <constructor-arg value="${hibernate.connection.url}" />
-        <constructor-arg value="sessionVariables=FOREIGN_KEY_CHECKS=0" />
-    </bean>
-
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${hibernate.connection.driver_class}" />
-        <property name="url" ref="databaseUrl" />
-        <property name="username" value="${hibernate.connection.username}" />
-        <property name="password" value="${hibernate.connection.password}" />
+        <property name="driverClassName" value="${integration.database.driver}" />
+        <property name="url" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params}" />
+        <property name="username" value="${integration.database.user}" />
+        <property name="password" value="${integration.database.password}" />
     </bean>
 
     <bean id="transactionManager" 

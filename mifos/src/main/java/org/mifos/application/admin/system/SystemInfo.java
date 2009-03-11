@@ -33,11 +33,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.TestingService;
 
 /**
  * JDBC URL parsing code in this class is
@@ -49,11 +47,12 @@ import org.mifos.framework.util.helpers.FilePaths;
  * </ul> 
  */
 public class SystemInfo implements Serializable {
-	
-	private DatabaseMetaData databaseMetaData;
+
+    private static final long serialVersionUID = 1L;
+    private DatabaseMetaData databaseMetaData;
 	private ServletContext context;
 	private Locale locale;
-	
+
 	private String javaVendor;
 	private String javaVersion;
 	private SvnRevision svnRevision;
@@ -65,7 +64,7 @@ public class SystemInfo implements Serializable {
 	private String infoSource;
 	private URI infoURL;
 	private String infoUserName;
-	
+
 	// Note: make sure to close the connection that got the metadata!
 	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource) 
 	throws Exception {
@@ -80,7 +79,7 @@ public class SystemInfo implements Serializable {
 	public SystemInfo(Locale locale, boolean getInfoSource) {
 		if (getInfoSource) {
 			try {
-                this.infoSource = new ConfigurationLocator().getFilePath(FilePaths.HIBERNATE_PROPERTIES_FILENAME);
+                this.infoSource = "" + new TestingService().getAllSettingsFilenames();
             } catch (IOException e) {
                 this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }
@@ -94,11 +93,11 @@ public class SystemInfo implements Serializable {
 		setOsVersion(System.getProperty("os.version"));
 		setCustomReportsDir(System.getProperty("user.home")+File.separatorChar+".mifos");
 	}
-	
+
 	public int getApplicationVersion() {
 		return DatabaseVersionPersistence.APPLICATION_VERSION;
 	}
-	
+
 	public String getDatabaseVendor() {
 		try {
 			return databaseMetaData.getDatabaseProductName();

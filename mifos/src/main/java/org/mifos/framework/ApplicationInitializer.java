@@ -20,8 +20,7 @@
 
 package org.mifos.framework;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -51,7 +50,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
-import org.mifos.framework.hibernate.HibernateStartUp;
+import org.mifos.framework.hibernate.configuration.ConfigureSession;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -60,7 +59,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.TestingService;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 
@@ -100,40 +99,25 @@ public class ApplicationInitializer implements ServletContextListener,
 	}
 
 	private static String getDatabaseConnectionInfo() {
-	    ConfigurationLocator configurationLocator = new ConfigurationLocator();
-		Properties hibernateCfg = new Properties();
-		File configFile = null;
-		try {
-	        configFile = configurationLocator.getFileHandle(
-	                FilePaths.HIBERNATE_PROPERTIES_FILENAME);
-			if (null != configFile) {
-				hibernateCfg.load(new FileInputStream(configFile));
-			}
-		}
-		catch (Exception e) {
-			/*
-			 * not sure if we can actually do anything useful with this
-			 * exception since we're likely running during container
-			 * initialization
-			 */
-			e.printStackTrace();
-		}
-        String info = "";
-        if (configurationLocator.isLastFileHandleFromClassPath()) {
-            info += "Mifos database connection using settings from classpath";
+        TestingService testingService = new TestingService();
+        Properties hibernateCfg = new Properties();
+        String info = "Using Mifos database connection settings";
+        try {
+            hibernateCfg = testingService.getDatabaseConnectionSettings();
+            info += " from file(s): " + testingService.getAllSettingsFilenames();
+        } catch (IOException e) {
+            /*
+             * not sure if we can actually do anything useful with this
+             * exception since we're likely running during container
+             * initialization
+             */
+            e.printStackTrace();
         }
-        else {
-            info += "Using custom Mifos database connection settings";
-        }
-        info += " from file: " + configFile.getAbsolutePath();
-        
-		info += " Connection URL="
-				+ hibernateCfg.getProperty("hibernate.connection.url");
-		info += ". Username="
-				+ hibernateCfg.getProperty("hibernate.connection.username");
-		info += ". Password=********";
-		return info;
-	}
+        info += " Connection URL=" + hibernateCfg.getProperty("hibernate.connection.url");
+        info += ". Username=" + hibernateCfg.getProperty("hibernate.connection.username");
+        info += ". Password=********";
+        return info;
+    }
 
 	private static DatabaseError databaseError = new DatabaseError();
 
@@ -343,7 +327,7 @@ public class ApplicationInitializer implements ServletContextListener,
 	 */
 	public static void initializeHibernate() throws AppNotConfiguredException {
 		try {
-			HibernateStartUp.initialize(FilePaths.HIBERNATE_PROPERTIES_FILENAME);
+		    ConfigureSession.configure();
 		}
 		catch (HibernateStartUpException e) {
 			throw new AppNotConfiguredException(e);
