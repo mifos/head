@@ -49,7 +49,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value<="CreateMultipleLoanAccounts"/>
+	<input type="hidden" id="page.id" value="CreateMultipleLoanAccounts"/>
 
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	<script src="pages/framework/js/conversion.js"></script>
