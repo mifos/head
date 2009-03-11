@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -79,7 +80,7 @@ public class SystemInfo implements Serializable {
 	public SystemInfo(Locale locale, boolean getInfoSource) {
 		if (getInfoSource) {
 			try {
-                this.infoSource = "" + new TestingService().getAllSettingsFilenames();
+                this.infoSource = Arrays.toString(new TestingService().getAllSettingsFilenames());
             } catch (IOException e) {
                 this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }

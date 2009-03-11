@@ -23,6 +23,7 @@ package org.mifos.framework;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -104,7 +105,7 @@ public class ApplicationInitializer implements ServletContextListener,
         String info = "Using Mifos database connection settings";
         try {
             hibernateCfg = testingService.getDatabaseConnectionSettings();
-            info += " from file(s): " + testingService.getAllSettingsFilenames();
+            info += " from file(s): " + Arrays.toString(testingService.getAllSettingsFilenames());
         } catch (IOException e) {
             /*
              * not sure if we can actually do anything useful with this
@@ -141,7 +142,6 @@ public class ApplicationInitializer implements ServletContextListener,
 						.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 				LOG.info("Logger has been initialised", false, null);
 
-				System.out.println(getDatabaseConnectionInfo());
 				LOG.info(getDatabaseConnectionInfo(), false, null);
 
 				DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
