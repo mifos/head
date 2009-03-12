@@ -3,14 +3,12 @@
 	xmlns:ehcache="http://www.springmodules.org/schema/ehcache"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 	http://www.springmodules.org/schema/ehcache http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
-	<bean id="cacheManager"
-		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation">
-			<value>classpath:org/mifos/config/ehcache.xml</value>
+			<value>classpath:org/mifos/config/resources/ehcache.xml</value>
 		</property>
 	</bean>
-	<bean id="cacheProviderFacade"
-		class="org.springmodules.cache.provider.ehcache.EhCacheFacade">
+	<bean id="cacheProviderFacade" class="org.springmodules.cache.provider.ehcache.EhCacheFacade">
 		<property name="cacheManager" ref="cacheManager" />
 	</bean>
 	<bean id="collectionSheetService"

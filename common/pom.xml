@@ -8,32 +8,28 @@
     <name>Mifos - Cheetah Common</name>
     <url>http://www.mifos.org</url>
 
-    <properties>
-        <modules.root.dir>${basedir}/..</modules.root.dir>
-    </properties>
-
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>gazelle-parent</artifactId>
         <version>0.0.3-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.3</version>
         </dependency> 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>2.5.6</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.4</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

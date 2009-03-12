@@ -48,7 +48,6 @@
 	<classpathentry kind="lib" path="mifos/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymock.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymockclassextension.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/ehcache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/freemarker-2.3.13.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/geronimo-spec-activation-1.0.2-rc4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/geronimo-spec-javamail-1.3.1-rc5.jar"/>

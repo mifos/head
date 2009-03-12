@@ -205,7 +205,7 @@
                 <exclude name="**/integrationDatabase.properties"/>
             </fileset>
         </copy>
-        <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/config"/>
+        <copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/config/resources"/>
         <copy todir="${build.web-inf}/services/MifosService/META-INF">
             <fileset dir="${src.dir}/org/mifos/api/resources">
                 <include name="services.xml"/>

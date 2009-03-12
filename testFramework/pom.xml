@@ -7,6 +7,11 @@
     <version>0.0.3-SNAPSHOT</version>
     <name>Mifos - Cheetah Test Framework</name>
     <url>http://www.mifos.org</url>
+    <parent>
+      <groupId>org.mifos</groupId>
+      <artifactId>gazelle-parent</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </parent>
     <repositories>
         <repository>
             <id>spring-snapshot</id>
@@ -52,28 +57,31 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>2.0-M2</version>
         </dependency>
+         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>2.5.6</version>
+            <scope>compile</scope>
+         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>5.8</version>
             <classifier>jdk15</classifier>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -89,32 +97,32 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>1.5.2</version>
         </dependency>
-        <dependency>
+         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time-hibernate</artifactId>
-            <version>1.0</version>
-        </dependency>
+            <exclusions>
+               <exclusion>
+                  <groupId>net.sf.ehcache</groupId>
+                  <artifactId>ehcache</artifactId>
+               </exclusion>
+            </exclusions>
+         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.6</version>
         </dependency>
         <dependency>
             <groupId>findbugs</groupId>
             <artifactId>annotations</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -134,7 +142,6 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>org.springmodules</groupId>
