@@ -61,7 +61,6 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         systemInfoPage.verifyDateTime(new DateTime());
     }
 
-    @Test(groups = "workInProgress")
     public void verifyUpdatedDateTimeTest() {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         TimeMachine timeMachine = new TimeMachine(selenium);
@@ -70,7 +69,6 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         timeMachinePage.verifySuccess(targetTime);
     }
     
-    @Test(groups = "workInProgress")
     public void verifyDateTimeTest() {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         TimeMachine timeMachine = new TimeMachine(selenium);
