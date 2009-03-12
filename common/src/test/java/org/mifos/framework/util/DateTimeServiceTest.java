@@ -84,7 +84,7 @@ public class DateTimeServiceTest {
         // The date that comes back should be as set
         Assert.assertEquals(someDateTime.toLocalDate(), dateTimeService.getCurrentDateTime().toLocalDate());
         // do something to make sure that a measurable about of time passes
-        Thread.sleep(10);
+        Thread.sleep(100);
         // Some time should have passed since setting the time on the dateTimeService
         Assert.assertTrue("After setting a date, the current time returned by the DateTimeService should continue advancing.",
                 dateTimeService.getCurrentDateTime().getMillis() > someDateTime.getMillis());

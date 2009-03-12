@@ -21,12 +21,36 @@
 package org.mifos.test.acceptance.framework;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
+import com.thoughtworks.selenium.Selenium;
 
 public class TimeMachine {
 
-    public void setDateTime(DateTime targetTime) {
-        // TODO Auto-generated method stub
+    private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
+    protected Selenium selenium;
+    
+    public TimeMachine(Selenium selenium) {
+        this.selenium = selenium;
+    }
+
+    public TimeMachinePage setDateTime(DateTime dateTime) {
+        DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
+        selenium.open("dateTimeUpdate.ftl?dateTime=" + formatter.print(dateTime.getMillis()));
+        waitForPageToLoad();
+        return new TimeMachinePage(selenium);        
+    }
+    
+    public TimeMachinePage resetDateTime() {
+        selenium.open("dateTimeUpdate.ftl?dateTime=system");
+        waitForPageToLoad();
+        return new TimeMachinePage(selenium);        
         
     }
 
+    protected void waitForPageToLoad() {
+        selenium.waitForPageToLoad(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
+    }
+    
 }

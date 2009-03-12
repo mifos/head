@@ -18,24 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.ui.core.controller;
+package org.mifos.test.acceptance.framework;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.joda.time.DateTime;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import junit.framework.Assert;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import com.thoughtworks.selenium.Selenium;
 
-public class PingController extends AbstractController {
 
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
-            Map<String, Object> model = new HashMap<String, Object>();
-            model.put("request", request);
-            return new ModelAndView("ping", "model", model);
+public class TimeMachinePage extends MifosPage {
+
+    
+    public TimeMachinePage(Selenium selenium) {
+        super(selenium);
+    }
+
+    public TimeMachinePage verifyPage() {
+        verifyPage("DateTimeUpdate");
+        return this;
+    }
+
+    public void verifySuccess(DateTime dateTime) {
+        Assert.assertEquals(dateTime.toString(), selenium.getText("DateTimeUpdate.text.result"));
     }
     
 }

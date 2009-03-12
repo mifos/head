@@ -54,7 +54,6 @@ import org.mifos.framework.persistence.UpgradeTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
-import org.mifos.framework.util.DateTimeServiceTest;
 import org.mifos.framework.util.LocalizationConverterTest;
 import org.mifos.framework.util.TestingServiceTest;
 import org.mifos.framework.util.helpers.ChapterNumSortTest;
@@ -92,7 +91,6 @@ public class FastTests extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new FastTests();
-		suite.addTest(DateTimeServiceTest.suite());
 		suite.addTest(MoneyTest.suite());
 		suite.addTestSuite(MifosCurrencyTest.class);
 		suite.addTestSuite(DateUtilsTest.class);

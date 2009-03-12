@@ -47,13 +47,16 @@
 
     <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 
+    <bean id="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController"/>
+
     <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<value>
+			/dateTimeUpdate.ftl=dateTimeUpdateController
             /ping.ftl=genericController
             /cheetah.css.ftl=genericController
             /gazelle.css.ftl=genericController
-    			/appInfoNoSecurity.ftl=appInfoController
+    		/appInfoNoSecurity.ftl=appInfoController
 			</value>
 		</property>
     </bean>

@@ -27,6 +27,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.SystemInfoPage;
 import org.mifos.test.acceptance.framework.TimeMachine;
+import org.mifos.test.acceptance.framework.TimeMachinePage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -45,6 +46,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
+        new TimeMachine(selenium).resetDateTime();
     }
 
     @AfterMethod
@@ -62,7 +64,16 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     @Test(groups = "workInProgress")
     public void verifyUpdatedDateTimeTest() {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
-        TimeMachine timeMachine = new TimeMachine();
+        TimeMachine timeMachine = new TimeMachine(selenium);
+        TimeMachinePage timeMachinePage = timeMachine.setDateTime(targetTime);
+        timeMachinePage.verifyPage();
+        timeMachinePage.verifySuccess(targetTime);
+    }
+    
+    @Test(groups = "workInProgress")
+    public void verifyDateTimeTest() {
+        DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
+        TimeMachine timeMachine = new TimeMachine(selenium);
         timeMachine.setDateTime(targetTime);
         
         AdminPage adminPage = loginAndGoToAdminPage();

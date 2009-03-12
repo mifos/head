@@ -33,6 +33,7 @@ public class DateTimeService {
     }
 
     public void setCurrentDateTime(DateTime someDateTime) {
+        resetToCurrentSystemDateTime();
         DateTimeUtils.setCurrentMillisOffset(someDateTime.getMillis() - new DateTime().getMillis());        
     }
     
