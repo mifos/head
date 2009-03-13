@@ -274,6 +274,9 @@ public class BulkEntryActionForm extends BaseActionForm {
             String attendanceFromForm = attendancesFromForm[index];
             if (null != attendanceFromForm) {
                 this.attendance.add(AttendanceType.fromShort(Short.valueOf(attendanceFromForm)));
+            } else {
+                AttendanceType groupAttendancePlaceHolder = null;
+                this.attendance.add(groupAttendancePlaceHolder); 
             }
             index++;
         }
