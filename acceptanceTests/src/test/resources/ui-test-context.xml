@@ -8,7 +8,7 @@
 
     <aop:aspectj-autoproxy />
 
-    <import resource="propertyConfigurer.xml"/>
+    <import resource="acceptancePropertyConfigurer.xml"/>
 
     <bean id="seleniumSpeedControl" class="org.mifos.test.acceptance.framework.util.SeleniumSpeedControl" />
 

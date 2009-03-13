@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans 
     classpath:xsd/spring-beans-2.5.xsd"> 
 
-    <import resource="propertyConfigurer.xml"/>
+    <import resource="acceptancePropertyConfigurer.xml"/>
 
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
