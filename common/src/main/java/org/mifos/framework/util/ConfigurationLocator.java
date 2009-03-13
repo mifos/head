@@ -68,6 +68,7 @@ public class ConfigurationLocator {
         return getFileHandle(filename).getAbsolutePath();
     }
 
+    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
     public File getFileHandle(String filename) throws IOException {
         String systemPropertyDirectory = System.getProperty(LOCATOR_SYSTEM_PROPERTY_NAME);
         String envPropertyDirectory = System.getenv(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
@@ -97,6 +98,7 @@ public class ConfigurationLocator {
             fileToReturn = new ClassPathResource(fallback).getFile();
         }
 
+        System.out.println("ConfigurationLocator FOUND: " + fileToReturn);
         return fileToReturn;
     }
 
