@@ -355,7 +355,7 @@
                 </dependencies>
                 <configuration>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://${acceptance.database.host}:${acceptance.database.port}/${acceptance.database}?${acceptance.database.params}</url>
+                    <url>jdbc:mysql://${acceptance.database.host}:${acceptance.database.port}/?${acceptance.database.params}</url>
                     <username>${acceptance.database.user}</username>
                     <password>${acceptance.database.password}</password>
                     <autocommit>true</autocommit>
