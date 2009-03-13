@@ -101,25 +101,16 @@ public class BulkEntryAction extends BaseAction {
 
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
-    private static Hashtable processedCenterList = new Hashtable<Integer, LockInfo>();
-    private static long allowedLockingTime;
-
     public BulkEntryAction() {
         masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
-        allowedLockingTime = getAllowedLockingTime();
-        clientService = new StandardClientService();
+         clientService = new StandardClientService();
         clientService.setClientAttendanceDao(new StandardClientAttendanceDao());
     }
 
     @Override
     protected BusinessService getService() {
         return new BulkEntryBusinessService();
-    }
-
-    // locking time is in milliseconds and is set in config file as minutes
-    private long getAllowedLockingTime() {
-        return GeneralConfig.getPerCenterTimeOutForBulkEntry() * 60 * 1000;
     }
 
     public static ActionSecurity getSecurity() {
@@ -244,70 +235,6 @@ public class BulkEntryAction extends BaseAction {
         return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
     }
 
-    private LockInfo createLockValue(long lockTime, String userId) {
-        return new LockInfo(lockTime, userId);
-    }
-
-    // this method returns the lock info if there is a lock on the center and
-    // the wait time < allowedLockingTime
-    private LockInfo startProcessingCenter(String centerIdStr, String userId) {
-        LockInfo previousLockInfo = null;
-        long currentTime = new DateTimeService().getCurrentDateTime().getMillis();
-        Integer centerId = Integer.parseInt(centerIdStr);
-        synchronized (processedCenterList) {
-            // there is a lock on this center, so check the locking time to see
-            // if it's expired
-            if (processedCenterList.containsKey(centerId)) {
-                LockInfo info = (LockInfo) processedCenterList.get(centerId);
-                long previousTime = info.getLockTime();
-                long waitTime = currentTime - previousTime;
-                if (waitTime >= allowedLockingTime) {
-                    processedCenterList.remove(centerId);
-                    processedCenterList.put(centerId, createLockValue(currentTime, userId));
-                } else // return this info for error message
-                {
-                    previousLockInfo = info;
-                }
-
-            }
-            // no lock so put a lock on it
-            else {
-                processedCenterList.put(centerId, createLockValue(currentTime, userId));
-            }
-        }
-
-        return previousLockInfo;
-    }
-
-    private void removeLock(ActionForm form) {
-        BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
-        Integer centerId = Integer.parseInt(bulkEntryForm.getCustomerId());
-        synchronized (processedCenterList) {
-            if (processedCenterList.containsKey(centerId)) {
-                processedCenterList.remove(centerId);
-            }
-        }
-
-    }
-
-    private void buildErrorMessage(String centerName, HttpServletRequest request, LockInfo info) {
-
-        ActionErrors actionErrors = new ActionErrors();
-        GregorianCalendar currentCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-        long currentTime = currentCalendar.getTimeInMillis();
-        long waitTime = currentTime - info.getLockTime();
-        long timeLeftToWait = allowedLockingTime - waitTime;
-        timeLeftToWait = timeLeftToWait / 1000;
-        long minutes = timeLeftToWait / 60;
-        long seconds = timeLeftToWait % 60;
-        currentCalendar.setTimeInMillis(info.getLockTime());
-        DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.US);
-        String lockTime = timeFormatter.format(currentCalendar.getTime());
-        actionErrors.add(BulkEntryConstants.LOCKED_CENTER_ERROR, new ActionMessage(
-                BulkEntryConstants.LOCKED_CENTER_ERROR, info.getUserId(), lockTime, minutes, seconds));
-
-        request.setAttribute(Globals.ERROR_KEY, actionErrors);
-    }
 
     /**
      * This method is called once the search criteria have been entered by the
@@ -325,12 +252,6 @@ public class BulkEntryAction extends BaseAction {
         UserContext userContext = getUserContext(request);
         String centerId = bulkEntryActionForm.getCustomerId();
         String userId = userContext.getName();
-        LockInfo info = startProcessingCenter(centerId, userId);
-        if (info != null) {
-            // error
-            buildErrorMessage(parentCustomer.getDisplayName(), request, info);
-            return mapping.findForward(BulkEntryConstants.GET_FAILURE);
-        }
 
         Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate", request);
         BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
@@ -427,7 +348,6 @@ public class BulkEntryAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        removeLock(form);
         return mapping.findForward(ActionForwards.cancel_success.toString());
     }
 
@@ -495,10 +415,7 @@ public class BulkEntryAction extends BaseAction {
                     savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
         } catch (Exception e) {
             throw e;
-        } finally {
-            // remove lock on the center
-            removeLock(form);
-        }
+        } 
 
         HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
                 .getAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, request);

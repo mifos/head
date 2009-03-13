@@ -44,23 +44,6 @@ public class GeneralConfigTest extends MifosIntegrationTest{
 	}
 	
 	@Test 
-	public void testGetPerCenterTimeOutForBulkEntry() {
-		Integer configuredValue = GeneralConfig.getPerCenterTimeOutForBulkEntry();
-		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		Integer currentValue = 30;
-		configMgr.setProperty(GeneralConfig.PerCenterTimeOutForBulkEntry, currentValue);
-		assertEquals(currentValue, GeneralConfig.getPerCenterTimeOutForBulkEntry());
-		// clear the PerCenterTimeOutForBulkEntry property from the config file so should get the default value
-		configMgr.clearProperty(GeneralConfig.PerCenterTimeOutForBulkEntry);
-		Integer defaultValue = GeneralConfig.getPerCenterTimeOutForBulkEntry();
-		Integer expectedDefaultValue = 10;
-		assertEquals(defaultValue, expectedDefaultValue);
-		// save it back
-		configMgr.setProperty(GeneralConfig.PerCenterTimeOutForBulkEntry, configuredValue);
-		
-	}
-	
-	@Test 
 	public void testGetMaxPointsPerPPISurvey() {
 		int configuredValue = GeneralConfig.getMaxPointsPerPPISurvey();
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();

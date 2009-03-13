@@ -75,7 +75,6 @@ public interface BulkEntryConstants {
     public String MEETINGDATEEXCEPTION = "errors.meetingdate";
     public String ERRORSUPDATE = "errors.update";
     public String REFRESH = "refresh";
-    public String LOCKED_CENTER_ERROR = "errors.lockedCenter";
 
     public String PRESENT = "1";
 
