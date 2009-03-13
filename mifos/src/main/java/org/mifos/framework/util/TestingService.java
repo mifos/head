@@ -47,7 +47,7 @@ public class TestingService {
         configurationLocator = new ConfigurationLocator();
     }
 
-    private String getTestMode() {
+    public String getTestMode() {
         // "main" means we are *not* running in a test mode
         return System.getProperty("mifos.test.mode", "main");
     }

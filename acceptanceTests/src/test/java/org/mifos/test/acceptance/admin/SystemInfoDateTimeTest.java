@@ -50,8 +50,9 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     }
 
     @AfterMethod
-    public void logOut() {
+    public void tearDown() {
         (new MifosPage(selenium)).logout();
+        new TimeMachine(selenium).resetDateTime();
     }
 
     public void verifyCurrentDateTimeTest() {

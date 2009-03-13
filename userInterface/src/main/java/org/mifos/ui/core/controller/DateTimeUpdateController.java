@@ -50,31 +50,54 @@ public class DateTimeUpdateController extends AbstractController {
         this.dateTimeService = dateTimeService;
     }
 
+    // This should be factored out to eliminate duplication with 
+    // the TestingService.  This could be moved up to the common
+    // module.  The whole TestingService class can't be moved 
+    // up to the common module because it depends on other classes
+    // in the mifos module.
+    private String getTestMode() {
+        // "main" means we are *not* running in a test mode
+        return System.getProperty("mifos.test.mode", "main");
+    }
+
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes") // Reason: here we want to surface a generic exception
     @Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
-	        String dateTimeString = request.getParameter("dateTime");
-	        String result = null;
-	        if (null == dateTimeString) {
-                result = "Missing 'dateTime' parameter!";
-	        } else if ("system".equals(dateTimeString)) {
-	            getDateTimeService().resetToCurrentSystemDateTime();
-	            result = getDateTimeService().getCurrentDateTime().toString();
-	        } else {
-	            DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
-	            DateTime dateTime = formatter.parseDateTime(dateTimeString);
+        // throw a generic exception if we are in "main" (production) mode, rather than a testing mode
+        if ("main".equals(getTestMode())) {
+            // obscure the error so we don't expose internals
+            // seems like kind of a hack, perhaps there's a better way to 
+            // generate a http 500 error
+            RuntimeException exception = new RuntimeException("Internal error.");
+            StackTraceElement[] elements = new StackTraceElement[1];
+            elements[0] = new StackTraceElement("","","",0);
+            exception.setStackTrace(elements);
+            throw exception;
+        }
 
-	            getDateTimeService().setCurrentDateTime(dateTime);
-	            result = dateTime.toString();
-	        }
-        	Map<String, Object> model = new HashMap<String, Object>();
-        	model.put("updateResult", result);
-        	model.put("request", request);
-        	Map<String, Object> status = new HashMap<String, Object>();
-        	List<String> errorMessages = new ArrayList<String>();
-        	status.put("errorMessages", errorMessages);
-        	ModelAndView modelAndView = new ModelAndView("dateTimeUpdate", "model", model);
-        	modelAndView.addObject("status", status);
-        	return modelAndView;
+        String dateTimeString = request.getParameter("dateTime");
+        String result = null;
+        if (null == dateTimeString) {
+            result = "Missing 'dateTime' parameter!";
+        } else if ("system".equals(dateTimeString)) {
+            getDateTimeService().resetToCurrentSystemDateTime();
+            result = getDateTimeService().getCurrentDateTime().toString();
+        } else {
+            DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
+            DateTime dateTime = formatter.parseDateTime(dateTimeString);
+
+            getDateTimeService().setCurrentDateTime(dateTime);
+            result = dateTime.toString();
+        }
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("updateResult", result);
+        model.put("request", request);
+        Map<String, Object> status = new HashMap<String, Object>();
+        List<String> errorMessages = new ArrayList<String>();
+        status.put("errorMessages", errorMessages);
+        ModelAndView modelAndView = new ModelAndView("dateTimeUpdate", "model", model);
+        modelAndView.addObject("status", status);
+        return modelAndView;
 	}
 	
 }
