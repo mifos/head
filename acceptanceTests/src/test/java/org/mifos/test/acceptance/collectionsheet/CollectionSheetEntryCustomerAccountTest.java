@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.collectionsheet;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
@@ -31,6 +32,7 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.TimeMachine;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
@@ -38,10 +40,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui", "workInProgress"})
+@Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     private static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
@@ -58,9 +61,22 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+        TimeMachine timeMachine = new TimeMachine(selenium);
+        DateTime targetTime = new DateTime(2009,2,23,1,0,0,0);
+        timeMachine.setDateTime(targetTime);
+    }
+    
+
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+         new TimeMachine(selenium).resetDateTime();
+        
     }
   
 
