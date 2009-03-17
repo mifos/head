@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -40,12 +41,18 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 		return new CollectionSheetEntrySelectPage(selenium);
 	}
 
-    public CreateLoanAccountsSearchPage navigateToCreateLoanAccountsUsingLeftMenu() {
+    public CreateLoanAccountsSearchPage navigateToCreateMultipleLoanAccountsUsingLeftMenu() {
         selenium.click("id=menu.link.create.multiple.loan.accounts"); 
         waitForPageToLoad();
         return new CreateLoanAccountsSearchPage(selenium);
     }
     
+    public CreateLoanAccountSearchPage navigateToCreateLoanAccountUsingLeftMenu() {
+        selenium.click("id=menu.link.create.loan.account"); 
+        waitForPageToLoad();
+        return new CreateLoanAccountSearchPage(selenium);
+    }
+
     public CreateCenterChooseOfficePage navigateToCreateNewCenterPage() {
         selenium.click("link=Create new Center"); 
         waitForPageToLoad();

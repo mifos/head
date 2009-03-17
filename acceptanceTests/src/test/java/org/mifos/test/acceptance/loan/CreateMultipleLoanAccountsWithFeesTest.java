@@ -111,7 +111,6 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
         createLoanAccountsSuccessPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoanAndNavigateToLoanAccountPage(0);
-        loanAccountPage.verifyPage();
         loanAccountPage.verifyFeeExists("2.7");
     }
 
@@ -119,7 +118,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToCreateLoanAccountsUsingLeftMenu();    
+        return clientsAndAccountsPage.navigateToCreateMultipleLoanAccountsUsingLeftMenu();    
     }
     
 }

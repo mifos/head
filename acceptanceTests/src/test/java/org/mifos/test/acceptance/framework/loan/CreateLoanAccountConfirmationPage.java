@@ -18,29 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework;
+package org.mifos.test.acceptance.framework.loan;
 
-import org.testng.Assert;
-
+import org.mifos.test.acceptance.framework.LoanAccountPage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import com.thoughtworks.selenium.Selenium;
 
-public class LoanAccountPage extends AbstractPage {
+public class CreateLoanAccountConfirmationPage extends MifosPage {
 
-    public LoanAccountPage(Selenium selenium) {
+
+    public CreateLoanAccountConfirmationPage(Selenium selenium) {
         super(selenium);
     }
 
     public void verifyPage() {
-        this.verifyPage("LoanAccountDetail");
+        this.verifyPage("CreateLoanAccountConfirmation");
+    }
+
+    public LoanAccountPage navigateToLoanAccountDetailsPage() {
+        selenium.click("CreateLoanAccountConfirmation.link.viewLoanDetails");
+        waitForPageToLoad();
+      return new LoanAccountPage(selenium);
     }
     
-    public void verifyFeeExists(String expectedFee) {
-        Assert.assertEquals(selenium.getText("LoanAccountDetail.text.loanFees"), expectedFee);
-    }
-
-    public void verifyLoanAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));
-        
-    }
-
 }

@@ -251,7 +251,7 @@
 								<tr align="left">
 									<td class="fontnormal"><mifos:mifoslabel
 										name="accounts.search_for" />:&nbsp; <html-el:text
-										styleId="111" property="searchString" maxlength="200"/> &nbsp;
+										styleId="cust_search_account_results.input.searchString" property="searchString" maxlength="200"/> &nbsp;
 									<html-el:submit styleId="cust_search_account_results.button.search" property="searchButton" styleClass="buttn">
 										<mifos:mifoslabel name="accounts.search" />
 									</html-el:submit></td>

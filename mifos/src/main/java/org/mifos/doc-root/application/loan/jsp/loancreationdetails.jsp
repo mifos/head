@@ -304,7 +304,7 @@ explanation of the license and how it is applied.
 											<td align="right" class="fontnormal" width="30%"><span id="loancreationdetails.label.loanAmount"><mifos:mifoslabel
 												name="loan.amount" mandatory="yes"   /></span>:</td>
 											<td valign="top"><mifos:mifosdecimalinput
-												property="loanAmount" readonly="false" styleId="sumLoanAmount"/> <mifos:mifoslabel
+												property="loanAmount" readonly="false" styleId="loancreationdetails.input.sumLoanAmount"/> <mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
 												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
 												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>

@@ -1,0 +1,10 @@
+
+Based on Acceptance_small_003 data set.  Added monthly meeting for two centers:
+
+Added Center that meets on 1st day of each month - "MonthlyCenter1stOfMonth"
+Contains group: GroupFor1stOfMonthCenter
+Contains client:  Client - Mary Monthly 
+
+Added Center that meets on 3rd Friday of each month - "MonthlyCenter3rdFriday"
+Contains group: GroupMonthly3rdFriday 
+Contains client: Client - Mia Monthly3rdFriday

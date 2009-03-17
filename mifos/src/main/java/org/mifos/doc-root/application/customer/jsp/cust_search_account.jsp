@@ -207,7 +207,7 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="accounts.name" />:</td>
-									<td><html-el:text styleId="111"
+									<td><html-el:text styleId="cust_search_account.input.searchString"
 										property="searchString" maxlength="200"/> </td>
 								</tr>
 								<tr class="fontnormal">

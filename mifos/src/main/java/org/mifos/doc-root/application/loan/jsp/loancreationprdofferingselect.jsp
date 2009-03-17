@@ -182,7 +182,7 @@ explanation of the license and how it is applied.
 												</span>
 											</td>
 											<td width="70%">
-												<mifos:select property="prdOfferingId">
+												<mifos:select property="prdOfferingId" styleId="loancreationprodofferingselect.select.loanProduct">
 													<c:forEach var="loanPrdOffering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanPrdOfferings')}" >
 															<html-el:option value="${loanPrdOffering.prdOfferingId}">${loanPrdOffering.prdOfferingName}</html-el:option>
 														</c:forEach>
