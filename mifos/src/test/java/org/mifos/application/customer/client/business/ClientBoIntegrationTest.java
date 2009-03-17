@@ -78,8 +78,8 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestClientBO extends MifosIntegrationTest {
-	public TestClientBO() throws SystemException, ApplicationException {
+public class ClientBoIntegrationTest extends MifosIntegrationTest {
+	public ClientBoIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

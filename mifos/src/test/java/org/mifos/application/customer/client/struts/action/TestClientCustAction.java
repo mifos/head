@@ -55,7 +55,7 @@ import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
-import org.mifos.application.customer.client.business.TestClientBO;
+import org.mifos.application.customer.client.business.ClientBoIntegrationTest;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -1078,7 +1078,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	public void testGet() throws Exception {
 		createInitialCustomers();
 		accountBO = getLoanAccount(client, meeting);
-		TestClientBO.setDateOfBirth(client,offSetCurrentDate(50));
+		ClientBoIntegrationTest.setDateOfBirth(client,offSetCurrentDate(50));
 		TestObjectFactory.updateObject(client);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
