@@ -22,7 +22,6 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;

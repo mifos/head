@@ -80,7 +80,7 @@ public class BulkEntryNodeBuilder {
             List<CollectionSheetEntryInstallmentView> bulkEntryCustomerViews,
             List<CollectionSheetEntryAccountFeeActionView> bulkEntryLoanFeeViews,
             List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeViews,
-            List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
+            List<ClientAttendanceDto> clientAttendance) {
         CollectionSheetEntryView parentNode = new CollectionSheetEntryView(parentCustomerView);
         List<CustomerBO> immediateChildren = getImmediateCustomers(parentNode.getCustomerDetail().getCustomerId(),
                 allCustomers);
@@ -89,7 +89,7 @@ public class BulkEntryNodeBuilder {
                 CustomerView customerView = getCustomerView(childCustomer);
                 parentNode.addChildNode(buildBulkEntry(allCustomers, childCustomer, customerView, transactionDate,
                         bulkEntryLoanViews, bulkEntryCustomerViews, bulkEntryLoanFeeViews, bulkEntryCustomerFeeViews,
-                        collectionSheetEntryClientAttendanceViews));
+                        clientAttendance));
             }
         }
         parentNode.populateLoanAccountsInformation(parentCustomer, transactionDate, bulkEntryLoanViews,

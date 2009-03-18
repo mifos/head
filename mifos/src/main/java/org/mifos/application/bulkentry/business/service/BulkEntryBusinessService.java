@@ -42,7 +42,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.FlushMode;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -59,7 +58,6 @@ import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentV
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistenceService;
-import org.mifos.application.bulkentry.util.helpers.BulkEntryClientAttendanceThread;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCustomerAccountThread;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryLoanThread;
 import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
@@ -78,9 +76,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.LocalizationConverter;
 
 public class BulkEntryBusinessService implements BusinessService {
 
@@ -114,13 +112,6 @@ public class BulkEntryBusinessService implements BusinessService {
 			List<String> savingsWithNames, List<String> customerNames,
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate, Date meetingDate) {
-		StringBuffer isThreadDone = new StringBuffer();
-		BulkEntryClientAttendanceThread bulkEntryClientAttendanceThread = 
-			new BulkEntryClientAttendanceThread(
-				customerViews, clients, customerNames, meetingDate,
-				isThreadDone);
-		Thread thread = new Thread(bulkEntryClientAttendanceThread);
-		thread.start();
 		for (CollectionSheetEntryView parent : customerViews) {
 			setSavingsDepositDetails(parent.getSavingsAccountDetails(),
 					personnelId, recieptId, paymentId, receiptDate,
@@ -131,16 +122,6 @@ public class BulkEntryBusinessService implements BusinessService {
 					personnelId, recieptId, paymentId, receiptDate,
 					transactionDate, savingsWithNames, parent
 							.getCustomerDetail().getCustomerId(), savingsCache);
-		}
-		
-		/* We probably could just join the thread here (but what do
-		   we need to do with InterruptedException?). */
-		while (!isThreadDone.toString().equals("Done")) {
-			try {
-				Thread.sleep(100L);
-			}
-			catch (InterruptedException e) {
-			}
 		}
 	}
 	
@@ -256,7 +237,6 @@ public class BulkEntryBusinessService implements BusinessService {
 		Thread threadCustomerAccount = new Thread(
 				bulkEntryCustomerAccountThread);
 		threadCustomerAccount.start();
-		//saveAttendance(clients, customerNames);  //TODO: take out when everything is converted to ClientService (adamf)
 		saveSavingsAccount(savings, savingsNames);
 
 		/* We probably could just join the threads here (but what do

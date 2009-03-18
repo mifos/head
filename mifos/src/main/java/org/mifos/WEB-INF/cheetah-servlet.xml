@@ -52,11 +52,13 @@
     <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<value>
-			/dateTimeUpdate.ftl=dateTimeUpdateController
+            /dateTimeUpdate.ftl=dateTimeUpdateController
+            /accessDenied.ftl=genericController
+            /pageNotFound.ftl=genericController
             /ping.ftl=genericController
             /cheetah.css.ftl=genericController
             /gazelle.css.ftl=genericController
-    		/appInfoNoSecurity.ftl=appInfoController
+    		   /appInfoNoSecurity.ftl=appInfoController
 			</value>
 		</property>
     </bean>
