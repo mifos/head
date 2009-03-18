@@ -4,14 +4,13 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Level;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 
 
 public class TestLogging extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 		super.setUp();
 	}
 

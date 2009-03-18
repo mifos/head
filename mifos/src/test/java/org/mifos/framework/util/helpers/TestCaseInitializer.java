@@ -26,6 +26,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -51,7 +52,7 @@ public class TestCaseInitializer {
     public synchronized void initialize() throws SystemException, ApplicationException {
         if (initialized == false) {
             initialized = true;
-            DatabaseSetup.configureLogging();
+            MifosLogManager.configureLogging();
             DatabaseSetup.initializeHibernate();
             // add this because it is added to Application Initializer
             Localization.getInstance().init();

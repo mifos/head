@@ -29,13 +29,13 @@ import junitx.framework.StringAssert;
 
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.DatabaseErrorCode;
-import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.components.logger.MifosLogManager;
 
 public class DatabaseInitFilterTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 		ApplicationInitializer.setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE,
 				"test death message", new SQLException("bletch ick sputter die"));
 	}

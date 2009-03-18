@@ -22,6 +22,7 @@ package org.mifos.framework;
 
 import org.junit.After;
 import org.junit.Before;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -45,7 +46,7 @@ public class MifosInMemoryIntegrationTest {
     }
 
     public MifosInMemoryIntegrationTest() {
-        DatabaseSetup.configureLogging();
+        MifosLogManager.configureLogging();
         DatabaseSetup.initializeHibernate(true);
     }
 }

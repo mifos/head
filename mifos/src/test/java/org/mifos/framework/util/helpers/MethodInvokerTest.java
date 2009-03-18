@@ -4,6 +4,7 @@ import static org.mifos.framework.TestUtils.EURO;
 import junit.framework.TestCase;
 
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.SystemException;
 
 
@@ -13,7 +14,7 @@ public class MethodInvokerTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 		installment = new EMIInstallment(
 			new Money(EURO, "0"), new Money(EURO, "0"));
 	}

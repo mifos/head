@@ -44,6 +44,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -158,7 +159,7 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
     }
     
     private void initializeMifosSoftware() {
-        DatabaseSetup.configureLogging();
+        MifosLogManager.configureLogging();
         DatabaseSetup.initializeHibernate();
     }
     

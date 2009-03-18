@@ -43,6 +43,7 @@ import org.mifos.framework.ProperlyAdaptedJUnit4Test;
 import org.mifos.framework.components.batchjobs.business.TaskTest;
 import org.mifos.framework.components.configuration.cache.TestKey;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
@@ -58,7 +59,6 @@ import org.mifos.framework.util.LocalizationConverterTest;
 import org.mifos.framework.util.TestingServiceTest;
 import org.mifos.framework.util.helpers.ChapterNumSortTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtilsTest;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.MoneyTest;
@@ -80,7 +80,7 @@ import org.mifos.framework.util.helpers.StringUtilsTest;
  * like).
  * 
  * If your only reason for wanting {@link MifosIntegrationTest} is logging,
- * you can call {@link DatabaseSetup#configureLogging()} (this seems
+ * you can call {@link MifosLogManager#configureLogging()} (this seems
  * fast enough).  Another choice is to pass around a {@link TestLogger}
  * (see {@link RoleActivityEntityTest} for an example) - this does a
  * better job of avoiding side effects, strange dependencies on

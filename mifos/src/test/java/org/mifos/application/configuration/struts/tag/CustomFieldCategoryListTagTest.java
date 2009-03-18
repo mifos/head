@@ -43,9 +43,9 @@ import junitx.framework.StringAssert;
 
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class CustomFieldCategoryListTagTest extends TestCase {
 
@@ -54,7 +54,7 @@ public class CustomFieldCategoryListTagTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 		userContext = TestUtils.makeUser();
 	}
 

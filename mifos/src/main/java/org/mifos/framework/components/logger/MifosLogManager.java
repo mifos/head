@@ -34,6 +34,7 @@ import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.helpers.FilePaths;
 
 /**
  * A class with static methods to obtain instances of the logger. It also keeps
@@ -203,5 +204,16 @@ public class MifosLogManager {
 		//return ApplicationConfig.getMFILocale();
 		return Localization.getInstance().getMainLocale();
 	}
+
+
+    /**
+     * Set up log4j (this is required for hibernate, as well as perhaps
+     * other parts of MIFOS).
+     */
+    public static void configureLogging() {
+    	if (!isConfigured()) {
+    		configure(FilePaths.LOG_CONFIGURATION_FILE);
+    	}
+    }
 
 }

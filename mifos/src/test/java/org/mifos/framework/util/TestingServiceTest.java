@@ -28,14 +28,14 @@ import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.components.logger.MifosLogManager;
 
 public class TestingServiceTest {
     static TestingService testingService = null;
 
     @Before
     public void setUp() {
-        DatabaseSetup.configureLogging();
+        MifosLogManager.configureLogging();
         testingService = new TestingService();
     }
 

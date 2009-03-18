@@ -1,8 +1,9 @@
 package org.mifos.application.customer;
 
-import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.mifos.application.customer.business.CustomerViewTest;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
@@ -12,6 +13,7 @@ import org.mifos.application.customer.center.business.service.TestCenterBusiness
 import org.mifos.application.customer.center.persistence.TestCenterPersistence;
 import org.mifos.application.customer.center.struts.action.CenterActionTest;
 import org.mifos.application.customer.client.business.ClientBoIntegrationTest;
+import org.mifos.application.customer.client.business.ClientBoTest;
 import org.mifos.application.customer.client.business.service.ClientBusinessServiceTest;
 import org.mifos.application.customer.client.persistence.ClientPersistenceTest;
 import org.mifos.application.customer.client.struts.action.ClientTransferActionTest;
@@ -36,43 +38,43 @@ import org.mifos.application.customer.struts.action.TestEditCustomerStatusAction
 import org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFnTest;
 import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+    TestCenterPersistence.class,
+    TestCustomerPersistence.class,
+    TestCustomerBusinessService.class,
+    TestCustomerTrxnDetailEntity.class,
+    TestCustomerApplyAdjustmentAction.class,
+    TestCustomerAction.class,
+    TestEditCustomerStatusAction.class,
+    TestCustomerNotesAction.class,
+    ClientBoIntegrationTest.class,
+    ClientBoTest.class,
+    TestCustomerBO.class,
+    CustomerUIHelperFnTest.class,
+    CenterBOTest.class,
+    TestCenterBusinessService.class,
+    CenterActionTest.class,
+    TestClientCustAction.class,
+    ClientTransferActionTest.class,
+    AddGroupMembershipActionTest.class,
+    CustHistoricalDataActionTest.class,
+    GroupBusinessServiceTest.class,
+    GroupPersistenceTest.class,
+    GroupActionTest.class,
+    GroupBOTest.class,
+    CustActionTest.class,
+    GroupTransferActionTest.class,
+    TestCustomerAccountAction.class,
+    ClientPersistenceTest.class,
+    ClientBusinessServiceTest.class,
+    TestCustSearchAction.class,
+    CustomerViewTest.class,
+    TestCustomerHelpers.class,
+    GroupPerformanceHistoryUpdaterTest.class,
+    GroupPerformanceHistoryEntityTest.class   
+})
+
 public class CustomerTestSuite extends TestSuite {
-
-	public static Test suite() throws Exception {
-		CustomerTestSuite testSuite = new CustomerTestSuite();
-		testSuite.addTestSuite(TestCenterPersistence.class);
-		testSuite.addTestSuite(TestCustomerPersistence.class);
-		testSuite.addTestSuite(TestCustomerBusinessService.class);
-		testSuite.addTestSuite(TestCustomerTrxnDetailEntity.class);
-		testSuite.addTestSuite(TestCustomerApplyAdjustmentAction.class);
-		testSuite.addTestSuite(TestCustomerAction.class);
-		testSuite.addTestSuite(TestEditCustomerStatusAction.class);
-		testSuite.addTestSuite(TestCustomerNotesAction.class);
-		testSuite.addTestSuite(ClientBoIntegrationTest.class);
-		testSuite.addTestSuite(TestCustomerBO.class);
-		testSuite.addTestSuite(CustomerUIHelperFnTest.class);
-		testSuite.addTestSuite(CenterBOTest.class);
-		testSuite.addTestSuite(TestCenterBusinessService.class);
-		testSuite.addTestSuite(CenterActionTest.class);
-		testSuite.addTestSuite(TestClientCustAction.class);
-		testSuite.addTestSuite(ClientTransferActionTest.class);
-		testSuite.addTestSuite(AddGroupMembershipActionTest.class);	
-		testSuite.addTestSuite(CustHistoricalDataActionTest.class);
-		testSuite.addTestSuite(GroupBusinessServiceTest.class);
-		testSuite.addTestSuite(GroupPersistenceTest.class);
-		testSuite.addTestSuite(GroupActionTest.class);
-		testSuite.addTestSuite(GroupBOTest.class);
-		testSuite.addTestSuite(CustActionTest.class);
-		testSuite.addTestSuite(GroupTransferActionTest.class);
-		testSuite.addTestSuite(TestCustomerAccountAction.class);
-		testSuite.addTestSuite(ClientPersistenceTest.class);
-		testSuite.addTestSuite(ClientBusinessServiceTest.class);
-		testSuite.addTestSuite(TestCustSearchAction.class);
-		testSuite.addTestSuite(CustomerViewTest.class);
-		testSuite.addTestSuite(TestCustomerHelpers.class);
-		testSuite.addTestSuite(GroupPerformanceHistoryUpdaterTest.class);
-		testSuite.addTestSuite(GroupPerformanceHistoryEntityTest.class);
-
-		return testSuite;
-	}
+    // placeholder class for above annotations
 }

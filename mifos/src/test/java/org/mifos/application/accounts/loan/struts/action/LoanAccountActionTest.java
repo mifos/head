@@ -54,8 +54,8 @@ import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.LoanProductService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.Money;
 
 /*
@@ -73,7 +73,7 @@ public class LoanAccountActionTest {
     
     @BeforeClass
     public static void before() {
-        DatabaseSetup.configureLogging();
+        MifosLogManager.configureLogging();
     }
 
     @Test

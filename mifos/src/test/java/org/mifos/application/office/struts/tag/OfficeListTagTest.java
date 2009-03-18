@@ -17,9 +17,9 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class OfficeListTagTest extends TestCase {
 
@@ -36,7 +36,7 @@ public class OfficeListTagTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 		result = new XmlBuilder();
 		userContext = TestUtils.makeUser();
 	}

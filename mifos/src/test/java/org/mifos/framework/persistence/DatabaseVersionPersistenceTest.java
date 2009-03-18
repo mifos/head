@@ -27,13 +27,13 @@ import net.sourceforge.mayfly.Database;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.components.logger.MifosLogManager;
 
 public class DatabaseVersionPersistenceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 	}
 
 	@Test public void readSuccess() throws Exception {

@@ -48,22 +48,12 @@ public class DatabaseSetup {
 	
 	private static SessionFactory mayflySessionFactory;
 
-	/**
-	 * Set up log4j (this is required for hibernate, as well as perhaps
-	 * other parts of MIFOS).
-	 */
-	public static void configureLogging() {
-		if (!MifosLogManager.isConfigured()) {
-			MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
-		}
-	}
-
 	public static void initializeHibernate() {
 			initializeHibernate(false);
 	}
 	
 	public static void initializeHibernate(boolean useInMemoryDatabase) {
-		DatabaseSetup.configureLogging();
+		MifosLogManager.configureLogging();
 
         // Make sure TestService is aware that we're running integration tests.
         // This is for integration test cases that use a database, but could
@@ -86,7 +76,7 @@ public class DatabaseSetup {
 	}
 
 	public static Configuration getHibernateConfiguration() {
-		configureLogging();
+		MifosLogManager.configureLogging();
 		
 		Configuration configuration = new Configuration();
         try {
