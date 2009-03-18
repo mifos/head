@@ -55,7 +55,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -100,7 +100,7 @@ public class TestAccountService extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -314,7 +314,7 @@ public class TestAccountService extends MifosIntegrationTest {
 		String flagNameForLoan = service.getFlagName(Short.valueOf("1"),
 				AccountStateFlag.LOAN_REJECTED, AccountTypes.LOAN_ACCOUNT);
 		assertNotNull(flagNameForLoan);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testGetStatusList() throws Exception {
@@ -333,7 +333,7 @@ public class TestAccountService extends MifosIntegrationTest {
 						AccountState.LOAN_PARTIAL_APPLICATION),
 						AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		assertEquals(2, statusListForLoan.size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	public void testRetrieveCustomFieldsDefinition() throws Exception {
@@ -352,7 +352,7 @@ public class TestAccountService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertEquals("exception.framework.ApplicationException", e.getKey());
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 

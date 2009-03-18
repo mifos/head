@@ -77,7 +77,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -134,7 +134,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 					clientNameDetailView, spouseNameDetailView,
 					clientDetailView, null);
 			new ClientPersistence().saveClient(client);
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		} catch (CustomerException e) {
 			throw new RuntimeException(e);
 		}
@@ -239,7 +239,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
-		retrievedSurvey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, retrievedSurvey.getSurveyId());
+		retrievedSurvey = (Survey)StaticHibernateUtil.getSessionTL().get(Survey.class, retrievedSurvey.getSurveyId());
 
 		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
 		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
@@ -552,7 +552,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 
-		ppiSurvey = (PPISurvey)HibernateUtil.getSessionTL().get(PPISurvey.class, ppiSurvey.getSurveyId());
+		ppiSurvey = (PPISurvey)StaticHibernateUtil.getSessionTL().get(PPISurvey.class, ppiSurvey.getSurveyId());
 
 		addRequestParameter("value(dateSurveyed_DD)", "01");
 		addRequestParameter("value(dateSurveyed_MM)", "02");

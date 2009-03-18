@@ -12,7 +12,7 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetPersiste
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetBOTest extends MifosIntegrationTest {
@@ -22,7 +22,7 @@ public class CollectionSheetBOTest extends MifosIntegrationTest {
 
     public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting()
 			throws Exception {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		Transaction transaction = session.beginTransaction();
 		Date year2010 = DateUtils.getSqlDate(2010, Calendar.JANUARY, 1);
 		CollectionSheetBO collectionSheet = new CollectionSheetBO();

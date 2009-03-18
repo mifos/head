@@ -10,7 +10,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFeeBusinessService extends MifosIntegrationTest {
@@ -27,14 +27,14 @@ public class TestFeeBusinessService extends MifosIntegrationTest {
 		super.tearDown();
 		TestObjectFactory.cleanUp(fee2);
 		TestObjectFactory.cleanUp(fee1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testGetFee() {
 		fee1 = TestObjectFactory.createOneTimeAmountFee(
 				"Customer_OneTime_AmountFee", FeeCategory.CENTER, "100",
 				FeePayment.UPFRONT);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		FeeBO dbFee = new FeeBusinessService().getFee(fee1.getFeeId());
 		assertNotNull(dbFee);
@@ -49,7 +49,7 @@ public class TestFeeBusinessService extends MifosIntegrationTest {
 		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1",
 				FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short
 						.valueOf("2"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFees();
 		assertNotNull(feeList);
@@ -73,7 +73,7 @@ public class TestFeeBusinessService extends MifosIntegrationTest {
 				FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
 		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1",
 				FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short.valueOf("2"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		List<FeeBO> feeList = new FeeBusinessService().retrieveProductFees();
 		assertNotNull(feeList);
@@ -95,7 +95,7 @@ public class TestFeeBusinessService extends MifosIntegrationTest {
 	public void testRetrieveCustomerFeesByCategaroyType() throws Exception {
 		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1",
 				FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		List<FeeBO> feeList = new FeeBusinessService()
 				.retrieveCustomerFeesByCategaroyType(FeeCategory.CENTER);

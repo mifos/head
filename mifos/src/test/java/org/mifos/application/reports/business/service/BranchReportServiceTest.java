@@ -56,7 +56,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportServiceTest extends BranchReportTestCase {
@@ -225,7 +225,7 @@ public class BranchReportServiceTest extends BranchReportTestCase {
 		populateClientSummary();
 		populateLoanArrearSummary();
 
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		transaction = session.beginTransaction();
 		officeBusinessServiceMock = createMock(OfficeBusinessService.class);
 		branchReportService = new BranchReportService(

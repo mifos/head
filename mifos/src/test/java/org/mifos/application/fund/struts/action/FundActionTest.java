@@ -11,7 +11,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -43,10 +43,10 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	
 	private void reloadMembers() {
 		if (fund != null) {
-			fund = (FundBO)HibernateUtil.getSessionTL().get(FundBO.class, fund.getFundId());
+			fund = (FundBO)StaticHibernateUtil.getSessionTL().get(FundBO.class, fund.getFundId());
 		}
 		if (fundBO != null) {
-			fundBO = (FundBO)HibernateUtil.getSessionTL().get(FundBO.class, fundBO.getFundId());
+			fundBO = (FundBO)StaticHibernateUtil.getSessionTL().get(FundBO.class, fundBO.getFundId());
 		}
 		
 	}
@@ -56,7 +56,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 		reloadMembers();
 		TestObjectFactory.removeObject(fund);
 		TestObjectFactory.removeObject(fundBO);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -146,7 +146,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	
 	public void testViewAllFunds() throws Exception{
 		fund = createFund("Fund-1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		setRequestPathInfo("/fundAction.do");
 		addRequestParameter("method", Methods.viewAllFunds.toString());
@@ -159,7 +159,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	
 	public void testManage() throws Exception{
 		fund = createFund("Fund-1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		setRequestPathInfo("/fundAction.do");
 		addRequestParameter("method", Methods.manage.toString());
@@ -168,7 +168,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.manage_success.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		assertNotNull(fund);
 		assertEquals("Fund-1",fund.getFundName());
@@ -215,7 +215,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	
 	public void testUpdateForNullFundName() throws Exception{
 		fund = createFund("Fund-1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		setRequestPathInfo("/fundAction.do");
 		addRequestParameter("method", Methods.manage.toString());
@@ -243,7 +243,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	public void testUpdateForDuplicateFundName() throws Exception{
 		fund = createFund("Fund-1");
 		fundBO = createFund("Fund-2");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		setRequestPathInfo("/fundAction.do");
 		addRequestParameter("method", Methods.manage.toString());
@@ -270,7 +270,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	
 	public void testUpdate() throws Exception{
 		fund = createFund("Fund-1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		setRequestPathInfo("/fundAction.do");
 		addRequestParameter("method", Methods.manage.toString());
@@ -294,7 +294,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.update_success.toString());
 		assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		assertNotNull(fund);
 		assertEquals("Fund-2",fund.getFundName());
@@ -331,7 +331,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	private FundBO createFund(String fundName) throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		return TestObjectFactory.createFund(fundCodeEntity,fundName);
 	}
 }

@@ -17,7 +17,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -63,7 +63,7 @@ public class TestAccountFeesActionDetailEntity extends MifosIntegrationTest {
 
 
 	public void testWaiveCharges() {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
@@ -76,7 +76,7 @@ public class TestAccountFeesActionDetailEntity extends MifosIntegrationTest {
 					.getFeeAmount());
 		}
 		assertEquals(new Money("100"), chargeWaived);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		accountBO=TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
@@ -100,17 +100,17 @@ public class TestAccountFeesActionDetailEntity extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
+		group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
 				group.getCustomerId());
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 

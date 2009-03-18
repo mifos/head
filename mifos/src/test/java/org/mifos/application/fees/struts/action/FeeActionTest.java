@@ -60,7 +60,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -109,7 +109,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 			TestObjectFactory.cleanUp(fee1);
 			TestObjectFactory.cleanUp(fee2);
 			TestObjectFactory.cleanUp(fee3);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		catch (Exception e) {
 			// TODO Whoops, cleanup didnt work, reset db
@@ -721,7 +721,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulViewAllFees() throws Exception {
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		fee = TestObjectFactory.createOneTimeRateFee("Group_Fee",
 				FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		fee1 = TestObjectFactory.createOneTimeRateFee("Customer_Fee",
@@ -732,8 +732,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		fee3 = TestObjectFactory
 				.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER, 40.0,
 						FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "viewAll");
 

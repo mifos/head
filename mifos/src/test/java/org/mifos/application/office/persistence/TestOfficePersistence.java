@@ -18,7 +18,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -38,7 +38,7 @@ public class TestOfficePersistence extends MifosIntegrationTest {
 
 	@Override
 	public void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -58,7 +58,7 @@ public class TestOfficePersistence extends MifosIntegrationTest {
             assertTrue(office.isActive());
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
@@ -77,7 +77,7 @@ public class TestOfficePersistence extends MifosIntegrationTest {
             assertTrue(e.getMessage().equals(OfficeConstants.PARENTOFFICE));
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
     }
 

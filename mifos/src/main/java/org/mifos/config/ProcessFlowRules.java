@@ -27,7 +27,7 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * Clients, groups, and accounts have some optional states, which can be hidden
@@ -67,14 +67,14 @@ public class ProcessFlowRules {
 			initLoanPendingApprovalState();
 			initSavingsPendingApprovalState();
 
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		}
 		catch (PersistenceException pe) {
-			HibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.rollbackTransaction();
 			throw pe;
 		}
 		catch (ConfigurationException ce) {
-			HibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.rollbackTransaction();
 			throw ce;
 		}
 	}

@@ -16,7 +16,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -46,7 +46,7 @@ public class TestLoanTrxnDetailEntity extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		super.tearDown();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testSuccessSetRunningBalance() throws Exception {
@@ -61,7 +61,7 @@ public class TestLoanTrxnDetailEntity extends MifosIntegrationTest {
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				sampleDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		account = new AccountPersistence().getAccount(account
 				.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
@@ -76,7 +76,7 @@ public class TestLoanTrxnDetailEntity extends MifosIntegrationTest {
 						.getPersonnel(), "423423", Short.valueOf("1"),
 				sampleDate, sampleDate);
 		account.applyPaymentWithPersist(paymentData);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		assertEquals(1, account.getAccountPayments().size());
 		AccountPaymentEntity payment = 

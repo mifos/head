@@ -8,7 +8,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FundBusinessServiceTest extends MifosIntegrationTest {
@@ -24,7 +24,7 @@ public class FundBusinessServiceTest extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -36,7 +36,7 @@ public class FundBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -59,19 +59,19 @@ public class FundBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	
 	public void testGetFund() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
 		assertEquals("Fund1", new FundBusinessService().getFund("Fund1").getFundName());
 		TestObjectFactory.removeObject(fund);
 	}
 	
 	public void testGetFundForInvalidConnection() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -80,15 +80,15 @@ public class FundBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		TestObjectFactory.removeObject(fund);
 	}
 	
 	public void testGetFundById() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		fund = new FundBusinessService().getFund(fund.getFundId());
 		assertNotNull(fund);
@@ -98,7 +98,7 @@ public class FundBusinessServiceTest extends MifosIntegrationTest {
 	}
 	
 	public void testGetFundByIdForInvalidConnection() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -107,7 +107,7 @@ public class FundBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		TestObjectFactory.removeObject(fund);
 	}

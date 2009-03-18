@@ -35,7 +35,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -91,7 +91,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(savings4);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -112,7 +112,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		
 		savings1.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "500.0"), new Money(currency, "1500.0"), helper
@@ -121,7 +121,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "600.0"), new Money(currency, "900.0"), helper
@@ -130,7 +130,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "800.0"), new Money(currency, "1700.0"), helper
@@ -139,7 +139,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		TestSavingsBO.setNextIntCalcDate(savings4,helper.getDate("01/05/2006"));
 		TestSavingsBO.setActivationDate(savings4,helper.getDate("10/04/2006"));
@@ -151,7 +151,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "500.0"), new Money(currency, "1500.0"), helper
@@ -160,7 +160,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "600.0"), new Money(currency, "900.0"), helper
@@ -169,7 +169,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "800.0"), new Money(currency, "1700.0"), helper
@@ -178,8 +178,8 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		Calendar cal = Calendar.getInstance(Configuration.getInstance()
 				.getSystemConfig().getMifosTimeZone());

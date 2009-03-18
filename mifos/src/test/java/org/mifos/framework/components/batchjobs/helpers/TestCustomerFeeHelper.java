@@ -34,7 +34,7 @@ import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -55,7 +55,7 @@ public class TestCustomerFeeHelper extends MifosIntegrationTest {
 	@Override
 	public void tearDown() {
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 	}
 
@@ -207,7 +207,7 @@ public class TestCustomerFeeHelper extends MifosIntegrationTest {
 				.getTaskHelper();
 		applyCustomerFeeHelper.executeTask();
 
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -230,9 +230,9 @@ public class TestCustomerFeeHelper extends MifosIntegrationTest {
 				applyCustomerFeeTask);
 		TestObjectFactory.simulateInvalidConnection();
 		applyCustomerFeeHelper.executeTask();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();

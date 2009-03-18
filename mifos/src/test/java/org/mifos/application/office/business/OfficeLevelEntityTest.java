@@ -44,7 +44,7 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeLevelEntityTest extends MifosIntegrationTest {
@@ -59,8 +59,8 @@ public class OfficeLevelEntityTest extends MifosIntegrationTest {
 		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
 				OfficeLevel.REGIONALOFFICE, parent, "Office_Regional", "OFB");
-		HibernateUtil.closeSession();
-		regionalOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.closeSession();
+		regionalOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(
 				OfficeBO.class, regionalOffice.getOfficeId());
 		try{
 		OfficeLevelEntity officeLevelEntity = regionalOffice.getLevel();

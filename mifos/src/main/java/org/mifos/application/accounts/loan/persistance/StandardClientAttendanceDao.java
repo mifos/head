@@ -32,7 +32,7 @@ import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
@@ -63,7 +63,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         }
         clientAttendance.setAttendance(attendance);
         getCustomerPersistence().createOrUpdate(clientAttendance);
-        HibernateUtil.commitTransaction();
+        StaticHibernateUtil.commitTransaction();
     }
 
     @SuppressWarnings("unchecked")

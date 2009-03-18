@@ -38,7 +38,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -74,7 +74,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -245,13 +245,13 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "get");
 		actionPerform();
 		LoanBO loan =(LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-		loan = (LoanBO)HibernateUtil.getSessionTL().load(LoanBO.class,loan.getAccountId());
+		loan = (LoanBO)StaticHibernateUtil.getSessionTL().load(LoanBO.class,loan.getAccountId());
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
 		
 		Short DEFAULT_LOCALE = (short)1;
 		assertNotNull(loan.getAccountState().getName());
 		
-		accountBO = (AccountBO)HibernateUtil.getSessionTL().load(AccountBO.class, accountBO.getAccountId());
+		accountBO = (AccountBO)StaticHibernateUtil.getSessionTL().load(AccountBO.class, accountBO.getAccountId());
 	}
 	
 	public void testApplyPaymentForLoanWhenReceiptDateisNull()throws Exception{

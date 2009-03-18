@@ -54,7 +54,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -75,13 +75,13 @@ public class TestCollSheetCustBO extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		HibernateUtil.getSessionTL();
+		StaticHibernateUtil.getSessionTL();
 	}
 
 	public void testPopulateCustomerDetails() {

@@ -18,7 +18,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
@@ -38,12 +38,12 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		database = TestDatabase.makeStandard();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		AuditInterceptor interceptor = new AuditInterceptor();
 		Session session = database.openSession(interceptor);
 		SessionHolder holder = new SessionHolder(session);
 		holder.setInterceptor(interceptor);
-		HibernateUtil.setThreadLocal(holder);
+		StaticHibernateUtil.setThreadLocal(holder);
 		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		ActivityContext ac = new ActivityContext((short) 0, userContext
@@ -54,7 +54,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.resetDatabase();
+		StaticHibernateUtil.resetDatabase();
 	}
 
 	private Question makeTestSelectQuestion(String name, int choiceNumber)

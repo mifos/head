@@ -15,7 +15,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosValueList;
 import org.mifos.framework.util.helpers.Constants;
@@ -65,7 +65,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -279,7 +279,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 			
 		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
 			String originalValue = "";
-			HibernateUtil.getSessionTL();
+			StaticHibernateUtil.getSessionTL();
 			
 			for (int operationIndex = 0; operationIndex < operations.length; ++operationIndex) { 
 				createFlowAndAddToRequest(LookupOptionsAction.class);
@@ -305,17 +305,17 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 				verifyNoActionMessages();
 				verifyForward(ActionForwards.update_success.toString());
 			}
-			HibernateUtil.flushAndCloseSession();
-			HibernateUtil.getSessionTL();
+			StaticHibernateUtil.flushAndCloseSession();
+			StaticHibernateUtil.getSessionTL();
 			
-			HibernateUtil.startTransaction();
+			StaticHibernateUtil.startTransaction();
 			
 			verifyOneListAndRestoreOriginalValues(
 					configurationNameSet[listIndex][MASTER_CONSTANT], 
 					configurationNameSet[listIndex][CONFIG_CONSTANT], 
 					configurationNameSet[listIndex][LIST_NAME],
 					originalValue);
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		}
 		
 	}

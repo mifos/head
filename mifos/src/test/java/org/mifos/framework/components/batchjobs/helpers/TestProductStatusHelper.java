@@ -23,7 +23,7 @@ import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestProductStatusHelper extends MifosIntegrationTest {
@@ -48,7 +48,7 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(product);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -72,7 +72,7 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 		} catch (BatchJobException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		product = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, product.getPrdOfferingId());
@@ -84,7 +84,7 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 
 		productStatusHelper.executeTask();
 
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -109,9 +109,9 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 
 		TestObjectFactory.simulateInvalidConnection();
 		productStatusHelper.executeTask();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -124,7 +124,7 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 
 	public void testRegisterStartup() throws BatchJobException {
 		productStatusHelper.registerStartup(System.currentTimeMillis());
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -157,7 +157,7 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 		productStatusHelper.registerStartup(System.currentTimeMillis());
 		productStatusHelper.registerCompletion(0,
 				SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -179,9 +179,9 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 		TestObjectFactory.simulateInvalidConnection();
 		productStatusHelper.registerCompletion(0,
 				SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -209,6 +209,6 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 		LoanOfferingBOTest.setStatus(product,new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.LOAN_INACTIVE));
 		TestObjectFactory.updateObject(product);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 }

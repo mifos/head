@@ -25,7 +25,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -49,7 +49,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 
 	private void reloadMembers() {
 		if (personnel != null) {
-			personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+			personnel = (PersonnelBO)StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 		}
 		
 	}
@@ -58,7 +58,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 	protected void tearDown() throws Exception {
 		reloadMembers();
 		TestObjectFactory.cleanUp(personnel);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -150,8 +150,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.updatePassword_success.toString());
 		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		HibernateUtil.commitTransaction();
-		personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+		StaticHibernateUtil.commitTransaction();
+		personnel = (PersonnelBO)StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 		assertTrue(personnel.isPasswordChanged());
 		// add verifying change log
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
@@ -293,8 +293,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 
-		HibernateUtil.commitTransaction();
-		personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+		StaticHibernateUtil.commitTransaction();
+		personnel = (PersonnelBO)StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 	
 		assertTrue(personnel.isPasswordChanged());
 		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
@@ -326,8 +326,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { LoginConstants.KEYINVALIDUSER });
 		verifyForward(ActionForwards.login_failure.toString());
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
 		assertFalse(personnel.isLocked());
 		assertEquals(0, personnel.getNoOfTries().intValue());
@@ -346,8 +346,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { LoginConstants.INVALIDOLDPASSWORD });
 		verifyForward(ActionForwards.login_failure.toString());
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
 		assertFalse(personnel.isLocked());
 		assertEquals(1, personnel.getNoOfTries().intValue());
@@ -367,8 +367,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { LoginConstants.KEYUSERLOCKED });
 		verifyForward(ActionForwards.login_failure.toString());
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
 		assertTrue(personnel.isLocked());
 		assertEquals(5, personnel.getNoOfTries().intValue());
@@ -463,9 +463,9 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 				"111111", date, Integer.valueOf("1"), Integer.valueOf("1"),
 				date, date, address, Short.valueOf("1"));
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}
@@ -478,8 +478,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyActionErrors(new String[] { LoginConstants.INVALIDOLDPASSWORD });
 		verifyForward(ActionForwards.login_failure.toString());
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
 	}
 

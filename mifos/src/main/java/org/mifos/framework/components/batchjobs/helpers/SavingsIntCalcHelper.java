@@ -11,7 +11,7 @@ import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class SavingsIntCalcHelper extends TaskHelper {
 
@@ -37,12 +37,12 @@ public class SavingsIntCalcHelper extends TaskHelper {
 			try {
 				SavingsBO savings = persistence.findById(accountId);
 				savings.updateInterestAccrued();
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 			} catch (Exception e) {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				errorList.add(accountId.toString());
 			} finally {
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		}
 		if (errorList.size() > 0)

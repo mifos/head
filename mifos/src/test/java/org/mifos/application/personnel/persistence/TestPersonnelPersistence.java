@@ -37,7 +37,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -87,7 +87,7 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(personnel);
 		TestObjectFactory.cleanUp(createdBranchOffice);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -107,7 +107,7 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
             assertFalse(personnel.isPasswordChanged());
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
@@ -124,7 +124,7 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
             assertTrue(e.getMessage().equals(PersonnelConstants.OFFICE));
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
@@ -184,8 +184,8 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
 			CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
 		center.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		assertTrue(!personnelPersistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
@@ -196,8 +196,8 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
 		assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
 		center.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
@@ -207,8 +207,8 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-		HibernateUtil.closeSession();
-		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(
 				OfficeBO.class, createdBranchOffice.getOfficeId());
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		assertEquals(branchOffice.getOfficeId(), personnel.getOffice()
@@ -220,17 +220,17 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
 				"Personnel notes created", new PersonnelPersistence()
 						.getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
 		personnel.addNotes(PersonnelConstants.SYSTEM_USER, personnelNotes);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
-		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+		createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(
 				OfficeBO.class, createdBranchOffice.getOfficeId());
 		assertEquals(1,personnelPersistence.getAllPersonnelNotes(personnel.getPersonnelId()).getSize());
 	}
@@ -327,9 +327,9 @@ public class TestPersonnelPersistence extends MifosIntegrationTest {
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, createdBy);
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
   }

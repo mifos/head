@@ -23,7 +23,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -60,7 +60,7 @@ public class TestSavingsBusinessService extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.removeObject(savingsOffering1);
 		TestObjectFactory.removeObject(savingsOffering2);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -95,7 +95,7 @@ public class TestSavingsBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -115,7 +115,7 @@ public class TestSavingsBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -143,7 +143,7 @@ public class TestSavingsBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -172,7 +172,7 @@ public class TestSavingsBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -226,7 +226,7 @@ public class TestSavingsBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 

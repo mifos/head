@@ -20,7 +20,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -41,19 +41,19 @@ public class TestAuditInterceptor extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		if (accountBO != null)
-			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+			accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
 		if (group != null)
-			group = (CustomerBO) HibernateUtil.getSessionTL().get(
+			group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, group.getCustomerId());
 		if (center != null)
-			center = (CustomerBO) HibernateUtil.getSessionTL().get(
+			center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -61,7 +61,7 @@ public class TestAuditInterceptor extends MifosIntegrationTest {
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestUtils.makeUser());
-		HibernateUtil.getInterceptor().createInitialValueMap(accountBO);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(accountBO);
 		LoanBO loanBO = ((LoanBO) accountBO);
 		((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO
 				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
@@ -69,10 +69,10 @@ public class TestAuditInterceptor extends MifosIntegrationTest {
 				"Added note", null,
 				null, false, null);
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(

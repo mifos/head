@@ -9,7 +9,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
 public class TestCOABO extends MifosIntegrationTest {
@@ -31,7 +31,7 @@ public class TestCOABO extends MifosIntegrationTest {
 		assertEquals(TestConstants.FINANCIAL_DIRECTINCOME_SIZE,
 				currentSubCategory.size());
 		
-		GLCodeEntity g = (GLCodeEntity) HibernateUtil.getSessionTL().load(GLCodeEntity.class, new Short("1"));
+		GLCodeEntity g = (GLCodeEntity) StaticHibernateUtil.getSessionTL().load(GLCodeEntity.class, new Short("1"));
 		System.out.println(g.getGlcode());
 	}
 

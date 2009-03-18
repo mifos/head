@@ -22,7 +22,7 @@ import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanArrearsTask extends MifosIntegrationTest {
@@ -58,7 +58,7 @@ public class TestLoanArrearsTask extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		loanArrearTask = null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -66,7 +66,7 @@ public class TestLoanArrearsTask extends MifosIntegrationTest {
 		int statusChangeHistorySize = loanAccount
 				.getAccountStatusChangeHistory().size();
 		loanArrearTask.run();
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " + Task.class.getName());
 		List<Task> tasks = query.list();
 		assertEquals(1, tasks.size());
@@ -95,7 +95,7 @@ public class TestLoanArrearsTask extends MifosIntegrationTest {
 				currentdate, loanOffering);
 		setDisbursementDateAsOldDate(loanAccount);
 		loanAccount.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		return loanAccount;
 	}
 

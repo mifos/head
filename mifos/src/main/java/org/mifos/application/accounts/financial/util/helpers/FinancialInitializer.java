@@ -38,7 +38,7 @@ import org.mifos.config.GLAccount;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialInitializer {
 	private static MifosLogger logger;
@@ -47,20 +47,20 @@ public class FinancialInitializer {
 		logger = MifosLogManager
 				.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 		try {
-			HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
+			StaticHibernateUtil.getSessionTL();
+			StaticHibernateUtil.startTransaction();
 			initalizeFinancialAction();
 			loadCOA();
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 
 			// necessary or cacheCOA() doesn't work correctly. Is that because
 			// the commitTransaction() isn't flushing the session?
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 
 			cacheCOA();
 		}
 		catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.rollbackTransaction();
 			throw new FinancialException(
 					FinancialExceptionConstants.ACTIONNOTFOUND, e);
 		}
@@ -81,7 +81,7 @@ public class FinancialInitializer {
 	 * the initial CoA data is loaded in the database.
 	 */
 	public static void loadCOA() throws FinancialException {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 
 		if (!ChartOfAccountsConfig.canLoadCoa(session)) {
 			logger.info("Chart of accounts data will not be modified since "
@@ -171,7 +171,7 @@ public class FinancialInitializer {
 	public static void cacheCOA() throws FinancialException {
 		if (ChartOfAccountsCache.isInitialized())
 			return;
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_COA);
 		List<COABO> coaBoList = query.list();
 		for (COABO coabo : coaBoList) {
@@ -180,7 +180,7 @@ public class FinancialInitializer {
 	}
 
 	public static void initalizeFinancialAction() throws FinancialException {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		try {
 			Query queryFinancialAction = session
 					.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);

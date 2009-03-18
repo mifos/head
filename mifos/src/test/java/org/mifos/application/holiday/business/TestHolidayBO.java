@@ -9,7 +9,7 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayBO extends MifosIntegrationTest {
@@ -28,7 +28,7 @@ public class TestHolidayBO extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(holidayEntity);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -42,8 +42,8 @@ public class TestHolidayBO extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
 				HolidayBO.class, holidayEntity.getHolidayPK());
@@ -66,8 +66,8 @@ public class TestHolidayBO extends MifosIntegrationTest {
 
 		try {
 			holidayEntity.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			// If it succedded to create this holiday
 			// Asssert false as it shouldn't by validations.
 			assertTrue(false);
@@ -93,8 +93,8 @@ public class TestHolidayBO extends MifosIntegrationTest {
 		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
 
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
 				HolidayBO.class, holidayEntity.getHolidayPK());
@@ -123,8 +123,8 @@ public class TestHolidayBO extends MifosIntegrationTest {
 		try {
 			holidayEntity.save();
 
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 
 			// If it succedded to create this holiday
 			// Asssert false as it shouldn't by validation rules.
@@ -158,8 +158,8 @@ public class TestHolidayBO extends MifosIntegrationTest {
 				"Test Holiday", entity);
 
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
 				HolidayBO.class, holidayEntity.getHolidayPK());

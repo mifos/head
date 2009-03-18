@@ -18,7 +18,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -49,8 +49,8 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TestDatabase.resetMySQLDatabase();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.flushAndCloseSession();
 	}
 
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {

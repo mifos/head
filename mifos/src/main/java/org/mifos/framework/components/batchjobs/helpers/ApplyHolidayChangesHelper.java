@@ -11,7 +11,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 	
@@ -35,12 +35,12 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 			for (HolidayBO holiday : unappliedHolidays) {
 				try {
 					handleHolidayApplication(holiday);
-					HibernateUtil.commitTransaction();
+					StaticHibernateUtil.commitTransaction();
 				} catch (Exception e) {
-					HibernateUtil.rollbackTransaction();
+					StaticHibernateUtil.rollbackTransaction();
 					errorList.add(holiday.toString());
 				} finally {
-					HibernateUtil.closeSession();
+					StaticHibernateUtil.closeSession();
 				}
 			}
 		if (errorList.size() > 0)
@@ -51,7 +51,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 	{
 		HolidayUtils.rescheduleLoanRepaymentDates(holiday);
 		
-HibernateUtil.commitTransaction();
+StaticHibernateUtil.commitTransaction();
 		
 		HolidayUtils.rescheduleSavingDates(holiday);
 		

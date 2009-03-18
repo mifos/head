@@ -79,7 +79,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -486,7 +486,7 @@ public class SavingsBO extends AccountBO {
 			}
 			PaymentTypeEntity paymentType = null;
 			try {
-				paymentType = (PaymentTypeEntity) HibernateUtil.openSession()
+				paymentType = (PaymentTypeEntity) StaticHibernateUtil.openSession()
 						.get(PaymentTypeEntity.class,
 								SavingsConstants.DEFAULT_PAYMENT_TYPE);
 			} catch (HibernateException e) {
@@ -1289,7 +1289,7 @@ public class SavingsBO extends AccountBO {
 		
 		// Fix for Hibernate 3.2, need to update for adjustment to existing payment to be committed
 		this.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		adjustInterest(oldInterest, trxnDate, newPayment);
 		if (this.getAccountState().getId().equals(

@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -59,7 +59,7 @@ public class TestSurvey extends MifosIntegrationTest {
 
 	@Override
 	public void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestDatabase.resetMySQLDatabase();
 		super.tearDown();
 	}
@@ -127,9 +127,9 @@ public class TestSurvey extends MifosIntegrationTest {
 		instance2.setOfficer(instance1.getOfficer());
 		instance2.setCreator(instance1.getCreator());
 		
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		CenterBO center = TestObjectFactory.createCenter("centerName", meeting);
 		meeting.setMeetingPlace("somewhere");
@@ -141,7 +141,7 @@ public class TestSurvey extends MifosIntegrationTest {
 		instance3.setCreator(instance1.getCreator());
 		surveysPersistence.createOrUpdate(instance2);
 		surveysPersistence.createOrUpdate(instance3);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesByCustomer(instance1.getCustomer());
 		assertEquals(2, retrievedInstances.size());
@@ -245,14 +245,14 @@ public class TestSurvey extends MifosIntegrationTest {
 		Survey survey = new Survey(
 			"testsurvey", SurveyState.ACTIVE, SurveyType.CLIENT);
 		
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		surveysPersistence.createOrUpdate(survey);
 		
-		List result = HibernateUtil.getSessionTL().createQuery("from " + Survey.class.getName()).list();
+		List result = StaticHibernateUtil.getSessionTL().createQuery("from " + Survey.class.getName()).list();
 		assertEquals(1, result.size());
 		Survey read_survey = (Survey) result.get(0);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		assertEquals("testsurvey", read_survey.getName());
 		assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
@@ -267,9 +267,9 @@ public class TestSurvey extends MifosIntegrationTest {
 		question.setQuestionText(questionText);
 		question.setShortName("Short Name Test");
 		question.setQuestionState(QuestionState.ACTIVE);
-		HibernateUtil.getSessionTL().save(question);
+		StaticHibernateUtil.getSessionTL().save(question);
 		
-		List result = HibernateUtil.getSessionTL().createQuery("from " + Question.class.getName()).list();
+		List result = StaticHibernateUtil.getSessionTL().createQuery("from " + Question.class.getName()).list();
 		assertEquals(1, result.size());
 		Question retrieved = (Question) result.get(0);
 		assertEquals(questionText, retrieved.getQuestionText());
@@ -348,7 +348,7 @@ public class TestSurvey extends MifosIntegrationTest {
 		instance.setCustomer(client);
 		instance.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
 		new SurveysPersistence().createOrUpdate(instance);		
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		return instance;
 	}
 	
@@ -366,12 +366,12 @@ public class TestSurvey extends MifosIntegrationTest {
 		choices.add(choice2);
 		question.setChoices(choices);
 		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
-		HibernateUtil.getSessionTL().save(question);
+		StaticHibernateUtil.getSessionTL().save(question);
 		SurveyResponse response = new SurveyResponse();
 		response.setSurveyQuestion(surveyQuestion);	
 		response.setChoiceValue(choice1);
 		response.setInstance(instance);
-		HibernateUtil.getSessionTL().save(response);
+		StaticHibernateUtil.getSessionTL().save(response);
 		List<SurveyResponse> responses = persistence.retrieveAllResponses();
 		assertEquals(1, responses.size());
 		assertEquals(choice1.getChoiceId(), responses.get(0).getChoiceValue().getChoiceId());
@@ -386,12 +386,12 @@ public class TestSurvey extends MifosIntegrationTest {
 		String shortName = "Sample Name";
 		Question question = new Question(shortName, questionText, AnswerType.NUMBER);
 		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
-		HibernateUtil.getSessionTL().save(question);
+		StaticHibernateUtil.getSessionTL().save(question);
 		SurveyResponse response = new SurveyResponse();
 		response.setSurveyQuestion(surveyQuestion);
 		response.setNumberValue(new Double(5));
 		response.setInstance(instance);
-		HibernateUtil.getSessionTL().save(response);
+		StaticHibernateUtil.getSessionTL().save(response);
 		
 		List<SurveyResponse> responses = new SurveysPersistence().retrieveAllResponses();
 		assertEquals(1, responses.size());

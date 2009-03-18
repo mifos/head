@@ -9,7 +9,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 
@@ -18,7 +18,7 @@ import org.mifos.framework.persistence.Persistence;
 	public class AcceptedPaymentTypePersistence extends Persistence {
 
 		public AcceptedPaymentType getAcceptedPaymentType(Short paymentTypeId) {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = StaticHibernateUtil.getSessionTL();
 			return (AcceptedPaymentType) session.get(AcceptedPaymentType.class, paymentTypeId);
 		}
 		

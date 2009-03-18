@@ -52,7 +52,7 @@ import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.configuration.ConfigureSession;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -394,7 +394,7 @@ public class ApplicationInitializer implements ServletContextListener,
 	}
 
 	public void requestDestroyed(ServletRequestEvent event) {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void requestInitialized(ServletRequestEvent event) {

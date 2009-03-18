@@ -43,7 +43,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -96,7 +96,7 @@ public class TestLoanArrearsAgingHelper extends MifosIntegrationTest {
 			TestDatabase.resetMySQLDatabase();
 		}
 		loanArrearsAgingHelper = null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -117,19 +117,19 @@ public class TestLoanArrearsAgingHelper extends MifosIntegrationTest {
 
 		setDisbursementDateAsOldDate(loanAccount1, 15, Short.valueOf("1"));
 		loanAccount1.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		setDisbursementDateAsOldDate(loanAccount2, 22, Short.valueOf("3"));
 		loanAccount2.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		setDisbursementDateAsOldDate(loanAccount3, 15,Short.valueOf("1"));
 		loanAccount3.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		setDisbursementDateAsOldDate(loanAccount4, 22, Short.valueOf("1"));
 		loanAccount4.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		loanArrearsAgingHelper.execute(System.currentTimeMillis());
 		
@@ -213,11 +213,11 @@ public class TestLoanArrearsAgingHelper extends MifosIntegrationTest {
 		
 				setDisbursementDateAsOldDate(loanAccount1, 22, Short.valueOf("3"));
 				loanAccount1.update();
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 		
 				setDisbursementDateAsOldDate(loanAccount2, 22, Short.valueOf("3"));
 				loanAccount2.update();
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 				
 				loanArrearsAgingHelper.execute(System.currentTimeMillis());
 				
@@ -260,7 +260,7 @@ public class TestLoanArrearsAgingHelper extends MifosIntegrationTest {
 				
 				loanAccount2.applyPaymentWithPersist(paymentData2);
 				
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 				
 				loanArrearsAgingHelper.execute(System.currentTimeMillis());
 				

@@ -27,7 +27,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 
 public class TestDataExchanger extends MifosIntegrationTest {
@@ -79,7 +79,7 @@ public class TestDataExchanger extends MifosIntegrationTest {
 		assertFalse(centerPersistence.isCenterExists(CENTER_NAME));
 		
 		dataExchanger.importXML(VALID_XML, TestUtils.makeUser());
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.flushAndCloseSession();
 		
 		assertTrue(centerPersistence.isCenterExists(CENTER_NAME));
 		
@@ -90,8 +90,8 @@ public class TestDataExchanger extends MifosIntegrationTest {
 		assertEquals(VALID_XML, dataExchanger.exportXML(center));
 		
 		centerPersistence.delete(center);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.flushAndCloseSession();
 		assertFalse(centerPersistence.isCenterExists(CENTER_NAME));		
 	}
 }

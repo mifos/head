@@ -70,7 +70,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -95,8 +95,8 @@ public class TestAccountBO extends TestAccount {
 	 * see a corresponding success test).
 	 */
 	public void testFailureRemoveFees() throws Exception {
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		UserContext uc = TestUtils.makeUser();
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
@@ -104,13 +104,13 @@ public class TestAccountBO extends TestAccount {
 		while (itr.hasNext())
 			accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
 					.getFeeId(), uc.getId());
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 	}
 	private void disburseLoan(LoanBO loan,Date startDate) throws Exception {
 		loan.disburseLoan("receiptNum", startDate,
 				Short.valueOf("1"), loan.getPersonnel(),
 				startDate, Short.valueOf("1"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 	public void testSuccessGetLastPmntAmntToBeAdjusted() throws Exception {
@@ -134,7 +134,7 @@ public class TestAccountBO extends TestAccount {
 		TestObjectFactory.flushandCloseSession();
 		// the loan has to be reloaded from db so that the payment list will be in desc order and the
 		// last payment will be the first in the payment list
-		loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				loan.getAccountId());		
 		
 		assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted(), DELTA);
@@ -258,7 +258,7 @@ public class TestAccountBO extends TestAccount {
 	}
 
 	public void testLoanAdjustment() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		Date currentDate = new Date(System.currentTimeMillis());
 		LoanBO loan = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
@@ -271,8 +271,8 @@ public class TestAccountBO extends TestAccount {
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
 		loan.applyPaymentWithPersist(accountPaymentDataView);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(TestUtils.makeUser());
@@ -280,8 +280,8 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(600), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(TestUtils.makeUser());
@@ -482,8 +482,8 @@ public class TestAccountBO extends TestAccount {
 		
 		center.getCustomerAccount().handleChangeInMeetingSchedule();
 		accountBO.handleChangeInMeetingSchedule();
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
@@ -519,8 +519,8 @@ public class TestAccountBO extends TestAccount {
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		accountBO.deleteFutureInstallments();
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		assertEquals(1, accountBO.getAccountActionDates().size());
@@ -529,7 +529,7 @@ public class TestAccountBO extends TestAccount {
 
 	public void testUpdate() throws Exception {
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(
 				LoanBO.class, accountBO.getAccountId());
 		accountBO.setUserContext(TestUtils.makeUser());
 
@@ -542,7 +542,7 @@ public class TestAccountBO extends TestAccount {
 		accountBO.addAccountNotes(accountNotesEntity);
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(
 				LoanBO.class, accountBO.getAccountId());
 		for (AccountNotesEntity accountNotes : accountBO
 				.getRecentAccountNotes()) {
@@ -563,7 +563,7 @@ public class TestAccountBO extends TestAccount {
 				.getTypicalMeeting());
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
 		for (AccountActionDateEntity actionDate : centerBO.getCustomerAccount()
 				.getAccountActionDates()) {
@@ -583,7 +583,7 @@ public class TestAccountBO extends TestAccount {
 				.getTypicalMeeting());
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		centerBO = TestObjectFactory.getCenter(centerBO.getCustomerId());
 		
 		List<AccountActionDateEntity> allInstallments = centerBO
@@ -595,8 +595,8 @@ public class TestAccountBO extends TestAccount {
 
 	public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
-		HibernateUtil.closeSession();
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.closeSession();
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(
 				LoanBO.class, accountBO.getAccountId());
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
@@ -607,7 +607,7 @@ public class TestAccountBO extends TestAccount {
 				currentDate, currentDate);
 		accountBO.applyPaymentWithPersist(paymentData);
 
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		LoanBO loan = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 
@@ -615,16 +615,16 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(600), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(
 				LoanBO.class, accountBO.getAccountId());
 		accountBO.setUserContext(TestUtils.makeUser());
 		accountBO.adjustPmnt("loan account has been adjusted by test code");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(
 				LoanBO.class, accountBO.getAccountId());
 		center = TestObjectFactory.getCenter(center
 				.getCustomerId());

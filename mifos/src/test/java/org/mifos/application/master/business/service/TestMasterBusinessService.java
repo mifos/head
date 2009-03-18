@@ -27,7 +27,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -48,7 +48,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 
 	@Override
 	public void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -70,7 +70,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -87,7 +87,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -118,7 +118,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		TestObjectFactory.cleanUp(center);
 	}
@@ -190,7 +190,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 			assertTrue(true);
 		} finally {
 
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		TestObjectFactory.cleanUp(account);
 		TestObjectFactory.cleanUp(center);
@@ -210,7 +210,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -231,7 +231,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}*/
 
@@ -249,7 +249,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	
@@ -261,7 +261,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	public void testretrieveCustomFieldsDefinition(){
@@ -272,7 +272,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -286,7 +286,7 @@ public class TestMasterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}	
 }

@@ -14,7 +14,7 @@ import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.config.GeneralConfig;
@@ -57,8 +57,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 		int updatedRecordCount = 0;
 		try 
 		{
-			HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
+			StaticHibernateUtil.getSessionTL();
+			StaticHibernateUtil.startTransaction();
 			for (Integer accountId : customerAccountIds) 
 			{
 				i++;
@@ -81,13 +81,13 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				{
 					if (updatedRecordCount % batchSize == 0)
 					{
-						HibernateUtil.flushAndClearSession();
+						StaticHibernateUtil.flushAndClearSession();
 					}
 					if (updatedRecordCount % recordCommittingSize == 0)
 					{
-						HibernateUtil.commitTransaction();
-						HibernateUtil.getSessionTL();
-						HibernateUtil.startTransaction();
+						StaticHibernateUtil.commitTransaction();
+						StaticHibernateUtil.getSessionTL();
+						StaticHibernateUtil.startTransaction();
 					}
 					if (updatedRecordCount % 1000 == 0)
 					{
@@ -102,14 +102,14 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				
 				
 			}
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 			
 				
 		} catch (Exception e) 
 			{
 			    System.out.println("account " + currentAccountId.intValue() + " exception " + e.getMessage());
 				getLogger().debug("GenerateMeetingsForCustomerAndSavingsHelper " + e.getMessage());
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				if (currentAccountId != null)
 				{
 					errorList.add(currentAccountId.toString());
@@ -119,7 +119,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 					"Unable to generate schedules for account with ID " + 
 					currentAccountId, false, null, e);
 			} finally {
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		
 		if (errorList.size() > 0)

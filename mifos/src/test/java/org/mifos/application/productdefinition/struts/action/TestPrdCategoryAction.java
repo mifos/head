@@ -17,7 +17,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -57,7 +57,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 	protected void tearDown() throws Exception {
 		productCategoryPersistence=null;
 		userContext=null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -267,7 +267,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 	}
 
 	private List<ProductCategoryBO> getProductCategory() {
-		return HibernateUtil
+		return StaticHibernateUtil
 				.getSessionTL()
 				.createQuery(
 						"from org.mifos.application.productdefinition.business.ProductCategoryBO pcb order by pcb.productCategoryID")
@@ -275,8 +275,8 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 	}
 
 	private void deleteProductCategory(ProductCategoryBO productCategoryBO) {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction	transaction = HibernateUtil.startTransaction();
+		Session session = StaticHibernateUtil.getSessionTL();
+		Transaction	transaction = StaticHibernateUtil.startTransaction();
 		session.delete(productCategoryBO);
 		transaction.commit();
 	}

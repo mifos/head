@@ -60,7 +60,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -101,7 +101,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -214,8 +214,8 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 		
 		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
@@ -233,8 +233,8 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 			new FinancialBusinessService();
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
@@ -289,8 +289,8 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
@@ -308,8 +308,8 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 			new FinancialBusinessService();
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);

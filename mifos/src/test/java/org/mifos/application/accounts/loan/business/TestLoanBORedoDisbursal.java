@@ -99,7 +99,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -149,7 +149,7 @@ public class TestLoanBORedoDisbursal {
 
     protected void initializeStatisticsService() {
         statisticsService = new StatisticsService();
-        statisticsService.setSessionFactory(HibernateUtil.getSessionFactory());
+        statisticsService.setSessionFactory(StaticHibernateUtil.getSessionFactory());
         statisticsService.setStatisticsEnabled(true);
     }
 
@@ -172,23 +172,23 @@ public class TestLoanBORedoDisbursal {
     public void tearDown() throws Exception {
 		//TestObjectFactory.removeObject(loanOffering);
 		if (loanBO != null)
-			loanBO = (AccountBO) HibernateUtil.getSessionTL().get(
+			loanBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 					AccountBO.class, loanBO.getAccountId());
 		if (group != null)
-			group = (CustomerBO) HibernateUtil.getSessionTL().get(
+			group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, group.getCustomerId());
 		if (center != null)
-			center = (CustomerBO) HibernateUtil.getSessionTL().get(
+			center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		if (null != fee) {
-			fee = (FeeBO) HibernateUtil.getSessionTL().get(
+			fee = (FeeBO) StaticHibernateUtil.getSessionTL().get(
 					FeeBO.class, fee.getFeeId());
 			TestObjectFactory.cleanUp(fee);
 		}
-        HibernateUtil.closeSession();
+        StaticHibernateUtil.closeSession();
     }
     
     private LoanOfferingBO createLoanOffering
@@ -199,11 +199,11 @@ public class TestLoanBORedoDisbursal {
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE) ;
 		InterestTypesEntity interestType = new InterestTypesEntity(InterestType.FLAT);
 		GLCodeEntity glCodePrincipal = 
-			(GLCodeEntity) HibernateUtil
+			(GLCodeEntity) StaticHibernateUtil
 								.getSessionTL()
 								.get(GLCodeEntity.class, TestGeneralLedgerCode.LOANS_TO_CLIENTS);
 		GLCodeEntity glCodeInterest = 
-			(GLCodeEntity) HibernateUtil
+			(GLCodeEntity) StaticHibernateUtil
 								.getSessionTL()
 								.get(GLCodeEntity.class, TestGeneralLedgerCode.INTEREST_ON_LOANS);
 

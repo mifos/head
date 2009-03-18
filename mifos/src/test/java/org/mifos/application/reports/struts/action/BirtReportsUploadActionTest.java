@@ -20,7 +20,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -119,14 +119,14 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 					(short) newActivityId,
 					SecurityConstants.ORGANIZATION_MANAGEMENT,
 					DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
-			activity.upgrade(HibernateUtil.getSessionTL().connection(), null);
+			activity.upgrade(StaticHibernateUtil.getSessionTL().connection(), null);
 
 		}
 		catch (Exception e) {
-			HibernateUtil.startTransaction();
+			StaticHibernateUtil.startTransaction();
 			new RolesPermissionsPersistence().delete(request
 					.getAttribute("report"));
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 			throw e;
 		}
 
@@ -289,7 +289,7 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		permPersistence.delete(activityEntity);
 		permPersistence.delete(anLookUp);
 
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 

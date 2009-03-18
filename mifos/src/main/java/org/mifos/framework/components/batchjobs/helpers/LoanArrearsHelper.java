@@ -31,7 +31,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.config.GeneralConfig;
 
@@ -81,11 +81,11 @@ public class LoanArrearsHelper extends TaskHelper {
 					loanBO.handleArrears();
 					if (i % batchSize == 0)
 					{
-						HibernateUtil.flushAndClearSession();
+						StaticHibernateUtil.flushAndClearSession();
 					}
 					if (i % recordCommittingSize == 0)
 					{
-						HibernateUtil.commitTransaction();
+						StaticHibernateUtil.commitTransaction();
 					}
 					if (i % 1000 == 0)
 					{
@@ -99,19 +99,19 @@ public class LoanArrearsHelper extends TaskHelper {
 					
 				
 				}
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 				
 				
 			} catch (Exception e) {
 				getLogger().debug("LoanArrearsTask " + e.getMessage());
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				if (loanBO != null)
 				{
 					errorList.add(loanBO.getAccountId().toString());
 				}
 			} finally {
 				
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		long time2 = new DateTimeService().getCurrentDateTime().getMillis();
 		long duration = time2 - time1;

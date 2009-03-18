@@ -41,7 +41,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -73,7 +73,7 @@ public class CustomFieldsBackfillerTest {
 
 	@After
 	public void tearDown() throws Exception {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 
 		// Clean up custom field record and association with client.
 		// Don't do this in a test method (like testExistingClientGetsNewField)
@@ -126,7 +126,7 @@ public class CustomFieldsBackfillerTest {
 		cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT,
 				CustomerLevel.CLIENT.getValue(), customField);
 
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 
 		// make sure record was added that joins the custom field with the
 		// customer that existed before the custom field was added
@@ -154,7 +154,7 @@ public class CustomFieldsBackfillerTest {
 		cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT,
 				CustomerLevel.CLIENT.getValue(), customField);
 
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 
 		// make sure record was added that joins the custom field with the
 		// customer that existed before the custom field was added

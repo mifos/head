@@ -12,7 +12,7 @@ import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAuditBusinessService extends MifosIntegrationTest{
@@ -58,7 +58,7 @@ public class TestAuditBusinessService extends MifosIntegrationTest{
 	}
 	
 	private AuditLog getAuditLog(Integer entityId, Short entityType) {
-		return (AuditLog) HibernateUtil.getSessionTL().createQuery(
+		return (AuditLog) StaticHibernateUtil.getSessionTL().createQuery(
 				"from AuditLog al where al.entityId=" + entityId
 						+ " and al.entityType=" + entityType).uniqueResult();
 	}

@@ -49,7 +49,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -82,7 +82,7 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		/*List<ProductMixBO> prdmixBO = (List<ProductMixBO>) HibernateUtil.getSessionTL().get(
+		/*List<ProductMixBO> prdmixBO = (List<ProductMixBO>) StaticHibernateUtil.getSessionTL().get(
 				ProductMixBO.class,productOffering.getPrdOfferingId());*/
 		
 		try {
@@ -93,7 +93,7 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 
 			// HACK: reload the productOffering in the new session to avoid 
 			// org.hibernate.StaleObjectStateException issues
-			productOffering = (PrdOfferingBO)HibernateUtil.getSessionTL().get(PrdOfferingBO.class, productOffering.getPrdOfferingId());
+			productOffering = (PrdOfferingBO)StaticHibernateUtil.getSessionTL().get(PrdOfferingBO.class, productOffering.getPrdOfferingId());
 			TestObjectFactory.removeObject(productOffering);
 			TestObjectFactory.removeObject(prdmix);	
 			TestObjectFactory.removeObject(saving1);
@@ -157,18 +157,18 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.create_success.toString());
 		cleanUpAfterCreate();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	private void cleanUpAfterCreate() throws PersistenceException,
 			ProductDefinitionException {
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		List<ProductMixBO> productList = (new ProductMixPersistence()
 				.getAllProductMix());
 		for (ProductMixBO tempPrdMix : productList) {
 			tempPrdMix.delete();
 		}
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 	public void testGet_success() throws Exception {

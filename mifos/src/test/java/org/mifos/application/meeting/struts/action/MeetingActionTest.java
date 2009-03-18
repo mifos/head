@@ -20,7 +20,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -57,7 +57,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -502,7 +502,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 	public void testEditForCenter()throws Exception{
 		MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new  Date());
 		center = createCenter(meeting);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "get");
@@ -529,7 +529,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new  Date());
 		center = createCenter(meeting);
 		group = TestObjectFactory.createGroupUnderCenter("myGroup", CustomerStatus.GROUP_ACTIVE, center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		String meetingPlace = "Delhi";
 
 		setRequestPathInfo("/centerCustAction.do");
@@ -554,7 +554,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.center_detail_page.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -576,7 +576,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		group = createGroupUnderBranch(null);
 		client1 = createClient("client1", group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient("client2", group, CustomerStatus.CLIENT_PENDING);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		assertNull(group.getCustomerMeeting());
 		assertNull(client1.getCustomerMeeting());
 		assertNull(client2.getCustomerMeeting());
@@ -606,7 +606,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.group_detail_page.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 		client1 = TestObjectFactory.getClient(client1.getCustomerId());
@@ -639,7 +639,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		group = createGroupUnderBranch(meeting);
 		client1 = createClient("client1", group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient("client2", group, CustomerStatus.CLIENT_PENDING);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 		client1 = TestObjectFactory.getClient(client1.getCustomerId());
@@ -673,7 +673,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.group_detail_page.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 		client1 = TestObjectFactory.getClient(client1.getCustomerId());
@@ -699,7 +699,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 	public void testSuccessfulEditCancel()throws Exception{
 		MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new  Date());
 		center = createCenter(meeting);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("globalCustNum", center.getGlobalCustNum());
@@ -717,14 +717,14 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(ActionForwards.center_detail_page.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		assertNotNull(center.getCustomerMeeting().getMeeting());
 	}
 
 	public void testSuccessfulCreateMeetingFromClientDetail()throws Exception{
 		client1 = createClient(null);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		assertNull(client1.getCustomerMeeting());
 		
@@ -753,7 +753,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		client1 = TestObjectFactory.getClient(client1.getCustomerId());
 		
@@ -767,7 +767,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 	public void testSuccessfulUpdateMeetingForClient()throws Exception{
 		MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new  Date());
 		client1 = createClient(meeting);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		String meetingPlace = "Delhi";
 	
 		setRequestPathInfo("/clientCustAction.do");
@@ -793,7 +793,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.client_detail_page.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		client1 = TestObjectFactory.getClient(client1.getCustomerId());
 		

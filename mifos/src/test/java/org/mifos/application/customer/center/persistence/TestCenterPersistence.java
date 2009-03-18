@@ -23,7 +23,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -48,7 +48,7 @@ public class TestCenterPersistence extends MifosIntegrationTest{
     @Override
 	public void tearDown() {
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
     }
 
     public void testCreateCenter()
@@ -68,7 +68,7 @@ public class TestCenterPersistence extends MifosIntegrationTest{
             assertTrue(center.isActive());
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
         long afterTransactionCount = getStatisticsService().getSuccessfulTransactionCount();
         assertEquals(beforeTransactionCount, afterTransactionCount);
@@ -77,21 +77,21 @@ public class TestCenterPersistence extends MifosIntegrationTest{
     public void testIsCenterExists_true() throws Exception {
 		String centerName="NewCenter";
 		center = TestObjectFactory.createCenter(centerName,getMeeting());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		assertTrue(new CenterPersistence().isCenterExists(centerName));
 	}
 	
 	public void testIsCenterExists_false() throws PersistenceException {
 		String centerName="NewCenter";
 		center = TestObjectFactory.createCenter(centerName,getMeeting());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
 	}
 	
 	public void testGetCenter() throws Exception {
 		String centerName="NewCenter";
 		center = TestObjectFactory.createCenter(centerName,getMeeting());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = new CenterPersistence().getCenter(center.getCustomerId());
 		assertEquals(centerName, center.getDisplayName());
 	}

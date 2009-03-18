@@ -34,7 +34,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchCashConfirmationReportHelper extends TaskHelper {
@@ -64,7 +64,7 @@ public class BranchCashConfirmationReportHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		Transaction transaction = null;
 		try {
 			transaction = session.beginTransaction();

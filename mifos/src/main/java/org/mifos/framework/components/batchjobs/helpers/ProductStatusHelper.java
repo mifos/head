@@ -49,7 +49,7 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ProductStatusHelper extends TaskHelper {
 
@@ -63,8 +63,8 @@ public class ProductStatusHelper extends TaskHelper {
 		String hqlUpdate;
 		Query query;
 		try {
-			session = HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
+			session = StaticHibernateUtil.getSessionTL();
+			StaticHibernateUtil.startTransaction();
 
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:activeLoanStatus "
 					+ "where p.prdType.productTypeID=:loan and p.startDate=:currentDate";
@@ -101,10 +101,10 @@ public class ProductStatusHelper extends TaskHelper {
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpdate();
 
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			try {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 			} catch (Exception ex) {
 				// Whoops, rollback failed, log error?
 				MifosLogManager

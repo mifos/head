@@ -12,7 +12,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanPrdPersistenceTest extends MifosIntegrationTest {
@@ -35,7 +35,7 @@ public class LoanPrdPersistenceTest extends MifosIntegrationTest {
 		TestObjectFactory.removeObject(loanOffering1);
 		TestObjectFactory.removeObject(loanOffering2);
 		TestObjectFactory.removeObject(loanOffering3);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -58,7 +58,7 @@ public class LoanPrdPersistenceTest extends MifosIntegrationTest {
 	}
 	public void testGetLoanOffering() throws PersistenceException {
 		loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1
 				.getPrdOfferingId());
@@ -69,7 +69,7 @@ public class LoanPrdPersistenceTest extends MifosIntegrationTest {
 
 	public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
 		loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		short localeId = 1;
 		loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1
@@ -96,7 +96,7 @@ public class LoanPrdPersistenceTest extends MifosIntegrationTest {
 						"Loa2");
 		loanOffering3 = createLoanOfferingBO(loanPrdNamesSortedByName[0],
 				"Loa3");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		List<LoanOfferingBO> loanOfferings = new LoanPrdPersistence()
 				.getAllLoanOfferings((short) 1);
@@ -108,7 +108,7 @@ public class LoanPrdPersistenceTest extends MifosIntegrationTest {
 			assertNotNull(loanOfferingBO.getPrdOfferingId());
 			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,

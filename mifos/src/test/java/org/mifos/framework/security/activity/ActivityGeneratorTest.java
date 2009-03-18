@@ -34,7 +34,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class ActivityGeneratorTest extends MifosIntegrationTest {
@@ -44,7 +44,7 @@ public class ActivityGeneratorTest extends MifosIntegrationTest {
     }
 
     public void testShouldInsertSuccessActivity() throws Exception {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 
 		ActivityGenerator activityGenerator = new ActivityGenerator();
 		MifosLookUpEntity lookUpEntity = new MifosLookUpEntity();

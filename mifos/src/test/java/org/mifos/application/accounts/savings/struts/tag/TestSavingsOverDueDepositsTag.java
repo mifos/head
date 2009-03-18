@@ -15,7 +15,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -36,7 +36,7 @@ public class TestSavingsOverDueDepositsTag extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}	
 	public void testBuildDateUI(){
 		Date date = new Date(System.currentTimeMillis());

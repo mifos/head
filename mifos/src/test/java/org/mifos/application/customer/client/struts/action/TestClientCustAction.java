@@ -95,7 +95,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -159,7 +159,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -201,7 +201,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>)SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
 		assertNotNull(savingsOfferingList);
 		assertEquals(1, savingsOfferingList.size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	public void testLoadWithGroupHavingNoLoanOfficer() throws Exception {
@@ -247,15 +247,15 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 		.getSession().getAttribute("clientCustActionForm");
 		assertNull(actionForm.getFormedByPersonnelValue());
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testLoadClientUnderGroup_FeeDifferentFrequecny() throws Exception {
 		createGroupWithoutFee();
 		List<FeeView> fees = getFees(RecurrenceType.MONTHLY);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("parentGroupId", group.getCustomerId().toString());
@@ -274,7 +274,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
 		assertEquals(0, additionalFees.size());
 		
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
 	}
@@ -282,7 +282,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	public void testLoadClientUnderGroup_FeeSameFrequecny() throws Exception {
 		createGroupWithoutFee();
 		List<FeeView> fees = getFees(RecurrenceType.WEEKLY);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("parentGroupId", group.getCustomerId().toString());
@@ -301,7 +301,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
 		assertNotNull(additionalFees);
 		assertEquals(1, additionalFees.size());
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
 	}
@@ -691,7 +691,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
 		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -1080,7 +1080,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		accountBO = getLoanAccount(client, meeting);
 		ClientBoIntegrationTest.setDateOfBirth(client,offSetCurrentDate(50));
 		TestObjectFactory.updateObject(client);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("globalCustNum", client.getGlobalCustNum());
@@ -1095,14 +1095,14 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				CustomerConstants.CUSTOM_FIELDS_LIST, request));
 		// assertEquals("No of active loan accounts should be
 		// 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
-		HibernateUtil.closeSession();
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		StaticHibernateUtil.closeSession();
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+		client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -1349,7 +1349,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short gender = Short.valueOf("49");
 		Short povertyStatus = Short.valueOf("41");
 		
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 				NameType.CLIENT, salutation, "Client", "", "1",
 				"");
@@ -1368,8 +1368,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null);
 		new ClientPersistence().saveClient(client);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		client = TestObjectFactory.getClient(new Integer(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
@@ -1710,8 +1710,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null);
 		new ClientPersistence().saveClient(client);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
@@ -1722,7 +1722,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		createParentCustomer();
 		client = TestObjectFactory.createClient(name,
 				CustomerStatus.CLIENT_ACTIVE, group, new Date());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 		client = TestObjectFactory.getClient(client.getCustomerId());
@@ -1811,8 +1811,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 						FeeCategory.CLIENT, "200", frequency, Short
 								.valueOf("2"));
 		fees.add(new FeeView(TestObjectFactory.getContext(),fee1));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		return fees;
 	}
 	
@@ -1824,7 +1824,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				new OfficePersistence().getOffice(Short.valueOf("3")), meeting, 
 				new PersonnelPersistence().getPersonnel(Short.valueOf("3")));
 		new GroupPersistence().saveGroup(group);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 }

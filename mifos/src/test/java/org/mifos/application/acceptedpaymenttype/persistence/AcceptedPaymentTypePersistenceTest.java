@@ -12,7 +12,7 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 
 public class AcceptedPaymentTypePersistenceTest extends TestAccount {
@@ -33,7 +33,7 @@ public class AcceptedPaymentTypePersistenceTest extends TestAccount {
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	

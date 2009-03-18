@@ -26,7 +26,7 @@ import java.util.List;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class BulkEntryLoanThread implements Runnable {
 
@@ -69,12 +69,12 @@ public class BulkEntryLoanThread implements Runnable {
                     try {
                         bulkEntryBusinessService.saveLoanAccount(loanAccountsProductView, personnelId, recieptId,
                                 paymentId, receiptDate, transactionDate);
-                        HibernateUtil.commitTransaction();
+                        StaticHibernateUtil.commitTransaction();
                     } catch (ServiceException be) {
                         accountNums.add((String) (be.getValues()[0]));
-                        HibernateUtil.rollbackTransaction();
+                        StaticHibernateUtil.rollbackTransaction();
                     } finally {
-                        HibernateUtil.closeSession();
+                        StaticHibernateUtil.closeSession();
                     }
                 }
             }

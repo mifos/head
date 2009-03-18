@@ -13,7 +13,7 @@ import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionC
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -38,16 +38,16 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,roleBO.getActivities().size());
 		assertEquals(roleBO.getCreatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getCreatedDate().getTime()));
 
 		RolesPermissionsPersistence.delete(roleBO);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		assertNull(roleBO);
 	}
@@ -60,8 +60,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),null,activities);
 			roleBO.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED,e.getKey());
@@ -70,8 +70,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"",activities);
 			roleBO.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED,e.getKey());
@@ -86,8 +86,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"",activities);
 			roleBO.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED,e.getKey());
@@ -102,8 +102,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"Admin",activities);
 			roleBO.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEALREADYEXIST,e.getKey());
@@ -118,8 +118,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",null);
 			roleBO.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES,e.getKey());
@@ -134,8 +134,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",new ArrayList<ActivityEntity>());
 			roleBO.save();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES,e.getKey());
@@ -148,15 +148,15 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,roleBO.getActivities().size());
 		assertEquals(roleBO.getCreatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getCreatedDate().getTime()));
 		roleBO.delete();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		assertNull(roleBO);
 	}
@@ -167,8 +167,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		RoleBO roleBO = RolesPermissionsPersistence.getRole("Admin");
 		try{
 			roleBO.delete();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEASSIGNEDTOPERSONNEL,e.getKey());
@@ -184,8 +184,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		ActivityEntity activity_1=roleBO.getActivities().get(0);
@@ -202,8 +202,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 				iter.remove();
 		}
 		roleBO.update(PersonnelConstants.SYSTEM_USER,"Test Role",activities);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 
@@ -218,8 +218,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertNull(roleActivityEntity);
 
 		roleBO.delete();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 
@@ -234,8 +234,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT - 2, activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT - 2,roleBO.getActivities().size());
@@ -250,8 +250,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 
 		roleBO.update(PersonnelConstants.SYSTEM_USER, "Test Role", activities);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,roleBO.getActivities().size());
@@ -263,8 +263,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertNotNull(roleActivityEntity);
 
 		roleBO.delete();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testUpdateForChangingName() throws Exception{
@@ -273,12 +273,12 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		roleBO.update(PersonnelConstants.SYSTEM_USER,"New role",activities);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("New role");
 
 		assertEquals("New role",roleBO.getName());
@@ -287,8 +287,8 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getUpdatedDate().getTime()));
 
 		roleBO.delete();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 
@@ -298,20 +298,20 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
 			roleBO.update(PersonnelConstants.SYSTEM_USER,"Admin",activities);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEALREADYEXIST,e.getKey());
 		}finally{
 			roleBO.delete();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -321,20 +321,20 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
 			roleBO.update(PersonnelConstants.SYSTEM_USER,null,activities);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED,e.getKey());
 		}finally{
 			roleBO.delete();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -344,20 +344,20 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
 			roleBO.update(PersonnelConstants.SYSTEM_USER,"",activities);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED,e.getKey());
 		}finally{
 			roleBO.delete();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -367,20 +367,20 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
 			roleBO.update(PersonnelConstants.SYSTEM_USER,"Test Role",null);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES,e.getKey());
 		}finally{
 			roleBO.delete();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -391,27 +391,27 @@ public class TestRoleBO extends MifosIntegrationTest {
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
 			roleBO.update(PersonnelConstants.SYSTEM_USER,"Test Role",new ArrayList<ActivityEntity>());
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 			fail();
 		}catch(RolesPermissionException e){
 			assertEquals(RolesAndPermissionConstants.KEYROLEWITHNOACTIVITIES,e.getKey());
 		}finally{
 			roleBO.delete();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.commitTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
 
 	private RoleActivityEntity getRoleActivity(Short roleId,
 			Short activityId) {
-		Query query = HibernateUtil
+		Query query = StaticHibernateUtil
 				.getSessionTL()
 				.createQuery(
 						"from org.mifos.application.rolesandpermission.business.RoleActivityEntity roleActivity where roleActivity.role=? and roleActivity.activity=?");
@@ -434,7 +434,7 @@ public class TestRoleBO extends MifosIntegrationTest {
 		} catch (RolesPermissionException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}

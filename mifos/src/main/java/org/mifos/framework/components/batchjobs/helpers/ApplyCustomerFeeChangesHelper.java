@@ -14,7 +14,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 
 public class ApplyCustomerFeeChangesHelper extends TaskHelper {
@@ -51,9 +51,9 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 					userContext.setId(PersonnelConstants.SYSTEM_USER);
 					fee.setUserContext(userContext);
 					fee.save();
-					HibernateUtil.commitTransaction();
+					StaticHibernateUtil.commitTransaction();
 				} catch (Exception e) {
-					HibernateUtil.rollbackTransaction();
+					StaticHibernateUtil.rollbackTransaction();
 					errorList.add(fee.getFeeName());
 				}
 			}

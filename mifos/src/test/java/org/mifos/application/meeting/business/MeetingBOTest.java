@@ -55,7 +55,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class MeetingBOTest extends MifosIntegrationTest{
@@ -909,9 +909,9 @@ public class MeetingBOTest extends MifosIntegrationTest{
 	public void testSuccessfulCreateDailyMeeting() throws MeetingException{
 		meeting = createDailyMeeting(ONE,new Date());
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		meeting = (MeetingBO)StaticHibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(ONE,meeting.getMeetingDetails().getRecurAfter());
 		assertEquals(RecurrenceType.DAILY, 
@@ -965,9 +965,9 @@ public class MeetingBOTest extends MifosIntegrationTest{
 	public void testSuccessfulCreateWeeklyMeeting() throws MeetingException{
 		meeting = createWeeklyMeeting(WeekDay.MONDAY,TWO, new Date());
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		meeting = (MeetingBO)StaticHibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(TWO,meeting.getMeetingDetails().getRecurAfter());
 		assertTrue(meeting.isWeekly());
@@ -1025,9 +1025,9 @@ public class MeetingBOTest extends MifosIntegrationTest{
 		dayNumber = FIVE;
 		meeting = createMonthlyMeetingOnDate(dayNumber, ONE, new Date());
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		meeting = (MeetingBO)StaticHibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(ONE,meeting.getMeetingDetails().getRecurAfter());
 		assertTrue(meeting.isMonthlyOnDate());
@@ -1082,9 +1082,9 @@ public class MeetingBOTest extends MifosIntegrationTest{
 	public void testSuccessfulCreateMonthlyMeetingOnWeekDay() throws MeetingException{
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY,RankType.FIRST,ONE, new Date());
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		meeting = (MeetingBO)StaticHibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(ONE,meeting.getMeetingDetails().getRecurAfter());
 		assertTrue(meeting.isMonthly());

@@ -48,7 +48,7 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence; 
@@ -59,7 +59,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 public class ApplicationConfigurationPersistence extends Persistence {
 	
 	/*
-	 * TODO: the HibernateUtil.closeSession() calls here are bad
+	 * TODO: the StaticHibernateUtil.closeSession() calls here are bad
 	 * If these methods are called as part of another operation,
 	 * the closing of the session can be unexpected and interrupt
 	 * an ongoing transaction
@@ -69,7 +69,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 		List<MifosLookUpEntity> entities=null;
 		try
 		{
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		 entities = session.getNamedQuery(
 				NamedQueryConstants.GET_ENTITIES).list();
 		 
@@ -82,7 +82,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 				}
 			}
 		} finally {
-			HibernateUtil.closeSession();	
+			StaticHibernateUtil.closeSession();	
 		}
 		
 		return entities;
@@ -91,7 +91,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 	public List<LookUpValueEntity> getLookupValues(){
 		List<LookUpValueEntity> values=null;
 		try{
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		 values = session.getNamedQuery(
 				NamedQueryConstants.GET_LOOKUPVALUES).list();
 		    if (values != null)
@@ -114,7 +114,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 
 		}
 		finally{
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		return values;
 	}
@@ -122,7 +122,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 	public List<SupportedLocalesEntity> getSupportedLocale(){
 		List<SupportedLocalesEntity> locales=null;
 		try {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 
 		 locales = session.getNamedQuery(
 				NamedQueryConstants.SUPPORTED_LOCALE_LIST).list();
@@ -134,7 +134,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 
 			}
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		
 		return locales;

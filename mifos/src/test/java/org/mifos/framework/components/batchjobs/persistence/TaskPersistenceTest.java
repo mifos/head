@@ -12,7 +12,7 @@ import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TaskPersistenceTest extends MifosIntegrationTest {
@@ -46,7 +46,7 @@ public class TaskPersistenceTest extends MifosIntegrationTest {
 		TaskPersistence p = new TaskPersistence();
 		p.saveAndCommitTask(task1);
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		p = new TaskPersistence();
 		assertTrue(p.hasLoanArrearsTaskRunSuccessfully());
 		Task task2 = new Task();
@@ -59,7 +59,7 @@ public class TaskPersistenceTest extends MifosIntegrationTest {
 		task2.setTask("LoanArrearsTask");
 		new TaskPersistence().saveAndCommitTask(task2);
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		assertFalse(p.hasLoanArrearsTaskRunSuccessfully());
 		TestObjectFactory.removeObject(task1);
 		TestObjectFactory.removeObject(task2);
@@ -75,8 +75,8 @@ public class TaskPersistenceTest extends MifosIntegrationTest {
 		task.setStatus(TaskStatus.COMPLETE.getValue());
 		task.setTask("ProductStatus");
 		new TaskPersistence().saveAndCommitTask(task);
-		HibernateUtil.closeSession();
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		StaticHibernateUtil.closeSession();
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();
@@ -108,9 +108,9 @@ public class TaskPersistenceTest extends MifosIntegrationTest {
 		} catch (PersistenceException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
-		Query query = HibernateUtil.getSessionTL().createQuery(
+		Query query = StaticHibernateUtil.getSessionTL().createQuery(
 				"from " +
 				Task.class.getName());
 		List<Task> tasks = query.list();

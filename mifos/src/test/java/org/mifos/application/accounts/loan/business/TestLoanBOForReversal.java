@@ -41,7 +41,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -71,23 +71,23 @@ public class TestLoanBOForReversal extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		if (loan != null)
-			loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+			loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 					loan.getAccountId());
 		if (client != null)
-			client = (ClientBO) HibernateUtil.getSessionTL().get(
+			client = (ClientBO) StaticHibernateUtil.getSessionTL().get(
 					ClientBO.class, client.getCustomerId());
 		if (group != null)
-			group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+			group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 					group.getCustomerId());
 		if (center != null)
-			center = (CenterBO) HibernateUtil.getSessionTL().get(
+			center = (CenterBO) StaticHibernateUtil.getSessionTL().get(
 					CenterBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(loan);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -129,12 +129,12 @@ public class TestLoanBOForReversal extends MifosIntegrationTest {
             getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         assertTrue("numberOfTransactions=" + numberOfTransactions + " should be: " + 0,
                 numberOfTransactions == 0);
-        HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+        StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private LoanBO retrieveLoanAccount() {
-		return (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		return (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				loan.getAccountId());
 	}
 
@@ -150,24 +150,24 @@ public class TestLoanBOForReversal extends MifosIntegrationTest {
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		loan.applyPaymentWithPersist(paymentData);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private void reverseLoan() throws AccountException {
 		loan = retrieveLoanAccount();
 		loan.setUserContext(userContext);
 		loan.reverseLoanDisbursal(group.getPersonnel(), "Loan Disbursal");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private void adjustLastPayment() throws AccountException {
 		loan = retrieveLoanAccount();
 		loan.setUserContext(userContext);
 		loan.adjustPmnt("loan account has been adjusted by test code");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	/*
@@ -229,7 +229,7 @@ public class TestLoanBOForReversal extends MifosIntegrationTest {
 		assertEquals(loan.getLoanAmount(), loan.getLoanSummary()
 				.getPrincipalDue());
 		assertEquals(new Money(), loan.getLoanSummary().getTotalAmntPaid());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 */
 	
@@ -288,7 +288,7 @@ public class TestLoanBOForReversal extends MifosIntegrationTest {
 		assertEquals(loan.getLoanAmount(), loan.getLoanSummary()
 				.getPrincipalDue());
 		assertEquals(new Money(), loan.getLoanSummary().getTotalAmntPaid());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 */
 	

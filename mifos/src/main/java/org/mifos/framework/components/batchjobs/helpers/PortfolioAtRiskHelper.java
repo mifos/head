@@ -19,7 +19,7 @@ import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
@@ -89,11 +89,11 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 					.error("PortfolioAtRiskHelper execute failed with exception " + e.getClass().getName() + ": " + 
 							e.getMessage() + " at group " + groupId.toString());
 					
-					HibernateUtil.rollbackTransaction();
+					StaticHibernateUtil.rollbackTransaction();
 					if (groupId != null)
 						errorList.add(groupId.toString());
 				} finally {
-					HibernateUtil.closeSession();
+					StaticHibernateUtil.closeSession();
 				}
 			}
 		

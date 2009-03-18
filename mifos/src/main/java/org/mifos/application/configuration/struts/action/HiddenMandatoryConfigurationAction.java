@@ -26,7 +26,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -114,7 +114,7 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 		HiddenMandatoryConfigurationActionForm actionForm = (HiddenMandatoryConfigurationActionForm) form;
 		List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
 		updateFieldConfiguration(actionForm, confFieldList);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		initializeFieldConfiguration(servlet);
 		logger.debug("Outside update method");
 		return mapping.findForward(ActionForwards.update_success.toString());

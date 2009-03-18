@@ -25,7 +25,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -74,8 +74,8 @@ public class LoginAction extends BaseAction {
 	public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside login of LoginAction");
 		loginLogger.info("Using Thread: " + Thread.currentThread().getName());
-		loginLogger.info("Is Session Open?: " + HibernateUtil.isSessionOpen());
-		loginLogger.info("Using hibernate session: " + HibernateUtil.getSessionTL().hashCode());
+		loginLogger.info("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
+		loginLogger.info("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
 		
 		LoginActionForm loginActionForm = (LoginActionForm) form;
 		String userName = loginActionForm.getUserName();

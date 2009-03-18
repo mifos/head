@@ -17,7 +17,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -60,7 +60,7 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -68,7 +68,7 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		center = createCenter("center1");
 		createAccountsForCenter();
 		savingsBO = getSavingsAccount(center,"fsaf6","ads6");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = service.getCenter(center.getCustomerId());
 		assertNotNull(center);
 		assertEquals("center1", center.getDisplayName());
@@ -76,7 +76,7 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		assertEquals(0, center.getOpenLoanAccounts().size());
 		assertEquals(1, center.getOpenSavingAccounts().size());
 		assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		retrieveAccountsToDelete();
 	}
 	
@@ -84,7 +84,7 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		center = createCenter("Center2");
 		createAccountsForCenter();
 		savingsBO = getSavingsAccount(center,"fsaf6","ads6");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = service.getCenter(center.getCustomerId());
 		assertNotNull(center);
 		assertEquals("Center2", center.getDisplayName());
@@ -92,13 +92,13 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		assertEquals(0, center.getOpenLoanAccounts().size());
 		assertEquals(1, center.getOpenSavingAccounts().size());
 		assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		retrieveAccountsToDelete();
 	}
 
 	public void testFailureGet() throws Exception {
 		center = createCenter("Center1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getCenter(center.getCustomerId());
@@ -106,13 +106,13 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}finally{
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 			}
 	}
 	
 	public void testFailureFindBySystemId() throws Exception {
 		center = createCenter("Center1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.findBySystemId(center.getGlobalCustNum());
@@ -120,7 +120,7 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}finally{
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		}
 	}
 	
@@ -140,7 +140,7 @@ public class TestCenterBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}finally{
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		}
 	}
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {

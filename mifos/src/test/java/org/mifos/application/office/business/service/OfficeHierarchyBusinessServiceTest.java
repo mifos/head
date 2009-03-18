@@ -44,7 +44,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeHierarchyBusinessServiceTest extends MifosIntegrationTest {
@@ -82,7 +82,7 @@ public class OfficeHierarchyBusinessServiceTest extends MifosIntegrationTest {
 				e.getKey());
 		}
 		finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 

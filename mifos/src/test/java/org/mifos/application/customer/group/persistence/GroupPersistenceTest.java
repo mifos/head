@@ -26,7 +26,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -61,7 +61,7 @@ public class GroupPersistenceTest extends MifosIntegrationTest {
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -105,7 +105,7 @@ public class GroupPersistenceTest extends MifosIntegrationTest {
             assertTrue(group.isActive());
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
@@ -147,14 +147,14 @@ public class GroupPersistenceTest extends MifosIntegrationTest {
 	private void createGroup(){
 		center = createCenter();
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		
 	}
 	private void createGroup_ON_HOLD_STATUS(){
 		center = createCenter();
 		group = TestObjectFactory.createGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	
 	}
     public OfficePersistence getOfficePersistence() {

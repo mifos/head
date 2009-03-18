@@ -3,7 +3,7 @@ package org.mifos.framework.components.fieldConfiguration.business;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class TestFieldConfigurationEntity extends MifosIntegrationTest{
 
@@ -12,7 +12,7 @@ public class TestFieldConfigurationEntity extends MifosIntegrationTest{
     }
 
     public void testGetFieldConfigurationEntity(){
-		FieldConfigurationEntity fieldConfigurationEntity=(FieldConfigurationEntity)HibernateUtil.getSessionTL().get(FieldConfigurationEntity.class,Integer.valueOf("1"));
+		FieldConfigurationEntity fieldConfigurationEntity=(FieldConfigurationEntity)StaticHibernateUtil.getSessionTL().get(FieldConfigurationEntity.class,Integer.valueOf("1"));
 		assertEquals(fieldConfigurationEntity.getFieldName(),"SecondLastName");
 	}
 }

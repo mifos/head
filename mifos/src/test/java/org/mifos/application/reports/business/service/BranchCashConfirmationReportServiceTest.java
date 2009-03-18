@@ -36,7 +36,7 @@ import org.mifos.application.cashconfirmationreport.BranchCashConfirmationIssueB
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
 
 public class BranchCashConfirmationReportServiceTest extends BranchReportTestCase {
@@ -57,7 +57,7 @@ public class BranchCashConfirmationReportServiceTest extends BranchReportTestCas
 		BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO(
 				"SOMEMORE", ZERO);
 		reportBO.addCenterIssue(anotherIssue);
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		Transaction transaction = session.beginTransaction();
 		session.save(reportBO);
 		List<BranchCashConfirmationInfoBO> centerIssues = ReportServiceFactory

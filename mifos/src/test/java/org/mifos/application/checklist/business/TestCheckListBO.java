@@ -17,7 +17,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCheckListBO extends MifosIntegrationTest {
@@ -39,7 +39,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(customerCheckList);
 		TestObjectFactory.cleanUp(accountCheckList);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -53,8 +53,8 @@ public class TestCheckListBO extends MifosIntegrationTest {
 				CheckListConstants.STATUS_ACTIVE, getCheckListDetails(),
 				(short) 1, (short) 1);
 		customerCheckList.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
@@ -77,8 +77,8 @@ public class TestCheckListBO extends MifosIntegrationTest {
 				accountStateEntity, "Account CheckList", Short.valueOf("1"),
 				getCheckListDetails(), Short.valueOf("1"), (short) 1);
 		accountCheckList.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, accountCheckList.getChecklistId());
@@ -104,7 +104,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		} catch (CheckListException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
 	}
@@ -122,7 +122,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		} catch (CheckListException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
 	}
@@ -141,7 +141,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		} catch (CheckListException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
 	}
@@ -150,7 +150,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		customerCheckList = TestObjectFactory.createCustomerChecklist(
 				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
 						.getValue(), CheckListConstants.STATUS_ACTIVE);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
 
@@ -158,8 +158,8 @@ public class TestCheckListBO extends MifosIntegrationTest {
 				customerCheckList.getCustomerStatus(), "Customer CheckList",
 				CheckListConstants.STATUS_INACTIVE, getCheckListDetails(),
 				(short) 1, (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
 
@@ -176,7 +176,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 				ProductType.LOAN.getValue(),
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				CheckListConstants.STATUS_ACTIVE);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, accountCheckList.getChecklistId());
 
@@ -184,8 +184,8 @@ public class TestCheckListBO extends MifosIntegrationTest {
 				accountCheckList.getAccountStateEntity(), "Account CheckList",
 				CheckListConstants.STATUS_INACTIVE, getCheckListDetails(),
 				(short) 1, (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, accountCheckList.getChecklistId());
 
@@ -205,8 +205,8 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		AccountCheckListBO accountCheckList = new AccountCheckListBO(productTypeEntity,
 				accountStateEntity, "Account CheckList", Short.valueOf("1"),
 				getCheckListDetails(), Short.valueOf("1"), (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			accountCheckList.save();
@@ -214,7 +214,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		} catch (CheckListException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	
@@ -263,7 +263,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 				CheckListConstants.STATUS_ACTIVE);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.LOAN_APPROVED);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, accountCheckList.getChecklistId());
 		try {
@@ -276,7 +276,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 			assertTrue(true);
 		} finally {
 			TestObjectFactory.deleteChecklist(accountCheckList1);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	
@@ -291,7 +291,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
 				CustomerStatus.fromInt(CustomerStatus.CENTER_INACTIVE
 						.getValue()));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
 				CustomerCheckListBO.class, customerCheckList.getChecklistId());
 		try {
@@ -304,7 +304,7 @@ public class TestCheckListBO extends MifosIntegrationTest {
 			assertTrue(true);
 		} finally {
 			TestObjectFactory.deleteChecklist(customerCheckList1);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 

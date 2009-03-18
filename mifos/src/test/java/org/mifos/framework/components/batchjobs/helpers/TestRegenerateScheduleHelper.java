@@ -64,7 +64,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -128,7 +128,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 			TestDatabase.resetMySQLDatabase();
 		}
 		regenerateScheduleHelper = null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -161,7 +161,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		TestObjectFactory.flushandCloseSession();
 
 		regenerateScheduleHelper.execute(System.currentTimeMillis());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		group = TestObjectFactory.getGroup(group
@@ -216,7 +216,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 
 		center
@@ -242,7 +242,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
 						.getActionDate());
@@ -288,7 +288,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 	}
 
@@ -299,7 +299,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		center = TestObjectFactory.getCenter(center.getCustomerId());
 		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 		TestLoanBO.setDisbursementDate(accountBO, offSetCurrentDate(21));
 		accountBO.getAccountActionDate((short) 1).setPaymentStatus(PaymentStatus.PAID);
@@ -331,7 +331,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		List<java.util.Date> meetingDates = null;
 		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
@@ -379,7 +379,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 	}
 
@@ -539,7 +539,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 						.getRecommendedAmount(), TestObjectFactory
 						.getCustomFields());
 		savings.save();
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 		return savings;
 	}
 

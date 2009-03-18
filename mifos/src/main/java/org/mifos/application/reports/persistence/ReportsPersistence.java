@@ -67,7 +67,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class ReportsPersistence extends Persistence {
@@ -81,7 +81,7 @@ public class ReportsPersistence extends Persistence {
 	 * Reports within a particular category
 	 */
 	public List<ReportsCategoryBO> getAllReportCategories() {
-		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+		Query query = StaticHibernateUtil.getSessionTL().getNamedQuery(
 				ReportsConstants.GETALLREPORTS);
 		return query.list();
 	}
@@ -95,7 +95,7 @@ public class ReportsPersistence extends Persistence {
 	}
 
 	public List<ReportsParams> getAllReportParams() {
-		return getAllReportParams(HibernateUtil.getSessionTL());
+		return getAllReportParams(StaticHibernateUtil.getSessionTL());
 	}
 
 	public List<ReportsParams> getAllReportParams(Session session) {
@@ -109,7 +109,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.save(reportsParams);
 			session.flush();
@@ -130,7 +130,7 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.delete(reportsParams);
 			session.flush();
@@ -161,12 +161,12 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
 	public List<ReportsDataSource> getAllReportDataSource() {
-		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+		Query query = StaticHibernateUtil.getSessionTL().getNamedQuery(
 				ReportsConstants.GETALLREPORTSDATASOURCE);
 		return query.list();
 	}
@@ -176,7 +176,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.save(reportsDataSource);
 			session.flush();
@@ -199,7 +199,7 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.delete(reportsDataSource);
 			session.flush();
@@ -231,13 +231,13 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
 	/* What is this for?  I don't see anyone calling it. */
 	public List<ReportsParamsMap> getAllReportParamsMap() {
-		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+		Query query = StaticHibernateUtil.getSessionTL().getNamedQuery(
 				ReportsConstants.GETALLREPORTSPARAMSMAP);
 		return query.list();
 	}
@@ -307,7 +307,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.save(reportsParamsMapValue);
 			session.flush();
@@ -329,7 +329,7 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
@@ -342,7 +342,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.delete(reportsParamsMapValue);
 			session.flush();
@@ -365,7 +365,7 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
@@ -377,7 +377,7 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		Transaction trxn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			trxn = session.beginTransaction();
 			session.update(reportsJasperMap);
 			session.flush();
@@ -398,7 +398,7 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
@@ -437,17 +437,17 @@ public class ReportsPersistence extends Persistence {
 
 	public ReportsJasperMap oneJasperOfReportId(short reportId)
 			throws PersistenceException {
-		return oneJasperOfReportId(HibernateUtil.getSessionTL(), reportId);
+		return oneJasperOfReportId(StaticHibernateUtil.getSessionTL(), reportId);
 	}
 
 	public void createJasperMap(ReportsJasperMap map) {
 		Session session = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			createJasperMap(session, map);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
@@ -458,7 +458,7 @@ public class ReportsPersistence extends Persistence {
 
 	/**
 	 * Creates a connection.
-	 * (This function calls HibernateUtil.closeSession before returning.
+	 * (This function calls StaticHibernateUtil.closeSession before returning.
 	 * I think what it is doing is closing the session but keeping
 	 * open the underlying connection.  Certainly looks ugly, not
 	 * sure whether it is buggy too...).
@@ -467,7 +467,7 @@ public class ReportsPersistence extends Persistence {
 			SystemException {
 		Session session = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			return session.connection();
 		}
 		catch (HibernateProcessException e) {
@@ -482,19 +482,19 @@ public class ReportsPersistence extends Persistence {
 					e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 
 	public ReportsBO getReport(Short reportId) {
 		Session session = null;
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		return (ReportsBO) session.load(ReportsBO.class, reportId);
 	}
 	
 	public ReportsCategoryBO getReportCategoryByCategoryId(Short reportCategoryId) {
 		Session session = null;
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		return (ReportsCategoryBO) session.load(ReportsCategoryBO.class, reportCategoryId);
 	}
 	

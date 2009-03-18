@@ -40,7 +40,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.migration.MifosValidationEventHandler;
@@ -86,8 +86,8 @@ public class TestCenterMapper extends MifosIntegrationTest {
 		validationEventHandler = new MifosValidationEventHandler();
 		unmarshaller.setEventHandler(validationEventHandler);
 		
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		UserContext userContext = TestUtils.makeUser();
 		testFee1 = TestObjectFactory.createOneTimeAmountFee("testFee1",
 				FeeCategory.CENTER,"100",FeePayment.UPFRONT, userContext);
@@ -96,7 +96,7 @@ public class TestCenterMapper extends MifosIntegrationTest {
 		testFeeMonthly = TestObjectFactory.createPeriodicAmountFee("testFeeMonthly", 
 				FeeCategory.CENTER, "44", RecurrenceType.MONTHLY, (short)1, 
 				userContext);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 	}
 	

@@ -23,7 +23,7 @@ package org.mifos.framework;
 import org.junit.After;
 import org.junit.Before;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -42,7 +42,7 @@ public class MifosInMemoryIntegrationTest {
 
     @After
     public void tearDown() {
-        HibernateUtil.resetDatabase();
+        StaticHibernateUtil.resetDatabase();
     }
 
     public MifosInMemoryIntegrationTest() {

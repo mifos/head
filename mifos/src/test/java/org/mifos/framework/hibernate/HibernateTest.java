@@ -30,7 +30,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.configuration.ConfigureSession;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HibernateTest extends MifosIntegrationTest {
 
@@ -52,14 +52,14 @@ public class HibernateTest extends MifosIntegrationTest {
 	}
 
 	public void testHibernateUtilIsSessionOpen() {
-		HibernateUtil.getSessionTL();
-		assertTrue(HibernateUtil.isSessionOpen());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.getSessionTL();
+		assertTrue(StaticHibernateUtil.isSessionOpen());
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testHibernateUtilIsSessionOpenForClosedSession() {
-		HibernateUtil.closeSession();
-		assertFalse(HibernateUtil.isSessionOpen());
+		StaticHibernateUtil.closeSession();
+		assertFalse(StaticHibernateUtil.isSessionOpen());
 	}
 
 }

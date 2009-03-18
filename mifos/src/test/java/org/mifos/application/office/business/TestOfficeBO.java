@@ -17,7 +17,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -36,7 +36,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -79,8 +79,8 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				parent, customFieldView, "abcd", "abcd", null,
 				OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.flushAndCloseSession();
 		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		assertEquals("1.1.2", officeBO.getSearchId());
 		assertEquals("abcd", officeBO.getOfficeName());
@@ -174,11 +174,11 @@ public class TestOfficeBO extends MifosIntegrationTest {
 
 	public void testGetChildern() throws Exception {
 		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO parent1 = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		assertEquals(2, parent1.getChildren().size());
@@ -197,7 +197,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 
 		officeBO.update("3", "3", officeBO.getOfficeStatus(), officeBO
 				.getOfficeLevel(), null, null, null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -217,7 +217,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO Child = new OfficeBO(userContext, OfficeLevel.BRANCHOFFICE,
 				officeBO, null, "2", "2", null, OperationMode.REMOTE_SERVER);
 		Child.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -243,7 +243,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO Child = new OfficeBO(userContext, OfficeLevel.BRANCHOFFICE,
 				officeBO, null, "2", "2", null, OperationMode.REMOTE_SERVER);
 		Child.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -267,7 +267,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		// createChild also
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -287,7 +287,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO Child = new OfficeBO(userContext, OfficeLevel.BRANCHOFFICE,
 				officeBO, null, "2", "2", null, OperationMode.REMOTE_SERVER);
 		Child.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -310,7 +310,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		// createChild also
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -330,7 +330,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO Child = new OfficeBO(userContext, OfficeLevel.BRANCHOFFICE,
 				officeBO, null, "2", "2", null, OperationMode.REMOTE_SERVER);
 		Child.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -354,7 +354,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -387,7 +387,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				parent, customFieldView1, "abcd", "abcd", null,
 				OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -401,7 +401,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		customFieldView.add(customFieldView2);
 		savbedOffice.update("abcd", "abcd", savbedOffice.getOfficeStatus(),
 				savbedOffice.getOfficeLevel(), null, null, customFieldView);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -418,7 +418,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -433,7 +433,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		savbedOffice.setCustomFields(null);
 		savbedOffice.update("abcd", "abcd", savbedOffice.getOfficeStatus(),
 				savbedOffice.getOfficeLevel(), null, null, customFieldView);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
@@ -450,20 +450,20 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO
 				.getOfficeId());
 		savbedOffice.setUserContext(userContext);
 		savbedOffice.update("abcd", "abcd", OfficeStatus.INACTIVE, savbedOffice
 				.getOfficeLevel(), null, null, null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		savbedOffice.setUserContext(userContext);
 		savbedOffice.update("abcd", "abcd", OfficeStatus.ACTIVE, savbedOffice
 				.getOfficeLevel(), null, null, null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		assertEquals(OfficeStatus.ACTIVE, savbedOffice.getOfficeStatus());
@@ -488,7 +488,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.BRANCHOFFICE,
 				office, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		assertEquals(1, office.getBranchOnlyChildren().size());
@@ -505,14 +505,14 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				OfficeLevel.AREAOFFICE, regionalOffice, "2", "2");
 		OfficeBO branchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, areaOffice, "3", "3");
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
 		areaOffice.setUserContext(userContext);
 		areaOffice.update("2", "2", areaOffice.getOfficeStatus(), areaOffice
 				.getOfficeLevel(), parent, null, null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		regionalOffice = TestObjectFactory.getOffice(regionalOffice
 				.getOfficeId());
@@ -541,7 +541,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				OfficeLevel.AREAOFFICE, regionalOffice, "2", "2");
 		OfficeBO branchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, areaOffice, "3", "3");
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
 		areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
@@ -576,13 +576,13 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				OfficeLevel.AREAOFFICE, regionalOffice, "2", "2");
 		OfficeBO branchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, ho, "3", "3");
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
 		branchOffice.setUserContext(userContext);
 		branchOffice.update("3", "3", branchOffice.getOfficeStatus(),
 				branchOffice.getOfficeLevel(), areaOffice, null, null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		regionalOffice = TestObjectFactory.getOffice(regionalOffice
 				.getOfficeId());
@@ -609,14 +609,14 @@ public class TestOfficeBO extends MifosIntegrationTest {
 		//
 		OfficeBO branchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, ho, "3", "3");
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
 		OfficeBO areaOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 		branchOffice.setUserContext(userContext);
 		branchOffice.update("3", "3", branchOffice.getOfficeStatus(),
 				branchOffice.getOfficeLevel(), areaOffice, null, null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1")) {
 			if ("1.1.1.1".equals(branchOffice.getSearchId())
@@ -639,7 +639,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
 				.getOfficeLevel(), ho, branchOffice.getAddress().getAddress(),
 				null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		if ("1.1.1".equals(branchOffice.getSearchId())
@@ -656,7 +656,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
 				.getOfficeLevel(), areaOffice, branchOffice.getAddress()
 				.getAddress(), null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 
 		resetOffices();
@@ -697,8 +697,8 @@ public class TestOfficeBO extends MifosIntegrationTest {
 
 		areaOffice.setParentOffice(ho);
 		areaOffice.setSearchId("1.1.1");
-		HibernateUtil.getSessionTL().saveOrUpdate(areaOffice);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.getSessionTL().saveOrUpdate(areaOffice);
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 
 		OfficeBO areaOffice1 = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
@@ -710,7 +710,7 @@ public class TestOfficeBO extends MifosIntegrationTest {
 				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
 				.getOfficeLevel(), areaOffice1, branchOffice.getAddress()
 				.getAddress(), null);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 	}
 

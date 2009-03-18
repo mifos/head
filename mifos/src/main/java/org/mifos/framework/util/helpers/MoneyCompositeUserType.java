@@ -54,7 +54,7 @@ import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.business.SystemConfiguration;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 /**
  * This class denotes a composite user type that has been 
  * created for the Money class. This has been done so that the
@@ -121,7 +121,7 @@ public class MoneyCompositeUserType implements CompositeUserType {
 			currency = configCurrency;
 		}
 		else {
-			Session session1 = HibernateUtil.getSessionTL();
+			Session session1 = StaticHibernateUtil.getSessionTL();
 			currency = (MifosCurrency) session1.get(MifosCurrency.class,
 					currencyId);
 		}

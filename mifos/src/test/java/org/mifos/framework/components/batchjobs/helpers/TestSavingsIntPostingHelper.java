@@ -31,7 +31,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -87,7 +87,7 @@ public class TestSavingsIntPostingHelper extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(savings4);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -106,8 +106,8 @@ public class TestSavingsIntPostingHelper extends MifosIntegrationTest {
 		TestSavingsBO.setBalance(savings4,new Money("250"));
 		savings4.update();
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		Calendar cal = Calendar.getInstance(Configuration.getInstance()
 				.getSystemConfig().getMifosTimeZone());

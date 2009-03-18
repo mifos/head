@@ -30,7 +30,7 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -190,7 +190,7 @@ public class LoanPersistence extends Persistence {
 			Set<AccountActionDateEntity> accountActionDates)
 			throws PersistenceException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = StaticHibernateUtil.getSessionTL();
 			for (AccountActionDateEntity entity : accountActionDates) {
 				session.delete(entity);
 			}
@@ -230,7 +230,7 @@ public class LoanPersistence extends Persistence {
 		String activeBadAccountIdQuery = "from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 9";
 		StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId,activeBadAccountIdQuery);
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = StaticHibernateUtil.getSessionTL();
 			Query query = session.createQuery(queryString.toString());
 			return query.list();
 		}
@@ -265,7 +265,7 @@ public class LoanPersistence extends Persistence {
 			Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException{
 		BigDecimal loanBalanceAmount = new BigDecimal(0);
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = StaticHibernateUtil.getSessionTL();
 			Criteria criteria = session.createCriteria(LoanBO.class)
 					.setProjection(Projections.sum("loanBalance.amount"))
 					.add(Restrictions.eq("accountState.id", (short) 5))
@@ -292,7 +292,7 @@ public class LoanPersistence extends Persistence {
 		String activeLoansQuery = "from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id in (5,9)";
 		StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId,activeLoansQuery);
 		try {
-			Session session = HibernateUtil.getSessionTL();
+			Session session = StaticHibernateUtil.getSessionTL();
 			Query query = session.createQuery(queryString.toString());
 			return query.list();
 		}

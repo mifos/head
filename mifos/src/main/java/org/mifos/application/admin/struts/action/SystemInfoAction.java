@@ -34,7 +34,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -46,13 +46,13 @@ public class SystemInfoAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
-			DatabaseMetaData metaData = HibernateUtil.getSessionTL().connection().getMetaData();
+			DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
 			ServletContext context = request.getSession().getServletContext();
 			SystemInfo systemInfo = new SystemInfo(metaData, context, Localization.getInstance().getMainLocale(), true);
 			SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
 			return mapping.findForward(ActionForwards.load_success.toString());
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	

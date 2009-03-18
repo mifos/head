@@ -47,7 +47,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -78,13 +78,13 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(collectionSheet);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
 	@Override
 	protected void setUp() throws Exception {
-		HibernateUtil.getSessionTL();
+		StaticHibernateUtil.getSessionTL();
 	}
 
 	public void testAddCollectionSheetCustomer() {
@@ -118,11 +118,11 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 		LoanBO loan = (LoanBO) accountBO;
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		collectionSheet.update(Short.valueOf("2"));
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.closeSession();
 		Money disbursedAmount = collectionSheet
 				.getCollectionSheetCustomerForCustomerId(group.getCustomerId())
 				.getLoanDetailsForAccntId(loan.getAccountId())
@@ -144,7 +144,7 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 
 	public void testCreateSuccess() throws Exception {
 		collectionSheet = createCollectionSheet();
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		CollectionSheetBO collectionSheetBO = (CollectionSheetBO) session.get(
 				CollectionSheetBO.class, collectionSheet.getCollSheetID());
 		assertNotNull(collectionSheetBO);
@@ -153,8 +153,8 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 	public void testCreateFailure() throws Exception {
 		CollectionSheetBO collSheet = new CollectionSheetBO();
 
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		try {
 			collSheet.create();
 			fail();
@@ -173,11 +173,11 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 		collectionSheet = createCollectionSheet(firstInstallmentActionDate
 				.getActionDate());
 		generateCollectionSheetForDate(collectionSheet);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		collectionSheet.update(Short.valueOf("2"));
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.closeSession();
 		assertEquals(Short.valueOf("2"), collectionSheet.getStatusFlag());
 	}
 
@@ -190,10 +190,10 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 		collSheet.setCreatedDate(getCurrentDate());
 		collSheet.setRunDate(getCurrentDate());
 		collSheet.setStatusFlag(null);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		collSheet.create();
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 		return collSheet;
 
 	}
@@ -207,10 +207,10 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 		collSheet.setCreatedDate(getCurrentDate());
 		collSheet.setRunDate(runDate);
 		collSheet.setStatusFlag(null);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		collSheet.create();
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 		return collSheet;
 
 	}
@@ -443,7 +443,7 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 	}
 	
 	public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting() throws Exception {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		Transaction transaction = session.beginTransaction();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(2010, Calendar.JANUARY, 0, 0, 0, 0);

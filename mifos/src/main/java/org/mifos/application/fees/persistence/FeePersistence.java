@@ -50,13 +50,13 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class FeePersistence extends Persistence {
 
 	public FeeBO getFee(Short feeId) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (FeeBO) session.get(FeeBO.class, feeId);
 	}
 	public FeeBO getFee(Short feeId,RateAmountFlag rateflag) throws PersistenceException {
@@ -119,7 +119,7 @@ public class FeePersistence extends Persistence {
 	}
 	
 	public RateFeeBO getRateFee(Short feeId) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (RateFeeBO) session.get(RateFeeBO.class, feeId);
 	}
 }

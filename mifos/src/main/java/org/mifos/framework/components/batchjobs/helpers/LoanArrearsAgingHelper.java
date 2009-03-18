@@ -28,7 +28,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class LoanArrearsAgingHelper extends TaskHelper {
 
@@ -52,14 +52,14 @@ public class LoanArrearsAgingHelper extends TaskHelper {
 			try {
 				LoanBO loanBO = new LoanPersistence().getAccount(accountId);
 				loanBO.handleArrearsAging();
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 			}
 			catch (Exception e) {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				errorList.add(accountId.toString());
 			}
 			finally {
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		}
 		if (errorList.size() > 0)

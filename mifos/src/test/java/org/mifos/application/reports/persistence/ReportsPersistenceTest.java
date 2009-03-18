@@ -15,7 +15,7 @@ import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class ReportsPersistenceTest extends MifosIntegrationTest {
@@ -34,7 +34,7 @@ public class ReportsPersistenceTest extends MifosIntegrationTest {
 	public void testGetAllReportCategories() {
 		List<ReportsCategoryBO> listOfReportCategories = reportsPersistence
 				.getAllReportCategories();
-         Session session = HibernateUtil.getSessionTL();
+         Session session = StaticHibernateUtil.getSessionTL();
          Query query = session.createQuery("select count(*) from ReportsCategoryBO");
          List list = query.list();
          
@@ -179,7 +179,7 @@ public class ReportsPersistenceTest extends MifosIntegrationTest {
 	 }
 	 
 	 public void testGetAllReports(){
-		 org.hibernate.Session session= HibernateUtil.getSessionTL();
+		 org.hibernate.Session session= StaticHibernateUtil.getSessionTL();
 		 Query query = session.createQuery("select count(*) from ReportsBO");
 		 List list = query.list();
 		 int reportsNum = ((Long)list.get(0)).intValue();

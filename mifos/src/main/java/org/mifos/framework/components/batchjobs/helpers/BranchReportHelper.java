@@ -40,7 +40,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 
 public class BranchReportHelper extends TaskHelper {
@@ -63,7 +63,7 @@ public class BranchReportHelper extends TaskHelper {
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
 		long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		Transaction transaction = session.beginTransaction();
 		Date runDate = new Date(timeInMillis);
 		

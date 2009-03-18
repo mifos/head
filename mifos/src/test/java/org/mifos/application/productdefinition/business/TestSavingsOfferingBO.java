@@ -60,7 +60,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -112,14 +112,14 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.MINIMUM_BALANCE);
 		savingsProduct.setUserContext(TestUtils.makeUserWithLocales());
-		HibernateUtil.getInterceptor().createInitialValueMap(savingsProduct);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(savingsProduct);
 		savingsProduct.update(Short.valueOf("1"), newName, newShortName,
 				productCategory, prdApplicableMaster, startDate, endDate,
 				"Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType,
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				new Money("100"), new Money("1"), 10.0);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(
 				SavingsOfferingBO.class, savingsProduct.getPrdOfferingId());
 
@@ -176,9 +176,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -203,9 +203,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -258,9 +258,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -288,9 +288,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -318,9 +318,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -346,9 +346,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -374,9 +374,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -409,9 +409,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -443,9 +443,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -475,9 +475,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -505,9 +505,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -535,9 +535,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -556,7 +556,7 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -571,9 +571,9 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
@@ -586,7 +586,7 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				new Money("10"), new Money(), new Money(), 10.0,
 				depglCodeEntity, intglCodeEntity);
 		savingsProduct.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(
 				SavingsOfferingBO.class, savingsProduct.getPrdOfferingId());
@@ -715,8 +715,8 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
 				intCalcMeeting, intPostMeeting, new Money("10"), new Money(
 						"100"), new Money("1"), 10.0);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(
 				SavingsOfferingBO.class, savingsProduct.getPrdOfferingId());
 		assertEquals(reduceCurrentDate(1), savingsProduct.getStartDate());
@@ -857,8 +857,8 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				"Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType,
 				intCalcMeeting, intPostMeeting, new Money("10"), new Money(
 						"100"), new Money("1"), 10.0);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(
 				SavingsOfferingBO.class, savingsProduct.getPrdOfferingId());
 		assertEquals(newStartDate, savingsProduct.getStartDate());
@@ -892,8 +892,8 @@ public class TestSavingsOfferingBO extends MifosIntegrationTest {
 				"Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType,
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				new Money("100"), new Money("1"), 10.0);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(
 				SavingsOfferingBO.class, savingsProduct.getPrdOfferingId());
 		assertEquals(newName, savingsProduct.getPrdOfferingName());

@@ -19,7 +19,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -63,7 +63,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -102,7 +102,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
 		verifyForward(ActionForwards.transferToBranch_failure.toString());		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		client = TestObjectFactory.getClient(client.getCustomerId());
 	}
 	
@@ -279,7 +279,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
 		client = TestObjectFactory.createClient("client_to_transfer",
 			getMeeting(), CustomerStatus.CLIENT_ACTIVE);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	private void createObjectsForTransferringClientInGroup()throws Exception{
@@ -297,7 +297,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		client = TestObjectFactory.createClient("Client11", 
 				CustomerStatus.CLIENT_ACTIVE,
 				group);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	private MeetingBO getMeeting() {

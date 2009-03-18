@@ -20,7 +20,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -64,7 +64,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 			TestObjectFactory.cleanUp(client);
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		catch (Exception e) {
 			/* throwing exceptions here will often mask whatever the
@@ -129,7 +129,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 				request));
 		assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_SIZE,
 				request));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testPreviewWithoutNotes() throws AccountException,
@@ -142,7 +142,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("searchString", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -162,7 +162,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("searchString", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("note", "0123456789012345678901234567890123456789"
@@ -197,7 +197,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("searchString", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("note", "0123456789012345678901234567890123456789");
@@ -215,7 +215,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("searchString", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("note", "0123456789012345678901234567890123456789");
@@ -227,8 +227,8 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		performNoErrors();
 		verifyForward(ActionForwards.update_success.toString());
 		
-		HibernateUtil.closeSession();
-		loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		StaticHibernateUtil.closeSession();
+		loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				loan.getAccountId());
 	}
 
@@ -291,7 +291,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		loan.setUserContext(userContext);
 		loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group
 				.getPersonnel(), new Date(), Short.valueOf("1"));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 }

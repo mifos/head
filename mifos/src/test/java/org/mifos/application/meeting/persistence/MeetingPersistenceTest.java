@@ -10,7 +10,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class MeetingPersistenceTest extends MifosIntegrationTest{
 
@@ -28,8 +28,8 @@ public class MeetingPersistenceTest extends MifosIntegrationTest{
 	public void testGetMeeting() throws Exception{
 		MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());

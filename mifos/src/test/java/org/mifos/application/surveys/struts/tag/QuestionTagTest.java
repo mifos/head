@@ -8,7 +8,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -30,19 +30,19 @@ public class QuestionTagTest extends MifosIntegrationTest {
 		result = new XmlBuilder();
 		super.setUp();
 		database = TestDatabase.makeStandard();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		AuditInterceptor interceptor = new AuditInterceptor();
 		Session session1 = database.openSession(interceptor);
 		SessionHolder holder = new SessionHolder(session1);
 		holder.setInterceptor(interceptor);
-		HibernateUtil.setThreadLocal(holder);
+		StaticHibernateUtil.setThreadLocal(holder);
 		session = session1;
 	}
 	
 	@Override
 	public void tearDown() throws Exception {
 		session.close();
-		HibernateUtil.resetDatabase();
+		StaticHibernateUtil.resetDatabase();
 	}
 	
 	public void testFreetext() throws Exception {

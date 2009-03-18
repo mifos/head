@@ -16,7 +16,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCheckListBusinessService extends MifosIntegrationTest {
@@ -33,7 +33,7 @@ public class TestCheckListBusinessService extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testGetCheckListMasterData() throws Exception {
@@ -159,7 +159,7 @@ public class TestCheckListBusinessService extends MifosIntegrationTest {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		checkList = new CheckListBusinessService().getCheckList(checkList
 				.getChecklistId());
 		assertNotNull(checkList);
@@ -173,7 +173,7 @@ public class TestCheckListBusinessService extends MifosIntegrationTest {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			checkList = new CheckListBusinessService().getCheckList(checkList
@@ -182,7 +182,7 @@ public class TestCheckListBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.cleanUp(checkList);
 	}
 

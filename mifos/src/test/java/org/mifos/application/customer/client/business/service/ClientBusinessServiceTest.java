@@ -36,7 +36,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -72,13 +72,13 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 		TestObjectFactory.removeObject(savingsOffering3);
 		TestObjectFactory.removeObject(savingsOffering4);
 		TestObjectFactory.cleanUp(client);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
 	public void testGetClient() throws Exception {
 		client = createClient("abc");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		client = service.getClient(client.getCustomerId());
 		assertNotNull(client);
 		assertEquals("abc", client.getClientName().getName().getFirstName());
@@ -87,7 +87,7 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 
 	public void testFailureGetClient() throws Exception {
 		client = createClient("abc");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			client = service.getClient(client.getCustomerId());
@@ -95,13 +95,13 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testFailureRetrieveOfferings() throws Exception {
 		savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1",
 				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.retrieveOfferingsApplicableToClient();
@@ -109,7 +109,7 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testRetrieveOfferingsApplicableToClient() throws Exception {
@@ -121,7 +121,7 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
 		savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4",
 				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = service
 				.retrieveOfferingsApplicableToClient();
 		assertEquals(2, offerings.size());
@@ -133,7 +133,7 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 					savingsOffering2.getPrdOfferingId()))
 				assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	
@@ -200,7 +200,7 @@ public class ClientBusinessServiceTest extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertEquals("exception.framework.ApplicationException", e.getKey());
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(group);

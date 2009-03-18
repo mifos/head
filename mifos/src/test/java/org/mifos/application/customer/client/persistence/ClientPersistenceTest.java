@@ -74,7 +74,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -141,7 +141,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(clientWithSameGovtId );
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
     public void testCreateClient()
@@ -171,7 +171,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
             assertTrue(client.isActive());
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
@@ -189,7 +189,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
             }
         }
         finally {
-            HibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.rollbackTransaction();
         }
     }
 
@@ -203,7 +203,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
 				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS, currentTimestamp);
 		savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4",
 				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS, currentTimestamp);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = new ClientPersistence()
 				.retrieveOfferingsApplicableToClient();
 		assertEquals(2, offerings.size());
@@ -215,7 +215,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
 					savingsOffering2.getPrdOfferingId()))
 				assertTrue(true);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testGetActiveClientsUnderParent() throws PersistenceException {
@@ -268,7 +268,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
 		try {
 			clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, 
 			        DateUtils.getDate(1980, Calendar.JANUARY, 1));
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		}
 		catch (RuntimeException e) {
 			fail("Should not throw error when updating to a government id of closed client");
@@ -282,7 +282,7 @@ public class ClientPersistenceTest extends MifosIntegrationTest {
 		try {
 			clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, 
 			        DateUtils.getDate(1980, Calendar.JANUARY, 1));
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 			fail("Should throw error when updating to a government id of active client");
 		}
 		catch (CustomerException e) {

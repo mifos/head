@@ -16,7 +16,7 @@ import javax.xml.validation.SchemaFactory;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.migration.generated.Center;
 import org.mifos.migration.generated.MifosDataExchange;
@@ -89,7 +89,7 @@ public class DataExchanger {
 				throw new RuntimeException(e);
 			}
 		}
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 	}
 

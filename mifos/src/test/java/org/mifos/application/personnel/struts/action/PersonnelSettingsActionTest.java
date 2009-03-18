@@ -23,7 +23,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -81,7 +81,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 	protected void tearDown() throws Exception {
 		userContext = null;
 		TestObjectFactory.cleanUp(personnel);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -375,7 +375,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		assertEquals("new first name", personnel.getPersonnelDetails()
 				.getName().getFirstName());
@@ -449,9 +449,9 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 						.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, userContext.getId());
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}

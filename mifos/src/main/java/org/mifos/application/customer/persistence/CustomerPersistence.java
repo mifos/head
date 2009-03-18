@@ -84,7 +84,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -665,7 +665,7 @@ public class CustomerPersistence extends Persistence {
 		Session session = null;
 		Query query = null;
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		String systemDate = DateUtils.getCurrentDate();
 		Date localDate = DateUtils.getLocaleDate(systemDate);
 		Calendar currentDate = new GregorianCalendar();
@@ -694,7 +694,7 @@ public class CustomerPersistence extends Persistence {
 	public CustomerPerformanceHistoryView getLastLoanAmount(Integer customerId)
 			throws PersistenceException {
 		Query query = null;
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = null;
 		if (null != session) {
 			query = session
@@ -903,8 +903,8 @@ public class CustomerPersistence extends Persistence {
 				" set customer.personnel.personnelId = :parentLoanOfficer " +
 				" where customer.searchId like :parentSearchId"
 				+ " and customer.office.officeId = :parentOfficeId";
-		Session session = HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		Session session = StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		Query update = session.createQuery(hql);
 		update.setParameter("parentLoanOfficer", parentLO);
 		update.setParameter("parentSearchId", parentSearchId + ".%");
@@ -953,7 +953,7 @@ public class CustomerPersistence extends Persistence {
 	   	
 	   	try
 	   	{
-	   			Connection connection = HibernateUtil.getSessionTL().connection();
+	   			Connection connection = StaticHibernateUtil.getSessionTL().connection();
 		    	statement = connection.createStatement();
 		    	String sql =  " select customer_id from customer where "
 				+ " customer.search_id like '" + parentSearchId 

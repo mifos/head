@@ -12,7 +12,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MeetingBusinessServiceTest extends MifosIntegrationTest{
@@ -23,7 +23,7 @@ public class MeetingBusinessServiceTest extends MifosIntegrationTest{
 
     @Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -41,8 +41,8 @@ public class MeetingBusinessServiceTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
 			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = service.getMeeting(meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
@@ -59,7 +59,7 @@ public class MeetingBusinessServiceTest extends MifosIntegrationTest{
 		} catch (MeetingException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	
@@ -68,8 +68,8 @@ public class MeetingBusinessServiceTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
 			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			meeting = service.getMeeting(meeting.getMeetingId());

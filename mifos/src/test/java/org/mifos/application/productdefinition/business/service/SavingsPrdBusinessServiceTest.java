@@ -15,7 +15,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdBusinessServiceTest extends MifosIntegrationTest {
@@ -31,7 +31,7 @@ public class SavingsPrdBusinessServiceTest extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -55,7 +55,7 @@ public class SavingsPrdBusinessServiceTest extends MifosIntegrationTest {
 	public void testGetApplicablePrdStatus() throws ServiceException {
 		List<PrdStatusEntity> prdStatusList = new SavingsPrdBusinessService()
 				.getApplicablePrdStatus((short) 1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		assertEquals(2, prdStatusList.size());
 		for (PrdStatusEntity prdStatus : prdStatusList) {
 			if (prdStatus.getPrdState().equals("1"))
@@ -83,7 +83,7 @@ public class SavingsPrdBusinessServiceTest extends MifosIntegrationTest {
 			assertTrue(false);
 		} catch (ServiceException e) {
 			assertTrue(true);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 			TestObjectFactory.removeObject(savingsOffering);
 		}
 	}

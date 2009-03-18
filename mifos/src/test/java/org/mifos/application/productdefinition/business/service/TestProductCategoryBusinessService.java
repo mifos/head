@@ -12,7 +12,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -37,7 +37,7 @@ public class TestProductCategoryBusinessService extends MifosIntegrationTest {
 		super.tearDown();
 		productCategoryBusinessService=null;
 		userContext=null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class TestProductCategoryBusinessService extends MifosIntegrationTest {
 			productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum());
 			fail();
 		} catch (ServiceException e) {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 			deleteProductCategory(productCategoryBO);
 		}
 	}
@@ -127,8 +127,8 @@ public class TestProductCategoryBusinessService extends MifosIntegrationTest {
 	
 
 	private void deleteProductCategory(ProductCategoryBO productCategoryBO) {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
+		Session session = StaticHibernateUtil.getSessionTL();
+		Transaction transaction = StaticHibernateUtil.startTransaction();
 		session.delete(productCategoryBO);
 		transaction.commit();
 	}
@@ -141,8 +141,8 @@ public class TestProductCategoryBusinessService extends MifosIntegrationTest {
 			"product category",
 			"created a category");
 		productCategoryBO.save();
-		HibernateUtil.commitTransaction();
-		return (ProductCategoryBO)HibernateUtil
+		StaticHibernateUtil.commitTransaction();
+		return (ProductCategoryBO)StaticHibernateUtil
 			.getSessionTL()
 			.createQuery(
 				"from " +

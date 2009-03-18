@@ -53,7 +53,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -123,7 +123,7 @@ public class SecurityHelper {
 		Query personRoles = null;
 
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			personRoles = session
 					.getNamedQuery(NamedQueryConstants.GETPERSONROLES);
@@ -143,7 +143,7 @@ public class SecurityHelper {
 		}
 
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 
 		return roles;
@@ -170,7 +170,7 @@ public class SecurityHelper {
 		Transaction transaction = null;
 		Query officeSearch = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			officeSearch = session
 					.getNamedQuery(NamedQueryConstants.GETOFFICESEARCH);
@@ -185,7 +185,7 @@ public class SecurityHelper {
 			transaction.rollback();
 			throw new SecurityException(SecurityConstants.GENERALERROR, he);
 		} finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 		return lst;
 	}
@@ -209,7 +209,7 @@ public class SecurityHelper {
 		Query queryOfficeSearchList = null;
 
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			queryOfficeSearchList = session
 					.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
@@ -222,7 +222,7 @@ public class SecurityHelper {
 			transaction.rollback();
 			throw new SecurityException(SecurityConstants.GENERALERROR, he);
 		} finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 
 		return lst;

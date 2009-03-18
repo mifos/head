@@ -74,7 +74,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
@@ -155,7 +155,7 @@ public class BulkEntryBusinessService implements BusinessService {
 									.setYesNoFlag(YesNoFlag.NO);
 						accountNums.add(accountView.getAccountId().toString());
 					} finally {
-						HibernateUtil.closeSession();
+						StaticHibernateUtil.closeSession();
 					}
 				}
 			}
@@ -208,7 +208,7 @@ public class BulkEntryBusinessService implements BusinessService {
 									.toString());
 							
 						} finally {
-							HibernateUtil.closeSession();
+							StaticHibernateUtil.closeSession();
 						}
 				}
 			}
@@ -264,12 +264,12 @@ public class BulkEntryBusinessService implements BusinessService {
 		for (ClientBO client : clients) {
 			try {
 				saveClientAttendance(client);
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 			} catch (ServiceException e) {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				customerNames.add(client.getDisplayName());
 			} finally {
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		}
 	}
@@ -279,12 +279,12 @@ public class BulkEntryBusinessService implements BusinessService {
 		for (SavingsBO saving : savings) {
 			try {
 				saveSavingsAccount(saving);
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 			} catch (ServiceException e) {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				customerNames.add(saving.getGlobalAccountNum());
 			} finally {
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		}
 	}

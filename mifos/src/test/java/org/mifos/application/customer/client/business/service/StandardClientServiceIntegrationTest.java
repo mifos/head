@@ -47,7 +47,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
@@ -133,7 +133,7 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         CenterBO center = TestObjectFactory.createCenter("Center", meeting);
         GroupBO group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         ClientBO client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        HibernateUtil.closeSession();
+        StaticHibernateUtil.closeSession();
 
         java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 
@@ -143,8 +143,8 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         ((ClientBO) client).addClientAttendance(clientAttendance);
         CustomerPersistence customerPersistence = new CustomerPersistence();
         customerPersistence.createOrUpdate(client);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
         List<ClientAttendanceDto> clientAttendanceDtos = (List<ClientAttendanceDto>) clientService.getClientAttendanceList(
                 meetingDate, client.getOffice().getOfficeId());

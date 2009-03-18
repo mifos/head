@@ -21,7 +21,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -49,7 +49,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 	}
 
 	public void testWaiveCharges() {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 
@@ -64,7 +64,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 					.getFeeAmount());
 		}
 		assertEquals(new Money("120.0"), chargeWaived);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
 		center = TestObjectFactory.getCenter(center
@@ -125,7 +125,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 				break;
 			}
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		group = TestObjectFactory.getGroup(group

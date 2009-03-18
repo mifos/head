@@ -44,7 +44,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 
 
 /**
- * A thin wrapper around {@link HibernateUtil}'s session methods, which
+ * A thin wrapper around {@link StaticHibernateUtil}'s session methods, which
  * has reason to exist (I guess) because the session handling in searches
  * is a bit complicated.
  */
@@ -54,14 +54,14 @@ public class QuerySession
     public static Session openSession() throws HibernateProcessException {
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
        	    .info("opening session for search");
-        return HibernateUtil.openSession();
+        return StaticHibernateUtil.openSession();
     }
 
     public static void closeSession(Session hibernateSession)
     throws HibernateProcessException {
     	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
     	    .info("closing session after search");
-    	HibernateUtil.closeSession(hibernateSession);
+    	StaticHibernateUtil.closeSession(hibernateSession);
 	}
 
 }

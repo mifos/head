@@ -33,7 +33,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
@@ -67,8 +67,8 @@ public class AccountPersistenceTest extends TestAccount {
 					"An account already exists with glcode"));
 		}
 		finally {
-			HibernateUtil.rollbackTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -85,8 +85,8 @@ public class AccountPersistenceTest extends TestAccount {
 					.getAccountIdFromGlCode(glCode));
 		}
 		finally {
-			HibernateUtil.rollbackTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -98,7 +98,7 @@ public class AccountPersistenceTest extends TestAccount {
 	 */
 	public void testAddCoaHierarchy() {
 		short id = TestGeneralLedgerCode.COST_OF_FUNDS;
-		COAHierarchyEntity h = (COAHierarchyEntity) HibernateUtil
+		COAHierarchyEntity h = (COAHierarchyEntity) StaticHibernateUtil
 				.getSessionTL().load(COAHierarchyEntity.class, id);
 		assertEquals(DIRECT_EXPENDITURE_GL_ACCOUNT_CODE, h.getParentAccount()
 				.getCoa().getAssociatedGlcode().getGlcode());

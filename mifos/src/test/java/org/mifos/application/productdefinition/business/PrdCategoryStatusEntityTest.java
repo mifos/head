@@ -8,7 +8,7 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class PrdCategoryStatusEntityTest extends MifosIntegrationTest {
 	
@@ -21,12 +21,12 @@ public class PrdCategoryStatusEntityTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 	}
 	
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		session=null;		
 	}
 	

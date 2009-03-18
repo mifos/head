@@ -76,7 +76,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -105,7 +105,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(loanOffering);
 		TestObjectFactory.cleanUp(fee);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -1088,7 +1088,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		product = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, product.getPrdOfferingId());
 		assertEquals("Loan Product", product.getPrdOfferingName());
@@ -1119,7 +1119,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
 	public void testGet() throws PageExpiredException {
 		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
@@ -1132,7 +1132,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering1 = (LoanOfferingBO) SessionUtils
 				.getAttribute(Constants.BUSINESS_KEY, request);
 
-		loanOffering1 = (LoanOfferingBO) HibernateUtil.getSessionTL().get(
+		loanOffering1 = (LoanOfferingBO) StaticHibernateUtil.getSessionTL().get(
 				LoanOfferingBO.class, loanOffering1.getPrdOfferingId());
 
 		// TODO: the need to pass a locale id in to the getName methods below
@@ -1183,14 +1183,14 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
 		assertNotNull(loanOffering1.getLoanOfferingFees());
 		assertNotNull(loanOffering1.getLoanOfferingFunds());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testViewAllLoanProducts() throws PageExpiredException {
 		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
 		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1",
 				"LOA1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "viewAllLoanProducts");
 		actionPerform();
@@ -1205,13 +1205,13 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals(2, loanOfferings.size());
 		Short DEFAULT_LOCALE_ID = (short) 1;
 		for (LoanOfferingBO loanOfferingBO : loanOfferings) {
-			loanOfferingBO = (LoanOfferingBO) HibernateUtil.getSessionTL().get(
+			loanOfferingBO = (LoanOfferingBO) StaticHibernateUtil.getSessionTL().get(
 					LoanOfferingBO.class, loanOfferingBO.getPrdOfferingId());
 			assertNotNull(loanOfferingBO.getPrdOfferingName());
 			assertNotNull(loanOfferingBO.getPrdOfferingId());
 			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		TestObjectFactory.removeObject(loanOffering1);
 
 	}

@@ -54,7 +54,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -107,7 +107,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 			TestObjectFactory.removeObject(savingsOffering);
 			TestObjectFactory.removeObject(savingsOffering1);
 			TestObjectFactory.removeObject(savingsOffering2);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		catch (Exception e) {
 			/* If this was caused by an underlying failure, we don't want
@@ -180,8 +180,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
                 new Money("100"), null);
 		savings.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		savings.setUserContext(userContext);
 		assertEquals(0, savings.getAccountCustomFields().size());
@@ -219,7 +219,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savingsOffering = null;
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertNotNull(savings);
@@ -509,7 +509,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		String globalAccountNum = (String) request
 				.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
 		assertNotNull(globalAccountNum);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
 		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
@@ -530,7 +530,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		String globalAccountNum = (String) request
 				.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
 		assertNotNull(globalAccountNum);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
 		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);
@@ -587,8 +587,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		paymentData.addAccountPaymentData(savingsPaymentData);
 		
 		savings.applyPaymentWithPersist(paymentData);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		savings.setUserContext(userContext);
@@ -622,7 +622,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 			assertEquals(DateUtils.getDateWithoutTimeStamp(curTime),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
 			break;
 		}
-		HibernateUtil.closeSession();	
+		StaticHibernateUtil.closeSession();	
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -637,7 +637,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000020", savingsOffering,
 				AccountState.SAVINGS_PARTIAL_APPLICATION);
 		savingsOffering = null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, 
 			TestUtils.makeUser(), request.getSession());
@@ -647,7 +647,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		performNoErrors();
 		verifyForward("depositduedetails_success");
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsBusinessService().findBySystemId(savings
 				.getGlobalAccountNum());
 
@@ -659,7 +659,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountState.SAVINGS_ACTIVE);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savingsOffering = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, 
@@ -672,7 +672,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward("waiveAmount_success");
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsBusinessService().findBySystemId(savings
 				.getGlobalAccountNum());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -685,7 +685,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountState.SAVINGS_PARTIAL_APPLICATION);
 		savingsOffering = null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, 
 				TestUtils.makeUser(), request.getSession());
@@ -697,7 +697,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward("waiveAmount_success");
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsBusinessService().findBySystemId(savings
 				.getGlobalAccountNum());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -751,7 +751,7 @@ public void testSuccessful_Update_AuditLog() throws Exception {
 		String globalAccountNum = (String) request
 				.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
 		assertNotNull(globalAccountNum);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
 		assertNotNull(savings);
 		assertEquals(600.0, savings.getRecommendedAmount().getAmountDoubleValue(), DELTA);

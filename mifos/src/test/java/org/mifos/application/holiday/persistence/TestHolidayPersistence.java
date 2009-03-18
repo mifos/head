@@ -11,7 +11,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayPersistence extends MifosIntegrationTest {
@@ -31,7 +31,7 @@ public class TestHolidayPersistence extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(holidayEntity);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -43,8 +43,8 @@ public class TestHolidayPersistence extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		List<HolidayBO> holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
 		assertNotNull(holidays);
@@ -73,8 +73,8 @@ public class TestHolidayPersistence extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
 		
@@ -94,8 +94,8 @@ public class TestHolidayPersistence extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
 		

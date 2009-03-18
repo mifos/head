@@ -37,7 +37,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -68,11 +68,11 @@ public class TestLoanBusinessService extends MifosIntegrationTest {
 	@Override
 	protected void tearDown() throws Exception {
 		try {
-			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+			accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
-			group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
+			group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
 					group.getCustomerId());
-			center = (CustomerBO) HibernateUtil.getSessionTL().get(
+			center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, center.getCustomerId());
 			TestObjectFactory.cleanUp(accountBO);
 			TestObjectFactory.cleanUp(group);
@@ -82,7 +82,7 @@ public class TestLoanBusinessService extends MifosIntegrationTest {
 			TestDatabase.resetMySQLDatabase();
 		}
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -127,7 +127,7 @@ public class TestLoanBusinessService extends MifosIntegrationTest {
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		applyPayments();
 
@@ -166,7 +166,7 @@ public class TestLoanBusinessService extends MifosIntegrationTest {
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		applyPayments();
 

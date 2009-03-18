@@ -28,7 +28,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -65,7 +65,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -87,7 +87,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		accountActionDate.addAccountFeesAction(accountFeesaction);
 		TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
+		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
 		trainingFee.setUserContext(TestUtils.makeUser());
 		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
@@ -99,7 +99,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		((ApplyCustomerFeeChangesHelper) task
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
 		CustomerScheduleEntity installment = (CustomerScheduleEntity) center
@@ -108,10 +108,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		AccountFeesActionDetailEntity accountFeesAction = installment
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
 		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
-		HibernateUtil.closeSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.closeSession();
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
-		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
+		group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
 				group.getCustomerId());
 	}
 
@@ -122,7 +122,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		TestCustomerAccountBO.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
@@ -141,7 +141,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		accountActionDate.addAccountFeesAction(accountFeesaction);
 		TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
+		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
 		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
@@ -153,7 +153,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
 		AccountActionDateEntity installment = center.getCustomerAccount()
@@ -170,9 +170,9 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		.getAccountActionDate(Short.valueOf("1"));
 		TestCustomerAccountBO.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
 		TestObjectFactory.updateObject(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
@@ -190,10 +190,10 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 						"10.0"));
 		TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
-		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
+		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
 		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee
@@ -207,7 +207,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
 		AccountActionDateEntity installment = center.getCustomerAccount()
@@ -240,7 +240,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
+		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
 		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
@@ -251,7 +251,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
 		AccountActionDateEntity installment = center.getCustomerAccount()
@@ -281,7 +281,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
+		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
 		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee
@@ -294,7 +294,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
 				.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 
 		AccountActionDateEntity installment = center.getCustomerAccount()
@@ -348,7 +348,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 
 		TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
+		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
 		trainingFee.setUserContext(TestUtils.makeUser());
 		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
@@ -359,9 +359,9 @@ public class TestApplyCustomerFeeChangesHelper extends MifosIntegrationTest {
 		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
 				.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
-		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
+		group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
 				group.getCustomerId());
 		AccountActionDateEntity installment = center.getCustomerAccount()
 				.getAccountActionDate(Short.valueOf("1"));

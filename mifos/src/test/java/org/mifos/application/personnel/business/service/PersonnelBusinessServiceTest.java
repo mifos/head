@@ -17,7 +17,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -45,7 +45,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(personnelBO);
 		TestObjectFactory.cleanUp(personnel);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -76,7 +76,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -89,7 +89,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}	
@@ -110,7 +110,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}	
@@ -133,7 +133,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 			assertTrue(true);
 		}
 		finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}	
@@ -146,7 +146,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}	
@@ -160,7 +160,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}	
@@ -173,7 +173,7 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}		
@@ -216,9 +216,9 @@ public class PersonnelBusinessServiceTest extends MifosIntegrationTest {
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, PersonnelConstants.SYSTEM_USER);
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}

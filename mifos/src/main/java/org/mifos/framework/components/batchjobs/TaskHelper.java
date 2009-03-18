@@ -50,7 +50,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 
 public abstract class TaskHelper {
@@ -160,8 +160,8 @@ public abstract class TaskHelper {
 	 */
 	public boolean isTaskAllowedToRun() {
 		try {
-			Session session = HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
+			Session session = StaticHibernateUtil.getSessionTL();
+			StaticHibernateUtil.startTransaction();
 			String hqlSelect = "select max(t.startTime) from Task t "
 					+ "where t.task=:taskName and t.description=:finishedSuccessfully";
 			Query query = session.createQuery(hqlSelect);
@@ -175,7 +175,7 @@ public abstract class TaskHelper {
 			} else {
 				timeInMillis = ((Timestamp) query.uniqueResult()).getTime();
 			}
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 			if ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis)
 					/ (1000 * 60 * 60 * 24) <= 1) {
 				timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();

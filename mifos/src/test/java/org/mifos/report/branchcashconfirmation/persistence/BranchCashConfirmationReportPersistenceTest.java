@@ -38,7 +38,7 @@ import org.mifos.application.productdefinition.persistence.PrdOfferingPersistenc
 import org.mifos.application.reports.business.service.BranchReportTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -189,7 +189,7 @@ public class BranchCashConfirmationReportPersistenceTest extends
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		transaction = session.beginTransaction();
 		persistence = new BranchCashConfirmationReportPersistence(
 				new PrdOfferingPersistence());

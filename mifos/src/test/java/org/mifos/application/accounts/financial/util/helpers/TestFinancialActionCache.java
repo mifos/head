@@ -5,7 +5,7 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class TestFinancialActionCache extends MifosIntegrationTest {
 	
@@ -28,7 +28,7 @@ public class TestFinancialActionCache extends MifosIntegrationTest {
 	
 	private FinancialActionBO createFinancialAction()
 	{
-		return (FinancialActionBO)HibernateUtil.getSessionTL().get(FinancialActionBO.class,FinancialActionConstants.PRINCIPALPOSTING.value);
+		return (FinancialActionBO)StaticHibernateUtil.getSessionTL().get(FinancialActionBO.class,FinancialActionConstants.PRINCIPALPOSTING.value);
 
 	}
 

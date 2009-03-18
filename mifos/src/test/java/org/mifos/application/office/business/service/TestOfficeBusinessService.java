@@ -11,7 +11,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficeBusinessService extends MifosIntegrationTest {
@@ -51,7 +51,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -71,7 +71,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -88,7 +88,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -106,7 +106,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -122,7 +122,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -139,7 +139,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -162,7 +162,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -182,7 +182,7 @@ public class TestOfficeBusinessService extends MifosIntegrationTest {
 		catch (ServiceException e) {
 			assertTrue(true);
 		}finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}

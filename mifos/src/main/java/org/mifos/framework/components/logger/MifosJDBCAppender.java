@@ -31,7 +31,7 @@ import org.apache.log4j.jdbc.JDBCAppender;
 import org.apache.log4j.spi.ErrorCode;
 import org.apache.log4j.spi.LoggingEvent;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  *  Enable the logger to log to a database (by
@@ -60,7 +60,7 @@ public class MifosJDBCAppender extends JDBCAppender {
 
 		    try {
 		      if (con != null && !con.isClosed()) {
-		    	  HibernateUtil.closeSession();
+		    	  StaticHibernateUtil.closeSession();
 		      }
 		    }//end-try
 		    catch (SQLException sqle) {

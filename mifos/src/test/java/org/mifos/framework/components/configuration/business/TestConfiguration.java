@@ -10,7 +10,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
@@ -34,7 +34,7 @@ public class TestConfiguration extends MifosIntegrationTest{
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	public void testSystemConfiguration()throws Exception{

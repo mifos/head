@@ -27,7 +27,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -69,8 +69,8 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
 				FeePayment.TIME_OF_DISBURSMENT);
 		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
 				FeeCategory.LOAN, "10.0", RecurrenceType.WEEKLY, (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		fees.add(fee1);
 		fees.add(fee3);
 		return fees;
@@ -119,24 +119,24 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
 		catch (Exception e) {
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private void reloadMembers() {
 		if (accountBO != null) {
-			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+			accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
 		}
 		if (group != null) {
-			group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+			group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 					group.getCustomerId());
 		}
 		if (center != null) {
-			center = (CenterBO) HibernateUtil.getSessionTL().get(
+			center = (CenterBO) StaticHibernateUtil.getSessionTL().get(
 					CenterBO.class, center.getCustomerId());
 		}
 		if (client != null) {
-			client = (CustomerBO) HibernateUtil.getSessionTL().get(
+			client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, client.getCustomerId());
 		}
 	}

@@ -49,7 +49,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -129,7 +129,7 @@ public class OffAction extends BaseAction {
 				parentOffice, offActionForm.getCustomFields(), offActionForm
 						.getOfficeName(), offActionForm.getShortName(),
 				offActionForm.getAddress(), OperationMode.REMOTE_SERVER);
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.flushAndCloseSession();
 		officeBO.save();
 
 		offActionForm.setOfficeId(officeBO.getOfficeId().toString());

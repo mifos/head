@@ -21,7 +21,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 
 
@@ -72,7 +72,7 @@ public class TestApplicationConfigurationPersistence extends MifosIntegrationTes
 		List<MifosLookUpEntity> entities=null;
 		try
 		{
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		 entities = session.getNamedQuery(
 				NamedQueryConstants.GET_ENTITIES).list();
 		 
@@ -107,7 +107,7 @@ public class TestApplicationConfigurationPersistence extends MifosIntegrationTes
 //			}
 
 		} finally {
-			HibernateUtil.closeSession();	
+			StaticHibernateUtil.closeSession();	
 		}
 			
 	}

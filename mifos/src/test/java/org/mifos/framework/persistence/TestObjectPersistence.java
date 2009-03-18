@@ -41,7 +41,7 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * This class is used to persist objects created by TestObjectFactory.
@@ -63,7 +63,7 @@ public class TestObjectPersistence {
 	}
 
 	public PersonnelBO getPersonnel(Short personnelId) {
-		return getPersonnel(HibernateUtil.getSessionTL(), personnelId);
+		return getPersonnel(StaticHibernateUtil.getSessionTL(), personnelId);
 	}
 	
 	
@@ -73,18 +73,18 @@ public class TestObjectPersistence {
 	 * If the row does not already exist in the database it returns null.
 	 */
 	public PersonnelBO getNonLoanOfficer() {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (PersonnelBO)session.get(PersonnelBO.class, new Short("2"));
 	}
 	
 	public FeeBO createFees(FeeBO fees) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		session.save(fees);
 		return fees;
 	}
 	
 	public FeeBO createFee(FeeBO fee) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		session.save(fee);
 		return fee;
 	}
@@ -95,16 +95,16 @@ public class TestObjectPersistence {
 	 * if the insertion was successful.
 	 */
 	public PersistentObject persist(PersistentObject obj) {
-		Session session = HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		Session session = StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		session.save(obj);
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 		return obj;
 		
 	}
 	
 	public ProductCategoryBO getLoanPrdCategory() {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (ProductCategoryBO)session.get(ProductCategoryBO.class, new Short("1"));
 	}
 
@@ -115,25 +115,25 @@ public class TestObjectPersistence {
 	 */
 	
 	public OfficeBO getOffice(Short officeId) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (OfficeBO)session.get(OfficeBO.class, officeId);
 	}
 
 	public PrdStatusEntity retrievePrdStatus(PrdStatus status) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (PrdStatusEntity)session.get(
 			PrdStatusEntity.class, status.getValue());
 	}
 
 	public MifosCurrency getCurrency() {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (MifosCurrency)session.get(
 			MifosCurrency.class, 
 			Short.valueOf((short)2));
 	}
 	
 	public MifosCurrency getCurrency(Short currencyId) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (MifosCurrency)session.get(MifosCurrency.class, currencyId);
 	}
 	
@@ -143,47 +143,47 @@ public class TestObjectPersistence {
 	 * relevant here?
 	 */
 	public LoanBO getLoanAccount(LoanBO loan) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		session.save(loan);
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 		return loan;
 	}
 	
 	public FeeFrequencyTypeEntity getFeeFrequencyType() {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (FeeFrequencyTypeEntity)session.get(
 			FeeFrequencyTypeEntity.class, Short.valueOf("1"));
 	}
 	
 	public void removeObject(PersistentObject obj) {
-		Session session = HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
+		Session session = StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.startTransaction();
 		session.delete(obj);
-		HibernateUtil.getTransaction().commit();
+		StaticHibernateUtil.getTransaction().commit();
 	}
 
 	public void update(PersistentObject obj) {
-        Session session = HibernateUtil.getSessionTL();
-        HibernateUtil.startTransaction();
+        Session session = StaticHibernateUtil.getSessionTL();
+        StaticHibernateUtil.startTransaction();
 	    session.saveOrUpdate(obj);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
     }
 	
     public void flushandCloseSession() {
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public <T> T getObject(Class<T> clazz, Integer pk) {
-		return (T)HibernateUtil.getSessionTL().get(clazz, pk);
+		return (T)StaticHibernateUtil.getSessionTL().get(clazz, pk);
 	}
 	
 	public Object getObject(Class clazz, Short pk) {
-		return HibernateUtil.getSessionTL().get(clazz, pk);
+		return StaticHibernateUtil.getSessionTL().get(clazz, pk);
 	}
 
 	public Object getObject(Class clazz, HolidayPK pk) {
-		return HibernateUtil.getSessionTL().get(clazz, pk);
+		return StaticHibernateUtil.getSessionTL().get(clazz, pk);
 	}
 
     public CustomerBO getCustomer(Integer customerId) {

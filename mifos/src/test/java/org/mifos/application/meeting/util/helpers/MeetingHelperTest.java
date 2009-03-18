@@ -8,7 +8,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class MeetingHelperTest extends MifosIntegrationTest{
 	public MeetingHelperTest() throws SystemException, ApplicationException {
@@ -26,8 +26,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
 			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser()));
 	}
@@ -44,8 +44,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, 
 			(short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser()));
 	}
@@ -56,8 +56,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 			(short) 7, (short) 2, new Date(), 
 			MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser()));
 	}
@@ -67,8 +67,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
 			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getMessageWithFrequency(meeting, TestUtils.makeUser()));
 	}
@@ -78,8 +78,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO((short) 7, 
 			(short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getMessageWithFrequency(meeting, TestUtils.makeUser()));
 	}
@@ -89,8 +89,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
 			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getDetailMessageWithFrequency(meeting, TestUtils.makeUser()));
 	}
@@ -100,8 +100,8 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 		MeetingBO meeting = new MeetingBO((short) 7, (short) 5, 
 			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertEquals(expected, helper.getDetailMessageWithFrequency(meeting, TestUtils.makeUser()));
 	}

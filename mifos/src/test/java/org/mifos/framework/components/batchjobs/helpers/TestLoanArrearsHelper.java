@@ -18,7 +18,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanArrearsHelper extends MifosIntegrationTest {
@@ -55,7 +55,7 @@ public class TestLoanArrearsHelper extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		loanArrearHelper = null;
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -81,7 +81,7 @@ public class TestLoanArrearsHelper extends MifosIntegrationTest {
 				currentdate, loanOffering);
 		setDisbursementDateAsOldDate(loanAccount);
 		loanAccount.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		return loanAccount;
 	}
 

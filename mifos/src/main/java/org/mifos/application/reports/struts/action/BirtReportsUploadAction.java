@@ -54,7 +54,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.activity.ActivityGeneratorException;
@@ -100,7 +100,7 @@ public class BirtReportsUploadAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsAction:getBirtReportPage Method: ");
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.flushAndCloseSession();
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
 		uploadForm.clear();
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
@@ -231,7 +231,7 @@ public class BirtReportsUploadAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsAction:getViewReportsPage Method: ");
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.flushAndCloseSession();
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
 				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.get_success.toString());

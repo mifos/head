@@ -23,7 +23,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -56,7 +56,7 @@ public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 	
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -477,7 +477,7 @@ public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 	public void testUpdate() throws Exception {
 		UserContext userContext = TestObjectFactory.getContext();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		HibernateUtil.getSessionTL();
+		StaticHibernateUtil.getSessionTL();
 		createFlowAndAddToRequest(AcceptedPaymentTypeAction.class);
 		setRequestPathInfo("/acceptedPaymentTypeAction.do");
 		addRequestParameter("method", "update");
@@ -500,11 +500,11 @@ public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.update_success.toString());
 		// verify that the data from database match with the ones we keep
 		verify(persistence, locale, allPayments);
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.flushAndCloseSession();
 		
 		// reverse data to get back to data before test
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		HibernateUtil.getSessionTL();
+		StaticHibernateUtil.getSessionTL();
 		createFlowAndAddToRequest(AcceptedPaymentTypeAction.class);
 		setRequestPathInfo("/acceptedPaymentTypeAction.do");
 		addRequestParameter("method", "update");
@@ -520,7 +520,7 @@ public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.update_success.toString());
 		// verify data from database and what we have in memory
 		verify(persistence, locale, allPayments);
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.flushAndCloseSession();
 	
 		
 		}

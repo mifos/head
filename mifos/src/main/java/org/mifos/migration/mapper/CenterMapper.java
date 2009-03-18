@@ -31,7 +31,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.migration.generated.Center;
 import org.mifos.migration.generated.CustomField;
@@ -245,7 +245,7 @@ public class CenterMapper {
 	}
 	
 	private static CustomFieldDefinitionEntity getCustomFieldDefinitionEntity(Short id) {
-		Session session = HibernateUtil.getSessionTL();
+		Session session = StaticHibernateUtil.getSessionTL();
 		return (CustomFieldDefinitionEntity) session.get(CustomFieldDefinitionEntity.class, id);		
 	}
 	

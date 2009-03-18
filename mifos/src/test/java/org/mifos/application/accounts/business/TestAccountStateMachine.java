@@ -12,7 +12,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceUnavailableException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountStateMachine extends MifosIntegrationTest {
@@ -31,7 +31,7 @@ public class TestAccountStateMachine extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -67,7 +67,7 @@ public class TestAccountStateMachine extends MifosIntegrationTest {
 			fail();
 		} catch (StatesInitializationException sie) {
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -83,7 +83,7 @@ public class TestAccountStateMachine extends MifosIntegrationTest {
 	public void testFlagForLoanCancelState() throws Exception {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 				AccountTypes.LOAN_ACCOUNT, null);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		List<AccountStateEntity> stateList = service
 				.getStatusList(new AccountStateEntity(
 						AccountState.LOAN_PARTIAL_APPLICATION),

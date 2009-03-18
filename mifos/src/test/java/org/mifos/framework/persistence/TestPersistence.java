@@ -9,7 +9,7 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class TestPersistence extends MifosIntegrationTest {
@@ -21,7 +21,7 @@ public class TestPersistence extends MifosIntegrationTest {
     public void testConnection() {
 		LoanPersistence loanPersistance = new LoanPersistence();
 		assertNotNull(loanPersistance.getConnection());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void xtestNonUniqueObjectException() throws Exception {

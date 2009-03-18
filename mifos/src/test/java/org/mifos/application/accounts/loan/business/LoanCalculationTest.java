@@ -77,7 +77,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -178,16 +178,16 @@ public class LoanCalculationTest  {
 	public void tearDown() throws Exception {
 		TestObjectFactory.removeObject(loanOffering);
 		if (accountBO != null)
-			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+			accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
 		if (badAccountBO != null)
-			badAccountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+			badAccountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
 					AccountBO.class, badAccountBO.getAccountId());
 		if (group != null)
-			group = (CustomerBO) HibernateUtil.getSessionTL().get(
+			group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, group.getCustomerId());
 		if (center != null)
-			center = (CustomerBO) HibernateUtil.getSessionTL().get(
+			center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 					CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(badAccountBO);
@@ -195,7 +195,7 @@ public class LoanCalculationTest  {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		//Money.setUsingNewMoney(false);
 		//LoanBO.setUsingNewLoanSchedulingMethod(false);
 		AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);

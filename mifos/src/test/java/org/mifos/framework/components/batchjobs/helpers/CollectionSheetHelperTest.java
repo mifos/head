@@ -31,7 +31,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollectionSheetHelperTest extends MifosIntegrationTest {
@@ -63,7 +63,7 @@ public class CollectionSheetHelperTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -174,7 +174,7 @@ public class CollectionSheetHelperTest extends MifosIntegrationTest {
 	}
 	
 	private List<CollectionSheetBO> getCollectionSheets() {
-		Query query = HibernateUtil
+		Query query = StaticHibernateUtil
 				.getSessionTL()
 				.createQuery(
 						"from org.mifos.application.collectionsheet.business.CollectionSheetBO");

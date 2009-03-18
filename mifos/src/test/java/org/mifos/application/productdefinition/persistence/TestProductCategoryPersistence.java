@@ -11,7 +11,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 
 public class TestProductCategoryPersistence extends MifosIntegrationTest {
@@ -108,7 +108,7 @@ public class TestProductCategoryPersistence extends MifosIntegrationTest {
 	
 
 	private List<ProductCategoryBO> getProductCategory() {
-		return HibernateUtil
+		return StaticHibernateUtil
 			.getSessionTL()
 			.createQuery(
 				"from " +
@@ -118,8 +118,8 @@ public class TestProductCategoryPersistence extends MifosIntegrationTest {
 	}
 
 	private void deleteProductCategory(ProductCategoryBO productCategoryBO) {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
+		Session session = StaticHibernateUtil.getSessionTL();
+		Transaction transaction = StaticHibernateUtil.startTransaction();
 		session.delete(productCategoryBO);
 		transaction.commit();
 	}
@@ -128,7 +128,7 @@ public class TestProductCategoryPersistence extends MifosIntegrationTest {
 		userContext=TestUtils.makeUser();
 		ProductCategoryBO productCategoryBO =new ProductCategoryBO(userContext,productCategoryPersistence.getProductTypes().get(0),"product category","created a category");
 		productCategoryBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		return getProductCategory().get(2);
 	}
 

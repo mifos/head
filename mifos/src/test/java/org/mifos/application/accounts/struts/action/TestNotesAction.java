@@ -18,7 +18,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
@@ -73,19 +73,19 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 
 	private void reloadMembers() {
 		if (savingsBO != null) {
-			savingsBO = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savingsBO.getAccountId());
+			savingsBO = (SavingsBO)StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savingsBO.getAccountId());
 		}
 		if (loanBO != null) {
-			loanBO = (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, loanBO.getAccountId());
+			loanBO = (LoanBO)StaticHibernateUtil.getSessionTL().get(LoanBO.class, loanBO.getAccountId());
 		}
 		if (group != null) {
-			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+			group = (GroupBO)StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
 		}
 		if (center != null) {
-			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+			center = (CenterBO)StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
 		}
 		if (client != null) {
-			client = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
+			client = (CustomerBO)StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
 		}
 		
 	}
@@ -103,7 +103,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -209,7 +209,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		actionPerform();
 
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		addRequestParameter("globalAccountNum", savingsBO.getGlobalAccountNum());
 		setRequestPathInfo("/savingsAction.do");
@@ -226,7 +226,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		assertEquals("Size of the search result should be 2", 2, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savingsBO = TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
 		getobjects();
 	}
@@ -337,7 +337,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		addRequestParameter("globalAccountNum", loanBO.getGlobalAccountNum());
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "get");
@@ -355,7 +355,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 
 		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		loanBO = TestObjectFactory.getObject(LoanBO.class,loanBO.getAccountId());
 
 		getobjects();

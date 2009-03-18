@@ -18,7 +18,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -35,7 +35,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 
 	@Override
 	public void tearDown() {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	
@@ -67,7 +67,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -96,7 +96,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -129,7 +129,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 	
@@ -143,7 +143,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -178,7 +178,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -221,8 +221,8 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(DynamicLookUpValueCreationTypes.LookUpOption,
 				salutationValueList.getEntityId(), 
 				NEW_SALUTATION_STRING);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.flushAndCloseSession();
 		
 		// verify that the new salutation was created
 		Integer newSalutationId = findValueListElementId(masterPersistence,  
@@ -231,8 +231,8 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		
 		// remove the new salutation
 		masterPersistence.deleteValueListElement(newSalutationId);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.flushAndCloseSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.flushAndCloseSession();
 		
 		// verify that the new salutation was deleted
 		assertFalse(foundStringInCustomValueList(masterPersistence, 
@@ -253,7 +253,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		
 		// save it
 		masterPersistence.updateValueListElementForLocale(id,UPDATED_NAME);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		// get the element back
 		// and verify that it has the new value
@@ -266,7 +266,7 @@ public class TestMasterPersistence extends MifosIntegrationTest {
 		}
 		// restore it
 		masterPersistence.updateValueListElementForLocale(id,originalName);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 	}	
 	

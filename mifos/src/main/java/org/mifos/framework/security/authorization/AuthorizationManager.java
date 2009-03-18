@@ -54,7 +54,7 @@ import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityRoles;
@@ -82,7 +82,7 @@ public class AuthorizationManager {
 	public void init() throws SystemException, ApplicationException {
 		Session session = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			init(session);
 
 		} catch (SystemException e) {
@@ -94,7 +94,7 @@ public class AuthorizationManager {
 				SecurityConstants.INITIALIZATIONFAILED, e);
 		}
 		finally {
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 

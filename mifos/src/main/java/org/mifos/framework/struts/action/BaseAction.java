@@ -56,7 +56,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -83,7 +83,7 @@ public abstract class BaseAction extends DispatchAction {
 		if(MifosTask.isBatchJobRunning()){
 			return logout(mapping, request);
 		}
-		if (HibernateUtil.isSessionOpen()) {
+		if (StaticHibernateUtil.isSessionOpen()) {
 			logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());
 		}
 		TransactionDemarcate annotation = getTransaction(form, request);
@@ -213,11 +213,11 @@ public abstract class BaseAction extends DispatchAction {
 		// do cleanup here
 		if (startSession()) {
 			try {
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 				postHandleTransaction(request, annotation);
 			} catch (HibernateException he) {
 				he.printStackTrace();
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				throw new ApplicationException(he);
 			}
 		} else {
@@ -225,11 +225,11 @@ public abstract class BaseAction extends DispatchAction {
 		}
 
 		if(closeSession) {
-			if (HibernateUtil.isSessionOpen()) {
+			if (StaticHibernateUtil.isSessionOpen()) {
 				logger.info("Closing open hibernate session at end of action: " + getClass().getName());
 			}
-			//HibernateUtil.flushAndCloseSession();
-			HibernateUtil.closeSession();
+			//StaticHibernateUtil.flushAndCloseSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -376,8 +376,8 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	protected void setInitialObjectForAuditLogging(Object object){
-		HibernateUtil.getSessionTL();
-		HibernateUtil.getInterceptor().createInitialValueMap(object);
+		StaticHibernateUtil.getSessionTL();
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(object);
 	}
 
 	private ActionForward logout(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {

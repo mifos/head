@@ -62,7 +62,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -190,8 +190,8 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		savings.adjustLastUserAction(actionForm.getLastPaymentAmountValue(),
 				actionForm.getNote());
 		doCleanUp(request);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.getSessionTL().evict(savings);
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.getSessionTL().evict(savings);
 		return mapping.findForward("account_detail_page");
 	}
 

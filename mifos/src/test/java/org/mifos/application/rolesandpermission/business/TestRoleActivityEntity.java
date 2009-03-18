@@ -4,7 +4,7 @@ import org.hibernate.Query;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class TestRoleActivityEntity extends MifosIntegrationTest {
 
@@ -21,7 +21,7 @@ public class TestRoleActivityEntity extends MifosIntegrationTest {
 	
 	private RoleActivityEntity getRoleActivity(Short roleId,
 			Short activityId) {
-		Query query = HibernateUtil
+		Query query = StaticHibernateUtil
 				.getSessionTL()
 				.createQuery(
 						"from org.mifos.application.rolesandpermission.business.RoleActivityEntity roleActivity where roleActivity.role=? and roleActivity.activity=?");

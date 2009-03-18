@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class TestFinancialActionConstants extends MifosIntegrationTest {
@@ -26,7 +26,7 @@ public class TestFinancialActionConstants extends MifosIntegrationTest {
 	 */
 	@Test
 	public void testGetFinancialAction() {
-		Query queryFinancialAction = HibernateUtil.getSessionTL()
+		Query queryFinancialAction = StaticHibernateUtil.getSessionTL()
 			.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
 		// NOTE: the following 2 database entries are not currently represented
 		// in the enum.  Should they be added to the enum or removed from the db?

@@ -22,7 +22,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -52,7 +52,7 @@ public class SavingsPrdPersistenceTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -65,7 +65,7 @@ public class SavingsPrdPersistenceTest extends MifosIntegrationTest {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		List<SavingsBO> savingsList = new SavingsPrdPersistence()
 				.retrieveSavingsAccountsForPrd(savingsOffering
 						.getPrdOfferingId());

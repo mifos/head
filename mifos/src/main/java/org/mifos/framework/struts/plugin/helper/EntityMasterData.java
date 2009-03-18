@@ -11,7 +11,7 @@ import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public final class EntityMasterData {
 
@@ -34,7 +34,7 @@ public final class EntityMasterData {
 	public void init()throws HibernateProcessException{
 		Session session=null;
 		try{
-			session=HibernateUtil.openSession();
+			session=StaticHibernateUtil.openSession();
 			session.beginTransaction();
 			Query query = session.getNamedQuery("getEntityMaster");
 
@@ -46,7 +46,7 @@ public final class EntityMasterData {
 		}catch(HibernateException e){
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("table entity_master could not be fetched",false,null,e);
 		}finally{
-			HibernateUtil.closeSession(session);
+			StaticHibernateUtil.closeSession(session);
 		}
 	}
 	

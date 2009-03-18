@@ -20,7 +20,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -64,7 +64,7 @@ public class TestCloseLoanAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -96,7 +96,7 @@ public class TestCloseLoanAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testRescheduleLoan() throws Exception{
-		Session session =HibernateUtil.openSession();
+		Session session =StaticHibernateUtil.openSession();
 		loanBO = getLoanAccount();
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
@@ -117,7 +117,7 @@ public class TestCloseLoanAction extends MifosMockStrutsTestCase {
 		for(TransactionHistoryView entry : history) {
 			assertEquals(AccountConstants.LOAN_RESCHEDULED, entry.getType());
 		}
-		HibernateUtil.closeSession(session);
+		StaticHibernateUtil.closeSession(session);
 	}
 
 	private LoanBO createInitialObjects(int disbursalType) {

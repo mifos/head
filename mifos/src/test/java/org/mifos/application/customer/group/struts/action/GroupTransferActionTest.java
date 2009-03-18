@@ -25,7 +25,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -74,7 +74,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(office);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -87,7 +87,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	
 	public void testSuccessfulPreview_transferToBranch() throws Exception {
 		loadOffices();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "previewBranchTransfer");
 		addRequestParameter("officeId", group.getOffice().getOfficeId().toString());
@@ -102,7 +102,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	
 	public void testFailure_transferToBranch() throws Exception {
 		loadOffices();	
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "previewBranchTransfer");
 		addRequestParameter("officeId", group.getOffice().getOfficeId().toString());
@@ -123,7 +123,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		TestObjectFactory.cleanUpChangeLog();
 		office = createOffice();
 		loadOffices();		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "previewBranchTransfer");
 		addRequestParameter("officeId", office.getOfficeId().toString());
@@ -178,7 +178,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	
 	public void testSuccessfulPreview_transferToCenter() throws Exception {
 		loadParents();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "previewParentTransfer");
@@ -194,7 +194,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	
 	public void testFailure_transferToCenter() throws Exception {
 		loadParents();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "previewParentTransfer");
@@ -219,7 +219,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	public void testSuccessful_transferToCenter() throws Exception {
 		TestObjectFactory.cleanUpChangeLog();
 		loadParents();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "previewParentTransfer");
@@ -234,7 +234,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		group = TestObjectFactory.getGroup(group.getCustomerId());
 		center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -267,7 +267,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	public void testSuccessful_removeGroupMemberShip() throws Exception {
 		TestObjectFactory.cleanUpChangeLog();
 		loadParents();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
@@ -291,7 +291,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	public void testSuccessful_LoadGrpMemberShip() throws Exception {
 		TestObjectFactory.cleanUpChangeLog();
 		loadParents();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
 		MeetingBO meeting = createWeeklyMeeting(WeekDay.MONDAY, Short.valueOf("1"), new  Date());
@@ -321,7 +321,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	public void testCancel() throws Exception {
 		loadOffices();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "cancel");
 	

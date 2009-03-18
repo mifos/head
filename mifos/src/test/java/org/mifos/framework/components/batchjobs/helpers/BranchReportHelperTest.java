@@ -46,7 +46,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class BranchReportHelperTest extends BranchReportTestCase {
 
@@ -189,7 +189,7 @@ public class BranchReportHelperTest extends BranchReportTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		transaction = session.beginTransaction();
 	}
 }

@@ -44,7 +44,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
@@ -96,7 +96,7 @@ public class TestLoanPersistence extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(loanAccountForDisbursement);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 
@@ -115,7 +115,7 @@ public class TestLoanPersistence extends MifosIntegrationTest {
 		}
 
 		TestObjectFactory.updateObject(loanAccount);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		loanAccount = new AccountPersistence().getAccount(loanAccount
 				.getAccountId());
 
@@ -125,7 +125,7 @@ public class TestLoanPersistence extends MifosIntegrationTest {
 
 		list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("2"));
 		assertEquals(1, list.size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		LoanBO testBO = TestObjectFactory.getObject(LoanBO.class, list
 				.get(0));
@@ -135,11 +135,11 @@ public class TestLoanPersistence extends MifosIntegrationTest {
 				.valueOf("1"));
 		assertFalse(actionDate.isPaid());
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("3"));
 		assertEquals(0, list.size());
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		loanAccount = TestObjectFactory.getObject(LoanBO.class,
 				loanAccount.getAccountId());
 	}
@@ -246,7 +246,7 @@ public class TestLoanPersistence extends MifosIntegrationTest {
 		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,
 				Short.valueOf("1"), loanAccountForDisbursement.getPersonnel(),
 				startDate, Short.valueOf("1"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 	private AccountBO getLoanAccount(AccountState state, Date startDate,

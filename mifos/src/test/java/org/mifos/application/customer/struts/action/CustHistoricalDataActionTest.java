@@ -15,7 +15,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -57,7 +57,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -84,7 +84,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
 		group.updateHistoricalData(customerHistoricalDataEntity);
 		group.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		assertEquals(mfiDate,new Date(group.getMfiJoiningDate().getTime()));
 		setRequestPathInfo("/custHistoricalDataAction.do");
 		addRequestParameter("method", "getHistoricalData");
@@ -222,7 +222,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 				group);
 		group.updateHistoricalData(customerHistoricalDataEntity);
 		group.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 		setRequestPathInfo("/custHistoricalDataAction.do");

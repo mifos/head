@@ -9,7 +9,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ApplyCustomerFeeHelper extends TaskHelper {
 
@@ -33,12 +33,12 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
 				CustomerAccountBO customerAccountBO = (CustomerAccountBO) accountPersistence
 						.getAccount(accountId);
 				customerAccountBO.applyPeriodicFees();
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 			} catch (Exception e) {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				errorList.add(accountId.toString());
 			} finally {
-				HibernateUtil.closeSession();
+				StaticHibernateUtil.closeSession();
 			}
 		}
 		if (errorList.size() > 0)

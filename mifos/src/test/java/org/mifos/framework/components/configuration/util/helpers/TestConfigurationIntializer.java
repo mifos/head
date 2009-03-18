@@ -6,7 +6,7 @@ import org.mifos.framework.components.configuration.cache.OfficeCache;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -26,7 +26,7 @@ public class TestConfigurationIntializer extends MifosIntegrationTest{
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testCreateSystemCache() throws Exception{
@@ -51,7 +51,7 @@ public class TestConfigurationIntializer extends MifosIntegrationTest{
 		} catch (StartUpException sue) {
 			assertEquals(ExceptionConstants.STARTUP_EXCEPTION, sue.getKey());
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 }

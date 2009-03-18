@@ -6,7 +6,7 @@ import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FundBOTest extends MifosIntegrationTest {
@@ -27,7 +27,7 @@ public class FundBOTest extends MifosIntegrationTest {
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(fundBO);
 		TestObjectFactory.cleanUp(fund);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -42,7 +42,7 @@ public class FundBOTest extends MifosIntegrationTest {
 	}
 	
 	public void testBuildFundWithoutFundName() throws Exception{
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		try{
 			fundBO = new FundBO(fundCodeEntity,null);
 			assertTrue(false);
@@ -53,7 +53,7 @@ public class FundBOTest extends MifosIntegrationTest {
 	}
 	
 	public void testBuildFundWithDuplicateFundName() throws Exception{
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		fundBO = createFund(fundCodeEntity,"Fund-1");
 		try{
 			new FundBO(fundCodeEntity,"Fund-1");
@@ -66,7 +66,7 @@ public class FundBOTest extends MifosIntegrationTest {
 	
 	public void testBuildFundForInvalidConnection() throws Exception{
 		
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			fundBO = new FundBO(fundCodeEntity,"Fund-1");
@@ -75,7 +75,7 @@ public class FundBOTest extends MifosIntegrationTest {
 		} catch (FundException e) {
 			assertTrue(true);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		
 				
@@ -83,10 +83,10 @@ public class FundBOTest extends MifosIntegrationTest {
 	}
 	
 	public void testBuildFund() throws Exception{
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		fundBO = new FundBO(fundCodeEntity,"Fund-1");
 		fundBO.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
 		assertEquals("Fund-1", fundBO.getFundName());
@@ -95,9 +95,9 @@ public class FundBOTest extends MifosIntegrationTest {
 	}
 	
 	public void testUpdateFundForNullFundName() throws Exception{
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		fundBO = createFund(fundCodeEntity,"Fund-1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
 		assertEquals("Fund-1", fundBO.getFundName());
@@ -113,10 +113,10 @@ public class FundBOTest extends MifosIntegrationTest {
 	}
 	
 	public void testUpdateFundForDuplicateFundName() throws Exception{
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		fundBO = createFund(fundCodeEntity,"Fund-1");
 		fund = createFund(fundCodeEntity,"Fund-2");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
 		assertEquals("Fund-1", fundBO.getFundName());
@@ -133,16 +133,16 @@ public class FundBOTest extends MifosIntegrationTest {
 	}
 	
 	public void testUpdateFund() throws Exception{
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		fundBO = createFund(fundCodeEntity,"Fund-1");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
 		assertEquals("Fund-1", fundBO.getFundName());
 		assertNotNull(fundBO.getFundCode());
 		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());
 		fundBO.update("Fund-2");
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		assertEquals("Fund-2", fundBO.getFundName());
 		assertNotNull(fundBO.getFundCode());
 		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());

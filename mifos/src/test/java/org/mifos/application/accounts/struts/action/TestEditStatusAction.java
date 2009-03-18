@@ -26,7 +26,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -69,16 +69,16 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 
 	private void reloadMembers() {
 		if (accountBO != null) {
-			accountBO = (AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+			accountBO = (AccountBO)StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 		}
 		if (group != null) {
-			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+			group = (GroupBO)StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
 		}
 		if (center != null) {
-			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+			center = (CenterBO)StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
 		}
 		if (client != null) {
-			client = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
+			client = (CustomerBO)StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
 		}
 		
 	}
@@ -95,7 +95,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -120,7 +120,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
 						SavingsConstants.STATUS_LIST, request)).size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testPreviewSuccess() throws Exception {
@@ -162,7 +162,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertNull("Since new Status is not cancel,so flag should be null.",
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request
 						.getSession()));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testPreviewFailure() throws Exception {
@@ -184,7 +184,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
 						SavingsConstants.STATUS_LIST, request)).size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "loan");
@@ -263,7 +263,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward("preview_success");
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("notes", "Test");

@@ -12,7 +12,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class RolesPermissionsPersistence extends Persistence {
@@ -26,7 +26,7 @@ public class RolesPermissionsPersistence extends Persistence {
 
 	public List<ActivityEntity> getActivities() throws PersistenceException {
 		try {
-			return getActivities(HibernateUtil.getSessionTL());
+			return getActivities(StaticHibernateUtil.getSessionTL());
 		}
 		catch (Exception e) {
 			throw new PersistenceException(e);

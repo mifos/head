@@ -23,7 +23,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -63,7 +63,7 @@ public class TestTagGenerator extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(personnel);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -175,9 +175,9 @@ public class TestTagGenerator extends MifosIntegrationTest {
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, userContext.getId());
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}

@@ -27,7 +27,7 @@ import org.mifos.config.ClientRules;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -189,7 +189,7 @@ public class GroupPersistence extends Persistence {
     	
     	try
     	{
-	    	connection = HibernateUtil.getSessionTL().connection();
+	    	connection = StaticHibernateUtil.getSessionTL().connection();
 	    	connection.setAutoCommit(false);
 	    	Statement statement = connection.createStatement();
 	    	short userId = 1; // this is bach job, so no user
@@ -224,7 +224,7 @@ public class GroupPersistence extends Persistence {
     		if (connection != null)
     		{
     			connection.close();
-    			HibernateUtil.closeSession();
+    			StaticHibernateUtil.closeSession();
     		}
     	}
     	

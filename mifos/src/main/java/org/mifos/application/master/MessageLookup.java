@@ -16,7 +16,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -159,7 +159,7 @@ public class MessageLookup implements MessageSourceAware {
 						// this method, we need to make sure we commit
 						// this is bad too, and should go away with some
 						// refactoring
-						HibernateUtil.commitTransaction();
+						StaticHibernateUtil.commitTransaction();
 						updateLookupValueInCache(labelKey, value);
 					}				
 				}

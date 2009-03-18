@@ -23,7 +23,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -65,7 +65,7 @@ public class TestBulkEntryPersistenceService extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		super.tearDown();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testGetAccount() throws Exception{
@@ -80,7 +80,7 @@ public class TestBulkEntryPersistenceService extends MifosIntegrationTest {
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
@@ -98,7 +98,7 @@ public class TestBulkEntryPersistenceService extends MifosIntegrationTest {
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
@@ -112,7 +112,7 @@ public class TestBulkEntryPersistenceService extends MifosIntegrationTest {
 						.valueOf("1"), currentDate, currentDate);
 
 		account.applyPaymentWithPersist(paymentData);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
 				.getAmountDoubleValue(), Double.valueOf("100.0"));
 	}
@@ -127,8 +127,8 @@ public void testGetBulkEntryClientAttendanceActionView() throws PersistenceExcep
         clientAttendance.setMeetingDate(meetingDate);
         ((ClientBO)client).addClientAttendance(clientAttendance );
         customerPersistence.createOrUpdate(client);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         
         List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = 
             bulkEntryPersistanceService
@@ -146,7 +146,7 @@ public void testGetBulkEntryClientAttendanceActionView() throws PersistenceExcep
             		CustomerStatus.CLIENT_ACTIVE,
                     group);
                         
-            HibernateUtil.closeSession();
+            StaticHibernateUtil.closeSession();
     }
 
 }

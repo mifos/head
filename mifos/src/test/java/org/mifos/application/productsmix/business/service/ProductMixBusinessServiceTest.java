@@ -41,7 +41,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -89,7 +89,7 @@ public class ProductMixBusinessServiceTest  extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(center2);
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -100,7 +100,7 @@ public class ProductMixBusinessServiceTest  extends MifosIntegrationTest {
 	public void testGetAllPrdOfferingsByType_Success() throws ServiceException {
 		assertEquals(1, service.getAllPrdOfferingsByType(
 				ProductType.SAVINGS.getValue().toString()).size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 	}
 	public void testGetAllowedPrdOfferingsForMixProduct_Success()
@@ -108,13 +108,13 @@ public class ProductMixBusinessServiceTest  extends MifosIntegrationTest {
 		assertEquals(1, service.getAllowedPrdOfferingsForMixProduct(
 				savingsOffering.getPrdOfferingId().toString(),
 				ProductType.SAVINGS.getValue().toString()).size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testGetAllPrdOfferingsByType_failure() throws ServiceException {
 		assertEquals(0, service.getAllPrdOfferingsByType(
 				ProductType.LOAN.getValue().toString()).size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 	
 	
@@ -138,7 +138,7 @@ public class ProductMixBusinessServiceTest  extends MifosIntegrationTest {
 								savingsOffering.getPrdOfferingId().toString(),
 								ProductType.SAVINGS.getValue().toString()).get(
 								1).getPrdOfferingName())) < 0);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 	}
 
@@ -170,7 +170,7 @@ public class ProductMixBusinessServiceTest  extends MifosIntegrationTest {
 						.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).get(
 								1).getPrdOfferingName())) < 0);
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private  ProductMixBO createNotAllowedProductForAProductOffering(PrdOfferingBO prdOffering,PrdOfferingBO prdOfferingNotAllowedId)
@@ -231,7 +231,7 @@ public class ProductMixBusinessServiceTest  extends MifosIntegrationTest {
 				.getPrdOfferingMix().get(0).getPrdOfferingName()
 				.compareToIgnoreCase(service.getPrdOfferingMix().get(1)
 						.getPrdOfferingName())) < 0);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 	}
 

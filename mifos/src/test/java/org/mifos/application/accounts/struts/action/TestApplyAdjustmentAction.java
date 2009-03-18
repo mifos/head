@@ -61,7 +61,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -107,7 +107,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group, 
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		return TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 	}
 
@@ -123,8 +123,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		
 		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.updateObject(loan);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	}
 
 	public void testLoadAdjustmentWhenObligationMet()throws Exception {
@@ -257,7 +257,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				personnel, loan);
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		loan=TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
 		setRequestPathInfo("/applyAdjustment");
@@ -360,7 +360,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(loan);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 

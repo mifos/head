@@ -32,7 +32,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -204,9 +204,9 @@ public class PersonnelPersistence extends Persistence {
 			throws PersistenceException {
 		super.createOrUpdate(personnelBO);
 		try {
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.rollbackTransaction();
 			throw new PersistenceException(e);
 		}
 

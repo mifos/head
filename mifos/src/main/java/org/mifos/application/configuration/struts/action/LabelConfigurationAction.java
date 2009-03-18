@@ -81,7 +81,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -189,7 +189,7 @@ public class LabelConfigurationAction extends BaseAction {
 		updatePaymentModes(labelConfigurationActionForm, userContext
 				.getLocaleId());
 
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		MifosConfiguration.getInstance().init();
 		MenuRepository.getInstance().removeLocaleMenu(
 				userContext.getPreferredLocale());

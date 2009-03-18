@@ -26,7 +26,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -56,7 +56,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(product);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 
 	}
@@ -924,7 +924,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 		
-		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
+		product = (SavingsOfferingBO)StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
 		assertEquals("Savings Offering", product.getPrdOfferingName());
 		assertEquals("SAVP", product.getPrdOfferingShortName());
 		assertEquals(2, product.getPrdCategory().getProductCategoryID()
@@ -1002,7 +1002,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 		
-		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
+		product = (SavingsOfferingBO)StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
 		
 		assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
 		setRequestPathInfo("/savingsproductaction.do");
@@ -1016,12 +1016,12 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 						request);
 		assertEquals("The size of savings products", 1, savingsProducts.size());
 		
-		SavingsOfferingBO savingsProduct = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, savingsProducts.get(0).getPrdOfferingId());
+		SavingsOfferingBO savingsProduct = (SavingsOfferingBO)StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class, savingsProducts.get(0).getPrdOfferingId());
 
 
 		assertEquals("Inactive", savingsProduct.getPrdStatus().getPrdState().getName());
 
-		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
+		product = (SavingsOfferingBO)StaticHibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
 
 	}
 

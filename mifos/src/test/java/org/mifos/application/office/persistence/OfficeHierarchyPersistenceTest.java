@@ -45,7 +45,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeHierarchyPersistenceTest extends MifosIntegrationTest {
@@ -87,7 +87,7 @@ public class OfficeHierarchyPersistenceTest extends MifosIntegrationTest {
 		} catch (PersistenceException expected) {
 		}
 		finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 

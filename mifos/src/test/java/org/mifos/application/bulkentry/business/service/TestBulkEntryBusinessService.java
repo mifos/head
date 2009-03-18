@@ -39,7 +39,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -92,7 +92,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -101,10 +101,10 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				currentDate, (short) 1,clients);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		client = TestObjectFactory.getCustomer(client.getCustomerId());
 		assertEquals("The size of attendance ", ((ClientBO) client)
@@ -117,9 +117,9 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		try {
 			bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 					null, (short) 1,clients);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 			bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 			fail("The attendance has been update for meeting date null");
 		} catch (ServiceException e) {
 			// What should we report to the user? errors.updatefailed?
@@ -128,7 +128,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 				PersistenceException.class, e.getCause());
 		}
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		client = TestObjectFactory.getCustomer(client.getCustomerId());
 	}
 
@@ -139,7 +139,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 				(short) 1, "324423", (short) 1, null, new java.sql.Date(System
 						.currentTimeMillis()));
 
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		account = (LoanBO) accountPersistence
 				.getAccount(account.getAccountId());
@@ -160,7 +160,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 							.currentTimeMillis()));
 			fail("A paid installment can be paid again");
 		} catch (ServiceException be) {
-			HibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.rollbackTransaction();
 			account.getAccountPayments().clear();
 			assertUpdateError(be);
 		}
@@ -172,7 +172,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 				"43245434", client, Short.valueOf("16"), new Date(System
 						.currentTimeMillis()), createSavingsOffering(
 						"Client21", "ased"));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		Map<Integer,BulkEntrySavingsCache> savingsAccounts = new HashMap<Integer,BulkEntrySavingsCache>();
 		bulkEntryBusinessService.setSavingsDepositAccountDetails(
@@ -181,11 +181,11 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 						System.currentTimeMillis()), new java.sql.Date(System
 						.currentTimeMillis()), false, client.getCustomerId(),
 				savingsAccounts);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
 				clientSavingsAccount.getAccountId()).getAccount());
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		clientSavingsAccount = (SavingsBO) accountPersistence
 				.getAccount(clientSavingsAccount.getAccountId());
 		assertEquals("The balance for account", clientSavingsAccount
@@ -195,7 +195,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 
 	public void testSuccessfulSavingsAccountWithdrawal() throws Exception {
 		createSavingsAccountWithBal("100", "Dfre1qw", "xzsc");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		Map<Integer,BulkEntrySavingsCache> savingsAccounts = new HashMap<Integer,BulkEntrySavingsCache>();
 		bulkEntryBusinessService.setSavingsWithdrawalAccountDetails(
 				getSavingsAccountView(clientSavingsAccount, "0", "100"), Short
@@ -204,8 +204,8 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 						.currentTimeMillis()), client.getCustomerId(),savingsAccounts);
 		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
 				clientSavingsAccount.getAccountId()).getAccount());
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		clientSavingsAccount = (SavingsBO) accountPersistence
 				.getAccount(clientSavingsAccount.getAccountId());
 		assertEquals("The balance for account", clientSavingsAccount
@@ -223,8 +223,8 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 				TestObjectFactory.getCustomerAccountView(center), center
 						.getPersonnel().getPersonnelId(), "65463", Short
 						.valueOf("1"), null, currentDate);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		assertEquals("The size of the payments done is", 
@@ -249,7 +249,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		} catch (ServiceException e) {
 			assertUpdateError(e);
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 	}
 
@@ -286,7 +286,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 			ObjectAssert.assertInstanceOf(
 					PersistenceException.class, e.getCause());
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 
 	}
@@ -310,7 +310,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 			ObjectAssert.assertInstanceOf(
 					PersistenceException.class, e.getCause());
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -329,7 +329,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 			String accountNumber = (String) e.getValues()[0];
 			assertEquals("" + client.getCustomerId(), accountNumber);
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 
@@ -337,13 +337,13 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		Date startDate = new Date(System.currentTimeMillis());
 
 		account = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		LoanAccountsProductView loanAccountsProductView = getAccountView(account);
 		loanAccountsProductView.setDisBursementAmountEntered(account.getLoanAmount().toString());
 		bulkEntryBusinessService.saveLoanAccount(loanAccountsProductView,
 				(short) 1, "324423", (short) 1, null, startDate);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 
 		account = TestObjectFactory.getObject(LoanBO.class, account
 				.getAccountId());
@@ -366,7 +366,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				currentDate, loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 	}
 
@@ -394,7 +394,7 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		client = TestObjectFactory.createClient(
 				"Client", CustomerStatus.CLIENT_ACTIVE,
 				group);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 	}
 
 	private SavingsAccountView getSavingsAccountView(SavingsBO account,
@@ -434,17 +434,17 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), currentDate,
 				createSavingsOffering(OfferingName, shortName));
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		Map<Integer,BulkEntrySavingsCache> savingsAccounts = new HashMap<Integer,BulkEntrySavingsCache>();
 		bulkEntryBusinessService.setSavingsDepositAccountDetails(
 				getSavingsAccountView(clientSavingsAccount, amount, "0"), Short
 						.valueOf("1"), "3424", (short) 1, currentDate,
 				currentDate, false,client.getCustomerId(),savingsAccounts);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
 				clientSavingsAccount.getAccountId()).getAccount());
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 	private CustomerAccountView createCustomerAccountWithNoDue()
@@ -456,8 +456,8 @@ public class TestBulkEntryBusinessService extends MifosIntegrationTest {
 		bulkEntryBusinessService.saveCustomerAccountCollections(
 				customerAccountView, center.getPersonnel().getPersonnelId(),
 				"65463", (short) 1, null, currentDate);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		return customerAccountView;
 	}

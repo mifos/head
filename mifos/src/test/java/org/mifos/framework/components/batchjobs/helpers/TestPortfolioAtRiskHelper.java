@@ -25,7 +25,7 @@ import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -62,7 +62,7 @@ public class TestPortfolioAtRiskHelper extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -111,11 +111,11 @@ public class TestPortfolioAtRiskHelper extends MifosIntegrationTest {
 		PortfolioAtRiskHelper portfolioAtRiskHelper = (PortfolioAtRiskHelper) portfolioAtRiskTask
 				.getTaskHelper();
 		portfolioAtRiskHelper.execute(System.currentTimeMillis());
-		//Session session = HibernateUtil.getSessionTL();
+		//Session session = StaticHibernateUtil.getSessionTL();
 		//session.delete(task);
 		TestObjectFactory.removeObject(task);
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		group = TestObjectFactory.getCustomer(group.getCustomerId());
 		client = TestObjectFactory.getCustomer(client.getCustomerId());

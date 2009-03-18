@@ -37,7 +37,7 @@ import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPers
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -56,7 +56,7 @@ public class ActivityGenerator {
 			String lookUpDescription) throws IOException, HibernateException,
 			PersistenceException, ServiceException, ActivityGeneratorException {
 
-		Transaction tx = HibernateUtil.startTransaction();
+		Transaction tx = StaticHibernateUtil.startTransaction();
 			insertLookUpValue(type, lookUpDescription);
 			insertLookUpValueLocale(lookUpId, lookUpDescription);
 			insertActivity(parentActivity, lookUpId);

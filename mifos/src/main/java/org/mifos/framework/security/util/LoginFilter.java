@@ -56,7 +56,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
@@ -119,7 +119,7 @@ public class LoginFilter implements Filter {
 					.sendRedirect(request.getContextPath()+LoginConstants.LOGINPAGEURI);
 		}
 		finally{
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 	}
 

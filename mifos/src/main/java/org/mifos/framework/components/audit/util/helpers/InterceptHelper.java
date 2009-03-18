@@ -62,7 +62,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -127,7 +127,7 @@ public class InterceptHelper {
 	
 	public Map hibernateMeta(Object object,String state) {
 		logger.debug("object : " +  object);
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory().getClassMetadata(object.getClass());
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory().getClassMetadata(object.getClass());
 		Object[] propertyValues = customMeta.getPropertyValues(object,EntityMode.POJO);
 		String[] propertyNames = customMeta.getPropertyNames();
 		Type[] propertyTypes = customMeta.getPropertyTypes();
@@ -296,7 +296,7 @@ public class InterceptHelper {
 	
 	private void readFurtherMeta(Object obj,String firstName,String state) {
 		Class clazz = getClazz(obj);
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory().getClassMetadata(clazz);
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory().getClassMetadata(clazz);
 		Object[] propertyValues = customMeta.getPropertyValues(obj,
 				EntityMode.POJO);
 		String[] propertyNames = customMeta.getPropertyNames();
@@ -656,7 +656,7 @@ public class InterceptHelper {
 	private void readFurtherMetaForCollectionType(Object obj,String firstName,String state) {
 		Class l = getClazz(obj);
 
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory()
 				.getClassMetadata(l);
 
 		Object[] propertyValues = customMeta.getPropertyValues(obj,	EntityMode.POJO);
@@ -939,7 +939,7 @@ public class InterceptHelper {
 	private void readAndMergeCollectionTypes(Object obj,String firstName,String parentName,String state) {
 		Class l = getClazz(obj);
 
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory()
 				.getClassMetadata(l);
 
 		Object[] propertyValues = customMeta.getPropertyValues(obj,	EntityMode.POJO);
@@ -1510,7 +1510,7 @@ public class InterceptHelper {
 	private void populateValueForObjectsOfTypeMasterDataEntity(Object obj,String state,String name){
 		Class clazz = getClazz(obj);
 		
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory()
 				.getClassMetadata(clazz);
 
 		setPrimaryKeyValues(customMeta,obj,name,state);
@@ -1520,7 +1520,7 @@ public class InterceptHelper {
 	private void populateValueForObjectsOfTypeMasterDataEntityInCollections(Object obj,String state,String name){
 		Class clazz = getClazz(obj);
 		
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory()
 				.getClassMetadata(clazz);
 		
 		setPrimaryKeyValueForCollectionType(customMeta,obj,name,state);
@@ -1530,7 +1530,7 @@ public class InterceptHelper {
 	private void populateAndMergeValueForObjectsOfTypeMasterDataEntityInCollections(Object obj,String state,String name){
 		Class clazz = getClazz(obj);
 		
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
+		ClassMetadata customMeta = StaticHibernateUtil.getSessionFactory()
 				.getClassMetadata(clazz);
 
 		setPrimaryKeyValueForCollectionTypeAndMerge(customMeta,obj,name,state);

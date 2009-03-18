@@ -83,7 +83,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -138,7 +138,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 			// Throwing here may mask earlier failures.
 			e.printStackTrace();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -278,7 +278,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				+ year);
 		performNoErrors();
 		verifyForward("preview_success");
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		groupAccount = TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());

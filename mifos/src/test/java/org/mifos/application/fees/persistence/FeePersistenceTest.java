@@ -14,7 +14,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -48,7 +48,7 @@ public class FeePersistenceTest extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
@@ -58,16 +58,16 @@ public class FeePersistenceTest extends MifosIntegrationTest {
 		periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"ClientPeridoicFee", FeeCategory.CLIENT, "5", 
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		assertEquals(0, feePersistence.getUpdatedFeesForCustomer().size());
 		
 		//get fee from db 
-		periodicFee =(FeeBO) HibernateUtil.getSessionTL().get(
+		periodicFee =(FeeBO) StaticHibernateUtil.getSessionTL().get(
 			FeeBO.class, periodicFee.getFeeId());
 		periodicFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
 		periodicFee.save();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		assertEquals(1, feePersistence.getUpdatedFeesForCustomer().size());
 
 		//cleanup
@@ -88,7 +88,7 @@ public class FeePersistenceTest extends MifosIntegrationTest {
 			FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
 		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", 
 			FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short.valueOf("2"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		
 		List<FeeBO> feeList = feePersistence.retrieveCustomerFees();
 		assertEquals(1, feeList.size());
@@ -109,7 +109,7 @@ public class FeePersistenceTest extends MifosIntegrationTest {
 		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", 
 				FeeCategory.LOAN, "400", RecurrenceType.WEEKLY, Short.valueOf("2"));
 		Short feeId = fee2.getFeeId();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		fee2 = feePersistence.getFee(fee2.getFeeId(),fee2.getFeeType());
 		assertEquals(feeId.shortValue(), fee2.getFeeId().shortValue());
 		
@@ -120,7 +120,7 @@ public class FeePersistenceTest extends MifosIntegrationTest {
 				FeeCategory.LOAN, 11.1, FeeFormula.AMOUNT, FeePayment.TIME_OF_DISBURSMENT);
 		
 		Short feeId = fee1.getFeeId();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		fee1 = feePersistence.getFee(fee1.getFeeId(),RateAmountFlag.RATE);
 		assertEquals(feeId.shortValue(), fee1.getFeeId().shortValue());
 

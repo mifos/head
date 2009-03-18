@@ -10,7 +10,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
@@ -29,7 +29,7 @@ public class HiddenMandatoryConfigurationActionTest extends
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -121,12 +121,12 @@ public class HiddenMandatoryConfigurationActionTest extends
 		assertTrue(fieldConfig.isFieldHidden("Personnel.Address3"));
 		assertTrue(fieldConfig.isFieldHidden("Center.Address3"));
 		
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
 		addRequestParameter("method", "update");
@@ -167,7 +167,7 @@ public class HiddenMandatoryConfigurationActionTest extends
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();

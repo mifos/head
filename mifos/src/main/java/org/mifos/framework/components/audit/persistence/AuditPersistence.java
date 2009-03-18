@@ -9,7 +9,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class AuditPersistence extends Persistence {
@@ -18,7 +18,7 @@ public class AuditPersistence extends Persistence {
 		Session session = null;
 		Transaction txn = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			txn = session.beginTransaction();
 			session.save(auditLog);
 			txn.commit();
@@ -27,7 +27,7 @@ public class AuditPersistence extends Persistence {
 			throw new RuntimeException(e);
 		} finally {
 			try {
-				HibernateUtil.closeSession(session);
+				StaticHibernateUtil.closeSession(session);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

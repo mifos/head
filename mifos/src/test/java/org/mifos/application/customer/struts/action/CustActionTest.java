@@ -22,7 +22,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -85,7 +85,7 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		userContext = null;
 		super.tearDown();
 	}
@@ -181,7 +181,7 @@ public class CustActionTest extends MifosMockStrutsTestCase {
         loan1.update();
         loan1.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_OTHER.getValue(),
                 "status changed for loan");
-        HibernateUtil.commitTransaction();
+        StaticHibernateUtil.commitTransaction();
         savings2 = getSavingsAccount(group, "fsaf65", "ads5");
         loan2 = getLoanAccount(client, "rtwetrtwert", "5rre");
         savings3 = getSavingsAccount(center, "fsaf26", "ads2");

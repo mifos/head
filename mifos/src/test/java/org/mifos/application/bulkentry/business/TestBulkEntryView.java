@@ -35,7 +35,7 @@ import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -74,7 +74,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.removeObject(loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		customerPersistence = null;
 		super.tearDown();
 	}
@@ -96,7 +96,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
@@ -123,7 +123,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 		assertEquals("The toal amount due for the product",
 				loanAccountsProductView.getTotalAmountDue().doubleValue(),
 				424.0);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		account1 = (LoanBO) new AccountPersistence().getAccount(account1
 				.getAccountId());
 		account2 = (LoanBO) new AccountPersistence().getAccount(account2
@@ -145,7 +145,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", group, AccountState.LOAN_APPROVED, 
 				startDate, loanOffering, 1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
@@ -172,7 +172,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 		assertEquals("The toal amount to be disbursed for the product",
 				loanAccountsProductView.getTotalDisburseAmount().doubleValue(),
 				300.0);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		account1 = (LoanBO) new AccountPersistence().getAccount(account1
 				.getAccountId());
 		account2 = (LoanBO) new AccountPersistence().getAccount(account2
@@ -196,7 +196,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 				"42423142341", group, AccountState.LOAN_APPROVED, 
 				new Date(System
 						.currentTimeMillis()), loanOffering, 1);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
@@ -221,7 +221,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 		assertEquals("The toal amount to be disbursed for the product",
 				loanAccountsProductView.getTotalDisburseAmount().doubleValue(),
 				600.0);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		account1 = (LoanBO) new AccountPersistence().getAccount(account1
 				.getAccountId());
 		account2 = (LoanBO) new AccountPersistence().getAccount(account2
@@ -279,8 +279,8 @@ public class TestBulkEntryView extends MifosIntegrationTest {
         expectedClientAttendance.setMeetingDate(meetingDate);
         client.addClientAttendance(expectedClientAttendance );
         customerPersistence.createOrUpdate(client);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
          
         List<ClientAttendanceDto> clientAttendanceList = bulkEntryPersistenceService.getClientAttendance(meetingDate,
                 center.getOffice().getOfficeId());
@@ -313,7 +313,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
              expectedClientAttendance.getAttendance().toString(), 
              clientBulkEntryView.getAttendence().toString());
          
-         HibernateUtil.closeSession();
+         StaticHibernateUtil.closeSession();
      }
 	     
 	private PersonnelView getPersonnelView(PersonnelBO personnel) {

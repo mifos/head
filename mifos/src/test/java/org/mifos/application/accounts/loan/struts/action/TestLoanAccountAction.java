@@ -125,7 +125,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -238,11 +238,11 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE) ;
 		InterestTypesEntity interestType = new InterestTypesEntity(InterestType.FLAT);
 		GLCodeEntity glCodePrincipal = 
-		(GLCodeEntity) HibernateUtil
+		(GLCodeEntity) StaticHibernateUtil
 							.getSessionTL()
 							.get(GLCodeEntity.class, TestGeneralLedgerCode.LOANS_TO_CLIENTS);
 		GLCodeEntity glCodeInterest = 
-		(GLCodeEntity) HibernateUtil
+		(GLCodeEntity) StaticHibernateUtil
 							.getSessionTL()
 							.get(GLCodeEntity.class, TestGeneralLedgerCode.INTEREST_ON_LOANS);
 		
@@ -367,7 +367,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(
 				actionForm.getAccountId()).intValue());
 		createPayment(loan, new Money("100"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		loan = TestObjectFactory.getObject(LoanBO.class, new Integer(
 				actionForm.getAccountId()).intValue());
 		assertEquals(new LocalDate(), new LocalDate(loan.getAccountApprovalDate().getTime()));		
@@ -421,7 +421,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				"status changed");
 		accountBO.update();
 
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		LoanBO loan = (LoanBO) accountBO;
 		LoanOfferingBO loanOffering = loan.getLoanOffering();
 //		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -512,7 +512,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 						.isPrinDueLastInst(), new ArrayList<FundBO>(),
 				new ArrayList<FeeBO>(), Short.valueOf("1"),
 				RecurrenceType.MONTHLY, loanPrdActionForm);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("loanAmount", loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount()
@@ -551,7 +551,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		accountBO.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed");
 		accountBO.update();
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		LoanBO loan = (LoanBO) accountBO;
 
 		setRequestPathInfo("/loanAccountAction.do");
@@ -734,11 +734,11 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				AccountActionTypes.DISBURSAL.getValue(), SessionUtils
 						.getAttribute(AccountConstants.LAST_PAYMENT_ACTION,
 								request));
-		client = (CustomerBO) HibernateUtil.getSessionTL().get(
+		client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, client.getCustomerId());
-		group = (CustomerBO) HibernateUtil.getSessionTL().get(CustomerBO.class,
+		group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
 				group.getCustomerId());
-		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
 	}
 
@@ -957,7 +957,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		loanOffering.addPrdOfferingFee(new LoanOfferingFeesEntity(loanOffering,
 				fees.get(0)));
 		TestObjectFactory.updateObject(loanOffering);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -1207,7 +1207,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 	 accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
 	 ((LoanBO) accountBO).setBusinessActivityId(1);
 	 accountBO.update();
-	 HibernateUtil.commitTransaction();
+	 StaticHibernateUtil.commitTransaction();
 	 LoanBO loan = (LoanBO) accountBO;
 	 LoanOfferingBO loanOffering = loan.getLoanOffering();
 	 loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -1411,7 +1411,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
 				Short.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 						.valueOf("1"));
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 	private AccountBO getLoanAccount(AccountState state, Date startDate,
@@ -1540,10 +1540,10 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				ApplicableTo.GROUPS);
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity principalglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class,
 						TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil
 				.getSessionTL().get(GLCodeEntity.class,
 						TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 		ProductCategoryBO productCategory = TestObjectFactory
@@ -1555,7 +1555,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		Date startDate = offSetCurrentDate(0);
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		List<FundBO> funds = new ArrayList<FundBO>();
-		FundBO fundBO = (FundBO) HibernateUtil.getSessionTL().get(FundBO.class,
+		FundBO fundBO = (FundBO) StaticHibernateUtil.getSessionTL().get(FundBO.class,
 				Short.valueOf("2"));
 		funds.add(fundBO);
 		LoanOfferingBO loanOfferingBO = new LoanOfferingBO(TestObjectFactory

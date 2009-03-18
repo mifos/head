@@ -35,7 +35,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 /**
@@ -81,7 +81,7 @@ public class TestProcessFlowRules {
 				AccountStateEntity.class,
 				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
 		ase.setIsOptional(false);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class TestProcessFlowRules {
 						CustomerStatus.CLIENT_PENDING.getValue());
 		assertTrue(cse.getIsOptional());
 		cse.setIsOptional(false);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		assertFalse(cse.getIsOptional());
 		assertTrue(ProcessFlowRules.isClientPendingApprovalStateEnabled());
 		ProcessFlowRules.init();
@@ -106,7 +106,7 @@ public class TestProcessFlowRules {
 				AccountStateEntity.class,
 				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
 		ase.setIsOptional(true);
-		HibernateUtil.commitTransaction();
+		StaticHibernateUtil.commitTransaction();
 		assertTrue(ase.getIsOptional());
 		assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
 		ProcessFlowRules.init();

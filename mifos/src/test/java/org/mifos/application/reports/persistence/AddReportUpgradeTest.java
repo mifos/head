@@ -8,7 +8,7 @@ import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class AddReportUpgradeTest extends MifosIntegrationTest {
 
@@ -28,7 +28,7 @@ public class AddReportUpgradeTest extends MifosIntegrationTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		session = HibernateUtil.getSessionTL();
+		session = StaticHibernateUtil.getSessionTL();
 		connection = session.connection();
 		transaction = session.beginTransaction();
 	}

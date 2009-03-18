@@ -22,7 +22,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
@@ -62,24 +62,24 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	
 	public void testExecuteForCustomerAccount() throws Exception{
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		createCenter();		
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
-		HibernateUtil.startTransaction();
+		StaticHibernateUtil.startTransaction();
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		
 		int noOfInstallments=center.getCustomerAccount().getAccountActionDates().size();
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
 		
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		center = TestObjectFactory.getCustomer(center.getCustomerId());
 		System.out.println(center.getCustomerAccount().getAccountActionDates().size());
@@ -124,7 +124,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				savings.getAccountId());
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper()
 				.execute(System.currentTimeMillis());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
 		group = TestObjectFactory.getCustomer(group.getCustomerId());

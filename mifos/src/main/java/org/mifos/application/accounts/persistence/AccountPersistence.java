@@ -49,7 +49,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -272,7 +272,7 @@ public class AccountPersistence extends Persistence {
 	throws PersistenceException {
 		Session session = null;
 		try {
-			session = HibernateUtil.openSession();
+			session = StaticHibernateUtil.openSession();
 			Query query = session.getNamedQuery(queryName);
 			setParametersInQuery(query, queryName, queryParameters);
 			return query.list();
@@ -426,7 +426,7 @@ public class AccountPersistence extends Persistence {
 				coaHierarchyEntity = new COAHierarchyEntity(newAccount, null);
 			}
 			else {
-				parentCOA = (COABO) HibernateUtil.getSessionTL().load(
+				parentCOA = (COABO) StaticHibernateUtil.getSessionTL().load(
 						COABO.class, parent_id);
 				coaHierarchyEntity = new COAHierarchyEntity(newAccount,
 						parentCOA.getCoaHierarchy());

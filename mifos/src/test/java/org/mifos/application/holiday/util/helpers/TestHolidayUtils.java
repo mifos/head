@@ -38,7 +38,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -121,14 +121,14 @@ public class TestHolidayUtils extends MifosIntegrationTest {
 	protected void tearDown() throws Exception {
 		try {
 			TestObjectFactory.cleanUpAccount(accountId);
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
 		} catch (Exception e) {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setSavedConfig();
 		super.tearDown();
 	}
@@ -168,8 +168,8 @@ public class TestHolidayUtils extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 		
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
 				HolidayBO.class, holidayEntity.getHolidayPK());
@@ -203,8 +203,8 @@ public class TestHolidayUtils extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 		
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
 				HolidayBO.class, holidayEntity.getHolidayPK());
@@ -504,8 +504,8 @@ public class TestHolidayUtils extends MifosIntegrationTest {
 		holidayEntity.setValidationEnabled(false);
 		
 		holidayEntity.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		return holidayEntity;
 	}
 
@@ -526,8 +526,8 @@ public class TestHolidayUtils extends MifosIntegrationTest {
 			.createSavingsAccount(savingsProduct, group, 
 				AccountState.SAVINGS_ACTIVE,
 				TestUtils.makeUser());
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		accountId = savings.getAccountId();
 		return TestObjectFactory.getObject(SavingsBO.class, accountId);

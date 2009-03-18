@@ -61,7 +61,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -118,7 +118,7 @@ public class TestCustomerBO extends MifosIntegrationTest {
 			// TODO Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -148,12 +148,12 @@ public class TestCustomerBO extends MifosIntegrationTest {
 	public void testRemoveGroupMemberShip() throws Exception {
 		createInitialObjects();
 		client.setUserContext(TestUtils.makeUser());
-		HibernateUtil.getInterceptor().createInitialValueMap(client);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
 		createPersonnel(PersonnelLevel.LOAN_OFFICER);
 		client.removeGroupMemberShip(loanOfficer, "comment");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 		assertEquals(loanOfficer.getPersonnelId(), client.getPersonnel().getPersonnelId());
 			group = TestObjectFactory.getGroup(group
@@ -167,10 +167,10 @@ public class TestCustomerBO extends MifosIntegrationTest {
 	public void testHasActiveLoanAccounts() throws Exception {
 		createInitialObjects();
 		client.setUserContext(TestUtils.makeUser());
-		HibernateUtil.getInterceptor().createInitialValueMap(client);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
 		boolean res=client.hasActiveLoanAccounts();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		assertEquals(res,false );
 		TestObjectFactory.cleanUpChangeLog();
 	}
@@ -226,7 +226,7 @@ public class TestCustomerBO extends MifosIntegrationTest {
 	public void testCheckIfClientIsATitleHolder() throws Exception {
 		createInitialObjects();
 		client.setUserContext(TestUtils.makeUser());
-		HibernateUtil.getInterceptor().createInitialValueMap(client);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
 	
 		try{
 			client.checkIfClientIsATitleHolder();
@@ -236,8 +236,8 @@ public class TestCustomerBO extends MifosIntegrationTest {
 					expected.getKey());
 		}
 		
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 	
 		TestObjectFactory.cleanUpChangeLog();
 	}
@@ -248,8 +248,8 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-		HibernateUtil.closeSession();
-		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(
 				OfficeBO.class, createdBranchOffice.getOfficeId());
 		createPersonnel(PersonnelLevel.LOAN_OFFICER);
 
@@ -259,14 +259,14 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		center = TestObjectFactory.createCenter("Center", meeting, 
 			getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
 		center.setUserContext(TestUtils.makeUserWithLocales());
-		HibernateUtil.getInterceptor().createInitialValueMap(center);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
@@ -288,13 +288,13 @@ public class TestCustomerBO extends MifosIntegrationTest {
 
 		group.setUserContext(TestUtils.makeUserWithLocales());
 
-		HibernateUtil.getInterceptor().createInitialValueMap(group);
+		StaticHibernateUtil.getInterceptor().createInitialValueMap(group);
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_DUPLICATE, 
 				"comment");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		group = TestObjectFactory.getGroup(group
 				.getCustomerId());
@@ -328,14 +328,14 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		GroupBOTest.setLastGroupLoanAmount(groupPerformanceHistory, new Money(
 				"100"));
 		TestObjectFactory.updateObject(group);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		group = (GroupBO) customerPersistence.findBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
 		assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory()
 				.getGroup().getCustomerId());
 		assertEquals(new Money("100"), group.getGroupPerformanceHistory()
 				.getLastGroupLoanAmount());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		group = TestObjectFactory.getGroup(group
@@ -563,8 +563,8 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		SavingsBO savings = getSavingsAccount("fsaf4", "ads4");
 		TestSavingsBO.setBalance(savings, new Money("1000"));
 		savings.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
 		client = TestObjectFactory.getClient(client
@@ -645,8 +645,8 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		accountBO = getLoanAccount(client, meeting);
-		HibernateUtil.closeSession();
-		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+		StaticHibernateUtil.closeSession();
+		client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		try {
 			client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test");
@@ -658,14 +658,14 @@ public class TestCustomerBO extends MifosIntegrationTest {
 			);
 			assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
 		}
-		HibernateUtil.closeSession();
-		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+		StaticHibernateUtil.closeSession();
+		client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+		accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -676,11 +676,11 @@ public class TestCustomerBO extends MifosIntegrationTest {
 				.getPersonnelId());
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		updatePersonnel(PersonnelLevel.LOAN_OFFICER, PersonnelStatus.INACTIVE,
 				getBranchOffice());
@@ -695,9 +695,9 @@ public class TestCustomerBO extends MifosIntegrationTest {
 			);
 			assertEquals(CustomerStatus.CENTER_INACTIVE, center.getStatus());
 		}
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 	}
 
@@ -706,19 +706,19 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-		HibernateUtil.closeSession();
-		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(
 				OfficeBO.class, createdBranchOffice.getOfficeId());
 		createPersonnel(PersonnelLevel.LOAN_OFFICER);
 		createCenter(getBranchOffice().getOfficeId(), loanOfficer
 				.getPersonnelId());
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment");
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
 		updatePersonnel(PersonnelLevel.LOAN_OFFICER, PersonnelStatus.ACTIVE,
 				createdBranchOffice);
@@ -733,9 +733,9 @@ public class TestCustomerBO extends MifosIntegrationTest {
 			assertEquals(CustomerStatus.CENTER_INACTIVE.getValue(), center
 					.getCustomerStatus().getId());
 		}
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 	}
 
@@ -745,9 +745,9 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		accountBO.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
 				null, "changed status");
 		accountBO.update();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
 		try {
 			client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test");
@@ -759,14 +759,14 @@ public class TestCustomerBO extends MifosIntegrationTest {
 			);
 			assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
 		}
-		HibernateUtil.closeSession();
-		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+		StaticHibernateUtil.closeSession();
+		client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
-		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
-		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		accountBO = (SavingsBO) HibernateUtil.getSessionTL().get(
+		accountBO = (SavingsBO) StaticHibernateUtil.getSessionTL().get(
 				SavingsBO.class, accountBO.getAccountId());
 	}
 
@@ -903,9 +903,9 @@ public class TestCustomerBO extends MifosIntegrationTest {
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, Short.valueOf("1"));
 		loanOfficer.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 
 	}
@@ -920,9 +920,9 @@ public class TestCustomerBO extends MifosIntegrationTest {
 				"rajendersaini@yahoo.com", null, null, name, Integer
 						.valueOf("1"), Integer.valueOf("1"), address, Short
 						.valueOf("1"));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 
 	}

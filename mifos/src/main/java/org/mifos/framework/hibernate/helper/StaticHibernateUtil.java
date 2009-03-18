@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 
-public class HibernateUtil {
+public class StaticHibernateUtil {
 
     private static final SessionFactory sessionFactory;
 

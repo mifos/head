@@ -22,7 +22,7 @@ package org.mifos.cli.admin;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.cli.BaseMifosCommandLine;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * @deprecated in favor of <code>sql/init_mifos_password.sql</code> script.
@@ -35,8 +35,8 @@ public class UpdateMifosPassword extends BaseMifosCommandLine {
         initializeApplication();
         System.out.println("application initialized");
         new PersonnelPersistence().getPersonnel((short)1).updatePassword(args[0], (short)1);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         System.out.println("done");
         System.exit(0);
     }

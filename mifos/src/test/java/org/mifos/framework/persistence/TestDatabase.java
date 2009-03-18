@@ -38,7 +38,7 @@ import org.hibernate.classic.Session;
 import org.junit.Assert;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -122,17 +122,17 @@ public class TestDatabase implements SessionOpener {
 	/**
 	 * This is for tests where it is difficult to pass around the Session.
 	 * 
-	 * Thus, we install it in a static in HibernateUtil.
+	 * Thus, we install it in a static in StaticHibernateUtil.
 	 * 
-	 * Make sure to call {@link HibernateUtil#resetDatabase()} from tearDown.
+	 * Make sure to call {@link StaticHibernateUtil#resetDatabase()} from tearDown.
 	 */
 	public Session installInThreadLocal() {
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		AuditInterceptor interceptor = new AuditInterceptor();
 		Session session1 = openSession(interceptor);
 		SessionHolder holder = new SessionHolder(session1);
 		holder.setInterceptor(interceptor);
-		HibernateUtil.setThreadLocal(holder);
+		StaticHibernateUtil.setThreadLocal(holder);
 		return session1;
 	}
 
@@ -180,8 +180,8 @@ public class TestDatabase implements SessionOpener {
 	}
 
 	public static void resetMySQLDatabase() throws Exception {
-		Connection connection = HibernateUtil.getSessionTL().connection();
-		HibernateUtil.startTransaction();
+		Connection connection = StaticHibernateUtil.getSessionTL().connection();
+		StaticHibernateUtil.startTransaction();
 		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
 		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
 		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
@@ -192,8 +192,8 @@ public class TestDatabase implements SessionOpener {
 		// "production" databases (those that Mifos running under an app
 		// server will connect to).
 
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		
 		// If the database is ever blown away, we must repopulate chart of
 		// accounts data since some unit tests rely on its presence. It must

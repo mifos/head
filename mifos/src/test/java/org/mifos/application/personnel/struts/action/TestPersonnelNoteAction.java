@@ -18,7 +18,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -59,7 +59,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 		userContext = null;
 		TestObjectFactory.cleanUp(personnel);
 		TestObjectFactory.cleanUp(createdBranchOffice);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -192,7 +192,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		setRequestPathInfo("/PersonAction.do");
 		addRequestParameter("method", Methods.get.toString());
@@ -210,7 +210,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 
 		assertEquals("Size of the search result should be 1", 1,((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());
 		
@@ -231,9 +231,9 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, userContext.getId());
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
 	}

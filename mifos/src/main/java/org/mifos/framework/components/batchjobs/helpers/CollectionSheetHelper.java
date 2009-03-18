@@ -42,7 +42,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * This is the helper class which is invoked by the collection sheet task. The
@@ -90,12 +90,12 @@ public class CollectionSheetHelper extends TaskHelper {
 			generateCollectionSheetForDate(collectionSheet);
 			collectionSheet
 					.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
-			HibernateUtil.commitTransaction();
+			StaticHibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			// if there is an exception roll back the transaction, close the
 			// session and open a new one.
-			HibernateUtil.rollbackTransaction();
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.rollbackTransaction();
+			StaticHibernateUtil.closeSession();
 			errorList.add("Coll Sheet Date"
 					+ collectionSheet.getCollSheetDate() + "Coll Sheet Date"
 					+ collectionSheet.getCollSheetID() + "Coll Sheet Run Date"
@@ -104,16 +104,16 @@ public class CollectionSheetHelper extends TaskHelper {
 				collectionSheet = getNewCollectionSheet(currentDate);
 				collectionSheet
 						.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_FAILED);
-				HibernateUtil.commitTransaction();
+				StaticHibernateUtil.commitTransaction();
 			} catch (Exception ae) {
-				HibernateUtil.rollbackTransaction();
+				StaticHibernateUtil.rollbackTransaction();
 				MifosLogManager
 						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 						.error(
 								"Collection sheet generation failed also the status could not be updated");
 			}
 		} finally {
-			HibernateUtil.closeSession();
+			StaticHibernateUtil.closeSession();
 		}
 		if (errorList.size() > 0)
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);

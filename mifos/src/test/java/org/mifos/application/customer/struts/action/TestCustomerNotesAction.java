@@ -50,7 +50,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -92,7 +92,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -214,7 +214,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.center_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
+		center = (CenterBO) (StaticHibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
 		assertEquals(1, center.getCustomerNotes().size());
 	}
@@ -312,7 +312,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.client_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
+		client = (ClientBO) (StaticHibernateUtil.getSessionTL().get(ClientBO.class,
 				new Integer(client.getCustomerId())));
 		assertEquals(1, client.getRecentCustomerNotes().size());
 		assertEquals(1, client.getCustomerNotes().size());
@@ -341,7 +341,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("customerId", center.getCustomerId().toString());
@@ -357,7 +357,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 
 		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		
 		getobjects();
 	}
@@ -460,7 +460,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.group_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
+		group = (GroupBO) (StaticHibernateUtil.getSessionTL().get(GroupBO.class,
 				new Integer(group.getCustomerId())));
 		assertEquals(1, group.getRecentCustomerNotes().size());
 		assertEquals(1, group.getCustomerNotes().size());
@@ -489,7 +489,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		actionPerform();
 
 
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("customerId", group.getCustomerId().toString());
@@ -505,7 +505,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 
 		assertEquals("Size of the search result should be 1", 1,((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		getobjects();
 	}
 

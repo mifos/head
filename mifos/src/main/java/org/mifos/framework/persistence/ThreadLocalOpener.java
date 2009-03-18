@@ -1,6 +1,6 @@
 package org.mifos.framework.persistence;
 
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 
 public class ThreadLocalOpener implements SessionOpener {
@@ -10,7 +10,7 @@ public class ThreadLocalOpener implements SessionOpener {
 	 * session, or returning one which is already open.
 	 */
 	public SessionHolder open() {
-		return HibernateUtil.getOrCreateSessionHolder();
+		return StaticHibernateUtil.getOrCreateSessionHolder();
 	}
 
 }

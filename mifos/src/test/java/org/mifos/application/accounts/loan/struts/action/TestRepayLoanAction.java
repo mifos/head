@@ -19,7 +19,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -50,20 +50,20 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		flowKey = createFlow(request, RepayLoanAction.class);
 		accountBO = getLoanAccount();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		accountBO=(AccountBO)StaticHibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
 	}
 	
 	@Override
 	protected void tearDown() throws Exception {
-		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
-		group=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,group.getCustomerId());
-		center=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,center.getCustomerId());
+		accountBO=(AccountBO)StaticHibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
+		group=(CustomerBO)StaticHibernateUtil.getSessionTL().get(CustomerBO.class,group.getCustomerId());
+		center=(CustomerBO)StaticHibernateUtil.getSessionTL().get(CustomerBO.class,center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 	

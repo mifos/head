@@ -43,7 +43,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -101,7 +101,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -515,8 +515,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				getMeeting(), 
 				new PersonnelPersistence().getPersonnel(loanOfficerId), new CustomerPersistence());
 		new CenterPersistence().saveCenter(center);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(new Integer(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 
@@ -576,7 +576,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		String name = "manage_center";
 		center = TestObjectFactory.createCenter(name,
 				getMeeting());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 	}
@@ -597,7 +597,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount("fsaf6", "ads6", center);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("globalCustNum", center.getGlobalCustNum());
@@ -616,7 +616,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				((List<SavingsBO>) SessionUtils.getAttribute(
 						ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, request))
 						.size());
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		center = TestObjectFactory.getCenter(center
 				.getCustomerId());
 		group = TestObjectFactory.getGroup(group
@@ -792,8 +792,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 						FeeCategory.CENTER, "200", frequency, Short
 								.valueOf("2"));
 		fees.add(new FeeView(TestObjectFactory.getContext(),fee1));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		return fees;
 	}
 
@@ -810,8 +810,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		fee2.update();
 		fees.add(fee1);
 		fees.add(fee2);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
 		return fees;
 	}
 	

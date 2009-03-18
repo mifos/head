@@ -32,7 +32,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -93,7 +93,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		userContext = null;
 		TestObjectFactory.cleanUp(personnel);
 		TestObjectFactory.cleanUp(createdBranchOffice);
-		HibernateUtil.closeSession();
+		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -490,9 +490,9 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 					customFieldView, name, "111111", date, Integer
 							.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
 		personnel.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		personnel=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,personnel.getPersonnelId());
+		StaticHibernateUtil.commitTransaction();
+		StaticHibernateUtil.closeSession();
+		personnel=(PersonnelBO)StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,personnel.getPersonnelId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
 	}
 
