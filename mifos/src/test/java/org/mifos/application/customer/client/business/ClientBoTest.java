@@ -29,80 +29,27 @@ import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
 
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientBoTest extends TestCase {
 	public ClientBoTest() throws SystemException, ApplicationException {
         super();
     }
 
-    private AccountBO accountBO;
-	private CustomerBO center;
-	private CenterBO center1;
-	private CustomerBO group;
-	private GroupBO group1;
-	private SavingsOfferingBO savingsOffering1;
-	private SavingsOfferingBO savingsOffering2;
-	private ClientBO client;
-	
-	
-    PersonnelBO personnel;
-
-    private OfficeBO office;
-	private CustomerPersistence customerPersistence = new CustomerPersistence();
-
-	@Override
+ 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		DatabaseSetup.configureLogging();
-		//personnel = getTestUser();		
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-/*		try {
-			TestObjectFactory.cleanUp(accountBO);
-			TestObjectFactory.cleanUp(client);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(group1);
-			TestObjectFactory.cleanUp(center);
-			TestObjectFactory.cleanUp(center1);
-			TestObjectFactory.cleanUp(office);
-			TestObjectFactory.removeObject(savingsOffering1);
-			TestObjectFactory.removeObject(savingsOffering2);			
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		HibernateUtil.closeSession();
-		*/
 		super.tearDown();
-	}
-	
-	public static void setDateOfBirth(ClientBO client,Date dateofBirth) {
-		client.setDateOfBirth(dateofBirth);
-	}
-
-	public static void setNoOfActiveLoans(ClientPerformanceHistoryEntity clientPerformanceHistoryEntity,Integer noOfActiveLoans) {
-		clientPerformanceHistoryEntity.setNoOfActiveLoans(noOfActiveLoans);
 	}
 	
 	
@@ -196,21 +143,6 @@ public class ClientBoTest extends TestCase {
         return new Date(currentDateCalendar.getTimeInMillis());
     }
     
-	private void createInitialObjects() throws Exception{
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, 
-			Short.valueOf("1"), new java.util.Date(), 
-			MeetingType.CUSTOMER_MEETING, "Delhi");
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = createClient(CustomerStatus.CLIENT_ACTIVE);
-		HibernateUtil.closeSession();
-	}
-	
-	private ClientBO createClient(CustomerStatus clientStatus){
-		return TestObjectFactory.createClient("Client", clientStatus,
-				group);
-	}
-	
 	private ClientAttendanceBO getClientAttendance(java.util.Date meetingDate) {
 		ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
 		clientAttendance.setAttendance(AttendanceType.PRESENT);
@@ -218,92 +150,6 @@ public class ClientBoTest extends TestCase {
 		return clientAttendance;
 	}
 
-	//////////////////////////////////////////  Retaining old methods temporarily 
-	///// while work is in progress 3/17/09
-/*	
-    public void testAddClientAttendance() throws Exception {
-        createInitialObjects();
-        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        client.addClientAttendance(getClientAttendance(meetingDate));
-        customerPersistence.createOrUpdate(client);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client
-                .getCustomerId());
-        assertEquals("The size of customer attendance is : ", client
-                .getClientAttendances().size(), 1);
-    }
-
-    public void testGetClientAttendanceForMeeting() throws Exception {
-        createInitialObjects();
-        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        client.addClientAttendance(getClientAttendance(meetingDate));
-        customerPersistence.createOrUpdate(client);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client
-                .getCustomerId());
-        assertEquals("The size of customer attendance is : ", client
-                .getClientAttendances().size(), 1);
-        assertEquals("The value of customer attendance for the meeting : ",
-                AttendanceType.PRESENT,
-                client.getClientAttendanceForMeeting(meetingDate)
-                        .getAttendanceAsEnum());
-    }
-
-    public void testHandleAttendance() throws Exception{
-        createInitialObjects();
-        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        client.handleAttendance(meetingDate, AttendanceType.PRESENT);
-        HibernateUtil.commitTransaction();
-        assertEquals("The size of customer attendance is : ", client
-                .getClientAttendances().size(), 1);
-        assertEquals("The value of customer attendance for the meeting : ",
-                AttendanceType.PRESENT,
-                client.getClientAttendanceForMeeting(meetingDate)
-                        .getAttendanceAsEnum());
-        client.handleAttendance(meetingDate, AttendanceType.ABSENT);
-        HibernateUtil.commitTransaction();
-        assertEquals("The size of customer attendance is : ",
-                1, client.getClientAttendances().size());
-        assertEquals("The value of customer attendance for the meeting : ",
-                AttendanceType.ABSENT,
-                client.getClientAttendanceForMeeting(meetingDate)
-                        .getAttendanceAsEnum());
-        HibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client
-                .getCustomerId());
-    }
-	
-    public void testHandleAttendanceForDifferentDates() throws Exception {
-        createInitialObjects();
-        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        client.handleAttendance(meetingDate, AttendanceType.PRESENT);
-        HibernateUtil.commitTransaction();
-        assertEquals("The size of customer attendance is : ", client
-                .getClientAttendances().size(), 1);
-        assertEquals("The value of customer attendance for the meeting : ",
-                AttendanceType.PRESENT,
-                client.getClientAttendanceForMeeting(meetingDate)
-                        .getAttendanceAsEnum());
-        HibernateUtil.closeSession();
-        Date offSetDate = getDateOffset(1);
-        client.handleAttendance(offSetDate, AttendanceType.ABSENT);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client
-                .getCustomerId());
-        assertEquals("The size of customer attendance is : ", client
-                .getClientAttendances().size(), 2);
-        assertEquals("The value of customer attendance for the meeting : ",
-                AttendanceType.PRESENT,
-                client.getClientAttendanceForMeeting(meetingDate)
-                        .getAttendanceAsEnum());
-        assertEquals("The value of customer attendance for the meeting : ",
-                AttendanceType.ABSENT,
-                client.getClientAttendanceForMeeting(offSetDate)
-                        .getAttendanceAsEnum());
-*/
     }
 
 	
