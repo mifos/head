@@ -6,7 +6,7 @@ import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.configuration.ConfigureSession;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class MifosService {
@@ -19,7 +19,7 @@ public class MifosService {
 	    MifosLogger logger = MifosLogManager.getLogger("org.mifos.logger");
 	    logger.info("Logger initialized", false, null);
 	    
-	    ConfigureSession.configure();
+	    StaticHibernateUtil.initialize();
 	    logger.info("Hibernate initialized", false, null);
 	    
 	    logger.info("Mifos Service Layer initialized", false, null);

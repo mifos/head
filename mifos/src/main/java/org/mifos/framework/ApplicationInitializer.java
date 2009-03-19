@@ -51,7 +51,6 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
-import org.mifos.framework.hibernate.configuration.ConfigureSession;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -327,7 +326,7 @@ public class ApplicationInitializer implements ServletContextListener,
 	 */
 	public static void initializeHibernate() throws AppNotConfiguredException {
 		try {
-		    ConfigureSession.configure();
+		    StaticHibernateUtil.initialize();
 		}
 		catch (HibernateStartUpException e) {
 			throw new AppNotConfiguredException(e);

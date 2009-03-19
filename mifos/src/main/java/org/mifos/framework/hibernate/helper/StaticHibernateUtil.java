@@ -20,34 +20,42 @@
 
 package org.mifos.framework.hibernate.helper;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.util.TestingService;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class StaticHibernateUtil {
 
-    private static final SessionFactory sessionFactory;
-
+    private static SessionFactory sessionFactory;
+    private static Configuration config = null;
     private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
 
-    static {
-        try {
-            sessionFactory = HibernateSessionFactory.getSessionFactory();
-        } catch (Throwable ex) {
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.",
-                    false, null, ex);
-
-            throw new ExceptionInInitializerError(ex);
-        }
+    /**
+     * This method must be called before using Hibernate!
+     */
+    public static void initialize() throws HibernateStartUpException {
+        config = new Configuration();
+        initializeHibernateConfiguration();
+        initializeDatabaseConnnectionSettings();
+        HibernateSessionFactory.setConfiguration(config);
+        initializeHibernateSessionFactory();
     }
 
     public static void setThreadLocal(SessionHolder holder) {
@@ -59,7 +67,7 @@ public class StaticHibernateUtil {
     }
 
     /**
-     * Open a new hibernate session.
+     * Open a new Hibernate session.
      */
     public static Session openSession() throws HibernateProcessException {
         try {
@@ -193,6 +201,37 @@ public class StaticHibernateUtil {
     public static void rollbackTransaction() {
         if (getSessionTL().getTransaction().isActive()) {
             getSessionTL().getTransaction().rollback();
+        }
+    }
+    
+    private static void initializeHibernateConfiguration() {
+        try {
+            config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
+        } catch (HibernateException e) {
+            throw new HibernateStartUpException(e);
+        } catch (MalformedURLException e) {
+            throw new HibernateStartUpException(e);
+        } catch (URISyntaxException e) {
+            throw new HibernateStartUpException(e);
+        }
+    }
+
+    private static void initializeDatabaseConnnectionSettings() {
+        try {
+            config.setProperties(new TestingService().getDatabaseConnectionSettings());
+        } catch (IOException e) {
+            throw new HibernateStartUpException(e);
+        }
+    }
+
+    private static void initializeHibernateSessionFactory() throws ExceptionInInitializerError {
+        try {
+            sessionFactory = HibernateSessionFactory.getSessionFactory();
+        } catch (Throwable ex) {
+            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.",
+                    false, null, ex);
+
+            throw new ExceptionInInitializerError(ex);
         }
     }
 

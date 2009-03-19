@@ -37,9 +37,9 @@ import org.hibernate.cfg.Configuration;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.configuration.ConfigureSession;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
@@ -72,7 +72,7 @@ public class DatabaseSetup {
 	}
 
 	public static void setMysql() {
-	    ConfigureSession.configure();
+	    StaticHibernateUtil.initialize();
 	}
 
 	public static Configuration getHibernateConfiguration() {
