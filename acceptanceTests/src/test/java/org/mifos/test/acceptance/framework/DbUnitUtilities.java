@@ -104,7 +104,7 @@ public class DbUnitUtilities {
 
         try {
             Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
-        } catch (DatabaseUnitException e) {
+        } catch (AssertionError e) {
             TableFormatter formatter = new TableFormatter();
             System.out.println("---Expected Table---");
             System.out.println(formatter.format(expectedTable));
@@ -161,7 +161,7 @@ public class DbUnitUtilities {
         
         try {
             Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
-        } catch (DatabaseUnitException e) {
+        } catch (AssertionError e) {
             TableFormatter formatter = new TableFormatter();
             System.out.println("---Expected Table---");
             System.out.println(formatter.format(expectedTable));
