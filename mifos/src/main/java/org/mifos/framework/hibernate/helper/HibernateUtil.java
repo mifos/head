@@ -20,87 +20,226 @@
 
 package org.mifos.framework.hibernate.helper;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.HibernateStartUpException;
+import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.util.TestingService;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class HibernateUtil {
 
-    public void setThreadLocal(SessionHolder holder) {
-        StaticHibernateUtil.setThreadLocal(holder);
+    private static Boolean initialized = Boolean.FALSE;
+    private static SessionFactory sessionFactory;
+    private static Configuration config = null;
+    private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
+
+    public HibernateUtil() {
+        initialize();
     }
     
+    public void initialize() throws HibernateStartUpException {
+        synchronized(initialized) {
+            if (initialized == Boolean.FALSE) {
+                config = new Configuration();
+                initializeHibernateConfiguration();
+                initializeDatabaseConnnectionSettings();
+                HibernateSessionFactory.setConfiguration(config);
+                initializeHibernateSessionFactory();
+                initialized = Boolean.TRUE;
+            }
+        }
+    }
+
+    public void setThreadLocal(SessionHolder holder) {
+        threadLocal.set(holder);
+    }
+
     public void resetDatabase() {
-        StaticHibernateUtil.resetDatabase();
+        closeSession();
     }
 
+    /**
+     * Open a new Hibernate session.
+     */
     public Session openSession() throws HibernateProcessException {
-        return StaticHibernateUtil.openSession();
+        try {
+            return sessionFactory.openSession();
+        } catch (HibernateException e) {
+            throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION, e);
+        }
     }
 
+    /**
+     * Close a session. Do nothing if the session is null or already closed.
+     */
     public void closeSession(Session session) throws HibernateProcessException {
-        StaticHibernateUtil.closeSession(session);
+        try {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        } catch (HibernateException e) {
+            throw new HibernateProcessException(HibernateConstants.FAILED_CLOSINGSESSION, e);
+        }
     }
 
+    /**
+     * Return the hibernate session factory
+     */
     public SessionFactory getSessionFactory() {
-        return StaticHibernateUtil.getSessionFactory();
+        return sessionFactory;
     }
 
     public Session openSession(Connection connection) {
-        return StaticHibernateUtil.openSession(connection);
+        return getSessionFactory().openSession(connection);
     }
 
+    /**
+     * Return the current hibernate session for this thread. If this thread
+     * doesn't have one, create a new one.
+     */
     public Session getSessionTL() {
-        return StaticHibernateUtil.getSessionTL();
+        try {
+            getOrCreateSessionHolder();
+        } catch (HibernateException he) {
+            throw new ConnectionNotFoundException(he);
+        }
+        return threadLocal.get().getSession();
+
     }
 
     public AuditInterceptor getInterceptor() {
-        return StaticHibernateUtil.getInterceptor();
+        return getSessionHolder().getInterceptor();
     }
 
+    /**
+     * Begin a transaction and store it in a thread-local variable, or return
+     * the currently open transaction if there is one. The result is that the
+     * transaction will remain open until a call to {@link #commitTransaction()}
+     * or {@link #rollbackTransaction()}. Calling this method instead of just
+     * creating a hibernate Transaction via the session is probably not a good
+     * idea (see an example of the latter at
+     * TestObjectPersistence#update(Session,
+     * org.mifos.framework.business.PersistentObject)
+     */
     public Transaction startTransaction() {
-        return StaticHibernateUtil.startTransaction();
+        Transaction transaction = getSessionTL().getTransaction();
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+        return transaction;
     }
 
     public Transaction getTransaction() {
-        return StaticHibernateUtil.getTransaction();
+        return getSessionTL().getTransaction();
     }
 
     public void closeSession() {
-        StaticHibernateUtil.closeSession();
+        if (getSessionTL().isOpen()) {
+            getSessionTL().close();
+        }
+        threadLocal.set(null);
     }
 
     public void flushAndCloseSession() {
-        StaticHibernateUtil.flushAndCloseSession();
+        if (getSessionTL().isOpen()) {
+            getSessionTL().flush();
+            getSessionTL().close();
+        }
+        threadLocal.set(null);
+
     }
 
     public void flushAndClearSession() {
-        StaticHibernateUtil.flushAndClearSession();
+        Session session = getSessionTL();
+        if (session.isOpen()) {
+            session.flush();
+            session.clear();
+        }
+
     }
 
     public SessionHolder getSessionHolder() {
-        return StaticHibernateUtil.getSessionHolder();
+        if (null == threadLocal.get()) {
+            // need to log to indicate that the session is being invoked when
+            // not present
+
+        }
+        return threadLocal.get();
     }
 
     public SessionHolder getOrCreateSessionHolder() throws HibernateException {
-        return StaticHibernateUtil.getOrCreateSessionHolder();
+        if (threadLocal.get() == null) {
+            AuditInterceptor auditInterceptor = new AuditInterceptor();
+            SessionHolder sessionHolder = new SessionHolder(sessionFactory.openSession(auditInterceptor));
+            sessionHolder.setInterceptor(auditInterceptor);
+            setThreadLocal(sessionHolder);
+        }
+        return threadLocal.get();
     }
 
     public boolean isSessionOpen() {
-        return StaticHibernateUtil.isSessionOpen();
+        if (getSessionHolder() != null) {
+            return getSessionHolder().getSession().isOpen();
+        }
+        return false;
     }
 
     public void commitTransaction() {
-        StaticHibernateUtil.commitTransaction();
+        if (getSessionTL().getTransaction().isActive()) {
+            getSessionTL().getTransaction().commit();
+        }
     }
 
     public void rollbackTransaction() {
-        StaticHibernateUtil.rollbackTransaction();
+        if (getSessionTL().getTransaction().isActive()) {
+            getSessionTL().getTransaction().rollback();
+        }
+    }
+    
+    private void initializeHibernateConfiguration() {
+        try {
+            config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
+        } catch (HibernateException e) {
+            throw new HibernateStartUpException(e);
+        } catch (MalformedURLException e) {
+            throw new HibernateStartUpException(e);
+        } catch (URISyntaxException e) {
+            throw new HibernateStartUpException(e);
+        }
+    }
+
+    private void initializeDatabaseConnnectionSettings() {
+        try {
+            config.setProperties(new TestingService().getDatabaseConnectionSettings());
+        } catch (IOException e) {
+            throw new HibernateStartUpException(e);
+        }
+    }
+
+    private void initializeHibernateSessionFactory() throws ExceptionInInitializerError {
+        try {
+            sessionFactory = HibernateSessionFactory.getSessionFactory();
+        } catch (Throwable ex) {
+            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.",
+                    false, null, ex);
+
+            throw new ExceptionInInitializerError(ex);
+        }
     }
 
 }
