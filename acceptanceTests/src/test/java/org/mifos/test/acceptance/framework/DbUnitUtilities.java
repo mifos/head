@@ -92,6 +92,7 @@ public class DbUnitUtilities {
      * @throws DataSetException
      * @throws DatabaseUnitException
      */
+    @SuppressWarnings({"PMD.SystemPrintln"}) // make sure we capture output independent of logging
     public void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
             DatabaseUnitException {
         
@@ -100,8 +101,17 @@ public class DbUnitUtilities {
         ITable actualTable = databaseDataSet.getTable(tableName);
         actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
                 expectedTable.getTableMetaData().getColumns());
-        
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
+
+        try {
+            Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
+        } catch (DatabaseUnitException e) {
+            TableFormatter formatter = new TableFormatter();
+            System.out.println("---Expected Table---");
+            System.out.println(formatter.format(expectedTable));
+            System.out.println("---Actual Table---");
+            System.out.println(formatter.format(actualTable));
+            throw e;
+        }
     }
 
     /**
@@ -128,7 +138,7 @@ public class DbUnitUtilities {
         verifySortedTableWithOrdering(tableName, databaseDataSet, expectedDataSet, sortingColumns, actualDBSortFlag, expectedDBSortFlag);                 
     }
 
-    
+    @SuppressWarnings({"PMD.SystemPrintln"}) // make sure we capture output independent of logging
     public void verifySortedTableWithOrdering(String tableName, IDataSet databaseDataSet, 
             IDataSet expectedDataSet, String[] sortingColumns, Boolean actualDBComparableFlag, Boolean expectedDBComparableFlag) throws DataSetException, DatabaseUnitException {
 
@@ -149,7 +159,16 @@ public class DbUnitUtilities {
             printTable(actualTable);
         }
         
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
+        try {
+            Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
+        } catch (DatabaseUnitException e) {
+            TableFormatter formatter = new TableFormatter();
+            System.out.println("---Expected Table---");
+            System.out.println(formatter.format(expectedTable));
+            System.out.println("---Actual Table---");
+            System.out.println(formatter.format(actualTable));
+            throw e;
+        }
     }
     
     public void printTable(ITable table) throws DataSetException {
