@@ -87,5 +87,9 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
         Assert.assertEquals(selenium.getValue("customerAccountAmountEntered[" + row + "][" + col + "]"), Double.toString(amount));
         
     }
+    public void verifyLoanAmountValue(int row, int col, double amount) {
+        Assert.assertEquals(selenium.getValue("enteredAmount[" + row + "][" + col + "]"), Double.toString(amount));
+        
+    }
 
 }

@@ -25,6 +25,7 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.TimeMachine;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
@@ -36,7 +37,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.joda.time.DateTime;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
@@ -53,9 +56,20 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+        TimeMachine timeMachine = new TimeMachine(selenium);
+        DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
+        timeMachine.setDateTime(targetTime);
+    }
+
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
+        new TimeMachine(selenium).resetDateTime();       
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -87,6 +101,18 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void twoLoansWithSameProductHasMergedLoanAmount() throws Exception {
+        SubmitFormParameters formParameters = getFormParametersForTestOffice();
+        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryEnterData(formParameters);
+        //check amount due for client who has two loan accounts on the same product
+        enterDataPage.verifyLoanAmountValue(3, 0, 2088.0);
+        enterDataPage.cancel();
+
+    }
+
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyCollectionSheetData(String filename) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT,
@@ -115,6 +141,25 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
         dbUnitUtilities.verifySortedTable(FINANCIAL_TRXN, databaseDataSet, expectedDataSet, 
             orderByColumns);
+    }
+
+    private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryEnterData(SubmitFormParameters formParameters) {
+        CollectionSheetEntrySelectPage selectPage = 
+            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterDataPage.verifyPage();
+        return enterDataPage;
+    }
+     
+ 
+    private SubmitFormParameters getFormParametersForTestOffice() {
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+      formParameters.setBranch("MyOffice1233265929385");
+      formParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");
+      formParameters.setCenter("MyCenter1233265933427");
+      formParameters.setPaymentMode("Cash");
+        return formParameters;
     }
 
 }
