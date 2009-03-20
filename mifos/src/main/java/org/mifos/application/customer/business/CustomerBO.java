@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
+ 
 package org.mifos.application.customer.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
