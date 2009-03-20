@@ -38,7 +38,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
  * This class is intended to be replaced by {@link SessionPersistence}
@@ -47,18 +47,30 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * no further changes).
  */
 public abstract class Persistence {
+    private HibernateUtil hibernateUtil;
+    
+	public HibernateUtil getHibernateUtil() {
+	    if (null == hibernateUtil) {
+	        hibernateUtil = new HibernateUtil();
+	    }
+        return hibernateUtil;
+    }
 
-	public Connection getConnection() {
-		return StaticHibernateUtil.getSessionTL().connection();
+    public void setHibernateUtil(HibernateUtil hibernateUtil) {
+        this.hibernateUtil = hibernateUtil;
+    }
+
+    public Connection getConnection() {
+		return getHibernateUtil().getSessionTL().connection();
 	}
 
 	public Object createOrUpdate(Object object) throws PersistenceException {
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            StaticHibernateUtil.startTransaction();
+            Session session = getHibernateUtil().getSessionTL();
+            getHibernateUtil().startTransaction();
             session.saveOrUpdate(object);
-            if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
-                StaticHibernateUtil.getInterceptor().createChangeValueMap(object);
+            if (getHibernateUtil().getInterceptor().isAuditLogRequired()) {
+                getHibernateUtil().getInterceptor().createChangeValueMap(object);
             }
         } catch (Exception hibernateException) {
             throw new PersistenceException(hibernateException);
@@ -68,13 +80,13 @@ public abstract class Persistence {
 	}
 	
 	public Session getSession() {
-		return StaticHibernateUtil.getSessionTL();
+		return getHibernateUtil().getSessionTL();
 	}
 
 	public void delete(Object object) throws PersistenceException {
-		Session session = StaticHibernateUtil.getSessionTL();
+		Session session = getHibernateUtil().getSessionTL();
 		try {
-			StaticHibernateUtil.startTransaction();
+			getHibernateUtil().startTransaction();
 			session.delete(object);
 		} catch (Exception he) {
 			throw new PersistenceException(he);
@@ -101,7 +113,7 @@ public abstract class Persistence {
 	}
 	
 	public Query createdNamedQuery(String queryName) {
-		Session session = StaticHibernateUtil.getSessionTL();
+		Session session = getHibernateUtil().getSessionTL();
 		Query query = session.getNamedQuery(queryName);
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
 				.debug(
@@ -113,7 +125,7 @@ public abstract class Persistence {
 	public Object execUniqueResultNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
         try {
             Query query = null;
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getHibernateUtil().getSessionTL();
             if (null != session) {
                 query = session.getNamedQuery(queryName);
                 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
@@ -184,7 +196,7 @@ public abstract class Persistence {
 		// since it is a RuntimeException. Let's eventually make this method
 		// more like loadPersistentObject(), below.
 		try {
-			return StaticHibernateUtil.getSessionTL().get(clazz, persistentObjectId);
+			return getHibernateUtil().getSessionTL().get(clazz, persistentObjectId);
 		}
 		catch (HibernateException e) {
 			throw new PersistenceException(e);
@@ -196,7 +208,7 @@ public abstract class Persistence {
 	 */
 	public Object loadPersistentObject(Class clazz,
 			Serializable persistentObjectId) {
-		return StaticHibernateUtil.getSessionTL().load(clazz, persistentObjectId);
+		return getHibernateUtil().getSessionTL().load(clazz, persistentObjectId);
 	}
 
 	protected Param typeNameValue(String type, String name, Object value) {

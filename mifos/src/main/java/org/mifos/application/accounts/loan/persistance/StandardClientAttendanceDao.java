@@ -32,12 +32,13 @@ import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
     private CustomerPersistence customerPersistence;
     private MasterPersistence masterPersistence;
+    private HibernateUtil hibernateUtil;
 
     public StandardClientAttendanceDao() {
     }
@@ -63,7 +64,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         }
         clientAttendance.setAttendance(attendance);
         getCustomerPersistence().createOrUpdate(clientAttendance);
-        StaticHibernateUtil.commitTransaction();
+        getHibernateUtil().commitTransaction();
     }
 
     @SuppressWarnings("unchecked")
@@ -109,4 +110,16 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         this.masterPersistence = masterPersistence;
     }
 
+    public HibernateUtil getHibernateUtil() {
+        if (null == hibernateUtil) {
+            hibernateUtil = new HibernateUtil();
+        }
+        return hibernateUtil;
+    }
+
+    public void setHibernateUtil(HibernateUtil hibernateUtil) {
+        this.hibernateUtil = hibernateUtil;
+    }
+
+    
 }
