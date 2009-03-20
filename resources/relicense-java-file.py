@@ -67,7 +67,7 @@ find . -not -ipath "*/target/*" -not -ipath "*.svn*" -iname "*.java"| xargs -ifo
         noLicenseRe = re.match("^\w", contents, re.MULTILINE | re.DOTALL)
         if (noLicenseRe):
             return license + contents
-        licenseRe = re.compile("^(/\*.*\*/\s*)", re.MULTILINE | re.DOTALL)
+        licenseRe = re.compile("^(/\*.*?\*/\s*)", re.MULTILINE | re.DOTALL)
         return licenseRe.sub(license, contents, 1)
     
     def readEntireFile(self, filename):
