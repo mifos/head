@@ -118,7 +118,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 				loanOffering);
 		StaticHibernateUtil.closeSession();
 
-		BulkEntryBO bulkEntry = new BulkEntryBO();
+		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
 		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
 		bulkEntry.setPaymentType(getPaymentTypeView());
@@ -167,7 +167,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 				startDate, loanOffering, 1);
 		StaticHibernateUtil.closeSession();
 
-		BulkEntryBO bulkEntry = new BulkEntryBO();
+		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
 		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
 		bulkEntry.setPaymentType(getPaymentTypeView());
@@ -218,7 +218,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
 						.currentTimeMillis()), loanOffering, 1);
 		StaticHibernateUtil.closeSession();
 
-		BulkEntryBO bulkEntry = new BulkEntryBO();
+		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
 		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
 		bulkEntry.setPaymentType(getPaymentTypeView());
@@ -311,7 +311,7 @@ public class TestBulkEntryView extends MifosIntegrationTest {
         assertEquals("Attendance was set", expectedClientAttendance.getAttendance().toString(),
                 collectionSheetEntryView.getAttendence().toString());
              
-        BulkEntryBO bulkEntry = new BulkEntryBO();
+        CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
         bulkEntry.setOffice(getOfficeView(center.getOffice()));
         bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
         bulkEntry.setPaymentType(getPaymentTypeView());

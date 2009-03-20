@@ -43,10 +43,10 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.bulkentry.business.BulkEntryBO;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryBO;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
-import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.AttendanceType;
@@ -153,12 +153,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		flowKey = createFlow(request, BulkEntryAction.class);
+		flowKey = createFlow(request, CollectionSheetEntryAction.class);
 	}
 
 	public void testSuccessfulCreate() throws Exception {
 	    TestDatabase.resetMySQLDatabase();
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
 		Calendar meetingDateCalendar = new GregorianCalendar();
 		int year = meetingDateCalendar.get(Calendar.YEAR);
 		int month = meetingDateCalendar.get(Calendar.MONTH);
@@ -172,11 +172,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	    clientAttendance.put(3, getClientAttendanceDto(3, meetingDate, AttendanceType.ABSENT, 2));
 
 	    request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-	    SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
+	    SessionUtils.setMapAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
         addRequestParameter("attendanceSelected[0]", "2");
 		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry,
         		request);
         setRequestPathInfo("/bulkentryaction.do");
         addRequestParameter("method", "preview");
@@ -202,8 +202,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 		performNoErrors();
 		verifyForward("create_success");
-		assertNotNull(request.getAttribute(BulkEntryConstants.CENTER));
-		assertEquals(request.getAttribute(BulkEntryConstants.CENTER), center
+		assertNotNull(request.getAttribute(CollectionSheetEntryConstants.CENTER));
+		assertEquals(request.getAttribute(CollectionSheetEntryConstants.CENTER), center
 				.getDisplayName());
 
 		groupAccount = TestObjectFactory.getObject(LoanBO.class,
@@ -252,7 +252,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 
 	public void testSuccessfulPreview() throws Exception {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
 		Calendar meetinDateCalendar = new GregorianCalendar();
 		int year = meetinDateCalendar.get(Calendar.YEAR);
 		int month = meetinDateCalendar.get(Calendar.MONTH);
@@ -260,7 +260,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
 		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry,
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -298,9 +298,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailurePreview() throws Exception {
-		BulkEntryBO bulkEntry = getFailureBulkEntry();
+		CollectionSheetEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry,
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -321,10 +321,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward("load_success");
 		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+				.getAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED,
 						request), Constants.NO);
 		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
-				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				.getAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
 						request), Constants.YES);
 	}
 
@@ -352,10 +352,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward("load_success");
 		List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils
-				.getAttribute(BulkEntryConstants.CUSTOMERSLIST, request);
+				.getAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, request);
 		assertEquals(1, parentCustomerList.size());
 		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
-				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				.getAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
 						request), Constants.YES);
 	}
 
@@ -376,7 +376,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyForward("load_success");
 		if (AccountingRules.isBackDatedTxnAllowed()) {
 			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+					.getAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED,
 							request), Constants.YES);
 			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
@@ -385,11 +385,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 			assertEquals(new java.util.Date(DateUtils.getDateWithoutTimeStamp(
 			getMeetingDates(meeting).getTime()).getTime()), DateUtils.getDate(((BulkEntryActionForm) request
 					.getSession().getAttribute(
-							BulkEntryConstants.BULKENTRYACTIONFORM))
+							CollectionSheetEntryConstants.BULKENTRYACTIONFORM))
 					.getTransactionDate()));
 		} else {
 			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
+					.getAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED,
 							request), Constants.NO);
 			assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
@@ -399,7 +399,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 			.getCurrentDateWithoutTimeStamp().getTime())
 			.toString()), ((BulkEntryActionForm) request
 					.getSession().getAttribute(
-							BulkEntryConstants.BULKENTRYACTIONFORM))
+							CollectionSheetEntryConstants.BULKENTRYACTIONFORM))
 					.getTransactionDate());
 		}
 	}
@@ -433,11 +433,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				savingsOffering3);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils
-		.setCollectionAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
+		.setCollectionAttribute(CollectionSheetEntryConstants.PAYMENT_TYPES_LIST,
 				masterService.retrieveMasterEntities(
 						PaymentTypeEntity.class, userContext
 								.getLocaleId()), request);
-		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
 				Constants.YES, request);
 
 		setMasterListInSession(center.getCustomerId());
@@ -469,11 +469,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailureGet() throws Exception {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry,
 				request);
-		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
 				Constants.YES, request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "get");
@@ -485,9 +485,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailurePreviewForEmptyAmount() throws Exception {
-		BulkEntryBO bulkEntry = getFailureBulkEntry();
+		CollectionSheetEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry,
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
@@ -500,9 +500,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailurePreviewForCharAmount() throws Exception {
-		BulkEntryBO bulkEntry = getFailureBulkEntry();
+		CollectionSheetEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+		SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry,
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
@@ -556,7 +556,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	}
 
-	private BulkEntryBO getSuccessfulBulkEntry() throws Exception {
+	private CollectionSheetEntryBO getSuccessfulBulkEntry() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -599,7 +599,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"43245434", client, Short.valueOf("16"), startDate,
 				savingsOffering3);
 
-		BulkEntryBO bulkEntry = new BulkEntryBO();
+		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 
 		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
 				getCusomerView(center));
@@ -668,7 +668,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return bulkEntry;
 	}
 
-	private BulkEntryBO getFailureBulkEntry() throws Exception {
+	private CollectionSheetEntryBO getFailureBulkEntry() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -715,7 +715,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				client, Short.valueOf("16"), startDate, savingsOffering1);
 
-		BulkEntryBO bulkEntry = new BulkEntryBO();
+		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 
 		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
 				getCusomerView(center));
@@ -865,7 +865,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 						.valueOf(CustomerLevel.CENTER.getValue()), "1.1");
 		List<CustomerView> customerList = new ArrayList<CustomerView>();
 		customerList.add(parentCustomer);
-		SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST,
+		SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST,
 				customerList, request);
 	}
 

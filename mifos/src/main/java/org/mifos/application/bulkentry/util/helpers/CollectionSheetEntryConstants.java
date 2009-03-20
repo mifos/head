@@ -20,10 +20,9 @@
  
 package org.mifos.application.bulkentry.util.helpers;
 
-public interface BulkEntryConstants {
+public interface CollectionSheetEntryConstants {
 
     public String BULKENTRY = "BulkEntry";
-    public String BULKENTRYPATH = "BulkEntryAction";
     public String BULKENTRYACTIONFORM = "bulkentryactionform";
 
     public String LOADLOANOFFICERS = "loadLoanOfficers";

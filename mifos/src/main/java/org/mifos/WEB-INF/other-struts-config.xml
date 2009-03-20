@@ -278,7 +278,7 @@
         </action>
         <!-- Ends-->
         <!-- Bulk Entry Action -->
-        <action path="/bulkentryaction" type="org.mifos.application.bulkentry.struts.action.BulkEntryAction"
+        <action path="/bulkentryaction" type="org.mifos.application.bulkentry.struts.action.CollectionSheetEntryAction"
                 parameter="method" scope="session" name="bulkentryactionform" validate="true"
                 input="/bulkentryaction.do?method=validate">
             <forward name="load_success" path="/pages/application/bulkentry/jsp/bulkentry.jsp"/>

@@ -50,7 +50,7 @@ import org.mifos.application.admin.struts.action.AdminAction;
 import org.mifos.application.admin.struts.action.SystemInfoAction;
 import org.mifos.application.admin.struts.action.ViewOrganizationSettingsAction;
 import org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadAction;
-import org.mifos.application.bulkentry.struts.action.BulkEntryAction;
+import org.mifos.application.bulkentry.struts.action.CollectionSheetEntryAction;
 import org.mifos.application.checklist.struts.action.ChkListAction;
 import org.mifos.application.configuration.struts.action.CustomFieldsAction;
 import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction;
@@ -206,7 +206,7 @@ public class ActivityMapper {
 		parseActionSecurity(EditStatusAction.getSecurity());
 		parseActionSecurity(CustAction.getSecurity());
 		parseActionSecurity(FundAction.getSecurity());
-		parseActionSecurity(BulkEntryAction.getSecurity());
+		parseActionSecurity(CollectionSheetEntryAction.getSecurity());
 		parseActionSecurity(AccountAppAction.getSecurity());
 		parseActionSecurity(SavingsAction.getSecurity());
 		parseActionSecurity(SavingsClosureAction.getSecurity());

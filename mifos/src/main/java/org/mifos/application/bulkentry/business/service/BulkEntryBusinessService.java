@@ -35,7 +35,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.bulkentry.business.BulkEntryBO;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryBO;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
@@ -75,7 +75,7 @@ public class BulkEntryBusinessService implements BusinessService {
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
-		return new BulkEntryBO(userContext);
+		return new CollectionSheetEntryBO(userContext);
 	}
 
 	public Date getLastMeetingDateForCustomer(Integer customerId)

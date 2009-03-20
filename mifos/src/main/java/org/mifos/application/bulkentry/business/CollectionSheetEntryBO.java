@@ -47,7 +47,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 
-public class BulkEntryBO extends BusinessObject {
+public class CollectionSheetEntryBO extends BusinessObject {
 
     private CustomerPersistence customerPersistenceService;
     private ClientService clientService;
@@ -64,13 +64,13 @@ public class BulkEntryBO extends BusinessObject {
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
 
-	public BulkEntryBO() {
+	public CollectionSheetEntryBO() {
 		super();
 		customerPersistenceService = new CustomerPersistence();
 		clientService = new StandardClientService();
 	}
 
-	public BulkEntryBO(UserContext userContext) {
+	public CollectionSheetEntryBO(UserContext userContext) {
 		super(userContext);
 		customerPersistenceService = new CustomerPersistence();
 	}

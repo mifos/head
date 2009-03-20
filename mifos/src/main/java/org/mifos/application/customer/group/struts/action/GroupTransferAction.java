@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
@@ -237,7 +237,7 @@ public class GroupTransferAction extends BaseAction {
 		
 		boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
 		SessionUtils
-				.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+				.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
 						isCenterHeirarchyExists ? Constants.YES : Constants.NO,
 						request);
 

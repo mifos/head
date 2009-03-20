@@ -30,7 +30,7 @@ import javax.servlet.jsp.JspException;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
-import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
@@ -63,8 +63,8 @@ public class BulkEntryDisplayHelper {
 	private StringBuilder buildStartTable(int totalProductSize, Locale locale) {
 		ResourceBundle resources = ResourceBundle.getBundle
 		(FilePaths.BULKENTRY_RESOURCE, locale);
-		String dueCollections = resources.getString(BulkEntryConstants.DUE_COLLECTION);
-		String issueWithdrawal = resources.getString(BulkEntryConstants.ISSUE_WITHDRAWAL);
+		String dueCollections = resources.getString(CollectionSheetEntryConstants.DUE_COLLECTION);
+		String issueWithdrawal = resources.getString(CollectionSheetEntryConstants.ISSUE_WITHDRAWAL);
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
@@ -93,9 +93,9 @@ public class BulkEntryDisplayHelper {
 		
 		ResourceBundle resources = ResourceBundle.getBundle
 		(FilePaths.BULKENTRY_RESOURCE, locale);
-		String clientName = resources.getString(BulkEntryConstants.CLIENT_NAME);
-		String acCollection = resources.getString(BulkEntryConstants.AC_COLLECTION);
-		String attn = resources.getString(BulkEntryConstants.ATTN);
+		String clientName = resources.getString(CollectionSheetEntryConstants.CLIENT_NAME);
+		String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
+		String attn = resources.getString(CollectionSheetEntryConstants.ATTN);
 		BulkEntryTagUIHelper.getInstance().generateStartTR(builder,
 				"fontnormal8ptbold");
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
@@ -151,7 +151,7 @@ public class BulkEntryDisplayHelper {
 		MifosCurrency currency = parent.getCurrency();
 		Locale locale = userContext.getPreferredLocale();
 		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
+		String account = resources.getString(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
 		String group = getLabel(ConfigurationConstants.GROUP, userContext);
 		String groupAccountStr = account.format(account, group);
 		groupAccountStr = " " + groupAccountStr + " ";
@@ -192,7 +192,7 @@ public class BulkEntryDisplayHelper {
 		List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 		ResourceBundle resources = ResourceBundle.getBundle
 		(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
-		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
+		String account = resources.getString(CollectionSheetEntryConstants.ACCOUNT_GROUP_CENTER);
 		String group = getLabel(ConfigurationConstants.GROUP, userContext);
 		String center = getLabel(ConfigurationConstants.CENTER, userContext);
 		String groupAccountStr = account.format(account, group);
@@ -418,7 +418,7 @@ public class BulkEntryDisplayHelper {
 			CollectionSheetEntryView collectionSheetEntryView, String method) {
         Integer customerId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
         ClientAttendanceDto clientAttendanceDto = clientAttendance.get(customerId);
-		if (method.equals(BulkEntryConstants.GETMETHOD)) {
+		if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendanceSelected[" + row
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
@@ -432,7 +432,7 @@ public class BulkEntryDisplayHelper {
 			}
 			builder.append("</select>");
 			builder.append("</td>");
-		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			for (CustomValueListElement attendance : custAttTypes) {
 			    if (null != clientAttendanceDto && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
@@ -446,8 +446,8 @@ public class BulkEntryDisplayHelper {
 			}
 			builder.append("</td>");
 
-		} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendanceSelected[" + row
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
@@ -489,7 +489,7 @@ public class BulkEntryDisplayHelper {
 				return;
 			}
 		}
-		if (method.equals(BulkEntryConstants.GETMETHOD)) {
+		if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
@@ -507,7 +507,7 @@ public class BulkEntryDisplayHelper {
 					: groupTotals[columns] + totalAmount;
 			centerTotals[columns] = centerTotals[columns] == null ? 0.0 + totalAmount
 					: centerTotals[columns] + totalAmount;
-		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			Double totalAmount = 0.0;
 			String enteredAmount = "";
 			if (isShowingDue) {
@@ -531,8 +531,8 @@ public class BulkEntryDisplayHelper {
 					: groupTotals[columns] + totalAmount;
 			centerTotals[columns] = centerTotals[columns] == null ? 0.0 + totalAmount
 					: centerTotals[columns] + totalAmount;
-		} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)) {
 
 			String enteredAmount = "";
 			if (isShowingDue)
@@ -586,12 +586,12 @@ public class BulkEntryDisplayHelper {
 		Double totalAmount = 0.0;
 		int depWithFlag = isDeposit ? 1 : 2;
 		if (isDeposit) {
-			if (method.equals(BulkEntryConstants.GETMETHOD)) {
+			if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 				totalAmount = accountView.getTotalDepositDue();
 				amount = totalAmount.toString();
-			} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-					|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
-					|| method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+			} else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+					|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
+					|| method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 				if (accountView.getDepositAmountEntered() != null) {
 					amount = accountView.getDepositAmountEntered();
 					if (!""
@@ -607,9 +607,9 @@ public class BulkEntryDisplayHelper {
 				}
 			}
 		} else {
-			if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-					|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
-					|| method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+			if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+					|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
+					|| method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 				if (accountView.getWithDrawalAmountEntered() != null) {
 					amount = accountView.getWithDrawalAmountEntered();
 					if (!"".equals(accountView.getWithDrawalAmountEntered()
@@ -624,9 +624,9 @@ public class BulkEntryDisplayHelper {
 				}
 			}
 		}
-		if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
-				|| method.equals(BulkEntryConstants.GETMETHOD)) {
+		if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance().generateSavingsTextInput(
 						builder, name + "[" + rows + "][" + columns + "]",
@@ -640,7 +640,7 @@ public class BulkEntryDisplayHelper {
 						savingsProductSize);
 			}
 
-		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			if (isDeposit
 					&& totalAmount.doubleValue() < accountView
 							.getTotalDepositDue().doubleValue()
@@ -681,13 +681,13 @@ public class BulkEntryDisplayHelper {
 			int levelId, Short officeId) throws JspException {
 		String amount = "";
 		Double totalAmount = 0.0;
-		if (method.equals(BulkEntryConstants.GETMETHOD)) {
+		if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 			totalAmount = customerAccountView.getTotalAmountDue()
 					.getAmountDoubleValue();
 			amount = new Money(totalAmount.toString()).toString();
-		} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
-				|| method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			if (customerAccountView.getCustomerAccountAmountEntered() != null) {
 				amount = customerAccountView.getCustomerAccountAmountEntered();
 				if (!"".equals(amount.trim())
@@ -700,9 +700,9 @@ public class BulkEntryDisplayHelper {
 				}
 			}
 		}
-		if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
-				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
-				|| method.equals(BulkEntryConstants.GETMETHOD)) {
+		if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
+				|| method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 
 			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance()
@@ -722,7 +722,7 @@ public class BulkEntryDisplayHelper {
 								savingsProductSize);
 			}
 
-		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		} else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			if (totalAmount.doubleValue() != customerAccountView
 					.getTotalAmountDue().getAmountDoubleValue())
 				builder.append("<font color=\"#FF0000\">" + amount + "</font>");
@@ -744,14 +744,14 @@ public class BulkEntryDisplayHelper {
 				.getCustomerLevelId();
 		ResourceBundle resources = ResourceBundle.getBundle
 		(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
-		String totalStr = resources.getString(BulkEntryConstants.TOTAL_GROUP_CENTER);
+		String totalStr = resources.getString(CollectionSheetEntryConstants.TOTAL_GROUP_CENTER);
 		String group = getLabel(ConfigurationConstants.GROUP, userContext);
 		String center = getLabel(ConfigurationConstants.CENTER, userContext);
 		String groupTotalStr = totalStr.format(totalStr, group);
 		groupTotalStr = " " + groupTotalStr + " ";
 		String centerTotalStr = totalStr.format(totalStr, center);
 		centerTotalStr = " " + centerTotalStr + " ";
-		if (!method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		if (!method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			if (customerLevel.equals(CustomerLevel.GROUP.getValue())) {
 				BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 				builder
@@ -945,14 +945,14 @@ public class BulkEntryDisplayHelper {
 			Money otherColl, Money withDrawals, Money totColl, Money totIssue,
 			Money netCash, String method, UserContext userContext) {
 		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
-		String totalCollections = resources.getString(BulkEntryConstants.TOTAL_COLLECTION);
-		String totalIssuesWithdrawals = resources.getString(BulkEntryConstants.TOTAL_ISSUE_WITHDRAWAL);
-		String dueCollections2 = resources.getString(BulkEntryConstants.DUE_COLLECTION2);
-		String loanDisbursements = resources.getString(BulkEntryConstants.LOAN_DISBURSEMENT);
-		String total = resources.getString(BulkEntryConstants.TOTAL);
-		String netCashStr = resources.getString(BulkEntryConstants.NET_CASH);
-		String withdrawals = resources.getString(BulkEntryConstants.WITHDRAWAL);
-		String otherCollections = resources.getString(BulkEntryConstants.OTHER_COLLECTION);		
+		String totalCollections = resources.getString(CollectionSheetEntryConstants.TOTAL_COLLECTION);
+		String totalIssuesWithdrawals = resources.getString(CollectionSheetEntryConstants.TOTAL_ISSUE_WITHDRAWAL);
+		String dueCollections2 = resources.getString(CollectionSheetEntryConstants.DUE_COLLECTION2);
+		String loanDisbursements = resources.getString(CollectionSheetEntryConstants.LOAN_DISBURSEMENT);
+		String total = resources.getString(CollectionSheetEntryConstants.TOTAL);
+		String netCashStr = resources.getString(CollectionSheetEntryConstants.NET_CASH);
+		String withdrawals = resources.getString(CollectionSheetEntryConstants.WITHDRAWAL);
+		String otherCollections = resources.getString(CollectionSheetEntryConstants.OTHER_COLLECTION);		
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<table width=\"95%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
@@ -962,7 +962,7 @@ public class BulkEntryDisplayHelper {
 		builder
 				.append("<td colspan=\"4\" class=\"fontnormal8ptbold\">" + totalIssuesWithdrawals + "</td>");
 		builder.append("</tr>");
-		if (!method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
+		if (!method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<tr class=\"fontnormal\">");
 			builder.append("<td class=\"fontnormal8pt\">" + dueCollections2 + "</td>");
 			builder

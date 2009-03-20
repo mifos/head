@@ -34,9 +34,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.bulkentry.business.BulkEntryBO;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryBO;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
-import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.client.business.AttendanceType;
@@ -217,10 +217,10 @@ public class BulkEntryActionForm extends BaseActionForm {
     @Override
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         logger.debug("BulkEntryActionForm.reset");
-        if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(BulkEntryConstants.PREVIEWMETHOD)) {
+        if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
             try {
-                BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
+                CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
                 
                 int customers = bulkEntry.getTotalCustomers();
                 int loanProductsSize = bulkEntry.getLoanProducts().size();
@@ -289,16 +289,16 @@ public class BulkEntryActionForm extends BaseActionForm {
         ActionErrors errors = new ActionErrors();
         UserContext userContext = getUserContext(request);
         Locale locale = userContext.getPreferredLocale();
-        if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(BulkEntryConstants.PREVIEWMETHOD)) {
+        if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             try {
-                BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
+                CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
                 return validatePopulatedData(bulkEntry.getBulkEntryParent(), errors, locale);
             } catch (PageExpiredException e) {
                 errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
                         ExceptionConstants.PAGEEXPIREDEXCEPTION));
             }
 
-        } else if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(BulkEntryConstants.GETMETHOD)) {
+        } else if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(CollectionSheetEntryConstants.GETMETHOD)) {
             java.sql.Date meetingDate = null;
             try {
                 meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate", request);
@@ -308,7 +308,7 @@ public class BulkEntryActionForm extends BaseActionForm {
             }
             try {
                 short isCenterHeirarchyExists = (Short) SessionUtils.getAttribute(
-                        BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, request);
+                        CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request);
                 return mandatoryCheck(meetingDate, getUserContext(request), isCenterHeirarchyExists);
             } catch (PageExpiredException e) {
                 errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
@@ -323,7 +323,7 @@ public class BulkEntryActionForm extends BaseActionForm {
         List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
 
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String acCollections = resources.getString(BulkEntryConstants.AC_COLLECTION);
+        String acCollections = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
         if (null != children) {
             for (CollectionSheetEntryView collectionSheetEntryView : children) {
                 validatePopulatedData(collectionSheetEntryView, errors, locale);
@@ -343,15 +343,15 @@ public class BulkEntryActionForm extends BaseActionForm {
                     if (!accountView.isValidDisbursementAmount()
                             || (!enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredDisbursalAmount
                                     .equals(0.0)))
-                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
                                 parent.getCustomerDetail().getDisplayName()));
                 }
                 if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
                     if (!accountView.isValidAmountEntered()
                             || (!enteredAmount.equals(totalDueAmount) && !enteredAmount.equals(0.0)))
-                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
                                 parent.getCustomerDetail().getDisplayName()));
                 }
                 if (totalDueAmount.doubleValue() > 0.0 && totalDisburtialAmount > 0.0) {
@@ -368,15 +368,15 @@ public class BulkEntryActionForm extends BaseActionForm {
                             || (!enteredAmount.equals(totalDueAmount)
                                     && !enteredDisbursalAmount.equals(totalDisburtialAmount)
                                     && !enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)))
-                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
                                 parent.getCustomerDetail().getDisplayName()));
                 }
                 if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
                     if (!accountView.isValidAmountEntered() || !accountView.isValidDisbursementAmount()
                             || !enteredDisbursalAmount.equals(0.0) || !enteredAmount.equals(0.0))
-                        errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                BulkEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
+                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView.getPrdOfferingShortName(),
                                 parent.getCustomerDetail().getDisplayName()));
                 }
             }
@@ -384,8 +384,8 @@ public class BulkEntryActionForm extends BaseActionForm {
         for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
             if (!savingsAccountView.isValidDepositAmountEntered()
                     || !savingsAccountView.isValidWithDrawalAmountEntered()) {
-                errors.add(BulkEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
-                        BulkEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView.getSavingsOffering()
+                errors.add(CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
+                        CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView.getSavingsOffering()
                                 .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
             }
         }
@@ -397,8 +397,8 @@ public class BulkEntryActionForm extends BaseActionForm {
         if (!customerAccountView.isValidCustomerAccountAmountEntered()
                 || ((!customerAccountAmountEntered.equals(customerAccountView.getTotalAmountDue()
                         .getAmountDoubleValue())) && (!customerAccountAmountEntered.equals(0.0)))) {
-            errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                    BulkEntryConstants.BULKENTRYINVALIDAMOUNT, acCollections, parent.getCustomerDetail()
+            errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
+                    CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, acCollections, parent.getCustomerDetail()
                             .getDisplayName()));
         }
         return errors;
@@ -407,9 +407,9 @@ public class BulkEntryActionForm extends BaseActionForm {
     private ActionErrors receiptDateValidate(ActionErrors errors, Locale locale) {
         if (!StringUtils.isNullOrEmpty(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
             ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-            String rcptdate = resources.getString(BulkEntryConstants.RECEIPTDATE);
-            errors.add(BulkEntryConstants.INVALID_RECEIPT_DATE, new ActionMessage(
-                    BulkEntryConstants.INVALID_RECEIPT_DATE, rcptdate));
+            String rcptdate = resources.getString(CollectionSheetEntryConstants.RECEIPTDATE);
+            errors.add(CollectionSheetEntryConstants.INVALID_RECEIPT_DATE, new ActionMessage(
+                    CollectionSheetEntryConstants.INVALID_RECEIPT_DATE, rcptdate));
         }
         return errors;
     }
@@ -417,9 +417,9 @@ public class BulkEntryActionForm extends BaseActionForm {
     private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext, short isCenterHeirarchyExists) {
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String loanOfficer = resources.getString(BulkEntryConstants.LOANOFFICERS);
-        String modeOfPayment = resources.getString(BulkEntryConstants.MODE_OF_PAYMENT);
-        String dateOfTransaction = resources.getString(BulkEntryConstants.DATEOFTRXN);
+        String loanOfficer = resources.getString(CollectionSheetEntryConstants.LOANOFFICERS);
+        String modeOfPayment = resources.getString(CollectionSheetEntryConstants.MODE_OF_PAYMENT);
+        String dateOfTransaction = resources.getString(CollectionSheetEntryConstants.DATEOFTRXN);
         ActionErrors errors = receiptDateValidate(new ActionErrors(), locale);
         java.sql.Date currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils
                 .getCurrentDate(userContext.getPreferredLocale()));
@@ -430,35 +430,35 @@ public class BulkEntryActionForm extends BaseActionForm {
             trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
         }
         if (officeId == null || "".equals(officeId.trim())) {
-            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(CollectionSheetEntryConstants.MANDATORYFIELDS,
                     getMessageText(ConfigurationConstants.BRANCHOFFICE, userContext)));
         }
         if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {
-            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(CollectionSheetEntryConstants.MANDATORYFIELDS,
                     loanOfficer));
         }
         if (customerId == null || "".equals(customerId.trim())) {
-            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(CollectionSheetEntryConstants.MANDATORYFIELDS,
                     getLabel(customerLabel, userContext)));
         }
         if (paymentId == null || "".equals(paymentId.trim())) {
-            errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(BulkEntryConstants.MANDATORYFIELDS,
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(CollectionSheetEntryConstants.MANDATORYFIELDS,
                     modeOfPayment));
         }
         if (getTransactionDate() == null || "".equals(getTransactionDate().trim())) {
-            errors.add(BulkEntryConstants.MANDATORYENTER, new ActionMessage(BulkEntryConstants.MANDATORYENTER,
+            errors.add(CollectionSheetEntryConstants.MANDATORYENTER, new ActionMessage(CollectionSheetEntryConstants.MANDATORYENTER,
                     dateOfTransaction));
         } else if (!DateUtils.isValidDate(getTransactionDate())) {
-            errors.add(BulkEntryConstants.INVALID_TRANSACTION_DATE, new ActionMessage(
-                    BulkEntryConstants.INVALID_TRANSACTION_DATE));
+            errors.add(CollectionSheetEntryConstants.INVALID_TRANSACTION_DATE, new ActionMessage(
+                    CollectionSheetEntryConstants.INVALID_TRANSACTION_DATE));
         }
         if (currentDate != null && meetingDate != null && trxnDate != null
                 && (meetingDate.compareTo(trxnDate) > 0 || trxnDate.compareTo(currentDate) > 0)) {
-            errors.add(BulkEntryConstants.INVALIDENDDATE, new ActionMessage(BulkEntryConstants.INVALIDENDDATE,
+            errors.add(CollectionSheetEntryConstants.INVALIDENDDATE, new ActionMessage(CollectionSheetEntryConstants.INVALIDENDDATE,
                     dateOfTransaction));
         } else if (meetingDate == null && trxnDate != null && trxnDate.compareTo(currentDate) != 0) {
-            errors.add(BulkEntryConstants.MEETINGDATEEXCEPTION, new ActionMessage(
-                    BulkEntryConstants.MEETINGDATEEXCEPTION, dateOfTransaction));
+            errors.add(CollectionSheetEntryConstants.MEETINGDATEEXCEPTION, new ActionMessage(
+                    CollectionSheetEntryConstants.MEETINGDATEEXCEPTION, dateOfTransaction));
         }
 
         return errors;

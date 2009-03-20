@@ -44,11 +44,11 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.bulkentry.business.BulkEntryBO;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryBO;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
-import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -93,7 +93,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.GeneralConfig;
 
-public class BulkEntryAction extends BaseAction {
+public class CollectionSheetEntryAction extends BaseAction {
 
     private MasterDataService masterService;
 
@@ -101,7 +101,7 @@ public class BulkEntryAction extends BaseAction {
 
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
-    public BulkEntryAction() {
+    public CollectionSheetEntryAction() {
         masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
          clientService = new StandardClientService();
@@ -134,7 +134,7 @@ public class BulkEntryAction extends BaseAction {
 
     @Override
     protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return method.equals(BulkEntryConstants.CREATEMETHOD);
+        return method.equals(CollectionSheetEntryConstants.CREATEMETHOD);
     }
 
     /**
@@ -146,14 +146,14 @@ public class BulkEntryAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         try {
-            request.getSession().setAttribute(BulkEntryConstants.BULKENTRYACTIONFORM, null);
+            request.getSession().setAttribute(CollectionSheetEntryConstants.BULKENTRYACTIONFORM, null);
             request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
             UserContext userContext = getUserContext(request);
             List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
             SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
 
             boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
-            SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+            SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
                     isCenterHeirarchyExists ? Constants.YES : Constants.NO, request);
             if (activeBranches.size() == 1) {
                 List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext, activeBranches.get(0)
@@ -162,24 +162,24 @@ public class BulkEntryAction extends BaseAction {
                 if (loanOfficers.size() == 1) {
                     List<CustomerView> parentCustomerList = loadCustomers(loanOfficers.get(0).getPersonnelId(),
                             activeBranches.get(0).getOfficeId());
-                    SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST, parentCustomerList, request);
-                    request.setAttribute(BulkEntryConstants.REFRESH, Constants.NO);
+                    SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, parentCustomerList, request);
+                    request.setAttribute(CollectionSheetEntryConstants.REFRESH, Constants.NO);
                 } else {
-                    SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST, new ArrayList<CustomerView>(), request);
-                    request.setAttribute(BulkEntryConstants.REFRESH, Constants.YES);
+                    SessionUtils.setAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, new ArrayList<CustomerView>(), request);
+                    request.setAttribute(CollectionSheetEntryConstants.REFRESH, Constants.YES);
                 }
             } else {
                 SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST, new ArrayList<PersonnelView>(), request);
-                SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST, new ArrayList<CustomerView>(), request);
-                request.setAttribute(BulkEntryConstants.REFRESH, Constants.YES);
+                SessionUtils.setAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, new ArrayList<CustomerView>(), request);
+                request.setAttribute(CollectionSheetEntryConstants.REFRESH, Constants.YES);
             }
-            SessionUtils.setCollectionAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST, masterService
+            SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.PAYMENT_TYPES_LIST, masterService
                     .retrieveMasterEntities(PaymentTypeEntity.class, userContext.getLocaleId()), request);
-            SessionUtils.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED, Constants.NO, request);
+            SessionUtils.setAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, Constants.NO, request);
 
         } catch (Exception e) {
         }
-        return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
 
     /**
@@ -204,10 +204,10 @@ public class BulkEntryAction extends BaseAction {
             actionForm.setTransactionDate(DateUtils.getCurrentDateWithoutTimeStamp());
         }
         SessionUtils.setAttribute("LastMeetingDate", meetingDate, request);
-        SessionUtils.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED, isBackDatedTrxnAllowed ? Constants.YES
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, isBackDatedTrxnAllowed ? Constants.YES
                 : Constants.NO, request);
 
-        return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -218,7 +218,7 @@ public class BulkEntryAction extends BaseAction {
         Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
         List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext, officeId);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, loanOfficers, request);
-        return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -228,11 +228,11 @@ public class BulkEntryAction extends BaseAction {
         Short personnelId = Short.valueOf(bulkEntryActionForm.getLoanOfficerId());
         Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
         List<CustomerView> parentCustomerList = loadCustomers(personnelId, officeId);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST, parentCustomerList, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, parentCustomerList, request);
         boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
-        SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS, isCenterHeirarchyExists ? Constants.YES
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, isCenterHeirarchyExists ? Constants.YES
                 : Constants.NO, request);
-        return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
 
 
@@ -254,7 +254,7 @@ public class BulkEntryAction extends BaseAction {
         String userId = userContext.getName();
 
         Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate", request);
-        BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         PersonnelView loanOfficer = getSelectedLO(request, form);
         bulkEntry.setLoanOfficer(loanOfficer);
         bulkEntry.setOffice(getSelectedBranchOffice(request, form));
@@ -264,8 +264,8 @@ public class BulkEntryAction extends BaseAction {
                 .getCustomerSearchId(), loanOfficer.getPersonnelId()));
         bulkEntry.setSavingsProducts(masterService.getSavingsProductsAsOfMeetingDate(meetingDate, parentCustomer
                 .getCustomerSearchId(), loanOfficer.getPersonnelId()));
-        SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERATTENDANCETYPES, masterService.getMasterData(
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, masterService.getMasterData(
                 MasterConstants.ATTENDENCETYPES, userContext.getLocaleId(),
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements(), request);
@@ -274,9 +274,9 @@ public class BulkEntryAction extends BaseAction {
 
         List<CustomerBO> customers = bulkEntry.retrieveActiveClientsUnderParent(parentCustomer.getCustomerSearchId());
         HashMap<Integer, ClientAttendanceDto> clientAttendance = getClientAttendance(customers, meetingDate);
-        SessionUtils.setMapAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
+        SessionUtils.setMapAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, clientAttendance, request);
 
-        return mapping.findForward(BulkEntryConstants.GETSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.GETSUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -284,7 +284,7 @@ public class BulkEntryAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
 
-        BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
+        CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
 
         List<ClientBO> clients = new ArrayList<ClientBO>();
         List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
@@ -309,18 +309,18 @@ public class BulkEntryAction extends BaseAction {
         }
 
         HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
-                .getAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, request);
+                .getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
         setClientAttendanceFromForm(clients, meetingDate, clientAttendance, bulkEntryActionForm);
 
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.CLIENTS, clients, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.SAVINGS, savingsAccounts, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.LOANS, loanAccprdViews, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERACCOUNTS, customerAccViews, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORCLIENTS, customerNames, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT, savingsDepNames, request);
-        SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW, savingsWithNames, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CLIENTS, clients, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.SAVINGS, savingsAccounts, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.LOANS, loanAccprdViews, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERACCOUNTS, customerAccViews, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORCLIENTS, customerNames, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSDEPOSIT, savingsDepNames, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSWITHDRAW, savingsWithNames, request);
 
-        return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.PREVIEWSUCCESS);
     }
 
     private void setData(CollectionSheetEntryView parent, List<LoanAccountsProductView> loanAccprdViews,
@@ -342,7 +342,7 @@ public class BulkEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        return mapping.findForward(BulkEntryConstants.PREVIUOSSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.PREVIUOSSUCCESS);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -355,15 +355,15 @@ public class BulkEntryAction extends BaseAction {
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         String forward = null;
-        String methodCalled = request.getParameter(BulkEntryConstants.METHOD);
+        String methodCalled = request.getParameter(CollectionSheetEntryConstants.METHOD);
         String input = request.getParameter("input");
         if (null != methodCalled) {
             if ("load".equals(input))
-                forward = BulkEntryConstants.LOADSUCCESS;
+                forward = CollectionSheetEntryConstants.LOADSUCCESS;
             else if ("get".equals(input))
-                forward = BulkEntryConstants.GETSUCCESS;
+                forward = CollectionSheetEntryConstants.GETSUCCESS;
             else if ("preview".equals(input))
-                forward = BulkEntryConstants.PREVIEWSUCCESS;
+                forward = CollectionSheetEntryConstants.PREVIEWSUCCESS;
         }
         if (null != forward)
             return mapping.findForward(forward);
@@ -383,32 +383,32 @@ public class BulkEntryAction extends BaseAction {
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
                 .getPreferredLocale());
         String loan = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.LOAN, userContext);
-        String attendance = resources.getString(BulkEntryConstants.ATTENDANCE);
-        String savingsWithdrawal = resources.getString(BulkEntryConstants.SAVING_WITHDRAWAL);
-        String savingsDeposit = resources.getString(BulkEntryConstants.SAVING_DEPOSITE);
-        String acCollection = resources.getString(BulkEntryConstants.AC_COLLECTION);
+        String attendance = resources.getString(CollectionSheetEntryConstants.ATTENDANCE);
+        String savingsWithdrawal = resources.getString(CollectionSheetEntryConstants.SAVING_WITHDRAWAL);
+        String savingsDeposit = resources.getString(CollectionSheetEntryConstants.SAVING_DEPOSITE);
+        String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
 
         // To enable cache
         BulkEntryBusinessService bulkEntryService = new BulkEntryBusinessService();
         List<String> loanAccountNums = new ArrayList<String>();
         List<String> customerAccountNums = new ArrayList<String>();
         List<String> savingsDepositAccountNums = (List<String>) SessionUtils.getAttribute(
-                BulkEntryConstants.ERRORSAVINGSDEPOSIT, request);
+                CollectionSheetEntryConstants.ERRORSAVINGSDEPOSIT, request);
         List<String> savingsWithdrawalsAccountNums = (List<String>) SessionUtils.getAttribute(
-                BulkEntryConstants.ERRORSAVINGSWITHDRAW, request);
-        List<String> customerNames = (List<String>) SessionUtils.getAttribute(BulkEntryConstants.ERRORCLIENTS, request);
+                CollectionSheetEntryConstants.ERRORSAVINGSWITHDRAW, request);
+        List<String> customerNames = (List<String>) SessionUtils.getAttribute(CollectionSheetEntryConstants.ERRORCLIENTS, request);
         StringBuilder builder = new StringBuilder();
         ActionErrors actionErrors = new ActionErrors();
 
-        BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(BulkEntryConstants.BULKENTRY, request);
+        CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
         logger.debug("transactionDate " + ((BulkEntryActionForm) form).getTransactionDate());
         Short personnelId = getUserContext(request).getId();
-        List<ClientBO> clients = (List<ClientBO>) SessionUtils.getAttribute(BulkEntryConstants.CLIENTS, request);
-        List<SavingsBO> savings = (List<SavingsBO>) SessionUtils.getAttribute(BulkEntryConstants.SAVINGS, request);
+        List<ClientBO> clients = (List<ClientBO>) SessionUtils.getAttribute(CollectionSheetEntryConstants.CLIENTS, request);
+        List<SavingsBO> savings = (List<SavingsBO>) SessionUtils.getAttribute(CollectionSheetEntryConstants.SAVINGS, request);
         List<LoanAccountsProductView> loans = (List<LoanAccountsProductView>) SessionUtils.getAttribute(
-                BulkEntryConstants.LOANS, request);
+                CollectionSheetEntryConstants.LOANS, request);
         List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils.getAttribute(
-                BulkEntryConstants.CUSTOMERACCOUNTS, request);
+                CollectionSheetEntryConstants.CUSTOMERACCOUNTS, request);
         try {
             bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                     .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
@@ -418,11 +418,11 @@ public class BulkEntryAction extends BaseAction {
         } 
 
         HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
-                .getAttribute(BulkEntryConstants.CLIENT_ATTENDANCE, request);
+                .getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
         clientService.setClientAttendance(setClientAttendanceFromForm(clients, meetingDate, clientAttendance,
                 bulkEntryActionForm));
 
-        request.setAttribute(BulkEntryConstants.CENTER, bulkEntry.getBulkEntryParent().getCustomerDetail()
+        request.setAttribute(CollectionSheetEntryConstants.CENTER, bulkEntry.getBulkEntryParent().getCustomerDetail()
                 .getDisplayName());
         if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
                 || savingsWithdrawalsAccountNums.size() > 0 || customerAccountNums.size() > 0
@@ -433,13 +433,13 @@ public class BulkEntryAction extends BaseAction {
             getErrorString(builder, customerAccountNums, acCollection);
             getErrorString(builder, customerNames, attendance);
             builder.append("<br><br>");
-            actionErrors.add(BulkEntryConstants.ERRORSUPDATE, new ActionMessage(BulkEntryConstants.ERRORSUPDATE,
+            actionErrors.add(CollectionSheetEntryConstants.ERRORSUPDATE, new ActionMessage(CollectionSheetEntryConstants.ERRORSUPDATE,
                     builder.toString()));
             request.setAttribute(Globals.ERROR_KEY, actionErrors);
         }
         // TO clear bulk entry cache in persistence service
         bulkEntryService = null;
-        return mapping.findForward(BulkEntryConstants.CREATESUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.CREATESUCCESS);
     }
 
     private HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<? extends CustomerBO> clients,
@@ -560,7 +560,7 @@ public class BulkEntryAction extends BaseAction {
         BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
         Integer customerId = Integer.valueOf(bulkEntryForm.getCustomerId());
         List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils.getAttribute(
-                BulkEntryConstants.CUSTOMERSLIST, request);
+                CollectionSheetEntryConstants.CUSTOMERSLIST, request);
         for (i = 0; i < parentCustomerList.size(); i++) {
             if (customerId.intValue() == parentCustomerList.get(i).getCustomerId().intValue()) {
                 break;
@@ -579,7 +579,7 @@ public class BulkEntryAction extends BaseAction {
         BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
         Short paymentTypeId = Short.valueOf(bulkEntryForm.getPaymentId());
         List<PaymentTypeEntity> paymentTypeList = (List<PaymentTypeEntity>) SessionUtils.getAttribute(
-                BulkEntryConstants.PAYMENT_TYPES_LIST, request);
+                CollectionSheetEntryConstants.PAYMENT_TYPES_LIST, request);
         for (i = 0; i < paymentTypeList.size(); i++) {
             if (paymentTypeId.shortValue() == paymentTypeList.get(i).getId().shortValue()) {
                 break;

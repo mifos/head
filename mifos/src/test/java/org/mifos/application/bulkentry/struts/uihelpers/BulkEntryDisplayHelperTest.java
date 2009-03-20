@@ -41,7 +41,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.bulkentry.business.BulkEntryBO;
+import org.mifos.application.bulkentry.business.CollectionSheetEntryBO;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -150,7 +150,7 @@ public class BulkEntryDisplayHelperTest extends MifosIntegrationTest {
 	}
 	
 	public void testBuildForCenterForGetMethod() throws Exception {
-		BulkEntryBO bulkEntry = createBulkEntry();
+		CollectionSheetEntryBO bulkEntry = createBulkEntry();
 		StringBuilder builder = new StringBuilder();
 		
 		// Assert that the extracted attendance types are the ones expected
@@ -200,7 +200,7 @@ public class BulkEntryDisplayHelperTest extends MifosIntegrationTest {
 				InterestType.FLAT, frequency);
 	}
 
-	private BulkEntryBO createBulkEntry() throws Exception {
+	private CollectionSheetEntryBO createBulkEntry() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		Date startDate = new Date(System.currentTimeMillis());
@@ -240,7 +240,7 @@ public class BulkEntryDisplayHelperTest extends MifosIntegrationTest {
 				"43245434", client, Short.valueOf("16"), startDate,
 				savingsOffering3);
 
-		BulkEntryBO bulkEntry = new BulkEntryBO();
+		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 
 		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
 				getCusomerView(center));
