@@ -71,7 +71,7 @@ public class DbUnitUtilities {
     
     private void initialize() {
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
-        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id", "due_date", "installment_id" });        
         columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_ATTENDANCE", new String[] { "id", "meeting_date" });        
         columnsToIgnoreWhenVerifyingTables.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date", "debit_credit_flag", "fin_action_id" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
@@ -81,6 +81,9 @@ public class DbUnitUtilities {
         columnsToIgnoreWhenVerifyingTables.put("FEE_TRXN_DETAIL", new String[] { "account_trxn_id", "account_fee_id", "fee_trxn_detail_id" });
         columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_ACCOUNT_ACTIVITY", new String[] { "customer_account_activity_id", "created_date" });        
         columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_TRXN_DETAIL", new String[] { "account_trxn_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("LOAN_SUMMARY", new String[] { "account_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "action_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_STATUS_CHANGE_HISTORY", new String[] { "changed_date" });        
         
     }
 
