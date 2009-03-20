@@ -54,6 +54,8 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -63,6 +65,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class BulkEntryBusinessService implements BusinessService {
+    private MifosLogger logger = MifosLogManager.getLogger(BulkEntryBusinessService.class.getName());
 
 	private BulkEntryPersistenceService bulkEntryPersistanceService;
 
@@ -204,6 +207,8 @@ public class BulkEntryBusinessService implements BusinessService {
 			List<ClientBO> clients, List<String> customerNames,
 			List<CustomerAccountView> customerAccounts,
 			List<String> customerAccountNums) {
+	    logger.debug("Running threaded saveData");
+	    
 		StringBuffer isThreadOneDone = new StringBuffer();
 		StringBuffer isCustomerAccountThreadDone = new StringBuffer();
 		BulkEntryLoanThread bulkEntryLoanThreadOne = new BulkEntryLoanThread(
@@ -241,6 +246,20 @@ public class BulkEntryBusinessService implements BusinessService {
 		 */
 	}
 
+    public void saveDataNonThreaded(List<LoanAccountsProductView> accountViews,
+            Short personnelId, String recieptId, Short paymentId,
+            Date receiptDate, Date transactionDate, List<String> accountNums,
+            List<SavingsBO> savings, List<String> savingsNames,
+            List<ClientBO> clients, List<String> customerNames,
+            List<CustomerAccountView> customerAccounts,
+            List<String> customerAccountNums) {
+        logger.debug("Running non-threaded saveData");
+
+        saveMultipleLoanAccounts(accountViews, customerAccountNums, personnelId, recieptId, paymentId, receiptDate, transactionDate);
+        saveMultipleCustomerAccountCollections(customerAccounts, customerAccountNums, personnelId, recieptId, paymentId, receiptDate, transactionDate);
+        saveSavingsAccount(savings, savingsNames);
+    }
+	
 	private void saveAttendance(List<ClientBO> clients,
 			List<String> customerNames) {
 		for (ClientBO client : clients) {
@@ -582,4 +601,47 @@ public class BulkEntryBusinessService implements BusinessService {
 		}
 		return paymentData;
 	}
+
+	public void saveMultipleLoanAccounts(List<LoanAccountsProductView> accountViews, List<String> accountNums,
+	        Short personnelId, String recieptId, Short paymentId, Date receiptDate,
+            Date transactionDate) {
+	    for (LoanAccountsProductView loanAccountsProductView : accountViews) {
+	        try {
+	            saveLoanAccount(loanAccountsProductView, personnelId, recieptId,
+	                    paymentId, receiptDate, transactionDate);
+	            StaticHibernateUtil.commitTransaction();
+	        } catch (ServiceException be) {
+	            accountNums.add((String) (be.getValues()[0]));
+	            StaticHibernateUtil.rollbackTransaction();
+	        } finally {
+	            StaticHibernateUtil.closeSession();
+	        }
+	    }
+    }
+
+	public void saveMultipleCustomerAccountCollections(List<CustomerAccountView> customerAccounts, List<String> accountNums,
+	        Short personnelId, String recieptId, Short paymentId, Date receiptDate,
+	        Date transactionDate) {
+	    for (CustomerAccountView customerAccountView : customerAccounts) {
+	        if (null != customerAccountView) {
+	            String amount = customerAccountView.getCustomerAccountAmountEntered();
+	            if (null != amount
+	                    && !LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount).equals(0.0)) {
+	                try {
+	                    saveCustomerAccountCollections(customerAccountView, personnelId,
+	                            recieptId, paymentId, receiptDate, transactionDate);
+	                    StaticHibernateUtil.commitTransaction();
+	                } catch (ServiceException be) {
+	                    accountNums.add((String) (be.getValues()[0]));
+	                    StaticHibernateUtil.rollbackTransaction();
+	                } catch (Exception e) {
+	                    accountNums.add(customerAccountView.getAccountId().toString());
+	                    StaticHibernateUtil.rollbackTransaction();
+	                } finally {
+	                    StaticHibernateUtil.closeSession();
+	                }
+	            }
+	        }
+	    }
+    }	
 }

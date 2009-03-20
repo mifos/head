@@ -65,18 +65,8 @@ public class BulkEntryLoanThread implements Runnable {
         try {
             BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
             if (null != accountViews) {
-                for (LoanAccountsProductView loanAccountsProductView : accountViews) {
-                    try {
-                        bulkEntryBusinessService.saveLoanAccount(loanAccountsProductView, personnelId, recieptId,
-                                paymentId, receiptDate, transactionDate);
-                        StaticHibernateUtil.commitTransaction();
-                    } catch (ServiceException be) {
-                        accountNums.add((String) (be.getValues()[0]));
-                        StaticHibernateUtil.rollbackTransaction();
-                    } finally {
-                        StaticHibernateUtil.closeSession();
-                    }
-                }
+                bulkEntryBusinessService.saveMultipleLoanAccounts(accountViews, 
+                    accountNums, personnelId, recieptId, paymentId, receiptDate, transactionDate);
             }
             /*
              * Commented out until we can figure out what is up with

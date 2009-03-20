@@ -409,10 +409,15 @@ public class CollectionSheetEntryAction extends BaseAction {
                 CollectionSheetEntryConstants.LOANS, request);
         List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERACCOUNTS, request);
+        
         try {
-            bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
+//            bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
+//                    .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
+//                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
+            bulkEntryService.saveDataNonThreaded(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                     .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
                     savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
+            
         } catch (Exception e) {
             throw e;
         } 

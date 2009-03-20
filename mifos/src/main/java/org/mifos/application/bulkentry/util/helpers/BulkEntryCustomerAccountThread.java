@@ -25,12 +25,17 @@ import java.util.List;
 
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class BulkEntryCustomerAccountThread implements Runnable {
 
+    private MifosLogger logger = MifosLogManager.getLogger(BulkEntryCustomerAccountThread.class.getName());
+    
     List<CustomerAccountView> customerAccounts;
 
     Short personnelId;
@@ -62,28 +67,10 @@ public class BulkEntryCustomerAccountThread implements Runnable {
 
     public void run() {
         try {
+            logger.debug("Starting run method.");
             BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
-            for (CustomerAccountView customerAccountView : customerAccounts) {
-                if (null != customerAccountView) {
-                    String amount = customerAccountView.getCustomerAccountAmountEntered();
-                    if (null != amount
-                            && !LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount).equals(0.0)) {
-                        try {
-                            bulkEntryBusinessService.saveCustomerAccountCollections(customerAccountView, personnelId,
-                                    recieptId, paymentId, receiptDate, transactionDate);
-                            StaticHibernateUtil.commitTransaction();
-                        } catch (ServiceException be) {
-                            accountNums.add((String) (be.getValues()[0]));
-                            StaticHibernateUtil.rollbackTransaction();
-                        } catch (Exception e) {
-                            accountNums.add(customerAccountView.getAccountId().toString());
-                            StaticHibernateUtil.rollbackTransaction();
-                        } finally {
-                            StaticHibernateUtil.closeSession();
-                        }
-                    }
-                }
-            }
+            bulkEntryBusinessService.saveMultipleCustomerAccountCollections(customerAccounts, 
+                accountNums, personnelId, recieptId, paymentId, receiptDate, transactionDate);
         } finally {
             isActivityDone.append("Done");
         }
