@@ -89,10 +89,15 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void clientAccountFeesSavedToDatabase() throws Exception {
-        SubmitFormParameters formParameters = getFormParametersForTestOffice();   
-        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
-        enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
-        verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
+        try {
+            SubmitFormParameters formParameters = getFormParametersForTestOffice();   
+            dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+            enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
+            verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
+        } catch (Exception e) {
+            dbUnitUtilities.dumpDatabaseToTimestampedFileInConfigurationDirectory(dataSource);
+            throw e;
+        }
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception

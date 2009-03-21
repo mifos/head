@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -51,7 +52,10 @@ import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.util.TableFormatter;
+import org.joda.time.DateTime;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.DateTimeService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -247,6 +251,29 @@ public class DbUnitUtilities {
         return databaseDataSet;
     }    
     
+    public void dumpDatabase(String fileName, DriverManagerDataSource dataSource) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
+        Connection jdbcConnection = null;
+        IDataSet fullDataSet;
+        try {
+            jdbcConnection = dataSource.getConnection();
+            IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
+            fullDataSet = connection.createDataSet();
+            FlatXmlDataSet.write(fullDataSet, new FileOutputStream(fileName));
+        } finally {
+            if (jdbcConnection != null) {
+                jdbcConnection.close();
+            }
+        }
+    }
+
+    public void dumpDatabaseToTimestampedFileInConfigurationDirectory(DriverManagerDataSource dataSource) throws FileNotFoundException, ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
+        String configurationDirectory = new ConfigurationLocator().getConfigurationDirectory();
+        DateTime currentTime = new DateTimeService().getCurrentDateTime();
+        String timeStamp = currentTime.toString();
+        String databaseDumpPathName = configurationDirectory + '/' + "databaseDump-" + timeStamp; 
+        dumpDatabase(databaseDumpPathName, dataSource);
+    }
+    
     private URL getUncompressed(File file) throws IOException {
         /* Buffer size based on this tutorial:
          * http://java.sun.com/developer/technicalArticles/Programming/compression/
@@ -282,5 +309,7 @@ public class DbUnitUtilities {
         
         return tempFile.toURI().toURL();
     }
+    
+    
     
 }

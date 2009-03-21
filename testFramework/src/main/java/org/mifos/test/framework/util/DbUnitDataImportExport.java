@@ -43,9 +43,6 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 
-/**
- *
- */
 @SuppressWarnings({"PMD.SystemPrintln",  // as a command line utility System.out output seems ok 
                    "PMD.SingularField"}) // Option fields could be local, but for consistency keep them at the class level
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"DM_EXIT"}, justification="Command line tool exit")

@@ -16,5 +16,7 @@
         <wb-resource deploy-path="/" source-path="/testFramework/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/common/src/main/java"/>
+<wb-resource deploy-path="/" source-path="/common/src/test/java"/>
+<wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
     </wb-module>
 </project-modules>

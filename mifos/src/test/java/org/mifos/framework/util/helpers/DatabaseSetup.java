@@ -48,8 +48,9 @@ public class DatabaseSetup {
 	
 	private static SessionFactory mayflySessionFactory;
 
-	public static void initializeHibernate() {
-			initializeHibernate(false);
+	public static void initializeHibernateUsingInMemoryDatabase() {
+			boolean useInMemoryDatabase = false;
+            initializeHibernate(useInMemoryDatabase);
 	}
 	
 	public static void initializeHibernate(boolean useInMemoryDatabase) {

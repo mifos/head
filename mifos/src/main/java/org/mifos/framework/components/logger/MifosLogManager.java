@@ -69,10 +69,8 @@ public class MifosLogManager {
 		// ancestor for all the other loggers
 		try {
 			readConfiguration(new ConfigurationLocator().getFilePath(fileName));
-			MifosLogger logger = 
-				new Log4jLogger(
-					LoggerConstants.ROOTLOGGER, 
-					getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
+            MifosLogger logger = new Log4jLogger(LoggerConstants.ROOTLOGGER,
+                    getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
 			loggerRepository=new HashMap<String, MifosLogger>(20);
 			loggerRepository.put(LoggerConstants.ROOTLOGGER, logger);
 

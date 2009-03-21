@@ -20,7 +20,6 @@
  
 package org.mifos.framework.util;
 
-
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 

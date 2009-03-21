@@ -53,7 +53,7 @@ public class TestCaseInitializer {
         if (initialized == false) {
             initialized = true;
             MifosLogManager.configureLogging();
-            DatabaseSetup.initializeHibernate();
+            DatabaseSetup.initializeHibernateUsingInMemoryDatabase();
             // add this because it is added to Application Initializer
             Localization.getInstance().init();
             /*

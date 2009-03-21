@@ -35,6 +35,7 @@ import org.springframework.core.io.ClassPathResource;
  * particular class is used to find the file used to configure the logger.
  */
 public class ConfigurationLocator {
+    private static final String CURRENT_WORKING_DIRECTORY_PATH = "";
     private static final String LOCATOR_SYSTEM_PROPERTY_NAME = "mifos.conf";
     private static final String LOCATOR_ENVIRONMENT_PROPERTY_NAME = "MIFOS_CONF";
     private static final String HOME_PROPERTY_NAME = "user.home";
@@ -68,37 +69,50 @@ public class ConfigurationLocator {
         return getFileHandle(filename).getAbsolutePath();
     }
 
-    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
-    public File getFileHandle(String filename) throws IOException {
+    private String[] getDirectoriesToSearch() {
         String systemPropertyDirectory = System.getProperty(LOCATOR_SYSTEM_PROPERTY_NAME);
         String envPropertyDirectory = System.getenv(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
         String homeDirectory = System.getProperty(HOME_PROPERTY_NAME);
-
-        File fileToReturn = null;
-
-        if (StringUtils.isNotBlank(systemPropertyDirectory)) {
-            File file = new File(systemPropertyDirectory, filename);
-            if (file.exists()) {
-                fileToReturn = file;
-            }
-        } else if (StringUtils.isNotBlank(envPropertyDirectory)) {
-            File file = new File(envPropertyDirectory, filename);
-            if (file.exists()) {
-                fileToReturn = file;
-            }
-        } else if (new File(homeDirectory, MIFOS_USER_CONFIG_DIRECTORY_NAME).exists()) {
-            File file = new File(homeDirectory + "/" + MIFOS_USER_CONFIG_DIRECTORY_NAME, filename);
-            if (file.exists()) {
-                fileToReturn = file;
+        String userConfigDirectory = homeDirectory + '/' + MIFOS_USER_CONFIG_DIRECTORY_NAME;
+        
+        String[] directoriesToSearch = { systemPropertyDirectory, envPropertyDirectory, userConfigDirectory };
+        return directoriesToSearch;
+    }
+    
+    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
+    public String getConfigurationDirectory() {
+        for (String directoryPath : getDirectoriesToSearch()) {
+            System.out.println("ConfigurationLocator examining configuration directory: " + directoryPath);
+            if (directoryExists(directoryPath)) {
+                System.out.println("ConfigurationLocator found configuration directory: " + directoryPath);
+                return directoryPath;
             }
         }
-
-        if (fileToReturn == null) {
-            String fallback = DEFAULT_CONFIGURATION_PATH + filename;
-            fileToReturn = new ClassPathResource(fallback).getFile();
+        return CURRENT_WORKING_DIRECTORY_PATH;
+    }
+    
+    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
+    private File getConfigurationFile(String filename) throws IOException {
+        for (String directoryPath : getDirectoriesToSearch()) {
+            System.out.println("ConfigurationLocator examining configuration directory: " + directoryPath);
+            if (StringUtils.isNotBlank(directoryPath)) {
+                File file = (new File(directoryPath, filename));
+                if (file.exists()) {
+                    return file;
+                }
+            }
         }
+        return new ClassPathResource(DEFAULT_CONFIGURATION_PATH + filename).getFile();
+    }
 
-        System.out.println("ConfigurationLocator FOUND: " + fileToReturn);
+    private boolean directoryExists(String directory) {
+        return StringUtils.isNotBlank(directory) && (new File(directory)).exists();
+    }
+
+    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
+    public File getFileHandle(String filename) throws IOException {
+        File fileToReturn = getConfigurationFile(filename);
+        System.out.println("ConfigurationLocator found configuration file: " + fileToReturn);
         return fileToReturn;
     }
 
