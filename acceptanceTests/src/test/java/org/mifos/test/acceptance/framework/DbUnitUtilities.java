@@ -269,7 +269,7 @@ public class DbUnitUtilities {
     public void dumpDatabaseToTimestampedFileInConfigurationDirectory(DriverManagerDataSource dataSource) throws FileNotFoundException, ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
         String configurationDirectory = new ConfigurationLocator().getConfigurationDirectory();
         DateTime currentTime = new DateTimeService().getCurrentDateTime();
-        String timeStamp = currentTime.toString();
+        String timeStamp = currentTime.toString().replace(":", "_");
         String databaseDumpPathName = configurationDirectory + '/' + "databaseDump-" + timeStamp; 
         dumpDatabase(databaseDumpPathName, dataSource);
     }
