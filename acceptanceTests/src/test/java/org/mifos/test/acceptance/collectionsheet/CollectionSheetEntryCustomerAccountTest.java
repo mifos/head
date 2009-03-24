@@ -24,6 +24,8 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.junit.Assert;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
@@ -88,13 +90,16 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    
+    @Test(invocationCount=1)
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();   
             dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
             enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
             verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
-        } catch (Exception e) {
+            throw new MifosRuntimeException("fail");
+        } catch (Error e) {
             dbUnitUtilities.dumpDatabaseToTimestampedFileInConfigurationDirectory(dataSource);
             throw e;
         }
