@@ -75,11 +75,10 @@ public class ConfigurationLocator {
         String homeDirectory = System.getProperty(HOME_PROPERTY_NAME);
         String userConfigDirectory = homeDirectory + '/' + MIFOS_USER_CONFIG_DIRECTORY_NAME;
         
-        String[] directoriesToSearch = { systemPropertyDirectory, envPropertyDirectory, userConfigDirectory };
-        return directoriesToSearch;
+        return new String[] { systemPropertyDirectory, envPropertyDirectory, userConfigDirectory };
     }
     
-    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
+    @SuppressWarnings({"PMD.SystemPrintln", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
     public String getConfigurationDirectory() {
         for (String directoryPath : getDirectoriesToSearch()) {
             System.out.println("ConfigurationLocator examining configuration directory: " + directoryPath);
@@ -91,12 +90,12 @@ public class ConfigurationLocator {
         return CURRENT_WORKING_DIRECTORY_PATH;
     }
     
-    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
+    @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
     private File getConfigurationFile(String filename) throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
             System.out.println("ConfigurationLocator examining configuration directory: " + directoryPath);
             if (StringUtils.isNotBlank(directoryPath)) {
-                File file = (new File(directoryPath, filename));
+                File file = new File(directoryPath, filename);
                 if (file.exists()) {
                     return file;
                 }
