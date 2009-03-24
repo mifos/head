@@ -32,7 +32,7 @@ import org.mifos.application.customer.center.business.CenterBOTest;
 import org.mifos.application.customer.center.business.service.TestCenterBusinessService;
 import org.mifos.application.customer.center.persistence.TestCenterPersistence;
 import org.mifos.application.customer.center.struts.action.CenterActionTest;
-import org.mifos.application.customer.client.business.ClientBoIntegrationTest;
+import org.mifos.application.customer.client.business.ClientIntegrationTest;
 import org.mifos.application.customer.client.business.ClientBoTest;
 import org.mifos.application.customer.client.business.service.ClientBusinessServiceTest;
 import org.mifos.application.customer.client.persistence.ClientPersistenceTest;
@@ -68,7 +68,7 @@ import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
     TestCustomerAction.class,
     TestEditCustomerStatusAction.class,
     TestCustomerNotesAction.class,
-    ClientBoIntegrationTest.class,
+    ClientIntegrationTest.class,
     ClientBoTest.class,
     TestCustomerBO.class,
     CustomerUIHelperFnTest.class,

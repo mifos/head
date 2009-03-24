@@ -21,11 +21,8 @@
 package org.mifos.application.bulkentry.struts.action;
 
 import java.sql.Date;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -48,8 +45,8 @@ import org.mifos.application.bulkentry.business.CollectionSheetEntryBO;
 import org.mifos.application.bulkentry.business.CollectionSheetEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
-import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
+import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -72,6 +69,8 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -82,16 +81,12 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.config.AccountingRules;
-import org.mifos.config.ClientRules;
-import org.mifos.config.GeneralConfig;
 
 public class CollectionSheetEntryAction extends BaseAction {
 
@@ -411,12 +406,12 @@ public class CollectionSheetEntryAction extends BaseAction {
                 CollectionSheetEntryConstants.CUSTOMERACCOUNTS, request);
         
         try {
-//            bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
-//                    .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
-//                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
-            bulkEntryService.saveDataNonThreaded(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
+            bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                     .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
                     savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
+//            bulkEntryService.saveDataNonThreaded(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
+//                    .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
+//                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
             
         } catch (Exception e) {
             throw e;
