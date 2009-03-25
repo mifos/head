@@ -20,6 +20,8 @@
  
 package org.mifos.test.acceptance.collectionsheet;
 
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -43,10 +45,8 @@ import org.joda.time.DateTime;
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
 
-    private static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
     private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
     private static final String CUSTOMER_ACCOUNT_ACTIVITY = "CUSTOMER_ACCOUNT_ACTIVITY";
-    private static final String CUSTOMER_TRXN_DETAIL = "CUSTOMER_TRXN_DETAIL";
     private static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
     private static final String LOAN_TRXN_DETAIL = "LOAN_TRXN_DETAIL";
     private static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
@@ -140,7 +140,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyCollectionSheetData(String filename) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { FEE_TRXN_DETAIL,
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { 
                 ACCOUNT_TRXN, 
                 LOAN_TRXN_DETAIL, 
                 ACCOUNT_PAYMENT, 
@@ -150,15 +150,39 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
                 ACCOUNT_STATUS_CHANGE_HISTORY,
                 FINANCIAL_TRXN,
                 CUSTOMER_ACCOUNT_ACTIVITY,
-                CUSTOMER_ATTENDANCE,
-                CUSTOMER_TRXN_DETAIL });
+                CUSTOMER_ATTENDANCE });
 
 
-        dbUnitUtilities.verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);   
-        dbUnitUtilities.verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
+        verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);   
+        verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
 
     }
 
+    private void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
+    DatabaseUnitException {
+        dbUnitUtilities.verifyTables(new String[] { CollectionSheetEntryCustomerAccountTest.CUSTOMER_ACCOUNT_ACTIVITY }, databaseDataSet, expectedDataSet);
+    }
+
+    private void verifyTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
+            throws DataSetException, DatabaseUnitException {
+        String [] orderLoanTrxnDetailByColumns = new String[] {"principal_amount","account_trxn_id"};
+        dbUnitUtilities.verifyTableWithSort(orderLoanTrxnDetailByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_TRXN_DETAIL, expectedDataSet, databaseDataSet);
+        String [] orderAccountPaymentByColumns = new String[] {"amount","account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderAccountPaymentByColumns,CollectionSheetEntryCustomerAccountTest.ACCOUNT_PAYMENT, expectedDataSet, databaseDataSet);
+        String [] orderLoanSummaryByColumns = new String[] {"raw_amount_total","account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderLoanSummaryByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_SUMMARY, expectedDataSet, databaseDataSet);
+        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};  
+        dbUnitUtilities.verifyTableWithSort(orderFinTrxnByColumns,CollectionSheetEntryCustomerAccountTest.FINANCIAL_TRXN, expectedDataSet, databaseDataSet );
+        String [] orderAcctTrxnByColumns = new String[] {"amount", "customer_id", "account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderAcctTrxnByColumns, CollectionSheetEntryCustomerAccountTest.ACCOUNT_TRXN, expectedDataSet, databaseDataSet);
+        String [] orderLoanScheduleByColumns = new String[] {"principal","account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderLoanScheduleByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_SCHEDULE, expectedDataSet, databaseDataSet);
+        String [] orderLoanActivityDetailsByColumns = new String[] {"principal_amount","account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderLoanActivityDetailsByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_ACTIVITY_DETAILS, expectedDataSet, databaseDataSet);
+        String [] orderAccountStatusChangeHistoryByColumns = new String[] {"account_id"};
+        dbUnitUtilities.verifyTableWithSort(orderAccountStatusChangeHistoryByColumns,CollectionSheetEntryCustomerAccountTest.ACCOUNT_STATUS_CHANGE_HISTORY, expectedDataSet, databaseDataSet);
+        
+     }
 
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryEnterData(SubmitFormParameters formParameters) {
         CollectionSheetEntrySelectPage selectPage = 
