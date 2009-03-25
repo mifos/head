@@ -20,8 +20,6 @@
  
 package org.mifos.test.acceptance.collectionsheet;
 
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -44,13 +42,22 @@ import org.joda.time.DateTime;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
+
+    private static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
+    private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
+    private static final String CUSTOMER_ACCOUNT_ACTIVITY = "CUSTOMER_ACCOUNT_ACTIVITY";
+    private static final String CUSTOMER_TRXN_DETAIL = "CUSTOMER_TRXN_DETAIL";
+    private static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
     private static final String LOAN_TRXN_DETAIL = "LOAN_TRXN_DETAIL";
+    private static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
+    private static final String LOAN_SUMMARY = "LOAN_SUMMARY";
     private static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
     private static final String LOAN_ACTIVITY_DETAILS = "LOAN_ACTIVITY_DETAILS";
-    private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
-    private static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
-    private static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
-
+    private static final String ACCOUNT_STATUS_CHANGE_HISTORY = "ACCOUNT_STATUS_CHANGE_HISTORY";
+    private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
+    
+    
+    
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -111,37 +118,47 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     }
 
-    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void defaultAmountsForMediumCenterSavedToDatabase() throws Exception {
+        try {
+            SubmitFormParameters formParameters = new SubmitFormParameters();
+            formParameters.setBranch("MyOffice1233266931234");
+            formParameters.setLoanOfficer("Joe1233266933656 Guy1233266933656");
+            formParameters.setCenter("MyCenter1233266935468");
+            formParameters.setPaymentMode("Cash");
+
+            dbUnitUtilities.loadDataFromFile("acceptance_medium_005_dbunit.xml.zip", dataSource);
+            CollectionSheetEntryConfirmationPage confirmPage = new CollectionSheetEntryTestHelper(selenium).submitDefaultCollectionSheetEntryData(formParameters);
+            confirmPage.verifyPage();
+            verifyCollectionSheetData("ColSheetLoanTest_001_result_dbunit.xml.zip");
+        } catch (Exception e) {
+            dbUnitUtilities.dumpDatabaseToTimestampedFileInConfigurationDirectory(dataSource);
+            throw e;
+        }
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void verifyCollectionSheetData(String filename) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT_PAYMENT,
-                                   ACCOUNT_TRXN,
-                                   FINANCIAL_TRXN,
-                                   LOAN_ACTIVITY_DETAILS,
-                                   LOAN_SCHEDULE,
-                                   LOAN_TRXN_DETAIL });
-        verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);   
-        verifyFinancialTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
-        // Note: CUSTOMER_ATTENDANCE is updated but we are not verifying it in this test
-    }
-
-    private void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
-            DatabaseUnitException {
-        dbUnitUtilities.verifyTables(new String[] { ACCOUNT_PAYMENT,
-                ACCOUNT_TRXN,
+        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { FEE_TRXN_DETAIL,
+                ACCOUNT_TRXN, 
+                LOAN_TRXN_DETAIL, 
+                ACCOUNT_PAYMENT, 
+                LOAN_SUMMARY, 
+                LOAN_SCHEDULE, 
                 LOAN_ACTIVITY_DETAILS,
-                LOAN_SCHEDULE,
-                LOAN_TRXN_DETAIL }, databaseDataSet, expectedDataSet);
+                ACCOUNT_STATUS_CHANGE_HISTORY,
+                FINANCIAL_TRXN,
+                CUSTOMER_ACCOUNT_ACTIVITY,
+                CUSTOMER_ATTENDANCE,
+                CUSTOMER_TRXN_DETAIL });
+
+
+        dbUnitUtilities.verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);   
+        dbUnitUtilities.verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
+
     }
 
-    private void verifyFinancialTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
-            throws DataSetException, DatabaseUnitException {
-        String[] orderByColumns = 
-            new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
-        dbUnitUtilities.verifySortedTable(FINANCIAL_TRXN, databaseDataSet, expectedDataSet, 
-            orderByColumns);
-    }
 
     private CollectionSheetEntryEnterDataPage navigateToCollectionSheetEntryEnterData(SubmitFormParameters formParameters) {
         CollectionSheetEntrySelectPage selectPage = 
@@ -151,7 +168,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         enterDataPage.verifyPage();
         return enterDataPage;
     }
-     
+    
  
     private SubmitFormParameters getFormParametersForTestOffice() {
         SubmitFormParameters formParameters = new SubmitFormParameters();

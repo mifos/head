@@ -20,8 +20,6 @@
  
 package org.mifos.test.acceptance.collectionsheet;
 
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -47,17 +45,17 @@ import org.testng.annotations.Test;
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
-    private static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
-    private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
-    private static final String CUSTOMER_ACCOUNT_ACTIVITY = "CUSTOMER_ACCOUNT_ACTIVITY";
-    private static final String CUSTOMER_TRXN_DETAIL = "CUSTOMER_TRXN_DETAIL";
-    private static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
-    private static final String LOAN_TRXN_DETAIL = "LOAN_TRXN_DETAIL";
-    private static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
-    private static final String LOAN_SUMMARY = "LOAN_SUMMARY";
-    private static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
-    private static final String LOAN_ACTIVITY_DETAILS = "LOAN_ACTIVITY_DETAILS";
-    private static final String ACCOUNT_STATUS_CHANGE_HISTORY = "ACCOUNT_STATUS_CHANGE_HISTORY";
+    public static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";
+    public static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";
+    public static final String CUSTOMER_ACCOUNT_ACTIVITY = "CUSTOMER_ACCOUNT_ACTIVITY";
+    public static final String CUSTOMER_TRXN_DETAIL = "CUSTOMER_TRXN_DETAIL";
+    public static final String ACCOUNT_TRXN = "ACCOUNT_TRXN";
+    public static final String LOAN_TRXN_DETAIL = "LOAN_TRXN_DETAIL";
+    public static final String ACCOUNT_PAYMENT = "ACCOUNT_PAYMENT";
+    public static final String LOAN_SUMMARY = "LOAN_SUMMARY";
+    public static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
+    public static final String LOAN_ACTIVITY_DETAILS = "LOAN_ACTIVITY_DETAILS";
+    public static final String ACCOUNT_STATUS_CHANGE_HISTORY = "ACCOUNT_STATUS_CHANGE_HISTORY";
     
 
     private static final double[] BASIC_CUSTOMER_ACCT_VALUES = new double[] {  17.0, 77.0, 123.0, 217.0, 44.0 };
@@ -67,7 +65,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
-    private DbUnitUtilities dbUnitUtilities;
+    public DbUnitUtilities dbUnitUtilities;
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -275,47 +273,10 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
                                    CUSTOMER_TRXN_DETAIL });
         
                                    
-        
-        verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);   
-        verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
-
+        dbUnitUtilities.verifyTablesWithoutSorting(expectedDataSet, databaseDataSet);
+        dbUnitUtilities.verifyTransactionsAfterSortingTables(expectedDataSet, databaseDataSet);
+         
     }
-       
-    private void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
-    DatabaseUnitException {
-        dbUnitUtilities.verifyTables(new String[] { CUSTOMER_ACCOUNT_ACTIVITY }, databaseDataSet, expectedDataSet);
-    }
-
-    private void verifyTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
-            throws DataSetException, DatabaseUnitException {
-        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};  
-        verifyTableWithSort(orderFinTrxnByColumns,FINANCIAL_TRXN, expectedDataSet, databaseDataSet );
-        String [] orderFeeTrxnByColumns = new String[]{"fee_trxn_detail_id", "account_trxn_id", "account_fee_id"};
-        verifyTableWithSort(orderFeeTrxnByColumns,FEE_TRXN_DETAIL, expectedDataSet, databaseDataSet );
-        String [] orderCustTrxnByColumns = new String[] {"total_amount"};
-        verifyTableWithSort(orderCustTrxnByColumns, CUSTOMER_TRXN_DETAIL, expectedDataSet, databaseDataSet);
-        String [] orderAcctTrxnByColumns = new String[] {"amount", "customer_id", "account_id"};
-        verifyTableWithSort(orderAcctTrxnByColumns, ACCOUNT_TRXN, expectedDataSet, databaseDataSet);
-        String [] orderLoanTrxnDetailByColumns = new String[] {"principal_amount","account_trxn_id"};
-        verifyTableWithSort(orderLoanTrxnDetailByColumns,LOAN_TRXN_DETAIL, expectedDataSet, databaseDataSet);
-        String [] orderAccountPaymentByColumns = new String[] {"amount","account_id"};
-        verifyTableWithSort(orderAccountPaymentByColumns,ACCOUNT_PAYMENT, expectedDataSet, databaseDataSet);
-        String [] orderLoanSummaryByColumns = new String[] {"raw_amount_total","account_id"};
-        verifyTableWithSort(orderLoanSummaryByColumns,LOAN_SUMMARY, expectedDataSet, databaseDataSet);
-        String [] orderLoanScheduleByColumns = new String[] {"principal","account_id"};
-        verifyTableWithSort(orderLoanScheduleByColumns,LOAN_SCHEDULE, expectedDataSet, databaseDataSet);
-        String [] orderLoanActivityDetailsByColumns = new String[] {"principal_amount","account_id"};
-        verifyTableWithSort(orderLoanActivityDetailsByColumns,LOAN_ACTIVITY_DETAILS, expectedDataSet, databaseDataSet);
-        String [] orderAccountStatusChangeHistoryByColumns = new String[] {"account_status_change_id"};
-        verifyTableWithSort(orderAccountStatusChangeHistoryByColumns,ACCOUNT_STATUS_CHANGE_HISTORY, expectedDataSet, databaseDataSet);
-        
-     }
-
-
-    private void verifyTableWithSort(String[] columnOrder, String tableName, IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
-            DatabaseUnitException {
-        dbUnitUtilities.verifySortedTableWithOrdering(tableName, databaseDataSet, expectedDataSet, 
-                columnOrder, false, true);
-    }
+      
     
 }

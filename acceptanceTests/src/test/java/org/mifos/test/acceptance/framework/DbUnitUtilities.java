@@ -56,6 +56,7 @@ import org.joda.time.DateTime;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.test.acceptance.collectionsheet.CollectionSheetEntryCustomerAccountTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -86,8 +87,8 @@ public class DbUnitUtilities {
         columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_ACCOUNT_ACTIVITY", new String[] { "customer_account_activity_id", "created_date" });        
         columnsToIgnoreWhenVerifyingTables.put("CUSTOMER_TRXN_DETAIL", new String[] { "account_trxn_id" });        
         columnsToIgnoreWhenVerifyingTables.put("LOAN_SUMMARY", new String[] { "account_id" });        
-        columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "action_date", "payment_date" });        
-        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_STATUS_CHANGE_HISTORY", new String[] { "changed_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "id", "action_date", "payment_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_STATUS_CHANGE_HISTORY", new String[] { "changed_date", "account_status_change_id", "account_id" });        
         
     }
 
@@ -308,6 +309,42 @@ public class DbUnitUtilities {
         zipFile.close();
         
         return tempFile.toURI().toURL();
+    }
+
+    public void verifyTablesWithoutSorting(IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
+    DatabaseUnitException {
+        verifyTables(new String[] { CollectionSheetEntryCustomerAccountTest.CUSTOMER_ACCOUNT_ACTIVITY }, databaseDataSet, expectedDataSet);
+    }
+
+    public void verifyTransactionsAfterSortingTables(IDataSet expectedDataSet, IDataSet databaseDataSet)
+            throws DataSetException, DatabaseUnitException {
+        String[] orderFinTrxnByColumns =  new String[]{"posted_amount", "glcode_id"};  
+        verifyTableWithSort(orderFinTrxnByColumns,CollectionSheetEntryCustomerAccountTest.FINANCIAL_TRXN, expectedDataSet, databaseDataSet );
+        String [] orderFeeTrxnByColumns = new String[]{"fee_trxn_detail_id","account_trxn_id", "account_fee_id"};
+        verifyTableWithSort(orderFeeTrxnByColumns,CollectionSheetEntryCustomerAccountTest.FEE_TRXN_DETAIL, expectedDataSet, databaseDataSet );
+        String [] orderCustTrxnByColumns = new String[] {"total_amount"};
+        verifyTableWithSort(orderCustTrxnByColumns, CollectionSheetEntryCustomerAccountTest.CUSTOMER_TRXN_DETAIL, expectedDataSet, databaseDataSet);
+        String [] orderAcctTrxnByColumns = new String[] {"amount", "customer_id", "account_id"};
+        verifyTableWithSort(orderAcctTrxnByColumns, CollectionSheetEntryCustomerAccountTest.ACCOUNT_TRXN, expectedDataSet, databaseDataSet);
+        String [] orderLoanTrxnDetailByColumns = new String[] {"principal_amount","account_trxn_id"};
+        verifyTableWithSort(orderLoanTrxnDetailByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_TRXN_DETAIL, expectedDataSet, databaseDataSet);
+        String [] orderAccountPaymentByColumns = new String[] {"amount","account_id"};
+        verifyTableWithSort(orderAccountPaymentByColumns,CollectionSheetEntryCustomerAccountTest.ACCOUNT_PAYMENT, expectedDataSet, databaseDataSet);
+        String [] orderLoanSummaryByColumns = new String[] {"raw_amount_total","account_id"};
+        verifyTableWithSort(orderLoanSummaryByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_SUMMARY, expectedDataSet, databaseDataSet);
+        String [] orderLoanScheduleByColumns = new String[] {"principal","account_id"};
+        verifyTableWithSort(orderLoanScheduleByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_SCHEDULE, expectedDataSet, databaseDataSet);
+        String [] orderLoanActivityDetailsByColumns = new String[] {"principal_amount","account_id"};
+        verifyTableWithSort(orderLoanActivityDetailsByColumns,CollectionSheetEntryCustomerAccountTest.LOAN_ACTIVITY_DETAILS, expectedDataSet, databaseDataSet);
+        String [] orderAccountStatusChangeHistoryByColumns = new String[] {"account_status_change_id"};
+        verifyTableWithSort(orderAccountStatusChangeHistoryByColumns,CollectionSheetEntryCustomerAccountTest.ACCOUNT_STATUS_CHANGE_HISTORY, expectedDataSet, databaseDataSet);
+        
+     }
+
+    public void verifyTableWithSort(String[] columnOrder, String tableName, IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
+            DatabaseUnitException {
+        verifySortedTableWithOrdering(tableName, databaseDataSet, expectedDataSet, 
+                columnOrder, false, true);
     }
     
     

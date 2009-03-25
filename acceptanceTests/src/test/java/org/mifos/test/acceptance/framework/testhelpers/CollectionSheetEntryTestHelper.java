@@ -24,7 +24,11 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.LoginPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -34,8 +38,8 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class CollectionSheetEntryTestHelper {
 
-    private final Selenium selenium;
-
+     private final Selenium selenium;
+    
     public CollectionSheetEntryTestHelper(Selenium selenium) {
         this.selenium = selenium;
     }
@@ -47,5 +51,24 @@ public class CollectionSheetEntryTestHelper {
         return clientsAndAccountsPage.navigateToEnterCollectionSheetDataUsingLeftMenu();
     }
 
-    
+    public CollectionSheetEntryConfirmationPage submitDefaultCollectionSheetEntryData(SubmitFormParameters formParameters) {
+        CollectionSheetEntrySelectPage selectPage = 
+            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
+        CollectionSheetEntryPreviewDataPage previewPage = enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+        previewPage.verifyPage(formParameters);
+        CollectionSheetEntryConfirmationPage confirmationPage = previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
+        confirmationPage.verifyPage();
+        return confirmationPage;
+    }
+ 
+    public CollectionSheetEntryEnterDataPage selectCenterAndContinue(SubmitFormParameters formParameters,
+            CollectionSheetEntrySelectPage selectPage) {
+        CollectionSheetEntryEnterDataPage enterDataPage = 
+            selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterDataPage.verifyPage();
+        return enterDataPage;
+    }
+
 }
