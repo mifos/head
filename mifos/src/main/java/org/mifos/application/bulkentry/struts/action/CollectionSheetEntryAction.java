@@ -294,6 +294,11 @@ public class CollectionSheetEntryAction extends BaseAction {
         List<CollectionSheetEntryView> customerViews = new ArrayList<CollectionSheetEntryView>();
 
         setData(bulkEntry.getBulkEntryParent(), loanAccprdViews, customerAccViews, customerViews);
+
+        /* badness: within this call to setData(), ClientBOs are instantiated
+         * and will eventually end up in the HTTP session. Recall that because
+         * of thread-local storage in HibernateUtil, each app server worker
+         * thread has a different Hibernate session. */
         new BulkEntryBusinessService().setData(customerViews, savingsCache, clients, savingsDepNames, savingsWithNames,
                 customerNames, getUserContext(request).getId(), bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                         .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), meetingDate);
