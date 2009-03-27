@@ -25,6 +25,85 @@
         <module>acceptanceTests</module>
     </modules>
 
+	<!--
+	FIXME: replace with a single, managed repository.
+	See http://www.sonatype.com/people/2009/02/why-putting-repositories-in-your-poms-is-a-bad-idea/
+	We may want to remove any mention of repositories from this or any child
+	POM, rather, require that ~/.m2/settings.xml mention our single, managed
+	repository.
+	-->
+    <repositories>
+        <repository>
+            <id>spring-snapshot</id>
+            <name>Spring Portfolio Milestone Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+        </repository>
+        <repository>
+            <id>maven-repository.mifos.org</id>
+            <name>Mifos Maven Repository</name>
+            <url>http://neem.mifos.org/maven/</url>
+        </repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>maven2-jboss-repository</id>
+            <name>JBoss maven2 repository</name>
+            <url>http://repository.jboss.com/maven2</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>ibiblio-maven2-repository</id>
+            <name>Ibiblio maven2 repository</name>
+            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>openqa.org</id>
+            <name>OpenQA Repository</name>
+            <url>http://archiva.openqa.org/repository/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <!-- for selenium 1.0-SNAPSHOT -->
+        <repository>
+            <id>snapshots.openqa.org</id>
+            <name>OpenQA Snapshots Repository</name>
+            <url>http://archiva.openqa.org/repository/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+	<!-- FIXME: this is duplicated in acceptanceTests/pom.xml -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Codehaus Snapshots</id>
+            <url>http://snapshots.repository.codehaus.org/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Codehaus Repository</id>
+            <url>http://repository.codehaus.org/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

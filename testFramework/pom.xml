@@ -12,47 +12,7 @@
       <artifactId>gazelle-parent</artifactId>
       <version>0.0.3-SNAPSHOT</version>
     </parent>
-    <repositories>
-        <repository>
-            <id>spring-snapshot</id>
-            <name>Spring Portfolio Milestone Repository</name>
-            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-        </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>maven2-jboss-repository</id>
-            <name>JBoss maven2 repository</name>
-            <url>http://repository.jboss.com/maven2</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>ibiblio-maven2-repository</id>
-            <name>Ibiblio maven2 repository</name>
-            <url>http://mirrors.ibiblio.org/pub/mirrors/maven2/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>Codehaus Snapshots</id>
-            <url>http://snapshots.repository.codehaus.org/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>Codehaus Repository</id>
-            <url>http://repository.codehaus.org/</url>
-        </pluginRepository>
-    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
