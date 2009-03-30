@@ -59,6 +59,7 @@ public class ConfigurationLocator {
              * may not be the correct approach--we may want to instead allow
              * this behavior (ignoring the exception) to be configurable.
              */
+            returnValue = "";
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
