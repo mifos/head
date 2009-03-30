@@ -269,7 +269,7 @@
 						</script>
 							<tr class="fontnormal" id="appliesto">
 								<td align="right">
-									<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<mifos:mifoslabel name="product.recamtappl" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:select property="recommendedAmntUnit" style="width:136px;">
