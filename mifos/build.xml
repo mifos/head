@@ -34,7 +34,7 @@
     <property file="${conf.dir}/build.properties"/>
     <property file="${conf.dir}/mainDatabase.properties"/>
     <property file="${test.conf.dir}/integrationDatabase.properties"/>
-   <property file="${test.conf.dir}/acceptanceDatabase.properties"/>
+    <property file="${test.conf.dir}/acceptanceDatabase.properties"/>
 
     <property name="main.database.url"
         value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params}"/>
@@ -357,7 +357,7 @@
             message="Unit tests failed - Report is available at ${dist.dir}"
             status="1"/>
     </target>
-	
+
     <target name="build" depends="compile,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
 
     <target name="war" depends="build">
@@ -437,27 +437,27 @@
         </sql>
     </target>
 
-   <target name="build_acceptance_db">
-       <echo>Using database: ${acceptance.database} at ${acceptance.database.host} port ${acceptance.database.port}</echo>
-       <sql driver="${database.driver}" url="${acceptance.database.url}" 
-           userid="${acceptance.database.user}" password="${acceptance.database.password}"
-           classpath="${database.driver.jar}">
-           <transaction>
-               Drop database if exists ${acceptance.database};
-               create database ${acceptance.database};
-               use ${acceptance.database};
-           </transaction>
-           <!-- The following list of scripts is supposed to
-           be the same as the one in build_db except -->
-           <transaction src="${sql.dir}/mifosdroptables.sql" />
-           <transaction src="${sql.dir}/latest-schema.sql" />
-           <transaction src="${sql.dir}/latest-data.sql" />
-           <transaction src="${sql.dir}/custom_data.sql" />
-           <transaction src="${sql.dir}/init_mifos_password.sql" />
-       </sql>
-   </target>
+    <target name="build_acceptance_db">
+        <echo>Using database: ${acceptance.database} at ${acceptance.database.host} port ${acceptance.database.port}</echo>
+        <sql driver="${database.driver}" url="${acceptance.database.url}" 
+            userid="${acceptance.database.user}" password="${acceptance.database.password}"
+            classpath="${database.driver.jar}">
+            <transaction>
+                Drop database if exists ${acceptance.database};
+                create database ${acceptance.database};
+                use ${acceptance.database};
+            </transaction>
+            <!-- The following list of scripts is supposed to
+            be the same as the one in build_db except -->
+            <transaction src="${sql.dir}/mifosdroptables.sql" />
+            <transaction src="${sql.dir}/latest-schema.sql" />
+            <transaction src="${sql.dir}/latest-data.sql" />
+            <transaction src="${sql.dir}/custom_data.sql" />
+            <transaction src="${sql.dir}/init_mifos_password.sql" />
+        </sql>
+    </target>
 
-	<target name="deploy" depends="war">
+    <target name="deploy" depends="war">
         <echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
         <copy file="${dist.dir}/${webapplication.name}.war" 
             todir="${deploy.destination}"
