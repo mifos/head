@@ -15,6 +15,7 @@
     <property name="test.conf.dir" value="${test.dir}/org/mifos/config/resources"/>
 	
 
+    <!-- mimics ConfigurationLocator directory search behavior -->
     <!--
     Simulate functionality in ConfigurationLocator used to find the Mifos
     database (and other miscellaneous settings) configuration file. Note that,
