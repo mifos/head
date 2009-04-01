@@ -100,7 +100,6 @@ public class DbUnitUtilities {
      * @throws DataSetException
      * @throws DatabaseUnitException
      */
-    @SuppressWarnings({"PMD.SystemPrintln"}) // make sure we capture output independent of logging
     public void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
             DatabaseUnitException {
         
@@ -113,13 +112,19 @@ public class DbUnitUtilities {
         try {
             Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
         } catch (AssertionError e) {
-            TableFormatter formatter = new TableFormatter();
-            System.out.println("---Expected Table---");
-            System.out.println(formatter.format(expectedTable));
-            System.out.println("---Actual Table---");
-            System.out.println(formatter.format(actualTable));
-            throw e;
+            throw new DatabaseUnitException(getTableDiff(expectedTable, actualTable), e);
         }
+    }
+
+    private String getTableDiff(ITable expectedTable, ITable actualTable) throws DataSetException {
+        TableFormatter formatter = new TableFormatter();
+        String newline = System.getProperty("line.separator");
+        StringBuilder differences = new StringBuilder();
+        differences.append("---Expected Table---" + newline);
+        differences.append(formatter.format(expectedTable) + newline);
+        differences.append("---Actual Table---" + newline);
+        differences.append(formatter.format(actualTable) + newline);
+        return differences.toString();
     }
 
     /**
@@ -146,7 +151,6 @@ public class DbUnitUtilities {
         verifySortedTableWithOrdering(tableName, databaseDataSet, expectedDataSet, sortingColumns, actualDBSortFlag, expectedDBSortFlag);                 
     }
 
-    @SuppressWarnings({"PMD.SystemPrintln"}) // make sure we capture output independent of logging
     public void verifySortedTableWithOrdering(String tableName, IDataSet databaseDataSet, 
             IDataSet expectedDataSet, String[] sortingColumns, Boolean actualDBComparableFlag, Boolean expectedDBComparableFlag) throws DataSetException, DatabaseUnitException {
 
@@ -170,12 +174,7 @@ public class DbUnitUtilities {
         try {
             Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
         } catch (AssertionError e) {
-            TableFormatter formatter = new TableFormatter();
-            System.out.println("---Expected Table---");
-            System.out.println(formatter.format(expectedTable));
-            System.out.println("---Actual Table---");
-            System.out.println(formatter.format(actualTable));
-            throw e;
+            throw new DatabaseUnitException(getTableDiff(expectedTable, actualTable), e);
         }
     }
     
