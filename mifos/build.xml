@@ -13,6 +13,7 @@
     <property name="test.dir" value="${basedir}/src/test/java"/>
     <property name="conf.dir" value="${src.dir}/org/mifos/config/resources"/>
     <property name="test.conf.dir" value="${test.dir}/org/mifos/config/resources"/>
+	
 
     <!--
     Simulate functionality in ConfigurationLocator used to find the Mifos
@@ -70,6 +71,8 @@
     <property name="build.classes" value="${build.web-inf}/classes"/>
     <property name="build.lib" value="${build.dir}/lib"/>
     <property name="build.adminReport" value="${build.src.dir}/adminReport"/>
+    <property name="src.webapp.dir" value="${basedir}/src/main/webapp"/>
+    <property name="src.web-inf.dir" value="${src.webapp.dir}/WEB-INF"/>
 
     <property name="test.classes" value="${build.test.dir}"/>
 
@@ -179,17 +182,17 @@
             </fileset>
         </copy>
         <copy todir="${build.web-inf}">
-            <fileset dir="${src.dir}/org/mifos/WEB-INF">
+            <fileset dir="${src.web-inf.dir}">
                 <exclude name="web.xml"/>
             </fileset>
         </copy>
+      <copy todir="${build.src.dir}/pages">
+          <fileset dir="${src.webapp.dir}/pages"/>
+      </copy>
         <copy todir="${build.classes}/org/mifos/framework/persistence">
             <fileset dir="${sql.dir}">
                 <include name="upgrade_to_*.sql" />
             </fileset>
-        </copy>
-        <copy todir="${build.src.dir}/pages">
-            <fileset dir="${src.dir}/org/mifos/doc-root"/>
         </copy>
 
         <copy todir="${build.classes}/org/mifos/application">
@@ -242,7 +245,7 @@
             <fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
         </copy>
         <concat destfile="${build.web-inf}/web.xml" append="no" force="yes" >
-            <fileset dir="${src.dir}/org/mifos/WEB-INF" includes="web.xml"/>
+            <fileset dir="${src.web-inf.dir}" includes="web.xml"/>
             <fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
         </concat>
         <replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="   &lt;!-- section: birt web viewer --&gt;" />
@@ -276,7 +279,7 @@
         </copy>
 
         <copy todir="${test.classes}/WEB-INF">
-            <fileset dir="${src.dir}/org/mifos/WEB-INF">
+            <fileset dir="${src.web-inf.dir}">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
