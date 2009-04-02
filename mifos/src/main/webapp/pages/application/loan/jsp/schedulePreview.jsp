@@ -52,7 +52,7 @@
 		<input type="hidden" id="page.id" value="SchedulePreview"/>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<c:choose>
             <c:when test="${requestScope.perspective == 'redoLoan'}">
                 <script>

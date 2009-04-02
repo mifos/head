@@ -39,7 +39,7 @@ explanation of the license and how it is applied.
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<script language="javascript">
 
 

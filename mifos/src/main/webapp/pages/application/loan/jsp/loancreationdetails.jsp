@@ -41,7 +41,7 @@ explanation of the license and how it is applied.
 		<script type="text/javascript" src="pages/application/meeting/js/meeting.js"></script>
 		<script type="text/javascript" src="pages/framework/js/conversion.js"></script>
 		<script type="text/javascript" src="pages/framework/js/con_en.js"></script>
-		<script type="text/javascript" src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		<script type="text/javascript" src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		
         <c:if test="${requestScope.perspective == 'redoLoan'}">
             <SCRIPT>

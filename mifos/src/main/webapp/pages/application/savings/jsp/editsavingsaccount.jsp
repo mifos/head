@@ -48,7 +48,7 @@
 	<tiles:put name="body" type="string">
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
 	<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
 

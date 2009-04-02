@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 		<script src="pages/application/fees/js/Fees.js"></script>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		
 		<html-el:form action="/feeaction.do?method=preview" focus="feeName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

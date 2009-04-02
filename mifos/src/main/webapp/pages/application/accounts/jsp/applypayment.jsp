@@ -53,7 +53,7 @@
 	<input type="hidden" id="page.id" value="ApplyPayment"/>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
-		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>
 		<SCRIPT>
 	function ViewDetails(){
 		customerAccountActionForm.action="customerAccountAction.do?method=load";
