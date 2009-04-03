@@ -173,7 +173,7 @@
 	</target>
 
 	<!-- task to minify javascript files (remove comments & whitespace for faster downloads) -->
-	<taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin.0.2.2.jar"/>
+	<taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin-0.2.2.jar"/>
 
 	<target name="copy_files" depends="copy-revision">
 		<copy todir="${build.web-inf}/lib">
