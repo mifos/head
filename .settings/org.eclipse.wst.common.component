@@ -18,5 +18,8 @@
         <wb-resource deploy-path="/" source-path="/common/src/main/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/test/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
+<wb-resource deploy-path="/" source-path="/mifos/src/main/sql"/>
+<wb-resource deploy-path="/" source-path="/mifos/src/main/webapp/pages"/>
+<wb-resource deploy-path="/" source-path="/mifos/src/main"/>
     </wb-module>
 </project-modules>

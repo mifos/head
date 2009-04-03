@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/org/mifos/config/resources/acceptanceDatabase.properties</database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/java/org/mifos/framework/persistence/sql</sql.resources.src.directory>
+        <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf> 

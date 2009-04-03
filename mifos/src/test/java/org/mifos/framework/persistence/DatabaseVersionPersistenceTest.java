@@ -56,14 +56,16 @@ public class DatabaseVersionPersistenceTest {
 		MifosLogManager.configureLogging();
 	}
 
-	@Test public void readSuccess() throws Exception {
+	@Test 
+	public void readSuccess() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
 		new DatabaseVersionPersistence(database.openConnection()).read();
 	}
 	
-	@Test public void readTwoRows() throws Exception {
+	@Test 
+	public void readTwoRows() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
