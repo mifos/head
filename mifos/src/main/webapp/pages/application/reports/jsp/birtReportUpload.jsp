@@ -128,7 +128,7 @@ explanation of the license and how it is applied.
 									    <mifos:mifoslabel
 										name="reports.labelTitle" />:</td>
 									<td><html-el:text styleId="111"
-										property="reportTitle" maxlength="200"/> </td>
+										property="reportTitle" size="40" maxlength="200"/> </td>
 								</tr>
 							    <tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
@@ -149,7 +149,7 @@ explanation of the license and how it is applied.
 									    <mifos:mifoslabel
 										name="reports.labelSelectTemplate" />:</td>
 								    <td>
-                                        <input type="file" value="" name="file"/>
+                                        <input type="file" size="70" value="" name="file"/>
                                     </td>
 								</tr>
 								<input type="hidden" name="isActive"  value="1" />
