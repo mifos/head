@@ -5,20 +5,18 @@
         <wb-resource deploy-path="/" source-path="/mifos/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/mifos/src/test/resources"/>
         <wb-resource deploy-path="/" source-path="/mifos/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/mifos/src/main/java/org/mifos/doc-root"/>
         <wb-resource deploy-path="/" source-path="/mifos/src/main/java"/>
-        <wb-resource deploy-path="/" source-path="/acceptanceTests/src/test/resources"/>
-        <wb-resource deploy-path="/" source-path="/userInterface/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/userInterface/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/userInterface/src/main/java"/>
-        <wb-resource deploy-path="/" source-path="/testFramework/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/testFramework/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/testFramework/src/main/java"/>
-        <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/main/java"/>
-        <wb-resource deploy-path="/" source-path="/common/src/main/java"/>
+<wb-resource deploy-path="/" source-path="/acceptanceTests/src/test/resources"/>
+<wb-resource deploy-path="/" source-path="/userInterface/src/main/resources"/>
+<wb-resource deploy-path="/" source-path="/userInterface/src/test/java"/>
+<wb-resource deploy-path="/" source-path="/userInterface/src/main/java"/>
+<wb-resource deploy-path="/" source-path="/testFramework/src/test/java"/>
+<wb-resource deploy-path="/" source-path="/testFramework/src/main/resources"/>
+<wb-resource deploy-path="/" source-path="/testFramework/src/main/java"/>
+<wb-resource deploy-path="/" source-path="/serviceInterfaces/src/main/java"/>
+<wb-resource deploy-path="/" source-path="/common/src/main/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/test/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
-<wb-resource deploy-path="/" source-path="/mifos/src/main/sql"/>
 <wb-resource deploy-path="/" source-path="/mifos/src/main/webapp/pages"/>
 <wb-resource deploy-path="/" source-path="/mifos/src/main"/>
     </wb-module>
