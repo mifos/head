@@ -20,7 +20,10 @@
  
 package org.mifos.test.acceptance.admin;
 
+import java.io.UnsupportedEncodingException;
+
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -62,7 +65,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         systemInfoPage.verifyDateTime(new DateTime());
     }
 
-    public void verifyUpdatedDateTimeTest() {
+    public void verifyUpdatedDateTimeTest() throws UnsupportedEncodingException {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         TimeMachine timeMachine = new TimeMachine(selenium);
         TimeMachinePage timeMachinePage = timeMachine.setDateTime(targetTime);
@@ -70,10 +73,22 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
         timeMachinePage.verifySuccess(targetTime);
     }
     
-    public void verifyDateTimeTest() {
+    public void verifyDateTimeTest() throws UnsupportedEncodingException {
         DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
         TimeMachine timeMachine = new TimeMachine(selenium);
         timeMachine.setDateTime(targetTime);
+        
+        AdminPage adminPage = loginAndGoToAdminPage();
+        SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();
+        systemInfoPage.verifyPage();
+        systemInfoPage.verifyDateTime(targetTime);
+    }
+
+    public void verifyDateTimeAndTimeZone() throws UnsupportedEncodingException {
+        DateTimeZone dateTimeZone = DateTimeZone.forOffsetHours(1);
+        DateTime targetTime = new DateTime(2008,1,1,0,0,0,0);
+        TimeMachine timeMachine = new TimeMachine(selenium);
+        timeMachine.setDateTime(targetTime, dateTimeZone);
         
         AdminPage adminPage = loginAndGoToAdminPage();
         SystemInfoPage systemInfoPage = adminPage.navigateToSystemInfoPage();

@@ -85,14 +85,18 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.name" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal" id="sysinfo.text.datebaseName"><c:out value="${sessionScope.systemInfo.databaseName}"/></span></td>
 					</tr>
-                    <tr>
-                        <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.user" bundle="adminUIResources" /></span></td>
-                        <td><span class="fontnormal" id="sysinfo.text.databaseUser"><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.datetime" bundle="adminUIResources" /></span></td>
-                        <td><span class="fontnormal" id="sysinfo.text.dateTime"><c:out value="${sessionScope.systemInfo.dateTimeString}"/></span></td>
-                    </tr>
+               <tr>
+                  <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.user" bundle="adminUIResources" /></span></td>
+                  <td><span class="fontnormal" id="sysinfo.text.databaseUser"><c:out value="${sessionScope.systemInfo.databaseUser}"/></span></td>
+               </tr>
+               <tr>
+                  <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.datetime" bundle="adminUIResources" /></span></td>
+                  <td><span class="fontnormal" id="sysinfo.text.dateTime"><c:out value="${sessionScope.systemInfo.dateTimeString}"/></span></td>
+               </tr>
+               <tr>
+                  <td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.datetime.iso8601" bundle="adminUIResources" /></span></td>
+                  <td><span class="fontnormal" id="sysinfo.text.dateTime"><c:out value="${sessionScope.systemInfo.dateTimeStringIso8601}"/></span></td>
+               </tr>
 				</table>
 			</td>
 		</html-el:form>

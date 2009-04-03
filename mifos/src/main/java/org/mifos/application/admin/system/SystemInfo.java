@@ -34,6 +34,7 @@ import javax.servlet.ServletContext;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
@@ -247,8 +248,12 @@ public class SystemInfo implements Serializable {
     }
     
     public String getDateTimeString() {
-        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(locale);
+        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
         return formatter.print(getDateTime().getMillis());
     }
 
+    public String getDateTimeStringIso8601() {
+        DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
+        return formatter.print(getDateTime().getMillis());
+    }
 }

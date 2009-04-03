@@ -20,7 +20,11 @@
  
 package org.mifos.test.acceptance.framework;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -35,11 +39,22 @@ public class TimeMachine {
         this.selenium = selenium;
     }
 
-    public TimeMachinePage setDateTime(DateTime dateTime) {
-        DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
-        selenium.open("dateTimeUpdate.ftl?dateTime=" + formatter.print(dateTime.getMillis()));
+    public TimeMachinePage setDateTime(DateTime dateTime) throws UnsupportedEncodingException {
+        DateTimeZone defaultDateTimeZone = null;
+        return setDateTime(dateTime, defaultDateTimeZone);
+    }
+
+    public TimeMachinePage setDateTime(DateTime dateTime, DateTimeZone dateTimeZone) throws UnsupportedEncodingException {
+        DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis().withZone(dateTimeZone);
+        String timeMachineUrl = "dateTimeUpdate.ftl?dateTime=" + getUrlEncodedTimeMachineDate(dateTime, formatter);
+        selenium.open(timeMachineUrl);
         waitForPageToLoad();
         return new TimeMachinePage(selenium);        
+    }
+
+    private String getUrlEncodedTimeMachineDate(DateTime dateTime, DateTimeFormatter formatter)
+            throws UnsupportedEncodingException {
+        return URLEncoder.encode(formatter.print(dateTime.getMillis()), "UTF-8");
     }
     
     public TimeMachinePage resetDateTime() {
