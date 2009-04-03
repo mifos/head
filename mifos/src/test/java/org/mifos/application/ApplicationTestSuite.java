@@ -31,7 +31,6 @@ import org.mifos.application.accounts.loan.LoanTestSuite;
 import org.mifos.application.accounts.savings.SavingsTestSuite;
 import org.mifos.application.admin.AdminTestSuite;
 import org.mifos.application.branchreport.BranchReportTestSuite;
-import org.mifos.application.bulkentry.BulkEntryTestSuite;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportTestSuite;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
@@ -78,7 +77,6 @@ import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
     SecurityTestSuite.class,
     CollectionSheetTestSuite.class,
     CustomerTestSuite.class,
-    BulkEntryTestSuite.class,
     ApplicationConfigurationTestSuite.class,         
     MasterTestSuite.class,
     AccountTestSuite.class,

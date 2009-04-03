@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntrySavingsInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;

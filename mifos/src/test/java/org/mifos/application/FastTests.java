@@ -23,7 +23,7 @@ package org.mifos.application;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.mifos.application.accounts.business.AccountBOTest;
-import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionViewTest;
+import org.mifos.application.collectionsheet.business.BulkEntryAccountFeeActionViewTest;
 import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionFormTest;
 import org.mifos.application.customer.struts.actionforms.CustomerActionFormTest;

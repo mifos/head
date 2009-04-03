@@ -51,7 +51,7 @@
 						<namefragment>label.collectionsheet</namefragment> 
 						<namefragment>label.data</namefragment>
 					</displayname>
-					<linkvalue>bulkentryaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>collectionsheetaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 				
 				
@@ -70,7 +70,7 @@
 						<namefragment>label.collectionsheet</namefragment> 
 						<namefragment>label.data</namefragment>
 					</displayname>
-					<linkvalue>bulkentryaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>collectionsheetaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 			</menugroup>
 			<menugroup>

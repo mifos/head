@@ -73,7 +73,7 @@ public interface LoggerConstants {
 	 */
 	public String AUDITLOGGER="org.mifos.framework.components.audit";
 	
-	public String BULKENTRYLOGGER="org.mifos.application.bulkentry";
+	public String BULKENTRYLOGGER="org.mifos.application.collectionsheet";
 	
 	/**
 	 * Logger for Collection Sheet Generation

@@ -47,7 +47,7 @@
 	</class>
 
 	<query name="account.getAllInstallmentsForAllCustomerAcounts">
-		<![CDATA[select new org.mifos.application.bulkentry.business.CollectionSheetEntryCustomerAccountInstallmentView(
+		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView(
 			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
 			accountAction.actionDateId,accountAction.actionDate,
 			accountAction.miscFee,accountAction.miscFeePaid,
@@ -63,7 +63,7 @@
 	</query>
 
 	<query name="account.getAllInstallmentsForCustomerAcount">
-		<![CDATA[select new org.mifos.application.bulkentry.business.CollectionSheetEntryCustomerAccountInstallmentView(
+		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView(
 			accountAction.account.accountId,customer.customerId,accountAction.installmentId,
 			accountAction.actionDateId,accountAction.actionDate,
 			accountAction.miscFee,accountAction.miscFeePaid,

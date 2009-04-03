@@ -37,7 +37,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
-import org.mifos.application.bulkentry.util.helpers.CollectionSheetEntryConstants;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;

@@ -29,7 +29,7 @@
 	</class>
 
 	<query name="account.getAllAccountFeeForAllInstallmentsForAllCustomerAccounts">
-		<![CDATA[select new org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView(
+		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView(
 			feeAction.accountActionDate.actionDateId, feeAction.fee,
 			feeAction.feeAmount, feeAction.feeAmountPaid
 			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
@@ -46,7 +46,7 @@
 	</query>
 
 	<query name="account.getAllAccountFeeForAllInstallmentsForCustomerAccount">
-		<![CDATA[select new org.mifos.application.bulkentry.business.CollectionSheetEntryAccountFeeActionView(
+		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView(
 			feeAction.accountActionDate.actionDateId, feeAction.fee,
 			feeAction.feeAmount, feeAction.feeAmountPaid
 			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,

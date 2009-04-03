@@ -22,8 +22,8 @@ package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntrySavingsInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPaymentData extends AccountPaymentData {

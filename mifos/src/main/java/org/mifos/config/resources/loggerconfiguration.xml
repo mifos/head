@@ -195,18 +195,6 @@ the location of Mifos_log.log.
   	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
   	<priority value="ERROR"/> 
   </category>
-   
-   <!-- collection sheet logger -->
-   <category name="org.mifos.application.collsheet" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-   
-   <!-- Bulk Entry logger -->
-   <category name="org.mifos.application.bulkentry" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
   
   <!-- CollectionSheet  logger -->
    <category name="org.mifos.application.collectionsheet" additivity="true"> 

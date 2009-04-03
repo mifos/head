@@ -69,7 +69,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;

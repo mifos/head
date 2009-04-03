@@ -25,8 +25,8 @@ import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryLoanInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 

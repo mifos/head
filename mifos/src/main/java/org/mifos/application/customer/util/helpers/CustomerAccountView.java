@@ -23,8 +23,8 @@ package org.mifos.application.customer.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.bulkentry.business.CollectionSheetEntryCustomerAccountInstallmentView;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 

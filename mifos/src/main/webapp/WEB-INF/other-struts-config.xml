@@ -33,8 +33,8 @@
         <!--  end -->
 
         <!-- Bulk Entry form -->
-        <form-bean name="bulkentryactionform"
-                   type="org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm"/>
+        <form-bean name="collectionsheetactionform"
+                   type="org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm"/>
         <!-- Office Hierarchy Action form -->
         <form-bean name="offhierarchyactionform"
                    type="org.mifos.application.office.struts.actionforms.OffHierarchyActionForm"/>
@@ -278,16 +278,16 @@
         </action>
         <!-- Ends-->
         <!-- Bulk Entry Action -->
-        <action path="/bulkentryaction" type="org.mifos.application.bulkentry.struts.action.CollectionSheetEntryAction"
-                parameter="method" scope="session" name="bulkentryactionform" validate="true"
-                input="/bulkentryaction.do?method=validate">
-            <forward name="load_success" path="/pages/application/bulkentry/jsp/bulkentry.jsp"/>
-            <forward name="get_success" path="/pages/application/bulkentry/jsp/bulkentry_data.jsp"/>
-            <forward name="preview_success" path="/pages/application/bulkentry/jsp/bulkentry_preview.jsp"/>
-            <forward name="create_success" path="/pages/application/bulkentry/jsp/bulkentryconfirmation.jsp"/>
-            <forward name="create_failure" path="/pages/application/bulkentry/jsp/bulkentryconfirmation.jsp"/>
-            <forward name="previuos_success" path="/pages/application/bulkentry/jsp/bulkentry_data.jsp"/>
-            <forward name="get_failure" path="/pages/application/bulkentry/jsp/bulkentry.jsp"/>
+        <action path="/collectionsheetaction" type="org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryAction"
+                parameter="method" scope="session" name="collectionsheetactionform" validate="true"
+                input="/collectionsheetaction.do?method=validate">
+            <forward name="load_success" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
+            <forward name="get_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
+            <forward name="preview_success" path="/pages/application/collectionsheet/jsp/bulkentry_preview.jsp"/>
+            <forward name="create_success" path="/pages/application/collectionsheet/jsp/bulkentryconfirmation.jsp"/>
+            <forward name="create_failure" path="/pages/application/collectionsheet/jsp/bulkentryconfirmation.jsp"/>
+            <forward name="previuos_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
+            <forward name="get_failure" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
             <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=bulkentrypage"/>
         </action>
         <!-- Ends-->

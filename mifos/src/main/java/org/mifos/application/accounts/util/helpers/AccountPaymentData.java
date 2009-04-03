@@ -21,7 +21,7 @@
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.bulkentry.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 
 public abstract class AccountPaymentData {
 
