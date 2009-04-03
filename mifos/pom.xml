@@ -100,10 +100,75 @@
          <version>2.5.6</version>
       </dependency>
       <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate</artifactId>
-          <version>3.2.5.ga</version>
-      </dependency>      
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate</artifactId>
+         <version>3.2.5.ga</version>
+      </dependency>
+      <dependency>
+         <groupId>net.sourceforge.mayfly</groupId>
+         <artifactId>mayfly</artifactId>
+         <version>cvs-2008-03-25</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-beanutils</groupId>
+         <artifactId>commons-beanutils</artifactId>
+         <version>1.7.0</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-codec</groupId>
+         <artifactId>commons-codec</artifactId>
+         <version>1.3</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-collections</groupId>
+         <artifactId>commons-collections</artifactId>
+         <version>3.2</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-configuration</groupId>
+         <artifactId>commons-configuration</artifactId>
+         <version>1.4</version>
+         <exclusions>
+            <exclusion>
+               <groupId>ant</groupId>
+               <artifactId>ant-optional</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>commons-digester</groupId>
+         <artifactId>commons-digester</artifactId>
+         <version>1.7</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>1.0</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-httpclient</groupId>
+         <artifactId>commons-httpclient</artifactId>
+         <version>3.0</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>commons-validator</groupId>
+         <artifactId>commons-validator</artifactId>
+         <version>1.1.4</version>
+      </dependency>
+      <dependency>
+         <groupId>asm</groupId>
+         <artifactId>asm</artifactId>
+         <version>1.5.3</version>
+      </dependency>
+      <dependency>
+         <groupId>asm</groupId>
+         <artifactId>asm-attrs</artifactId>
+         <version>1.5.3</version>
+      </dependency>
       <dependency>
          <groupId>org.springmodules</groupId>
          <artifactId>spring-modules-cache</artifactId>
@@ -186,9 +251,9 @@
          <artifactId>commons-lang</artifactId>
       </dependency>
       <dependency>
-		  <groupId>joda-time</groupId>
-		  <artifactId>joda-time</artifactId>
-      </dependency>        
+         <groupId>joda-time</groupId>
+         <artifactId>joda-time</artifactId>
+      </dependency>
    </dependencies>
 
    <build>

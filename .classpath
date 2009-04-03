@@ -19,7 +19,6 @@
 	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main/java"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER">
 		<accessrules>
 			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
@@ -36,13 +35,7 @@
 	<classpathentry kind="lib" path="mifos/lib/backport-util-concurrent-2.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/c3p0-0.9.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/cglib-2.1.3.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-beanutils-1.7.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-configuration-1.4.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-digester-1.7.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-httpclient-3.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-javaflow-20060411.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/freemarker-2.3.13.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/geronimo-spec-activation-1.0.2-rc4.jar"/>
@@ -64,7 +57,6 @@
 	<classpathentry kind="lib" path="mifos/lib/jta.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/mayfly-cvs-2008-03-25.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/neethi-1.0.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/relaxngDatatype.jar"/>
@@ -81,10 +73,6 @@
 	<classpathentry kind="lib" path="mifos/build-lib/maven-ant-tasks-2.0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="mifos/lib/activation-1.0.2.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/asm-1.5.3.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/asm-attrs-1.5.3.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-fileupload-1.0.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/commons-validator-1.1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymock-2.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/javax.servlet-4.0.2.jar"/>
