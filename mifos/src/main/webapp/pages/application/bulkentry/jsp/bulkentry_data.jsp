@@ -43,6 +43,7 @@ explanation of the license and how it is applied.
 				form.action="bulkentryaction.do";
 				form.submit();
 			}
+		//-->
 		</script>
 
 		<script SRC="pages/application/bulkentry/js/BulkEntry.js"></script>
