@@ -413,11 +413,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         try {
             bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                     .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
-                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
-//            bulkEntryService.saveDataNonThreaded(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
-//                    .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
-//                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);
-            
+                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);            
         } catch (Exception e) {
             throw e;
         } 

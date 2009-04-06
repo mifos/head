@@ -200,7 +200,7 @@ public class BulkEntryBusinessService implements BusinessService {
 		}
 	}
 
-	public void saveData(List<LoanAccountsProductView> accountViews,
+	public void saveDataThreaded(List<LoanAccountsProductView> accountViews,
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate, List<String> accountNums,
 			List<SavingsBO> savings, List<String> savingsNames,
@@ -246,7 +246,7 @@ public class BulkEntryBusinessService implements BusinessService {
 		 */
 	}
 
-    public void saveDataNonThreaded(List<LoanAccountsProductView> accountViews,
+    public void saveData(List<LoanAccountsProductView> accountViews,
             Short personnelId, String recieptId, Short paymentId,
             Date receiptDate, Date transactionDate, List<String> accountNums,
             List<SavingsBO> savings, List<String> savingsNames,
