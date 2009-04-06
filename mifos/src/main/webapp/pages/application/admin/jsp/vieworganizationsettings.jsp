@@ -114,10 +114,30 @@ explanation of the license and how it is applied.
 								<c:out value="${orgSettings.intDigitsAfterDecimal}"/>
 								<br/>
 								<mifos:mifoslabel name="VOS.intDigitsBeforeDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.minInterest}"/>
+								<c:out value="${orgSettings.intDigitsBeforeDecimal}"/>
 								<br/>
 								<mifos:mifoslabel name="VOS.interestDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.interestDays}"/>
+								<br/>
+
+								<mifos:mifoslabel name="VOS.currencyRoundingMode" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.currencyRoundingMode}"/>
+								<br/>
+								
+								<mifos:mifoslabel name="VOS.initialRoundingMode" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.initialRoundingMode}"/>
+								<br/>
+								
+								<mifos:mifoslabel name="VOS.finalRoundingMode" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.finalRoundingMode}"/>
+								<br/>
+								
+								<mifos:mifoslabel name="VOS.finalRoundOffMultiple" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.finalRoundOffMultiple}"/>
+								<br/>
+								
+								<mifos:mifoslabel name="VOS.initialRoundOffMultiple" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
+								<c:out value="${orgSettings.initialRoundOffMultiple}"/>
 								<br/>
 								<br/>
 							</span>

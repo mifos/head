@@ -129,9 +129,18 @@ public class ViewOrganizationSettingsAction extends BaseAction {
 				.getDigitsBeforeDecimalForInterest().toString());
 		accountingRules.setProperty("interestDays", AccountingRules
 				.getNumberOfInterestDays().toString());
-
+		accountingRules.setProperty("currencyRoundingMode", AccountingRules
+				.getCurrencyRoundingMode().toString());
+		accountingRules.setProperty("initialRoundingMode", AccountingRules
+				.getInitialRoundingMode().toString());
+		accountingRules.setProperty("finalRoundingMode", AccountingRules
+				.getFinalRoundingMode().toString());
+		accountingRules.setProperty("finalRoundOffMultiple", AccountingRules
+				.getFinalRoundOffMultiple().toString());
+		accountingRules.setProperty("initialRoundOffMultiple", AccountingRules
+				.getInitialRoundOffMultiple().toString());
 		return accountingRules;
-	}
+	} 
 
 	private Properties getClientRules() throws ConfigurationException {
 		Properties clientRules = new Properties();
