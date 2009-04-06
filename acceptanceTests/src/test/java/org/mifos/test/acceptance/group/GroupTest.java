@@ -26,7 +26,14 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
+import org.mifos.test.acceptance.framework.group.ConfirmCenterMembershipPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -67,4 +74,80 @@ public class GroupTest extends UiTestCaseBase {
         GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
         groupViewDetailsPage.verifyPage();
     }
+
+    @Test(enabled=false)  // need ability to initialize cached data
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void createGroupInPendingApprovalStateTest() throws Exception {
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+        CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
+        CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
+        CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
+        confirmationPage.verifyPage();
+        GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
+        groupDetailsPage.verifyPage();  
+        groupDetailsPage.verifyStatus("Application Pending*");
+    }
+
+    @Test(enabled=false)  // need ability to initialize cached data
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void createGroupInPartialApplicationStateTest() throws Exception {
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+        CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
+        CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
+        CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForPartialApplication(formParameters);
+        confirmationPage.verifyPage();
+        GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
+        groupDetailsPage.verifyPage();       
+        groupDetailsPage.verifyStatus("Partial Application*");
+    }
+    
+    @Test(enabled=false)  // need ability to initialize cached data
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void changeCenterMembership() throws Exception {
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+        CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
+        CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
+        CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
+        confirmationPage.verifyPage();
+        GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
+        groupDetailsPage.verifyPage();  
+        CenterSearchTransferGroupPage centerSearchTransfer = groupDetailsPage.editCenterMembership();
+        centerSearchTransfer.verifyPage();
+        ConfirmCenterMembershipPage confirmMembership = centerSearchTransfer.search("Center3");
+        confirmMembership.verifyPage();
+        groupDetailsPage = confirmMembership.submitMembershipChange();
+        groupDetailsPage.verifyPage();  
+        groupDetailsPage.verifyLoanOfficer(" Loan officer: Jenna Barth");
+    }
+
+
+    private CreateGroupEntryPage loginAndNavigateToNewGroupPage() {
+        LoginPage loginPage = appLauncher.launchMifos();
+        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        String centerName = "Center1";
+        CreateGroupSearchPage groupSearchPage = homePage.navigateToCreateNewGroupSearchPage();
+        groupSearchPage.verifyPage();
+        return  groupSearchPage.searchAndNavigateToCreateGroupPage(centerName);
+    }
+
+    private CreateGroupSubmitParameters getGenericGroupFormParameters() {
+        CreateGroupSubmitParameters formParameters = new CreateGroupSubmitParameters();
+        formParameters.setGroupName("groupTest" + StringUtil.getRandomString(6));
+        formParameters.setRecruitedBy("Bagonza Wilson");
+        formParameters.setTrainedDateDay("25");
+        formParameters.setTrainedDateMonth("03");
+        formParameters.setTrainedDateYear("1999");
+        formParameters.setExternalId("external12345");
+        formParameters.setAddressOne("address one: 4321 Pine Street");
+        formParameters.setAddressTwo("address two: P.O. Box 99");
+        formParameters.setAddressThree("address three: suite 322");
+        formParameters.setCity("Circuit City");
+        formParameters.setState("Garden State");
+        formParameters.setCountry("Elbonia");
+        formParameters.setPostalCode("33AB3");
+        formParameters.setTelephone("88855533322");
+        return formParameters;
+    }
+
+
 }

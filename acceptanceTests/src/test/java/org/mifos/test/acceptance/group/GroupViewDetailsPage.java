@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -36,5 +38,19 @@ public class GroupViewDetailsPage extends MifosPage {
     public GroupViewDetailsPage verifyPage() {
         verifyPage("ViewGroupDetails");
         return this;
+    }
+
+    public void verifyStatus(String status) {
+        Assert.assertTrue(selenium.isTextPresent(status), "Expected string: " + status);     
+    }
+
+    public CenterSearchTransferGroupPage editCenterMembership() {
+        selenium.click("viewgroupdetails.link.editCenterMembership");
+        return new CenterSearchTransferGroupPage(selenium);
+    }
+
+    public void verifyLoanOfficer(String loanOfficer) {
+        Assert.assertTrue(selenium.isTextPresent(loanOfficer), "Expected string: " + loanOfficer);     
+        
     }
 }

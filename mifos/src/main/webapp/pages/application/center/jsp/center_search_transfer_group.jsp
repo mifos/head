@@ -49,6 +49,7 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:put name="body" type="string">
+<input type="hidden" id="page.id" value="center_search_transfer_group"/>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <script language="javascript">

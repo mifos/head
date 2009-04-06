@@ -20,6 +20,7 @@
  
 package org.mifos.test.acceptance.framework;
 
+import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.testng.Assert;
 
@@ -68,6 +69,12 @@ public class HomePage extends MifosPage {
         selenium.click("home.button.search");
         waitForPageToLoad();
         return new SearchResultsPage(selenium); 
+    }
+
+    public CreateGroupSearchPage navigateToCreateNewGroupSearchPage() {
+        selenium.click("menu.link.create.new.group");
+        waitForPageToLoad();
+        return new CreateGroupSearchPage(selenium);        
     }
       
 }

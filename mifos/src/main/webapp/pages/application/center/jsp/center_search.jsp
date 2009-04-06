@@ -52,6 +52,9 @@
 
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
+ <input type="hidden" id="page.id" value="CenterSearch"/>
+ 
+ 
  <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
  <script type="text/javascript">
