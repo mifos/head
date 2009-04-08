@@ -83,7 +83,7 @@
 
     <property name="database.driver" value="com.mysql.jdbc.Driver"/>
     <property name="database.driver.jar" 
-        value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
+        value="./target/mifos/WEB-INF/lib/mysql-connector-java-5.1.6.jar"/>
 
     <path id="class.path">
         <fileset dir="${lib.dir}">
@@ -389,7 +389,7 @@
     <property name="main.database.url"
         value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params}"/>
 
-    <target name="build_production_db" description="Builds the application database without custom config data">
+    <target name="build_production_db" depends="maven_dependencies" description="Builds the application database without custom config data">
         <echo>Using database: ${main.database} at ${main.database.host} port ${main.database.port}, user: ${main.database.user}</echo>
         <sql driver="${database.driver}" url="${main.database.url}" 
             userid="${main.database.user}" password="${main.database.password}"
@@ -406,7 +406,7 @@
         </sql>
     </target>
 
-    <target name="build_db" description="Builds the application database">
+    <target name="build_db" depends="maven_dependencies" description="Builds the application database">
         <echo>Using database: ${main.database} at ${main.database.host} port ${main.database.port}, user: ${main.database.user}</echo>
         <sql driver="${database.driver}" url="${main.database.url}" 
             userid="${main.database.user}" password="${main.database.password}"
@@ -424,7 +424,7 @@
         </sql>
     </target>
 
-    <target name="build_test_db">
+    <target name="build_test_db" depends="maven_dependencies">
         <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
         <sql driver="${database.driver}" url="${integration.database.url}" 
             userid="${integration.database.user}" password="${integration.database.password}"
@@ -446,7 +446,7 @@
         </sql>
     </target>
 
-    <target name="build_acceptance_db">
+    <target name="build_acceptance_db" depends="maven_dependencies">
         <echo>Using database: ${acceptance.database} at ${acceptance.database.host} port ${acceptance.database.port}</echo>
         <sql driver="${database.driver}" url="${acceptance.database.url}" 
             userid="${acceptance.database.user}" password="${acceptance.database.password}"
