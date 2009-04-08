@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 </c:choose>
 </p>
 
-                    <p><a href="http://www.google.com"><mifos:mifoslabel name="Surveys.Printerversion" bundle="SurveysUIResources" /></a> <br>
+                    <p><a href="surveysAction.do?method=prePrintVersion" target="_new"><mifos:mifoslabel name="Surveys.Printerversion" bundle="SurveysUIResources" /></a> <br>
                       <br>
                       <span class="fontnormalbold"><mifos:mifoslabel name="Surveys.Questions" bundle="SurveysUIResources" /></span><br>
                       <br>
