@@ -36,7 +36,7 @@
     <property file="${conf.dir}/build.properties"/>
     <property file="${conf.dir}/mainDatabase.properties"/>
     <property file="${test.conf.dir}/integrationDatabase.properties"/>
-    <property file="${test.conf.dir}/acceptanceDatabase.properties"/>
+    <property file="${conf.dir}/acceptanceDatabase.properties"/>
 
     <property name="main.database.url"
         value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params}"/>
