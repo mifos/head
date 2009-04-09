@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.testng.Assert;
 
@@ -55,7 +56,7 @@ public class AdminPage extends MifosPage {
     }
     
     public DefineNewLoanProductPage navigateToDefineLoanProduct() {
-        selenium.click("link=Define new Loan product");
+        selenium.click("admin.link.defineNewLoanProduct");
         waitForPageToLoad();
         return new DefineNewLoanProductPage(selenium);
     }
@@ -122,6 +123,12 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new SystemInfoPage(selenium);
 
+    }
+
+    public ViewLoanProductsPage navigateToViewLoanProducts() {
+        selenium.click("admin.link.viewLoanProducts");
+        waitForPageToLoad();
+        return new ViewLoanProductsPage(selenium);
     }
   
 }

@@ -54,6 +54,7 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="EditLoanProductPreview"/>
 
 		<script language="javascript">
 		<!--
@@ -77,17 +78,17 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">
-					<html-el:link
+					<html-el:link styleId="EditLoanProductPreview.link.admin"
 						href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
-					</html-el:link> / <html-el:link
+					</html-el:link> / <html-el:link styleId="EditLoanProductPreview.link.viewLoanProducts"
 						href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 						<fmt:message key="product.viewLoanProducts">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
 							bundle="ProductDefUIResources" /></fmt:param>
 						</fmt:message>
-					</html-el:link> / <html-el:link
+					</html-el:link> / <html-el:link styleId="EditLoanProductPreview.link.viewLoanProduct"
 						href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${param.prdOfferName}" />
 					</html-el:link></span></td>
@@ -117,8 +118,8 @@
 							</td>
 						</tr>
 					</table>
-					<font class="fontnormalRedBold"><html-el:errors
-						bundle="ProductDefUIResources" /></font> <br>
+					<font class="fontnormalRedBold"><span id="EditLoanProductPreview.error.message"><html-el:errors
+						bundle="ProductDefUIResources" /></span></font> <br>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="100%" height="23" class="fontnormalbold">
@@ -831,7 +832,7 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td class="blueline"><span class="fontnormal"> <html-el:button
+							<td class="blueline"><span class="fontnormal"> <html-el:button styleId="EditLoanProductPreview.button.edit"
 								property="edit" styleClass="insidebuttn"
 								onclick="fnEdit(this.form)">
 								<fmt:message key="product.editLoanInfo">
@@ -848,11 +849,11 @@
 					<span class="fontnormal"> </span> <br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center">&nbsp; <html-el:submit styleClass="buttn"
+							<td align="center">&nbsp; <html-el:submit styleId="EditLoanProductPreview.button.submit" styleClass="buttn"
 								property="submitBut">
 								<mifos:mifoslabel name="product.butsubmit"
 									bundle="ProductDefUIResources" />
-							</html-el:submit> &nbsp; <html-el:button property="cancel"
+							</html-el:submit> &nbsp; <html-el:button styleId="EditLoanProductPreview.button.cancel" property="cancel"
 								styleClass="cancelbuttn"
 								onclick="javascript:fnCancel(this.form)">
 								<mifos:mifoslabel name="product.cancel"

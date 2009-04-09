@@ -55,6 +55,14 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createWeeklyLoanProduct()throws Exception {
+        SubmitFormParameters formParameters = getWeeklyLoanProductParameters();
+        AdminPage adminPage = loginAndNavigateToAdminPage();
+        adminPage.verifyPage();
+        adminPage.defineLoanProduct(formParameters);
+
+    }
+
+    private SubmitFormParameters getWeeklyLoanProductParameters() {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setOfferingName("productWeekly" + StringUtil.getRandomString(4));
         formParameters.setOfferingShortName("pw" + StringUtil.getRandomString(2));
@@ -74,16 +82,19 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setGracePeriodType("None");
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
-
-   
+        return formParameters;
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void createMonthlyLoanProduct()throws Exception {
+        SubmitFormParameters formParameters = getMonthlyLoanProductParameters();
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         adminPage.defineLoanProduct(formParameters);
 
     }
-    
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void createMonthlyLoanProduct()throws Exception {
+
+    private SubmitFormParameters getMonthlyLoanProductParameters() {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setOfferingName("productMonthly" + StringUtil.getRandomString(4));
         formParameters.setOfferingShortName("pm" + StringUtil.getRandomString(2));
@@ -103,11 +114,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setGracePeriodType("None");
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
-
-        AdminPage adminPage = loginAndNavigateToAdminPage();
-        adminPage.verifyPage();
-        adminPage.defineLoanProduct(formParameters);
-
+        return formParameters;
     }
                     
     private AdminPage loginAndNavigateToAdminPage() {

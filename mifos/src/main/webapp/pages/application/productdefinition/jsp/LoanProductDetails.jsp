@@ -33,6 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="LoanProductDetails"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="loanPrd" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<c:set var="loanAmountType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmountType')}" />
@@ -58,7 +59,7 @@ explanation of the license and how it is applied.
 								<c:out value="${loanPrd.prdOfferingName}" />
 							</td>
 							<td width="26%" align="right">
-								<html-el:link href="loanproductaction.do?method=manage&prdOfferingId=${loanPrd.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${loanPrd.prdOfferingName}">
+								<html-el:link styleId="loanproductdetails.link.editLoanProduct" href="loanproductaction.do?method=manage&prdOfferingId=${loanPrd.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${loanPrd.prdOfferingName}">
 									<fmt:message key="product.editLoanInfo">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
@@ -346,7 +347,7 @@ explanation of the license and how it is applied.
 													value="${loanPrd.interestGLcode.glcode}" /> <br> <mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.principalGLcode.glcode}" /> <br> </span>
 											<br>
 											<br>
-											<span class="fontnormal"> <html-el:link
+											<span class="fontnormal"> <html-el:link styleId="loanproductdetails.link.viewChangeLog" 
 													href="loanproductaction.do?method=loadChangeLog&entityType=LoanProduct&entityId=${loanPrd.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${loanPrd.prdOfferingName}">
 													<mifos:mifoslabel name="product.viewchangelog" bundle="ProductDefUIResources" />
 												</html-el:link> </span>
