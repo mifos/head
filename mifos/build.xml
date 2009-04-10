@@ -216,12 +216,6 @@
         <copy todir="${build.classes}/org/mifos/config" >
             <fileset dir="${config.dir}"/>
         </copy>
-        <copy todir="${build.web-inf}/services/MifosService/META-INF">
-            <fileset dir="${src.dir}/org/mifos/api/resources">
-                <include name="services.xml" />
-                <include name="*.wsdl" />
-            </fileset>
-        </copy>
         <copy todir="${build.src.dir}/pages/application/reports/uploads">
             <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
                 <include name="*.jrxml"/>
