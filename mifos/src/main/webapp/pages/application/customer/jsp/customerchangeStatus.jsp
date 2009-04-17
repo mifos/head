@@ -103,10 +103,10 @@
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
 									<tr class="fontnormal">
-										<td width="2%" align="center"><html-el:radio styleId="customerchangestatus.input.status"
+										<td width="2%" align="center"><html-el:radio styleId="customerchangeStatus.input.status"
 											property="newStatusId" value="${status.id}"
 											onclick="manageFlag(${status.id})" /></td>
-										<td width="98%"><span id="customerchangestatus.label.status"><c:out value="${status.name}" /></span></td>
+										<td width="98%"><span id="customerchangeStatus.label.status"><c:out value="${status.name}" /></span></td>
 									</tr>
 								</c:forEach>
 								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}">

@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 
 /**
  * Encapsulates the GUI based actions that can
@@ -63,6 +64,15 @@ public class LoginPage extends AbstractPage {
 		waitForPageToLoad();
 		return new HomePage(selenium);
 	}
+	
+    public ChangePasswordPage loginAndGoToChangePasswordPageAs(String userName, String password) {
+        selenium.open("loginAction.do?method=load");
+        selenium.type(USERNAME_INPUT_ID, userName);
+        selenium.type(PASSWORD_INPUT_ID, password);
+        selenium.click(LOGIN_BUTTON_ID);
+        waitForPageToLoad();
+        return new ChangePasswordPage(selenium);
+    }	
 	
 	public LoginPage loginFailedAs(String userName, String password) {
 		selenium.open("loginAction.do?method=load");

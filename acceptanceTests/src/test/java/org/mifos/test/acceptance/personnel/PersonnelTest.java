@@ -29,11 +29,14 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
+import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.Assert;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = { "createUserStory", "acceptance", "ui" })
@@ -55,19 +58,21 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     public void createUserTest() {
-        AdminPage adminPage = loginAndGoToAdminPage();
+        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
+        AdminPage adminPage = homePage.navigateToAdminPage();
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-        adminPage.createUser(adminPage2, getAdminUserParameters(), officeName);
+        adminPage2.createUser(adminPage2, adminPage2.getAdminUserParameters(), officeName);
     }
 
     public void editUserTest() {
-        AdminPage adminPage = loginAndGoToAdminPage();
+        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
+        AdminPage adminPage = homePage.navigateToAdminPage();
 
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
 
-        UserViewDetailsPage userDetailsPage = adminPage.createUser(adminPage2, getAdminUserParameters(), officeName);
+        UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, adminPage2.getAdminUserParameters(), officeName);
 
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
@@ -82,51 +87,40 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     public void createUserWithNonAdminRoleTest() {
-        AdminPage adminPage = loginAndGoToAdminPage();
+        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
+        AdminPage adminPage = homePage.navigateToAdminPage();
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-        adminPage.createUser(adminPage2, getNonAdminUserParameters(), officeName);
+        adminPage.createUser(adminPage2, adminPage.getNonAdminUserParameters(), officeName);
     }
-
-    public CreateUserEnterDataPage.SubmitFormParameters getAdminUserParameters() {
-        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
-        formParameters.setFirstName("New");
-        formParameters.setLastName("User" + StringUtil.getRandomString(8));
-        formParameters.setDateOfBirthDD("21");
-        formParameters.setDateOfBirthMM("11");
-        formParameters.setDateOfBirthYYYY("1980");
-        formParameters.setGender("Male");
-        formParameters.setPreferredLanguage("English");
-        formParameters.setUserLevel("Loan Officer");
-        formParameters.setRole("Admin");
-        formParameters.setUserName("loanofficer_blore" + StringUtil.getRandomString(5));
-        formParameters.setPassword("password");
-        formParameters.setPasswordRepeat("password");
-        return formParameters;
-    }
-
-    public CreateUserEnterDataPage.SubmitFormParameters getNonAdminUserParameters() {
-        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
-        formParameters.setFirstName("NonAdmin");
-        formParameters.setLastName("User" + StringUtil.getRandomString(8));
-        formParameters.setDateOfBirthDD("04");
-        formParameters.setDateOfBirthMM("04");
-        formParameters.setDateOfBirthYYYY("1986");
-        formParameters.setGender("Male");
-        formParameters.setUserLevel("Non Loan Officer");
-        formParameters.setUserName("test" + StringUtil.getRandomString(5));
-        formParameters.setPassword("tester");
-        formParameters.setPasswordRepeat("tester");
-        return formParameters;
-    }
-
-
-    public AdminPage loginAndGoToAdminPage() {
+    
+    public void changePasswordTest() {
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
         AdminPage adminPage = homePage.navigateToAdminPage();
-        adminPage.verifyPage();
-        return adminPage;
-    }
 
+        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
+        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
+        
+        CreateUserEnterDataPage.SubmitFormParameters userParameters = adminPage2.getAdminUserParameters();
+        UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, userParameters, officeName);        
+        EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
+
+        CreateUserEnterDataPage.SubmitFormParameters passwordParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+        passwordParameters.setPassword("tester1");
+        passwordParameters.setPasswordRepeat("tester1");
+
+        EditUserPreviewDataPage editPreviewDataPage = editUserPage.submitAndGotoEditUserPreviewDataPage(passwordParameters);
+        editPreviewDataPage.submit();
+        
+        LoginPage loginPage = new LoginPage(selenium);
+        loginPage.logout();
+        ChangePasswordPage changePasswordPage = loginPage.loginAndGoToChangePasswordPageAs(userParameters.getUserName(), passwordParameters.getPassword());
+        ChangePasswordPage.SubmitFormParameters changePasswordParameters = new ChangePasswordPage.SubmitFormParameters();
+        changePasswordParameters.setOldPassword("tester1");
+        changePasswordParameters.setNewPassword("tester2");
+        changePasswordParameters.setConfirmPassword("tester2");
+        HomePage homePage2 = changePasswordPage.submitAndGotoHomePage(changePasswordParameters);
+        
+        Assert.assertTrue(homePage2.getWelcome().contains(userParameters.getFirstName()));
+    }
 }

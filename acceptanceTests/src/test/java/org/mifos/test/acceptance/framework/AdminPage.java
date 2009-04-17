@@ -29,7 +29,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Encapsulates the GUI based actions that can
- * be done from the Home page and the page 
+ * be done from the Admin page and the page 
  * that will be navigated to.
  *
  */
@@ -108,7 +108,39 @@ public class AdminPage extends MifosPage {
         Assert.assertEquals(userDetailsPage.getStatus(), "Active");
         return userDetailsPage;
     }
+    
+    public CreateUserEnterDataPage.SubmitFormParameters getAdminUserParameters() {
+        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+        formParameters.setFirstName("New");
+        formParameters.setLastName("User" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD("21");
+        formParameters.setDateOfBirthMM("11");
+        formParameters.setDateOfBirthYYYY("1980");
+        formParameters.setGender("Male");
+        formParameters.setPreferredLanguage("English");
+        formParameters.setUserLevel("Loan Officer");
+        formParameters.setRole("Admin");
+        formParameters.setUserName("loanofficer_blore" + StringUtil.getRandomString(3));
+        formParameters.setPassword("password");
+        formParameters.setPasswordRepeat("password");
+        return formParameters;
+    }
 
+    public CreateUserEnterDataPage.SubmitFormParameters getNonAdminUserParameters() {
+        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+        formParameters.setFirstName("NonAdmin");
+        formParameters.setLastName("User" + StringUtil.getRandomString(8));
+        formParameters.setDateOfBirthDD("04");
+        formParameters.setDateOfBirthMM("04");
+        formParameters.setDateOfBirthYYYY("1986");
+        formParameters.setGender("Male");
+        formParameters.setUserLevel("Non Loan Officer");
+        formParameters.setUserName("test" + StringUtil.getRandomString(5));
+        formParameters.setPassword("tester");
+        formParameters.setPasswordRepeat("tester");
+        return formParameters;
+    }    
+    
     public void defineLoanProduct(SubmitFormParameters formParameters) {
         DefineNewLoanProductPage newLoanPage = navigateToDefineLoanProduct();
         newLoanPage.verifyPage();

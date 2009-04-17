@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework;
 
 import com.thoughtworks.selenium.Selenium;
 
+import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
+
 public class CreateMeetingPage extends MifosPage {
 
 	public CreateMeetingPage() {
@@ -72,5 +74,14 @@ public class CreateMeetingPage extends MifosPage {
         selenium.click("createmeeting.button.save");
         waitForPageToLoad();
         return new CreateCenterEnterDataPage(selenium);
-    }    
+    }
+    
+    public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(SubmitFormParameters parameters) {
+        selectIfNotEmpty("weekDay", parameters.getWeekDay());
+        typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
+        typeTextIfNotEmpty("createmeeting.input.meetingPlace", parameters.getMeetingPlace());
+        selenium.click("createmeeting.button.save");
+        waitForPageToLoad();
+        return new CreateClientEnterMfiDataPage(selenium);
+    }        
 }

@@ -81,8 +81,8 @@
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td class="headingorange"><c:out
-								value="${BusinessKey.displayName}" /></td>
+							<td class="headingorange"><span id="viewClientDetails.heading"><c:out
+								value="${BusinessKey.displayName}" /></span></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${BusinessKey.customerStatus.id != 6}">
@@ -101,8 +101,8 @@
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage
-								id="${BusinessKey.customerStatus.id}" moduleName="customer" /> <c:out
-								value="${BusinessKey.customerStatus.name}" /> <c:forEach
+								id="${BusinessKey.customerStatus.id}" moduleName="customer" /> <span id="viewClientDetails.text.status"><c:out
+								value="${BusinessKey.customerStatus.name}" /></span> <c:forEach
 								var="flagSet" items="${BusinessKey.customerFlags}">
 								<span class="fontnormal"> <c:if
 									test="${BusinessKey.blackListed}">
@@ -467,8 +467,8 @@
 							<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
 								name="client.DateOfBirth" bundle="ClientUIResources"></mifos:mifoslabel>
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
-							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.dateOfBirth)}" />;
+							<span id="viewClientDetails.text.dateOfBirth"><c:out
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.dateOfBirth)}" /></span>;
 							<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'age')}" /> <mifos:mifoslabel
 								name="client.YearsOld" bundle="ClientUIResources"></mifos:mifoslabel><br></td>
 						</tr>
@@ -486,7 +486,7 @@
 								test="${!empty BusinessKey.customerDetail.maritalStatus}">;</c:if>
 							<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseFatherValue')}" />
 							<mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>
-							<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseFatherName')}" />
+							<span id="viewClientDetails.text.spouseFatherName"><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseFatherName')}" /></span>
 								<c:if
 								test="${!empty BusinessKey.customerDetail.numChildren}">;
 								<c:out
@@ -519,7 +519,7 @@
 							<mifos:mifoslabel name="client.PovertyStatus" bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"/>
 							<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}">
 									<c:if test = "${povertyStatus.id == BusinessKey.customerDetail.povertyStatus}">
-										<c:out value="${povertyStatus.name}"/>
+										<span id="viewClientDetails.text.povertyStatus"><c:out value="${povertyStatus.name}"/></span>
 									</c:if>
 							</c:forEach>
 							<br>
@@ -538,7 +538,7 @@
 							<td class="fontnormal"><c:if
 								test="${!empty BusinessKey.customerDetail.handicapped}">
 								<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>
-								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntityName')}" />
+								<span id="viewClientDetails.text.handicapped"><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntityName')}" /></span>
 							</c:if></td>
 						</tr>
 						<c:if
@@ -791,7 +791,9 @@
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
+
 							<td class="paddingL10">
+              <span id="viewClientDetails.text.notes">
                 <c:choose>
                   <c:when test="${!empty BusinessKey.recentCustomerNotes}">
                     <c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
@@ -811,7 +813,7 @@
                       name="Group.nonotesavailable" bundle="GroupUIResources" /> 
                     </span>
                   </c:otherwise>
-							  </c:choose>
+							  </c:choose></span>
               </td>
 						</tr>
 						<tr>

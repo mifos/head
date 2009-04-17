@@ -46,8 +46,7 @@ public class EditUserDataPage extends MifosPage {
         selectIfNotEmpty("gender", parameters.getGender());
         selectIfNotEmpty("preferredLocale", parameters.getPreferredLanguage());
         selectIfNotEmpty("level", parameters.getUserLevel());
-        typeTextIfNotEmpty("edit_user.input.userName", parameters.getUserName());
-        typeTextIfNotEmpty("edit_user.input.password", parameters.getPassword());
+        typeTextIfNotEmpty("edit_user.input.userPassword", parameters.getPassword());
         typeTextIfNotEmpty("edit_user.input.passwordRepeat", parameters.getPasswordRepeat());
         selenium.click("edit_user.button.preview");
         waitForPageToLoad();

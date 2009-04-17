@@ -34,7 +34,6 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.UserViewDetailsPage;
-import org.mifos.test.acceptance.personnel.PersonnelTest;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -65,15 +64,13 @@ public class CenterTest extends UiTestCaseBase {
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();
 	    
-	    PersonnelTest personnelTest = new PersonnelTest();
-        
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
 
-        CreateUserEnterDataPage.SubmitFormParameters userFormParameters = personnelTest.getAdminUserParameters();
+        CreateUserEnterDataPage.SubmitFormParameters userFormParameters = adminPage2.getAdminUserParameters();
                 
-        UserViewDetailsPage userDetailsPage = adminPage.createUser(adminPage2, userFormParameters, officeName);
+        UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, userFormParameters, officeName);
         
 	    ClientsAndAccountsHomepage clientsAccountsPage = userDetailsPage.navigateToClientsAndAccountsHomepage();
 	    

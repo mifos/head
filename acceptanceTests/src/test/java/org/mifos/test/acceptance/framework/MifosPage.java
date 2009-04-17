@@ -54,13 +54,19 @@ public class MifosPage extends AbstractPage {
         }
     } 
     
+    protected void checkIfNotEmpty(String locator, String value) {
+        if (!isEmpty(value)) {
+            selenium.check(locator);
+        }
+    } 
+    
     protected void selectAndWaitIfNotEmpty(String locator, String value) {
         if (!isEmpty(value)) {
             selenium.select(locator, "label=" + value);
             waitForPageToLoad();
         }
     }     
-    
+
     private boolean isEmpty(String value) {
         boolean empty = true;
         if (value!= null && !value.isEmpty()) {

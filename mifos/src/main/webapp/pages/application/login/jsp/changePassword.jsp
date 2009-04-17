@@ -26,7 +26,7 @@
 		<tr>
 			<td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188"
 				height="74"></td>
-			<td align="right" bgcolor="#FFFFFF" class="fontnormal"><html-el:link
+			<td align="right" bgcolor="#FFFFFF" class="fontnormal"><html-el:link styleId="changePassword.link.logout"
 				href="javascript:fnLogout()"><mifos:mifoslabel
 				name="login.logout" bundle="LoginUIResources"/></html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
@@ -68,24 +68,24 @@
 		</tr>
 	</table>
 	<br>
-	<font class="fontnormalRedBold"><html-el:errors bundle="LoginUIResources" /></font>
+	<font class="fontnormalRedBold"><span id="changePassword.error.message"><html-el:errors bundle="LoginUIResources" /></span></font>
 	<table width="93%" border="0" cellpadding="3" cellspacing="0">
 		<tr class="fontnormal">
-			<td align="right"><mifos:mifoslabel name="login.oldpassword" bundle="LoginUIResources"/> </td>
-			<td><html-el:password property="oldPassword" style="width:136px;"
+			<td align="right"><span id="changePassword.label.oldPassword"><mifos:mifoslabel name="login.oldpassword" bundle="LoginUIResources"/></span> </td>
+			<td><html-el:password styleId="changePassword.input.oldPassword" property="oldPassword" style="width:136px;"
 				redisplay="false" /></td>
 		</tr>
 		<tr class="fontnormal">
-			<td width="32%" align="right"><span class="mandatorytext"></span> <mifos:mifoslabel
-				name="login.newpassword" bundle="LoginUIResources"/>
+			<td width="32%" align="right"><span class="mandatorytext"></span> <span id="changePassword.label.newPassword"><mifos:mifoslabel
+				name="login.newpassword" bundle="LoginUIResources"/></span>
 			</td>
-			<td width="68%"><html-el:password property="newPassword"
+			<td width="68%"><html-el:password styleId="changePassword.input.newPassword" property="newPassword"
 				style="width:136px;" redisplay="false" /></td>
 		</tr>
 		<tr class="fontnormal">
-			<td align="right"><span class="mandatorytext"></span> <mifos:mifoslabel
-				name="login.confirmpassword" bundle="LoginUIResources"/> </td>
-			<td><html-el:password property="confirmPassword" style="width:136px;"
+			<td align="right"><span class="mandatorytext"></span> <span id="changePassword.label.confirmPassword"><mifos:mifoslabel
+				name="login.confirmpassword" bundle="LoginUIResources"/></span> </td>
+			<td><html-el:password styleId="changePassword.input.confirmPassword" property="confirmPassword" style="width:136px;"
 				redisplay="false" /></td>
 		</tr>
 		<html-el:hidden property="input" value="LoginChangePW" />
@@ -102,10 +102,10 @@
 	<br>
 	<table width="93%" border="0" cellpadding="0" cellspacing="0">
 		<tr>
-			<td align="center"> <html-el:submit
+			<td align="center"> <html-el:submit styleId="changePassword.button.submit"
 				styleClass="buttn">
 				<mifos:mifoslabel name="login.submit" bundle="LoginUIResources"/>
-			</html-el:submit>&nbsp; <html-el:button property="cancel"
+			</html-el:submit>&nbsp; <html-el:button styleId="changePassword.button.cancel" property="cancel"
 				styleClass="cancelbuttn" onclick="fnCancel()">
 				<mifos:mifoslabel name="login.cancel" bundle="LoginUIResources"/>
 			</html-el:button></td>

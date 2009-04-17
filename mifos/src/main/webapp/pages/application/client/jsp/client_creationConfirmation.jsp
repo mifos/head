@@ -60,9 +60,9 @@
 					<!-- Center confirmation message -->
 					<tr>
 						<td class="headingorange">
-							<fmt:message key="client.ConfirmationMessage">
+							<span id="client_creationConfirmation.heading"><fmt:message key="client.ConfirmationMessage">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
-							</fmt:message><br>
+							</fmt:message></span><br>
 						<br>
 						</td>
 					</tr>
@@ -70,7 +70,7 @@
 						<!-- Displays the center system id and name of the center -->
 						<td class="fontnormalbold"><mifos:mifoslabel
 							name="client.Confirmation.Note" bundle="ClientUIResources"></mifos:mifoslabel>
-						<span class="fontnormal"> <c:out
+						<span class="fontnormal" id="client_creationConfirmation.text.confirmation"><c:out
 							value="${sessionScope.clientCustActionForm.clientName.displayName}" /> <mifos:mifoslabel
 							name="client.Confirmation.NameSystemID"
 							bundle="ClientUIResources"></mifos:mifoslabel></span> <c:out

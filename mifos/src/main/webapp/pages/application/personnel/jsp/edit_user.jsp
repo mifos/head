@@ -411,7 +411,7 @@
 				<mifos:mifoslabel name="Personnel.Password" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		     </td>
              <td>
-                	<html-el:password property="userPassword" style="width:136px;" redisplay="false"/>
+                	<html-el:password styleId="edit_user.input.userPassword" property="userPassword" style="width:136px;" redisplay="false"/>
              </td>
           </tr>
           <tr class="fontnormal">
@@ -419,7 +419,7 @@
 				<mifos:mifoslabel name="Personnel.ConfirmPassword" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		      </td>
               <td>
-               	<html-el:password property="passwordRepeat" style="width:136px;" redisplay="false"/>
+               	<html-el:password styleId="edit_user.input.passwordRepeat" property="passwordRepeat" style="width:136px;" redisplay="false"/>
               </td>
           </tr>
         </table>

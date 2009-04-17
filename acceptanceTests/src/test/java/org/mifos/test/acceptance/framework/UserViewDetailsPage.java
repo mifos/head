@@ -54,11 +54,10 @@ public class UserViewDetailsPage extends MifosPage {
     public String getStatus() {
         return selenium.getText("personneldetails.text.status");
     }
-
+    
     public void verifyModifiedNameAndEmail(SubmitFormParameters formParameters) {
         Assert.assertTrue(getFullName().contains(
                 formParameters.getFirstName() + " " + formParameters.getLastName()));
         Assert.assertEquals(getEmail(), formParameters.getEmail());
-       
     }
 }
