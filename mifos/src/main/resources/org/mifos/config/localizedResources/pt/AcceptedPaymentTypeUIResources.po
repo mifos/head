@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-09 15:53-0700\n"
-"PO-Revision-Date: 2009-04-20 16:50-0700\n"
+"PO-Revision-Date: 2009-04-20 16:58-0700\n"
 "Last-Translator: Van Mittal-Henkle <vanmh@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: acceptedPaymentType.Cancel
 msgid "Cancel"
-msgstr "test"
+msgstr ""
 
 #: acceptedPaymentType.Submit
 msgid "Submit"
