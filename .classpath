@@ -38,7 +38,6 @@
 	<classpathentry kind="lib" path="mifos/lib/jiprof-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jsp-api.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jspsmart.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/jsr173_1.0_api.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jta.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/log4j-1.2.14.jar"/>
@@ -47,21 +46,17 @@
 	<classpathentry kind="lib" path="mifos/lib/struts-1.2.7.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/struts-el.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/strutstest-2.1.4.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/trang.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/xmlunit-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/build-lib/maven-ant-tasks-2.0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="mifos/lib/activation-1.0.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymock-2.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/javax.servlet-4.0.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jaxb-impl-2.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jaxb-libs-1.0.5.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/jaxb-xjc-2.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jsmin-0.2.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jstl-1.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/standard-1.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/struts-legacy-1.0.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/trangtask-0.8.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
