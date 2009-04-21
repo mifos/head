@@ -424,9 +424,8 @@ public class BulkEntryDisplayHelper {
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendance : custAttTypes) {
 				builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
-                if (null != clientAttendanceDto && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
+                if (null != collectionSheetEntryView.getAttendence() && attendance.getAssociatedId().intValue() == collectionSheetEntryView.getAttendence()) {
                     builder.append(" selected=\"selected\"");
-                    clientAttendanceDto.setRow(row);
                 }
                 builder.append( ">" 	+ attendance.getLookUpValue() + "</option>");
 			}
@@ -435,7 +434,7 @@ public class BulkEntryDisplayHelper {
 		} else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			for (CustomValueListElement attendance : custAttTypes) {
-			    if (null != clientAttendanceDto && (attendance.getAssociatedId().intValue() == clientAttendanceDto.getAttendance().getValue())) {
+			    if (null != collectionSheetEntryView.getAttendence() && attendance.getAssociatedId().intValue() == collectionSheetEntryView.getAttendence()) {
 					if (!collectionSheetEntryView.getAttendence().toString().equals("1")) {
 						builder.append("<font color=\"#FF0000\">"
 								+ attendance.getLookUpValue() + "</font>");

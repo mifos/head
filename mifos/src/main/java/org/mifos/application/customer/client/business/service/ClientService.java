@@ -35,6 +35,7 @@ public interface ClientService extends Service {
     public HashMap<Integer, ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws ServiceException;
     public List<ClientAttendanceDto> getClientAttendanceList(Date meetingDate, Short officeId) throws ServiceException;
     public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException;
+    public void setClientAttendance(ClientAttendanceDto clientAttendanceDto) throws ServiceException;
     public ClientDao getClientDao();
     public void setClientDao(ClientDao clientDao);
     public ClientAttendanceDao getClientAttendanceDao();

@@ -308,10 +308,6 @@ public class CollectionSheetEntryAction extends BaseAction {
                 savingsAccounts.add(bulkEntrySavingsCache.getAccount());
         }
 
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
-                .getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
-        setClientAttendanceFromForm(clients, meetingDate, clientAttendance, bulkEntryActionForm);
-
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CLIENTS, clients, request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.SAVINGS, savingsAccounts, request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.LOANS, loanAccprdViews, request);
@@ -319,6 +315,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORCLIENTS, customerNames, request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSDEPOSIT, savingsDepNames, request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSWITHDRAW, savingsWithNames, request);
+        SessionUtils.setCollectionAttribute("CollectionSheetEntryViews", customerViews, request);
 
         return mapping.findForward(CollectionSheetEntryConstants.PREVIEWSUCCESS);
     }
@@ -409,19 +406,16 @@ public class CollectionSheetEntryAction extends BaseAction {
                 CollectionSheetEntryConstants.LOANS, request);
         List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERACCOUNTS, request);
+        List<CollectionSheetEntryView> collectionSheetEntryViews = (List<CollectionSheetEntryView>) SessionUtils.getAttribute("CollectionSheetEntryViews", request);
         
         try {
             bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                     .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
-                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums);            
+                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums,
+                    collectionSheetEntryViews);            
         } catch (Exception e) {
             throw e;
         } 
-
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
-                .getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
-        clientService.setClientAttendance(setClientAttendanceFromForm(clients, meetingDate, clientAttendance,
-                bulkEntryActionForm));
 
         request.setAttribute(CollectionSheetEntryConstants.CENTER, bulkEntry.getBulkEntryParent().getCustomerDetail()
                 .getDisplayName());
@@ -459,22 +453,6 @@ public class CollectionSheetEntryAction extends BaseAction {
             for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDtos) {
                 result.put(clientAttendanceDto.getClientId(), clientAttendanceDto);
             }
-        }
-        return result;
-    }
-
-    private ArrayList<ClientAttendanceDto> setClientAttendanceFromForm(List<? extends CustomerBO> clients,
-            Date meetingDate, HashMap<Integer, ClientAttendanceDto> clientAttendance, BulkEntryActionForm form) {
-        List<AttendanceType> attendanceFromForm = form.getAttendance();
-        ArrayList<ClientAttendanceDto> result = new ArrayList<ClientAttendanceDto>();
-        HashMap<Integer, ClientAttendanceDto> clientAttendanceFromForm = clientAttendance;
-        if (null == clientAttendance || 0 == clientAttendance.size()) {
-            clientAttendanceFromForm = getClientAttendance(clients, meetingDate);
-        }
-        for (ClientAttendanceDto clientAttendanceDto : clientAttendanceFromForm.values()) {
-            AttendanceType attendance = attendanceFromForm.get(clientAttendanceDto.getRow());
-            clientAttendanceDto.setAttendance(attendance);
-            result.add(clientAttendanceDto);
         }
         return result;
     }

@@ -24,9 +24,11 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -44,7 +46,11 @@ import org.mifos.application.collectionsheet.util.helpers.BulkEntryCustomerAccou
 import org.mifos.application.collectionsheet.util.helpers.BulkEntryLoanThread;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
+import org.mifos.application.customer.client.business.service.ClientService;
+import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -68,10 +74,10 @@ public class BulkEntryBusinessService implements BusinessService {
     private MifosLogger logger = MifosLogManager.getLogger(BulkEntryBusinessService.class.getName());
 
 	private BulkEntryPersistenceService bulkEntryPersistanceService;
-
 	private CustomerPersistence customerPersistence;
+    private ClientService clientService;
 
-	public BulkEntryBusinessService() {
+    public BulkEntryBusinessService() {
 		bulkEntryPersistanceService = new BulkEntryPersistenceService();
 		customerPersistence = new CustomerPersistence();
 	}
@@ -252,15 +258,35 @@ public class BulkEntryBusinessService implements BusinessService {
             List<SavingsBO> savings, List<String> savingsNames,
             List<ClientBO> clients, List<String> customerNames,
             List<CustomerAccountView> customerAccounts,
-            List<String> customerAccountNums) {
+            List<String> customerAccountNums,
+            List<CollectionSheetEntryView> collectionSheetEntryViews) {
         logger.debug("Running non-threaded saveData");
 
+        saveAttendance(collectionSheetEntryViews, transactionDate);
         saveMultipleLoanAccounts(accountViews, customerAccountNums, personnelId, recieptId, paymentId, receiptDate, transactionDate);
         saveMultipleCustomerAccountCollections(customerAccounts, customerAccountNums, personnelId, recieptId, paymentId, receiptDate, transactionDate);
         saveSavingsAccount(savings, savingsNames);
     }
 	
-	private void saveAttendance(List<ClientBO> clients,
+    private void saveAttendance(List<CollectionSheetEntryView> collectionSheetEntryViews, Date transactionDate) {
+        ClientService clientService = getClientService();
+        for (CollectionSheetEntryView collectionSheetEntryView : collectionSheetEntryViews) {
+            Short levelId = collectionSheetEntryView.getCustomerDetail().getCustomerLevelId();
+            if (levelId.equals(CustomerLevel.CLIENT.getValue())) {
+                try {
+                    ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(collectionSheetEntryView
+                            .getCustomerDetail().getCustomerId(), new LocalDate(transactionDate),
+                            AttendanceType.fromShort(collectionSheetEntryView
+                            .getAttendence()));
+                    clientService.setClientAttendance(clientAttendanceDto);
+                } catch (ServiceException e) {
+                    System.out.println(e);
+                }
+            }
+        }
+    }
+    
+    private void saveAttendance(List<ClientBO> clients,
 			List<String> customerNames) {
 		for (ClientBO client : clients) {
 			try {
@@ -644,4 +670,17 @@ public class BulkEntryBusinessService implements BusinessService {
 	        }
 	    }
     }	
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    public ClientService getClientService() {
+        if (clientService == null) {
+            clientService = new StandardClientService();
+            clientService.setClientAttendanceDao(new StandardClientAttendanceDao());
+        }
+        return clientService;
+    }
+
 }

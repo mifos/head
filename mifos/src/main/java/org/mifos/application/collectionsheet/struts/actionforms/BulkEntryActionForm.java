@@ -69,7 +69,6 @@ public class BulkEntryActionForm extends BaseActionForm {
     private String transactionDateMM;
     private String transactionDateYY;
     private String officeId;
-    private List<AttendanceType> attendance;
 
     public String getCustomerId() {
         return customerId;
@@ -101,14 +100,6 @@ public class BulkEntryActionForm extends BaseActionForm {
 
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
-    }
-
-    public List<AttendanceType> getAttendance() {
-        return this.attendance;
-    }
-
-    public void setAttendance(List<AttendanceType> attendance) {
-        this.attendance = attendance;
     }
 
     public String getReceiptDate() {
@@ -259,26 +250,10 @@ public class BulkEntryActionForm extends BaseActionForm {
                 bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
                 bulkEntryDataView.setCustomerAccountAmountEntered(customerAccountAmountEntered);
                 bulkEntryDataView.setAttendance(attendance);
-                setAttendance(attendance);
                 bulkEntry.setBulkEntryDataView(bulkEntryDataView);
             } catch (PageExpiredException e) {
                 throw new RuntimeException(e);
             }
-        }
-    }
-
-    private void setAttendance(String[] attendancesFromForm) {
-        this.attendance = new ArrayList<AttendanceType>();
-        int index = 0;
-        for (String attendance : attendancesFromForm) {
-            String attendanceFromForm = attendancesFromForm[index];
-            if (null != attendanceFromForm) {
-                this.attendance.add(AttendanceType.fromShort(Short.valueOf(attendanceFromForm)));
-            } else {
-                AttendanceType groupAttendancePlaceHolder = null;
-                this.attendance.add(groupAttendancePlaceHolder); 
-            }
-            index++;
         }
     }
 
