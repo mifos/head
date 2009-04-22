@@ -43,7 +43,7 @@ import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
-import org.mifos.application.checklist.util.resources.CheckListConstants;
+import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.collectionsheet.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;

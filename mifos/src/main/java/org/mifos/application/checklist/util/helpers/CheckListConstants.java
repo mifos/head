@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.application.checklist.util.resources;
+package org.mifos.application.checklist.util.helpers;
 
 public interface CheckListConstants {
 

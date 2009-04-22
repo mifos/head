@@ -28,8 +28,8 @@ import java.util.Set;
 
 import org.mifos.application.checklist.exceptions.CheckListException;
 import org.mifos.application.checklist.persistence.CheckListPersistence;
+import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.checklist.util.helpers.CheckListType;
-import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;

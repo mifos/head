@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.checklist.util.resources.CheckListConstants;
+import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;

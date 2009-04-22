@@ -20,15 +20,17 @@
  
 package org.mifos.framework.struts.tags;
 
-import javax.servlet.jsp.JspException;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
+import javax.servlet.jsp.JspException;
+
+import junit.framework.TestCase;
+
 import org.dom4j.DocumentException;
-import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class MifosImageTagTest extends MifosIntegrationTest{
+public class MifosImageTagTest extends TestCase {
 	public MifosImageTagTest() throws SystemException, ApplicationException {
         super();
     }

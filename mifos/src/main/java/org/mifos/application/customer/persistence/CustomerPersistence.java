@@ -47,7 +47,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
-import org.mifos.application.checklist.util.resources.CheckListConstants;
+import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
