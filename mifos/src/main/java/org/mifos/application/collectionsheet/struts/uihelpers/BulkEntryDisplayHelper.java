@@ -418,13 +418,14 @@ public class BulkEntryDisplayHelper {
 			CollectionSheetEntryView collectionSheetEntryView, String method) {
         Integer customerId = collectionSheetEntryView.getCustomerDetail().getCustomerId();
         ClientAttendanceDto clientAttendanceDto = clientAttendance.get(customerId);
-		if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
+		Short collectionSheetEntryViewAttendence = collectionSheetEntryView.getAttendence();
+        if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendanceSelected[" + row
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendance : custAttTypes) {
 				builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
-                if (null != collectionSheetEntryView.getAttendence() && attendance.getAssociatedId().intValue() == collectionSheetEntryView.getAttendence()) {
+                if (attendancesAreEqual(collectionSheetEntryViewAttendence, attendance)) {
                     builder.append(" selected=\"selected\"");
                 }
                 builder.append( ">" 	+ attendance.getLookUpValue() + "</option>");
@@ -434,8 +435,8 @@ public class BulkEntryDisplayHelper {
 		} else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			for (CustomValueListElement attendance : custAttTypes) {
-			    if (null != collectionSheetEntryView.getAttendence() && attendance.getAssociatedId().intValue() == collectionSheetEntryView.getAttendence()) {
-					if (!collectionSheetEntryView.getAttendence().toString().equals("1")) {
+			    if (attendancesAreEqual(collectionSheetEntryViewAttendence, attendance)) {
+					if (!collectionSheetEntryViewAttendence.toString().equals("1")) {
 						builder.append("<font color=\"#FF0000\">"
 								+ attendance.getLookUpValue() + "</font>");
 					} else {
@@ -450,19 +451,23 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendanceSelected[" + row
 					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
-			for (CustomValueListElement attendence : custAttTypes) {
-				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
-				if (null != collectionSheetEntryView.getAttendence()
-						&& attendence.getAssociatedId().equals(
-								Integer.valueOf(collectionSheetEntryView.getAttendence()))) {
+			for (CustomValueListElement attendance : custAttTypes) {
+				builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
+				if (null != collectionSheetEntryViewAttendence
+						&& attendance.getAssociatedId().equals(
+								Integer.valueOf(collectionSheetEntryViewAttendence))) {
 					builder.append(" selected ");
 				}
-				builder.append(">" + attendence.getLookUpValue() + "</option>");
+				builder.append(">" + attendance.getLookUpValue() + "</option>");
 			}
 			builder.append("</select>");
 			builder.append("</td>");
 		}
 	}
+
+    private boolean attendancesAreEqual(Short collectionSheetEntryViewAttendence, CustomValueListElement attendance) {
+        return null != collectionSheetEntryViewAttendence && attendance.getAssociatedId().intValue() == collectionSheetEntryViewAttendence;
+    }
 	protected Double getDoubleValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) : null;
 	}

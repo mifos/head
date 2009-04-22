@@ -32,7 +32,7 @@ public interface CollectionSheetEntryConstants {
     public String GETSUCCESS = "get_success";
     public String PREVIEWSUCCESS = "preview_success";
     public String CREATESUCCESS = "create_success";
-    public String PREVIUOSSUCCESS = "previuos_success";
+    public String PREVIOUSSUCCESS = "previous_success";
     public String GET_FAILURE = "get_failure";
 
     public String BRANCHOFFICESLIST = "BranchOfficesList";
@@ -88,6 +88,7 @@ public interface CollectionSheetEntryConstants {
     public String SAVINGS = "savings";
     public String CLIENTS = "clients";
     public String CLIENT_ATTENDANCE = "clientAttendance";
+    public String COLLECTION_SHEET_ENTRY = "collectionSheetEntry";
     public String CUSTOMERACCOUNTS = "customeraccounts";
     public String ERRORCLIENTS = "errorclients";
     public String ERRORLOANS = "errorloans";

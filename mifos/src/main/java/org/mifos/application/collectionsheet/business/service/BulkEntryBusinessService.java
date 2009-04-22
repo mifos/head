@@ -57,6 +57,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -212,9 +213,11 @@ public class BulkEntryBusinessService implements BusinessService {
 			List<SavingsBO> savings, List<String> savingsNames,
 			List<ClientBO> clients, List<String> customerNames,
 			List<CustomerAccountView> customerAccounts,
-			List<String> customerAccountNums) {
+			List<String> customerAccountNums,
+			List<CollectionSheetEntryView> collectionSheetEntryViews) {
 	    logger.debug("Running threaded saveData");
 	    
+	    saveAttendance(collectionSheetEntryViews, transactionDate);
 		StringBuffer isThreadOneDone = new StringBuffer();
 		StringBuffer isCustomerAccountThreadDone = new StringBuffer();
 		BulkEntryLoanThread bulkEntryLoanThreadOne = new BulkEntryLoanThread(
@@ -280,27 +283,13 @@ public class BulkEntryBusinessService implements BusinessService {
                             .getAttendence()));
                     clientService.setClientAttendance(clientAttendanceDto);
                 } catch (ServiceException e) {
-                    System.out.println(e);
+                    throw new MifosRuntimeException("Unrecoverable service error trying to save client attendance: ", e);
                 }
             }
         }
+        StaticHibernateUtil.commitTransaction();
     }
     
-    private void saveAttendance(List<ClientBO> clients,
-			List<String> customerNames) {
-		for (ClientBO client : clients) {
-			try {
-				saveClientAttendance(client);
-				StaticHibernateUtil.commitTransaction();
-			} catch (ServiceException e) {
-				StaticHibernateUtil.rollbackTransaction();
-				customerNames.add(client.getDisplayName());
-			} finally {
-				StaticHibernateUtil.closeSession();
-			}
-		}
-	}
-
 	private void saveSavingsAccount(List<SavingsBO> savings,
 			List<String> customerNames) {
 		for (SavingsBO saving : savings) {

@@ -315,7 +315,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORCLIENTS, customerNames, request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSDEPOSIT, savingsDepNames, request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSWITHDRAW, savingsWithNames, request);
-        SessionUtils.setCollectionAttribute("CollectionSheetEntryViews", customerViews, request);
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY, customerViews, request);
 
         return mapping.findForward(CollectionSheetEntryConstants.PREVIEWSUCCESS);
     }
@@ -339,7 +339,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        return mapping.findForward(CollectionSheetEntryConstants.PREVIUOSSUCCESS);
+        return mapping.findForward(CollectionSheetEntryConstants.PREVIOUSSUCCESS);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -406,7 +406,8 @@ public class CollectionSheetEntryAction extends BaseAction {
                 CollectionSheetEntryConstants.LOANS, request);
         List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERACCOUNTS, request);
-        List<CollectionSheetEntryView> collectionSheetEntryViews = (List<CollectionSheetEntryView>) SessionUtils.getAttribute("CollectionSheetEntryViews", request);
+        List<CollectionSheetEntryView> collectionSheetEntryViews = (List<CollectionSheetEntryView>) SessionUtils
+                .getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY, request);
         
         try {
             bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
