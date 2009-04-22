@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.application.office.util.resources;
+package org.mifos.application.office.util.helpers;
 
 public interface OfficeConstants {
 	

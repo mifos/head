@@ -20,21 +20,17 @@
  
 package org.mifos.framework.struts.tags;
 
+import static org.junit.Assert.assertEquals;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import javax.servlet.jsp.JspException;
 
-import junit.framework.TestCase;
-
 import org.dom4j.DocumentException;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.junit.Test;
 
-public class MifosImageTagTest extends TestCase {
-	public MifosImageTagTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class MifosImageTagTest {
 
+    @Test
     public void testRender() throws JspException, DocumentException{
 		MifosImageTag mifosImageTag = new MifosImageTag();
 		String path = "customer";

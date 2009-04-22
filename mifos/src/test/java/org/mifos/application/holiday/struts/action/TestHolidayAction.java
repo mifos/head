@@ -20,7 +20,7 @@
  
 package org.mifos.application.holiday.struts.action;
 
-import org.mifos.application.holiday.util.resources.HolidayConstants;
+import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;

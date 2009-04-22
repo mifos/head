@@ -51,7 +51,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.persistence.OfficePersistence;
-import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;

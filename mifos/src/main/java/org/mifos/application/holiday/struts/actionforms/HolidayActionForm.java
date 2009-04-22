@@ -32,7 +32,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.util.resources.HolidayConstants;
+import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.security.util.UserContext;

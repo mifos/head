@@ -23,8 +23,8 @@ package org.mifos.application.office.business;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**

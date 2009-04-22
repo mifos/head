@@ -25,8 +25,8 @@ import static org.mifos.framework.util.helpers.DateUtils.getDateWithoutTimeStamp
 import java.util.Date;
 
 import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.ApplicationException;

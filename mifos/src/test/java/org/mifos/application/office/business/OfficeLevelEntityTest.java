@@ -21,8 +21,8 @@
 package org.mifos.application.office.business;
 
 import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;

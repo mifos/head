@@ -223,11 +223,7 @@
             </fileset>
         </copy>
         <copy todir="${build.classes}">
-            <fileset dir="${basedir}/src/main/resources">
-                <include name="**/*.xml"/>
-                <include name="**/*.xsd"/>
-                <include name="**/*.properties"/>
-            </fileset>
+            <fileset dir="${basedir}/src/main/resources"/>
         </copy>
         <copy todir="${test.classes}">
             <fileset dir="${basedir}/src/test/resources">

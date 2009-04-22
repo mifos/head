@@ -63,7 +63,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;

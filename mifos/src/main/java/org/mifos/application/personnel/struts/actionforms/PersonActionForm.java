@@ -39,7 +39,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;

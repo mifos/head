@@ -39,7 +39,7 @@ import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
-import org.mifos.application.holiday.util.resources.HolidayConstants;
+import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;

@@ -20,16 +20,14 @@
  
 package org.mifos.framework.struts.tags;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class RawButtonTest extends MifosIntegrationTest {
+import org.junit.Test;
 
-	public RawButtonTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class RawButtonTest {
 
+    @Test
     public void testRawButton(){
 		RawButton rawButton = new RawButton();
 		rawButton.setDisabled("disabled");

@@ -20,9 +20,10 @@
  
 package org.mifos.framework.struts;
 
-import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.mifos.framework.struts.actionforms.TestBaseActionForm;
 import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.struts.plugin.TestEnumPlugin;
@@ -40,32 +41,27 @@ import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
 import org.mifos.framework.util.TestLocalizationConverter;
 
-public class StrutsTestSuite extends TestSuite {
-
-	public StrutsTestSuite() {
-		super();
+	@RunWith(Suite.class)
+	@Suite.SuiteClasses({	
+		TestConstPlugin.class,
+		TestEnumPlugin.class,
+		TestInitializerPlugin.class,
+		TestBaseActionForm.class,
+		DateTagTest.class,
+		RawButtonTest.class,
+		RawSelectTest.class,
+		MifosCheckBoxTagTest.class,
+		MifosTextareaTagTest.class,
+		MifosFileTagTest.class,
+		MifosLabelTagTest.class,
+		MifosImageTagTest.class,
+		MifosFileTagTest.class,
+		MifosAlphaNumTextTagTest.class,
+		MifosNumberTextTagTest.class,
+		TestLocalizationConverter.class,
+		MifosPropertyMessageResourcesTest.class
+	})
+	
+	public class StrutsTestSuite extends TestSuite {
+	    // placeholder class
 	}
-
-	public static Test suite() throws Exception{
-		TestSuite suite = new StrutsTestSuite();
-		suite.addTestSuite(TestConstPlugin.class);
-		suite.addTestSuite(TestEnumPlugin.class);
-		suite.addTestSuite(TestInitializerPlugin.class);
-		suite.addTestSuite(TestBaseActionForm.class);
-		suite.addTestSuite(DateTagTest.class);
-		suite.addTestSuite(RawButtonTest.class);
-		suite.addTestSuite(RawSelectTest.class);
-		suite.addTestSuite(MifosCheckBoxTagTest.class);
-		suite.addTestSuite(MifosTextareaTagTest.class);
-		suite.addTestSuite(MifosFileTagTest.class);
-		suite.addTestSuite(MifosLabelTagTest.class);
-		suite.addTestSuite(MifosImageTagTest.class);
-		suite.addTestSuite(MifosFileTagTest.class);
-		suite.addTestSuite(MifosAlphaNumTextTagTest.class);
-		suite.addTestSuite(MifosNumberTextTagTest.class);
-		suite.addTestSuite(TestLocalizationConverter.class);
-		suite.addTest(MifosPropertyMessageResourcesTest.testSuite());
-		return suite;
-	}
-
-}

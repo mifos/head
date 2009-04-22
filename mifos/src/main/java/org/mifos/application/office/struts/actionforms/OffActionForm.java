@@ -36,7 +36,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
-import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;

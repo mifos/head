@@ -27,7 +27,7 @@ import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.resources.HolidayConstants;
+import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

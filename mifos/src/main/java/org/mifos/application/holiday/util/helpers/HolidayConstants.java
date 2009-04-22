@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.application.holiday.util.resources;
+package org.mifos.application.holiday.util.helpers;
 
 public interface HolidayConstants {
 

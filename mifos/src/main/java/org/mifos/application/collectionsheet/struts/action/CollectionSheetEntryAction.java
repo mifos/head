@@ -64,7 +64,7 @@ import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;

@@ -55,8 +55,4 @@ public class MifosPropertyMessageResourcesTest {
 		assertEquals("Branch Office", resource.getMessage(TestUtils.ukLocale(), ConfigurationConstants.BRANCHOFFICE));
 	}
 
-	public static junit.framework.Test testSuite() {
-		return new JUnit4TestAdapter(MifosPropertyMessageResourcesTest.class);
-	}
-	
 }
