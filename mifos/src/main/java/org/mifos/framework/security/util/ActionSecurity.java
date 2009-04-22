@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.mifos.framework.security.util.resources.SecurityConstants;
 
 /**
  * Wrapper for a mapping of methods in an action class to a primary key in the

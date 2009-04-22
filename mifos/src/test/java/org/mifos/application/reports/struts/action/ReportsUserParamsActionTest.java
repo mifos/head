@@ -27,8 +27,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
+import org.mifos.framework.security.util.ReportSecurityConstants;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.ReportSecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {

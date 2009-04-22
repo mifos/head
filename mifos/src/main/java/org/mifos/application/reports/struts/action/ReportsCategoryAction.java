@@ -49,7 +49,7 @@ import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.activity.ActivityGeneratorException;
 import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;

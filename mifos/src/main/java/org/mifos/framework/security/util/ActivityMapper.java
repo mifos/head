@@ -100,7 +100,6 @@ import org.mifos.application.surveys.struts.action.QuestionsAction;
 import org.mifos.application.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 
 /**
  * Singleton.

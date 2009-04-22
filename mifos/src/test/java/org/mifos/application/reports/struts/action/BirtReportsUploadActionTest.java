@@ -43,7 +43,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
-import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {

@@ -10,6 +10,7 @@
     <property name="build.compiler" value="modern"/>
     <property name="java.home" value="${env.JAVA_HOME}"/>
     <property name="src.dir" value="${basedir}/src/main/java"/>
+    <property name="resources.dir" value="${basedir}/src/main/resources"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
 	<property name="config.dir" value = "${basedir}/src/main/resources/org/mifos/config"/>
     <property name="conf.dir" value="${config.dir}/resources"/>
@@ -217,14 +218,18 @@
             <fileset dir="${config.dir}"/>
         </copy>
         <copy todir="${build.src.dir}/pages/application/reports/uploads">
-            <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
+            <fileset dir="${resources.dir}/org/mifos/application/reports/uploads">
                 <include name="*.jrxml"/>
                 <include name="*.jasper"/>
             </fileset>
         </copy>
         <copy todir="${build.classes}">
-            <fileset dir="${basedir}/src/main/resources"/>
-        </copy>
+            <fileset dir="${resources.dir}">
+                <include name="**/*.xml"/>
+                <include name="**/*.xsd"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>    	
         <copy todir="${test.classes}">
             <fileset dir="${basedir}/src/test/resources">
                 <include name="**/*.xml"/>

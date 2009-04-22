@@ -38,7 +38,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.authorization.HierarchyManager;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 
 /**
  * This class encupsulate all the funcionality requied by security module to

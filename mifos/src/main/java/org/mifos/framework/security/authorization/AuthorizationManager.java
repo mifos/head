@@ -40,9 +40,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityRoles;
+import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.SecurityHelper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 
 /**
  * A singleton authorization service. Tracks a map of activities to roles

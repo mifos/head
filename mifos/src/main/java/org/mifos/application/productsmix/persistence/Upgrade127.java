@@ -23,10 +23,10 @@ package org.mifos.application.productsmix.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.ENGLISH_LOCALE;
 import static org.mifos.framework.security.AddActivity.changeActivityMessage;
 import static org.mifos.framework.security.AddActivity.reparentActivity;
-import static org.mifos.framework.security.util.resources.SecurityConstants.CAN_DEFINE_PRODUCT_MIX;
-import static org.mifos.framework.security.util.resources.SecurityConstants.CAN_EDIT_PRODUCT_MIX;
-import static org.mifos.framework.security.util.resources.SecurityConstants.PRODUCT_DEFINITION;
-import static org.mifos.framework.security.util.resources.SecurityConstants.PRODUCT_MIX;
+import static org.mifos.framework.security.util.SecurityConstants.CAN_DEFINE_PRODUCT_MIX;
+import static org.mifos.framework.security.util.SecurityConstants.CAN_EDIT_PRODUCT_MIX;
+import static org.mifos.framework.security.util.SecurityConstants.PRODUCT_DEFINITION;
+import static org.mifos.framework.security.util.SecurityConstants.PRODUCT_MIX;
 
 import java.io.IOException;
 import java.sql.Connection;

@@ -23,7 +23,7 @@ package org.mifos.framework.struts.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.security.util.SecurityConstants;
 
 public class SecurityParam extends BodyTagSupport {
 	

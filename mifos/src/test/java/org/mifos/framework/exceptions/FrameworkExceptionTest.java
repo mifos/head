@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.security.util.SecurityConstants;
 
 public class FrameworkExceptionTest extends TestCase {
 

@@ -53,7 +53,7 @@ import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.formulaic.ValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.actionforms.GenericActionForm;

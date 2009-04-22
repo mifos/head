@@ -21,7 +21,6 @@
 package org.mifos.framework.security.util;
 
 import org.mifos.framework.security.authorization.HierarchyManager;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class EventManger {
 	

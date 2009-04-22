@@ -56,7 +56,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.AddActivity;
-import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 

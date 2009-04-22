@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.framework.security.util.resources;
+package org.mifos.framework.security.util;
 
 /**
  * This inteface will hold all the constants used related to the security
