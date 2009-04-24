@@ -55,14 +55,14 @@ public class TestingService {
     public Properties getDatabaseConnectionSettings() throws IOException {
         String defaultSettingsFilename = getDefaultSettingsFilename(getTestMode());
 
-        File defaultsFile = configurationLocator.getFileHandle(defaultSettingsFilename);
+        File defaultsFile = configurationLocator.getFile(defaultSettingsFilename);
         Properties mifosSpecific = new Properties();
         mifosSpecific.load(new FileInputStream(defaultsFile));
 
         Properties overrides = new Properties();
 
         try {
-            File overridesFile = configurationLocator.getFileHandle(FilePaths.LOCAL_CONFIGURATION_OVERRIDES);
+            File overridesFile = configurationLocator.getFile(FilePaths.LOCAL_CONFIGURATION_OVERRIDES);
             overrides.load(new FileInputStream(overridesFile));
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides

@@ -20,6 +20,12 @@
  
 package org.mifos.framework.components.batchjobs;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,20 +35,24 @@ import java.util.Timer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.mifos.core.ClasspathResource;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.DateTimeService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
 
 public class MifosScheduler extends Timer {
 	
 	Timer timer = null;
-	
 	List<String> taskNames = new ArrayList<String>();
+    private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
+    private ConfigurationLocator configurationLocator;
 
-	public MifosScheduler() {
+    public MifosScheduler() {
 		timer = new Timer();
 	}
 	
@@ -63,8 +73,7 @@ public class MifosScheduler extends Timer {
 		MifosTask mifosTask;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(ClasspathResource.getURI(
-				SchedulerConstants.PATH).toString());
+        Document document = builder.parse(getTaskConfigurationInputSource());
 		NodeList rootSchedulerTasks = document
 				.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);
 		Element rootNodeName = (Element) rootSchedulerTasks.item(0);
@@ -111,7 +120,7 @@ public class MifosScheduler extends Timer {
 		}
 	}
 
-	/**
+    /**
 	 * These are the non-reqular jobs which do not recure but have to be run
 	 * infrequently on user request. Hence there is no delay input. An example:
 	 * Change in center meeting schedule which needs to change all inherited
@@ -146,5 +155,23 @@ public class MifosScheduler extends Timer {
 	public List<String> getTaskNames() {
 		return taskNames;
 	}
+
+   private InputSource getTaskConfigurationInputSource() throws FileNotFoundException, IOException {
+      File configurationFile = getConfigurationLocator().getFile("task.xml");
+      FileReader fileReader = new FileReader(configurationFile);
+      logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
+      return new InputSource(fileReader);
+    }
+	
+    public ConfigurationLocator getConfigurationLocator() {
+        if (configurationLocator == null) {
+            configurationLocator = new ConfigurationLocator();
+        }
+        return this.configurationLocator;
+    }
+
+    public void setConfigurationLocator(ConfigurationLocator configurationLocator) {
+        this.configurationLocator = configurationLocator;
+    }
 
 }

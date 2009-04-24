@@ -33,13 +33,13 @@ public class ConfigurationLocatorTest {
     @Test
     public void testGetFileHandle() throws IOException {
         ConfigurationLocator locator = new ConfigurationLocator();
-        Assert.assertNotNull(locator.getFileHandle("mock.mifosChartOfAccounts.xml"));
+        Assert.assertNotNull(locator.getFile("mock.mifosChartOfAccounts.xml"));
     }
 
     @Test (expected = FileNotFoundException.class)
     public void testGetFileHandleFailure() throws IOException {
         ConfigurationLocator locator = new ConfigurationLocator();
-        locator.getFileHandle("x.xml");
+        locator.getFile("x.xml");
     }
 
     public static junit.framework.Test suite() {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
+	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main/sql"/>
 	<classpathentry kind="src" output="mifos/target/mifos/pages" path="mifos/src/main/webapp/pages"/>
-	<classpathentry excluding="java/|resources/|webapp/pages/" including="sql" kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main"/>
+	<classpathentry excluding="java/|resources/|webapp/pages/|sql/" including="sql" kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
 	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="userInterface/src/main/resources"/>

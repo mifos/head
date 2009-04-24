@@ -19,5 +19,6 @@
 <wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
 <wb-resource deploy-path="/" source-path="/mifos/src/main/webapp/pages"/>
 <wb-resource deploy-path="/" source-path="/mifos/src/main"/>
+<wb-resource deploy-path="/" source-path="/mifos/src/main/sql"/>
     </wb-module>
 </project-modules>

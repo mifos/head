@@ -67,7 +67,7 @@ public class ConfigurationLocator {
     }
 
     public String getFilePath(String filename) throws IOException {
-        return getFileHandle(filename).getAbsolutePath();
+        return getFile(filename).getAbsolutePath();
     }
 
     private String[] getDirectoriesToSearch() {
@@ -110,7 +110,7 @@ public class ConfigurationLocator {
     }
 
     @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
-    public File getFileHandle(String filename) throws IOException {
+    public File getFile(String filename) throws IOException {
         File fileToReturn = getConfigurationFile(filename);
         System.out.println("ConfigurationLocator found configuration file: " + fileToReturn);
         return fileToReturn;
