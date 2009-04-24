@@ -11,6 +11,7 @@
     <property name="java.home" value="${env.JAVA_HOME}"/>
     <property name="src.dir" value="${basedir}/src/main/java"/>
     <property name="resources.dir" value="${basedir}/src/main/resources"/>
+    <property name="test.resources.dir" value="${basedir}/src/test/resources"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
 	<property name="config.dir" value = "${basedir}/src/main/resources/org/mifos/config"/>
     <property name="conf.dir" value="${config.dir}/resources"/>
@@ -299,8 +300,9 @@
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
-
-
+        <copy todir="${test.classes}">
+            <fileset dir="${test.resources.dir}"/>
+        </copy>     
     </target>
 
     <target name="run_test" 
