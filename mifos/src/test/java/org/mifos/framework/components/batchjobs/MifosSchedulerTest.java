@@ -82,7 +82,7 @@ public class MifosSchedulerTest extends MifosIntegrationTest {
 
 	private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws IOException {
         ConfigurationLocator mockConfigurationLocator = createMock(ConfigurationLocator.class);
-        expect(mockConfigurationLocator.getFile("task.xml")).andReturn(new ClassPathResource(taskConfigurationPath).getFile());
+        expect(mockConfigurationLocator.getFile(SchedulerConstants.CONFIGURATION_FILE_NAME)).andReturn(new ClassPathResource(taskConfigurationPath).getFile());
         replay(mockConfigurationLocator);
         MifosScheduler mifosScheduler = new MifosScheduler();
         mifosScheduler.setConfigurationLocator(mockConfigurationLocator);

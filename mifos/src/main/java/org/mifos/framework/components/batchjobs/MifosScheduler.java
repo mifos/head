@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,7 +45,8 @@ import org.xml.sax.InputSource;
 
 public class MifosScheduler extends Timer {
 	
-	Timer timer = null;
+	private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
+    Timer timer = null;
 	List<String> taskNames = new ArrayList<String>();
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
     private ConfigurationLocator configurationLocator;
@@ -70,55 +69,41 @@ public class MifosScheduler extends Timer {
 	 * the MifosScheduler"
 	 */
 	public void registerTasks() throws Exception {
-		MifosTask mifosTask;
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
+        MifosTask mifosTask;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(getTaskConfigurationInputSource());
-		NodeList rootSchedulerTasks = document
-				.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);
-		Element rootNodeName = (Element) rootSchedulerTasks.item(0);
-		NodeList collectionOfScheduledTasks = rootNodeName
-				.getElementsByTagName(SchedulerConstants.SCHEDULER);
-		for (int i = 0; i < collectionOfScheduledTasks.getLength(); i++) {
-			Element scheduledTask = (Element) collectionOfScheduledTasks
-					.item(i);
-			Element subNodeName1 = (Element) scheduledTask
-					.getElementsByTagName(SchedulerConstants.TASK_CLASS_NAME)
-					.item(0);
-			String taskName = ((Text) subNodeName1.getFirstChild()).getData()
-					.trim();
-			Element subNodeName2 = (Element) scheduledTask
-					.getElementsByTagName(SchedulerConstants.INITIAL_TIME).item(
-							0);
-			String initialTime = ((Text) subNodeName2.getFirstChild())
-					.getData().trim();
-			Element subNodeName3 = null;
-			String delayTime = null;
-			if ((scheduledTask
-					.getElementsByTagName(SchedulerConstants.DELAY_TIME)) != null) {
-				subNodeName3 = (Element) scheduledTask.getElementsByTagName(
-						SchedulerConstants.DELAY_TIME).item(0);
-				if (subNodeName3.getFirstChild() != null) {
-					delayTime = ((Text) subNodeName3.getFirstChild()).getData()
-							.trim();
-				}
-			}
-			mifosTask = (MifosTask) Class.forName(
-					"org.mifos.framework.components.batchjobs.helpers."
-							.concat(taskName)).newInstance();
-			mifosTask.name = taskName;
-			if (delayTime != null) {
-				if (Long.parseLong(delayTime) < 86400) {
-					throw new IllegalArgumentException(
-							"Please specify the delay time >= 86400(1 day)");
-				}
-				schedule(mifosTask, parseInitialTime(initialTime), Long
-						.parseLong(delayTime) * 1000);
-			} else {
-				schedule(mifosTask, parseInitialTime(initialTime));
-			}
-		}
-	}
+        NodeList rootSchedulerTasks = document.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);
+        Element rootNodeName = (Element) rootSchedulerTasks.item(0);
+        NodeList collectionOfScheduledTasks = rootNodeName.getElementsByTagName(SchedulerConstants.SCHEDULER);
+        for (int i = 0; i < collectionOfScheduledTasks.getLength(); i++) {
+            Element scheduledTask = (Element) collectionOfScheduledTasks.item(i);
+            Element subNodeName1 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.TASK_CLASS_NAME)
+                    .item(0);
+            String taskName = ((Text) subNodeName1.getFirstChild()).getData().trim();
+            Element subNodeName2 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.INITIAL_TIME)
+                    .item(0);
+            String initialTime = ((Text) subNodeName2.getFirstChild()).getData().trim();
+            Element subNodeName3 = null;
+            String delayTime = null;
+            if ((scheduledTask.getElementsByTagName(SchedulerConstants.DELAY_TIME)) != null) {
+                subNodeName3 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.DELAY_TIME).item(0);
+                if (subNodeName3.getFirstChild() != null) {
+                    delayTime = ((Text) subNodeName3.getFirstChild()).getData().trim();
+                }
+            }
+            mifosTask = (MifosTask) Class.forName(BATCH_JOB_CLASS_PATH_PREFIX + taskName).newInstance();
+            mifosTask.name = taskName;
+            if (delayTime != null) {
+                if (Long.parseLong(delayTime) < 86400) {
+                    throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
+                }
+                schedule(mifosTask, parseInitialTime(initialTime), Long.parseLong(delayTime) * 1000);
+            } else {
+                schedule(mifosTask, parseInitialTime(initialTime));
+            }
+        }
+    }
 
     /**
 	 * These are the non-reqular jobs which do not recure but have to be run
@@ -157,7 +142,7 @@ public class MifosScheduler extends Timer {
 	}
 
    private InputSource getTaskConfigurationInputSource() throws FileNotFoundException, IOException {
-      File configurationFile = getConfigurationLocator().getFile("task.xml");
+      File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
       FileReader fileReader = new FileReader(configurationFile);
       logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
       return new InputSource(fileReader);

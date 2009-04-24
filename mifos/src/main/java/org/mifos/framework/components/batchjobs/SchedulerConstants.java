@@ -22,8 +22,7 @@ package org.mifos.framework.components.batchjobs;
 
 public interface SchedulerConstants {
 
-	public static final String PATH=
-		"org/mifos/framework/util/resources/batchjobs/task.xml";
+	public static final String CONFIGURATION_FILE_NAME="task.xml";
 	public static final String SCHEDULER_TASKS="scheduler-tasks";
 	public static final String SCHEDULER="scheduler";
 	public static final String TASK_CLASS_NAME="task-class-name";
