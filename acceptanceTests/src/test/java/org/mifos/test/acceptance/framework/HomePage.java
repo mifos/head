@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.framework.reports.ReportsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -75,6 +76,12 @@ public class HomePage extends MifosPage {
         selenium.click("menu.link.create.new.group");
         waitForPageToLoad();
         return new CreateGroupSearchPage(selenium);        
+    }
+
+    public ReportsPage navigateToReportsPage() {
+        selenium.click("homeheader.link.reports");
+        waitForPageToLoad();
+        return new ReportsPage(selenium);
     }
       
 }
