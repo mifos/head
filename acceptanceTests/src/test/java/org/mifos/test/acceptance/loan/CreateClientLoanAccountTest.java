@@ -24,6 +24,7 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.InitializeApplicationPage;
 import org.mifos.test.acceptance.framework.LoanAccountPage;
 import org.mifos.test.acceptance.framework.LoginPage; 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -39,7 +40,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "CreateMultipleLoanAccountsWithFeesTest", "acceptance", "ui", "workInProgress" })
+@Test(sequential = true, groups = { "CreateMultipleLoanAccountsWithFeesTest", "acceptance", "ui" })
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -54,7 +55,9 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
+        appLauncher = new AppLauncher(selenium);  
+        InitializeApplicationPage initApplicationPage = new InitializeApplicationPage(this.selenium);
+        initApplicationPage.navigateToInitializeApplicationPage();
     }
 
     @AfterMethod
@@ -94,8 +97,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
      @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
      public void
-     newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth()
-     throws Exception {
+     newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
      CreateLoanAccountSearchParameters searchParameters = new
      CreateLoanAccountSearchParameters();
      searchParameters.setSearchString("Client - Mia Monthly3rdFriday");

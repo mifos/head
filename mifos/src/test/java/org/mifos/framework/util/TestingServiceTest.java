@@ -31,24 +31,24 @@ import org.junit.Test;
 import org.mifos.framework.components.logger.MifosLogManager;
 
 public class TestingServiceTest {
-    static TestingService testingService = null;
+    static StandardTestingService standardTestingService = null;
 
     @Before
     public void setUp() {
         MifosLogManager.configureLogging();
-        testingService = new TestingService();
+        standardTestingService = new StandardTestingService();
     }
 
     @Test
     public void testGetDatabaseConnectionSettings() throws IOException {
-        Properties p = testingService.getDatabaseConnectionSettings();
+        Properties p = standardTestingService.getDatabaseConnectionSettings();
         Assert.assertNotNull(p.getProperty("hibernate.connection.url"));
     }
     
     @Test
     public void testGetDefaultSettingsFilename()
     {
-        String actual = testingService.getDefaultSettingsFilename("acceptance");
+        String actual = standardTestingService.getDefaultSettingsFilename("acceptance");
         Assert.assertEquals("acceptanceDatabase.properties", actual);
     }
     
@@ -56,7 +56,7 @@ public class TestingServiceTest {
     public void testTranslateToHibernate() {
         Properties p = new Properties();
         p.setProperty("integration.database", "fozzy");
-        Properties q = testingService.translateToHibernate(p, "integration");
+        Properties q = standardTestingService.translateToHibernate(p, "integration");
         String url = q.getProperty("hibernate.connection.url");
         Assert.assertNotNull(url);
         Assert.assertTrue(url.contains("fozzy"));

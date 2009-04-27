@@ -38,7 +38,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.TestingService;
+import org.mifos.framework.util.StandardTestingService;
 
 /**
  * JDBC URL parsing code in this class is
@@ -82,7 +82,7 @@ public class SystemInfo implements Serializable {
 	public SystemInfo(Locale locale, boolean getInfoSource) {
 		if (getInfoSource) {
 			try {
-                this.infoSource = Arrays.toString(new TestingService().getAllSettingsFilenames());
+                this.infoSource = Arrays.toString(new StandardTestingService().getAllSettingsFilenames());
             } catch (IOException e) {
                 this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }

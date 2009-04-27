@@ -59,7 +59,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.TestingService;
+import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 
@@ -99,12 +99,12 @@ public class ApplicationInitializer implements ServletContextListener,
 	}
 
 	private static String getDatabaseConnectionInfo() {
-        TestingService testingService = new TestingService();
+        StandardTestingService standardTestingService = new StandardTestingService();
         Properties hibernateCfg = new Properties();
         String info = "Using Mifos database connection settings";
         try {
-            hibernateCfg = testingService.getDatabaseConnectionSettings();
-            info += " from file(s): " + Arrays.toString(testingService.getAllSettingsFilenames());
+            hibernateCfg = standardTestingService.getDatabaseConnectionSettings();
+            info += " from file(s): " + Arrays.toString(standardTestingService.getAllSettingsFilenames());
         } catch (IOException e) {
             /*
              * not sure if we can actually do anything useful with this

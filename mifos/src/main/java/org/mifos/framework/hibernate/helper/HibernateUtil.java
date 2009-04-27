@@ -38,7 +38,7 @@ import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
-import org.mifos.framework.util.TestingService;
+import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class HibernateUtil {
@@ -225,7 +225,7 @@ public class HibernateUtil {
 
     private void initializeDatabaseConnnectionSettings() {
         try {
-            config.setProperties(new TestingService().getDatabaseConnectionSettings());
+            config.setProperties(new StandardTestingService().getDatabaseConnectionSettings());
         } catch (IOException e) {
             throw new HibernateStartUpException(e);
         }

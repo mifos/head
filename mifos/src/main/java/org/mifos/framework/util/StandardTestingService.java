@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util;
 
 import java.io.File;
@@ -32,17 +32,20 @@ import java.util.Properties;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.service.test.TestingService;
 
 /**
  * Encapsulates all logic necessary to have the application behave differently
  * during acceptance and integration tests.
  */
-public class TestingService {
-    MifosLogger LOG = null;
+public class StandardTestingService implements TestingService {
+    private MifosLogger LOG = null;
     private final ConfigurationLocator configurationLocator;
 
-    public TestingService() {
+    public StandardTestingService() {
         LOG = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
         configurationLocator = new ConfigurationLocator();
     }
@@ -66,7 +69,7 @@ public class TestingService {
             overrides.load(new FileInputStream(overridesFile));
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            System.err.println("TestingService: local overrides not found.");
+            LOG.warn("StandardTestingService: local overrides not found.");
         }
 
         mifosSpecific.putAll(overrides);
@@ -82,9 +85,9 @@ public class TestingService {
             settingsFilenames.add(optionalOverrides);
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            System.err.println("TestingService: no local overrides in use.");
+            LOG.warn("StandardTestingService: no local overrides in use.");
         }
-        return settingsFilenames.toArray(new String[]{});
+        return settingsFilenames.toArray(new String[] {});
     }
 
     public String getDefaultSettingsFilename() {
@@ -141,5 +144,20 @@ public class TestingService {
         }
 
         return hibernateSpecific;
+    }
+
+    @Override
+    public void reinitializeCaches() {
+        if ("main".equals(getTestMode())) {
+            throw new RuntimeException("only allowed during testing");
+        } else {
+            try {
+                HierarchyManager.getInstance().init();
+                AuthorizationManager.getInstance().init();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            LOG.info("cache reinitialization complete.");
+        }
     }
 }
