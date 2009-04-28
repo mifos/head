@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.test.acceptance.loan;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -26,7 +26,7 @@ import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.InitializeApplicationPage;
 import org.mifos.test.acceptance.framework.LoanAccountPage;
-import org.mifos.test.acceptance.framework.LoginPage; 
+import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
@@ -55,7 +55,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);  
+        appLauncher = new AppLauncher(selenium);
         InitializeApplicationPage initApplicationPage = new InitializeApplicationPage(this.selenium);
         initApplicationPage.navigateToInitializeApplicationPage();
     }
@@ -65,21 +65,19 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-     public void newWeeklyClientLoanAccount() throws Exception {
-     CreateLoanAccountSearchParameters searchParameters = new
-     CreateLoanAccountSearchParameters();
-     searchParameters.setSearchString("Client - Veronica Abisya");
-     searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
-            
-     CreateLoanAccountSubmitParameters submitAccountParameters = new
-     CreateLoanAccountSubmitParameters();
-     submitAccountParameters.setAmount("1012.0");
-     dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip",
-     dataSource);
-            
-     createLoanAndCheckAmount(searchParameters, submitAccountParameters);
-     }
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void newWeeklyClientLoanAccount() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1012.0");
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+
+        createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
@@ -95,22 +93,19 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
     }
 
-     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-     public void
-     newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
-     CreateLoanAccountSearchParameters searchParameters = new
-     CreateLoanAccountSearchParameters();
-     searchParameters.setSearchString("Client - Mia Monthly3rdFriday");
-     searchParameters.setLoanProduct("MonthlyClientFlatLoanThirdFridayOfMonth");
-            
-     CreateLoanAccountSubmitParameters submitAccountParameters = new
-     CreateLoanAccountSubmitParameters();
-     submitAccountParameters.setAmount("2765.0");
-     dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml.zip",
-     dataSource);
-            
-     createLoanAndCheckAmount(searchParameters, submitAccountParameters);
-     }
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void newMonthlyClientLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Mia Monthly3rdFriday");
+        searchParameters.setLoanProduct("MonthlyClientFlatLoanThirdFridayOfMonth");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("2765.0");
+        dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml.zip", dataSource);
+
+        createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+    }
 
     private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
