@@ -146,6 +146,12 @@ public class StandardTestingService implements TestingService {
         return hibernateSpecific;
     }
 
+    /**
+     * Provides for re-initialization of certain custom Mifos caches. Necessary
+     * since acceptance tests may truncate and reload data directly in a Mifos
+     * database without the application's knowledge, causing the application to
+     * behave unexpectedly. Only allowed during acceptance tests.
+     */
     @Override
     public void reinitializeCaches() {
         if ("main".equals(getTestMode())) {
