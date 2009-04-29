@@ -61,8 +61,8 @@
 
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
-    <property name="birt.report.design.dir" value="${basedir}/BirtReportDesign"/>
-    <property name="birt.report.resource.dir" value="${basedir}/BirtReportResource"/>
+    <property name="birt.report.design.dir" value="${resources.dir}/BirtReportDesign"/>
+    <property name="birt.report.resource.dir" value="${resources.dir}/BirtReportResource"/>
     <property name="sql.dir" value="${basedir}/src/main/sql"/>
     <property name="test.sql.dir" value="${basedir}/src/test/sql"/>
     <property name="build.dir" value="${basedir}/target"/>
