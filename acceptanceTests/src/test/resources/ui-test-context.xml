@@ -21,5 +21,6 @@
 
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
     <bean id="dbUnitUtilities" class="org.mifos.test.acceptance.framework.DbUnitUtilities" />
+    <bean id="initRemote" class="org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService" />
 
 </beans>

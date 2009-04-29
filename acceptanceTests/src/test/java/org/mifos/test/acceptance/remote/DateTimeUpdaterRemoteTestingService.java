@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework;
+package org.mifos.test.acceptance.remote;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,15 +27,16 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.mifos.test.acceptance.framework.TimeMachinePage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class TimeMachine {
+public class DateTimeUpdaterRemoteTestingService {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
     
-    public TimeMachine(Selenium selenium) {
+    public DateTimeUpdaterRemoteTestingService(Selenium selenium) {
         this.selenium = selenium;
     }
 

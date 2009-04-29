@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.LoanProductDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -48,6 +49,8 @@ public class EditLoanProductTest extends UiTestCaseBase {
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     private AppLauncher appLauncher;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
         
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -63,7 +66,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void viewExistingLoanProduct() throws Exception {
-        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         ViewLoanProductsPage viewLoanProducts = loginAndNavigateToViewLoanProductsPage();
         LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails("FlatInterestLoanProduct1");
         loanProductDetailsPage.verifyPage();
@@ -72,7 +75,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void editExistingLoanProduct() throws Exception {
-        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         ViewLoanProductsPage viewLoanProducts = loginAndNavigateToViewLoanProductsPage();
         LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails("FlatInterestLoanProduct1");
         EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();

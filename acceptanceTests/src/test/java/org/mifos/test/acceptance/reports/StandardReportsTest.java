@@ -30,6 +30,7 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryS
 import org.mifos.test.acceptance.framework.reports.CollectionSheetReportPage;
 import org.mifos.test.acceptance.framework.reports.CollectionSheetReportParametersPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,6 +47,8 @@ public class StandardReportsTest extends UiTestCaseBase {
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
     private AppLauncher appLauncher;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -62,7 +65,7 @@ public class StandardReportsTest extends UiTestCaseBase {
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void generateCollectionSheetEntryReport() throws Exception {
-        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("MyOffice1233265929385");
         formParameters.setLoanOfficer("Joe1233265931256 Guy1233265931256");

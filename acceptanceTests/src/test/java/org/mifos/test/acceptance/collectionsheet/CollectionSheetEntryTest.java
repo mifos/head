@@ -25,7 +25,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.TimeMachine;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
@@ -33,6 +32,8 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryP
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -62,21 +63,23 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        TimeMachine timeMachine = new TimeMachine(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,2,0,0,0);
-        timeMachine.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
-        new TimeMachine(selenium).resetDateTime();       
+        new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();       
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -87,7 +90,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
         
-        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         
         CollectionSheetEntrySelectPage selectPage = 
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -110,7 +113,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void twoLoansWithSameProductHasMergedLoanAmount() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryEnterData(formParameters);
         //check amount due for client who has two loan accounts on the same product
         enterDataPage.verifyLoanAmountValue(3, 0, 2088.0);
@@ -127,7 +130,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             formParameters.setCenter("MyCenter1233266935468");
             formParameters.setPaymentMode("Cash");
 
-            dbUnitUtilities.loadDataFromFile("acceptance_medium_005_dbunit.xml.zip", dataSource);
+            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml.zip", dataSource, selenium);
             CollectionSheetEntryConfirmationPage confirmPage = new CollectionSheetEntryTestHelper(selenium).submitDefaultCollectionSheetEntryData(formParameters);
             confirmPage.verifyPage();
             verifyCollectionSheetData("ColSheetLoanTest_001_result_dbunit.xml.zip");

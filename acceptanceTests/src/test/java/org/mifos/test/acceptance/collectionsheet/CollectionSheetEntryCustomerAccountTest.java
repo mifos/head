@@ -28,7 +28,6 @@ import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.TimeMachine;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
@@ -36,6 +35,8 @@ import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryP
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -67,23 +68,25 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
-    public DbUnitUtilities dbUnitUtilities;
+    private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        TimeMachine timeMachine = new TimeMachine(selenium);
+        DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,2,23,1,0,0,0);
-        timeMachine.setDateTime(targetTime);
+        dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
     }
     
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
-         new TimeMachine(selenium).resetDateTime();
+         new DateTimeUpdaterRemoteTestingService(selenium).resetDateTime();
         
     }
   
@@ -93,7 +96,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     public void clientAccountFeesSavedToDatabase() throws Exception {
         try {
             SubmitFormParameters formParameters = getFormParametersForTestOffice();   
-            dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
             enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
             verifyCollectionSheetData("ColSheetCustAcct_001_result_dbunit.xml.zip");
         } catch (Error e) {
@@ -105,7 +108,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void previousPaidFeeNotDisplayedOnSecondCollectionSheetEntry() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountData(formParameters, BASIC_CUSTOMER_ACCT_VALUES);
         //navigate back to collection sheet entry
         HomePage homePage = confirmationPage.navigateToHomePage();
@@ -126,7 +129,7 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void unpaidFeeDisplayedOnSecondCollectionSheetEntryAndSaved() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        dbUnitUtilities.loadDataFromFile("acceptance_small_003_dbunit.xml.zip", dataSource);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntryConfirmationPage confirmationPage = enterAndSubmitCustomerAccountData(formParameters, FIRST_PARTIAL_CUSTOMER_ACCT_VALUES);
         //navigate back to collection sheet entry
         HomePage homePage = confirmationPage.navigateToHomePage();

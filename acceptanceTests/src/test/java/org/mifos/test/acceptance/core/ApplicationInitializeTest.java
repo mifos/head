@@ -20,19 +20,19 @@
 
 package org.mifos.test.acceptance.core;
 
-
 import org.mifos.test.acceptance.framework.InitializeApplicationPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"initializeApplicationTest","acceptance","ui"})
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
+@Test(sequential = true, groups = { "initializeApplicationTest", "acceptance", "ui" })
 public class ApplicationInitializeTest extends UiTestCaseBase {
 
     public void applicationInitTest() {
-        InitializeApplicationPage initializeApplicationPage = new InitializeApplicationPage(this.selenium);
-        initializeApplicationPage.navigateToInitializeApplicationPage();
+        InitializeApplicationPage initializeApplicationPage = new InitializeApplicationRemoteTestingService()
+                .reinitializeApplication(this.selenium);
         initializeApplicationPage.verifyPage();
     }
 }
