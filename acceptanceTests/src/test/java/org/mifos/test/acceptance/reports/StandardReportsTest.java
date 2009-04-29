@@ -27,7 +27,6 @@ import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
-import org.mifos.test.acceptance.framework.reports.CollectionSheetReportPage;
 import org.mifos.test.acceptance.framework.reports.CollectionSheetReportParametersPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -61,7 +60,7 @@ public class StandardReportsTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-
+    
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void generateCollectionSheetEntryReport() throws Exception {
@@ -79,10 +78,13 @@ public class StandardReportsTest extends UiTestCaseBase {
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         ReportsPage reportsPage = homePage.navigateToReportsPage();
         CollectionSheetReportParametersPage collSheetReportParametersPage = reportsPage.selectCollectionSheetEntryReport();
-        CollectionSheetReportPage collSheetReportPage = collSheetReportParametersPage.generateCollectionSheetEntryReport(formParameters);
-        // TODO: No validation of report data done with this test - simply looking for string on report page
-        collSheetReportPage.verifyPage();
-        
+        collSheetReportParametersPage.generateCollectionSheetEntryReport(formParameters);
+        // TODO: No validation for now.  This will simply demonstrate the problem if 
+        // PDF generation is messed up (as it was when the itext library was removed)
+        // An attempt was made to validate by using the BIRT url to generate the PDF
+        // but following that url includes parameter dropdown screens before whatever
+        // call actually generates the PDF
+       
     }
 
 }
