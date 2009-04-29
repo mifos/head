@@ -41,6 +41,7 @@ import org.apache.struts.tiles.TilesRequestProcessor;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
@@ -50,8 +51,10 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PreviousRequestValues;
 
 public class MifosRequestProcessor extends TilesRequestProcessor {
+    private MifosLogger LOG = null;
 
 	public MifosRequestProcessor() {
+	    LOG = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 	}
 
 	private ActivityContext setActivityContextFromRequest(
@@ -246,8 +249,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		}
 
 		catch (Exception e) {
-			// FIXME: this needs to be logged.
-			e.printStackTrace();
+			LOG.error("error processing request", e);
 			forward = (processException(request, response, e, form, mapping));
 			// set the last forward in the activity context
 			if (activityContext != null)
