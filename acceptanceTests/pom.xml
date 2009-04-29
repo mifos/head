@@ -56,6 +56,11 @@
                                     <installDir>${cargo.install.directory}/${container.name}</installDir>
                                 </zipUrlInstaller>
                             </container>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>-Xms1024m -Xmx1024m</cargo.jvmargs>
+                                </properties>
+                            </configuration>
                         </configuration>
                     </plugin>
                 </plugins>
