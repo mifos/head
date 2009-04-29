@@ -34,6 +34,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.UserViewDetailsPage;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -51,6 +52,7 @@ public class CenterTest extends UiTestCaseBase {
 	public void setUp() throws Exception {
 		super.setUp();
 		appLauncher = new AppLauncher(selenium);
+		new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
 	}
 
 	@AfterMethod
