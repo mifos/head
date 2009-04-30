@@ -188,9 +188,7 @@
             </fileset>
         </copy>
         <copy todir="${build.web-inf}">
-            <fileset dir="${src.web-inf.dir}">
-                <exclude name="web.xml"/>
-            </fileset>
+            <fileset dir="${src.web-inf.dir}"/>
         </copy>
         <copy todir="${build.src.dir}/pages">
             <fileset dir="${src.webapp.dir}/pages"/>
@@ -246,11 +244,6 @@
         <copy todir="${build.src.dir}">
             <fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
         </copy>
-        <concat destfile="${build.web-inf}/web.xml" append="no" force="yes" >
-            <fileset dir="${src.web-inf.dir}" includes="web.xml"/>
-            <fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
-        </concat>
-        <replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="   &lt;!-- section: birt web viewer --&gt;" />
     </target>
 
     <target name="copy_birt_reports">

@@ -30,6 +30,14 @@
                         <directory>reporting/BirtReportResource</directory>
                         <targetPath>report/BirtReportResource</targetPath>
                     </resource>
+                    <resource>
+                        <directory>reporting/BirtWebViewer</directory>
+                        <excludes>
+                            <exclude>*.jsp</exclude>
+                            <exclude>*.rptdesign</exclude>
+                            <exclude>**/web.xml</exclude>
+                        </excludes>
+                    </resource>
 				</webResources>
 			</configuration>
 		</plugin>
