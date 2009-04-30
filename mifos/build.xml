@@ -11,6 +11,7 @@
     <property name="java.home" value="${env.JAVA_HOME}"/>
     <property name="src.dir" value="${basedir}/src/main/java"/>
     <property name="resources.dir" value="${basedir}/src/main/resources"/>
+    <property name="reporting.dir" value="${basedir}/reporting"/>
     <property name="test.resources.dir" value="${basedir}/src/test/resources"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
 	<property name="config.dir" value = "${basedir}/src/main/resources/org/mifos/config"/>
@@ -60,9 +61,9 @@
     <property name="test.memory" value="1024M" />
 
     <property name="lib.dir" value="${basedir}/lib"/>
-    <property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
-    <property name="birt.report.design.dir" value="${resources.dir}/BirtReportDesign"/>
-    <property name="birt.report.resource.dir" value="${resources.dir}/BirtReportResource"/>
+    <property name="birt.web.viewer.dir" value="${reporting.dir}/BirtWebViewer"/>
+    <property name="birt.report.design.dir" value="${reporting.dir}/BirtReportDesign"/>
+    <property name="birt.report.resource.dir" value="${reporting.dir}/BirtReportResource"/>
     <property name="sql.dir" value="${basedir}/src/main/sql"/>
     <property name="test.sql.dir" value="${basedir}/src/test/sql"/>
     <property name="build.dir" value="${basedir}/target"/>
