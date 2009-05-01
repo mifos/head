@@ -20,6 +20,11 @@
  
 package org.mifos.test.acceptance.framework;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountsSuccessPage extends AbstractPage {
@@ -31,11 +36,33 @@ public class CreateLoanAccountsSuccessPage extends AbstractPage {
     public void verifyPage() {
         this.verifyPage("CreateMultipleLoanAccountsConfirm");
     }
-
-    public LoanAccountPage selectLoanAndNavigateToLoanAccountPage(int loanNumberToChoose) {
+    
+    public LoanAccountPage selectLoansAndNavigateToLoanAccountPage(int loanNumberToChoose) {
         selenium.click("id=CreateMultipleLoanAccountsConfirm.link.account." + loanNumberToChoose);
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+    
+    public List<String> verifyAndGetLoanAccountNumbers(int expectedLoanAccountNumbers){
+        String[] links = selenium.getAllLinks();
+        List<String> accountNumbers = new ArrayList<String>();        
+        for (String link : links) {
+            if (link.startsWith("CreateMultipleLoanAccountsConfirm.link.account.")){
+                String text = selenium.getText("id="+link);
+                String accountNumber = text.split("#")[1];
+                accountNumbers.add(accountNumber);
+            }
+        }
+        
+        Assert.assertEquals(expectedLoanAccountNumbers, accountNumbers.size());        
+
+        return accountNumbers;
+    }
+    
+    public HomePage navigateToHomePage(){
+        selenium.click("id=clientsAndAccountsHeader.link.home");
+        waitForPageToLoad();
+        return new HomePage(selenium);
     }
 
 }

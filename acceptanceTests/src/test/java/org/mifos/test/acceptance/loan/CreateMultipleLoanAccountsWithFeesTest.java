@@ -31,6 +31,7 @@ import org.mifos.test.acceptance.framework.LoanAccountPage;
 import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.CreateMultipleLoanAccountSelectParameters;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -42,39 +43,7 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"CreateMultipleLoanAccountsWithFeesTest","acceptance","ui", "workInProgress"})
 public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
-
-    public class CreateMultipleLoanAccountSelectParameters {
-        public String getBranch() {
-            return this.branch;
-        }
-        public void setBranch(String branch) {
-            this.branch = branch;
-        }
-        public String getLoanOfficer() {
-            return this.loanOfficer;
-        }
-        public void setLoanOfficer(String loanOfficer) {
-            this.loanOfficer = loanOfficer;
-        }
-        public String getCenter() {
-            return this.center;
-        }
-        public void setCenter(String center) {
-            this.center = center;
-        }
-        public String getLoanProduct() {
-            return this.loanProduct;
-        }
-        public void setLoanProduct(String loanProduct) {
-            this.loanProduct = loanProduct;
-        }
-        
-        private String branch;
-        private String loanOfficer;
-        private String center;
-        private String loanProduct;
-    }
-
+    
     private AppLauncher appLauncher;
 
     @Autowired
@@ -88,6 +57,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml.zip", dataSource);
         appLauncher = new AppLauncher(selenium);
     }
 
@@ -113,7 +83,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         createLoanAccountsEntryPage.selectClients(2, "Client - Polly Gikonyo");
         CreateLoanAccountsSuccessPage createLoanAccountsSuccessPage = createLoanAccountsEntryPage.submitAndNavigateToCreateMultipleLoanAccountsSuccessPage();
         createLoanAccountsSuccessPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoanAndNavigateToLoanAccountPage(0);
+        LoanAccountPage loanAccountPage = createLoanAccountsSuccessPage.selectLoansAndNavigateToLoanAccountPage(0);
         loanAccountPage.verifyFeeExists("2.7");
     }
 

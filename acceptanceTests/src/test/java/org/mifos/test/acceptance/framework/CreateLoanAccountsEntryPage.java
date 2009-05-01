@@ -34,6 +34,10 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
         Assert.assertEquals(selenium.getText("CreateMultipleLoanAccountsSearchResults.clientName." + clientNumber), expectedClientName);
         selenium.check("CreateMultipleLoanAccountsSearchResults.checkbox." + clientNumber);
     }
+    
+    public void updateLoanPurposeForClient(int clientNumber, String loanPurpose){
+        selenium.select("clientDetails[" + clientNumber + "].businessActivity", loanPurpose);
+    }
 
     public CreateLoanAccountsSuccessPage submitAndNavigateToCreateMultipleLoanAccountsSuccessPage() {
         selenium.click("CreateMultipleLoanAccountsSearchResults.button.submit");
@@ -41,6 +45,12 @@ public class CreateLoanAccountsEntryPage extends AbstractPage {
         return new CreateLoanAccountsSuccessPage(selenium);
     }
 
+    public CreateLoanAccountsSuccessPage saveAndNavigateToCreateMultipleLoanAccountsSuccessPage() {
+        selenium.click("CreateMultipleLoanAccountsSearchResults.button.saveForLater");
+        waitForPageToLoad();
+        return new CreateLoanAccountsSuccessPage(selenium);
+    }
+    
     public void verifyPage() {
         this.verifyPage("CreateMultipleLoanAccountsSearchResults");
     }

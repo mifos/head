@@ -39,8 +39,28 @@ public class LoanAccountPage extends AbstractPage {
     }
 
     public void verifyLoanAmount(String amount) {
-        Assert.assertTrue(selenium.isTextPresent(amount));
-        
+        Assert.assertTrue(selenium.isTextPresent(amount));        
     }
-
+   
+    public void verifyLoanIsForClient(String clientName){
+        Assert.assertTrue(selenium.isTextPresent(clientName));
+    }
+    
+    public void verifyPurpose (String purpose){
+        Assert.assertTrue(selenium.isTextPresent(purpose));
+    }
+    
+    public void verifyLoanIsPendingApproval(){
+        Assert.assertTrue(selenium.isTextPresent("Application Pending Approval"));
+    }
+    
+    public void verifyLoanIsInPartialApplication(){
+        Assert.assertTrue(selenium.isTextPresent("Partial Application "));
+    }
+    
+    public HomePage navigateToHomePage(){
+        selenium.click("id=clientsAndAccountsHeader.link.home");
+        waitForPageToLoad();
+        return new HomePage(selenium);
+    }
 }

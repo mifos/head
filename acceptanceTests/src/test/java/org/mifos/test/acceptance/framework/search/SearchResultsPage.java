@@ -20,6 +20,7 @@
  
 package org.mifos.test.acceptance.framework.search;
 
+import org.mifos.test.acceptance.framework.LoanAccountPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.group.GroupViewDetailsPage;
 
@@ -51,5 +52,12 @@ public class SearchResultsPage extends MifosPage {
         selenium.click(locator);
         waitForPageToLoad();
         return new GroupViewDetailsPage(selenium);
+    }
+    
+    public LoanAccountPage navigateToLoanAccountDetailPage(String loanId){
+      String xpath = "//a[contains(@href,'<loanId>')]";
+      selenium.click(xpath.replace("<loanId>", loanId));
+      waitForPageToLoad();
+      return new LoanAccountPage(selenium);
     }
 }
