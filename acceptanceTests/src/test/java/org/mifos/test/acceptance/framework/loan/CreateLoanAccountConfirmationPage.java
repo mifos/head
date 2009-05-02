@@ -20,7 +20,6 @@
  
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.LoanAccountPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import com.thoughtworks.selenium.Selenium;
 

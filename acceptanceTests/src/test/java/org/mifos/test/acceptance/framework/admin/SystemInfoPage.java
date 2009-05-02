@@ -18,29 +18,38 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.admin;
 
+import java.util.Locale;
+
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class ConfirmCenterMembershipPage extends MifosPage {
+public class SystemInfoPage extends MifosPage {
 
-
-    public ConfirmCenterMembershipPage(Selenium selenium) {
+    public SystemInfoPage(Selenium selenium) {
         super(selenium);
     }
-
-    public void verifyPage() {
-        this.verifyPage("ConfirmCenterMembership");
-    }
-
-    public GroupViewDetailsPage submitMembershipChange() {
-        selenium.click("confirmcentermembership.button.submit");
-        waitForPageToLoad();
-        return new GroupViewDetailsPage(selenium);
-    }
-
-
     
+    public SystemInfoPage verifyPage() {
+        verifyPage("SysInfo");
+        return this;
+    }
+
+    public String getDateTime() {
+        return selenium.getText("sysinfo.text.dateTime");
+    }
+    
+    public void verifyDateTime(DateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withLocale(new Locale("en","GB"));
+        String expectedDateTime =  formatter.print(dateTime.getMillis());
+        Assert.assertEquals(expectedDateTime, getDateTime(),"System date time and Mifos date time should be the same.");        
+    }
+
 }

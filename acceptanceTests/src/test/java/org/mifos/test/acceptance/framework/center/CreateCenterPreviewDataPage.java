@@ -18,26 +18,25 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateGroupConfirmationPage extends MifosPage {
+public class CreateCenterPreviewDataPage extends MifosPage {
 
+	public CreateCenterPreviewDataPage() {
+		super();
+	}
 
-    public CreateGroupConfirmationPage(Selenium selenium) {
-        super(selenium);
-    }
-
-    public void verifyPage() {
-        this.verifyPage("CreateGroupConfirmation");
-    }
-
-    public GroupViewDetailsPage navigateToGroupDetailsPage() {
-        selenium.click("creategroupconfirmation.link.viewGroupDetail");
+	public CreateCenterPreviewDataPage(Selenium selenium) {
+		super(selenium);
+	}
+	
+    public CreateCenterConfirmationPage submit() {
+        selenium.click("previewcenter.button.submit");
         waitForPageToLoad();
-      return new GroupViewDetailsPage(selenium);
+        return new CreateCenterConfirmationPage(selenium);
     }
-    
 }

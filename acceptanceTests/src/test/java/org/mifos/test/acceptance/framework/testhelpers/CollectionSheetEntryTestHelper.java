@@ -23,12 +23,12 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.login.LoginPage;
 
 import com.thoughtworks.selenium.Selenium;
 

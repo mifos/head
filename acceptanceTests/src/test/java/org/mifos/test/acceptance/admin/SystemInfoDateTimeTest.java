@@ -24,13 +24,13 @@ import java.io.UnsupportedEncodingException;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.SystemInfoPage;
 import org.mifos.test.acceptance.framework.TimeMachinePage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.SystemInfoPage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "acceptance", "ui" })
+@Test(sequential = true, groups = {"acceptance","ui"})
 public class SystemInfoDateTimeTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

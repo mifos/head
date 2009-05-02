@@ -23,10 +23,10 @@ package org.mifos.test.acceptance.reports;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.reports.CollectionSheetReportParametersPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "StandardReports", "acceptance", "ui" })
+@Test(sequential = true, groups = {"reports","acceptance","ui"})
 public class StandardReportsTest extends UiTestCaseBase {
 
     @Autowired

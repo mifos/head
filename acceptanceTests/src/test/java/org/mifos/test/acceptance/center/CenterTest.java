@@ -20,20 +20,20 @@
  
 package org.mifos.test.acceptance.center;
 
-import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.CreateCenterChooseOfficePage;
-import org.mifos.test.acceptance.framework.CreateCenterConfirmationPage;
-import org.mifos.test.acceptance.framework.CreateCenterEnterDataPage;
-import org.mifos.test.acceptance.framework.CreateCenterPreviewDataPage;
-import org.mifos.test.acceptance.framework.CreateMeetingPage;
-import org.mifos.test.acceptance.framework.CreateUserEnterDataPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
+import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
+import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
+import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
+import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
+import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
@@ -42,7 +42,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"createCenterStory","acceptance","ui"})
+@Test(sequential=true, groups={"smoke","center","acceptance","ui"})
 public class CenterTest extends UiTestCaseBase {
 
 	private AppLauncher appLauncher; 

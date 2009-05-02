@@ -18,26 +18,29 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateGroupConfirmationPage extends MifosPage {
+public class CreateUserConfirmationPage extends MifosPage {
 
-
-    public CreateGroupConfirmationPage(Selenium selenium) {
+    /**
+     * @param selenium
+     */
+    public CreateUserConfirmationPage(Selenium selenium) {
         super(selenium);
     }
-
-    public void verifyPage() {
-        this.verifyPage("CreateGroupConfirmation");
-    }
-
-    public GroupViewDetailsPage navigateToGroupDetailsPage() {
-        selenium.click("creategroupconfirmation.link.viewGroupDetail");
-        waitForPageToLoad();
-      return new GroupViewDetailsPage(selenium);
-    }
     
+    public String getConfirmation() {
+        return selenium.getText("createuser_confirmation.text.confirmation");
+    }    
+
+    public UserViewDetailsPage navigateToUserViewDetailsPage() {
+        selenium.click("createuser_confirmation.link.viewUser");
+        waitForPageToLoad();
+        return new UserViewDetailsPage(selenium);
+    }
+
 }

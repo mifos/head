@@ -18,29 +18,36 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage.SubmitFormParameters;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class ConfirmCenterMembershipPage extends MifosPage {
+public class CenterViewDetailsPage extends MifosPage {
 
-
-    public ConfirmCenterMembershipPage(Selenium selenium) {
+    public CenterViewDetailsPage(Selenium selenium) {
         super(selenium);
     }
-
-    public void verifyPage() {
-        this.verifyPage("ConfirmCenterMembership");
-    }
-
-    public GroupViewDetailsPage submitMembershipChange() {
-        selenium.click("confirmcentermembership.button.submit");
-        waitForPageToLoad();
-        return new GroupViewDetailsPage(selenium);
-    }
-
-
     
+    public String getCenterName() {
+        return selenium.getText("viewCenterDetails.text.displayName");
+    }
+
+    public String getStatus() {
+        return selenium.getText("viewCenterDetails.text.status");
+    }
+    
+    public String getLoanOfficer() {
+        return selenium.getText("viewCenterDetails.text.loanOfficer");
+    }
+
+    public void verifyActiveCenter(SubmitFormParameters formParameters) {
+        Assert.assertEquals(getCenterName(), formParameters.getCenterName());
+        Assert.assertEquals(getStatus(), "Active");
+        Assert.assertEquals(getLoanOfficer(), formParameters.getLoanOfficer());
+       
+    }
 }

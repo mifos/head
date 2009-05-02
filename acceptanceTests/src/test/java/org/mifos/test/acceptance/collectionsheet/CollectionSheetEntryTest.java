@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 import org.joda.time.DateTime;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
+@Test(sequential=true, groups={"smoke","collectionsheet","acceptance","ui"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     private static final String FINANCIAL_TRXN = "FINANCIAL_TRXN";

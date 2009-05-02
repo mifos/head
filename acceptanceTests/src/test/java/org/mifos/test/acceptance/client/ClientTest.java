@@ -20,15 +20,15 @@
  
 package org.mifos.test.acceptance.client;
 
-import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.CreateUserEnterDataPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.UserViewDetailsPage;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
+import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "createClientStory", "acceptance", "ui" })
+@Test(sequential = true, groups = {"smoke","client","acceptance","ui"})
 
 public class ClientTest extends UiTestCaseBase {
 

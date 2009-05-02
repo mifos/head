@@ -45,7 +45,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
+@Test(sequential=true, groups={"smoke","collectionsheet","acceptance","ui"})
 public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
 
     public static final String FEE_TRXN_DETAIL = "FEE_TRXN_DETAIL";

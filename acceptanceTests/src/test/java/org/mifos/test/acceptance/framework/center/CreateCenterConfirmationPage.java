@@ -18,26 +18,27 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.center;
 
-import org.mifos.test.acceptance.framework.MifosPage;
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateGroupConfirmationPage extends MifosPage {
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
+public class CreateCenterConfirmationPage extends MifosPage {
 
-    public CreateGroupConfirmationPage(Selenium selenium) {
+    public CreateCenterConfirmationPage(Selenium selenium) {
         super(selenium);
     }
-
+    
     public void verifyPage() {
-        this.verifyPage("CreateGroupConfirmation");
-    }
-
-    public GroupViewDetailsPage navigateToGroupDetailsPage() {
-        selenium.click("creategroupconfirmation.link.viewGroupDetail");
-        waitForPageToLoad();
-      return new GroupViewDetailsPage(selenium);
+        Assert.assertTrue(selenium.isElementPresent("createcenterconfirmation.text.confirmation"), "Confirmation message not found on create new center confirmation page");
     }
     
+    public CenterViewDetailsPage navigateToCenterViewDetailsPage() {
+        selenium.click("createcenterconfirmation.link.viewDetailsInfo");
+        waitForPageToLoad();
+        return new CenterViewDetailsPage(selenium);
+    }
+
 }

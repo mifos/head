@@ -20,9 +20,9 @@
  
 package org.mifos.test.acceptance.framework.search;
 
-import org.mifos.test.acceptance.framework.LoanAccountPage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 
 import com.thoughtworks.selenium.Selenium;
 

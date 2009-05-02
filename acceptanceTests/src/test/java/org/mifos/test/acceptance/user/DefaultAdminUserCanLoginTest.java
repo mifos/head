@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  * http://mingle.mifos.org:7070/projects/cheetah/cards/661
  */
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"userLoginStory","acceptance","ui"})
+@Test(sequential=true, groups={"smoke","user","acceptance","ui"})
 public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 
 	private AppLauncher appLauncher;

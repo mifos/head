@@ -24,13 +24,13 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoanAccountPage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -40,7 +40,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "CreateMultipleLoanAccountsWithFeesTest", "acceptance", "ui" })
+@Test(sequential = true, groups = {"smoke","loan","acceptance","ui"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

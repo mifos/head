@@ -18,26 +18,31 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.loanproduct;
 
-import org.mifos.test.acceptance.framework.MifosPage;
+
+import org.mifos.test.acceptance.framework.AbstractPage;
+
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateGroupConfirmationPage extends MifosPage {
+public class DefineNewLoanProductPreviewPage extends AbstractPage {
 
+    public DefineNewLoanProductPreviewPage() {
+        super();
+    }
 
-    public CreateGroupConfirmationPage(Selenium selenium) {
+    public DefineNewLoanProductPreviewPage(Selenium selenium) {
         super(selenium);
     }
-
+ 
     public void verifyPage() {
-        this.verifyPage("CreateGroupConfirmation");
+        this.verifyPage("CreateLoanProductPreview");
     }
 
-    public GroupViewDetailsPage navigateToGroupDetailsPage() {
-        selenium.click("creategroupconfirmation.link.viewGroupDetail");
+    public DefineNewLoanProductConfirmationPage submit() {
+        selenium.click("createLoanProductPreview.button.submit");
         waitForPageToLoad();
-      return new GroupViewDetailsPage(selenium);
-    }
-    
+        return new DefineNewLoanProductConfirmationPage(selenium);
+     }
+
 }

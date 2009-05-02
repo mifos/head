@@ -46,7 +46,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
+@Test(sequential=true, groups={"smoke","collectionsheet","acceptance","ui"})
 public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
 
     private static final int ATTENDANCE_P = CollectionSheetEntryEnterDataPage.ATTENDANCE_P;

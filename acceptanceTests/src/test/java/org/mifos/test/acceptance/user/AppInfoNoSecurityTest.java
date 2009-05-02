@@ -51,7 +51,7 @@ import org.testng.annotations.Test;
  * http://mingle.mifos.org:7070/projects/cheetah/cards/1103
  */
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"userLoginStory","acceptance","ui"})
+@Test(sequential=true, groups={"user","acceptance","ui"})
 public class AppInfoNoSecurityTest extends UiTestCaseBase {
 
 	private AppInfoNoSecurityPage appInfoNoSecurityPage;

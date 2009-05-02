@@ -21,23 +21,35 @@
 package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateGroupConfirmationPage extends MifosPage {
+public class GroupViewDetailsPage extends MifosPage {
+    public GroupViewDetailsPage() {
+        super();
+    }
 
-
-    public CreateGroupConfirmationPage(Selenium selenium) {
+    public GroupViewDetailsPage(Selenium selenium) {
         super(selenium);
     }
-
-    public void verifyPage() {
-        this.verifyPage("CreateGroupConfirmation");
-    }
-
-    public GroupViewDetailsPage navigateToGroupDetailsPage() {
-        selenium.click("creategroupconfirmation.link.viewGroupDetail");
-        waitForPageToLoad();
-      return new GroupViewDetailsPage(selenium);
-    }
     
+    public GroupViewDetailsPage verifyPage() {
+        verifyPage("ViewGroupDetails");
+        return this;
+    }
+
+    public void verifyStatus(String status) {
+        Assert.assertTrue(selenium.isTextPresent(status), "Expected string: " + status);     
+    }
+
+    public CenterSearchTransferGroupPage editCenterMembership() {
+        selenium.click("viewgroupdetails.link.editCenterMembership");
+        return new CenterSearchTransferGroupPage(selenium);
+    }
+
+    public void verifyLoanOfficer(String loanOfficer) {
+        Assert.assertTrue(selenium.isTextPresent(loanOfficer), "Expected string: " + loanOfficer);     
+        
+    }
 }

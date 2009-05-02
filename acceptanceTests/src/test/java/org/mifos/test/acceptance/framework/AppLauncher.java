@@ -20,6 +20,8 @@
  
 package org.mifos.test.acceptance.framework;
 
+import org.mifos.test.acceptance.framework.login.LoginPage;
+
 import com.thoughtworks.selenium.Selenium;
 
 public class AppLauncher extends AbstractPage {

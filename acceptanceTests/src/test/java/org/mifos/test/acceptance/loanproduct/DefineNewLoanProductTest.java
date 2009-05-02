@@ -22,10 +22,10 @@ package org.mifos.test.acceptance.loanproduct;
 
 
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"loanProducts","acceptance"})
+@Test(sequential=true, groups={"smoke","loanproduct","acceptance"})
 public class DefineNewLoanProductTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

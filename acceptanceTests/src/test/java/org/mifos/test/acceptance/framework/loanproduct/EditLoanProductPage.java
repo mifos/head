@@ -21,7 +21,7 @@
 package org.mifos.test.acceptance.framework.loanproduct;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.DefineNewLoanProductPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;

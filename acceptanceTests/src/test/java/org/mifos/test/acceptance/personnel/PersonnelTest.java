@@ -20,17 +20,17 @@
  
 package org.mifos.test.acceptance.personnel;
 
-import org.mifos.test.acceptance.framework.AdminPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.CreateUserEnterDataPage;
-import org.mifos.test.acceptance.framework.EditUserDataPage;
-import org.mifos.test.acceptance.framework.EditUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
-import org.mifos.test.acceptance.framework.LoginPage;
+import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.user.EditUserDataPage;
+import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
+import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "createUserStory", "acceptance", "ui" })
+@Test(sequential = true, groups = {"smoke","personnel","acceptance","ui"})
 public class PersonnelTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;

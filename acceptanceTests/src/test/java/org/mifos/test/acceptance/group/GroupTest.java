@@ -23,7 +23,6 @@ package org.mifos.test.acceptance.group;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
-import org.mifos.test.acceptance.framework.LoginPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.group.CenterSearchTransferGroupPage;
@@ -31,8 +30,10 @@ import org.mifos.test.acceptance.framework.group.ConfirmCenterMembershipPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupConfirmationPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupEntryPage.CreateGroupSubmitParameters;
+import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "GroupTest", "acceptance", "ui" })
+@Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
 public class GroupTest extends UiTestCaseBase {
 
     @Autowired

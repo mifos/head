@@ -18,26 +18,27 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.test.acceptance.framework.group;
+package org.mifos.test.acceptance.framework.office;
 
-import org.mifos.test.acceptance.framework.MifosPage;
 import com.thoughtworks.selenium.Selenium;
 
-public class CreateGroupConfirmationPage extends MifosPage {
+import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
+public class CreateOfficeConfirmationPage extends MifosPage {
 
-    public CreateGroupConfirmationPage(Selenium selenium) {
+    public CreateOfficeConfirmationPage(Selenium selenium) {
         super(selenium);
     }
-
+    
     public void verifyPage() {
-        this.verifyPage("CreateGroupConfirmation");
-    }
-
-    public GroupViewDetailsPage navigateToGroupDetailsPage() {
-        selenium.click("creategroupconfirmation.link.viewGroupDetail");
-        waitForPageToLoad();
-      return new GroupViewDetailsPage(selenium);
+        Assert.assertTrue(selenium.isElementPresent("createNewOfficeSuccessful.text.confirmation"), "Confirmation message not found on create new office confirmation page");
     }
     
+    public OfficeViewDetailsPage navigateToOfficeViewDetailsPage() {
+        selenium.click("createNewOfficeSuccessful.link.viewOfficeDetails");
+        waitForPageToLoad();
+        return new OfficeViewDetailsPage(selenium);
+    }
+
 }
