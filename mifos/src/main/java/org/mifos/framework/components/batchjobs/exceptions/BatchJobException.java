@@ -26,6 +26,7 @@ import java.util.List;
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class BatchJobException extends ApplicationException {
+	private static final long serialVersionUID = 1L;
 
 	protected final String key;
 
