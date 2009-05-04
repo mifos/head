@@ -47,7 +47,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
-		System.out.println("GenerateMeetingsForCustomerAndSavings starts ");
 		long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
 		AccountPersistence accountPersistence = new AccountPersistence();
 		List<Integer> customerAccountIds;
@@ -59,7 +58,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 					.getActiveCustomerAndSavingsAccounts();
 			accountCount = customerAccountIds.size();
 			long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
-			System.out.println("Time to execute the query " + duration + " . Got " + accountCount + " accounts.");
+			getLogger().info("Time to execute the query " + duration + " . Got " + accountCount + " accounts.");
 			if (accountCount == 0)
 			{
 				return;
@@ -112,7 +111,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 					if (updatedRecordCount % 1000 == 0)
 					{
 						long time = new DateTimeService().getCurrentDateTime().getMillis();
-						System.out.println("out of " + i + " accounts processed, " + updatedRecordCount +
+						getLogger().info("out of " + i + " accounts processed, " + updatedRecordCount +
 								" accounts updated. The last 1000 updated in " + (time - startTime) + 
 								" milliseconds. There are " + (accountCount -i) + " more accounts to be processed.");
 						startTime = time;
@@ -127,7 +126,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				
 		} catch (Exception e) 
 			{
-			    System.out.println("account " + currentAccountId.intValue() + " exception " + e.getMessage());
+		        getLogger().info("account " + currentAccountId.intValue() + " exception " + e.getMessage());
 				getLogger().debug("GenerateMeetingsForCustomerAndSavingsHelper " + e.getMessage());
 				StaticHibernateUtil.rollbackTransaction();
 				if (currentAccountId != null)
@@ -142,9 +141,10 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				StaticHibernateUtil.closeSession();
 			}
 		
-		if (errorList.size() > 0)
+		if (errorList.size() > 0) {
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-		System.out.println("GenerateMeetingsForCustomerAndSavings ends successfully. Ran in " +  (new DateTimeService().getCurrentDateTime().getMillis()-taskStartTime));
+		}
+		getLogger().info("GenerateMeetingsForCustomerAndSavings ran in " +  (new DateTimeService().getCurrentDateTime().getMillis()-taskStartTime));
 		
 	}
 

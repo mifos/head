@@ -58,6 +58,7 @@ public class CollectionSheetHelper extends TaskHelper {
 
 	public CollectionSheetHelper(MifosTask mifosTask) {
 		super(mifosTask);
+		setLogger(MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER));
 	}
 
 	public CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
@@ -107,10 +108,7 @@ public class CollectionSheetHelper extends TaskHelper {
 				StaticHibernateUtil.commitTransaction();
 			} catch (Exception ae) {
 				StaticHibernateUtil.rollbackTransaction();
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.error(
-								"Collection sheet generation failed also the status could not be updated");
+				getLogger().error("Collection sheet generation failed also the status could not be updated", ae);
 			}
 		} finally {
 			StaticHibernateUtil.closeSession();
@@ -129,30 +127,22 @@ public class CollectionSheetHelper extends TaskHelper {
 		List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
 				.getCustFromAccountActionsDate(collectionSheet
 						.getCollSheetDate());
-		MifosLogManager
-				.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-				.debug(
-						"After retrieving account action date objects for next meeting date. ");
+		getLogger().debug("After retrieving account action date objects for next meeting date. ");
 		if (null != accountActionDates && accountActionDates.size() > 0) {
 			collectionSheet.populateAccountActionDates(accountActionDates);
 		}
 		List<LoanBO> loanBOs = new CollectionSheetPersistence()
 				.getLnAccntsWithDisbursalDate(collectionSheet
 						.getCollSheetDate());
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
-				"After retrieving loan accounts due for disbursal");
+		getLogger().debug("After retrieving loan accounts due for disbursal");
 		if (null != loanBOs && loanBOs.size() > 0) {
 			collectionSheet.addLoanDetailsForDisbursal(loanBOs);
-			MifosLogManager
-					.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-					.debug(
-							"After processing loan accounts which had disbursal due.");
+			getLogger().debug("After processing loan accounts which had disbursal due.");
 		}
 		if (null != collectionSheet.getCollectionSheetCustomers()
 				&& collectionSheet.getCollectionSheetCustomers().size() > 0) {
 			collectionSheet.updateCollectiveTotals();
-			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-					.debug("After updating collective totals");
+			getLogger().debug("After updating collective totals");
 		}
 	}
 

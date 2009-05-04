@@ -53,6 +53,10 @@ public abstract class TaskHelper {
 	protected MifosLogger getLogger() {
 		return logger;
 	}
+	
+	protected void setLogger(MifosLogger logger) {
+        this.logger = logger;
+    }
 
 	/**
 	 * This method is responsible for inserting a row with the task name in the
@@ -96,8 +100,7 @@ public abstract class TaskHelper {
 			}
 			new TaskPersistence().saveAndCommitTask(task);
 		} catch (PersistenceException e) {
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error(
-					"batch job task " + mifosTask.name + " failed");
+			getLogger().error("unable to register completion of " + mifosTask.name, e);
 		} finally {
 			MifosTask.batchJobFinished();
 		}
@@ -119,9 +122,9 @@ public abstract class TaskHelper {
 			if (timeInMillis == 0) {
 				timeInMillis = new DateTimeService().getCurrentDateTime().getMillis();
 			}
-			//System.out.println(mifosTask.name + "started");
+			getLogger().info(mifosTask.name + " started");
 			perform(timeInMillis);
-			//System.out.println(mifosTask.name + "finished");
+			getLogger().info(mifosTask.name + " finished");
 		}
 	}
 
@@ -179,11 +182,9 @@ public abstract class TaskHelper {
 			if (isAllowedToRun == false)
 			{
 				String message = "PortfolioAtRisk Task can't run because it requires the LoanArrearsTask to run successfully first.";
-				MifosLogManager.getLogger(LoggerConstants.BATCH_JOBS).error(message);
-				System.out.println(message);
+				getLogger().error(message);
 				return isAllowedToRun;
 			}
-				
 		}
 		catch (PersistenceException ex)
 		{
@@ -212,6 +213,7 @@ public abstract class TaskHelper {
 			registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY,
 					TaskStatus.COMPLETE);
 		} catch (BatchJobException e) {
+		    getLogger().error(mifosTask.name + " failed", e);
 			registerCompletion(timeInMillis, e.getErrorMessage(),
 					TaskStatus.FAILED);
 		}

@@ -46,7 +46,6 @@ public class LoanArrearsHelper extends TaskHelper {
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
 		long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-		System.out.println("LoanArrearsTask starts");
 		AccountPersistence accountPersistence = new AccountPersistence();
 		List<String> errorList = new ArrayList<String>();
 		List<Integer> listAccountIds = null;
@@ -59,7 +58,7 @@ public class LoanArrearsHelper extends TaskHelper {
 					.getLoanAccountsInArrearsInGoodStanding(latenessDays);
 			long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
 			accountNumber = listAccountIds.size();
-			System.out.println("LoanArrearsTask: getLoanAccountsInArrearsInGoodStanding ran in " + 
+			getLogger().info("LoanArrearsTask: getLoanAccountsInArrearsInGoodStanding ran in " + 
 					duration2 + " milliseconds" + " got " + accountNumber + " accounts to update.");
 		} catch (Exception e) {
 			throw new BatchJobException(e);
@@ -85,7 +84,7 @@ public class LoanArrearsHelper extends TaskHelper {
                 }
                 if (i % 1000 == 0) {
                     long time = new DateTimeService().getCurrentDateTime().getMillis();
-                    System.out.println("1000 accounts updated in " + (time - startTime) + " milliseconds. There are "
+                    getLogger().info("1000 accounts updated in " + (time - startTime) + " milliseconds. There are "
                             + (accountNumber - i) + " more accounts to be updated.");
                     startTime = time;
                 }
@@ -105,14 +104,10 @@ public class LoanArrearsHelper extends TaskHelper {
         
 		long time2 = new DateTimeService().getCurrentDateTime().getMillis();
 		long duration = time2 - time1;
-		getLogger().info("Time to run LoanArrearsTask " + duration);
-		System.out.println("LoanArrearsTask ran in " + duration + " milliseconds");
+		getLogger().info("LoanArrearsTask ran in " + duration + " milliseconds");
 		if (errorList.size() > 0) {
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
 		}
-		
-		getLogger().debug("LoanArrearsTask ran successfully");
-		System.out.println("LoanArrearsTask ran successfully");
 	}
 
 	@Override

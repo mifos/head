@@ -29,8 +29,6 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ProductStatusHelper extends TaskHelper {
@@ -85,14 +83,7 @@ public class ProductStatusHelper extends TaskHelper {
 
 			StaticHibernateUtil.commitTransaction();
 		} catch (Exception e) {
-			try {
-				StaticHibernateUtil.rollbackTransaction();
-			} catch (Exception ex) {
-				// Whoops, rollback failed, log error?
-				MifosLogManager
-				.getLogger(LoggerConstants.BATCH_JOBS)
-				.error("ProductStatusHelper execute failed and subsequent rollback failed with exception " + ex.getClass().getName() + ": " + ex.getMessage());
-			}
+		    StaticHibernateUtil.rollbackTransaction();
 			throw new BatchJobException(e);
 		}
 	}
