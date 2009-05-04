@@ -29,6 +29,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SessionException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
@@ -88,8 +89,10 @@ public class TestProductStatusHelper extends MifosIntegrationTest {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			productStatusHelper.execute(System.currentTimeMillis());
-			fail();
+			fail("unexpected absence of exception");
 		} catch (BatchJobException e) {
+            fail("unexpected exception");
+		} catch (SessionException e) {
 			assertTrue(true);
 		}
 		StaticHibernateUtil.closeSession();
