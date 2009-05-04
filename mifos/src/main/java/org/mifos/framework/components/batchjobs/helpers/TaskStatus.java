@@ -22,8 +22,11 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 
 public enum TaskStatus {
-	COMPLETE(Short.valueOf("1")), INCOMPLETE(Short.valueOf("0"));
-	Short value;
+    INCOMPLETE(Short.valueOf("0")),
+	COMPLETE(Short.valueOf("1")), 
+    FAILED(Short.valueOf("2")); 
+
+    Short value;
 
 	TaskStatus(Short value) {
 		this.value = value;

@@ -213,7 +213,7 @@ public abstract class TaskHelper {
 					TaskStatus.COMPLETE);
 		} catch (BatchJobException e) {
 			registerCompletion(timeInMillis, e.getErrorMessage(),
-					TaskStatus.INCOMPLETE);
+					TaskStatus.FAILED);
 		}
 	}
 }

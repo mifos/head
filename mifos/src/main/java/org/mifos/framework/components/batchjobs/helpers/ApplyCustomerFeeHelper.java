@@ -33,7 +33,20 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class ApplyCustomerFeeHelper extends TaskHelper {
 
-	public ApplyCustomerFeeHelper(MifosTask mifosTask) {
+    private AccountPersistence accountPersistence;
+    
+	public AccountPersistence getAccountPersistence() {
+	    if (null == accountPersistence) {
+	        accountPersistence = new AccountPersistence();
+	    }
+        return accountPersistence;
+    }
+
+    public void setAccountPersistence(AccountPersistence accountPersistence) {
+        this.accountPersistence = accountPersistence;
+    }
+
+    public ApplyCustomerFeeHelper(MifosTask mifosTask) {
 		super(mifosTask);
 	}
 
@@ -41,7 +54,7 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
 	public void execute(long timeInMills) throws BatchJobException {
 		List<String> errorList = new ArrayList<String>();
 		List<Integer> accountIds;
-		AccountPersistence accountPersistence = new AccountPersistence();
+		AccountPersistence accountPersistence = getAccountPersistence();
 		try {
 			accountIds = accountPersistence
 					.getAccountsWithYesterdaysInstallment();

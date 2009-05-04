@@ -69,57 +69,48 @@ public class LoanArrearsHelper extends TaskHelper {
 		int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
 		int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
 		
-		try
-		{
-			long startTime = new DateTimeService().getCurrentDateTime().getMillis();
-			for (Integer accountId : listAccountIds) {
-					loanBO = (LoanBO) accountPersistence
-							.getAccount(accountId);
-					assert (loanBO.getAccountState().getId().shortValue() ==
-						AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue().shortValue());
-					
-						
-					loanBO.handleArrears();
-					if (i % batchSize == 0)
-					{
-						StaticHibernateUtil.flushAndClearSession();
-					}
-					if (i % recordCommittingSize == 0)
-					{
-						StaticHibernateUtil.commitTransaction();
-					}
-					if (i % 1000 == 0)
-					{
-						long time = new DateTimeService().getCurrentDateTime().getMillis();
-						System.out.println("1000 accounts updated in " + (time - startTime) + 
-								" milliseconds. There are " + (accountNumber -i) + " more accounts to be updated.");
-						startTime = time;
-						
-					}
-					i++;	
-					
-				
-				}
-				StaticHibernateUtil.commitTransaction();
-				
-				
-			} catch (Exception e) {
-				getLogger().debug("LoanArrearsTask " + e.getMessage());
-				StaticHibernateUtil.rollbackTransaction();
-				if (loanBO != null)
-				{
-					errorList.add(loanBO.getAccountId().toString());
-				}
-			} finally {
-				
-				StaticHibernateUtil.closeSession();
-			}
+		try {
+            long startTime = new DateTimeService().getCurrentDateTime().getMillis();
+            for (Integer accountId : listAccountIds) {
+                loanBO = (LoanBO) accountPersistence.getAccount(accountId);
+                assert (loanBO.getAccountState().getId().shortValue() == AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
+                        .getValue().shortValue());
+
+                loanBO.handleArrears();
+                if (i % batchSize == 0) {
+                    StaticHibernateUtil.flushAndClearSession();
+                }
+                if (i % recordCommittingSize == 0) {
+                    StaticHibernateUtil.commitTransaction();
+                }
+                if (i % 1000 == 0) {
+                    long time = new DateTimeService().getCurrentDateTime().getMillis();
+                    System.out.println("1000 accounts updated in " + (time - startTime) + " milliseconds. There are "
+                            + (accountNumber - i) + " more accounts to be updated.");
+                    startTime = time;
+                }
+                i++;
+            }
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (Exception e) {
+            getLogger().debug("LoanArrearsTask " + e.getMessage());
+            StaticHibernateUtil.rollbackTransaction();
+            if (loanBO != null) {
+                errorList.add(loanBO.getAccountId().toString());
+            }
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+        
 		long time2 = new DateTimeService().getCurrentDateTime().getMillis();
 		long duration = time2 - time1;
 		getLogger().info("Time to run LoanArrearsTask " + duration);
 		System.out.println("LoanArrearsTask ran in " + duration + " milliseconds");
-		if (errorList.size() > 0)
+		if (errorList.size() > 0) {
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+		}
+		
 		getLogger().debug("LoanArrearsTask ran successfully");
 		System.out.println("LoanArrearsTask ran successfully");
 	}

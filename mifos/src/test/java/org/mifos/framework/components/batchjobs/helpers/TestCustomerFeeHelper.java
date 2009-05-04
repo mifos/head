@@ -36,6 +36,7 @@ import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -58,6 +59,10 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 public class TestCustomerFeeHelper extends MifosIntegrationTest {
 
@@ -242,6 +247,32 @@ public class TestCustomerFeeHelper extends MifosIntegrationTest {
 			TestObjectFactory.removeObject(task);
 		}
 	}
+
+    public void testExecuteTaskAndForceException() throws PersistenceException, BatchJobException {
+        ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+        applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
+        ApplyCustomerFeeHelper applyCustomerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
+                .getTaskHelper();
+        AccountPersistence accountPersistenceMock = createMock(AccountPersistence.class);
+        expect(accountPersistenceMock.getAccountsWithYesterdaysInstallment()).andThrow(new PersistenceException("mock exception"));
+        replay(accountPersistenceMock);
+        applyCustomerFeeHelper.setAccountPersistence(accountPersistenceMock);
+        
+        applyCustomerFeeHelper.executeTask();
+
+        Query query = StaticHibernateUtil.getSessionTL().createQuery(
+                "from " +
+                Task.class.getName());
+        List<Task> tasks = query.list();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        for (Task task : tasks) {
+            assertEquals(TaskStatus.FAILED.getValue().shortValue(), task
+                    .getStatus());
+            assertEquals("ApplyCustomerFeeTask", task.getTask());
+            TestObjectFactory.removeObject(task);
+        }
+    }
 
 	public void testExecuteFailure() {
 		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
