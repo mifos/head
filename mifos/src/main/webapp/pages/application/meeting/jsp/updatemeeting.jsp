@@ -262,7 +262,7 @@ function goToCancelPage(){
 								<mifos:mifoslabel name="meeting.button.save" bundle="MeetingResources"/>
 							</html-el:submit> &nbsp; 
 							<html-el:button	onclick="goToCancelPage();" property="cancelButton"
-								value="Cancel" styleClass="cancelbuttn">
+								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="office.button.cancel" bundle="OfficeResources"/>
 							</html-el:button>
 							</td>
