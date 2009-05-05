@@ -29,7 +29,6 @@
 	<classpathentry kind="lib" path="mifos/lib/c3p0-0.9.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/cglib-2.1.3.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/commons-javaflow-20060411.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/freemarker-2.3.13.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jakarta-oro.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jasperreports-1.3.1-javaflow.jar"/>
@@ -47,7 +46,6 @@
 	<classpathentry kind="lib" path="mifos/lib/struts-1.2.7.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/struts-el.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/strutstest-2.1.4.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/xmlunit-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/build-lib/maven-ant-tasks-2.0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="mifos/lib/easymock-2.4.jar"/>
