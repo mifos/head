@@ -283,27 +283,7 @@
 		    <groupId>log4j</groupId>
 		    <artifactId>log4j</artifactId>
 		    <version>1.2.14</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>jsp-api</artifactId>
-		    <version>2.0</version>
-		</dependency>
-		<dependency>
-		    <groupId>c3p0</groupId>
-		    <artifactId>c3p0</artifactId>
-		    <version>0.9.1</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>jstl</artifactId>
-		    <version>1.1.2</version>
-		</dependency>
-		<dependency>
-		    <groupId>junit-addons</groupId>
-		    <artifactId>junit-addons</artifactId>
-		    <version>1.4</version>
-		</dependency>		 		 				          
+		</dependency>	 		 				          
    </dependencies>
 
    <build>

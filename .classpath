@@ -50,5 +50,9 @@
 	<classpathentry kind="lib" path="mifos/lib/standard-1.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/struts-legacy-1.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/itext-1.3.1.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/c3p0-0.9.1.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/jstl.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
