@@ -44,7 +44,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<%@page import="org.mifos.application.holiday.util.resources.HolidayConstants;"%>
+<%@page import="org.mifos.application.holiday.util.helpers.HolidayConstants;"%>
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
