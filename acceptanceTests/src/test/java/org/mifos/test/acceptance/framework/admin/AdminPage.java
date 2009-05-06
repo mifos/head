@@ -55,13 +55,19 @@ public class AdminPage extends MifosPage {
 	public AdminPage(Selenium selenium) {
 		super(selenium);
 	}
-		
-	public CreateOfficeEnterDataPage navigateToCreateOfficeEnterDataPage() {
+
+	public ViewHolidaysPage navigateToViewHolidaysPage() {
+	    selenium.click("admin.link.viewHolidays");
+        waitForPageToLoad();
+        return new ViewHolidaysPage(selenium);     
+    }
+    
+    public CreateOfficeEnterDataPage navigateToCreateOfficeEnterDataPage() {
         selenium.click("admin.link.defineNewOffice");
         waitForPageToLoad();
-        return new CreateOfficeEnterDataPage(selenium);	    
-	}
-	
+        return new CreateOfficeEnterDataPage(selenium);     
+    }
+    
     public ChooseOfficePage navigateToCreateUserPage() {
         selenium.click("admin.link.defineNewUsers");
         waitForPageToLoad();
