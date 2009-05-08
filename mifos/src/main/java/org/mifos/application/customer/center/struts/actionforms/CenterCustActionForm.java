@@ -92,6 +92,10 @@ public class CenterCustActionForm extends CustomerActionForm{
 		return mfiJoiningDateDD;
 	}
 
+	/*
+	 * Validation is done in the order that the fields appear on the UI.
+	 * @see org.mifos.application.customer.struts.actionforms.CustomerActionForm#validateFields(javax.servlet.http.HttpServletRequest, java.lang.String)
+	 */
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
 		ActionErrors errors = new ActionErrors();
@@ -99,18 +103,24 @@ public class CenterCustActionForm extends CustomerActionForm{
 			validateName(errors);
 			validateLO(errors);
 			validateMeeting(request, errors);
-			validateMfiJoiningDate(request, errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
-			validateCustomFields(request,errors);
-			validateFees(request, errors);
 		}else if (method.equals(Methods.editPreview.toString())){
 			CenterBO center = (CenterBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
 			if(center.isActive())
 				validateLO(errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
-			validateCustomFields(request,errors);
 		}
-		return errors;
+
+        if(method.equals(Methods.preview.toString()) ||
+                method.equals(Methods.editPreview.toString())) {      
+            validateMfiJoiningDate(request, errors);
+            validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
+            validateCustomFields(request,errors);
+        }
+        // fees are only editable in preview and come last
+        if(method.equals(Methods.preview.toString())){      
+            validateFees(request, errors);
+        }
+        
+        return errors;
 	}
 	
 	protected void validateMfiJoiningDate(HttpServletRequest request,

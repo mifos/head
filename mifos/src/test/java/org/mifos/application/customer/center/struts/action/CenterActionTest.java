@@ -509,6 +509,9 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "editPreview");
 		addRequestParameter("displayName", "center");
 		addRequestParameter("loanOfficerId", "1");
+        addRequestParameter("mfiJoiningDateDD", "01");
+        addRequestParameter("mfiJoiningDateMM", "01");
+        addRequestParameter("mfiJoiningDateYY", "01");
 		int i = 0;
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			addRequestParameter("customField[" + i + "].fieldId",
@@ -556,6 +559,9 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("displayName", "center");
 		addRequestParameter("loanOfficerId", "1");
 		addRequestParameter("externalId", "12");
+        addRequestParameter("mfiJoiningDateDD", "01");
+        addRequestParameter("mfiJoiningDateMM", "01");
+        addRequestParameter("mfiJoiningDateYY", "01");
 		int i = 0;
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			addRequestParameter("customField[" + i + "].fieldId",
