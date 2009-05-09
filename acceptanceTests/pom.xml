@@ -48,7 +48,7 @@
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0-SNAPSHOT</version>
+                        <version>1.0</version>
                         <configuration>
                             <container>
                                 <zipUrlInstaller>
@@ -208,12 +208,6 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.openqa.selenium.client-drivers</groupId>
-            <artifactId>selenium-java-client-driver</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>1.5.4</version>
@@ -249,26 +243,12 @@
             <artifactId>joda-time</artifactId>
             <version>1.6</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.seleniumhq.selenium.client-drivers</groupId>
+            <artifactId>selenium-java-client-driver</artifactId>
+            <version>1.0-beta-2</version>
+        </dependency>
     </dependencies>
-
-	<!-- FIXME: this is duplicated in ../pom.xml -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>Codehaus Snapshots</id>
-            <url>http://snapshots.repository.codehaus.org/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>Codehaus Repository</id>
-            <url>http://repository.codehaus.org/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <finalName>gazelle-testing</finalName>

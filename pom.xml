@@ -34,7 +34,7 @@
 	-->
     <repositories>
         <repository>
-            <id>spring-snapshot</id>
+            <id>spring-milestone</id>
             <name>Spring Portfolio Milestone Repository</name>
             <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
         </repository>
@@ -62,42 +62,13 @@
             <layout>default</layout>
         </repository>
         <repository>
-            <id>openqa.org</id>
+            <id>openqa.org-repository</id>
             <name>OpenQA Repository</name>
-            <url>http://archiva.openqa.org/repository/releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <!-- for selenium 1.0-SNAPSHOT -->
-        <repository>
-            <id>snapshots.openqa.org</id>
-            <name>OpenQA Snapshots Repository</name>
-            <url>http://archiva.openqa.org/repository/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
+            <url>http://nexus.openqa.org/content/repositories/releases</url>
         </repository>
     </repositories>
 
-	<!-- FIXME: this is duplicated in acceptanceTests/pom.xml -->
     <pluginRepositories>
-        <pluginRepository>
-            <id>Codehaus Snapshots</id>
-            <url>http://snapshots.repository.codehaus.org/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
         <pluginRepository>
             <id>Codehaus Repository</id>
             <url>http://repository.codehaus.org/</url>
