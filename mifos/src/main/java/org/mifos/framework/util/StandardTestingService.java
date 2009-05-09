@@ -29,9 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -42,11 +39,9 @@ import org.mifos.service.test.TestingService;
  * during acceptance and integration tests.
  */
 public class StandardTestingService implements TestingService {
-    private MifosLogger LOG = null;
     private final ConfigurationLocator configurationLocator;
 
     public StandardTestingService() {
-        LOG = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
         configurationLocator = new ConfigurationLocator();
     }
 
@@ -69,7 +64,7 @@ public class StandardTestingService implements TestingService {
             overrides.load(new FileInputStream(overridesFile));
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            LOG.warn("StandardTestingService: local overrides not found.");
+            System.err.println("StandardTestingService: local overrides not found.");
         }
 
         mifosSpecific.putAll(overrides);
@@ -85,7 +80,7 @@ public class StandardTestingService implements TestingService {
             settingsFilenames.add(optionalOverrides);
         } catch (FileNotFoundException e) {
             // basically ignore; no matter if they don't have local overrides
-            LOG.warn("StandardTestingService: no local overrides in use.");
+            System.err.println("StandardTestingService: no local overrides in use.");
         }
         return settingsFilenames.toArray(new String[] {});
     }
@@ -163,7 +158,6 @@ public class StandardTestingService implements TestingService {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            LOG.info("cache reinitialization complete.");
         }
     }
 }
