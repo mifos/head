@@ -341,11 +341,9 @@ public class ApplicationInitializer implements ServletContextListener,
 	 */
 	private void initializeLogger() throws AppNotConfiguredException {
 		try {
-			MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
+			MifosLogManager.configureLogging();
 		}
 		catch (LoggerConfigurationException lce) {
-
-			lce.printStackTrace();
 			throw new AppNotConfiguredException(lce);
 		}
 
