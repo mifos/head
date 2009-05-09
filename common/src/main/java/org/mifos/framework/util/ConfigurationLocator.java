@@ -82,7 +82,6 @@ public class ConfigurationLocator {
     @SuppressWarnings({"PMD.SystemPrintln", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
     public String getConfigurationDirectory() {
         for (String directoryPath : getDirectoriesToSearch()) {
-            System.out.println("ConfigurationLocator examining configuration directory: " + directoryPath);
             if (directoryExists(directoryPath)) {
                 System.out.println("ConfigurationLocator found configuration directory: " + directoryPath);
                 return directoryPath;
@@ -94,7 +93,6 @@ public class ConfigurationLocator {
     @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
     private File getConfigurationFile(String filename) throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
-            System.out.println("ConfigurationLocator examining configuration directory: " + directoryPath);
             if (StringUtils.isNotBlank(directoryPath)) {
                 File file = new File(directoryPath, filename);
                 if (file.exists()) {
