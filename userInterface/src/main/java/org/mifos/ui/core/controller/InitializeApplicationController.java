@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -48,7 +49,7 @@ public class InitializeApplicationController extends AbstractController {
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView returnValue = new ModelAndView("pageNotFound");
-        if ("main".equals(getTestingService().getTestMode())) {
+        if (TestMode.MAIN == getTestingService().getTestMode()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             getTestingService().reinitializeCaches();

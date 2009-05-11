@@ -56,11 +56,6 @@ public class DatabaseSetup {
 	public static void initializeHibernate(boolean useInMemoryDatabase) {
 		MifosLogManager.configureLogging();
 
-        // Make sure TestService is aware that we're running integration tests.
-        // This is for integration test cases that use a database, but could
-        // also apply to other "black box" tests.
-        System.setProperty("mifos.test.mode", "integration");
-
 		if (HibernateSessionFactory.isConfigured()) {
 			return;
 		}

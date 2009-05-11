@@ -34,10 +34,6 @@ public class MeetingHelperTest extends MifosIntegrationTest{
 	public MeetingHelperTest() throws SystemException, ApplicationException {
         super();
     }
-
-    {
-		TestUtils.initializeSpring();
-	}
 	
 	private MeetingHelper helper = new MeetingHelper();
 	

@@ -20,6 +20,11 @@
  
 package org.mifos.config;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -28,8 +33,11 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationFactory;
+import org.apache.commons.configuration.ConfigurationConverter;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.service.test.TestMode;
 
 
 /**
@@ -53,8 +61,7 @@ import org.apache.commons.configuration.ConfigurationFactory;
  * to be changed significantly as iterative development proceeds.
  */
 public class ConfigurationManager implements Configuration {
-	private static final String FACTORY_CONFIG = "resources/configurationFactory.xml";
-	
+
 	/**
 	 * Filename where default application-wide configuration values are stored.
 	 * This file should never be hand-edited, edit values in the custom config
@@ -79,6 +86,9 @@ public class ConfigurationManager implements Configuration {
 	 */
 	public static final String CUSTOM_CONFIG_PROPS_FILENAME = "applicationConfiguration.custom.properties";
 	
+	/** Custom application-wide configuration file for acceptance testing only. */
+	public static final String ACCEPTANCE_CONFIG_PROPS_FILENAME = "applicationConfiguration.acceptance.properties";
+	
 	private static ConfigurationManager configurationManagerInstance = new ConfigurationManager();
 		
 	private Configuration configuration;
@@ -91,16 +101,48 @@ public class ConfigurationManager implements Configuration {
 	}
 
 	private ConfigurationManager() {
-		ConfigurationFactory factory = new ConfigurationFactory();
-		URL configURL = getClass().getResource(FACTORY_CONFIG);
-		factory.setConfigurationURL(configURL);
-		
+	    ConfigurationLocator configurationLocator = new ConfigurationLocator();
+	    Properties props = new Properties();
+
 		try {
-			configuration = factory.getConfiguration();
+		    File defaults = configurationLocator.getFile(DEFAULT_CONFIG_PROPS_FILENAME);
+		    props.load(new BufferedInputStream(new FileInputStream(defaults)));
 		}
-		catch (ConfigurationException e) {
-			throw new RuntimeException(e);
-		}	
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+        TestMode currentTestMode = new StandardTestingService().getTestMode();
+        File customConfigFilename = null;
+        
+        try {
+            if (TestMode.MAIN == currentTestMode) {
+                customConfigFilename = configurationLocator.getFile(CUSTOM_CONFIG_PROPS_FILENAME);
+            } else if (TestMode.ACCEPTANCE == currentTestMode) {
+                customConfigFilename = configurationLocator.getFile(ACCEPTANCE_CONFIG_PROPS_FILENAME);
+            }
+        } catch (FileNotFoundException e) {
+            /* Do nothing */
+        } catch (IOException e) {
+            throw new SystemException(e);
+        }
+        
+        // set apart from above cases for currentTestMode to emphasize lack of exceptions thrown 
+        if (TestMode.INTEGRATION == currentTestMode) {
+            URL configURL = getClass().getResource("resources/" + CUSTOM_CONFIG_PROPS_FILENAME);
+            customConfigFilename = new File(configURL.getFile());
+        }
+
+        if (null != customConfigFilename) {
+            try {
+    		    props.load(new BufferedInputStream(new FileInputStream(customConfigFilename)));
+    		}
+    		catch (IOException e) {
+                throw new SystemException(e);
+            }
+        }
+
+		configuration = ConfigurationConverter.getConfiguration(props);
 	}
 
 	public Configuration getConfiguration() {

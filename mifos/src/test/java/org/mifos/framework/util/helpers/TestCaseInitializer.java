@@ -32,6 +32,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.service.test.TestMode;
 
 /**
  * Many tests initialize themselves via this class.
@@ -52,6 +54,11 @@ public class TestCaseInitializer {
     public synchronized void initialize() throws SystemException, ApplicationException {
         if (initialized == false) {
             initialized = true;
+            /* Make sure TestingService is aware that we're running integration tests.
+             * This is for integration test cases that use a database, but could
+             * also apply to other "black box" tests. */
+            new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+            
             MifosLogManager.configureLogging();
             DatabaseSetup.initializeHibernateUsingInMemoryDatabase();
             // add this because it is added to Application Initializer

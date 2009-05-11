@@ -28,10 +28,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
 
 /**
@@ -45,9 +47,21 @@ public class StandardTestingService implements TestingService {
         configurationLocator = new ConfigurationLocator();
     }
 
-    public String getTestMode() {
-        // "main" means we are *not* running in a test mode
-        return System.getProperty("mifos.test.mode", "main");
+    public TestMode getTestMode() {
+        String testMode = System.getProperty(TEST_MODE_SYSTEM_PROPERTY);
+        if ("acceptance".equals(testMode)) {
+            return TestMode.ACCEPTANCE;
+        } else if ("integration".equals(testMode)) {
+            return TestMode.INTEGRATION;
+        } else {
+            // "main" means we are *not* running in a test mode
+            return TestMode.MAIN;
+        }
+    }
+    
+    public void setTestMode(TestMode newMode) {
+        String modeString = newMode.toString().toLowerCase();
+        System.setProperty(TEST_MODE_SYSTEM_PROPERTY, modeString);
     }
 
     public Properties getDatabaseConnectionSettings() throws IOException {
@@ -85,17 +99,13 @@ public class StandardTestingService implements TestingService {
         return settingsFilenames.toArray(new String[] {});
     }
 
-    public String getDefaultSettingsFilename() {
-        return getDefaultSettingsFilename(System.getProperty("mifos.test.mode", getTestMode()));
-    }
-
-    public String getDefaultSettingsFilename(String testMode) {
+    public String getDefaultSettingsFilename(TestMode testMode) {
         String defaultSettingsFilename = null;
-        if (testMode.equals("main")) {
+        if (testMode == TestMode.MAIN) {
             defaultSettingsFilename = FilePaths.DATABASE_CONFIGURATION;
-        } else if (testMode.equals("acceptance")) {
+        } else if (testMode == TestMode.ACCEPTANCE) {
             defaultSettingsFilename = FilePaths.ACCEPTANCE_DATABASE_CONFIGURATION;
-        } else if (testMode.equals("integration")) {
+        } else if (testMode == TestMode.INTEGRATION) {
             defaultSettingsFilename = FilePaths.INTEGRATION_DATABASE_CONFIGURATION;
         } else {
             throw new RuntimeException("illegal mifos.test.mode");
@@ -103,8 +113,9 @@ public class StandardTestingService implements TestingService {
         return defaultSettingsFilename;
     }
 
-    Properties translateToHibernate(Properties mifosSpecific, String testMode) {
+    Properties translateToHibernate(Properties mifosSpecific, TestMode testModeEnum) {
         Properties hibernateSpecific = new Properties();
+        String testMode = testModeEnum.toString().toLowerCase();
 
         String host = mifosSpecific.getProperty(testMode + ".database.host");
         String port = mifosSpecific.getProperty(testMode + ".database.port");
@@ -149,7 +160,7 @@ public class StandardTestingService implements TestingService {
      */
     @Override
     public void reinitializeCaches() {
-        if ("main".equals(getTestMode())) {
+        if (TestMode.MAIN == getTestMode()) {
             throw new RuntimeException("only allowed during testing");
         } else {
             try {

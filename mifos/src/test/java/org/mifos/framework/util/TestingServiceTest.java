@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util;
 
 import java.io.IOException;
@@ -26,17 +26,27 @@ import java.util.Properties;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.service.test.TestMode;
 
 public class TestingServiceTest {
     static StandardTestingService standardTestingService = null;
-
-    @Before
-    public void setUp() {
+    static TestMode savedTestMode = null;
+    
+    @BeforeClass
+    public static void setUpBeforeClass() {
         MifosLogManager.configureLogging();
         standardTestingService = new StandardTestingService();
+        savedTestMode = standardTestingService.getTestMode();
+        standardTestingService.setTestMode(TestMode.ACCEPTANCE);
+    }
+    
+    @AfterClass
+    public static void tearDownAfterClass() {
+        standardTestingService.setTestMode(savedTestMode);
     }
 
     @Test
@@ -44,19 +54,19 @@ public class TestingServiceTest {
         Properties p = standardTestingService.getDatabaseConnectionSettings();
         Assert.assertNotNull(p.getProperty("hibernate.connection.url"));
     }
-    
+
     @Test
-    public void testGetDefaultSettingsFilename()
-    {
-        String actual = standardTestingService.getDefaultSettingsFilename("acceptance");
+    public void testGetDefaultSettingsFilename() {
+        
+        String actual = standardTestingService.getDefaultSettingsFilename(standardTestingService.getTestMode());
         Assert.assertEquals("acceptanceDatabase.properties", actual);
     }
-    
+
     @Test
     public void testTranslateToHibernate() {
         Properties p = new Properties();
         p.setProperty("integration.database", "fozzy");
-        Properties q = standardTestingService.translateToHibernate(p, "integration");
+        Properties q = standardTestingService.translateToHibernate(p, TestMode.INTEGRATION);
         String url = q.getProperty("hibernate.connection.url");
         Assert.assertNotNull(url);
         Assert.assertTrue(url.contains("fozzy"));
