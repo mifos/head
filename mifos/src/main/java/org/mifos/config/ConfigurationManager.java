@@ -38,6 +38,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.service.test.TestMode;
+import org.springframework.core.io.ClassPathResource;
 
 
 /**
@@ -53,10 +54,6 @@ import org.mifos.service.test.TestMode;
  * values that should be set once at install time or not be changed 
  * after being set are likely to go into configuration files.
  * <p>
- * The file org/mifos/config/resources/configurationFactory.xml 
- * contains the names of the configuration files currently being
- * read.
- * <p>
  * This class is currently under active development, so it is likely
  * to be changed significantly as iterative development proceeds.
  */
@@ -66,9 +63,6 @@ public class ConfigurationManager implements Configuration {
 	 * Filename where default application-wide configuration values are stored.
 	 * This file should never be hand-edited, edit values in the custom config
 	 * file instead.
-	 * <p>
-	 * If the value of this constant is changed, modify the file
-	 * {@link #FACTORY_CONFIG} in tandem.
 	 * 
 	 * @see #CUSTOM_CONFIG_PROPS_FILENAME
 	 */
@@ -78,9 +72,6 @@ public class ConfigurationManager implements Configuration {
 	 * Filename where custom overrides for application-wide configuration values
 	 * are stored. Keys in this file must exist in the default config file. This
 	 * file may be hand-edited.
-	 * <p>
-	 * If the value of this constant is changed, modify the file
-	 * {@link #FACTORY_CONFIG} in tandem.
 	 * 
 	 * @see #DEFAULT_CONFIG_PROPS_FILENAME
 	 */
@@ -93,11 +84,8 @@ public class ConfigurationManager implements Configuration {
 		
 	private Configuration configuration;
 	
-	
-	
 	public static final ConfigurationManager getInstance() {
-		return configurationManagerInstance;
-		
+		return configurationManagerInstance;	
 	}
 
 	private ConfigurationManager() {
@@ -113,13 +101,13 @@ public class ConfigurationManager implements Configuration {
         }
         
         TestMode currentTestMode = new StandardTestingService().getTestMode();
-        File customConfigFilename = null;
+        File customConfigFile = null;
         
         try {
             if (TestMode.MAIN == currentTestMode) {
-                customConfigFilename = configurationLocator.getFile(CUSTOM_CONFIG_PROPS_FILENAME);
+                customConfigFile = configurationLocator.getFile(CUSTOM_CONFIG_PROPS_FILENAME);
             } else if (TestMode.ACCEPTANCE == currentTestMode) {
-                customConfigFilename = configurationLocator.getFile(ACCEPTANCE_CONFIG_PROPS_FILENAME);
+                customConfigFile = configurationLocator.getFile(ACCEPTANCE_CONFIG_PROPS_FILENAME);
             }
         } catch (FileNotFoundException e) {
             /* Do nothing */
@@ -127,17 +115,13 @@ public class ConfigurationManager implements Configuration {
             throw new SystemException(e);
         }
         
-        // set apart from above cases for currentTestMode to emphasize lack of exceptions thrown 
         if (TestMode.INTEGRATION == currentTestMode) {
-            URL configURL = getClass().getResource("resources/" + CUSTOM_CONFIG_PROPS_FILENAME);
-            customConfigFilename = new File(configURL.getFile());
-        }
-
-        if (null != customConfigFilename) {
             try {
-    		    props.load(new BufferedInputStream(new FileInputStream(customConfigFilename)));
-    		}
-    		catch (IOException e) {
+                customConfigFile = new ClassPathResource("org/mifos/config/resources/" + CUSTOM_CONFIG_PROPS_FILENAME).getFile();
+                props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
+            } catch (IOException e) {
+                // an IOException will be thrown if the file is not found
+                // since we currently depend of finding this file, fail if we don't find it
                 throw new SystemException(e);
             }
         }
