@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerPositionEntity;
@@ -232,9 +233,13 @@ public class CenterCustAction extends CustAction {
 		actionForm.setGlobalCustNum(center.getGlobalCustNum());
 		actionForm.setExternalId(center.getExternalId());
 
-		if (center.getMfiJoiningDate() != null)
-			actionForm.setMfiJoiningDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), center
-			.getMfiJoiningDate().toString()));
+		if (center.getMfiJoiningDate() != null) {
+		    DateTime mfiJoiningDateTime = new DateTime(center.getMfiJoiningDate());
+			actionForm.setMfiJoiningDate(DateUtils.getUserLocaleDate(getUserContext(request).
+			        getPreferredLocale(), center.getMfiJoiningDate().toString()));
+			actionForm.setMfiJoiningDate(mfiJoiningDateTime.getDayOfMonth(),
+			        mfiJoiningDateTime.getMonthOfYear(), mfiJoiningDateTime.getYear());
+		}
 
 		actionForm.setAddress(center.getAddress());
 		actionForm.setCustomerPositions(createCustomerPositionViews(center
