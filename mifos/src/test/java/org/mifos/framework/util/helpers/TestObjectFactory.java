@@ -43,7 +43,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.TestAccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -991,7 +991,7 @@ public class TestObjectFactory {
 					savings, customer, ++installment, new java.sql.Date(date
 							.getTime()), PaymentStatus.UNPAID, new Money(
 							currency, "200.0"));
-			TestAccountActionDateEntity.addAccountActionDate(actionDate,
+			AccountActionDateEntityIntegrationTest.addAccountActionDate(actionDate,
 					savings);
 		}
 		StaticHibernateUtil.commitTransaction();

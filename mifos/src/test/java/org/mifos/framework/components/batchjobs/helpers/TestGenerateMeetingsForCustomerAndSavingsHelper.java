@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.business.TestAccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -109,7 +109,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	public void testExecuteForSavingsAccount() throws Exception{
 		savings=getSavingsAccountForCenter();
 		int noOfInstallments=savings.getAccountActionDates().size();
-		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(savings);
+		AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(savings);
 		TestObjectFactory.flushandCloseSession();
 		savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
@@ -136,7 +136,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		Date meetingStartDate = savings.getCustomer().getCustomerMeeting()
 				.getMeeting().getStartDate();
 		int noOfInstallments = savings.getAccountActionDates().size();
-		TestAccountActionDateEntity
+		AccountActionDateEntityIntegrationTest
 				.changeInstallmentDatesToPreviousDateExceptLastInstallment(
 						savings, 6);
 		TestObjectFactory.flushandCloseSession();
@@ -164,7 +164,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				meeting, feeView);
 		// give batch jobs something useful to do
 		// TODO: move this method to a shared util class?
-		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
+		AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
 		center.update();
 	}
 	

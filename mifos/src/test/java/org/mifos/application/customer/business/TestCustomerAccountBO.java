@@ -39,8 +39,8 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.TestAccountFeesEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -275,7 +275,7 @@ public class TestCustomerAccountBO extends MifosIntegrationTest {
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
 		customerAccountBO.setUserContext(userContext);
-		List<AccountTrxnEntity> reversedTrxns = TestAccountPaymentEntity
+		List<AccountTrxnEntity> reversedTrxns = AccountPaymentEntityIntegrationTest
 				.reversalAdjustment("payment adjustment done",
 						customerAccountBO.getLastPmnt());
 		customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
@@ -458,7 +458,7 @@ public class TestCustomerAccountBO extends MifosIntegrationTest {
 				.getCustomerAccount(), fee, ((AmountFeeBO) fee).getFeeAmount()
 				.getAmountDoubleValue(), null, null, new Date(System
 				.currentTimeMillis()));
-		TestAccountFeesEntity.addAccountFees(accountFeesEntity, group
+		AccountFeesEntityIntegrationTest.addAccountFees(accountFeesEntity, group
 				.getCustomerAccount());
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
@@ -1306,7 +1306,7 @@ public class TestCustomerAccountBO extends MifosIntegrationTest {
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 		}
 		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,
+		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,
 				customerAccountBO);
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();

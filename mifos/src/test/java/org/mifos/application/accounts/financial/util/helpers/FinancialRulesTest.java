@@ -28,9 +28,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class TestFinancialRules {
+public class FinancialRulesTest {
 	public static junit.framework.Test testSuite() {
-		return new JUnit4TestAdapter(TestFinancialRules.class);
+		return new JUnit4TestAdapter(FinancialRulesTest.class);
 	}
 
 	@BeforeClass

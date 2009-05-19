@@ -26,7 +26,7 @@ import java.util.List;
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.application.acceptedpaymenttype.persistence.helper.TransactionAcceptedPaymentTypes;
-import org.mifos.application.accounts.TestAccount;
+import org.mifos.application.accounts.AccountIntegrationTest;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -35,7 +35,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 
-public class AcceptedPaymentTypePersistenceTest extends TestAccount {
+public class AcceptedPaymentTypePersistenceTest extends AccountIntegrationTest {
 
 	public AcceptedPaymentTypePersistenceTest() throws SystemException, ApplicationException {
         super();

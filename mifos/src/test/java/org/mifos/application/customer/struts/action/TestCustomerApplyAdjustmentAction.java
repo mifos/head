@@ -27,7 +27,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
@@ -260,7 +260,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 //			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,customerAccountBO);
 
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();

@@ -31,9 +31,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class TestFinancialBO extends MifosIntegrationTest {
+public class FinancialBOIntegrationTest extends MifosIntegrationTest {
 
-	public TestFinancialBO() throws SystemException, ApplicationException {
+	public FinancialBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

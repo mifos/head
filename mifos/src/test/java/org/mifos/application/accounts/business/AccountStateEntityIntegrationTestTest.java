@@ -31,9 +31,9 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class AccountStateEntityTest extends MifosIntegrationTest {
+public class AccountStateEntityIntegrationTestTest extends MifosIntegrationTest {
 	
-	public AccountStateEntityTest() throws SystemException, ApplicationException {
+	public AccountStateEntityIntegrationTestTest() throws SystemException, ApplicationException {
         super();
     }
 

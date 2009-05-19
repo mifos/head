@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
-import org.mifos.application.accounts.TestAccount;
+import org.mifos.application.accounts.AccountIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -58,9 +58,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountBO extends TestAccount {
+public class AccountBOIntegrationTest extends AccountIntegrationTest {
 
-	public TestAccountBO() throws SystemException, ApplicationException {
+	public AccountBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -83,19 +83,12 @@ public class TestAccountBO extends TestAccount {
 		UserContext uc = TestUtils.makeUser();
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
-		Iterator itr = accountFeesEntitySet.iterator();
+		Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
 		while (itr.hasNext())
 			accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
 					.getFeeId(), uc.getId());
 		StaticHibernateUtil.getTransaction().commit();
 	}
-	private void disburseLoan(LoanBO loan,Date startDate) throws Exception {
-		loan.disburseLoan("receiptNum", startDate,
-				Short.valueOf("1"), loan.getPersonnel(),
-				startDate, Short.valueOf("1"));
-		StaticHibernateUtil.commitTransaction();
-	}
-
 	public void testSuccessGetLastPmntAmntToBeAdjusted() throws Exception {
 	
 		LoanBO loan = accountBO;
@@ -184,7 +177,7 @@ public class TestAccountBO extends TestAccount {
 		installmentIdList = getApplicableInstallmentIdsForRemoveFees(accountBO);
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
-		Iterator itr = accountFeesEntitySet.iterator();
+		Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
 		while (itr.hasNext()) {
 			accountBO.updateAccountActionDateEntity(installmentIdList,
 					((AccountFeesEntity) itr.next()).getFees().getFeeId());
@@ -192,23 +185,11 @@ public class TestAccountBO extends TestAccount {
 		// TODO: assert what?
 	}
 
-	private List<Short> getApplicableInstallmentIdsForRemoveFees(
-			AccountBO account) {
-		List<Short> installmentIdList = new ArrayList<Short>();
-		for (AccountActionDateEntity accountActionDateEntity : account
-				.getApplicableIdsForFutureInstallments()) {
-			installmentIdList.add(accountActionDateEntity.getInstallmentId());
-		}
-		installmentIdList.add(account.getDetailsOfNextInstallment()
-				.getInstallmentId());
-		return installmentIdList;
-	}
-
 	public void testSuccessUpdateAccountFeesEntity() {
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
 		assertEquals (1, accountFeesEntitySet.size());
-		Iterator itr = accountFeesEntitySet.iterator();
+		Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
 		while (itr.hasNext()) {
 			AccountFeesEntity accountFeesEntity = (AccountFeesEntity) itr
 					.next();
@@ -482,20 +463,6 @@ public class TestAccountBO extends TestAccount {
 		}
 	}
 
-	private void checkScheduleDates(List<java.util.Date> meetingDates, AccountActionDateEntity actionDateEntity) {
-		// first installment should remain today, ie meeting unchanged
-		if (actionDateEntity.getInstallmentId() == 1) 
-			assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()),
-					DateUtils.getCurrentDateWithoutTimeStamp());
-		// next week's installment & subsequent weeks should be on new meeting dates
-		else if (actionDateEntity.getInstallmentId() == 2)
-			assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), 
-					DateUtils.getDateWithoutTimeStamp(meetingDates.get(1)));
-		else if (actionDateEntity.getInstallmentId() == 3)
-			assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), 
-					DateUtils.getDateWithoutTimeStamp(meetingDates.get(2)));
-	}
-
 	public void testDeleteFutureInstallments() throws HibernateException,
 			SystemException, AccountException {
 		TestObjectFactory.flushandCloseSession();
@@ -647,12 +614,52 @@ public class TestAccountBO extends TestAccount {
 		account.getInstallmentDates(meeting, (short)0, (short)0);		
 	}
 	
+	   public void testGenerateId() throws Exception {
+	        AccountBO account = new AccountBO(35);
+	        String officeGlobalNum = "0567";
+	        String globalAccountNum = account.generateId(officeGlobalNum);
+	        assertEquals("056700000000035", globalAccountNum);
+	    }
+	
 	public static void addToAccountStatusChangeHistory(LoanBO loan,
 			AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
 		loan.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
 	}
 
-	private java.sql.Date offSetCurrentDate(int noOfDays) {
+	private List<Short> getApplicableInstallmentIdsForRemoveFees(
+    		AccountBO account) {
+    	List<Short> installmentIdList = new ArrayList<Short>();
+    	for (AccountActionDateEntity accountActionDateEntity : account
+    			.getApplicableIdsForFutureInstallments()) {
+    		installmentIdList.add(accountActionDateEntity.getInstallmentId());
+    	}
+    	installmentIdList.add(account.getDetailsOfNextInstallment()
+    			.getInstallmentId());
+    	return installmentIdList;
+    }
+
+    private void checkScheduleDates(List<java.util.Date> meetingDates, AccountActionDateEntity actionDateEntity) {
+    	// first installment should remain today, ie meeting unchanged
+    	if (actionDateEntity.getInstallmentId() == 1) 
+    		assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()),
+    				DateUtils.getCurrentDateWithoutTimeStamp());
+    	// next week's installment & subsequent weeks should be on new meeting dates
+    	else if (actionDateEntity.getInstallmentId() == 2)
+    		assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), 
+    				DateUtils.getDateWithoutTimeStamp(meetingDates.get(1)));
+    	else if (actionDateEntity.getInstallmentId() == 3)
+    		assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), 
+    				DateUtils.getDateWithoutTimeStamp(meetingDates.get(2)));
+    }
+
+    private void disburseLoan(LoanBO loan,Date startDate) throws Exception {
+    	loan.disburseLoan("receiptNum", startDate,
+    			Short.valueOf("1"), loan.getPersonnel(),
+    			startDate, Short.valueOf("1"));
+    	StaticHibernateUtil.commitTransaction();
+    }
+
+    private java.sql.Date offSetCurrentDate(int noOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);

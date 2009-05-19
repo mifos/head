@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistenceTest;
-import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeActionTest;
+import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeActionIntegrationTest;
 
 
 
@@ -40,7 +40,7 @@ public class ApplicationAcceptedPaymentTypeTestSuite extends TestSuite {
 	public static Test suite()
 	{
 		TestSuite testSuite = new ApplicationAcceptedPaymentTypeTestSuite();
-		testSuite.addTestSuite(AcceptedPaymentTypeActionTest.class);
+		testSuite.addTestSuite(AcceptedPaymentTypeActionIntegrationTest.class);
 		testSuite.addTestSuite(AcceptedPaymentTypePersistenceTest.class);
 		
 		return testSuite;

@@ -24,13 +24,13 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.accounts.financial.business.TestCOABO;
-import org.mifos.application.accounts.financial.business.TestFinancialBO;
+import org.mifos.application.accounts.financial.business.COABOIntegrationTest;
+import org.mifos.application.accounts.financial.business.FinancialBOIntegrationTest;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCacheTest;
-import org.mifos.application.accounts.financial.util.helpers.TestFinancialActionCache;
-import org.mifos.application.accounts.financial.util.helpers.TestFinancialActionConstants;
-import org.mifos.application.accounts.financial.util.helpers.TestFinancialInitializer;
-import org.mifos.application.accounts.financial.util.helpers.TestFinancialRules;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionCacheIntegrationTest;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstantsIntegrationTest;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializerTest;
+import org.mifos.application.accounts.financial.util.helpers.FinancialRulesTest;
 
 public class FinancialTestSuite extends TestSuite {
 	
@@ -46,13 +46,13 @@ public class FinancialTestSuite extends TestSuite {
 	public static Test suite() throws Exception
 	{
 		TestSuite testSuite = new FinancialTestSuite();
-		testSuite.addTestSuite(TestFinancialActionCache.class);
-		testSuite.addTest(TestFinancialInitializer.suite());
+		testSuite.addTestSuite(FinancialActionCacheIntegrationTest.class);
+		testSuite.addTest(FinancialInitializerTest.suite());
 		testSuite.addTest(ChartOfAccountsCacheTest.suite());
-		testSuite.addTest(TestFinancialRules.testSuite());
-		testSuite.addTestSuite(TestCOABO.class);
-		testSuite.addTestSuite(TestFinancialBO.class);
-		testSuite.addTest(TestFinancialActionConstants.suite());
+		testSuite.addTest(FinancialRulesTest.testSuite());
+		testSuite.addTestSuite(COABOIntegrationTest.class);
+		testSuite.addTestSuite(FinancialBOIntegrationTest.class);
+		testSuite.addTest(FinancialActionConstantsIntegrationTest.suite());
 
 		return testSuite;
 		

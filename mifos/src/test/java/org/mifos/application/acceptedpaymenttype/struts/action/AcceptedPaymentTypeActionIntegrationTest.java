@@ -50,9 +50,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
+public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTestCase{
 
-	public AcceptedPaymentTypeActionTest() throws SystemException, ApplicationException {
+	public AcceptedPaymentTypeActionIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

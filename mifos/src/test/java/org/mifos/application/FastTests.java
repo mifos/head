@@ -22,7 +22,7 @@ package org.mifos.application;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.mifos.application.accounts.business.AccountBOTest;
+import org.mifos.application.accounts.business.AccountBOIntegrationTest;
 import org.mifos.application.collectionsheet.business.BulkEntryAccountFeeActionViewTest;
 import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionFormTest;
@@ -124,7 +124,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(TestKey.class);
 		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
 		suite.addTestSuite(LoanCycleCounterTest.class);
-		suite.addTestSuite(AccountBOTest.class);
+		suite.addTestSuite(AccountBOIntegrationTest.class);
 		suite.addTestSuite(PrdOfferingBOTest.class);
 		
 		suite.addTest(QuestionTest.suite());

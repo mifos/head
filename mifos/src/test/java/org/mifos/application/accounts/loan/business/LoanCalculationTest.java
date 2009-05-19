@@ -57,8 +57,8 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.TestAccountActionDateEntity;
-import org.mifos.application.accounts.business.TestAccountFeesEntity;
+import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
@@ -281,7 +281,7 @@ public class LoanCalculationTest  {
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,
 				maintanenceFee, ((AmountFeeBO) maintanenceFee).getFeeAmount()
 						.getAmountDoubleValue());
-		TestAccountFeesEntity.addAccountFees(accountPeriodicFee, loan);
+		AccountFeesEntityIntegrationTest.addAccountFees(accountPeriodicFee, loan);
 		loan.setLoanMeeting(meeting);
 		short i = 0;
 		for (Date date : meetingDates) {
@@ -291,7 +291,7 @@ public class LoanCalculationTest  {
 			actionDate.setInterest(new Money(currency, "12.0"));
 			actionDate.setActionDate(new java.sql.Date(date.getTime()));
 			actionDate.setPaymentStatus(PaymentStatus.UNPAID);
-			TestAccountActionDateEntity.addAccountActionDate(actionDate, loan);
+			AccountActionDateEntityIntegrationTest.addAccountActionDate(actionDate, loan);
 
 			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 					actionDate, maintanenceFee, accountPeriodicFee, new Money(

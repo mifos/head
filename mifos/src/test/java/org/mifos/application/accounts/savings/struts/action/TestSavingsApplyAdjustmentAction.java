@@ -26,7 +26,7 @@ import java.util.Locale;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -133,7 +133,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,depositAmount);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
@@ -174,7 +174,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balance);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
@@ -319,7 +319,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,depositAmount);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();

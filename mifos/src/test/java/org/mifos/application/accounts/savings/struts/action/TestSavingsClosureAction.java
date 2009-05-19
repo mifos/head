@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -313,7 +313,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 						.getDate("30/05/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment1,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment1,savings);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();
@@ -326,7 +326,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				balanceAmount, helper.getDate("15/06/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment2,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment2,savings);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();

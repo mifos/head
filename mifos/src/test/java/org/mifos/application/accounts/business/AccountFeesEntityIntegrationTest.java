@@ -51,8 +51,8 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
-public class TestAccountFeesEntity extends MifosIntegrationTest {
-	public TestAccountFeesEntity() throws SystemException, ApplicationException {
+public class AccountFeesEntityIntegrationTest extends MifosIntegrationTest {
+	public AccountFeesEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

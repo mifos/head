@@ -18,45 +18,38 @@
  * explanation of the license and how it is applied.
  */
  
-package org.mifos.application.accounts.business;
+package org.mifos.application.accounts.financial.util.helpers;
 
-import org.hibernate.Session;
+import org.mifos.application.accounts.financial.business.FinancialActionBO;
+import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-/**
- * Also see {@link AccountActionEntityTest}.
- */
-public class TestAccountActionEntity extends MifosIntegrationTest {	
+public class FinancialActionCacheIntegrationTest extends MifosIntegrationTest {
 	
-	public TestAccountActionEntity() throws SystemException, ApplicationException {
+
+	public FinancialActionCacheIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    private Session session;
-	private AccountActionEntity accountActionEntity;
 
-	@Override
-	protected void setUp() throws Exception {
-		session = StaticHibernateUtil.getSessionTL();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		StaticHibernateUtil.closeSession();
-		session=null;
-	}
-
-	public void testGetAccountAction(){
-		Short id = 1;
-		accountActionEntity = getAccountActionEntityObject(id);
-		assertEquals("Loan Repayment", accountActionEntity.getName());
-	}
-
-	private AccountActionEntity getAccountActionEntityObject(Short id) {
-		return (AccountActionEntity)session.get(AccountActionEntity.class,id);
+    public void testFinancialActionCache() throws FinancialException
+	{
+		
+		FinancialActionCache.addToCache(createFinancialAction());
+		
+		FinancialActionBO principalAction = FinancialActionCache.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
+		assertEquals(principalAction.getId().shortValue(),1);
+		
 	}
 	
+	
+	private FinancialActionBO createFinancialAction()
+	{
+		return (FinancialActionBO)StaticHibernateUtil.getSessionTL().get(FinancialActionBO.class,FinancialActionConstants.PRINCIPALPOSTING.value);
+
+	}
+
 }

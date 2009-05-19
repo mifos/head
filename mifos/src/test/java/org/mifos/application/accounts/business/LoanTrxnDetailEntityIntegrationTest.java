@@ -40,9 +40,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestLoanTrxnDetailEntity extends MifosIntegrationTest {
+public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTest {
 
-	public TestLoanTrxnDetailEntity() throws SystemException, ApplicationException {
+	public LoanTrxnDetailEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

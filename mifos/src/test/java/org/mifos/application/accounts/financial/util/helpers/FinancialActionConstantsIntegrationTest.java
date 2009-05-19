@@ -20,21 +20,18 @@
  
 package org.mifos.application.accounts.financial.util.helpers;
 
-import static org.junit.Assert.assertEquals;
 import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Query;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class TestFinancialActionConstants extends MifosIntegrationTest {
+public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTest {
 
-	public TestFinancialActionConstants() throws SystemException, ApplicationException {
+	public FinancialActionConstantsIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -58,7 +55,7 @@ public class TestFinancialActionConstants extends MifosIntegrationTest {
 	}
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestFinancialActionConstants.class);
+		return new JUnit4TestAdapter(FinancialActionConstantsIntegrationTest.class);
 	}
 	
 }

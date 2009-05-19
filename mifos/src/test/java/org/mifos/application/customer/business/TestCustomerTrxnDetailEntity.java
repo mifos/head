@@ -28,7 +28,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -132,7 +132,7 @@ public class TestCustomerTrxnDetailEntity extends MifosIntegrationTest {
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 		}
 		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,customerAccountBO);
 		
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();

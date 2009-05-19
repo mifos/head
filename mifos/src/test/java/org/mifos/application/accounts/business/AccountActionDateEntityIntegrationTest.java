@@ -27,7 +27,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.TestAccount;
+import org.mifos.application.accounts.AccountIntegrationTest;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -42,9 +42,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountActionDateEntity extends TestAccount {
+public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTest {
 
-	public TestAccountActionDateEntity() throws SystemException, ApplicationException {
+	public AccountActionDateEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

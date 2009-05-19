@@ -41,9 +41,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountFeesActionDetailEntity extends MifosIntegrationTest {
+public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrationTest {
 
-	public TestAccountFeesActionDetailEntity() throws SystemException, ApplicationException {
+	public AccountFeesActionDetailEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

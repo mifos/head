@@ -33,9 +33,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class TestFinancialInitializer {
+public class FinancialInitializerTest {
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestFinancialInitializer.class);
+		return new JUnit4TestAdapter(FinancialInitializerTest.class);
 	}
 	
 	@BeforeClass

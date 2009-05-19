@@ -34,7 +34,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.TestAccountFeesEntity;
+import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -1213,7 +1213,7 @@ public class TestCustomerPersistence extends MifosIntegrationTest {
 				.getCustomerAccount(), periodicFee, ((AmountFeeBO) periodicFee)
 				.getFeeAmount().getAmountDoubleValue());
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		TestAccountFeesEntity.addAccountFees(accountFee, customerAccount);
+		AccountFeesEntityIntegrationTest.addAccountFees(accountFee, customerAccount);
 		TestObjectFactory.updateObject(customerAccount);
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();

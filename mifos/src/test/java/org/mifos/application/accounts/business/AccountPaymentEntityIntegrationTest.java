@@ -45,9 +45,9 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountPaymentEntity extends MifosIntegrationTest {
+public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTest {
 
-	public TestAccountPaymentEntity() throws SystemException, ApplicationException {
+	public AccountPaymentEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 

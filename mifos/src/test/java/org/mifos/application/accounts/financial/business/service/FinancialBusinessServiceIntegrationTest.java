@@ -29,7 +29,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -66,8 +66,8 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestFinancialBusinessService extends MifosIntegrationTest {
-	public TestFinancialBusinessService() throws SystemException, ApplicationException {
+public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTest {
+	public FinancialBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
     private static final double DELTA = 0.00000001;
@@ -116,7 +116,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 			new FinancialBusinessService();
 		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
 		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,loan);
 		
 
 		financialBusinessService.buildAccountingEntries(accountTrxnEntity);
@@ -210,7 +210,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 				savings, depositAmount, balanceAmount, trxnDate,
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 		
 		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
@@ -286,7 +286,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 				savings, withdrawalAmount, balanceAmount, trxnDate,
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
@@ -364,7 +364,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 					.getAccountTrxns().size());
 			FinancialBusinessService financialBusinessService = 
 				new FinancialBusinessService();
-			TestAccountPaymentEntity.addAccountPayment(payment,savings);
+			AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 			SavingsTrxnDetailEntity accountTrxn = null;
 			for (AccountTrxnEntity trxn : payment.getAccountTrxns())
 				accountTrxn = (SavingsTrxnDetailEntity) trxn;
@@ -439,7 +439,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 				new Money(), new Money(), new Money(), new Money(), null);
 
 		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,loan);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
 		TestObjectFactory.updateObject(loan);
 		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity
@@ -487,7 +487,7 @@ public class TestFinancialBusinessService extends MifosIntegrationTest {
 				new Money(), new Money(), new Money(), new Money(), null);
 
 		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,loan);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
 		TestObjectFactory.updateObject(loan);
 		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity

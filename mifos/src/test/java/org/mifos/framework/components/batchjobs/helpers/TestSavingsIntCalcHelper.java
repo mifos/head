@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -129,7 +129,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 						"1000.0"), helper.getDate("10/03/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings1);
 		
 		savings1.update();
 		StaticHibernateUtil.commitTransaction();
@@ -139,7 +139,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("20/03/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings1);
 		savings1.update();
 		StaticHibernateUtil.commitTransaction();
 
@@ -148,7 +148,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("10/04/2006"),
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings1,
 				createdBy, group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings1);
 		savings1.update();
 		StaticHibernateUtil.commitTransaction();
 
@@ -157,7 +157,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("20/04/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings1);
 		savings1.update();
 		StaticHibernateUtil.commitTransaction();
 		
@@ -169,7 +169,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("20/04/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings4);
 		savings4.update();
 		StaticHibernateUtil.commitTransaction();
 
@@ -178,7 +178,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("25/04/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings4);
 		savings4.update();
 		StaticHibernateUtil.commitTransaction();
 
@@ -187,7 +187,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("28/04/2006"),
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings4,
 				createdBy, group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings4);
 		savings4.update();
 		StaticHibernateUtil.commitTransaction();
 
@@ -196,7 +196,7 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 				.getDate("30/04/2006"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4, createdBy,
 				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
+		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings4);
 		savings4.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();
