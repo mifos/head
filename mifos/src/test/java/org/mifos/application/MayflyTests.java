@@ -23,8 +23,8 @@ package org.mifos.application;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
-import org.mifos.application.accounts.struts.action.TestApplyAdjustmentAction;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.struts.action.ApplyAdjustmentActionTest;
 import org.mifos.application.fees.persistence.FeePersistenceTest;
 import org.mifos.application.fees.struts.action.FeeActionTest;
 import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
@@ -55,8 +55,8 @@ public class MayflyTests extends TestSuite {
 		   unconfirmed)? */
 		//suite.addTestSuite(TestOfficePersistence.class);
 
-		suite.addTestSuite(TestSavingsBO.class);
-		suite.addTestSuite(TestApplyAdjustmentAction.class);
+		suite.addTestSuite(SavingsBOIntegrationTest.class);
+		suite.addTestSuite(ApplyAdjustmentActionTest.class);
 		suite.addTestSuite(FeeActionTest.class);
 		suite.addTestSuite(TestHolidayUtils.class);
 		

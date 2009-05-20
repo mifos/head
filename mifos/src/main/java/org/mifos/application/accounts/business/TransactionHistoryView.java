@@ -197,7 +197,7 @@ implements Comparable<TransactionHistoryView> {
 	 * just something we can count on --> this should be changed to suite a
 	 * production need if one exists.
 	 * The tests that rely on this ordering include:
-	 * {@link TestSavingsAction#testSuccessfullGetTransactionHistory()}
+	 * {@link SavingsActionTest#testSuccessfullGetTransactionHistory()}
 	 */
 	public int compareTo(TransactionHistoryView o) {
 		int dateCompare = this.getPostedDate().compareTo(o.getPostedDate());

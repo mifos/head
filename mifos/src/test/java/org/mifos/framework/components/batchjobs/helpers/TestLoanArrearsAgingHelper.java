@@ -31,7 +31,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -296,10 +296,10 @@ public class TestLoanArrearsAgingHelper extends MifosIntegrationTest {
 			Short installmentSize) {
 		Date startDate = offSetCurrentDate(days);
 		LoanBO loan = account;
-		TestLoanBO.modifyDisbursmentDate(loan,startDate);
+		LoanBOIntegrationTest.modifyDisbursmentDate(loan,startDate);
 		for (AccountActionDateEntity actionDate : loan.getAccountActionDates()){
 			if(actionDate.getInstallmentId().shortValue()<=installmentSize.shortValue())
-				TestLoanBO.setActionDate(actionDate,offSetGivenDate(
+				LoanBOIntegrationTest.setActionDate(actionDate,offSetGivenDate(
 						actionDate.getActionDate(), days));
 		}
 	}

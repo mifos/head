@@ -24,25 +24,25 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.mifos.application.accounts.loan.business.LoanBOForReversalIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBORedoDisbursalTest;
 import org.mifos.application.accounts.loan.business.LoanCalculationTest;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanBOForReversal;
-import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBORedoDisbursal;
-import org.mifos.application.accounts.loan.business.service.TestLoanBusinessService;
-import org.mifos.application.accounts.loan.persistence.TestLoanPersistence;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntityIntegrationTest;
+import org.mifos.application.accounts.loan.business.service.LoanBusinessServiceIntegrationTest;
+import org.mifos.application.accounts.loan.persistence.LoanPersistenceIntegrationTest;
+import org.mifos.application.accounts.loan.struts.action.AccountStatusActionTest;
+import org.mifos.application.accounts.loan.struts.action.LoanAccountActionIndividualLoansIntegrationTest;
 import org.mifos.application.accounts.loan.struts.action.LoanAccountActionTest;
+import org.mifos.application.accounts.loan.struts.action.LoanActivityActionTest;
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationActionTest;
+import org.mifos.application.accounts.loan.struts.action.RepayLoanActionTest;
 import org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalActionTest;
-import org.mifos.application.accounts.loan.struts.action.TestAccountStatusAction;
-import org.mifos.application.accounts.loan.struts.action.TestLoanAccountAction;
-import org.mifos.application.accounts.loan.struts.action.TestLoanAccountActionIndividualLoans;
-import org.mifos.application.accounts.loan.struts.action.TestLoanActivityAction;
-import org.mifos.application.accounts.loan.struts.action.TestRepayLoanAction;
-import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionFormTest;
+import org.mifos.application.accounts.loan.struts.action.LoanAccountActionEasyMockTest;
+import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionFormIntegrationTest;
 import org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFnTest;
-import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanActivityTag;
-import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanRepayTag;
+import org.mifos.application.accounts.loan.struts.uihelpers.LoanActivityTagIntegrationTest;
+import org.mifos.application.accounts.loan.struts.uihelpers.LoanRepayTagIntegrationTest;
 
 public class LoanTestSuite extends TestSuite {
 	public static void main(String[] args) {
@@ -54,23 +54,23 @@ public class LoanTestSuite extends TestSuite {
 		TestSuite testSuite = new LoanTestSuite();
         testSuite.addTest(LoanAccountActionTest.testSuite());
 		testSuite.addTest(LoanCalculationTest.testSuite());
-		testSuite.addTestSuite(TestLoanPersistence.class);
-		testSuite.addTestSuite(TestLoanBO.class);
-		testSuite.addTestSuite(TestRepayLoanAction.class);
-		testSuite.addTestSuite(TestLoanBusinessService.class);
-		testSuite.addTestSuite(TestLoanActivityAction.class);
-		testSuite.addTestSuite(TestLoanAccountAction.class);
-		testSuite.addTestSuite(TestAccountStatusAction.class);
-		testSuite.addTestSuite(TestLoanScheduleEntity.class);
+		testSuite.addTestSuite(LoanPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(LoanBOIntegrationTest.class);
+		testSuite.addTestSuite(RepayLoanActionTest.class);
+		testSuite.addTestSuite(LoanBusinessServiceIntegrationTest.class);
+		testSuite.addTestSuite(LoanActivityActionTest.class);
+		testSuite.addTestSuite(LoanAccountActionEasyMockTest.class);
+		testSuite.addTestSuite(AccountStatusActionTest.class);
+		testSuite.addTestSuite(LoanScheduleEntityIntegrationTest.class);
 		testSuite.addTestSuite(LoanUIHelperFnTest.class);
-		testSuite.addTestSuite(TestLoanActivityTag.class);
-		testSuite.addTestSuite(TestLoanRepayTag.class);
+		testSuite.addTestSuite(LoanActivityTagIntegrationTest.class);
+		testSuite.addTestSuite(LoanRepayTagIntegrationTest.class);
 		testSuite.addTestSuite(MultipleLoanAccountsCreationActionTest.class);
-		testSuite.addTestSuite(TestLoanBOForReversal.class);
-        testSuite.addTest(TestLoanBORedoDisbursal.testSuite());
+		testSuite.addTestSuite(LoanBOForReversalIntegrationTest.class);
+        testSuite.addTest(LoanBORedoDisbursalTest.testSuite());
         testSuite.addTestSuite(ReverseLoanDisbursalActionTest.class);
-        testSuite.addTestSuite(TestLoanAccountActionIndividualLoans.class);
-        testSuite.addTestSuite(LoanAccountActionFormTest.class);
+        testSuite.addTestSuite(LoanAccountActionIndividualLoansIntegrationTest.class);
+        testSuite.addTestSuite(LoanAccountActionFormIntegrationTest.class);
 		return testSuite;
 	}
 }

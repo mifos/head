@@ -30,7 +30,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanCalculationTest;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -158,7 +158,7 @@ public class PortfolioAtRiskCalculationTest extends MifosIntegrationTest{
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
+			LoanBOIntegrationTest.setActionDate(accountActionDateEntity,new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}

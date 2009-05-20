@@ -20,8 +20,6 @@
  
 package org.mifos.application.accounts.loan.business;
 
-import static org.junit.Assert.*;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

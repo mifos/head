@@ -35,10 +35,10 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -166,7 +166,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
 				.getAccountFeesActionDetails()) {
-			TestLoanBO.setFeeAmountPaid(accountFeesActionDetailEntity,TestObjectFactory
+			LoanBOIntegrationTest.setFeeAmountPaid(accountFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
 					accountTrxnEntity, accountFeesActionDetailEntity
@@ -212,7 +212,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 				group);
 		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
 		
-		TestSavingsBO.setBalance(savings,balanceAmount);
+		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();
@@ -227,7 +227,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
 				group, "", null);
 		payment.addAccountTrxn(accountTrxn);
-		TestSavingsBO.setBalance(savings,balanceAmount);
+		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
 
 		FinancialBusinessService financialBusinessService = 
 			new FinancialBusinessService();
@@ -287,7 +287,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
 				group);
 		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
-		TestSavingsBO.setBalance(savings,balanceAmount);
+		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();
@@ -302,7 +302,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
 				group, "correction entry", null);
 		payment.addAccountTrxn(accountTrxn);
-		TestSavingsBO.setBalance(savings,balanceAmount);
+		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
 
 		FinancialBusinessService financialBusinessService = 
 			new FinancialBusinessService();

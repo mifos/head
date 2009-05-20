@@ -42,8 +42,8 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -306,11 +306,11 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 					accntActionDate,null,
 					null, new Money("5"));
 
-			TestLoanBO.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
+			LoanBOIntegrationTest.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(3));
 
 			accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
-			TestLoanScheduleEntity.modifyData(accntActionDate,
+			LoanScheduleEntityIntegrationTest.modifyData(accntActionDate,
 					TestObjectFactory.getMoneyForMFICurrency(10),
 					TestObjectFactory.getMoneyForMFICurrency(5),
 					TestObjectFactory.getMoneyForMFICurrency(3),
@@ -338,12 +338,12 @@ public class TestCollSheetBO extends MifosIntegrationTest {
 			AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(
 					accntActionDate,  null,
 					null, new Money("5"));
-			TestLoanBO.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
+			LoanBOIntegrationTest.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(3));
 
 			accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 
-			TestLoanScheduleEntity.modifyData(accntActionDate,
+			LoanScheduleEntityIntegrationTest.modifyData(accntActionDate,
 					TestObjectFactory.getMoneyForMFICurrency(10),
 					TestObjectFactory.getMoneyForMFICurrency(5),
 					TestObjectFactory.getMoneyForMFICurrency(3),

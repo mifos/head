@@ -51,11 +51,11 @@ import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCach
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -837,7 +837,7 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, AccountState state, Date startDate,
 			LoanOfferingBO offering) {
-		LoanBO loan = TestLoanBO.createLoanAccount(globalNum, customer, state,
+		LoanBO loan = LoanBOIntegrationTest.createLoanAccount(globalNum, customer, state,
 				startDate, offering);
 		try {
 			loan.save();
@@ -852,7 +852,7 @@ public class TestObjectFactory {
 	public static LoanBO createBasicLoanAccount(
 			CustomerBO customer, AccountState state, Date startDate,
 			LoanOfferingBO offering) {
-		LoanBO loan = TestLoanBO.createBasicLoanAccount(customer, state,
+		LoanBO loan = LoanBOIntegrationTest.createBasicLoanAccount(customer, state,
 				startDate, offering);
 		try {
 			loan.save();
@@ -868,7 +868,7 @@ public class TestObjectFactory {
 	public static LoanBO createIndividualLoanAccount(String globalNum, 
 			CustomerBO customer, AccountState state, Date startDate, 
 			LoanOfferingBO offering) {
-		LoanBO loan = TestLoanBO.createIndividualLoanAccount(globalNum, customer,
+		LoanBO loan = LoanBOIntegrationTest.createIndividualLoanAccount(globalNum, customer,
 				state, startDate, offering);
 		try {
 			loan.save();
@@ -982,7 +982,7 @@ public class TestObjectFactory {
 		savings.save();
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(accountStateId, null, "");
-		TestSavingsBO.setActivationDate(savings, new Date(System
+		SavingsBOIntegrationTest.setActivationDate(savings, new Date(System
 				.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
 		short installment = 0;
@@ -1020,7 +1020,7 @@ public class TestObjectFactory {
 				customer, state, savingsOffering.getRecommendedAmount(),
 				getCustomFieldView());
 		savings.save();
-		TestSavingsBO.setActivationDate(savings, new Date(System
+		SavingsBOIntegrationTest.setActivationDate(savings, new Date(System
 				.currentTimeMillis()));
 		StaticHibernateUtil.commitTransaction();
 		return (SavingsBO) addObject(getObject(SavingsBO.class, savings
@@ -1241,7 +1241,7 @@ public class TestObjectFactory {
 	 * 
 	 * Changing {@link TestObjectFactory#getUserContext()} to
 	 * {@link TestUtils#makeUserWithLocales()} caused a failure
-	 * in {@link TestLoanBO#testApplyUpfrontFee}
+	 * in {@link LoanBOIntegrationTest#testApplyUpfrontFee}
 	 * (and other tests).
 	 */
 	public static FeeBO createOneTimeRateFee(String feeName,
@@ -1922,7 +1922,7 @@ public class TestObjectFactory {
 			CustomerBO customer, AccountState state, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
 //		loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
-		LoanBO loan = TestLoanBO.createLoanAccountWithDisbursement(globalNum,
+		LoanBO loan = LoanBOIntegrationTest.createLoanAccountWithDisbursement(globalNum,
 				customer, state, startDate, loanOfering, disbursalType, Short
 						.valueOf("6"));
 		try {

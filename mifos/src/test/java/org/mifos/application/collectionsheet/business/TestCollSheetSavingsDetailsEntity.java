@@ -24,7 +24,7 @@ import java.util.Date;
 
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -88,14 +88,14 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("100.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
         assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 		accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
@@ -116,7 +116,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 		// meeting date is Rs 200
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("100.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
@@ -135,7 +135,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 		// meeting date is Rs 200
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
@@ -155,7 +155,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 		// date is Rs 200
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("100.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("100.00"));
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
@@ -174,7 +174,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 		// date is Rs 200
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
@@ -189,7 +189,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
@@ -203,7 +203,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosIntegrationTest {
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
-		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
+		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
 		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));

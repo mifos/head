@@ -34,17 +34,17 @@ import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTe
 import org.mifos.application.accounts.business.AccountStateEntityIntegrationTestTest;
 import org.mifos.application.accounts.business.AccountStateMachineIntegrationTest;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntityIntegrationTest;
-import org.mifos.application.accounts.business.service.TestAccountService;
+import org.mifos.application.accounts.business.service.AccountServiceIntegrationTest;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessServiceIntegrationTest;
-import org.mifos.application.accounts.offsetting.TestOffsetAccountBO;
-import org.mifos.application.accounts.persistence.AccountPersistenceTest;
-import org.mifos.application.accounts.struts.action.TestAccountAction;
-import org.mifos.application.accounts.struts.action.TestApplyAdjustmentAction;
-import org.mifos.application.accounts.struts.action.TestApplyChargeAction;
-import org.mifos.application.accounts.struts.action.TestApplyPaymentAction;
-import org.mifos.application.accounts.struts.action.TestEditStatusAction;
-import org.mifos.application.accounts.struts.action.TestNotesAction;
-import org.mifos.application.accounts.util.helper.TestAccountState;
+import org.mifos.application.accounts.offsetting.OffsetAccountBOIntegrationTest;
+import org.mifos.application.accounts.persistence.AccountPersistenceIntegrationTest;
+import org.mifos.application.accounts.struts.action.AccountActionTest;
+import org.mifos.application.accounts.struts.action.ApplyAdjustmentActionTest;
+import org.mifos.application.accounts.struts.action.ApplyChargeActionTest;
+import org.mifos.application.accounts.struts.action.ApplyPaymentActionTest;
+import org.mifos.application.accounts.struts.action.EditStatusActionTest;
+import org.mifos.application.accounts.struts.action.NotesActionTest;
+import org.mifos.application.accounts.util.helper.AccountStateIntegrationTest;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.accounts.business.AddAccountActionTest;
 
@@ -61,13 +61,13 @@ public class AccountTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new AccountTestSuite();
-		testSuite.addTestSuite(AccountPersistenceTest.class);
+		testSuite.addTestSuite(AccountPersistenceIntegrationTest.class);
 		testSuite.addTestSuite(AccountBOIntegrationTest.class);
 		testSuite.addTestSuite(AccountFeesEntityIntegrationTest.class);
 		testSuite.addTestSuite(AccountActionDateEntityIntegrationTest.class);
-		testSuite.addTestSuite(TestAccountService.class);
-		testSuite.addTestSuite(TestAccountAction.class);
-		testSuite.addTestSuite(TestApplyAdjustmentAction.class);
+		testSuite.addTestSuite(AccountServiceIntegrationTest.class);
+		testSuite.addTestSuite(AccountActionTest.class);
+		testSuite.addTestSuite(ApplyAdjustmentActionTest.class);
 		testSuite.addTestSuite(AccountStateEntityIntegrationTestTest.class);
 		testSuite.addTestSuite(AccountActionEntityIntegrationTest.class);
 		testSuite.addTestSuite(LoanTrxnDetailEntityIntegrationTest.class);
@@ -75,14 +75,14 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestCustomerAccountBO.class);
 		testSuite.addTestSuite(AccountPaymentEntityIntegrationTest.class);
 		testSuite.addTestSuite(FinancialBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(TestApplyPaymentAction.class);
-		testSuite.addTestSuite(TestNotesAction.class);
+		testSuite.addTestSuite(ApplyPaymentActionTest.class);
+		testSuite.addTestSuite(NotesActionTest.class);
 		testSuite.addTestSuite(AccountStateMachineIntegrationTest.class);
-		testSuite.addTestSuite(TestEditStatusAction.class);
-		testSuite.addTestSuite(TestApplyChargeAction.class);		
-		testSuite.addTestSuite(TestOffsetAccountBO.class);	
+		testSuite.addTestSuite(EditStatusActionTest.class);
+		testSuite.addTestSuite(ApplyChargeActionTest.class);		
+		testSuite.addTestSuite(OffsetAccountBOIntegrationTest.class);	
 		testSuite.addTest(AddAccountStateFlagTest.testSuite());
-		testSuite.addTestSuite(TestAccountState.class);
+		testSuite.addTestSuite(AccountStateIntegrationTest.class);
 		testSuite.addTest(AddAccountActionTest.suite());
 		return testSuite;
 		

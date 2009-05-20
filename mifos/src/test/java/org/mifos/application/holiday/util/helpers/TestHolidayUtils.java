@@ -33,7 +33,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -309,7 +309,7 @@ public class TestHolidayUtils extends MifosIntegrationTest {
 		Calendar startDate = Calendar.getInstance();
 		// TODO: It is ugly to call into another test like this,
 		// and this code also isn't cleaning up the data correctly.
-		TestLoanBO testLoanBO = new TestLoanBO();
+		LoanBOIntegrationTest testLoanBO = new LoanBOIntegrationTest();
 		
 		LoanScheduleEntity[] loanRepaymentSchedule = testLoanBO.createLoanRepaymentSchedule();
 		

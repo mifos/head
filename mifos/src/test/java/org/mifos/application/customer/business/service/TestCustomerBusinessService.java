@@ -37,10 +37,10 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
@@ -1015,7 +1015,7 @@ public class TestCustomerBusinessService extends MifosIntegrationTest {
 		StaticHibernateUtil.closeSession();
 		savingsBO = (SavingsBO) (new AccountPersistence().getAccount(savingsBO
 				.getAccountId()));
-		TestSavingsBO.setBalance(savingsBO, new Money());
+		SavingsBOIntegrationTest.setBalance(savingsBO, new Money());
 		Money enteredAmount = new Money(currency, "100.0");
 		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount,
 				savingsBO.getPersonnel(), Short.valueOf("1"), new Date(System
@@ -1050,7 +1050,7 @@ public class TestCustomerBusinessService extends MifosIntegrationTest {
 		currentDateCalendar = new GregorianCalendar(year, month, day - 40);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			TestLoanBO.setActionDate(accountActionDateEntity,
+			LoanBOIntegrationTest.setActionDate(accountActionDateEntity,
 					new java.sql.Date(currentDateCalendar.getTimeInMillis()));
 			break;
 		}

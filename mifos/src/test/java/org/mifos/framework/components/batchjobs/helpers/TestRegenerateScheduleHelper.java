@@ -36,7 +36,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -301,7 +301,7 @@ public class TestRegenerateScheduleHelper extends MifosIntegrationTest {
 				.getCustomerId());
 		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
-		TestLoanBO.setDisbursementDate(accountBO, offSetCurrentDate(21));
+		LoanBOIntegrationTest.setDisbursementDate(accountBO, offSetCurrentDate(21));
 		accountBO.getAccountActionDate((short) 1).setPaymentStatus(PaymentStatus.PAID);
 		accountBO.getAccountActionDate((short) 2).setPaymentStatus(PaymentStatus.PAID);
 		accountBO.getAccountActionDate((short) 3).setPaymentStatus(PaymentStatus.PAID);

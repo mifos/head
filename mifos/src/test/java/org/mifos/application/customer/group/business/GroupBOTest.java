@@ -34,9 +34,9 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanCalculationTest;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -726,11 +726,11 @@ public class GroupBOTest extends MifosIntegrationTest {
 	public void testGetTotalSavingsBalance() throws Exception {
 		createInitialObjects();
 		SavingsBO savings1 = getSavingsAccount(group, "fsaf6", "ads6");
-		TestSavingsBO.setBalance(savings1,new Money("1000"));
+		SavingsBOIntegrationTest.setBalance(savings1,new Money("1000"));
 		
 		savings1.update();
 		SavingsBO savings2 = getSavingsAccount(client, "fsaf5", "ads5");
-		TestSavingsBO.setBalance(savings2,new Money("2000"));
+		SavingsBOIntegrationTest.setBalance(savings2,new Money("2000"));
 		savings1.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();
@@ -1543,7 +1543,7 @@ public class GroupBOTest extends MifosIntegrationTest {
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
+			LoanBOIntegrationTest.setActionDate(accountActionDateEntity,new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}

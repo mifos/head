@@ -61,7 +61,7 @@ import org.mifos.framework.util.helpers.Money;
 /*
  * This is a stand alone unit test class which uses Easymock to 
  * test a methods on LoanAccountAction without hitting the database.
- * There is a related integration test class TestLoanAccountAction
+ * There is a related integration test class LoanAccountActionEasyMockTest
  * which uses the "old style" of testing which hits the database.
  */
 public class LoanAccountActionTest {

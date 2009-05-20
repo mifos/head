@@ -32,7 +32,7 @@ import java.util.Date;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -121,8 +121,8 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 		createInitialObjects();
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
-		TestSavingsBO.setNextIntCalcDate(savings1,helper.getDate("01/05/2006"));
-		TestSavingsBO.setActivationDate(savings1,helper.getDate("05/03/2006"));
+		SavingsBOIntegrationTest.setNextIntCalcDate(savings1,helper.getDate("01/05/2006"));
+		SavingsBOIntegrationTest.setActivationDate(savings1,helper.getDate("05/03/2006"));
 
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings1, new Money(currency, "1000.0"), new Money(currency,
@@ -161,8 +161,8 @@ public class TestSavingsIntCalcHelper extends MifosIntegrationTest {
 		savings1.update();
 		StaticHibernateUtil.commitTransaction();
 		
-		TestSavingsBO.setNextIntCalcDate(savings4,helper.getDate("01/05/2006"));
-		TestSavingsBO.setActivationDate(savings4,helper.getDate("10/04/2006"));
+		SavingsBOIntegrationTest.setNextIntCalcDate(savings4,helper.getDate("01/05/2006"));
+		SavingsBOIntegrationTest.setActivationDate(savings4,helper.getDate("10/04/2006"));
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "1000.0"), new Money(currency, "1000.0"), helper

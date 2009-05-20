@@ -32,7 +32,7 @@ import java.util.Date;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -113,17 +113,17 @@ public class TestSavingsIntPostingHelper extends MifosIntegrationTest {
 
 	public void testInterestPosting() throws Exception {
 		createInitialObjects();
-		TestSavingsBO.setNextIntPostDate(savings1,helper.getDate("31/03/2006"));
-		TestSavingsBO.setActivationDate(savings1,helper.getDate("05/03/2006"));
-		TestSavingsBO.setInterestToBePosted(savings1,new Money(currency, "500"));
-		TestSavingsBO.setBalance(savings1,new Money("250"));
+		SavingsBOIntegrationTest.setNextIntPostDate(savings1,helper.getDate("31/03/2006"));
+		SavingsBOIntegrationTest.setActivationDate(savings1,helper.getDate("05/03/2006"));
+		SavingsBOIntegrationTest.setInterestToBePosted(savings1,new Money(currency, "500"));
+		SavingsBOIntegrationTest.setBalance(savings1,new Money("250"));
 		
 		savings1.update();
 
-		TestSavingsBO.setNextIntPostDate(savings4,helper.getDate("31/03/2006"));
-		TestSavingsBO.setActivationDate(savings4,helper.getDate("15/03/2006"));
-		TestSavingsBO.setInterestToBePosted(savings4,new Money(currency, "800.40"));
-		TestSavingsBO.setBalance(savings4,new Money("250"));
+		SavingsBOIntegrationTest.setNextIntPostDate(savings4,helper.getDate("31/03/2006"));
+		SavingsBOIntegrationTest.setActivationDate(savings4,helper.getDate("15/03/2006"));
+		SavingsBOIntegrationTest.setInterestToBePosted(savings4,new Money(currency, "800.40"));
+		SavingsBOIntegrationTest.setBalance(savings4,new Money("250"));
 		savings4.update();
 
 		StaticHibernateUtil.commitTransaction();

@@ -32,9 +32,9 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -581,7 +581,7 @@ public class TestCustomerBO extends MifosIntegrationTest {
 
 	public void testgetSavingsBalance() throws Exception {
 		SavingsBO savings = getSavingsAccount("fsaf4", "ads4");
-		TestSavingsBO.setBalance(savings, new Money("1000"));
+		SavingsBOIntegrationTest.setBalance(savings, new Money("1000"));
 		savings.update();
 		StaticHibernateUtil.commitTransaction();
 		StaticHibernateUtil.closeSession();
@@ -842,7 +842,7 @@ public class TestCustomerBO extends MifosIntegrationTest {
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			TestLoanBO.setActionDate(accountActionDateEntity,
+			LoanBOIntegrationTest.setActionDate(accountActionDateEntity,
 					new java.sql.Date(currentDateCalendar.getTimeInMillis()));
 			break;
 		}
@@ -864,9 +864,9 @@ public class TestCustomerBO extends MifosIntegrationTest {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				TestLoanBO.setActionDate(installment, lastWeekDate);
+				LoanBOIntegrationTest.setActionDate(installment, lastWeekDate);
 			} else if (installment.getInstallmentId().intValue() == 2) {
-				TestLoanBO.setActionDate(installment, twoWeeksBeforeDate);
+				LoanBOIntegrationTest.setActionDate(installment, twoWeeksBeforeDate);
 			}
 		}
 	}
