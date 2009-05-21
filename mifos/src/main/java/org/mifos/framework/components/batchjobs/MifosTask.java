@@ -55,11 +55,6 @@ public abstract class MifosTask extends TimerTask {
 		helper.executeTask();
 	}
 
-	@Override
-	public boolean cancel() {
-		return true;
-	}
-
 	public static boolean isBatchJobRunning() {
 		return batchJobRunning;
 	}
