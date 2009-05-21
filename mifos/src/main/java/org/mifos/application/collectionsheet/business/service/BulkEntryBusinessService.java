@@ -42,8 +42,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
-import org.mifos.application.collectionsheet.util.helpers.BulkEntryCustomerAccountThread;
-import org.mifos.application.collectionsheet.util.helpers.BulkEntryLoanThread;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.AttendanceType;
@@ -205,54 +203,6 @@ public class BulkEntryBusinessService implements BusinessService {
 				}
 			}
 		}
-	}
-
-	public void saveDataThreaded(List<LoanAccountsProductView> accountViews,
-			Short personnelId, String recieptId, Short paymentId,
-			Date receiptDate, Date transactionDate, List<String> accountNums,
-			List<SavingsBO> savings, List<String> savingsNames,
-			List<ClientBO> clients, List<String> customerNames,
-			List<CustomerAccountView> customerAccounts,
-			List<String> customerAccountNums,
-			List<CollectionSheetEntryView> collectionSheetEntryViews) {
-	    logger.debug("Running threaded saveData");
-	    
-	    saveAttendance(collectionSheetEntryViews, transactionDate);
-		StringBuffer isThreadOneDone = new StringBuffer();
-		StringBuffer isCustomerAccountThreadDone = new StringBuffer();
-		BulkEntryLoanThread bulkEntryLoanThreadOne = new BulkEntryLoanThread(
-				accountViews, personnelId, recieptId, paymentId, receiptDate,
-				transactionDate, accountNums, isThreadOneDone);
-		Thread threadOne = new Thread(bulkEntryLoanThreadOne);
-		threadOne.start();
-		BulkEntryCustomerAccountThread bulkEntryCustomerAccountThread = 
-			new BulkEntryCustomerAccountThread(
-				customerAccounts, personnelId, recieptId, paymentId,
-				receiptDate, transactionDate, customerAccountNums,
-				isCustomerAccountThreadDone);
-		Thread threadCustomerAccount = new Thread(
-				bulkEntryCustomerAccountThread);
-		threadCustomerAccount.start();
-		saveSavingsAccount(savings, savingsNames);
-
-		/* We probably could just join the threads here (but what do
-		   we need to do with InterruptedException?). */
-		while ((!isThreadOneDone.toString().equals("Done"))
-				|| (!isCustomerAccountThreadDone.toString().equals("Done"))) {
-			try {
-				Thread.sleep(100L);
-			}
-			catch (InterruptedException e) {
-			}
-		}
-		
-		/* Commented out until we can figure out what is up
-		   with TestBulkEntryAction#SUPPLY_ENTERED_AMOUNT_PARAMETERS
-		Exception exception = bulkEntryLoanThreadOne.exception;
-		if (exception != null) {
-			throw new RuntimeException(exception);
-		}
-		 */
 	}
 
     public void saveData(List<LoanAccountsProductView> accountViews,
