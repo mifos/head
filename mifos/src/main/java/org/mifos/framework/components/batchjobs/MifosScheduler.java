@@ -56,7 +56,7 @@ public class MifosScheduler extends Timer {
 	}
 	
 	/**
-	 * This method schedules a specified task to run at a specified time afer a
+	 * This method schedules a specified task to run at a specified time after a
 	 * specified delay
 	 */
 	public void schedule(MifosTask task, Date initial, long delay) {
@@ -65,7 +65,7 @@ public class MifosScheduler extends Timer {
 	}
 
 	/**
-	 * This method reads all the task from a xml file and registers them with
+	 * This method reads all the task from an xml file and registers them with
 	 * the MifosScheduler"
 	 */
 	public void registerTasks() throws Exception {
@@ -106,11 +106,13 @@ public class MifosScheduler extends Timer {
     }
 
     /**
-	 * These are the non-reqular jobs which do not recure but have to be run
+	 * These are the non-regular jobs which do not recur but have to be run
 	 * infrequently on user request. Hence there is no delay input. An example:
 	 * Change in center meeting schedule which needs to change all inherited
 	 * meetings as well as reschedule loans, these tasks typically require a few
 	 * input params as well.
+	 * 
+	 * @deprecated YAGNI. Not currently used, and not known to be necessary. No replacement has been identified.
 	 */
 	public void schedule(MifosTask task, Date initial) {
 		timer.schedule(task, initial);
