@@ -46,6 +46,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
+<input type="hidden" id="page.id" value="edit_additional_fields" />
 
 <html-el:form action="/customFieldsAction.do?method=editPreview">
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -145,9 +146,11 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
               <tr>
 				<td align="center"><html-el:submit
+					styleId="edit_additional_fields.button.preview"
 					property="btnPreviewEdit" styleClass="buttn" >
 					<mifos:mifoslabel name="configuration.preview" />
 				</html-el:submit>&nbsp; <html-el:button property="cancelButton"
+					styleId="edit_additional_fields.button.cancel"
 					styleClass="cancelbuttn"
 					onclick="location.href='customFieldsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 					<mifos:mifoslabel name="configuration.cancel"  />

@@ -44,6 +44,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
+<input type="hidden" id="page.id" value="preview_additional_fields" />
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
 	function fnCreateCancel(){
@@ -166,7 +167,7 @@
 		    	<br> 
 		    	<br>     		        
 			    <span class="fontnormal">
-			    <html-el:button property="button" styleClass="insidebuttn" onclick="javascript:fnPrevious();">
+			    <html-el:button  styleId="preview_additional_fields.button.edit" property="button" styleClass="insidebuttn" onclick="javascript:fnPrevious();">
 					<mifos:mifoslabel name="configuration.edit_additional_field" ></mifos:mifoslabel>
 				</html-el:button>      
 				</span>
@@ -184,10 +185,10 @@
             <table width="93%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit property="submitBtn" styleClass="buttn">
+                <html-el:submit styleId="preview_additional_fields.button.submit" property="submitBtn" styleClass="buttn">
 							<mifos:mifoslabel name="configuration.submit" />
 				</html-el:submit>&nbsp;
-				<html-el:button property="calcelButton" styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
+				<html-el:button  styleId="preview_additional_fields.button.cancel" property="calcelButton" styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
 							<mifos:mifoslabel name="configuration.cancel" />
 				</html-el:button>                
                 </td>

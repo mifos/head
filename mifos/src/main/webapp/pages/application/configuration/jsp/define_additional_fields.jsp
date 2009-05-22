@@ -53,7 +53,9 @@
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-		<html-el:form action="/customFieldsAction.do?method=preview" focus="categoryType">
+		<input type="hidden" id="page.id" value="define_additional_fields" />
+		<html-el:form action="/customFieldsAction.do?method=preview"
+			focus="categoryType">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="450" align="left" valign="top" bgcolor="#FFFFFF">
@@ -74,7 +76,8 @@
 									<td width="27%">
 									<table border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td><img src="pages/framework/images/timeline/bigarrow.gif"
+											<td><img
+												src="pages/framework/images/timeline/bigarrow.gif"
 												width="17" height="17"></td>
 											<td class="timelineboldorange"><mifos:mifoslabel
 												name="configuration.additional_fields_information" /></td>
@@ -104,14 +107,13 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="headingorange"><span class="heading"> <mifos:mifoslabel
-										name="configuration.define_additional_fields"  /> - </span> <mifos:mifoslabel
-										name="configuration.enter_additional_fields_information"  /></td>
+										name="configuration.define_additional_fields" /> - </span> <mifos:mifoslabel
+										name="configuration.enter_additional_fields_information" /></td>
 								</tr>
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel
-										name="configuration.instruction1"  />
-									<mifos:mifoslabel name="configuration.instruction2"
-										mandatory="yes" /></td>
+										name="configuration.instruction1" /> <mifos:mifoslabel
+										name="configuration.instruction2" mandatory="yes" /></td>
 								</tr>
 							</table>
 							<br>
@@ -126,8 +128,7 @@
 								</tr>
 								<tr class="fontnormal">
 									<td width="27%" align="right"><mifos:mifoslabel
-										name="configuration.category" mandatory="yes"
-										/>:</td>
+										name="configuration.category" mandatory="yes" />:</td>
 									<td valign="top"><mifos:select property="categoryType"
 										style="width:136px;">
 										<c:forEach
@@ -141,13 +142,14 @@
 									<td width="27%" align="right"><mifos:mifoslabel
 										name="configuration.label" mandatory="yes" />:</td>
 									<td width="73%" valign="top"><mifos:mifosalphanumtext
-										property="labelName" maxlength="200" /></td>
+										styleId="define_additional_fields.input.labelName" property="labelName" maxlength="200" /></td>
 								</tr>
 								<tr class="fontnormal">
-                  					<td align="right"><mifos:mifoslabel
-										name="configuration.mandatory"  />:</td>
-                  					<td><html-el:checkbox property="mandatoryField"  value="1" /> </td>
-                				</tr>
+									<td align="right"><mifos:mifoslabel
+										name="configuration.mandatory" />:</td>
+									<td><html-el:checkbox property="mandatoryField" value="1" />
+									</td>
+								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
 										name="configuration.data_type" mandatory="yes" />:</td>
@@ -158,7 +160,7 @@
 											var="oneDataType">
 											<%-- XXX: Fix for issue #1962, don't display Date data type --%>
 											<c:if test="${oneDataType.id != '3'}">
-											<html-el:option value="${oneDataType.id}">${oneDataType.name}</html-el:option>
+												<html-el:option value="${oneDataType.id}">${oneDataType.name}</html-el:option>
 											</c:if>
 										</c:forEach>
 									</mifos:select></td>
@@ -178,13 +180,13 @@
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit
-										property="btnPreview" styleClass="buttn" >
+									<td align="center"><html-el:submit styleId="define_additional_fields.button.preview" property="btnPreview"
+										styleClass="buttn">
 										<mifos:mifoslabel name="configuration.preview" />
-									</html-el:submit>&nbsp; <html-el:button property="cancelButton"
+									</html-el:submit>&nbsp; <html-el:button styleId="define_additional_fields.button.cancel" property="cancelButton"
 										styleClass="cancelbuttn"
 										onclick="location.href='customFieldsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
-										<mifos:mifoslabel name="configuration.cancel"  />
+										<mifos:mifoslabel name="configuration.cancel" />
 									</html-el:button></td>
 								</tr>
 							</table>
@@ -192,8 +194,6 @@
 						</tr>
 					</table>
 					<br>
-					<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-					<html-el:hidden property="method" value="preview" />
-					</html-el:form> 
-			</tiles:put> 
-		</tiles:insert>
+					<html-el:hidden property="currentFlowKey"
+						value="${requestScope.currentFlowKey}" /> <html-el:hidden
+						property="method" value="preview" /> </html-el:form> </tiles:put> </tiles:insert>
