@@ -23,18 +23,18 @@ package org.mifos.framework.security;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.security.util.ActivityMapperTest;
+import org.mifos.framework.security.util.ActivityMapperIntegrationTest;
 import org.mifos.framework.security.util.LoginFilterTest;
-import org.mifos.framework.security.util.SecurityHelperTest;
+import org.mifos.framework.security.util.SecurityHelperIntegrationTest;
 
 public class SecurityTestSuite extends TestSuite {
 
     public static Test suite() throws Exception{
         TestSuite suite = new SecurityTestSuite();
-        suite.addTestSuite(SecurityHelperTest.class);
+        suite.addTestSuite(SecurityHelperIntegrationTest.class);
         suite.addTestSuite(LoginFilterTest.class);
         suite.addTest(AddActivityTest.testSuite());
-		suite.addTest(ActivityMapperTest.suite());
+		suite.addTest(ActivityMapperIntegrationTest.suite());
         return suite;
     }
 }

@@ -25,11 +25,11 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.struts.action.ApplyAdjustmentActionTest;
-import org.mifos.application.fees.persistence.FeePersistenceTest;
+import org.mifos.application.fees.persistence.FeePersistenceIntegrationTest;
 import org.mifos.application.fees.struts.action.FeeActionTest;
-import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
+import org.mifos.application.holiday.util.helpers.HolidayUtilsIntegrationTest;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
-import org.mifos.framework.persistence.LatestTestAfterCheckpoint;
+import org.mifos.framework.persistence.LatestTestAfterCheckpointBaseTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**
@@ -37,28 +37,28 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * {@link DatabaseSetup}.
  * 
  * Does not include tests which are hardcoded to always use Mayfly,
- * like {@link LatestTestAfterCheckpoint} or {@link DatabaseVersionPersistenceTest}.
+ * like {@link LatestTestAfterCheckpointBaseTest} or {@link DatabaseVersionPersistenceTest}.
  */
 public class MayflyTests extends TestSuite {
 	
 	public static Test suite() throws Exception {
 		TestSuite suite = new MayflyTests();
-		suite.addTestSuite(FeePersistenceTest.class);
-		//suite.addTestSuite(CenterBOTest.class);
+		suite.addTestSuite(FeePersistenceIntegrationTest.class);
+		//suite.addTestSuite(CenterBOIntegrationTest.class);
 		
 		// Hung up on SELECT DISTINCT vs ORDER BY
 		// Also has other failures - apparently unrelated
-		//TestCustomerPersistence
+		//CustomerPersistenceIntegrationTest
 		
 		/* Failing in getMaxOfficeId.
 		   Perhaps Integer vs. Long as return from getObject (but that's
 		   unconfirmed)? */
-		//suite.addTestSuite(TestOfficePersistence.class);
+		//suite.addTestSuite(OfficePersistenceIntegrationTest.class);
 
 		suite.addTestSuite(SavingsBOIntegrationTest.class);
 		suite.addTestSuite(ApplyAdjustmentActionTest.class);
 		suite.addTestSuite(FeeActionTest.class);
-		suite.addTestSuite(TestHolidayUtils.class);
+		suite.addTestSuite(HolidayUtilsIntegrationTest.class);
 		
 		suite.addTestSuite(MayflyMiscTest.class);
 		return suite;

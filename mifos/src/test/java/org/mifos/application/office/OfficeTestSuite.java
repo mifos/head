@@ -23,15 +23,15 @@ package org.mifos.application.office;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.office.business.OfficeLevelEntityTest;
-import org.mifos.application.office.business.TestOfficeBO;
-import org.mifos.application.office.business.TestOfficeStatusEntity;
-import org.mifos.application.office.business.service.OfficeHierarchyBusinessServiceTest;
-import org.mifos.application.office.business.service.TestOfficeBusinessService;
-import org.mifos.application.office.persistence.OfficeHierarchyPersistenceTest;
-import org.mifos.application.office.persistence.TestOfficePersistence;
+import org.mifos.application.office.business.OfficeLevelEntityIntegrationTest;
+import org.mifos.application.office.business.OfficeBOIntegrationTest;
+import org.mifos.application.office.business.OfficeStatusEntityIntegrationTest;
+import org.mifos.application.office.business.service.OfficeHierarchyBusinessServiceIntegrationTest;
+import org.mifos.application.office.business.service.OfficeBusinessServiceIntegrationTest;
+import org.mifos.application.office.persistence.OfficeHierarchyPersistenceIntegrationTest;
+import org.mifos.application.office.persistence.OfficePersistenceIntegrationTest;
 import org.mifos.application.office.struts.action.OffHierarchyActionTest;
-import org.mifos.application.office.struts.action.TestOfficeAction;
+import org.mifos.application.office.struts.action.OfficeActionTest;
 
 public class OfficeTestSuite extends TestSuite {
 	public OfficeTestSuite() throws Exception {
@@ -40,15 +40,15 @@ public class OfficeTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new OfficeTestSuite();
-		testSuite.addTestSuite(TestOfficePersistence.class);
-		testSuite.addTestSuite(TestOfficeAction.class);
-		testSuite.addTestSuite(TestOfficeBO.class);
-		testSuite.addTestSuite(TestOfficeBusinessService.class);
-		testSuite.addTestSuite(OfficeHierarchyPersistenceTest.class);
-		testSuite.addTestSuite(OfficeHierarchyBusinessServiceTest.class);
+		testSuite.addTestSuite(OfficePersistenceIntegrationTest.class);
+		testSuite.addTestSuite(OfficeActionTest.class);
+		testSuite.addTestSuite(OfficeBOIntegrationTest.class);
+		testSuite.addTestSuite(OfficeBusinessServiceIntegrationTest.class);
+		testSuite.addTestSuite(OfficeHierarchyPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(OfficeHierarchyBusinessServiceIntegrationTest.class);
 		testSuite.addTestSuite(OffHierarchyActionTest.class);
-		testSuite.addTestSuite(TestOfficeStatusEntity.class);
-		testSuite.addTestSuite(OfficeLevelEntityTest.class);
+		testSuite.addTestSuite(OfficeStatusEntityIntegrationTest.class);
+		testSuite.addTestSuite(OfficeLevelEntityIntegrationTest.class);
 		return testSuite;
 	}
 }

@@ -25,19 +25,19 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.ppi.business.PpiLikelihoodTest;
 import org.mifos.application.ppi.business.PpiSurveyInstanceTest;
-import org.mifos.application.ppi.business.TestPPIChoice;
-import org.mifos.application.ppi.business.TestPPISurvey;
-import org.mifos.application.ppi.helpers.TestXmlPPIParser;
-import org.mifos.application.ppi.struts.action.TestPPIAction;
+import org.mifos.application.ppi.business.PPIChoiceIntegrationTest;
+import org.mifos.application.ppi.business.PPISurveyIntegrationTest;
+import org.mifos.application.ppi.helpers.XmlPPIParserTest;
+import org.mifos.application.ppi.struts.action.PPIActionTest;
 
 public class PPITestSuite extends TestSuite {
 	
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new PPITestSuite();
-		testSuite.addTest(TestXmlPPIParser.suite());
-		testSuite.addTest(TestPPIChoice.suite());
-		testSuite.addTest(TestPPISurvey.suite());
-		testSuite.addTestSuite(TestPPIAction.class);
+		testSuite.addTest(XmlPPIParserTest.suite());
+		testSuite.addTest(PPIChoiceIntegrationTest.suite());
+		testSuite.addTest(PPISurveyIntegrationTest.suite());
+		testSuite.addTestSuite(PPIActionTest.class);
 		testSuite.addTest(PpiLikelihoodTest.suite());
 		testSuite.addTest(PpiSurveyInstanceTest.suite());
 		return testSuite;

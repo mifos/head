@@ -24,9 +24,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.productsmix.business.ProductMixBOTest;
-import org.mifos.application.productsmix.business.service.ProductMixBusinessServiceTest;
-import org.mifos.application.productsmix.persistence.ProductMixPersistenceTest;
+import org.mifos.application.productsmix.business.ProductMixBOIntegrationTest;
+import org.mifos.application.productsmix.business.service.ProductMixBusinessServiceIntegrationTest;
+import org.mifos.application.productsmix.persistence.ProductMixPersistenceIntegrationTest;
 import org.mifos.application.productsmix.struts.action.ProductMixActionTest;
 
 public class ProductMixTestSuite extends TestSuite{
@@ -46,9 +46,9 @@ public class ProductMixTestSuite extends TestSuite{
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new ProductMixTestSuite();
-		testSuite.addTestSuite(ProductMixBOTest.class);
-		testSuite.addTestSuite(ProductMixBusinessServiceTest.class);
-		testSuite.addTestSuite(ProductMixPersistenceTest.class);
+		testSuite.addTestSuite(ProductMixBOIntegrationTest.class);
+		testSuite.addTestSuite(ProductMixBusinessServiceIntegrationTest.class);
+		testSuite.addTestSuite(ProductMixPersistenceIntegrationTest.class);
 		testSuite.addTestSuite(ProductMixActionTest.class);
 		
 		return testSuite;

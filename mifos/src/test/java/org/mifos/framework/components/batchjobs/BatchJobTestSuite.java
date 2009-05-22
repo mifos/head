@@ -23,21 +23,21 @@ package org.mifos.framework.components.batchjobs;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.components.batchjobs.helpers.CollectionSheetHelperTest;
-import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskCalculationTest;
-import org.mifos.framework.components.batchjobs.helpers.TestApplyCustomerFeeChangesHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestApplyHolidayChangesHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestCustomerFeeHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestGenerateMeetingsForCustomerAndSavingsHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestLoanArrearsAgingHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestLoanArrearsHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestLoanArrearsTask;
-import org.mifos.framework.components.batchjobs.helpers.TestPortfolioAtRiskHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestProductStatusHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestRegenerateScheduleHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestSavingsIntCalcHelper;
-import org.mifos.framework.components.batchjobs.helpers.TestSavingsIntPostingHelper;
-import org.mifos.framework.components.batchjobs.persistence.TaskPersistenceTest;
+import org.mifos.framework.components.batchjobs.helpers.CollectionSheetHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskCalculationIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.ApplyCustomerFeeChangesHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.ApplyHolidayChangesHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.CustomerFeeHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.LoanArrearsAgingHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.LoanArrearsHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.LoanArrearsTaskIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.ProductStatusHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.RegenerateScheduleHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.persistence.TaskPersistenceIntegrationTest;
 
 public class BatchJobTestSuite extends TestSuite {
 
@@ -47,22 +47,22 @@ public class BatchJobTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new BatchJobTestSuite();
-		testSuite.addTestSuite(TestLoanArrearsTask.class);
-		testSuite.addTestSuite(TestLoanArrearsHelper.class);
-		testSuite.addTestSuite(TestSavingsIntCalcHelper.class);
-		testSuite.addTestSuite(TestSavingsIntPostingHelper.class);
-		testSuite.addTestSuite(TestCustomerFeeHelper.class);
-		testSuite.addTestSuite(TestRegenerateScheduleHelper.class);
-		testSuite.addTestSuite(TestApplyCustomerFeeChangesHelper.class);
-		testSuite.addTestSuite(TestProductStatusHelper.class);
-		testSuite.addTestSuite(TestLoanArrearsAgingHelper.class);
-		testSuite.addTestSuite(TestPortfolioAtRiskHelper.class);
-		testSuite.addTestSuite(MifosSchedulerTest.class);
-		testSuite.addTestSuite(TaskPersistenceTest.class);
-		testSuite.addTestSuite(TestGenerateMeetingsForCustomerAndSavingsHelper.class);
-		testSuite.addTestSuite(CollectionSheetHelperTest.class);
-		testSuite.addTestSuite(TestApplyHolidayChangesHelper.class);
-		testSuite.addTestSuite(PortfolioAtRiskCalculationTest.class);
+		testSuite.addTestSuite(LoanArrearsTaskIntegrationTest.class);
+		testSuite.addTestSuite(LoanArrearsHelperIntegrationTest.class);
+		testSuite.addTestSuite(SavingsIntCalcHelperIntegrationTest.class);
+		testSuite.addTestSuite(SavingsIntPostingHelperIntegrationTest.class);
+		testSuite.addTestSuite(CustomerFeeHelperIntegrationTest.class);
+		testSuite.addTestSuite(RegenerateScheduleHelperIntegrationTest.class);
+		testSuite.addTestSuite(ApplyCustomerFeeChangesHelperIntegrationTest.class);
+		testSuite.addTestSuite(ProductStatusHelperIntegrationTest.class);
+		testSuite.addTestSuite(LoanArrearsAgingHelperIntegrationTest.class);
+		testSuite.addTestSuite(PortfolioAtRiskHelperIntegrationTest.class);
+		testSuite.addTestSuite(MifosSchedulerIntegrationTest.class);
+		testSuite.addTestSuite(TaskPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest.class);
+		testSuite.addTestSuite(CollectionSheetHelperIntegrationTest.class);
+		testSuite.addTestSuite(ApplyHolidayChangesHelperIntegrationTest.class);
+		testSuite.addTestSuite(PortfolioAtRiskCalculationIntegrationTest.class);
 		return testSuite;
 	}
 }

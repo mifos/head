@@ -23,21 +23,21 @@ package org.mifos.application.meeting;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.meeting.business.MeetingBOTest;
-import org.mifos.application.meeting.business.service.MeetingBusinessServiceTest;
-import org.mifos.application.meeting.persistence.MeetingPersistenceTest;
+import org.mifos.application.meeting.business.MeetingBOIntegrationTest;
+import org.mifos.application.meeting.business.service.MeetingBusinessServiceIntegrationTest;
+import org.mifos.application.meeting.persistence.MeetingPersistenceIntegrationTest;
 import org.mifos.application.meeting.struts.action.MeetingActionTest;
-import org.mifos.application.meeting.util.helpers.MeetingHelperTest;
+import org.mifos.application.meeting.util.helpers.MeetingHelperIntegrationTest;
 
 public class MeetingTestSuite extends TestSuite {
 
 	public static Test suite()throws Exception{
 		MeetingTestSuite testSuite = new MeetingTestSuite();
-		testSuite.addTestSuite(MeetingBOTest.class);
-		testSuite.addTestSuite(MeetingPersistenceTest.class);
-		testSuite.addTestSuite(MeetingBusinessServiceTest.class);
+		testSuite.addTestSuite(MeetingBOIntegrationTest.class);
+		testSuite.addTestSuite(MeetingPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(MeetingBusinessServiceIntegrationTest.class);
 		testSuite.addTestSuite(MeetingActionTest.class);
-		testSuite.addTestSuite(MeetingHelperTest.class);
+		testSuite.addTestSuite(MeetingHelperIntegrationTest.class);
 		return testSuite;
 	}
 }

@@ -29,8 +29,8 @@ import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigur
 import org.mifos.application.configuration.struts.action.LabelConfigurationActionTest;
 import org.mifos.application.configuration.struts.action.LookupOptionsActionTest;
 import org.mifos.application.configuration.struts.tag.CustomFieldCategoryListTagTest;
-import org.mifos.application.configuration.struts.tag.CustomFieldsListTagTest;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceTest;
+import org.mifos.application.configuration.struts.tag.CustomFieldsListTagIntegrationTest;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceIntegrationTest;
 
 public class ApplicationConfigurationTestSuite extends TestSuite {
 	
@@ -44,15 +44,15 @@ public class ApplicationConfigurationTestSuite extends TestSuite {
 	public static Test suite()
 	{
 		TestSuite testSuite = new ApplicationConfigurationTestSuite();
-		testSuite.addTestSuite(TestApplicationConfigurationPersistence.class);
-		testSuite.addTestSuite(TestConfiguration.class);
+		testSuite.addTestSuite(ApplicationConfigurationPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(ConfigurationIntegrationTest.class);
 		testSuite.addTestSuite(LabelConfigurationActionTest.class);
 		testSuite.addTestSuite(HiddenMandatoryConfigurationActionTest.class);
 		testSuite.addTestSuite(LookupOptionsActionTest.class);
 		testSuite.addTestSuite(CustomFieldsActionTest.class);
 		testSuite.addTestSuite(CustomFieldCategoryListTagTest.class);
-		testSuite.addTestSuite(CustomFieldsListTagTest.class);
-		testSuite.addTestSuite(ConfigurationPersistenceTest.class);
+		testSuite.addTestSuite(CustomFieldsListTagIntegrationTest.class);
+		testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
 		return testSuite;
 		
 	}

@@ -102,7 +102,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
+import org.mifos.application.productdefinition.business.LoanOfferingBOIntegrationTest;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
@@ -264,8 +264,8 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
 		
 		PrdStatusEntity prdStatus = new TestObjectPersistence()
 		    .retrievePrdStatus(PrdStatus.LOAN_ACTIVE);
-		LoanOfferingBOTest.setStatus(loanOffering,prdStatus);
-		LoanOfferingBOTest.setGracePeriodType(loanOffering,gracePeriodType);
+		LoanOfferingBOIntegrationTest.setStatus(loanOffering,prdStatus);
+		LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering,gracePeriodType);
 		loanOffering.save();
 		
 		return loanOffering;
@@ -1435,7 +1435,7 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
 	private LoanOfferingBO getLoanOfferingFromLastLoan(String name,
 			String shortName, ApplicableTo applicableTo,
 			RecurrenceType meetingFrequency, short recurAfter) throws SystemException, ApplicationException {
-		LoanOfferingBOTest loanOfferingBO = new LoanOfferingBOTest();
+		LoanOfferingBOIntegrationTest loanOfferingBO = new LoanOfferingBOIntegrationTest();
 		LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(meetingFrequency, recurAfter, CUSTOMER_MEETING,
@@ -1476,7 +1476,7 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
 	private LoanOfferingBO getLoanOfferingFromLoanCycle(String name,
 			String shortName, ApplicableTo applicableTo,
 			RecurrenceType meetingFrequency, short recurAfter) throws SystemException, ApplicationException {
-		LoanOfferingBOTest loanOfferingBO = new LoanOfferingBOTest();
+		LoanOfferingBOIntegrationTest loanOfferingBO = new LoanOfferingBOIntegrationTest();
 		LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(meetingFrequency, recurAfter, CUSTOMER_MEETING,

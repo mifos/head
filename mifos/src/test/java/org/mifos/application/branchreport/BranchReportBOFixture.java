@@ -20,7 +20,7 @@
  
 package org.mifos.application.branchreport;
 
-import static org.mifos.application.reports.business.service.BranchReportTestCase.DEFAULT_CURRENCY;
+import static org.mifos.application.reports.business.service.BranchReportIntegrationTestCase.DEFAULT_CURRENCY;
 import static org.mifos.framework.util.helpers.MoneyFactory.createMoney;
 
 import java.math.BigDecimal;

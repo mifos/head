@@ -46,7 +46,7 @@ public class ViewOrganizationSettingsActionTest extends MifosMockStrutsTestCase 
 		flowKey = createFlow(request, ViewOrganizationSettingsAction.class);
 
 		// no idea what the next three lines do besides make the test pass.
-		// Copied them from TestAdminAction
+		// Copied them from AdminActionTest
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);

@@ -31,7 +31,7 @@ import org.mifos.application.accounts.AccountIntegrationTest;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
-import org.mifos.application.customer.business.TestCustomerAccountBO;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -72,8 +72,8 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
-		TestCustomerAccountBO.setMiscFee(accountActionDate,new Money("20"));
-		Money chargeWaived = TestCustomerAccountBO.waiveCharges(accountActionDate);
+		CustomerAccountBOIntegrationTest.setMiscFee(accountActionDate,new Money("20"));
+		Money chargeWaived = CustomerAccountBOIntegrationTest.waiveCharges(accountActionDate);
 		assertEquals(new Money(), accountActionDate.getMiscFee());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
 				.getAccountFeesActionDetails()) {
@@ -121,7 +121,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 		for (AccountFeesEntity accFeesEntity : accountFeeSet) {
 			if (accFeesEntity.getFees().getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
-				TestCustomerAccountBO.applyPeriodicFees(accountActionDateEntity,accFeesEntity
+				CustomerAccountBOIntegrationTest.applyPeriodicFees(accountActionDateEntity,accFeesEntity
 						.getFees().getFeeId(), new Money("100"));
 				break;
 			}

@@ -56,7 +56,7 @@ import org.mifos.framework.util.helpers.StringUtils;
  * {@link MasterDataEntity} in the database.  Most of what is here
  * can better be accomplished by enums and by {@link MessageLookup}.
  * 
- * Test cases: {@link TestMasterPersistence}
+ * Test cases: {@link MasterPersistenceIntegrationTest}
  */
 public class MasterPersistence extends Persistence {
 

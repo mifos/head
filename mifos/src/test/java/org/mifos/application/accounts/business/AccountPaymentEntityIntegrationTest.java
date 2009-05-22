@@ -29,8 +29,8 @@ import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
-import org.mifos.application.customer.business.TestCustomerAccountBO;
-import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerTrxnDetailEntityIntegrationTest;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -96,9 +96,9 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTest {
 		customerAccountBO.setUserContext(userContext);
 		
 		CustomerScheduleEntity accountAction = (CustomerScheduleEntity)customerAccountBO.getAccountActionDate(Short.valueOf("1"));
-		TestCustomerAccountBO.setMiscFeePaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
-		TestCustomerAccountBO.setMiscPenaltyPaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
-		TestCustomerAccountBO.setPaymentDate(accountAction,currentDate);
+		CustomerAccountBOIntegrationTest.setMiscFeePaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
+		CustomerAccountBOIntegrationTest.setMiscPenaltyPaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
+		CustomerAccountBOIntegrationTest.setPaymentDate(accountAction,currentDate);
 		accountAction.setPaymentStatus(PaymentStatus.PAID);
 		
 		MasterPersistence masterPersistenceService = new MasterPersistence();
@@ -122,7 +122,7 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTest {
 					accountTrxnEntity, accountFeesActionDetailEntity
 							.getAccountFee(), accountFeesActionDetailEntity
 							.getFeeAmount());
-			TestCustomerTrxnDetailEntity.addFeesTrxnDetail(accountTrxnEntity,feeTrxn);
+			CustomerTrxnDetailEntityIntegrationTest.addFeesTrxnDetail(accountTrxnEntity,feeTrxn);
 			//TODO: is there anything to assert on here?
 			//totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}

@@ -24,9 +24,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.fees.business.FeeBOTest;
-import org.mifos.application.fees.business.service.TestFeeBusinessService;
-import org.mifos.application.fees.persistence.FeePersistenceTest;
+import org.mifos.application.fees.business.FeeBOIntegrationTest;
+import org.mifos.application.fees.business.service.FeeBusinessServiceIntegrationTest;
+import org.mifos.application.fees.persistence.FeePersistenceIntegrationTest;
 import org.mifos.application.fees.struts.action.FeeActionTest;
 
 public class FeeTestSuite extends TestSuite {
@@ -48,9 +48,9 @@ public class FeeTestSuite extends TestSuite {
 	public static Test suite() throws Exception {
 		FeeTestSuite testSuite = new FeeTestSuite();
 		testSuite.addTestSuite(FeeActionTest.class);
-		testSuite.addTestSuite(FeeBOTest.class);
-		testSuite.addTestSuite(FeePersistenceTest.class);
-		testSuite.addTestSuite(TestFeeBusinessService.class);
+		testSuite.addTestSuite(FeeBOIntegrationTest.class);
+		testSuite.addTestSuite(FeePersistenceIntegrationTest.class);
+		testSuite.addTestSuite(FeeBusinessServiceIntegrationTest.class);
 		return testSuite;
 	}
 }

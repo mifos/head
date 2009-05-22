@@ -31,7 +31,7 @@ import org.mifos.framework.business.PersistentObject;
  * The entityType field should be a CamelCase name containing no whitespace
  * (since it is used as part of a properties file key value)  
  * The no whitespace requirement is enforced by the unit test 
- * TestApplicationConfigurationPersistence.testGetLookupEntities()
+ * ApplicationConfigurationPersistenceIntegrationTest.testGetLookupEntities()
  */
 
 public class MifosLookUpEntity extends PersistentObject {

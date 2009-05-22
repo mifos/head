@@ -24,9 +24,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.fund.business.FundBOTest;
-import org.mifos.application.fund.business.service.FundBusinessServiceTest;
-import org.mifos.application.fund.persistence.FundPersistenceTest;
+import org.mifos.application.fund.business.FundBOIntegrationTest;
+import org.mifos.application.fund.business.service.FundBusinessServiceIntegrationTest;
+import org.mifos.application.fund.persistence.FundPersistenceIntegrationTest;
 import org.mifos.application.fund.struts.action.FundActionTest;
 
 public class FundTestSuite extends TestSuite{
@@ -46,10 +46,10 @@ public class FundTestSuite extends TestSuite{
 
 	public static Test suite() throws Exception {
 		FundTestSuite testSuite = new FundTestSuite();
-		testSuite.addTestSuite(FundBOTest.class);
+		testSuite.addTestSuite(FundBOIntegrationTest.class);
 		testSuite.addTestSuite(FundActionTest.class);
-		testSuite.addTestSuite(FundBusinessServiceTest.class);
-		testSuite.addTestSuite(FundPersistenceTest.class);
+		testSuite.addTestSuite(FundBusinessServiceIntegrationTest.class);
+		testSuite.addTestSuite(FundPersistenceIntegrationTest.class);
 		return testSuite;
 	}
 }

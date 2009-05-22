@@ -23,11 +23,11 @@ package org.mifos.framework.components.configuration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.master.business.TestMifosCurrency;
-import org.mifos.framework.components.configuration.business.TestConfiguration;
-import org.mifos.framework.components.configuration.business.TestConfigurationKeyValueInteger;
-import org.mifos.framework.components.configuration.persistence.TestConfigurationPersistence;
-import org.mifos.framework.components.configuration.util.helpers.TestConfigurationIntializer;
+import org.mifos.application.master.business.MifosCurrencyIntegrationTest;
+import org.mifos.framework.components.configuration.business.ConfigurationIntegrationTest;
+import org.mifos.framework.components.configuration.business.ConfigurationKeyValueIntegerIntegrationTest;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceIntegrationTest;
+import org.mifos.framework.components.configuration.util.helpers.ConfigurationIntializerIntegrationTest;
 
 public class ConfigurationTestSuite extends TestSuite {
 
@@ -38,11 +38,11 @@ public class ConfigurationTestSuite extends TestSuite {
 	public static Test suite()throws Exception
 	{
 		TestSuite testSuite = new ConfigurationTestSuite();
-		testSuite.addTestSuite(TestConfigurationPersistence.class);
-		testSuite.addTestSuite(TestMifosCurrency.class);
-		testSuite.addTestSuite(TestConfigurationIntializer.class);
-		testSuite.addTestSuite(TestConfiguration.class);
-		testSuite.addTestSuite(TestConfigurationKeyValueInteger.class);
+		testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(MifosCurrencyIntegrationTest.class);
+		testSuite.addTestSuite(ConfigurationIntializerIntegrationTest.class);
+		testSuite.addTestSuite(ConfigurationIntegrationTest.class);
+		testSuite.addTestSuite(ConfigurationKeyValueIntegerIntegrationTest.class);
 		return testSuite;
 	}
 }

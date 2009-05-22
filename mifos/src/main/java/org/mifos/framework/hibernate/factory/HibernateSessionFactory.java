@@ -52,7 +52,7 @@ public class HibernateSessionFactory {
 		/**
 		 * Throwing HibernateStartUpException if sessionFactory is
 		 * already set seems to cause somewhat
-		 * mysterious failures in {@link TestConstPlugin}.
+		 * mysterious failures in {@link ConstPluginTest}.
 		 * 
 		 * Why?
 		 * 

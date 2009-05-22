@@ -81,7 +81,7 @@ import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.business.TestCustomerAccountBO;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
@@ -138,7 +138,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
+import org.mifos.application.productdefinition.business.LoanOfferingBOIntegrationTest;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
@@ -712,8 +712,8 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatus);
-		LoanOfferingBOTest.setStatus(loanOffering, prdStatus);
-		LoanOfferingBOTest.setGracePeriodType(loanOffering, gracePeriodType);
+		LoanOfferingBOIntegrationTest.setStatus(loanOffering, prdStatus);
+		LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering, gracePeriodType);
 		return (LoanOfferingBO) addObject(testObjectPersistence
 				.persist(loanOffering));
 	}
@@ -759,8 +759,8 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatus);
-		LoanOfferingBOTest.setStatus(loanOffering, prdStatus);
-		LoanOfferingBOTest.setGracePeriodType(loanOffering, gracePeriodType);
+		LoanOfferingBOIntegrationTest.setStatus(loanOffering, prdStatus);
+		LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering, gracePeriodType);
 		return (LoanOfferingBO) addObject(testObjectPersistence
 				.persist(loanOffering));
 	}
@@ -801,8 +801,8 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatus);
-		LoanOfferingBOTest.setStatus(loanOffering, prdStatus);
-		LoanOfferingBOTest.setGracePeriodType(loanOffering, gracePeriodType);
+		LoanOfferingBOIntegrationTest.setStatus(loanOffering, prdStatus);
+		LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering, gracePeriodType);
 		return (LoanOfferingBO) addObject(testObjectPersistence
 				.persist(loanOffering));
 	}
@@ -1096,7 +1096,7 @@ public class TestObjectFactory {
 	 * 
 	 * Changing {@link TestObjectFactory#getUserContext()} to
 	 * {@link TestUtils#makeUserWithLocales()} caused a failure
-	 * in {@link TestCustomerAccountBO#testApplyPeriodicFee}
+	 * in {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee}
 	 * (and about 163 other tests).
 	 */
 	public static FeeBO createPeriodicAmountFee(String feeName,
@@ -1202,7 +1202,7 @@ public class TestObjectFactory {
 	 * 
 	 * Changing {@link TestObjectFactory#getUserContext()} to
 	 * {@link TestUtils#makeUserWithLocales()} caused a failure
-	 * in {@link TestCustomerAccountBO#testApplyUpfrontFee}
+	 * in {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee}
 	 * (and other tests).
 	 */
 	public static FeeBO createOneTimeAmountFee(String feeName,

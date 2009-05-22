@@ -23,18 +23,19 @@ package org.mifos.framework.struts.tags;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.framework.MifosIntegrationTest;
+import junit.framework.TestCase;
+
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class RawSelectTest extends MifosIntegrationTest {
+public class RawSelectTest extends TestCase {
 
 	public RawSelectTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testRawSelect() {
-		Map data = new HashMap();
+		Map<String, String> data = new HashMap<String, String>();
 		data.put("key", "value");
 		data.put("key1", "value1");
 		RawSelect rawSelect = new RawSelect();

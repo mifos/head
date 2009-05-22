@@ -23,35 +23,35 @@ package org.mifos.application.branchreport;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.branchreport.persistence.BranchReportPersistenceTest;
-import org.mifos.application.reports.business.BranchReportParameterFormTest;
-import org.mifos.application.reports.business.service.BranchReportConfigServiceTest;
-import org.mifos.application.reports.business.service.BranchReportServiceTest;
-import org.mifos.application.reports.business.service.ReportProductOfferingServiceTest;
+import org.mifos.application.branchreport.persistence.BranchReportPersistenceIntegrationTest;
+import org.mifos.application.reports.business.BranchReportParameterFormIntegrationTest;
+import org.mifos.application.reports.business.service.BranchReportConfigServiceIntegrationTest;
+import org.mifos.application.reports.business.service.BranchReportServiceIntegrationTest;
+import org.mifos.application.reports.business.service.ReportProductOfferingServiceIntegrationTest;
 import org.mifos.application.reports.business.validator.BranchReportParameterValidatorTest;
-import org.mifos.application.reports.business.validator.ReportParameterValidatorFactoryTest;
-import org.mifos.framework.components.batchjobs.helpers.BranchReportClientSummaryHelperTest;
-import org.mifos.framework.components.batchjobs.helpers.BranchReportHelperTest;
-import org.mifos.framework.components.batchjobs.helpers.BranchReportLoanArrearsAgingHelperTest;
-import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffSummaryHelperTest;
-import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffingLevelSummaryHelperTest;
+import org.mifos.application.reports.business.validator.ReportParameterValidatorFactoryIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.BranchReportClientSummaryHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.BranchReportHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.BranchReportLoanArrearsAgingHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffSummaryHelperIntegrationTest;
+import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffingLevelSummaryHelperIntegrationTest;
 
 public class BranchReportTestSuite extends TestSuite {
 	public static Test suite() throws Exception {
 		TestSuite suite = new TestSuite();
-		suite.addTestSuite(BranchReportHelperTest.class);
-		suite.addTestSuite(BranchReportServiceTest.class);
-		suite.addTestSuite(BranchReportPersistenceTest.class);
-		suite.addTestSuite(BranchReportParameterFormTest.class);
+		suite.addTestSuite(BranchReportHelperIntegrationTest.class);
+		suite.addTestSuite(BranchReportServiceIntegrationTest.class);
+		suite.addTestSuite(BranchReportPersistenceIntegrationTest.class);
+		suite.addTestSuite(BranchReportParameterFormIntegrationTest.class);
 		suite.addTestSuite(BranchReportParameterValidatorTest.class);
-		suite.addTestSuite(BranchReportClientSummaryHelperTest.class);
-		suite.addTestSuite(BranchReportLoanArrearsAgingHelperTest.class);
-		suite.addTestSuite(BranchReportStaffSummaryHelperTest.class);
-		suite.addTestSuite(BranchReportConfigServiceTest.class);
-		suite.addTestSuite(ReportProductOfferingServiceTest.class);
-		suite.addTestSuite(BranchReportStaffingLevelSummaryHelperTest.class);
+		suite.addTestSuite(BranchReportClientSummaryHelperIntegrationTest.class);
+		suite.addTestSuite(BranchReportLoanArrearsAgingHelperIntegrationTest.class);
+		suite.addTestSuite(BranchReportStaffSummaryHelperIntegrationTest.class);
+		suite.addTestSuite(BranchReportConfigServiceIntegrationTest.class);
+		suite.addTestSuite(ReportProductOfferingServiceIntegrationTest.class);
+		suite.addTestSuite(BranchReportStaffingLevelSummaryHelperIntegrationTest.class);
 		suite.addTestSuite(BranchReportStaffingLevelSummaryBOTest.class);
-		suite.addTestSuite(ReportParameterValidatorFactoryTest.class);
+		suite.addTestSuite(ReportParameterValidatorFactoryIntegrationTest.class);
 		suite.addTest(LoanArrearsAgingPeriodTest.suite());
 		return suite;
 	}

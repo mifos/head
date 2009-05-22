@@ -24,20 +24,20 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.framework.components.fieldConfiguration.business.AddFieldTest;
-import org.mifos.framework.components.fieldConfiguration.business.TestFieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.TestFieldConfigurationPersistence;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigTest;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.TestFieldConfigurationHelper;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntityIntegrationTest;
+import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistenceIntegrationTest;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigIntegrationTest;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelperIntegrationTest;
 
 public class FieldConfigurationTestSuite extends TestSuite {
 
 	public static Test suite()throws Exception
 	{
 		TestSuite testSuite = new FieldConfigurationTestSuite();
-		testSuite.addTestSuite(TestFieldConfigurationEntity.class);
-		testSuite.addTestSuite(TestFieldConfigurationPersistence.class);
-		testSuite.addTestSuite(FieldConfigTest.class);
-		testSuite.addTestSuite(TestFieldConfigurationHelper.class);
+		testSuite.addTestSuite(FieldConfigurationEntityIntegrationTest.class);
+		testSuite.addTestSuite(FieldConfigurationPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(FieldConfigIntegrationTest.class);
+		testSuite.addTestSuite(FieldConfigurationHelperIntegrationTest.class);
 		testSuite.addTest(AddFieldTest.suite());
 		return testSuite;
 	}

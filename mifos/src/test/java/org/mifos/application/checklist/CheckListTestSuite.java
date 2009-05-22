@@ -24,10 +24,10 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.checklist.business.TestCheckListBO;
-import org.mifos.application.checklist.business.service.TestCheckListBusinessService;
-import org.mifos.application.checklist.persistence.TestCheckListPersistence;
-import org.mifos.application.checklist.struts.action.TestChkListAction;
+import org.mifos.application.checklist.business.CheckListBOIntegrationTest;
+import org.mifos.application.checklist.business.service.CheckListBusinessServiceIntegrationTest;
+import org.mifos.application.checklist.persistence.CheckListPersistenceIntegrationTest;
+import org.mifos.application.checklist.struts.action.CheckListActionTest;
 
 public class CheckListTestSuite extends TestSuite {
 
@@ -38,10 +38,10 @@ public class CheckListTestSuite extends TestSuite {
 
 	public static Test suite() {
 		TestSuite testSuite = new CheckListTestSuite();
-		testSuite.addTestSuite(TestCheckListBO.class);
-		testSuite.addTestSuite(TestCheckListBusinessService.class);
-		testSuite.addTestSuite(TestCheckListPersistence.class);
-		testSuite.addTestSuite(TestChkListAction.class);
+		testSuite.addTestSuite(CheckListBOIntegrationTest.class);
+		testSuite.addTestSuite(CheckListBusinessServiceIntegrationTest.class);
+		testSuite.addTestSuite(CheckListPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(CheckListActionTest.class);
 		return testSuite;
 	}
 }

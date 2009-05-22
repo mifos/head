@@ -52,26 +52,26 @@ import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
 import org.mifos.config.ConfigTestSuite;
-import org.mifos.config.TestConfigurationManager;
+import org.mifos.config.ConfigurationManagerTest;
 import org.mifos.framework.components.ComponentsTestSuite;
-import org.mifos.framework.components.audit.TestAuditLogSuite;
+import org.mifos.framework.components.audit.AuditLogTestSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
-import org.mifos.framework.components.mifosmenu.TestMenuParser;
-import org.mifos.framework.hibernate.HibernateTest;
-import org.mifos.framework.hibernate.helper.TestHibernateHelper;
-import org.mifos.framework.persistence.LatestTestAfterCheckpoint;
-import org.mifos.framework.persistence.TestPersistence;
+import org.mifos.framework.components.mifosmenu.MenuParserIntegrationTest;
+import org.mifos.framework.hibernate.HibernateIntegrationTest;
+import org.mifos.framework.hibernate.helper.HibernateHelperIntegrationTest;
+import org.mifos.framework.persistence.LatestTestAfterCheckpointBaseTest;
+import org.mifos.framework.persistence.PersistenceIntegrationTest;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
-import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
+import org.mifos.framework.util.helpers.StringToMoneyConverterIntegrationTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     ConfigTestSuite.class,
-    TestConfigurationManager.class, 
+    ConfigurationManagerTest.class, 
     ProductMixTestSuite.class,
     FastTests.class,
     SecurityTestSuite.class,
@@ -81,7 +81,7 @@ import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
     MasterTestSuite.class,
     AccountTestSuite.class,
     FinancialTestSuite.class,
-    StringToMoneyConverterTest.class,
+    StringToMoneyConverterIntegrationTest.class,
     ConfigurationTestSuite.class,
     BatchJobTestSuite.class,
     LoanTestSuite.class,
@@ -97,16 +97,16 @@ import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
     MeetingTestSuite.class,
     LoginTestSuite.class,
     FundTestSuite.class,
-    TestAuditLogSuite.class,
+    AuditLogTestSuite.class,
     CheckListTestSuite.class,
     AdminTestSuite.class,
     StrutsTestSuite.class,
-    HibernateTest.class,
-    LatestTestAfterCheckpoint.class,
+    HibernateIntegrationTest.class,
+    LatestTestAfterCheckpointBaseTest.class,
     MayflyMiscTest.class,
-    TestMenuParser.class,
-    TestHibernateHelper.class,
-    TestPersistence.class,
+    MenuParserIntegrationTest.class,
+    HibernateHelperIntegrationTest.class,
+    PersistenceIntegrationTest.class,
     FrameworkUtilsSuite.class,
     HolidayTestSuite.class,
     SurveysTestSuite.class,

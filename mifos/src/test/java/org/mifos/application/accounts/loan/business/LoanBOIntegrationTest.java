@@ -77,7 +77,7 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.business.TestCustomerBO;
+import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
@@ -97,7 +97,7 @@ import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
+import org.mifos.application.holiday.util.helpers.HolidayUtilsIntegrationTest;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -2277,7 +2277,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 		assertEquals(true, true);
 	}
 
-	/** TODO: Only called from {@link TestHolidayUtils}. 
+	/** TODO: Only called from {@link HolidayUtilsIntegrationTest}. 
 	 * We should not have one test depending on another. */
 	public LoanScheduleEntity[] createLoanRepaymentSchedule()
 			throws AccountException, SystemException, FinancialException,
@@ -3462,7 +3462,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 	public void testBuildForInactiveCustomer() throws NumberFormatException,
 			SystemException, ApplicationException {
 		createInitialCustomers();
-		TestCustomerBO.setCustomerStatus(group, new CustomerStatusEntity(
+		CustomerBOIntegrationTest.setCustomerStatus(group, new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED));
 		TestObjectFactory.updateObject(group);
 		group = TestObjectFactory.getGroup(group

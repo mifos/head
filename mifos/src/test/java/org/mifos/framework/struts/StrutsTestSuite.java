@@ -24,41 +24,41 @@ import junit.framework.TestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.mifos.framework.struts.actionforms.TestBaseActionForm;
-import org.mifos.framework.struts.plugin.TestConstPlugin;
-import org.mifos.framework.struts.plugin.TestEnumPlugin;
-import org.mifos.framework.struts.plugin.TestInitializerPlugin;
+import org.mifos.framework.struts.actionforms.BaseActionFormIntegrationTest;
+import org.mifos.framework.struts.plugin.ConstPluginTest;
+import org.mifos.framework.struts.plugin.EnumPluginTest;
+import org.mifos.framework.struts.plugin.InitializerPluginTest;
 import org.mifos.framework.struts.tags.DateTagTest;
-import org.mifos.framework.struts.tags.MifosAlphaNumTextTagTest;
-import org.mifos.framework.struts.tags.MifosCheckBoxTagTest;
-import org.mifos.framework.struts.tags.MifosFileTagTest;
+import org.mifos.framework.struts.tags.MifosAlphaNumTextTagIntegrationTest;
+import org.mifos.framework.struts.tags.MifosCheckBoxTagIntegrationTest;
+import org.mifos.framework.struts.tags.MifosFileTagIntegrationTest;
 import org.mifos.framework.struts.tags.MifosImageTagTest;
-import org.mifos.framework.struts.tags.MifosLabelTagTest;
-import org.mifos.framework.struts.tags.MifosNumberTextTagTest;
+import org.mifos.framework.struts.tags.MifosLabelTagIntegrationTest;
+import org.mifos.framework.struts.tags.MifosNumberTextTagIntegrationTest;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResourcesTest;
-import org.mifos.framework.struts.tags.MifosTextareaTagTest;
+import org.mifos.framework.struts.tags.MifosTextareaTagIntegrationTest;
 import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
-import org.mifos.framework.util.TestLocalizationConverter;
+import org.mifos.framework.util.LocalizationConverterIntegrationTest;
 
 	@RunWith(Suite.class)
 	@Suite.SuiteClasses({	
-		TestConstPlugin.class,
-		TestEnumPlugin.class,
-		TestInitializerPlugin.class,
-		TestBaseActionForm.class,
+		ConstPluginTest.class,
+		EnumPluginTest.class,
+		InitializerPluginTest.class,
+		BaseActionFormIntegrationTest.class,
 		DateTagTest.class,
 		RawButtonTest.class,
 		RawSelectTest.class,
-		MifosCheckBoxTagTest.class,
-		MifosTextareaTagTest.class,
-		MifosFileTagTest.class,
-		MifosLabelTagTest.class,
+		MifosCheckBoxTagIntegrationTest.class,
+		MifosTextareaTagIntegrationTest.class,
+		MifosFileTagIntegrationTest.class,
+		MifosLabelTagIntegrationTest.class,
 		MifosImageTagTest.class,
-		MifosFileTagTest.class,
-		MifosAlphaNumTextTagTest.class,
-		MifosNumberTextTagTest.class,
-		TestLocalizationConverter.class,
+		MifosFileTagIntegrationTest.class,
+		MifosAlphaNumTextTagIntegrationTest.class,
+		MifosNumberTextTagIntegrationTest.class,
+		LocalizationConverterIntegrationTest.class,
 		MifosPropertyMessageResourcesTest.class
 	})
 	

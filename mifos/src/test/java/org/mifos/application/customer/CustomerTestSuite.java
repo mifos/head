@@ -24,75 +24,75 @@ import junit.framework.TestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.mifos.application.customer.business.CustomerViewTest;
-import org.mifos.application.customer.business.TestCustomerBO;
-import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
-import org.mifos.application.customer.business.service.TestCustomerBusinessService;
-import org.mifos.application.customer.center.business.CenterBOTest;
-import org.mifos.application.customer.center.business.service.TestCenterBusinessService;
-import org.mifos.application.customer.center.persistence.TestCenterPersistence;
+import org.mifos.application.customer.business.CustomerViewIntegrationTest;
+import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerTrxnDetailEntityIntegrationTest;
+import org.mifos.application.customer.business.service.CustomerBusinessServiceIntegrationTest;
+import org.mifos.application.customer.center.business.CenterBOIntegrationTest;
+import org.mifos.application.customer.center.business.service.CenterBusinessServiceIntegrationTest;
+import org.mifos.application.customer.center.persistence.CenterPersistenceIntegrationTest;
 import org.mifos.application.customer.center.struts.action.CenterActionTest;
 import org.mifos.application.customer.client.business.ClientIntegrationTest;
 import org.mifos.application.customer.client.business.ClientBoTest;
-import org.mifos.application.customer.client.business.service.ClientBusinessServiceTest;
-import org.mifos.application.customer.client.persistence.ClientPersistenceTest;
+import org.mifos.application.customer.client.business.service.ClientBusinessServiceIntegrationTest;
+import org.mifos.application.customer.client.persistence.ClientPersistenceIntegrationTest;
 import org.mifos.application.customer.client.struts.action.ClientTransferActionTest;
-import org.mifos.application.customer.client.struts.action.TestClientCustAction;
-import org.mifos.application.customer.group.business.GroupBOTest;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntityTest;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdaterTest;
-import org.mifos.application.customer.group.business.service.GroupBusinessServiceTest;
-import org.mifos.application.customer.group.persistence.GroupPersistenceTest;
+import org.mifos.application.customer.client.struts.action.ClientCustActionTest;
+import org.mifos.application.customer.group.business.GroupBOIntegrationTest;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntityIntegrationTest;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdaterIntegrationTest;
+import org.mifos.application.customer.group.business.service.GroupBusinessServiceIntegrationTest;
+import org.mifos.application.customer.group.persistence.GroupPersistenceIntegrationTest;
 import org.mifos.application.customer.group.struts.action.AddGroupMembershipActionTest;
 import org.mifos.application.customer.group.struts.action.GroupActionTest;
 import org.mifos.application.customer.group.struts.action.GroupTransferActionTest;
-import org.mifos.application.customer.persistence.TestCustomerPersistence;
+import org.mifos.application.customer.persistence.CustomerPersistenceIntegrationTest;
 import org.mifos.application.customer.struts.action.CustActionTest;
 import org.mifos.application.customer.struts.action.CustHistoricalDataActionTest;
-import org.mifos.application.customer.struts.action.TestCustSearchAction;
-import org.mifos.application.customer.struts.action.TestCustomerAccountAction;
-import org.mifos.application.customer.struts.action.TestCustomerAction;
-import org.mifos.application.customer.struts.action.TestCustomerApplyAdjustmentAction;
-import org.mifos.application.customer.struts.action.TestCustomerNotesAction;
-import org.mifos.application.customer.struts.action.TestEditCustomerStatusAction;
+import org.mifos.application.customer.struts.action.CustSearchActionTest;
+import org.mifos.application.customer.struts.action.CustomerAccountActionTest;
+import org.mifos.application.customer.struts.action.CustomerActionTest;
+import org.mifos.application.customer.struts.action.CustomerApplyAdjustmentActionTest;
+import org.mifos.application.customer.struts.action.CustomerNotesActionTest;
+import org.mifos.application.customer.struts.action.EditCustomerStatusActionTest;
 import org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFnTest;
-import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
+import org.mifos.application.customer.util.helpers.CustomerHelpersIntegrationTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    TestCenterPersistence.class,
-    TestCustomerPersistence.class,
-    TestCustomerBusinessService.class,
-    TestCustomerTrxnDetailEntity.class,
-    TestCustomerApplyAdjustmentAction.class,
-    TestCustomerAction.class,
-    TestEditCustomerStatusAction.class,
-    TestCustomerNotesAction.class,
+    CenterPersistenceIntegrationTest.class,
+    CustomerPersistenceIntegrationTest.class,
+    CustomerBusinessServiceIntegrationTest.class,
+    CustomerTrxnDetailEntityIntegrationTest.class,
+    CustomerApplyAdjustmentActionTest.class,
+    CustomerActionTest.class,
+    EditCustomerStatusActionTest.class,
+    CustomerNotesActionTest.class,
     ClientIntegrationTest.class,
     ClientBoTest.class,
-    TestCustomerBO.class,
+    CustomerBOIntegrationTest.class,
     CustomerUIHelperFnTest.class,
-    CenterBOTest.class,
-    TestCenterBusinessService.class,
+    CenterBOIntegrationTest.class,
+    CenterBusinessServiceIntegrationTest.class,
     CenterActionTest.class,
-    TestClientCustAction.class,
+    ClientCustActionTest.class,
     ClientTransferActionTest.class,
     AddGroupMembershipActionTest.class,
     CustHistoricalDataActionTest.class,
-    GroupBusinessServiceTest.class,
-    GroupPersistenceTest.class,
+    GroupBusinessServiceIntegrationTest.class,
+    GroupPersistenceIntegrationTest.class,
     GroupActionTest.class,
-    GroupBOTest.class,
+    GroupBOIntegrationTest.class,
     CustActionTest.class,
     GroupTransferActionTest.class,
-    TestCustomerAccountAction.class,
-    ClientPersistenceTest.class,
-    ClientBusinessServiceTest.class,
-    TestCustSearchAction.class,
-    CustomerViewTest.class,
-    TestCustomerHelpers.class,
-    GroupPerformanceHistoryUpdaterTest.class,
-    GroupPerformanceHistoryEntityTest.class   
+    CustomerAccountActionTest.class,
+    ClientPersistenceIntegrationTest.class,
+    ClientBusinessServiceIntegrationTest.class,
+    CustSearchActionTest.class,
+    CustomerViewIntegrationTest.class,
+    CustomerHelpersIntegrationTest.class,
+    GroupPerformanceHistoryUpdaterIntegrationTest.class,
+    GroupPerformanceHistoryEntityIntegrationTest.class   
 })
 
 public class CustomerTestSuite extends TestSuite {

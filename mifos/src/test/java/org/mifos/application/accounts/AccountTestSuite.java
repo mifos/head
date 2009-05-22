@@ -45,7 +45,7 @@ import org.mifos.application.accounts.struts.action.ApplyPaymentActionTest;
 import org.mifos.application.accounts.struts.action.EditStatusActionTest;
 import org.mifos.application.accounts.struts.action.NotesActionTest;
 import org.mifos.application.accounts.util.helper.AccountStateIntegrationTest;
-import org.mifos.application.customer.business.TestCustomerAccountBO;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.accounts.business.AddAccountActionTest;
 
 public class AccountTestSuite extends TestSuite {
@@ -72,7 +72,7 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(AccountActionEntityIntegrationTest.class);
 		testSuite.addTestSuite(LoanTrxnDetailEntityIntegrationTest.class);
 		testSuite.addTestSuite(AccountFeesActionDetailEntityIntegrationTest.class);
-		testSuite.addTestSuite(TestCustomerAccountBO.class);
+		testSuite.addTestSuite(CustomerAccountBOIntegrationTest.class);
 		testSuite.addTestSuite(AccountPaymentEntityIntegrationTest.class);
 		testSuite.addTestSuite(FinancialBusinessServiceIntegrationTest.class);
 		testSuite.addTestSuite(ApplyPaymentActionTest.class);

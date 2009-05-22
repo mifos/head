@@ -32,8 +32,8 @@ import org.mifos.application.customer.util.helpers.LoanCycleCounterTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.meeting.util.helpers.WeekDayTest;
 import org.mifos.application.office.struts.tag.OfficeListTagTest;
-import org.mifos.application.ppi.helpers.TestXmlPPIParser;
-import org.mifos.application.productdefinition.business.PrdOfferingBOTest;
+import org.mifos.application.ppi.helpers.XmlPPIParserTest;
+import org.mifos.application.productdefinition.business.PrdOfferingBOIntegrationTest;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.surveys.business.QuestionTest;
@@ -41,13 +41,13 @@ import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.ProperlyAdaptedJUnit4Test;
 import org.mifos.framework.components.batchjobs.business.TaskTest;
-import org.mifos.framework.components.configuration.cache.TestKey;
+import org.mifos.framework.components.configuration.cache.KeyTest;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
-import org.mifos.framework.formulaic.TestValidators;
+import org.mifos.framework.formulaic.ValidatorsTest;
 import org.mifos.framework.persistence.CompositeUpgradeTest;
 import org.mifos.framework.persistence.DatabaseInitFilterTest;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
@@ -121,19 +121,19 @@ public class FastTests extends TestSuite {
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
 		suite.addTestSuite(TaskTest.class);
-		suite.addTestSuite(TestKey.class);
+		suite.addTestSuite(KeyTest.class);
 		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
 		suite.addTestSuite(LoanCycleCounterTest.class);
 		suite.addTestSuite(AccountBOIntegrationTest.class);
-		suite.addTestSuite(PrdOfferingBOTest.class);
+		suite.addTestSuite(PrdOfferingBOIntegrationTest.class);
 		
 		suite.addTest(QuestionTest.suite());
 		
 		suite.addTestSuite(CustomerStatusFlagTest.class);
 
-		suite.addTestSuite(TestValidators.class);
+		suite.addTestSuite(ValidatorsTest.class);
 		
-		suite.addTest(TestXmlPPIParser.suite());
+		suite.addTest(XmlPPIParserTest.suite());
 		
 		suite.addTest(StringUtilsTest.suite());
 		suite.addTest(ChapterNumSortTest.suite());

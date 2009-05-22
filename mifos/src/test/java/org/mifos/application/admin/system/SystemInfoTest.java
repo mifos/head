@@ -21,23 +21,19 @@
 package org.mifos.application.admin.system;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.net.URI;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.config.Localization;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.FilePaths;
 
 import servletunit.ServletContextSimulator;
 

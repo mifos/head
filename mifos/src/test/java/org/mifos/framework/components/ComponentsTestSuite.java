@@ -23,10 +23,10 @@ package org.mifos.framework.components;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.components.logger.TestLogging;
-import org.mifos.framework.components.logger.TestMessage;
-import org.mifos.framework.components.tabletag.TableTagExceptionTest;
-import org.mifos.framework.components.taggenerator.TestTagGenerator;
+import org.mifos.framework.components.logger.LoggingTest;
+import org.mifos.framework.components.logger.MessageIntegrationTest;
+import org.mifos.framework.components.tabletag.TableTagExceptionIntegrationTest;
+import org.mifos.framework.components.taggenerator.TagGeneratorIntegrationTest;
 
 public class ComponentsTestSuite extends TestSuite{
 	public ComponentsTestSuite() {
@@ -35,10 +35,10 @@ public class ComponentsTestSuite extends TestSuite{
 
 	public static Test suite()throws Exception	{
 		TestSuite testSuite = new ComponentsTestSuite();
-		testSuite.addTestSuite(TestTagGenerator.class);
-		testSuite.addTestSuite(TestLogging.class);
-		testSuite.addTestSuite(TestMessage.class);
-		testSuite.addTestSuite(TableTagExceptionTest.class);
+		testSuite.addTestSuite(TagGeneratorIntegrationTest.class);
+		testSuite.addTestSuite(LoggingTest.class);
+		testSuite.addTestSuite(MessageIntegrationTest.class);
+		testSuite.addTestSuite(TableTagExceptionIntegrationTest.class);
 		return testSuite;
 	}
 }

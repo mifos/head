@@ -24,15 +24,15 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntityTest;
-import org.mifos.application.master.business.service.TestMasterBusinessService;
-import org.mifos.application.master.persistence.TestMasterPersistence;
+import org.mifos.application.master.business.service.MasterBusinessServiceIntegrationTest;
+import org.mifos.application.master.persistence.MasterPersistenceIntegrationTest;
 
 public class MasterTestSuite extends TestSuite {
 	
 	public static Test suite() throws Exception {
 		MasterTestSuite testSuite = new MasterTestSuite();
-		testSuite.addTestSuite(TestMasterPersistence.class);
-		testSuite.addTestSuite(TestMasterBusinessService.class);
+		testSuite.addTestSuite(MasterPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(MasterBusinessServiceIntegrationTest.class);
 		testSuite.addTest(CustomFieldDefinitionEntityTest.suite());
 		testSuite.addTest(MessageLookupTest.suite());
 		return testSuite;

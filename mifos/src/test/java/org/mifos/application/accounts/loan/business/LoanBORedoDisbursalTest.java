@@ -85,7 +85,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
+import org.mifos.application.productdefinition.business.LoanOfferingBOIntegrationTest;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -226,8 +226,8 @@ public class LoanBORedoDisbursalTest {
         
         PrdStatusEntity prdStatus = new TestObjectPersistence()
                 .retrievePrdStatus(PrdStatus.LOAN_ACTIVE);
-		LoanOfferingBOTest.setStatus(loanOffering,prdStatus);
-		LoanOfferingBOTest.setGracePeriodType(loanOffering,gracePeriodType);
+		LoanOfferingBOIntegrationTest.setStatus(loanOffering,prdStatus);
+		LoanOfferingBOIntegrationTest.setGracePeriodType(loanOffering,gracePeriodType);
         loanOffering.save();
 
         return loanOffering;

@@ -24,7 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.admin.struts.action.TestAdminAction;
+import org.mifos.application.admin.struts.action.AdminActionTest;
 import org.mifos.application.admin.struts.action.ViewOrganizationSettingsActionTest;
 import org.mifos.application.admin.system.ApplicationInformationTest;
 import org.mifos.application.admin.system.SystemInfoTest;
@@ -48,7 +48,7 @@ public class AdminTestSuite extends TestSuite{
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new AdminTestSuite();
-		testSuite.addTestSuite(TestAdminAction.class);
+		testSuite.addTestSuite(AdminActionTest.class);
 		testSuite.addTest(SystemInfoTest.suite());
 		testSuite.addTest(ApplicationInformationTest.suite());
 		testSuite.addTestSuite(ViewOrganizationSettingsActionTest.class);

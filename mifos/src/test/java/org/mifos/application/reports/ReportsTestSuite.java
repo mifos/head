@@ -23,19 +23,19 @@ package org.mifos.application.reports;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.reports.persistence.AddReportUpgradeTest;
-import org.mifos.application.reports.persistence.ReportsPersistenceTest;
+import org.mifos.application.reports.persistence.AddReportUpgradeIntegrationTest;
+import org.mifos.application.reports.persistence.ReportsPersistenceIntegrationTest;
 import org.mifos.application.reports.struts.action.ReportsUserParamsActionTest;
-import org.mifos.application.reports.struts.action.TestReportsAction;
+import org.mifos.application.reports.struts.action.ReportsActionTest;
 
 public class ReportsTestSuite extends TestSuite {
 	
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new ReportsTestSuite();		
-		testSuite.addTestSuite(ReportsPersistenceTest.class);
-		testSuite.addTestSuite(TestReportsAction.class);
+		testSuite.addTestSuite(ReportsPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(ReportsActionTest.class);
 		testSuite.addTestSuite(ReportsUserParamsActionTest.class);
-		testSuite.addTestSuite(AddReportUpgradeTest.class);
+		testSuite.addTestSuite(AddReportUpgradeIntegrationTest.class);
 		return testSuite;
 	}
 

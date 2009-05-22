@@ -24,15 +24,15 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.collectionsheet.business.TestBulkEntryView;
-import org.mifos.application.collectionsheet.business.TestCollSheetBO;
-import org.mifos.application.collectionsheet.business.TestCollSheetCustBO;
-import org.mifos.application.collectionsheet.business.TestCollSheetSavingsDetailsEntity;
-import org.mifos.application.collectionsheet.business.service.TestBulkEntryBusinessService;
-import org.mifos.application.collectionsheet.persistence.TestBulkEntryPersistence;
-import org.mifos.application.collectionsheet.persistence.service.TestBulkEntryPersistenceService;
-import org.mifos.application.collectionsheet.struts.action.TestBulkEntryAction;
-import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelperTest;
+import org.mifos.application.collectionsheet.business.BulkEntryViewIntegrationTest;
+import org.mifos.application.collectionsheet.business.CollSheetBOIntegrationTest;
+import org.mifos.application.collectionsheet.business.CollSheetCustBOIntegrationTest;
+import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntityIntegrationTest;
+import org.mifos.application.collectionsheet.business.service.BulkEntryBusinessServiceIntegrationTest;
+import org.mifos.application.collectionsheet.persistence.BulkEntryPersistenceIntegrationTest;
+import org.mifos.application.collectionsheet.persistence.service.BulkEntryPersistenceServiceIntegrationTest;
+import org.mifos.application.collectionsheet.struts.action.BulkEntryActionIntegrationTest;
+import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelperIntegrationTest;
 
 public class CollectionSheetTestSuite extends TestSuite {
 
@@ -44,16 +44,16 @@ public class CollectionSheetTestSuite extends TestSuite {
 
     public static Test suite() {
         TestSuite testSuite = new CollectionSheetTestSuite();
-        testSuite.addTestSuite(TestCollSheetCustBO.class);
-        testSuite.addTestSuite(TestCollSheetBO.class);
-        testSuite.addTestSuite(TestCollSheetSavingsDetailsEntity.class);
+        testSuite.addTestSuite(CollSheetCustBOIntegrationTest.class);
+        testSuite.addTestSuite(CollSheetBOIntegrationTest.class);
+        testSuite.addTestSuite(CollSheetSavingsDetailsEntityIntegrationTest.class);
 
-        testSuite.addTestSuite(TestBulkEntryPersistence.class);
-        testSuite.addTestSuite(TestBulkEntryPersistenceService.class);
-        testSuite.addTestSuite(TestBulkEntryBusinessService.class);
-        testSuite.addTestSuite(TestBulkEntryAction.class);
-        testSuite.addTestSuite(TestBulkEntryView.class);
-        testSuite.addTestSuite(BulkEntryDisplayHelperTest.class);
+        testSuite.addTestSuite(BulkEntryPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(BulkEntryPersistenceServiceIntegrationTest.class);
+        testSuite.addTestSuite(BulkEntryBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(BulkEntryActionIntegrationTest.class);
+        testSuite.addTestSuite(BulkEntryViewIntegrationTest.class);
+        testSuite.addTestSuite(BulkEntryDisplayHelperIntegrationTest.class);
 
         return testSuite;
 

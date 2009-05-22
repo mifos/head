@@ -326,7 +326,7 @@ public class AccountPersistence extends Persistence {
 	private Short getAccountIdFromGlCode(String glCode, boolean duringInitialization) {
 		// Without this check, Mayfly will fail to execute the query
 		// since the query parameter is a "null literal". This affects
-		// TestSurvey* unit tests.
+		// SurveyIntegrationTest* unit tests.
 		// Even though this check is only required for Mayfly, it is
 		// good practice anyway to *not* execute a query that will never
 		// have any results.

@@ -20,9 +20,9 @@
  
 package org.mifos.application.admindocuments;
 
-import org.mifos.application.admindocuments.persistence.TestAdminDocAccStateMixPersistence;
-import org.mifos.application.admindocuments.persistence.TestAdminDocumentPersistence;
-import org.mifos.application.admindocuments.struts.action.TestBirtAdminDocumentUploadAction;
+import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersistenceIntegrationTest;
+import org.mifos.application.admindocuments.persistence.AdminDocumentPersistenceIntegrationTest;
+import org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadActionTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -31,9 +31,9 @@ import junit.framework.TestSuite;
 public class AdminDocumentTestSuite extends TestSuite {
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new AdminDocumentTestSuite();
-		testSuite.addTestSuite(TestBirtAdminDocumentUploadAction.class);
-		testSuite.addTestSuite(TestAdminDocAccStateMixPersistence.class);
-		testSuite.addTestSuite(TestAdminDocumentPersistence.class);
+		testSuite.addTestSuite(BirtAdminDocumentUploadActionTest.class);
+		testSuite.addTestSuite(AdminDocAccStateMixPersistenceIntegrationTest.class);
+		testSuite.addTestSuite(AdminDocumentPersistenceIntegrationTest.class);
 		return testSuite;
 	}
 }
