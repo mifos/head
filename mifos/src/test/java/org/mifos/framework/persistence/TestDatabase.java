@@ -179,6 +179,11 @@ public class TestDatabase implements SessionOpener {
 		executeScript(connection, "latest-data-checkpoint.sql");
 	}
 
+	/**
+	 * This method was added to work around integration test inter- and intradependencies. 
+         * Once these dependencies are eliminated (hopefully Summer 2009), this method should
+         * be eliminated as well.
+	 */
 	public static void resetMySQLDatabase() throws Exception {
 		Connection connection = StaticHibernateUtil.getSessionTL().connection();
 		StaticHibernateUtil.startTransaction();
