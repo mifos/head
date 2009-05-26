@@ -42,7 +42,7 @@ public class PaymentData {
 
 	private Date transactionDate;
 
-	private String recieptNum;
+	private String receiptNum;
 
 	private Date recieptDate;
 
@@ -110,7 +110,7 @@ public class PaymentData {
 	}
 
 	public String getRecieptNum() {
-		return recieptNum;
+		return receiptNum;
 	}
 
 	public Money getTotalAmount() {
@@ -137,12 +137,14 @@ public class PaymentData {
 		this.paymentTypeId = paymentTypeId;
 	}
 
+	// FIXME: misspelled
 	public void setRecieptDate(Date recieptDate) {
 		this.recieptDate = recieptDate;
 	}
 
+	// FIXME: misspelled
 	public void setRecieptNum(String recieptNum) {
-		this.recieptNum = recieptNum;
+		this.receiptNum = recieptNum;
 	}
 
 	private void setTotalAmount(Money totalAmount) {
