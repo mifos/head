@@ -19,60 +19,62 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: acceptedPaymentType.Cancel
 msgid "Cancel"
-msgstr ""
+msgstr "បោះបង់"
 
 #: acceptedPaymentType.Submit
 msgid "Submit"
-msgstr ""
+msgstr "យល់ព្រម"
 
 #: acceptedPaymentType.admin
 msgid "Admin"
-msgstr ""
+msgstr "អ្នកគ្រប់គ្រង់"
 
 #: acceptedPaymentType.clientgroupcenter
 msgid "Clients / Groups / Centers"
-msgstr ""
+msgstr "ម៉ាស៊ីនកូន ក្រុមអ្នកប្រើប្រាស់​ មជ្ឈមណ្ឌុល"
 
 #: acceptedPaymentType.defineacceptedpaymenttype
 msgid "Define Accepted Payment Types"
-msgstr ""
+msgstr "ការកំណត់ប្រភេទការបង់ប្រាក់"
 
 #: acceptedPaymentType.deposit
 msgid "Deposits"
-msgstr ""
+msgstr "ប្រាក់កក់"
 
 #: acceptedPaymentType.disbursement
 msgid "Disbursements"
-msgstr ""
+msgstr "​ប្រាក់ចំណាយ"
 
 #: acceptedPaymentType.fee
 msgid "Fees"
-msgstr ""
+msgstr "ប្រាក់ឈ្នូល"
 
 #: acceptedPaymentType.instruction1
 msgid ""
 "Specify the accepted payment types below. Click on a payment type in the "
 "left box to select. Then click Add."
 msgstr ""
+"កំណត់ប្រភេទការបង់ប្រាក់ខាងក្រោម​ "
+"ចុចប្រភេទការបង់ប្រាក់នៅខាងឆ្វេងហើយចុចបញ្ចូល។"
 
 #: acceptedPaymentType.instruction2
 msgid ""
 "To remove, click on a payment type on the right box to select. Then click "
 "remove."
-msgstr ""
+msgstr "ដើម្បីលុប​ ចុចលើប្រភេទការបង់ប្រាក់នៅប្រអប់ខាងស្តាំ​ ហើយចុចលុប។"
 
 #: acceptedPaymentType.loan
 msgid "Loans"
-msgstr ""
+msgstr "ប្រាក់ឲ្យខ្ចី"
 
 #: acceptedPaymentType.repayment
 msgid "Repayments"
-msgstr ""
+msgstr "ការបង់ប្រាក់"
 
 #: acceptedPaymentType.saving
 msgid "Savings"
-msgstr ""
+msgstr "ប្រាក់សន្សំ"
 
 #: acceptedPaymentType.withdrawal
 msgid "Withdrawals"
-msgstr ""
+msgstr "ការដក់ប្រាក់"
