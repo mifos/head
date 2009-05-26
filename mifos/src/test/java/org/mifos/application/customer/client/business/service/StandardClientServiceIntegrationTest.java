@@ -160,7 +160,7 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
     
     private void initializeMifosSoftware() {
         MifosLogManager.configureLogging();
-        DatabaseSetup.initializeHibernateUsingInMemoryDatabase();
+        DatabaseSetup.initializeHibernate();
     }
     
     private void initializeData() throws DataSetException, IOException, SQLException, DatabaseUnitException {

@@ -60,7 +60,7 @@ public class TestCaseInitializer {
             new StandardTestingService().setTestMode(TestMode.INTEGRATION);
             
             MifosLogManager.configureLogging();
-            DatabaseSetup.initializeHibernateUsingInMemoryDatabase();
+            DatabaseSetup.initializeHibernate();
             // add this because it is added to Application Initializer
             Localization.getInstance().init();
             /*
