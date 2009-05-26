@@ -72,8 +72,8 @@ public abstract class Persistence {
             if (getHibernateUtil().getInterceptor().isAuditLogRequired()) {
                 getHibernateUtil().getInterceptor().createChangeValueMap(object);
             }
-        } catch (Exception hibernateException) {
-            throw new PersistenceException(hibernateException);
+        } catch (Exception e) { // including exceptions *not* from hibernate!
+            throw new PersistenceException(e);
         }
 
         return object;
