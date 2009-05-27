@@ -12,7 +12,7 @@
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${integration.database.driver}" />
-        <property name="url" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params}" />
+        <property name="url" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params.spring}" />
         <property name="username" value="${integration.database.user}" />
         <property name="password" value="${integration.database.password}" />
     </bean>
