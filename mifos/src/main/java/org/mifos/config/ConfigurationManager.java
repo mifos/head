@@ -108,24 +108,16 @@ public class ConfigurationManager implements Configuration {
                 customConfigFile = configurationLocator.getFile(CUSTOM_CONFIG_PROPS_FILENAME);
             } else if (TestMode.ACCEPTANCE == currentTestMode) {
                 customConfigFile = configurationLocator.getFile(ACCEPTANCE_CONFIG_PROPS_FILENAME);
+            } else if (TestMode.INTEGRATION == currentTestMode) {
+                customConfigFile = new ClassPathResource("org/mifos/config/resources/" + CUSTOM_CONFIG_PROPS_FILENAME).getFile();
             }
+            props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
         } catch (FileNotFoundException e) {
             /* Do nothing */
         } catch (IOException e) {
             throw new SystemException(e);
         }
         
-        if (TestMode.INTEGRATION == currentTestMode) {
-            try {
-                customConfigFile = new ClassPathResource("org/mifos/config/resources/" + CUSTOM_CONFIG_PROPS_FILENAME).getFile();
-                props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
-            } catch (IOException e) {
-                // an IOException will be thrown if the file is not found
-                // since we currently depend of finding this file, fail if we don't find it
-                throw new SystemException(e);
-            }
-        }
-
 		configuration = ConfigurationConverter.getConfiguration(props);
 	}
 
