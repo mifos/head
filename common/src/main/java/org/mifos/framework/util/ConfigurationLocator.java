@@ -42,6 +42,14 @@ public class ConfigurationLocator {
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
 
+    @SuppressWarnings("PMD.ImmutableField")
+    private ConfigurationLocatorHelper configurationLocatorHelper;
+
+    public ConfigurationLocator() {
+        super();
+       configurationLocatorHelper = new ConfigurationLocatorHelper();
+    }
+
     /**
      * Will not throw an exception if the file is not found. This method may be
      * used to find files in cases where we don't care if the file cannot be
@@ -73,14 +81,14 @@ public class ConfigurationLocator {
     private String[] getDirectoriesToSearch() {
         String systemPropertyDirectory = System.getProperty(LOCATOR_SYSTEM_PROPERTY_NAME);
         String envPropertyDirectory = System.getenv(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
-        String homeDirectory = System.getProperty(HOME_PROPERTY_NAME);
+        String homeDirectory = getHomeProperty();
         String userConfigDirectory = homeDirectory + '/' + MIFOS_USER_CONFIG_DIRECTORY_NAME;
         
         return new String[] { systemPropertyDirectory, envPropertyDirectory, userConfigDirectory };
     }
-    
+
     @SuppressWarnings({"PMD.SystemPrintln", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
-    public String getConfigurationDirectory() {
+    public String getConfigurationDirectory() throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (directoryExists(directoryPath)) {
                 System.out.println("ConfigurationLocator found configuration directory: " + directoryPath);
@@ -103,8 +111,16 @@ public class ConfigurationLocator {
         return new ClassPathResource(DEFAULT_CONFIGURATION_PATH + filename).getFile();
     }
 
-    private boolean directoryExists(String directory) {
-        return StringUtils.isNotBlank(directory) && (new File(directory)).exists();
+    private String getHomeProperty() {
+        return configurationLocatorHelper.getHomeProperty(HOME_PROPERTY_NAME);
+    }
+    
+    private boolean directoryExists(String directory) throws IOException {
+        return StringUtils.isNotBlank(directory) && (getFileObject(directory)).exists();
+    }
+
+    private File getFileObject(String directory) throws IOException {
+        return configurationLocatorHelper.getFile(directory);
     }
 
     @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
@@ -112,6 +128,10 @@ public class ConfigurationLocator {
         File fileToReturn = getConfigurationFile(filename);
         System.out.println("ConfigurationLocator found configuration file: " + fileToReturn);
         return fileToReturn;
+    }
+
+    public void setConfigurationLocatorHelper(ConfigurationLocatorHelper fileFactory) {
+        this.configurationLocatorHelper = fileFactory;
     }
 
 }

@@ -20,15 +20,22 @@
  
 package org.mifos.framework.util;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import org.junit.Test;
 
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
+import org.junit.Test;
+
 public class ConfigurationLocatorTest {
+
+    private static final String EXPECTED_PATH = "/Users/caitie/.mifos";
 
     @Test
     public void testGetFileHandle() throws IOException {
@@ -42,8 +49,30 @@ public class ConfigurationLocatorTest {
         locator.getFile("x.xml");
     }
 
+    @Test
+    public void testGetConfigurationDirectory() throws IOException {
+        ConfigurationLocator locator = getConfigurationLocatorWithMockFileFactory();
+        String configurationDirectory = locator.getConfigurationDirectory();
+        Assert.assertNotNull(configurationDirectory);
+        Assert.assertEquals(EXPECTED_PATH, configurationDirectory);
+    }
+    
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(ConfigurationLocatorTest.class);
     }
 
+    private ConfigurationLocator getConfigurationLocatorWithMockFileFactory()  {
+        File mockFile = createMock(File.class);
+        expect(mockFile.exists()).andReturn(true);
+        replay(mockFile);
+        ConfigurationLocatorHelper mockFileFactory = createMock(ConfigurationLocatorHelper.class);
+        expect(mockFileFactory.getFile(EXPECTED_PATH)).andReturn(mockFile);
+        expect(mockFileFactory.getHomeProperty("user.home")).andReturn("/Users/caitie");
+        replay(mockFileFactory);
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        configurationLocator.setConfigurationLocatorHelper(mockFileFactory);
+        return configurationLocator;
+    }
+
+    
 }
