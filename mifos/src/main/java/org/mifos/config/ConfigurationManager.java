@@ -113,8 +113,15 @@ public class ConfigurationManager implements Configuration {
             }
             props.load(new BufferedInputStream(new FileInputStream(customConfigFile)));
         } catch (FileNotFoundException e) {
-            /* Do nothing */
+            /* An FileNotFoundException will be thrown if a file is not found
+             * by getFile(); for normal runtime and acceptance testing modes,
+             * the custom config file is optional, hence, ignore the exception.
+             */
         } catch (IOException e) {
+            /* An IOException is thrown by ClassPathResource if the file is not
+             * found. Integration tests require a (dummy) custom config file
+             * and we should fail if the file is missing.
+             */
             throw new SystemException(e);
         }
         
