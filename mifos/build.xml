@@ -146,7 +146,8 @@
 
     <target name="compile" depends="make_dir,copy_files,maven_dependencies" 
         description="Compiles the source files">
-        <javac srcdir="${src.dir}" 
+        <javac fork="yes"
+            srcdir="${src.dir}" 
             destdir="${build.classes}" 
             debug="${debug.flag}"
             target="1.5"
@@ -161,7 +162,8 @@
 
     <target name="compile_test" depends="compile,maven_test_dependencies" 
         description="Compiles the test files">
-        <javac srcdir="${test.dir}" 
+        <javac fork="yes"
+            srcdir="${test.dir}" 
             destdir="${test.classes}" 
             debug="${debug.flag}"
             includes="**/*.java"
