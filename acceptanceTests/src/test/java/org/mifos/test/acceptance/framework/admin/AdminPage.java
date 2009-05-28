@@ -81,8 +81,7 @@ public class AdminPage extends MifosPage {
     }
 
     public AdminPage verifyPage() {
-        Assert.assertTrue(selenium.isElementPresent("admin.label.admintasks"),"Didn't reach Admin home page");
-        Assert.assertTrue(selenium.isElementPresent("admin.text.welcome"), "Welcome message not found on Admin home page");
+        verifyPage("admin");
         return this;
     }
     

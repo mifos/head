@@ -40,6 +40,7 @@ while(enn.hasMoreElements()){
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+        <input type="hidden" id="page.id" value="admin"/>
 		<html-el:form action="AdminAction.do?method=load">
 			<td align="left" valign="top" bgcolor="#FFFFFF"
 				style="padding-left:8px; padding-top:10px;">

@@ -1,0 +1,4 @@
+
+Based on Acceptance_small_004 data set.  Test set generated for WaiveLoanFeeTest (Issue 2397)
+
+Test  set has a loan (#000100000000215) with an associated overdue loan fee.

@@ -65,4 +65,10 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new HomePage(selenium);
     }
+
+    public ViewInstallmentDetailsPage navigateToViewInstallmentDetails() {
+        selenium.click("id=loanaccountdetail.link.viewInstallmentDetails");
+        waitForPageToLoad();
+        return new ViewInstallmentDetailsPage(selenium);
+    }
 }
