@@ -24,7 +24,6 @@
 			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="lib" path="mifos/lib/jasperreports-1.3.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jiprof-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jspsmart.jar"/>
@@ -36,8 +35,6 @@
 	<classpathentry kind="lib" path="mifos/lib/strutstest-2.1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/build-lib/maven-ant-tasks-2.0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="mifos/lib/easymock-2.4.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/javax.servlet-4.0.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jaxb-impl-2.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jaxb-libs-1.0.5.jar"/>
