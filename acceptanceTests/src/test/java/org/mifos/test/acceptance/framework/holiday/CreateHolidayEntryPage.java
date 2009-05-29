@@ -21,8 +21,6 @@
 package org.mifos.test.acceptance.framework.holiday;
 
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.util.UiTestUtils;
-//import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -124,13 +122,13 @@ public class CreateHolidayEntryPage extends MifosPage {
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());
         selenium.select("holiday.input.repaymentrule", "label=" + formParameters.getRepaymentRule());
         
-        UiTestUtils.sleep(15000);
+        selenium.fireEvent("holidayFromDateYY", "blur");
+        selenium.fireEvent("holidayThruDateYY", "blur");
+        
         
         selenium.click("holiday.button.preview");
         waitForPageToLoad();
         
-        UiTestUtils.sleep(5000);
-
         
         return new CreateHolidayConfirmationPage(selenium);
          
