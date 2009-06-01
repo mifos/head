@@ -19,43 +19,43 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: accountStatus.account
 msgid "Account \\#"
-msgstr ""
+msgstr "លេខគណនី"
 
 #: accountStatus.accountowner
 msgid "Account Owner"
-msgstr ""
+msgstr "ម្ចាស់គណនី"
 
 #: accountStatus.acctid
 msgid "Acct ID"
-msgstr ""
+msgstr "ឈ្មោះគណនី"
 
 #: accountStatus.approved
 msgid "Approved"
-msgstr ""
+msgstr "បញ្ចាក់"
 
 #: accountStatus.branch
 msgid "Branch"
-msgstr ""
+msgstr "សាខា"
 
 #: accountStatus.cancel
 msgid "Cancel"
-msgstr ""
+msgstr "បោះបង់"
 
 #: accountStatus.changeaccountstatus
 msgid "Change account status"
-msgstr ""
+msgstr "ប្តូរប្រភេទគណនេយ្យ"
 
 #: accountStatus.client
 msgid "Client\\:"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #: accountStatus.confirmation
 msgid "confirmation"
-msgstr ""
+msgstr "ការអះអាង"
 
 #: accountStatus.currentstatus
 msgid "Current Status"
-msgstr ""
+msgstr "ប្រភេទកំពុងប្រើប្រាស់"
 
 #: accountStatus.disbursaldate
 msgid "Disbursal Dt"
@@ -63,31 +63,31 @@ msgstr ""
 
 #: accountStatus.foundfor
 msgid "found for"
-msgstr ""
+msgstr "ស្វែងរកឃើញចំនួន"
 
 #: accountStatus.hierarchydelimiter
 msgid "/"
-msgstr ""
+msgstr "ឬ"
 
 #: accountStatus.id
 msgid "\\: ID"
-msgstr ""
+msgstr "ឈ្មោះ"
 
 #: accountStatus.in
 msgid "in"
-msgstr ""
+msgstr "ក្នុង"
 
 #: accountStatus.loan
 msgid "Loan"
-msgstr ""
+msgstr "ប្រាក់កម្ចី"
 
 #: accountStatus.loanOfficer
 msgid "Loan Officer"
-msgstr ""
+msgstr "មន្ត្រីឪទាន"
 
 #: accountStatus.loanamount
 msgid "Loan Amount"
-msgstr ""
+msgstr "សរុបប្រាក់កម្ចី"
 
 #: accountStatus.loanofficer
 msgid "Loan Officer\\:"
@@ -95,44 +95,45 @@ msgstr ""
 
 #: accountStatus.newstatus
 msgid "New Status\\:"
-msgstr ""
+msgstr "ប្រភេទការប្រើប្រាស់ថ្មី"
 
 #: accountStatus.noresultfound
 msgid "No search result found."
-msgstr ""
+msgstr "ស្វែងរកមិនឃើញ"
 
 #: accountStatus.note
 msgid "Note\\:"
-msgstr ""
+msgstr "កំណត់ចំណាំ"
 
 #: accountStatus.results
 msgid "results"
-msgstr ""
+msgstr "លទ្ធផលស្វែងរក"
 
 #: accountStatus.search
 msgid "Search"
-msgstr ""
+msgstr "ស្វែងរក"
 
 #: accountStatus.select
 msgid "--Select--"
-msgstr ""
+msgstr "ជ្រើសរើស"
 
 #: accountStatus.state
 msgid "Pending-Approval"
-msgstr ""
+msgstr "មិនទាន់សំរេច"
 
 #: accountStatus.statusmessage
 msgid "The following account status has been successfully modified"
-msgstr ""
+msgstr "ប្រភេទគណនេយ្យទាំងនេះត្រូវបានផ្លាស់ប្តូររួចរាល់"
 
 #: accountStatus.submit
 msgid "Submit"
-msgstr ""
+msgstr "យល់ព្រម"
 
 #: accountStatus.type
 msgid "Type"
-msgstr ""
+msgstr "ប្រភេទ"
 
 #: accountStauts.searchheader
 msgid "7 results in All branches found for Loans in Pending approval"
 msgstr ""
+"លទ្ធផលចំនួនប្រាំពីរស្វែងរកឃើញក្នុងសាខាទាំងអស់សំរាប់ប្រាក់កម្ចីមិនទាន់សំរេច"
