@@ -65,8 +65,6 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-				
 		try {
 			TestObjectFactory.cleanUp(client);
 			TestObjectFactory.cleanUp(group);
@@ -77,6 +75,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
 		}
 		
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public static void addFeesTrxnDetail(CustomerTrxnDetailEntity accountTrxnEntity,FeesTrxnDetailEntity feeTrxn) {

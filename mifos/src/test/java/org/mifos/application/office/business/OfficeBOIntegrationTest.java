@@ -51,6 +51,7 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		userContext = TestUtils.makeUser();
 	}
 

@@ -30,8 +30,8 @@ public class LoggingTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		MifosLogManager.configureLogging();
-		super.setUp();
+	    super.setUp();
+	    MifosLogManager.configureLogging();
 	}
 
 	@Override

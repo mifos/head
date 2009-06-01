@@ -52,11 +52,11 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
 	SavingsBO savings;
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}	
 	public void testBuildDateUI(){
 		Date date = new Date(System.currentTimeMillis());

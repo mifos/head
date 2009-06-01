@@ -44,6 +44,7 @@ public class AccountStateIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		accountPersistence = new AccountPersistence();
 	}
 

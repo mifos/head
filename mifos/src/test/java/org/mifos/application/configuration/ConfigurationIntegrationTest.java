@@ -39,6 +39,7 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		configuration = MifosConfiguration.getInstance();
 	}
 

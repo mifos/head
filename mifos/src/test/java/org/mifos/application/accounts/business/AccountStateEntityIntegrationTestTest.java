@@ -42,6 +42,7 @@ public class AccountStateEntityIntegrationTestTest extends MifosIntegrationTest 
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		session = StaticHibernateUtil.getSessionTL();
 	}
 	

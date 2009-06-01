@@ -51,9 +51,9 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	public void setUp() throws Exception {
-        officePersistence = new OfficePersistence();
+	    super.setUp();
+	    officePersistence = new OfficePersistence();
         initializeStatisticsService();
-        super.setUp();
     }
 
 	@Override

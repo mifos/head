@@ -47,14 +47,14 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTest{
 	
 	@Override
 	protected void setUp() throws Exception {
+        super.setUp();	    
 		configuration = Configuration.getInstance();
-		super.setUp();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public void testSystemConfiguration()throws Exception{

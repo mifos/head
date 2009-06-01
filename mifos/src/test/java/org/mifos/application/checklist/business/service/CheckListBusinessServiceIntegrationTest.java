@@ -52,8 +52,8 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testGetCheckListMasterData() throws Exception {

@@ -183,8 +183,8 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		transaction.rollback();
+		super.tearDown();
 	}
 
 	@Override

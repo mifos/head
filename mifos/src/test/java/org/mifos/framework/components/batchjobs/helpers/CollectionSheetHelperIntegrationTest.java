@@ -72,8 +72,8 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		initialDaysInAdvance = configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
-		super.setUp();
 	}
 
 	@Override

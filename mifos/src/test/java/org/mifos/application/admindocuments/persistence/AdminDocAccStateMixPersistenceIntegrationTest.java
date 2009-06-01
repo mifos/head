@@ -39,6 +39,7 @@ public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrat
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		reportsPersistence = new AdminDocAccStateMixPersistence();
 	}
 

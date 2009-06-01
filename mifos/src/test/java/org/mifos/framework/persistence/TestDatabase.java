@@ -23,12 +23,16 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
@@ -40,6 +44,8 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialInitialize
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.util.ConfigurationLocator;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class TestDatabase implements SessionOpener {
@@ -179,32 +185,48 @@ public class TestDatabase implements SessionOpener {
 		executeScript(connection, "latest-data-checkpoint.sql");
 	}
 
-	/**
-	 * This method was added to work around integration test inter- and intradependencies. 
-         * Once these dependencies are eliminated (hopefully Summer 2009), this method should
-         * be eliminated as well.
-	 */
-	public static void resetMySQLDatabase() throws Exception {
-		Connection connection = StaticHibernateUtil.getSessionTL().connection();
-		StaticHibernateUtil.startTransaction();
-		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
-		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
-		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
-		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
-		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
+    /**
+     * This method was added to work around integration test inter- and
+     * intradependencies. Once these dependencies are eliminated (hopefully
+     * Summer 2009), this method should be eliminated as well.
+     */
+    public static void resetMySQLDatabase() throws Exception {
+        StaticHibernateUtil.flushAndClearSession();
 
-		// Don't execute "init_mifos_password.sql" ... this is only for
-		// "production" databases (those that Mifos running under an app
-		// server will connect to).
+        Connection connection = getJDBCConnection();
+        connection.setAutoCommit(false);
+        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("truncate_tables.sql"), connection);
+        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
+        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
+        SqlUpgrade.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
+        connection.commit();
+        connection.close();
 
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		
-		// If the database is ever blown away, we must repopulate chart of
-		// accounts data since some unit tests rely on its presence. It must
-		// be created via this method since adding it via an sql script would
-		// invalidate *other* unit tests that assume this method has been
-		// called.
-		FinancialInitializer.initialize();
-	}	
+        // If the database is ever blown away, we must repopulate chart of
+        // accounts data since some unit tests rely on its presence. It must
+        // be created via this method since adding it via an sql script would
+        // invalidate *other* unit tests that assume this method has been
+        // called.
+        FinancialInitializer.initialize();
+    }
+
+    // FIXME Use Spring Managed Connection
+
+    private static Connection getJDBCConnection() throws Exception {
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+        Properties p = new Properties();
+        p.load(new FileInputStream(configurationLocator.getFile(FilePaths.INTEGRATION_DATABASE_CONFIGURATION)));
+
+        try {
+            p.load(new FileInputStream(configurationLocator.getFile(FilePaths.LOCAL_CONFIGURATION_OVERRIDES)));
+        } catch (FileNotFoundException e) {
+            // this config file is optional
+        }
+
+        //Class.forName(p.getProperty("integration.database.driver"));
+        String url = "jdbc:mysql://" + p.getProperty("integration.database.host") + ":"
+                + p.getProperty("integration.database.port") + "/" + p.getProperty("integration.database")
+                + "?useUnicode=true&characterEncoding=UTF-8&sessionVariables=FOREIGN_KEY_CHECKS=0";
+        return DriverManager.getConnection(url, p.getProperty("integration.database.user"), p.getProperty("integration.database.password"));
+    }
 }

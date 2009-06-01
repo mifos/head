@@ -52,7 +52,6 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTest {
 
 		TestObjectFactory.removeObject(prdMix);
 		TestObjectFactory.removeObject(savingsOffering);
-		
 		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}

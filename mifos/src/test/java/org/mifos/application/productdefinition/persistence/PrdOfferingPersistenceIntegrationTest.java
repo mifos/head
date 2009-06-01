@@ -74,7 +74,6 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTest 
 		TestObjectFactory.removeObject(prdmix2);	
 		TestObjectFactory.removeObject(loanOffering);
 		TestObjectFactory.removeObject(loanOffering2);
-		
 		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}

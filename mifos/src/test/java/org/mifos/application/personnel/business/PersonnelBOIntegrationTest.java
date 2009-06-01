@@ -89,10 +89,10 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
-		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+	    super.setUp();
+	    office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		name = new Name("XYZ", null, null, null);
-		super.setUp();
 	}
 
 	@Override

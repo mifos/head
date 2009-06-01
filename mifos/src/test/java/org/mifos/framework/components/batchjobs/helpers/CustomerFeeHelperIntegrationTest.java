@@ -78,10 +78,10 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTest {
 	}
 
 	@Override
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(center);
 		StaticHibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
 	public void testExecute() throws Exception {

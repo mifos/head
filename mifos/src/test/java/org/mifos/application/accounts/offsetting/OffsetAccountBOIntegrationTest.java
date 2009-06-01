@@ -88,7 +88,6 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTest {
 			// throwing here tends to mask failures
 			e.printStackTrace();
 		}
-
 		super.tearDown();
 	}
 

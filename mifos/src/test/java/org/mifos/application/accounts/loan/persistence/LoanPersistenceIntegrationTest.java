@@ -101,6 +101,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 

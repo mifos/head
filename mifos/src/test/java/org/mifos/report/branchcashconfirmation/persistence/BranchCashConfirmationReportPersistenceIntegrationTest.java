@@ -204,5 +204,6 @@ public class BranchCashConfirmationReportPersistenceIntegrationTest extends
 	@Override
 	protected void tearDown() throws Exception {
 		transaction.rollback();
+		super.tearDown();
 	}
 }

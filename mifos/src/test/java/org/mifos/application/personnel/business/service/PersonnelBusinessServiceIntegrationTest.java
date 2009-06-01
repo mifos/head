@@ -57,8 +57,8 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		personnelBusinessService = new PersonnelBusinessService();
-		super.setUp();
 	}
 
 	@Override

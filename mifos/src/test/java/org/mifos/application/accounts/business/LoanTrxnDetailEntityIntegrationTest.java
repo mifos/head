@@ -65,8 +65,8 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		super.tearDown();
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testSuccessSetRunningBalance() throws Exception {

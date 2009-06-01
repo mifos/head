@@ -88,7 +88,6 @@ public class ProductMixBusinessServiceIntegrationTest  extends MifosIntegrationT
 		TestObjectFactory.removeObject(secondSavingsOffering);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(center2);
-		
 		StaticHibernateUtil.closeSession();
 		super.tearDown();
 	}

@@ -56,9 +56,9 @@ public class FeeBOIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUp(fee);
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testCreateWithoutFeeName() throws Exception {

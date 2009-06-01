@@ -66,9 +66,9 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.removeObject(savingsProduct);
 		TestObjectFactory.removeObject(savingsOffering1);
+		super.tearDown();
 	}
 
 	public void testUpdateSavingsOfferingForLogging() throws Exception {

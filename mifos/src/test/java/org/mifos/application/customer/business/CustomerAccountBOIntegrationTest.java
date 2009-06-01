@@ -91,8 +91,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		userContext = TestObjectFactory.getContext();
-		super.setUp();
 	}
 
 	@Override

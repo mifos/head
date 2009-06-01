@@ -113,7 +113,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
 
     @Override
 	protected void tearDown() throws Exception {
-    	super.tearDown();
 		TestObjectFactory.removeObject(savingsOffering1);
 		TestObjectFactory.removeObject(savingsOffering2);
 		TestObjectFactory.removeObject(savingsOffering3);
@@ -125,6 +124,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
     public void testCreateClient()

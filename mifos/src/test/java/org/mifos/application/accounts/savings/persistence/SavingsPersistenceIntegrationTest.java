@@ -122,8 +122,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(accountCheckList);
 		TestObjectFactory.removeObject(savingsOffering1);
 		TestObjectFactory.removeObject(savingsOffering2);
-		super.tearDown();
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testGetSavingsProducts() throws Exception {

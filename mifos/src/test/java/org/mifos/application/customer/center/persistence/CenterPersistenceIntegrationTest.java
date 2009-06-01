@@ -59,16 +59,17 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTest{
 
     @Override
 	public void setUp() throws Exception {
+        super.setUp();
         officePersistence = new OfficePersistence();
         centerPersistence = new CenterPersistence();
         initializeStatisticsService();
-        super.setUp();
     }
 
     @Override
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(center);
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
     }
 
     public void testCreateCenter()

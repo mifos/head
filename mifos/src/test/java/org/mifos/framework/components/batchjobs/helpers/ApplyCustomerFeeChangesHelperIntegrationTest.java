@@ -66,6 +66,7 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("center1", meeting);

@@ -82,6 +82,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		persistenceMock = createMock(BranchCashConfirmationReportPersistence.class);
 		service = new BranchCashConfirmationReportService(persistenceMock,
 				new OfficeBusinessService());

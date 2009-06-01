@@ -48,7 +48,8 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
 	
 	@Override
 	protected void setUp() throws Exception {
-		acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
+		super.setUp();
+	    acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
 	}
 
 	@Override

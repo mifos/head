@@ -39,6 +39,7 @@ public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTes
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		reportsPersistence = new AdminDocumentPersistence();
 	}
 

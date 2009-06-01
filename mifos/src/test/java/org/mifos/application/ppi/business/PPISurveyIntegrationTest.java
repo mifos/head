@@ -65,6 +65,7 @@ public class PPISurveyIntegrationTest extends MifosInMemoryIntegrationTest {
 	private TestDatabase database;
 
 	@Before public void setUp() {
+	    super.setUp();
 		persistence = new PPIPersistence();
 		database = TestDatabase.makeStandard();
 		database.installInThreadLocal();
@@ -73,6 +74,7 @@ public class PPISurveyIntegrationTest extends MifosInMemoryIntegrationTest {
 	@After
 	public void tearDown() {
 		StaticHibernateUtil.resetDatabase();
+		super.tearDown();
 	}
 	
 	@Test

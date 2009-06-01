@@ -54,10 +54,10 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		productCategoryBusinessService=null;
 		userContext=null;
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	/**

@@ -42,6 +42,7 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
 	
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		configurationPersistence= new ApplicationConfigurationPersistence();
 	}
 

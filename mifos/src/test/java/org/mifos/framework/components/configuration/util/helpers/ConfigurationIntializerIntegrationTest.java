@@ -45,8 +45,8 @@ public class ConfigurationIntializerIntegrationTest extends MifosIntegrationTest
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testCreateSystemCache() throws Exception{

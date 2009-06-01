@@ -44,10 +44,10 @@ public class FeeBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUp(fee2);
 		TestObjectFactory.cleanUp(fee1);
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testGetFee() {

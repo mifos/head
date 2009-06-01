@@ -52,7 +52,8 @@ public class ProductMixValidatorIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
-		configServiceMock = createMock(ConfigurationBusinessService.class);
+	    super.setUp();
+	    configServiceMock = createMock(ConfigurationBusinessService.class);
 		productMixBusinessServiceMock = createMock(ProductMixBusinessService.class);
 		loanMock = createMock(LoanBO.class);
 		customerMock = createMock(CustomerBO.class);

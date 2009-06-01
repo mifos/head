@@ -96,6 +96,7 @@ public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrati
 	
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		loanOffering = LoanOfferingBO.createInstanceForTest((short)1);
 		loan = LoanBO.createInstanceForTest(loanOffering);
 		configServiceMock = createMock(ConfigurationBusinessService.class);

@@ -61,7 +61,6 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(client2);

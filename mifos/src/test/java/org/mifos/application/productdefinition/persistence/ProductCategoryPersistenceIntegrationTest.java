@@ -52,9 +52,9 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		productCategoryPersistence=null;
 		userContext=null;
+		super.tearDown();
 	}
 	
 	public void testGetMaxPrdCategoryId() throws Exception{

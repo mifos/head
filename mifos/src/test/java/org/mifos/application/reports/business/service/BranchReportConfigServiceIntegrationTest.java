@@ -71,6 +71,7 @@ public class BranchReportConfigServiceIntegrationTest extends MifosIntegrationTe
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		ClassPathResource branchReportConfig = new ClassPathResource(
 				FilePaths.BRANCH_REPORT_CONFIG);
 		branchReportConfigService = new BranchReportConfigService(

@@ -87,8 +87,8 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		super.tearDown();
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testGetAccount() throws Exception {

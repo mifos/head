@@ -48,6 +48,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		result = new XmlBuilder();
+		//FIXME why there are 2 setup
 		super.setUp();
 		database = TestDatabase.makeStandard();
 		StaticHibernateUtil.closeSession();
@@ -63,6 +64,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTest {
 	public void tearDown() throws Exception {
 		session.close();
 		StaticHibernateUtil.resetDatabase();
+		super.tearDown();
 	}
 	
 	public void testFreetext() throws Exception {

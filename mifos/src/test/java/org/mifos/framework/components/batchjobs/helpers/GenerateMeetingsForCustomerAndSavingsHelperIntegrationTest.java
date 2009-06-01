@@ -71,8 +71,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends
 
 	@Override
 	protected void setUp() throws Exception {
+        super.setUp();
 		userContext = TestObjectFactory.getContext();
-		super.setUp();
 	}
 
 	@Override

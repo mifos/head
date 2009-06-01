@@ -101,6 +101,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		StaticHibernateUtil.getSessionTL();
 	}
 

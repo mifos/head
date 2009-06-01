@@ -74,6 +74,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTest {
 
     @Override
 	public void setUp() throws Exception{
+        super.setUp();
         initializeStatisticsService();
     }
 

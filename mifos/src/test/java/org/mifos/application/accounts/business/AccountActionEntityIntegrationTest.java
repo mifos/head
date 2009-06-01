@@ -48,6 +48,7 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		session = StaticHibernateUtil.getSessionTL();
 	}
 
@@ -55,6 +56,7 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTest {
 	protected void tearDown() throws Exception {
 		StaticHibernateUtil.closeSession();
 		session=null;
+		super.tearDown();
 	}
 
 	public void testGetAccountAction(){

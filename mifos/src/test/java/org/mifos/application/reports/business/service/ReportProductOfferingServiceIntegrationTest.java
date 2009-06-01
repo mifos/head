@@ -144,6 +144,7 @@ public class ReportProductOfferingServiceIntegrationTest extends MifosIntegratio
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		loanPrdBusinessServiceMock = createMock(LoanPrdBusinessService.class);
 		savingsProductBusinessServiceMock = createMock(SavingsPrdBusinessService.class);
 		reportProductOfferingConfig = new ClassPathResource(

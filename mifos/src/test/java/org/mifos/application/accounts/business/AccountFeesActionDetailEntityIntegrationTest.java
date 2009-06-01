@@ -136,8 +136,8 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
 
 	@Override
 	protected void setUp() throws Exception {
-		accountBO = getLoanAccount();
-		super.setUp();
+	    super.setUp();
+	    accountBO = getLoanAccount();
 	}
 
 }

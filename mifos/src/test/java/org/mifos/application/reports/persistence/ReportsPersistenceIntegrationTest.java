@@ -48,6 +48,7 @@ public class ReportsPersistenceIntegrationTest extends MifosIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
+	    super.setUp();
 		reportsPersistence = new ReportsPersistence();
 	}
 

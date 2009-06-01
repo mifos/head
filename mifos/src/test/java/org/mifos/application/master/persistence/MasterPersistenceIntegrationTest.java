@@ -54,8 +54,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTest {
 	}
 
 	@Override
-	public void tearDown() {
+	public void tearDown() throws Exception {
 		StaticHibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	
