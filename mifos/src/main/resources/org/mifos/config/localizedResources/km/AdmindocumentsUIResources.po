@@ -29,28 +29,28 @@ msgstr ""
 
 #: Account.Admin
 msgid "Admin"
-msgstr ""
+msgstr "អ្នកគ្រប់គ្រង"
 
 #: Account.ClickCancelToDetailsPage
 msgid ""
 "Click Cancel to return to Loan Details Page without submitting information."
-msgstr ""
+msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រប្រាក់កម្ចីបោះបង់ព័ត៌មានទាំងនេះ"
 
 #: Account.ClickPreview
 msgid "Then click Preview."
-msgstr ""
+msgstr "បន្ចាប់មកចុចត្រលប់ក្រោយ"
 
 #: Account.Edit
 msgid "Click Edit to make changes."
-msgstr ""
+msgstr "ចុចបន្ថែមដើម្បីប្តូរ"
 
 #: Account.EditLabel
 msgid "Edit"
-msgstr ""
+msgstr "បន្ថែម"
 
 #: Account.EnterANote
 msgid "Enter a note in the field below."
-msgstr ""
+msgstr "បញ្ចូលកំណត់សំគាល់ក្នុងប្រអប់ខាងក្រោម"
 
 #: Account.Note
 msgctxt "Account.Note"
@@ -59,7 +59,7 @@ msgstr ""
 
 #: Account.NoteLabel
 msgid "Note"
-msgstr ""
+msgstr "កំណត់សំគាល់"
 
 #: Account.Notes
 msgctxt "Account.Notes"
@@ -68,27 +68,27 @@ msgstr ""
 
 #: Account.PreviewNote
 msgid "Preview Note"
-msgstr ""
+msgstr "ពិនិត្យកំណត់សំគាល់"
 
 #: Account.ReviewText
 msgid "Review the text below."
-msgstr ""
+msgstr "ពិនិត្យអត្ថបទខាងក្រោម"
 
 #: Account.StatusHistory
 msgid "Status history"
-msgstr ""
+msgstr "ប្រវត្តិកាលកំពុងមាន"
 
 #: Account.Submit
 msgid "If satisfied click Submit."
-msgstr ""
+msgstr "ប្រសិនបើពេញចិត្តចុចយល់ព្រម"
 
 #: Account.ViewEditUsers
 msgid "View/Edit Users"
-msgstr ""
+msgstr "មើល​ បន្ថែម​ អ្នកប្រើប្រាស់"
 
 #: Account.ViewUsers
 msgid "View Users"
-msgstr ""
+msgstr "មើលអ្នកប្រើប្រាស់"
 
 #: Account.returnToAccountDetails
 msgctxt "Account.returnToAccountDetails"
@@ -97,7 +97,7 @@ msgstr ""
 
 #: AdjustmentNotes
 msgid "Adjustment Notes"
-msgstr ""
+msgstr "កំណត់ចំណាំកែតម្រូវ"
 
 #: Amount
 msgctxt "Amount"
@@ -111,7 +111,7 @@ msgstr ""
 
 #: Clientname
 msgid "Client name"
-msgstr ""
+msgstr "ឈ្មោះអ្នកប្រើប្រាស់"
 
 #: Credit
 msgctxt "Credit"
@@ -140,7 +140,7 @@ msgstr ""
 
 #: GLCode
 msgid "GL Code"
-msgstr ""
+msgstr "លេខសំខាត់ GL"
 
 #: NewStatus
 msgctxt "NewStatus"
@@ -164,7 +164,7 @@ msgstr ""
 
 #: Postedby
 msgid "Posted by"
-msgstr ""
+msgstr "បិទប្រកាសដោយ"
 
 #: TransactionID
 msgctxt "TransactionID"
@@ -188,51 +188,51 @@ msgstr ""
 
 #: account.amount_zero
 msgid "amount should be greater than 0.0"
-msgstr ""
+msgstr "ចំនួនសរុបគួរតែច្រើនជាង 0.0"
 
 #: account.chargetype
 msgid "charge type"
-msgstr ""
+msgstr "ប្រភេទនៃការគិតថ្លៃ"
 
 #: accounts.Account
 msgid "Account"
-msgstr ""
+msgstr "គណនេយ្យ"
 
 #: accounts.ChecklistMsg
 msgid "Complete and check off the following tasks."
-msgstr ""
+msgstr "បញ្ចប់ និងបិតរាល់ប្រតិបត្តិការទាំងឡាយ"
 
 #: accounts.ClickCancel1
 msgid "Click Cancel to return to"
-msgstr ""
+msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
 
 #: accounts.ClickCancel2
 msgid "details without submitting information."
-msgstr ""
+msgstr "ទំព័រពិស្តារដោយមិនយល់ព្រមព័ត៌មានទាំងនេះ"
 
 #: accounts.ClickContinue
 msgid "Then click Continue."
-msgstr ""
+msgstr "បន្ទាប់មកចុចបន្ត"
 
 #: accounts.ClickSubmit
 msgid "Then click Submit."
-msgstr ""
+msgstr "បន្ទាប់មកចុចយល់ព្រម"
 
 #: accounts.ConfirmStatusChange
 msgid "Confirm status change"
-msgstr ""
+msgstr "អះអាងប្រភេទនៃការផ្លាស់ប្តូរ"
 
 #: accounts.EditStatus
 msgid "Edit status"
-msgstr ""
+msgstr "បន្ថែមប្រភេទ"
 
 #: accounts.NewStatus
 msgid "New status"
-msgstr ""
+msgstr "ប្រភេទថ្មី"
 
 #: accounts.NoChecklist
 msgid "No CheckList Available"
-msgstr ""
+msgstr "គ្មានតារាងបញ្ចីទំនេរ"
 
 #: accounts.NoFlagsAvailable
 msgid "No Flags Available"
@@ -240,81 +240,85 @@ msgstr ""
 
 #: accounts.NoNotesAvailable
 msgid "No notes available."
-msgstr ""
+msgstr "គ្មានកំណត់ចំណាំទំនេរ"
 
 #: accounts.OldStatus
 msgid "Old status"
-msgstr ""
+msgstr "ប្រភេទចាស់"
 
 #: accounts.Sel_client/group
 msgid "Select a Client/Group"
-msgstr ""
+msgstr "ជ្រើសរើសអ្នកប្រើប្រាស់ និងក្រុម"
 
 #: accounts.Select
 msgid "Select"
-msgstr ""
+msgstr "ជ្រើសរើស"
 
 #: accounts.SelectACustomer
 msgid "Select a customer"
-msgstr ""
+msgstr "ជ្រើសរើសអតិថិជនម្នាក់"
 
 #: accounts.SelectCustomer
 msgid "Select customer"
-msgstr ""
+msgstr "ជ្រើសរើសអតិថិជន"
 
 #: accounts.SelectExplaination1
 msgid "When cancelling a"
-msgstr ""
+msgstr "នៅពេលការបោះបង់មួយ"
 
 #: accounts.SelectExplaination2
 msgid ", select an explanation from the dropdown list below."
-msgstr ""
+msgstr "ចុចការពន្យល់មួយពីតារាងខាងក្រោម"
 
 #: accounts.SelectStatus
 msgid "Select from the status options below."
-msgstr ""
+msgstr "ជ្រើសរើសប្រភេទខាងក្រោម"
 
 #: accounts.acc_details
 msgid "Loan Account Details"
-msgstr ""
+msgstr "គណនេយ្យប្រាក់កម្ចីពិស្តារ"
 
 #: accounts.acc_info
 msgid "account information"
-msgstr ""
+msgstr "ព័ណ៌មានអំពីគណនេយ្យ"
 
 #: accounts.acc_owner
 msgid "Account Owner\\:"
-msgstr ""
+msgstr "ម្ចាស់គណនេយ្យ"
 
 #: accounts.acc_statement
 msgid "Account statement as of"
-msgstr ""
+msgstr "បញ្ចីចំនេញខាត"
 
 #: accounts.acc_summary
 msgid "Account summary"
-msgstr ""
+msgstr "សេចក្តីសង្ខេបគណនេយ្យ"
 
 #: accounts.account
 msgid "account"
-msgstr ""
+msgstr "គណនេយ្យ"
 
 #: accounts.activity
 msgid "Activity"
-msgstr ""
+msgstr "សកម្មភាព"
 
 #: accounts.add_note
+#: Account.AddNote
 msgctxt "accounts.add_note"
 msgid "Add Note"
-msgstr ""
+msgstr "បន្តែមកំណត់សំគាល់"
 
+#. #Autogenerated resource bundle. Run 'native2ascii -reverse' to convert to latin1 encoding.
+#. #Thu Aug 21 11:40:50 CDT 2008
 #: accounts.addnewnote
+#: Account.AddNewNote
 msgctxt "accounts.addnewnote"
 msgid "Add new note"
-msgstr ""
+msgstr "បន្តែមកំណត់សំគាល់ថ្មី"
 
 #: accounts.addnote
 msgid "Add a note"
-msgstr ""
+msgstr "បន្ថែមកំណត់ចំណាំមួយ"
 
 #: accounts.adjustment_detail
 msgid ""
@@ -322,18 +326,21 @@ msgid ""
 "will make a reverse transaction entry and the account balance will be "
 "updated."
 msgstr ""
+"ការបង់ប្រាក់ចុងក្រោយត្រូវបានទុកជាមោឃៈប្រសិនបើទាមទារ។​ "
+"ប្រសិនបើការកែតម្រូវត្រូវធ្វើឡើង​ "
+"ប្រព័ន្ធនឹងទុកប្រតិបត្តិការដែលបានបញ្ចូលជាមោឃៈ ហើយតុល្យភាពនឹងកែប្រែជាថ្មី។"
 
 #: accounts.admin_set_fees
 msgid "Administrative Set Fees"
-msgstr ""
+msgstr "អ្នកគ្រប់គ្រងកំណត់ថ្លៃ"
 
 #: accounts.agro
 msgid "Agriculture"
-msgstr ""
+msgstr "កសិកម្ម"
 
 #: accounts.agro_loan
 msgid "Agricultural Loan"
-msgstr ""
+msgstr "ការបណ្តាក់លើកសិកម្ម"
 
 #: accounts.allowed_amount
 msgid "(Allowed Amount\\: INR"
@@ -341,15 +348,15 @@ msgstr ""
 
 #: accounts.allowed_interest
 msgid "(Allowed Interest Rate Amount"
-msgstr ""
+msgstr "អត្រាការប្រាក់សរុបដែលផ្តល់ឲ្យ"
 
 #: accounts.allowed_no_of_inst
 msgid "(Allowed Number of Installments"
-msgstr ""
+msgstr "ចំនួនប្រាក់សងរំលោះដែលផ្តល់ឲ្យ"
 
 #: accounts.amnt_tobe_adjusted
 msgid "Amount to be adjusted"
-msgstr ""
+msgstr "ចំនួនសរុបដែលបានកែតម្រូវ"
 
 #: accounts.amount
 msgctxt "accounts.amount"
@@ -368,36 +375,40 @@ msgstr ""
 
 #: accounts.amount_due
 msgid "Amount due"
-msgstr ""
+msgstr "បំណុលសរុប"
 
 #: accounts.amt
+#: Amount
+#: accounts.amount
+#: accounts.amount(USD)
+#: accounts.amount_(Rs)
 msgctxt "accounts.amt"
 msgid "Amount"
-msgstr ""
+msgstr "ចំនួនសរុប"
 
 #: accounts.amt_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "ចំណាយសរុប"
 
 #: accounts.anti_disburse_dd
 msgid "Anticipated disbursement date\\:"
-msgstr ""
+msgstr "កាលបរិច្ចេកនៃការចំណាយប្រាក់ជាមុន"
 
 #: accounts.app_fee
 msgid "Application Fee"
-msgstr ""
+msgstr "ថ្លៃពាក្យ"
 
 #: accounts.app_fee_amt
 msgid "Application fee amount"
-msgstr ""
+msgstr "ចំនួនសរុបថ្លៃពាក្យ"
 
 #: accounts.appl_fees
 msgid "Application fee\\:"
-msgstr ""
+msgstr "ថ្លៃពាក្យ"
 
 #: accounts.apply_add_fees
 msgid "Apply Additional Fees"
-msgstr ""
+msgstr "ការដាក់បញ្ចូលតម្លៃបន្ថែម"
 
 #: accounts.apply_adjustment
 msgctxt "accounts.apply_adjustment"
@@ -406,24 +417,25 @@ msgstr ""
 
 #: accounts.apply_charges
 msgid "Apply charges"
-msgstr ""
+msgstr "ការដាក់បញ្ចូលការយកថ្លៃ"
 
 #: accounts.apply_payment
 msgid "Apply payment"
-msgstr ""
+msgstr "ការដាក់បញ្ចូលការបង់ប្រាក់"
 
 #: accounts.apply_trans
 msgid "Apply transactions"
-msgstr ""
+msgstr "ការដាក់បញ្ចូលប្រតិបត្តិការ"
 
 #: accounts.applyadjustment
+#: accounts.apply_adjustment
 msgctxt "accounts.applyadjustment"
 msgid "Apply adjustment"
-msgstr ""
+msgstr "ការដាក់បញ្ចូលការកែតម្រូវ"
 
 #: accounts.approved
 msgid "Approved"
-msgstr ""
+msgstr "សំរេចយល់ព្រម"
 
 #: accounts.apr
 msgid "APR"
@@ -435,20 +447,21 @@ msgstr ""
 
 #: accounts.backtocharges
 msgid "Back to Charges page"
-msgstr ""
+msgstr "ត្រលប់ទៅទំព័រនៃការយកថ្លៃ"
 
 #: accounts.balance
+#: Balance
 msgctxt "accounts.balance"
 msgid "Balance"
-msgstr ""
+msgstr "តុល្យភាព"
 
 #: accounts.balance_at_disburse
 msgid "Balance at Disbursement"
-msgstr ""
+msgstr "តុល្យភាពនៃការចំណាយប្រាក់"
 
 #: accounts.branch-01
 msgid "Branch 01"
-msgstr ""
+msgstr "តុល្យភាពលេខ ០១"
 
 #: accounts.btn_reviewAdjustment
 msgctxt "accounts.btn_reviewAdjustment"
@@ -457,43 +470,43 @@ msgstr ""
 
 #: accounts.business_work_act
 msgid "Business work activities"
-msgstr ""
+msgstr "សកម្មភាពធ្វើការរបស់អាជីវកម្ម"
 
 #: accounts.cancel
 msgid "Cancel"
-msgstr ""
+msgstr "បោះបង់"
 
 #: accounts.cattle_loan
 msgid "Cattle Loan"
-msgstr ""
+msgstr "ការបណ្តាក់គោក្របី"
 
 #: accounts.centercharges
 msgid "Center charges"
-msgstr ""
+msgstr "ការយកថ្លៃរួម"
 
 #: accounts.change_log
 msgid "Change Log"
-msgstr ""
+msgstr "ប្តូររបាយការណ៏"
 
 #: accounts.changestatus
 msgid "Change status"
-msgstr ""
+msgstr "ប្តូរប្រភេទ"
 
 #: accounts.charged
 msgid "charged"
-msgstr ""
+msgstr "បានយកប្រាក់"
 
 #: accounts.charged_applied
 msgid "Charges Applied"
-msgstr ""
+msgstr "ការយកប្រាក់ត្រូវបានដាក់បញ្ចូល"
 
 #: accounts.charges
 msgid "charges"
-msgstr ""
+msgstr "ការយកថ្លៃ"
 
 #: accounts.check_remove
 msgid "Check to Remove"
-msgstr ""
+msgstr "ធីកដើម្បីលុប"
 
 #: accounts.chk_revert_last_pmnt
 msgid "Check to revert the last payment"
@@ -501,15 +514,15 @@ msgstr ""
 
 #: accounts.client/group_name
 msgid "Client/Group Name"
-msgstr ""
+msgstr "ឈ្មោះក្រុមអ្នកប្រើប្រាស់"
 
 #: accounts.clientcharges
 msgid "Client charges"
-msgstr ""
+msgstr "ការយកថ្លៃអ្នកប្រើប្រាស់"
 
 #: accounts.coll_sheet_type
 msgid "Collection sheet type"
-msgstr ""
+msgstr "ការប្រមូលផ្តុំប្រភេទតារាង"
 
 #: accounts.collateral_notes
 msgctxt "accounts.collateral_notes"
@@ -518,22 +531,25 @@ msgstr ""
 
 #: accounts.collateral_type
 msgid "Collateral type"
-msgstr ""
+msgstr "ប្រភេទវត្ថុដាក់ធានា"
 
 #: accounts.collateralnote
+#: accounts.collateral_notes
 msgctxt "accounts.collateralnote"
 msgid "Collateral notes"
-msgstr ""
+msgstr "កំណត់សំគាល់វត្ថុដាក់ធានា"
 
 #: accounts.colon
 msgid "\\:"
-msgstr ""
+msgstr "\\:"
 
 #: accounts.complete_field
 msgid ""
 "Select a loan instance. Then click Continue. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
+"ជ្រើសរើសប្រភេទប្រាក់កម្ចី។​ បន្ទាប់មកចុចបន្ត។ ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រ​ "
+"អ្នកប្រើប្រាស់ និងគណនេយ្យ ដោយមិនយល់ព្រមព័ត៌មានទាំងនេះ"
 
 #: accounts.congo
 msgid ""
@@ -541,22 +557,25 @@ msgid ""
 "You can enter an account number into the search box to access account "
 "details."
 msgstr ""
+"គណនេយ្យប្រាក់កម្ចីថ្មីមួយរបស់លោក Jonh Anderson ត្រូវបានកំណត់ទៅគណនីលេខ "
+"13354646។ "
+"អ្នកអាចបញ្ចូលលេខគណនីទៅក្នុងប្រអប់ស្វែងរកដើម្បីចូលទៅកាន់ទំព័រគណនេយ្យពិស្តារ។"
 
 #: accounts.consultancy_fee
 msgid "Consultancy fee"
-msgstr ""
+msgstr "ប្រាក់ឈ្នួលថេរ"
 
 #: accounts.continue
 msgid "Continue"
-msgstr ""
+msgstr "បន្ត"
 
 #: accounts.create
 msgid "Create"
-msgstr ""
+msgstr "បង្កើត"
 
 #: accounts.create_loan_acc
 msgid "Create Loan Account"
-msgstr ""
+msgstr "បង្កើតគណនេយ្យប្រាក់កម្ចី"
 
 #: accounts.credit
 msgctxt "accounts.credit"
@@ -565,33 +584,35 @@ msgstr ""
 
 #: accounts.currentstatus
 msgid "Current status"
-msgstr ""
+msgstr "ប្រភេទបច្ចុប្បន្ន"
 
 #: accounts.date
+#: Date
 msgctxt "accounts.date"
 msgid "Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេក"
 
 #: accounts.date_of_trxn
 msgid "Date of transaction"
-msgstr ""
+msgstr "កាលបរិច្ចេកប្រតិបត្តិការ"
 
 #: accounts.date_paid
 msgid "Date paid"
-msgstr ""
+msgstr "កាលបរិច្ចេកបង់ប្រាក់"
 
 #: accounts.date_posted
+#: DatePosted
 msgctxt "accounts.date_posted"
 msgid "Date Posted"
-msgstr ""
+msgstr "កាលបរិច្ឆេកបិទប្រកាស"
 
 #: accounts.dateofpayment
 msgid "Date of payment"
-msgstr ""
+msgstr "ការបរិច្ចេកនៃការបង់ប្រាក់"
 
 #: accounts.days_arrears
 msgid "Days in arrears"
-msgstr ""
+msgstr "ចំនួនថ្ងៃនៃប្រាក់ដែលហួសថ្ងៃកំណត់ដែលត្រូវសង"
 
 #: accounts.debit
 msgctxt "accounts.debit"
@@ -600,7 +621,7 @@ msgstr ""
 
 #: accounts.defamt
 msgid "Default amount"
-msgstr ""
+msgstr "ចំនួនសរុបដើម"
 
 #: accounts.definst
 msgid "Default \\# of installments"
@@ -608,24 +629,25 @@ msgstr ""
 
 #: accounts.defintrate
 msgid "Default interest rate"
-msgstr ""
+msgstr "អត្រាការប្រាក់ដើម"
 
 #: accounts.delinquency
 msgid "Delinquency"
-msgstr ""
+msgstr "ការសងប្រាក់យឺតហូសកាលកំណត់"
 
 #: accounts.desc
+#: Description
 msgctxt "accounts.desc"
 msgid "Description"
-msgstr ""
+msgstr "ការពិពណ័នា"
 
 #: accounts.description
 msgid "Description\\:"
-msgstr ""
+msgstr "ការពិពណ៍នា"
 
 #: accounts.dis_date
 msgid "Proposed/Actual disbursement date"
-msgstr ""
+msgstr "កាលបរិច្ចេកសំណើរ និងការចំណាយប្រាក់ជាក់ស្តែង"
 
 #: accounts.disb_pr
 msgid "Disb Pr"
@@ -633,21 +655,24 @@ msgstr ""
 
 #: accounts.due_date
 msgid "Due date"
-msgstr ""
+msgstr "កាលបរិច្ចេកបំណុល"
 
 #: accounts.edit_acc_info
 msgid "Edit account information"
-msgstr ""
+msgstr "បន្ថែមព័ត៌មានគណនេយ្យ"
 
 #: accounts.edit_info
 msgid ""
 "Edit the fields below. Then click Preview. Click Cancel to return to Loan "
 "Account Details without submitting information."
 msgstr ""
+"បន្ថែមតារាងខាងក្រោម។​​ ហើយចុចដំបូង។ "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រគណនេយ្យប្រាក់កម្ចីពិស្តារ "
+"ដោយមិនដាក់បញ្ចូលព័ត៌មានទាំងនេះ"
 
 #: accounts.edit_loan_acc
 msgid "Edit loan account information"
-msgstr ""
+msgstr "បន្ថែមព័ត៌មានគណនេយ្យប្រាក់កម្ចី"
 
 #: accounts.edittrans
 msgid ""
@@ -655,10 +680,13 @@ msgid ""
 "return to account details without submitting information or to try again "
 "with changes."
 msgstr ""
+"ពិនិត្យប្រតិបត្តិការខាងក្រោម។ ប្រសិនបើពេញចិត្តចុចយល់ព្រម។ "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រគណនេយ្យពិស្តារដោយមិនទទួលយកព័ត៌មានទាំងនេះ "
+"ឬព្យាយាមម្តងទៀតដោយមិនផ្លាស់ប្តូរ។"
 
 #: accounts.edittrxn
 msgid "Edit transaction"
-msgstr ""
+msgstr "បន្ថែមប្រតិបត្តិការ"
 
 #: accounts.edu_loan
 msgid "Educational Loan"
@@ -666,32 +694,37 @@ msgstr ""
 
 #: accounts.enter_client_details1
 msgid "Enter a"
-msgstr ""
+msgstr "បញ្ចូល"
 
 #: accounts.enter_client_details2
 msgid ""
 "name and click Search. Click Cancel to return to Clients & Accounts without "
 "submitting information."
 msgstr ""
+"ឈ្មោះ ហើយចុចស្វែងរក។ ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រ "
+"អតិថិជន​និងគណនេយ្យដោយមិនទទួលយកព័ត៍មានទាំងនេះ។"
 
 #: accounts.enter_loan_accinfo
 msgid "Enter loan account information"
-msgstr ""
+msgstr "បញ្ចូលព័ត៌មានគណនេយ្យប្រាក់កម្ចី"
 
 #: accounts.enter_note
 msgid ""
 "Enter a note in the field below. Then click preview. Click Cancel to return "
 "to group details without submitting information"
 msgstr ""
+"បញ្ចូលកំណត់សំគាល់ក្នុងប្រអប់ខាងក្រោម។ បន្ទាប់មកចុចដំបូង។ "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រនៃក្រុមពិស្តារដោយមិនទទួលយកព័ត៌មានទាំងនេះ។"
 
 #: accounts.enteramount
 msgid "Enter amount"
-msgstr ""
+msgstr "បញ្ចូលចំនួនសរុប"
 
 #: accounts.fee_amt
+#: account.amount
 msgctxt "accounts.fee_amt"
 msgid "amount"
-msgstr ""
+msgstr "ចំនួនសរុប"
 
 #: accounts.fee_pd
 msgid "Fee Pd"
@@ -703,15 +736,15 @@ msgstr ""
 
 #: accounts.fee_type
 msgid "Fee Type"
-msgstr ""
+msgstr "ប្រភេទប្រាក់ឈ្នួល"
 
 #: accounts.fees
 msgid "Fees"
-msgstr ""
+msgstr "ប្រាក់ឈ្នួល"
 
 #: accounts.field
 msgid "Field"
-msgstr ""
+msgstr "ប្រអប់"
 
 #: accounts.fish_ponds
 msgid "Fish ponds"
@@ -719,15 +752,15 @@ msgstr ""
 
 #: accounts.freq_of_inst
 msgid "Frequency of Installments\\:"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះជាញឹកញាប់"
 
 #: accounts.future_install
 msgid "Future Installments"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះអនាគត"
 
 #: accounts.generate_report
 msgid "Generate report"
-msgstr ""
+msgstr "បង្កើតរបាយការណ៍"
 
 #: accounts.gl_cod
 msgid "GL Cod"
@@ -735,27 +768,27 @@ msgstr ""
 
 #: accounts.grace_period
 msgid "Grace period for repayments"
-msgstr ""
+msgstr "រយះពេលសមរម្យសំរាប់ការបង់ប្រាក់ម្តងទៀត"
 
 #: accounts.grace_period_type
 msgid "Grace Period Type"
-msgstr ""
+msgstr "ប្រភេទរយះពេលសមរម្យ"
 
 #: accounts.graceperdur
 msgid "Grace period duration"
-msgstr ""
+msgstr "ចំនួនពេល"
 
 #: accounts.groupcharges
 msgid "Group charges"
-msgstr ""
+msgstr "ក្រុមនៃការកំណត់ថ្លៃ"
 
 #: accounts.hope&effort_group
 msgid "Hope & Effort Group"
-msgstr ""
+msgstr "ក្រុមនៃក្តីសង្ឃឹម និងក្រុមនៃការប្រឹងប្រែង"
 
 #: accounts.horticulture
 msgid "Horticulture"
-msgstr ""
+msgstr "ដំណាំវប្បកម្ម"
 
 #: accounts.ins
 msgid "Ins \\#"
@@ -763,7 +796,7 @@ msgstr ""
 
 #: accounts.inst
 msgid "Installments"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះ"
 
 #: accounts.install_paid
 msgctxt "accounts.install_paid"
@@ -772,11 +805,11 @@ msgstr ""
 
 #: accounts.installment_details
 msgid "Installment details"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះពិស្តារ"
 
 #: accounts.installments
 msgid "Installment"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះ"
 
 #: accounts.instance_info
 msgid "Instance information"
@@ -789,28 +822,29 @@ msgstr ""
 
 #: accounts.instt_due
 msgid "Installments due"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះនៅជំពាក់"
 
 #: accounts.instt_paid
+#: accounts.install_paid
 msgctxt "accounts.instt_paid"
 msgid "Installments paid"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះបានបង់"
 
 #: accounts.interest
 msgid "Interest"
-msgstr ""
+msgstr "ការប្រាក់"
 
 #: accounts.interest_amount
 msgid "Interest Rate Amount"
-msgstr ""
+msgstr "អត្រាការប្រាក់សរុប"
 
 #: accounts.interest_cal_payments
 msgid "Interest Calculation Rule For Early/Late Payments"
-msgstr ""
+msgstr "ការគណនាការប្រាក់សំរាប់ការបង់ប្រាក់ពីមុន និងចុងក្រោយ"
 
 #: accounts.interest_disb
 msgid "Interest deducted at disbursement"
-msgstr ""
+msgstr "ការដកចេញការប្រាក់ពីការបើកប្រាក់ចំណាយ"
 
 #: accounts.interest_rate
 msgctxt "accounts.interest_rate"
@@ -819,36 +853,37 @@ msgstr ""
 
 #: accounts.interest_type
 msgid "Interest Rate Type"
-msgstr ""
+msgstr "ប្រភេទអត្រាការប្រាក់"
 
 #: accounts.intr_rec
 msgid "Intr Rec"
 msgstr ""
 
 #: accounts.intrate
+#: accounts.interest_rate
 msgctxt "accounts.intrate"
 msgid "Interest rate"
-msgstr ""
+msgstr "អត្រាការប្រាក់"
 
 #: accounts.intratetype
 msgid "Interest rate type"
-msgstr ""
+msgstr "ប្រភេទអត្រាការប្រាក់"
 
 #: accounts.kanakpura_center
 msgid "Kanakpura Center"
-msgstr ""
+msgstr "មជ្ឃមណ្ឌុល​ kanapura"
 
 #: accounts.last_pmnt
 msgid "Last payment made"
-msgstr ""
+msgstr "ការបង់ប្រាក់ចុងក្រោយ"
 
 #: accounts.loan_amount
 msgid "Loan amount"
-msgstr ""
+msgstr "ចំនួនសរុបប្រាក់កម្ចី"
 
 #: accounts.loan_balance
 msgid "Recent activity"
-msgstr ""
+msgstr "សកម្មភាពថ្មីៗ"
 
 #: accounts.loaninstname
 msgctxt "accounts.loaninstname"
@@ -857,7 +892,7 @@ msgstr ""
 
 #: accounts.maintenance_fee
 msgid "Maintenance fee"
-msgstr ""
+msgstr "ប្រាក់ឈ្នួលសំរាប់ការថែរក្សា"
 
 #: accounts.mariev
 msgid "mariev"
@@ -865,7 +900,7 @@ msgstr ""
 
 #: accounts.maturity_date
 msgid "Loan maturity date"
-msgstr ""
+msgstr "ប្រាក់កម្ចីដល់ការកំនត់ត្រូវសង"
 
 #: accounts.maxinst
 msgid "Max \\# of installments"
@@ -873,23 +908,23 @@ msgstr ""
 
 #: accounts.maxintrate
 msgid "Max interest rate"
-msgstr ""
+msgstr "អត្រាការប្រាក់អតិបរមា"
 
 #: accounts.maxloanamt
 msgid "Max loan amount"
-msgstr ""
+msgstr "ចំនួនប្រាក់កម្ចីអតិបរមា"
 
 #: accounts.meeting_charges
 msgid "Meeting charges"
-msgstr ""
+msgstr "ការយកថ្លៃសមរម្យ"
 
 #: accounts.member_fee_amt
 msgid "Membership fee amount"
-msgstr ""
+msgstr "ប្រាក់ឈ្នួលសរុបសមាជិគ"
 
 #: accounts.membership_fee
 msgid "Membership fee"
-msgstr ""
+msgstr "ប្រាក់ឈ្នួលសមាជិគ"
 
 #: accounts.mininst
 msgid "Min \\# of installments"
@@ -897,11 +932,11 @@ msgstr ""
 
 #: accounts.minintrate
 msgid "Min interest rate"
-msgstr ""
+msgstr "អត្រាការប្រាក់អប្បបរមា"
 
 #: accounts.minloanamt
 msgid "Min loan amount"
-msgstr ""
+msgstr "ប្រាក់កម្ចីសរុបអប្បបរមា"
 
 #: accounts.missed_payments
 msgid "\\# of missed payments"
@@ -919,116 +954,121 @@ msgstr ""
 
 #: accounts.mon
 msgid "(Monthly)"
-msgstr ""
+msgstr "ប្រចាំខែ"
 
 #: accounts.more_details
 msgid "More account and transaction details"
-msgstr ""
+msgstr "គណនេយ្យ និងប្រតិបត្តិការពិស្តារដទៃទៀត"
 
 #: accounts.name
 msgid "Name"
-msgstr ""
+msgstr "ឈ្មោះ"
 
 #: accounts.new_status
+#: NewStatus
 msgctxt "accounts.new_status"
 msgid "New Status"
-msgstr ""
+msgstr "ប្រភេទថ្មី"
 
 #: accounts.new_val
 msgid "New Value"
-msgstr ""
+msgstr "តម្លៃថ្មី"
 
 #: accounts.next_inst
 msgid "Next installment"
-msgstr ""
+msgstr "ប្រាក់សងរំលោះបន្ទាប់"
 
 #: accounts.next_inst_due
 msgid "Next installment due"
-msgstr ""
+msgstr "ប្រាក់សង់រំលោះបន្ទាប់មិនទានសង"
 
 #: accounts.next_install_details
 msgid "Next installment details"
-msgstr ""
+msgstr "ប្រាក់សង់រំលោះពិស្តារបន្ទាប់"
 
 #: accounts.niew_acc_activity
 msgid "View all account activity"
-msgstr ""
+msgstr "ពិនិត្យសកម្មភាពគណនេយ្យទាំងអស់"
 
 #: accounts.no
 msgid "No."
-msgstr ""
+msgstr "លេខ"
 
 #: accounts.no_of_inst
 msgid "No. of installments\\:"
-msgstr ""
+msgstr "លេខនៃប្រាក់សង់រំលោះ"
 
 #: accounts.note
+#: Account.Note
 msgctxt "accounts.note"
 msgid "Note\\:"
-msgstr ""
+msgstr "កំណត់សំគាល់"
 
 #: accounts.notes
+#: Account.Notes
 msgctxt "accounts.notes"
 msgid "Notes"
-msgstr ""
+msgstr "កំណត់សំគាល់ច្រើន"
 
 #: accounts.of_payments
 msgid "\\# of payments"
 msgstr ""
 
 #: accounts.old_status
+#: OldStatus
 msgctxt "accounts.old_status"
 msgid "Old Status"
-msgstr ""
+msgstr "ប្រភេទចាស់"
 
 #: accounts.old_val
 msgid "Old Value"
-msgstr ""
+msgstr "តម្លៃចាស់"
 
 #: accounts.once_20days
 msgid "Once in 20 days)"
-msgstr ""
+msgstr "១ថ្ងៃក្នុង២០ថ្ងៃ"
 
 #: accounts.open_new_acc
 msgid "Open another account for this client"
-msgstr ""
+msgstr "បើកគណនេយ្យដទៃសំរាប់អតិថិជននេះ"
 
 #: accounts.open_new_insur_acc
 msgid "Open a new insurance account"
-msgstr ""
+msgstr "បើកគណនេយ្យថ្មី"
 
 #: accounts.open_new_loan_acc
 msgid "Open a new loan account"
-msgstr ""
+msgstr "បើកគណនេយ្យប្រាក់កម្ចីថ្មី"
 
 #: accounts.open_new_sav_acc
 msgid "Open a new savings account"
-msgstr ""
+msgstr "បើកគណនេយ្យប្រាក់សន្សំថ្មី"
 
 #: accounts.or
 msgid "or"
-msgstr ""
+msgstr "ឬ"
 
 #: accounts.original_loan
 msgid "Original loan"
-msgstr ""
+msgstr "ប្រាក់កម្ចីដើម"
 
 #: accounts.past_due
 msgid "Total past due"
-msgstr ""
+msgstr "សរុបបំណុលពីមុន"
 
 #: accounts.past_due_details
 msgid "Past due details"
-msgstr ""
+msgstr "បំណុលចាស់ពិស្តារ"
 
 #: accounts.payment
 msgid "Payment"
-msgstr ""
+msgstr "ការចំណាយ"
 
 #: accounts.payment_id
+#: PaymentID
 msgctxt "accounts.payment_id"
 msgid "Payment ID\\#"
-msgstr ""
+msgstr "ឈ្មោះប្រភេទការបង់ប្រាក់​ និងលេខការបង់ប្រាក់"
 
 #: accounts.penalty
 msgid "Penalty"
@@ -1048,7 +1088,7 @@ msgstr ""
 
 #: accounts.performance_history
 msgid "Performance history"
-msgstr ""
+msgstr "ប្រតិបត្តិការពីមុន"
 
 #: accounts.periodicity_annual_fee
 msgid "Periodicity\\: annual fee"
@@ -1060,12 +1100,13 @@ msgstr ""
 
 #: accounts.plz_note
 msgid "Please Note"
-msgstr ""
+msgstr "សូមកំណត់ចំណាំ"
 
 #: accounts.posted_by
+#: PostedBy
 msgctxt "accounts.posted_by"
 msgid "Posted By"
-msgstr ""
+msgstr "បិទប្រកាសដោយ"
 
 #: accounts.poultry_farm
 msgid "Poultry farm"
@@ -1082,15 +1123,15 @@ msgstr ""
 
 #: accounts.preview
 msgid "Preview"
-msgstr ""
+msgstr "ពីមុន"
 
 #: accounts.preview_accinfo
 msgid "Preview loan account information"
-msgstr ""
+msgstr "ព័ត៌មានគណនេយ្យប្រាក់កម្ចីពីមុន"
 
 #: accounts.principal
 msgid "Principal"
-msgstr ""
+msgstr "ប្រាក់ដើម"
 
 #: accounts.principle_due
 msgid "Principal due on last installment"
@@ -1098,27 +1139,27 @@ msgstr ""
 
 #: accounts.product_summary
 msgid "Loan Product Summary"
-msgstr ""
+msgstr "ផលិតផលកម្ចីសង្ខេប"
 
 #: accounts.proposed_date
 msgid "Proposed/Actual disbursal date"
-msgstr ""
+msgstr "សំណើរ​ និងកាលបរិច្ចេកបង់ប្រាក់"
 
 #: accounts.rec_creation_date
 msgid "Record Creation Date\\:"
-msgstr ""
+msgstr "កាលបរិច្ចេកនៃការបង្កើត"
 
 #: accounts.receiptdate
 msgid "Receipt date"
-msgstr ""
+msgstr "កាលបរិច្ចេកបង្កាន់ដៃ"
 
 #: accounts.receiptid
 msgid "Receipt ID"
-msgstr ""
+msgstr "លេខបង្កាន់ដៃ"
 
 #: accounts.recent_notes
 msgid "Recent notes"
-msgstr ""
+msgstr "កំណត់ចំណាំថ្មីៗ"
 
 #: accounts.recurring_acc_fees
 msgid "Recurring account fees"
@@ -1126,24 +1167,25 @@ msgstr ""
 
 #: accounts.remove
 msgid "Remove"
-msgstr ""
+msgstr "យកចេញ"
 
 #: accounts.removed
 msgid "removed"
-msgstr ""
+msgstr "ត្រូវបានយកចេញ"
 
 #: accounts.repayment_sched
 msgid "Repayment Schedule as of"
-msgstr ""
+msgstr "កាលវិភាគនៃការបង់ប្រាក់ម្តងទៀត"
 
 #: accounts.returnToAccountDetails
+#: Account.returnToAccountDetails
 msgctxt "accounts.returnToAccountDetails"
 msgid "Return to account details"
-msgstr ""
+msgstr "ត្រលប់ទៅទំព័រគណនេយ្យពិស្តារ"
 
 #: accounts.returndetails
 msgid "Return to details page"
-msgstr ""
+msgstr "ត្រលប់ទៅទំព័រពិស្តារ"
 
 #: accounts.review
 msgid ""
@@ -1151,18 +1193,21 @@ msgid ""
 "Edit to make changes. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
 msgstr ""
+"ពិនិត្យព័ត៌មានខាងក្រោម។ ចុច​យល់ព្រមប្រសិនបើពេញចិត្ត "
+"ឬចុចបន្ថែមដើម្បីផ្លាស់ប្តូរ។ "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រអតិថិជនដោយមិនទទួលយកព័ត៌មានទាំងនេះ។"
 
 #: accounts.review&edit
 msgid "Review and/or edit installments"
-msgstr ""
+msgstr "ពិនិត្យ​ និងបន្ថែមការប្រាក់សងរំលោះ"
 
 #: accounts.review&submit
 msgid "Review & submit"
-msgstr ""
+msgstr "ពិនិត្យ​ និងយល់ព្រម"
 
 #: accounts.review/edit_ins
 msgid "Review/edit installments"
-msgstr ""
+msgstr "ពិនិត្យ​ និងបន្ថែមការប្រាក់សងរំលោះ"
 
 #: accounts.review_payment_schedule
 msgid ""
@@ -1170,11 +1215,15 @@ msgid ""
 "Click Preview to continue. Click Cancel to return to Clients & Accounts "
 "without submitting information."
 msgstr ""
+"ពិនិត្យកាលវិភាគនៃការបង់ប្រាក់ខាងក្រោម។ "
+"អ្នកអាចបន្ថែមព័ត៌មានអំពីប្រាក់រំលោះផ្ទាល់ខ្លួន។ ចុចមុនដើម្បីបន្ត។ "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រអតិថិជន និងគណនេយ្យដោយមិនទទួលយកព័ត៌មានទាំងនេះ។"
 
 #: accounts.reviewadjustment
+#: accounts.btn_reviewAdjustment
 msgctxt "accounts.reviewadjustment"
 msgid "Review adjustment"
-msgstr ""
+msgstr "ការពិនិត្យមើលការកែតម្រូវ"
 
 #: accounts.reviewadjustment_detail
 msgid ""
@@ -1182,56 +1231,61 @@ msgid ""
 "confirm. Click Cancel to to return to details page without adjusting the "
 "transaction."
 msgstr ""
+"តើអ្នកប្រកដថាអ្នកចង់កែតម្រូវប្រតិបត្តិការចុងក្រោយឬទេ? "
+"ចុចយល់ព្រមដើម្បីបញ្ចាក់។ "
+"ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រពិស្តារដោយមិនកែតម្រូវប្រតិបត្តិការទាំងនេះ។"
 
 #: accounts.reviewtransaction
 msgid "Review transaction"
-msgstr ""
+msgstr "ពិនិត្យប្រតិបត្តិការ"
 
 #: accounts.running_bal
 msgid "Running balance"
-msgstr ""
+msgstr "ដំណើរការតុល្យការ"
 
 #: accounts.saveForLater
 msgid "Save for later"
-msgstr ""
+msgstr "រក្សាទុកសំរាប់ពេលក្រោយ។"
 
 #: accounts.search
 msgid "Search"
-msgstr ""
+msgstr "ស្វែងរក"
 
 #: accounts.search_for
 msgid "Search for"
-msgstr ""
+msgstr "ស្វែងរកសម្រាប់"
 
 #: accounts.seeallnotes
 msgid "See all notes"
-msgstr ""
+msgstr "មើលកំណត់ត្រាទាំងអស់"
 
 #: accounts.sel_charge_type
 msgid "Select charge type\\:"
-msgstr ""
+msgstr "ជ្រើសរើសប្រភេទនៃការយកថ្លៃ"
 
 #: accounts.select
 msgid "select"
-msgstr ""
+msgstr "ជ្រើសរើស"
 
 #: accounts.select_click1
 msgid "To select, click on a resulting"
-msgstr ""
+msgstr "ដើម្បីជ្រើសរើស ចុចលើលទ្ធផល"
 
 #: accounts.select_click2
 msgid ""
 "from the list below. Click Cancel to return to Clients & Accounts without "
 "submitting information."
 msgstr ""
+"ពីតារាងខាងក្រោម ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រអតិថិជន និងគណនេយ្យ "
+"ដោយមិនទទួលយកព័ត៌មានទាំងនេះ។"
 
 #: accounts.select_client
 msgid "Select client"
-msgstr ""
+msgstr "ជ្រើសរើសអតិថិជន"
 
 #: accounts.select_client/group
 msgid "Select client/group"
-msgstr ""
+msgstr "ជ្រើសរើសអតិថិជន និងក្រុម"
 
 #: accounts.select_loan_inst
 msgid ""
@@ -1241,15 +1295,15 @@ msgstr ""
 
 #: accounts.source_fund
 msgid "Source of fund"
-msgstr ""
+msgstr "ធនធានស្វែងរកឃើញ"
 
 #: accounts.status
 msgid "Status\\:"
-msgstr ""
+msgstr "កំពុងស្ថិតនៅ"
 
 #: accounts.status_active
 msgid "Active"
-msgstr ""
+msgstr "មានដំណើរការ"
 
 #: accounts.status_history
 msgid "Status History"
@@ -1257,27 +1311,27 @@ msgstr ""
 
 #: accounts.submit
 msgid "Submit"
-msgstr ""
+msgstr "យល់ព្រម"
 
 #: accounts.submitForApproval
 msgid "Submit for approval"
-msgstr ""
+msgstr "យល់ព្រមការសំរេច"
 
 #: accounts.successful_creation
 msgid "You have successfully created a new loan account"
-msgstr ""
+msgstr "អ្នកបានបង្កើកគណនេយ្យប្រាក់កម្ចីថ្មីដោយជោគជ័យ។"
 
 #: accounts.suggested_steps
 msgid "Suggested next steps"
-msgstr ""
+msgstr "ស្នើរទៅជំហានបន្ទាប់"
 
 #: accounts.total
 msgid "Total"
-msgstr ""
+msgstr "សរុប"
 
 #: accounts.total_due_install
 msgid "Total due this installment"
-msgstr ""
+msgstr "បំណុលសរុបសំរាប់ការសងប្រាក់រំលោះ"
 
 #: accounts.tractor_loan
 msgid "Tractor Loan"
@@ -1285,80 +1339,85 @@ msgstr ""
 
 #: accounts.training_fee
 msgid "Training fee"
-msgstr ""
+msgstr "ប្រាក់ឈ្នូលពីវគ្គបណ្តុះបណ្តាល"
 
 #: accounts.transaction_id
+#: TransactionID
 msgctxt "accounts.transaction_id"
 msgid "Transaction ID\\#"
-msgstr ""
+msgstr "ឈ្មោះប្រតិបត្តិការ​ និងលេខប្រតិបត្តិការ"
 
 #: accounts.transc_history
 msgid "Transaction history"
-msgstr ""
+msgstr "ប្រតិបត្តិការពីមុន"
 
 #: accounts.tsunami_fund
 msgid "Tsunami fund"
 msgstr ""
 
 #: accounts.type
+#: Type
 msgctxt "accounts.type"
 msgid "Type"
-msgstr ""
+msgstr "ប្រភេទ"
 
 #: accounts.type_1
 msgid "Type 1"
-msgstr ""
+msgstr "ប្រភេទ​ ទី១"
 
 #: accounts.type_2
 msgid "Type 2"
-msgstr ""
+msgstr "ប្រភេទទី​ ២"
 
 #: accounts.user
+#: User
 msgctxt "accounts.user"
 msgid "User"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #: accounts.view_change_log
 msgid "View change log"
-msgstr ""
+msgstr "ពិនិត្យមើលការកែប្រែរបាយការណ៍"
 
 #: accounts.view_inst_details
 msgid "View installment details"
-msgstr ""
+msgstr "ពិនិត្យមើលប្រាក់សងរំលោះពិស្តារ"
 
 #: accounts.view_loan_acc
 msgid "View loan account details now"
-msgstr ""
+msgstr "ពិនិត្យមើលគណនេយ្យប្រាក់សងរំលោះពិស្តារឥលូវ"
 
 #: accounts.view_schd
 msgid "View repayment schedule"
-msgstr ""
+msgstr "ពិនិត្យមើលកាលវិភាគការបង់ប្រាក់ម្តងទៀត"
 
 #: accounts.view_status_history
 msgid "View status history"
-msgstr ""
+msgstr "ពិនិត្យមើលប្រភេទពីមុន"
 
 #: accounts.view_transc_history
 msgid "View transaction history"
-msgstr ""
+msgstr "ពិនិត្យមើលប្រតិបត្តិការពីមុន"
 
 #: accounts.waive
 msgid "Waive"
-msgstr ""
+msgstr "បោះបង់ចោល"
 
 #: accounts.yes
 msgid "Yes"
-msgstr ""
+msgstr "យល់ព្រម"
 
 #: error.accountType
 msgid "Please specify account type."
-msgstr ""
+msgstr "ចូរកំណត់ប្រភេទគណនេយ្យអោយបានច្បាស់លាស់។"
 
 #: error.activity.not.allowed
 msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you required permissions and try again."
 msgstr ""
+"អ្នកគ្នានសិទ្ធិក្នុងការអនុវត្តសកម្មភាពនេះ។​ទាក់ទងអ្នកគ្រប់គ្រងរបស់អ្នកដើម្បី"
+"ផ្តល់សិទ្ធិ ហើយព្យាយាមម្តងទៀត។"
 
 #: error.file
 msgid "Please select an administrative document."
@@ -1366,7 +1425,7 @@ msgstr ""
 
 #: error.incompletechecklist
 msgid "Please select all the items in the checklist and click submit."
-msgstr ""
+msgstr "សូមជ្រើសរើសយកធាតុទាំងអស់ក្នុងប្រអប់ហើយចុចយល់ព្រម។"
 
 #: error.miscchargenotapplicable
 msgid "Misc fee or penalty can only be applied to active customers."
@@ -1384,15 +1443,15 @@ msgstr ""
 
 #: error.status
 msgid "Please choose a status."
-msgstr ""
+msgstr "សូមជ្រើសរើសប្រភេទ"
 
 #: error.statusList
 msgid "Please select a status from the list below."
-msgstr ""
+msgstr "សូមជ្រើសរើសប្រភេទពីតារាងខាងក្រោម"
 
 #: error.statuschangenotallowed
 msgid "The action is not permissible."
-msgstr ""
+msgstr "គ្មានការអនុញ្ញាត្តសំរាប់សកម្មភាពនេះ"
 
 #: error.titleName
 msgid "Please specify administrative document title."
@@ -1412,7 +1471,7 @@ msgstr ""
 
 #: errors.adjustmentNoteTooBig
 msgid "Adjustment note cannot be more than 300 chars."
-msgstr ""
+msgstr "កំណត់ចំណាំការកែតម្រូវគឺមិនលើសពី​៣០០អក្សរ"
 
 #: errors.decimalFormat
 msgid "{0} is greater than the allowable size."
