@@ -43,7 +43,7 @@ msgstr ""
 
 #: Center.Add
 msgid "Add"
-msgstr ""
+msgstr "បញ្ជូលបន្ថែម"
 
 #: Center.AdditionalFees
 msgid "Additional fees"
