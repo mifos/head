@@ -19,23 +19,23 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: bulkEntry.Branch
 msgid "Branch"
-msgstr ""
+msgstr "សាខា"
 
 #: bulkEntry.Center
 msgid "Center"
-msgstr ""
+msgstr "មជ្ឈមណ្ឌុល"
 
 #: bulkEntry.acCollection
 msgid "A/C Collections"
-msgstr ""
+msgstr "គណនេយ្យប្រមូលបាន"
 
 #: bulkEntry.accountGroupCenter
 msgid "%s account"
-msgstr ""
+msgstr "ភាគរយគណនេយ្យ"
 
 #: bulkEntry.attendance
 msgid "Attendance"
-msgstr ""
+msgstr "អវត្តមាន"
 
 #: bulkEntry.attn
 msgid "Attn"
@@ -47,7 +47,7 @@ msgstr ""
 
 #: bulkEntry.cancel
 msgid "Cancel"
-msgstr ""
+msgstr "បោះបង់"
 
 #: bulkEntry.clickcanc
 msgid "Click Cancel to return to Clients &amp; Accounts."
@@ -55,19 +55,19 @@ msgstr ""
 
 #: bulkEntry.clientName
 msgid "Client Name"
-msgstr ""
+msgstr "ឈ្មោះអតិថិជន"
 
 #: bulkEntry.cont
 msgid "Continue"
-msgstr ""
+msgstr "បន្ត"
 
 #: bulkEntry.datafor
 msgid "Data for"
-msgstr ""
+msgstr "កាលបរិច្ចេកសំរាប់"
 
 #: bulkEntry.dateoftrxn
 msgid "Date of transaction"
-msgstr ""
+msgstr "កាលបរិច្ចេកប្រតិបត្តការ"
 
 #: bulkEntry.dueCollections
 msgctxt "bulkEntry.dueCollections"
@@ -76,36 +76,37 @@ msgstr ""
 
 #: bulkEntry.dueCollections2
 msgid "Due collections\\:"
-msgstr ""
+msgstr "បំណុលដែលបានសង"
 
 #: bulkEntry.duecoll
+#: bulkEntry.dueCollections
 msgctxt "bulkEntry.duecoll"
 msgid "Due/Collections"
-msgstr ""
+msgstr "បំណុល​និងការសង់ប្រាក់"
 
 #: bulkEntry.editdata
 msgid "Edit Data"
-msgstr ""
+msgstr "បន្ថែមទិន្នន័យ"
 
 #: bulkEntry.entdataclipre
 msgid "Enter data and click Preview."
-msgstr ""
+msgstr "បញ្ចូលទិន្នន័យហើយចុចពិនិត្យមើល"
 
 #: bulkEntry.entercollsheetdata
 msgid "Enter collection sheet data"
-msgstr ""
+msgstr "បញ្ចូលទិន្នន័យចូលក្នុងតារាងប្រាក់ដែលបានសង"
 
 #: bulkEntry.enterdata
 msgid "Enter data"
-msgstr ""
+msgstr "បញ្ចូលទិន្នន័យ"
 
 #: bulkEntry.entersucc
 msgid "You have successfully entered collection sheet data"
-msgstr ""
+msgstr "អ្នកបានបញ្ចូលទិន្នន័យចូលក្នុងតារាងប្រាក់ដែលបានសងរួចរាល់"
 
 #: bulkEntry.hasenter
 msgid "has been entered."
-msgstr ""
+msgstr "ត្រូវបានបញ្ចូល"
 
 #: bulkEntry.issuesWithdrawals
 msgctxt "bulkEntry.issuesWithdrawals"
@@ -113,25 +114,26 @@ msgid "Issues/Withdrawals"
 msgstr ""
 
 #: bulkEntry.isswith
+#: bulkEntry.issuesWithdrawals
 msgctxt "bulkEntry.isswith"
 msgid "Issues/Withdrawals"
-msgstr ""
+msgstr "ការប្រកាស និងការដកប្រាក់"
 
 #: bulkEntry.loanDisbursements
 msgid "Loan disbursements\\:"
-msgstr ""
+msgstr "ការបង់ប្រាក់បំណុល"
 
 #: bulkEntry.loanofficer
 msgid "Loan officer"
-msgstr ""
+msgstr "មន្ត្រីឥទាន"
 
 #: bulkEntry.mandatory
 msgid "Fields marked with an asterisk are required."
-msgstr ""
+msgstr "ប្រអប់ដែលមានសញ្ញា​​ (*) ត្រូវតែបំពេញ"
 
 #: bulkEntry.meetingdate
 msgid "Meeting date"
-msgstr ""
+msgstr "កាលបរិច្ចេកប្រជុំ"
 
 #: bulkEntry.netCash
 msgid "Net Cash\\:"
@@ -139,11 +141,11 @@ msgstr ""
 
 #: bulkEntry.otherCollections
 msgid "Other collections\\:"
-msgstr ""
+msgstr "ប្រាក់ដែលប្រមូលបានផ្សេងៗ"
 
 #: bulkEntry.plsnote
 msgid "Please Note"
-msgstr ""
+msgstr "សូមកំណត់ចំណាំ"
 
 #: bulkEntry.pmnttype
 msgid "Mode of payment"
@@ -151,19 +153,19 @@ msgstr ""
 
 #: bulkEntry.prevdataclisub
 msgid "Preview the data and click Submit."
-msgstr ""
+msgstr "ពិនិត្យមើលទិន្នន័យហើយចុចយល់ព្រម"
 
 #: bulkEntry.preview
 msgid "Preview"
-msgstr ""
+msgstr "ពិនិត្យមើល"
 
 #: bulkEntry.rcptdate
 msgid "Receipt date"
-msgstr ""
+msgstr "កាលបរិច្ចេកបង្កាន់ដៃបង់ប្រាក់"
 
 #: bulkEntry.rcptid
 msgid "Receipt ID"
-msgstr ""
+msgstr "លេខបង្កាន់ដៃបង់ប្រាក់"
 
 #: bulkEntry.revnsub
 msgid "Review &amp; submit"
@@ -171,55 +173,57 @@ msgstr ""
 
 #: bulkEntry.savingsDeposit
 msgid "Savings Deposit"
-msgstr ""
+msgstr "ប្រាក់កក់នៃគណនេយ្យសន្សំ"
 
 #: bulkEntry.savingsWithdrawal
 msgid "Savings Withdrawal"
-msgstr ""
+msgstr "ការដកប្រាក់នៃគណនេយ្យសន្សំ"
 
 #: bulkEntry.select
 msgid "Select"
-msgstr ""
+msgstr "ជ្រើសរើស"
 
 #: bulkEntry.selectOfficeFromList
 msgid ""
 "To select, choose an {0} from the list below. Then select the loan officer "
 "and the"
-msgstr ""
+msgstr "ដើម្បីជ្រើសរើស ជ្រើសរើសលេខមួយពីប្រអប់ខាងក្រោម ហើយចុចយកមន្ត្រីឥទាន​ និង"
 
 #: bulkEntry.submit
 msgid "Submit"
-msgstr ""
+msgstr "យល់ព្រម"
 
 #: bulkEntry.total
 msgid "Total\\:"
-msgstr ""
+msgstr "សរុប"
 
 #: bulkEntry.totalCollections
 msgid "Total Collections"
-msgstr ""
+msgstr "សរុបប្រាក់ប្រមូលបាន"
 
 #: bulkEntry.totalGroupCenter
 msgid "%s Total"
-msgstr ""
+msgstr "សរុបជាភាគរយ"
 
 #: bulkEntry.totalIssuesWithdrawals
 msgid "Total Issues/Withdrawals"
-msgstr ""
+msgstr "សរុបការប្រកាស​ និងការដកប្រាក់"
 
 #: bulkEntry.trxndate
 msgid "Transaction date"
-msgstr ""
+msgstr "កាលបរិច្ចេកប្រតិបត្តិការ"
 
 #: bulkEntry.withdrawals
 msgid "Withdrawals\\:"
-msgstr ""
+msgstr "ការដកប្រាក់"
 
 #: error.activity.not.allowed
 msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you the required permissions and try again."
 msgstr ""
+"អ្នកគ្មានសិទ្ធិក្នុងការប្រើប្រតិបត្តិការនេះ។ "
+"ទាក់ទងភ្នាក់ងារគ្រប់គ្រងរបស់អ្នកដើម្បីស្នើរសុំសិទ្ធិហើយព្យាយាមម្តងទៀត។"
 
 #: errors.InvalidReceiptDate
 msgid "<li>Please specify a valid receipt date.</li>"
@@ -265,4 +269,4 @@ msgstr ""
 
 #: exception.framework.PageExpiredException
 msgid "The action is not permissible."
-msgstr ""
+msgstr "សកម្មភាពនេះមិនបានអនុញ្ញាត្ត"
