@@ -19,89 +19,89 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: button.adminModule
 msgid "Admin Module"
-msgstr ""
+msgstr "ការផ្លាស់ប្តូររបស់អ្នកគ្រប់គ្រង"
 
 #: button.clientModule
 msgid "Client Module"
-msgstr ""
+msgstr "ការផ្លាស់ប្តូររបស់អ្នកប្រើប្រាស់"
 
 #: error.InvalidUser
 msgid "<li>Your Entered wrong User Name OR Password</li>"
-msgstr ""
+msgstr "អ្នកបញ្ចូលឈ្មោះ និងលេខកូដមិនត្រឹមត្រូវទេ"
 
 #: errors.byte
 msgid "{0} must be a byte."
-msgstr ""
+msgstr "{a}​ត្រូវតែ 1byte."
 
 #: errors.creditcard
 msgid "{0} is an invalid credit card number."
-msgstr ""
+msgstr "{a}​ គឺមិនត្រឹមត្រូវលេខក្រេឌីតកាត"
 
 #: errors.date
 msgid "{0} is not a date."
-msgstr ""
+msgstr "{a}​ គឺមិនមែនជាកាលបរិច្ចេក"
 
 #: errors.double
 msgid "{0} must be a double."
-msgstr ""
+msgstr "{a}​ត្រូវតែផ្ទួន"
 
 #: errors.email
 msgid "{0} is an invalid e-mail address."
-msgstr ""
+msgstr "{a}​ គឺមិនត្រឹមត្រូវអាស្រយដ្ឋានe-mail"
 
 #: errors.float
 msgid "{0} must be a float."
-msgstr ""
+msgstr "{a}​ត្រូវតែចាប់ផ្តើម"
 
 #: errors.footer
 msgid "</ul><hr>"
-msgstr ""
+msgstr "hr"
 
 #: errors.header
 msgid ""
 "<h3><font color\\=\"red\">Validation Error</font></h3>You must correct the "
 "following error(s) before proceeding\\:<ul>"
-msgstr ""
+msgstr "ការវាយតម្លៃមានកំហុស។ អ្នកត្រូវតែប្រមូលកំហុសទាំងនោះមុនពេលដំណើរការ"
 
 #: errors.integer
 msgid "{0} must be an integer."
-msgstr ""
+msgstr "{a}​ត្រូវតែចំនួនគត់"
 
 #: errors.invalid
 msgid "{0} is invalid."
-msgstr ""
+msgstr "{a}​​ គឺមិនត្រឹមត្រូវ"
 
 #: errors.long
 msgid "{0} must be a long."
-msgstr ""
+msgstr "{a}​ត្រូវតែវែង"
 
 #: errors.maxlength
 msgid "{0} can not be greater than {1} characters."
-msgstr ""
+msgstr "{a}​ គឺមិនត្រូវច្រើនជាង {n}​ អក្សរ "
 
 #: errors.minlength
 msgid "{0} can not be less than {1} characters."
-msgstr ""
+msgstr "{a}​ គឺមិនត្រូវតិចជាង {n}​ អក្សរ"
 
 #: errors.notequal
 msgid "<li>{0} does not match {1}</li>"
-msgstr ""
+msgstr "{0} មិនដូច {1}"
 
 #: errors.range
 msgid "<li>{0} is not in the range {1} through {2}.</li>"
-msgstr ""
+msgstr "{0} មិននៅចន្លោះ​ {1} ពី {2}."
 
 #: errors.required
 msgid "<li>{0} is required.</li>"
-msgstr ""
+msgstr "{0} ត្រូវតែបំពេញ"
 
 #: errors.short
 msgid "{0} must be a short."
-msgstr ""
+msgstr "{0} ត្រូវតែខ្លីបំផុត"
 
 #: label.accounts
 msgid "Accounts"
-msgstr ""
+msgstr "គណនេយ្យ"
 
 #: label.admintasks
 msgctxt "label.admintasks"
@@ -110,43 +110,43 @@ msgstr ""
 
 #: label.atrisk
 msgid "at risk"
-msgstr ""
+msgstr "មានហានិភ័យ"
 
 #: label.branch
 msgid "Branch"
-msgstr ""
+msgstr "សាខា"
 
 #: label.center
 msgid "center"
-msgstr ""
+msgstr "មជ្ឍមណ្ឌុល"
 
 #: label.client
 msgid "client"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #: label.clients
 msgid "Clients"
-msgstr ""
+msgstr "ពួកអ្នកប្រើប្រាស់"
 
 #: label.collectionsheet
 msgid "Collection Sheet"
-msgstr ""
+msgstr "បញ្ចីប្រាក់ទទួលបាន"
 
 #: label.collectionsheets
 msgid "Collection Sheets"
-msgstr ""
+msgstr "បញ្ចីនៃប្រាក់ទទួលបានទាំងអស់"
 
 #: label.create
 msgid "Create"
-msgstr ""
+msgstr "បង្កើត"
 
 #: label.createnew
 msgid "Create new"
-msgstr ""
+msgstr "បង្កើតថ្មី"
 
 #: label.data
 msgid "Data"
-msgstr ""
+msgstr "ទិន្នន័យ"
 
 #: label.delinquentloans
 msgid "Delinquent loans"
@@ -197,9 +197,10 @@ msgid "Print"
 msgstr ""
 
 #: label.quickstart
+#: label.admintasks
 msgctxt "label.quickstart"
 msgid "Quick start"
-msgstr ""
+msgstr "ការចាប់ផ្តើម"
 
 #: label.report
 msgid "report"
