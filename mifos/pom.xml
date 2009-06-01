@@ -330,10 +330,20 @@
 		  <groupId>com.sun.xml.bind</groupId>
 		  <artifactId>jaxb-libs</artifactId>
 		  <version>1.0.5</version>
-		</dependency>											       
-    </dependencies>
+		</dependency>			
+		<dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>jstl</artifactId>
+		  <version>1.1.2</version>
+		</dependency>										       
+		<dependency>
+		  <groupId>javax.transaction</groupId>
+		  <artifactId>jta</artifactId>
+		  <version>1.1</version>
+		</dependency>
 
-    <build>
+     </dependencies>
+   <build>
         <!-- START only used by Eclipse WTP -->
         <!--
             Ant is still required to build the Mifos WAR. See

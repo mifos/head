@@ -24,9 +24,7 @@
 			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="lib" path="mifos/lib/jiprof-1.1.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jspsmart.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/jta.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/relaxngDatatype.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/servlet-api-2.5-6.0.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/struts-1.2.7.jar"/>
@@ -38,8 +36,7 @@
 	<classpathentry kind="lib" path="mifos/lib/standard-1.1.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/struts-legacy-1.0.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jsp-api.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/jstl.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jakarta-oro.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
