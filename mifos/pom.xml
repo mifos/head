@@ -366,6 +366,11 @@
 		  <artifactId>struts-el</artifactId>
 		  <version>1.2.7</version>
 		</dependency>
+		<dependency>
+		  <groupId>struts</groupId>
+		  <artifactId>struts-legacy</artifactId>
+		  <version>1.0</version>
+		</dependency>
 				
      </dependencies>
    <build>
