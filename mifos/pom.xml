@@ -342,11 +342,6 @@
 		  <version>1.1</version>
 		</dependency>
 		<dependency>
-		  <groupId>javax.servlet</groupId>
-		  <artifactId>jsp-api</artifactId>
-		  <version>2.0</version>
-		</dependency>
-		<dependency>
 		  <groupId>org.apache</groupId>
 		  <artifactId>jakarta-oro</artifactId>
 		  <version>20020329</version>
@@ -361,7 +356,17 @@
 		  <artifactId>jspsmart</artifactId>
 		  <version>20050208</version>
 		</dependency>
-		
+		<dependency>
+		  <groupId>struts</groupId>
+		  <artifactId>struts</artifactId>
+		  <version>1.2.7</version>
+		</dependency>
+		<dependency>
+		  <groupId>struts</groupId>
+		  <artifactId>struts-el</artifactId>
+		  <version>1.2.7</version>
+		</dependency>
+				
      </dependencies>
    <build>
         <!-- START only used by Eclipse WTP -->
