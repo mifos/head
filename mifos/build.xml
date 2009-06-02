@@ -500,12 +500,16 @@
         <artifact:dependencies filesetId="maven-dependencies.fileset" useScope="runtime">
             <artifact:pom id="maven.project.dependencies" file="pom.xml" />
         </artifact:dependencies>
-        <copy todir="${build.web-inf}/lib">
-            <fileset refid="maven-dependencies.fileset" />
+        <copy todir="${build.web-inf}/lib" >
+		    <fileset refid="maven-dependencies.fileset"/>
             <mapper type="flatten" />
         </copy>
-    </target>
+    	<delete>
+	        <fileset dir="${build.web-inf}/lib" includes="easymock*.jar,javax.servlet.jar,jsp-api*.jar,junit*.jar,servlet-api*.jar,strutstest*.jar,jsp-api*.jar,junit*.jar,servlet-api*.jar"/>
+    	</delete>
 
+    </target>
+	
     <target name="maven_test_dependencies">
         <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
             <artifact:pom id="maven.project.dependencies" file="pom.xml" />

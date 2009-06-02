@@ -28,7 +28,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="mifos/lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/jsmin-0.2.2.jar"/>
-	<classpathentry kind="lib" path="mifos/lib/jsp-api.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/servlet-api-2.5-6.0.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
