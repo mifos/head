@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
-    <artifactId>gazelle-testing</artifactId>
+    <artifactId>mifos-testing</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.3-SNAPSHOT</version>
-    <name>Mifos - Gazelle Acceptance Tests</name>
+    <version>0.0.4-SNAPSHOT</version>
+    <name>Mifos - Acceptance Tests</name>
     <url>http://www.mifos.org</url>
 
     <properties>
@@ -176,13 +176,13 @@
         <!-- for this module -->
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetah-common</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <artifactId>mifos-common</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>gazelle-webapp</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <artifactId>mifos-webapp</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -224,8 +224,8 @@
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetah-testFramework</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <artifactId>mifos-testFramework</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -251,7 +251,7 @@
     </dependencies>
 
     <build>
-        <finalName>gazelle-testing</finalName>
+        <finalName>mifos-testing</finalName>
         <defaultGoal>integration-test</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
@@ -444,7 +444,7 @@
                         <deployables>
                             <deployable>
                                 <groupId>org.mifos</groupId>
-                                <artifactId>gazelle-webapp</artifactId>
+                                <artifactId>mifos-webapp</artifactId>
                                 <type>war</type>
                                 <properties>
                                     <context>mifos</context>

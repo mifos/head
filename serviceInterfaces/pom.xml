@@ -2,10 +2,10 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.mifos</groupId>
-   <artifactId>cheetah-serviceInterfaces</artifactId>
+   <artifactId>mifos-serviceInterfaces</artifactId>
    <packaging>jar</packaging>
-   <version>0.0.3-SNAPSHOT</version>
-   <name>Mifos - Cheetah Service Interfaces</name>
+   <version>0.0.4-SNAPSHOT</version>
+   <name>Mifos - Service Interfaces</name>
    <url>http://www.mifos.org</url>
 
    <properties>
@@ -14,8 +14,8 @@
    
    <parent>
      <groupId>org.mifos</groupId>
-     <artifactId>gazelle-parent</artifactId>
-     <version>0.0.3-SNAPSHOT</version>
+     <artifactId>mifos-parent</artifactId>
+     <version>0.0.4-SNAPSHOT</version>
    </parent>
      
    <dependencies>
@@ -23,7 +23,7 @@
       <!-- from parent pom -->
       <dependency>
          <groupId>org.mifos</groupId>
-         <artifactId>cheetah-testFramework</artifactId>
+         <artifactId>mifos-testFramework</artifactId>
       </dependency>      
       <dependency>
          <groupId>org.springframework</groupId>
@@ -132,7 +132,7 @@
 	  </dependency>
    </dependencies>
    <build>
-      <finalName>cheetah-serviceInterfaces</finalName>
+      <finalName>mifos-serviceInterfaces</finalName>
       <defaultGoal>jar</defaultGoal>
       <sourceDirectory>${modules.root.dir}/serviceInterfaces/src/main/java</sourceDirectory>
       <scriptSourceDirectory>${modules.root.dir}/serviceInterfaces/src/main/scripts</scriptSourceDirectory>

@@ -2,16 +2,16 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.mifos</groupId>
-   <artifactId>cheetah-common</artifactId>
+   <artifactId>mifos-common</artifactId>
    <packaging>jar</packaging>
-   <version>0.0.3-SNAPSHOT</version>
-   <name>Mifos - Cheetah Common</name>
+   <version>0.0.4-SNAPSHOT</version>
+   <name>Mifos - Common</name>
    <url>http://www.mifos.org</url>
 
    <parent>
       <groupId>org.mifos</groupId>
-      <artifactId>gazelle-parent</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <artifactId>mifos-parent</artifactId>
+      <version>0.0.4-SNAPSHOT</version>
    </parent>
 
    <properties>
@@ -47,7 +47,7 @@
       </dependency>   
 </dependencies>
    <build>
-      <finalName>gazelle-common</finalName>
+      <finalName>mifos-common</finalName>
       <defaultGoal>jar</defaultGoal>
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>

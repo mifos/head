@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
-    <artifactId>gazelle-parent</artifactId>
+    <artifactId>mifos-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3-SNAPSHOT</version>
-    <name>Mifos - Gazelle Parent</name>
+    <version>0.0.4-SNAPSHOT</version>
+    <name>Mifos - Parent</name>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -79,8 +79,8 @@
         <dependencies>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>cheetah-testFramework</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <artifactId>mifos-testFramework</artifactId>
+                <version>0.0.4-SNAPSHOT</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -91,18 +91,18 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>cheetah-common</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <artifactId>mifos-common</artifactId>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>cheetah-serviceInterfaces</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <artifactId>mifos-serviceInterfaces</artifactId>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>cheetah-userInterface</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
+                <artifactId>mifos-userInterface</artifactId>
+                <version>0.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

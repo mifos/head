@@ -25,8 +25,8 @@
 					<artifactItems>
 						<artifactItem>
 							<groupId>org.mifos</groupId>
-							<artifactId>gazelle-webapp</artifactId>
-							<version>0.0.3-SNAPSHOT</version>
+							<artifactId>mifos-webapp</artifactId>
+							<version>0.0.4-SNAPSHOT</version>
 							<destFileName>mifos.war</destFileName>
 							<type>war</type>
 							<overWrite>true</overWrite>

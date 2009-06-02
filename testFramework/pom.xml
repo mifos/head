@@ -2,15 +2,15 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.mifos</groupId>
-   <artifactId>cheetah-testFramework</artifactId>
+   <artifactId>mifos-testFramework</artifactId>
    <packaging>jar</packaging>
-   <version>0.0.3-SNAPSHOT</version>
-   <name>Mifos - Cheetah Test Framework</name>
+   <version>0.0.4-SNAPSHOT</version>
+   <name>Mifos - Test Framework</name>
    <url>http://www.mifos.org</url>
    <parent>
       <groupId>org.mifos</groupId>
-      <artifactId>gazelle-parent</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <artifactId>mifos-parent</artifactId>
+      <version>0.0.4-SNAPSHOT</version>
    </parent>
 
    <dependencies>
@@ -140,7 +140,7 @@
       </dependency>
    </dependencies>
    <build>
-      <finalName>cheetah-testFramework</finalName>
+      <finalName>mifos-testFramework</finalName>
       <defaultGoal>jar:jar</defaultGoal>
       <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
       <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>

@@ -2,14 +2,14 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
-    <artifactId>gazelle</artifactId>
+    <artifactId>mifos-application</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3-SNAPSHOT</version>
-    <name>Mifos - Gazelle Application</name>
+    <version>0.0.4-SNAPSHOT</version>
+    <name>Mifos - Application</name>
     <parent>
         <groupId>org.mifos</groupId>
-        <artifactId>gazelle-parent</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <artifactId>mifos-parent</artifactId>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
 
     <repositories>
@@ -41,19 +41,19 @@
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetah-testFramework</artifactId>
+            <artifactId>mifos-testFramework</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetah-common</artifactId>
+            <artifactId>mifos-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetah-serviceInterfaces</artifactId>
+            <artifactId>mifos-serviceInterfaces</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>cheetah-userInterface</artifactId>
+            <artifactId>mifos-userInterface</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -396,7 +396,7 @@
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <id>build-gazelle-war</id>
+                        <id>build-mifos-war</id>
                         <configuration>
                             <tasks>
                                 <property name="build.compiler"
@@ -424,13 +424,13 @@
                 <executions>
                     <execution>
                         <phase>install</phase>
-                        <id>install-gazelle-war</id>
+                        <id>install-mifos-war</id>
                         <configuration>
                             <file>${basedir}/dist/mifos.war</file>
-                            <version>0.0.3-SNAPSHOT</version>
+                            <version>0.0.4-SNAPSHOT</version>
                             <groupId>org.mifos</groupId>
                             <packaging>war</packaging>
-                            <artifactId>gazelle-webapp</artifactId>
+                            <artifactId>mifos-webapp</artifactId>
                         </configuration>
                         <goals>
                             <goal>install-file</goal>

@@ -4,12 +4,12 @@
    <groupId>org.mifos</groupId>
    <artifactId>gazelle</artifactId>
    <packaging>war</packaging>
-   <version>0.0.3-SNAPSHOT</version>
+   <version>0.0.4-SNAPSHOT</version>
    <name>Mifos - Gazelle Application</name>
    <parent>
       <groupId>org.mifos</groupId>
-      <artifactId>gazelle-parent</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <artifactId>mifos-parent</artifactId>
+      <version>0.0.4-SNAPSHOT</version>
    </parent>
 
    <build>
