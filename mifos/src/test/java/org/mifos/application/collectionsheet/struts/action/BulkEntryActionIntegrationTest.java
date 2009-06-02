@@ -278,7 +278,6 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
 				+ year);
 		performNoErrors();
 		verifyForward("preview_success");
-		StaticHibernateUtil.closeSession();
 
 		groupAccount = TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
