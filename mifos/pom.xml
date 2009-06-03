@@ -389,7 +389,22 @@
 		  <version>2.5-6.0.0</version>
 		  <scope>compile</scope>
 		</dependency>
-						
+		<dependency>
+		  <groupId>junit-addons</groupId>
+		  <artifactId>junit-addons</artifactId>
+		  <version>1.4</version>
+		  <scope>test</scope>
+          <exclusions>
+              <exclusion>
+                  <groupId>xerces</groupId>
+                  <artifactId>xercesImpl</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>xerces</groupId>
+                  <artifactId>xmlParserAPIs</artifactId>
+              </exclusion>
+          </exclusions>
+		</dependency>								
      </dependencies>
    <build>
         <!-- START only used by Eclipse WTP -->
