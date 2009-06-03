@@ -412,7 +412,7 @@
             Ant is still required to build the Mifos WAR. See
             http://mifos.org/developers/wiki/GazelleMavenMigration
         -->
-        <finalName>mifos</finalName>
+        <finalName>mifos-webapp</finalName>
         <defaultGoal>war:war</defaultGoal>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
