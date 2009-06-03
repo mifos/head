@@ -48,6 +48,8 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 	<tiles:put name="body" type="string">
+	<input type="hidden" id="page.id" value="Review_holidayCreation"/>
+	
 
 		<script>
 			function fun_return(form)
@@ -170,7 +172,7 @@
 					</table>
 					<table width="96%" border="0" cellspacing="0" cellpadding="1">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleClass="buttn" styleId="holiday.button.submit">
 								<mifos:mifoslabel name="loan.submit" />
 							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
 								styleClass="cancelbuttn"

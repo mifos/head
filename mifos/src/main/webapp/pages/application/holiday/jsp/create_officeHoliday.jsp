@@ -46,7 +46,7 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<input type="hidden" id="page.id" value="create_officeHoliday"/>
 	<tiles:put name="body" type="string">
 		<SCRIPT>
 	function ViewHolidays(){
@@ -120,7 +120,7 @@
 							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
 								mandatory="yes" name="holiday.HolidayName" isColonRequired="Yes" bundle="HolidayUIResources"/></td>
 							<td width="76%">
-								<mifos:mifosalphanumtext property="holidayName" name="holidayActionForm" style="width:45%" maxlength="25"/>
+								<mifos:mifosalphanumtext styleId="holiday.input.name" property="holidayName" name="holidayActionForm" style="width:45%" maxlength="25"/>
 							</td>
 						</tr>
 						<tr>
@@ -138,7 +138,7 @@
 								name="holiday.HolidayRepaymentRule" mandatory="yes" isColonRequired="Yes" bundle="HolidayUIResources"/></td>
 							
 							<td class="fontnormal"><mifos:select
-								name="holidayActionForm" property="repaymentRuleId">
+								name="holidayActionForm" property="repaymentRuleId" styleId="holiday.input.repaymentrule">
 								<c:forEach var="RRT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RepaymentRuleType')}" >
 									<html-el:option value="${RRT.id}">${RRT.lookUpValue}</html-el:option>
 								</c:forEach>
@@ -158,15 +158,15 @@
 							<td align="center"><c:choose>
 								<c:when
 									test="${(BusinessKey.accountType.accountTypeId!=1) }"> <!--&& (holidayActionForm.amount == '0.0'||holidayActionForm.amount=='0')}"-->
-									<html-el:submit styleClass="buttn"
+									<html-el:submit styleClass="buttn" styleId="holiday.button.preview"
 										property="Preview"> 
 										<mifos:mifoslabel name="holiday.button.preview" bundle="HolidayUIResources"><!--holiday.reviewtransaction"-->
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" property="Preview">
-										<mifos:mifoslabel name="holiday.reviewtransaction"  bundle="HolidayUIResources">
+									<html-el:submit styleClass="buttn" styleId="holiday.button.preview" property="Preview">
+										<mifos:mifoslabel name="holiday.reviewtransaction" bundle="HolidayUIResources">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:otherwise>

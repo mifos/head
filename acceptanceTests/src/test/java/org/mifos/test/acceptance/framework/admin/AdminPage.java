@@ -21,6 +21,9 @@
 package org.mifos.test.acceptance.framework.admin;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
+import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
+import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
@@ -78,6 +81,12 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.defineNewLoanProduct");
         waitForPageToLoad();
         return new DefineNewLoanProductPage(selenium);
+    }
+    
+    public UndoLoanDisbursalSearchPage navigateToUndoLoanDisbursal() {
+        selenium.click("admin.link.reverseLoanDisbursal");
+        waitForPageToLoad();
+        return new UndoLoanDisbursalSearchPage(selenium);
     }
 
     public AdminPage verifyPage() {
@@ -193,4 +202,16 @@ public class AdminPage extends MifosPage {
         return new ViewAdditionalFieldCategoriesPage(selenium);
     }
   
+    
+    public CreateHolidayEntryPage navigateToDefineHolidayPage() {
+        selenium.click("admin.link.defineNewHoliday");
+        waitForPageToLoad();
+        return new CreateHolidayEntryPage(selenium);
+    }
+
+    public ViewHolidaysPage navigateToViewHolidays() {
+        selenium.click("admin.link.viewHolidays");  
+        waitForPageToLoad();
+        return new ViewHolidaysPage(selenium);
+    }
 }

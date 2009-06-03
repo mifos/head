@@ -17,22 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.test.acceptance.framework.admin;
+
+package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class ViewHolidaysPage extends MifosPage {
-
-    public ViewHolidaysPage(Selenium selenium) {
+public class UndoLoanDisbursalPreviewPage extends MifosPage {
+    public UndoLoanDisbursalPreviewPage (Selenium selenium) {
         super(selenium);
+        this.selenium = selenium;
     }
     
-    public ViewHolidaysPage verifyPage() {
-        verifyPage("view_organizational_holidays");
-        return this;
-    }
+    public void verifyPage() {
+        this.verifyPage("UndoLoanDisbursalPreview");
+    }    
 
+    public AdminPage submitAndNavigateToAdminPage() {
+        selenium.click("undoloandisbursalpreview.button.submit");
+        waitForPageToLoad();
+        
+        return new AdminPage(selenium);
+    }
 }

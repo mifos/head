@@ -1,0 +1,5 @@
+Database version: 207
+Description:
+Based on acceptance_small_003.  
+The data set represents the expected data after undoing the loan disbursal for
+the group loan with id 000100000000206.

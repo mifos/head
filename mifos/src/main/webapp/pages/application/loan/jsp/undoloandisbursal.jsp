@@ -183,7 +183,7 @@
 									<mifos:mifoslabel mandatory="yes" name="loan.note" />
 								</td>
 								<td width="94%" align="left" valign="top" style="padding-left:4px;">									
-									<mifos:textarea property="note" style="width:320px; height:110px;"/>
+									<mifos:textarea styleId="undoloandisbursal.input.note" property="note" style="width:320px; height:110px;"/>
 								</td>
 							</tr>
 						</table>
@@ -198,7 +198,7 @@
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="previewButton" styleClass="buttn" >
+									<html-el:submit styleId="undoloandisbursal.button.preview" property="previewButton" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.preview" />
 									</html-el:submit>
 									&nbsp;
