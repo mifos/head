@@ -11,6 +11,25 @@
         <artifactId>mifos-parent</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+        <jdk.version>1.6</jdk.version>
+
+        <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
+        <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
+        <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/sql</sql.resources.src.directory>
+        <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
+        <!-- mimics ConfigurationLocator directory search behavior -->
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
+        <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
+        <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+        <!--
+        Don't search System.getProperty("conf.dir") for local.properties; no
+        need. It is only used to override settings in
+        acceptanceDatabase.properties.
+        -->
+
+    </properties>
 
     <repositories>
         <repository>
@@ -317,7 +336,7 @@
         <groupId>javax.xml.bind</groupId>
         <artifactId>jaxb-api</artifactId>
         <version>2.1</version>
-      </dependency>     
+      </dependency>
       <dependency>
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
@@ -327,12 +346,12 @@
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-libs</artifactId>
         <version>1.0.5</version>
-      </dependency>        
+      </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.1.2</version>
-      </dependency>                                    
+      </dependency>
       <dependency>
         <groupId>javax.transaction</groupId>
         <artifactId>jta</artifactId>
@@ -377,7 +396,7 @@
         <groupId>javax.servlet</groupId>
         <artifactId>jsp-api</artifactId>
         <version>2.0</version>
-      </dependency>     
+      </dependency>
       <dependency>
         <groupId>jetty</groupId>
         <artifactId>servlet-api</artifactId>
@@ -397,7 +416,7 @@
                   <artifactId>xmlParserAPIs</artifactId>
               </exclusion>
           </exclusions>
-      </dependency>                       
+      </dependency>
      </dependencies>
     <build>
         <finalName>mifos-from-maven</finalName>
@@ -477,6 +496,95 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${main.database.properties.file}</file>
+                                <file>${test.database.properties.file}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                                <file>${mifos.overrides.home}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>process-test-resources</phase>
+						<configuration>
+							<tasks>
+								<echo>test.database.properties.file:
+									${test.database.properties.file}</echo>
+								<echo>integration.database.port:
+									${integration.database.port}</echo>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-nodeps</artifactId>
+						<version>1.6.5</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.6</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+					<username>${integration.database.user}</username>
+					<password>${integration.database.password}</password>
+					<autocommit>true</autocommit>
+				</configuration>
+				<executions>
+					<execution>
+						<id>build_test_db</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<srcFiles>
+								<srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
     </build>
 </project>
