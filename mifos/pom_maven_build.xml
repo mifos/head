@@ -41,7 +41,35 @@
 				</webResources>
 			</configuration>
 		</plugin>
-
+    	<plugin>
+        	<groupId>com.mobilvox.ossi.mojo</groupId>
+        	<artifactId>maven-js-plugin</artifactId>
+        	<version>1.3.1</version>
+            <configuration>
+				<!-- Whether to merge the WAR files into one or not. -->
+				<mergeWarFiles>true</mergeWarFiles>
+				<!-- The classifier for compressed files. -->
+				<classifier>js-compressed</classifier>
+				<!-- Whether to replace JS files in the site and custom goals. -->
+				<replaceJavaScript>true</replaceJavaScript>
+				<!-- Includes and excludes for compression (should we exclude birt?)-->
+				<includes>
+					<include>**/**.js</include>
+				</includes>
+				<!-- Input and output directories for the custom MOJO. -->
+				<jsDirectory>target/mifos/pages</jsDirectory>
+				<outputDirectory>target/mifos/pages</outputDirectory>
+			</configuration>
+			<!-- Not sure if package phase is where this should go. -->
+			<executions>
+				<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>compress</goal>
+					</goals>
+				</execution>
+			</executions>	
+      	</plugin>
       </plugins>
    </build>
 </project>
