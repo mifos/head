@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,104 +43,104 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SearchAction extends BaseAction {
-	
-	public SearchAction() {
-		
-	}
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return null;
-	}
-	
-	private void setPerspective(HttpServletRequest request) {
+    public SearchAction() {
+
+    }
+
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return null;
+    }
+
+    private void setPerspective(HttpServletRequest request) {
         if (request.getParameter("perspective") != null) {
             request.setAttribute("perspective", request.getParameter("perspective"));
-        }		
-	}
-	public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		//Integer current = (Integer)SessionUtils.getAttribute("current",request);
-		
-		//if( current ==null) throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
-		//SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
-		checkForValidData(request);
-		SessionUtils.setRemovableAttribute("meth","previous",TableTagConstants.PATH,request.getSession());
-		setPerspective(request);
-		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
-		if( forwardkey ==null)throw new PageExpiredException();
-		return mapping.findForward(forwardkey);
-	}
-	
-	public ActionForward searchNext(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		//Integer current=1;
-		//if(null !=SessionUtils.getAttribute("current",request.getSession())) {
-		//  current=(Integer)SessionUtils.getAttribute("current",request.getSession());
-		//}
-		//SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
-		checkForValidData(request);
-		SessionUtils.setRemovableAttribute("meth","next",TableTagConstants.PATH,request.getSession());
-		setPerspective(request);
-		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
-		if (forwardkey == null) {
-			throw new PageExpiredException();
-		}
-		return mapping.findForward(forwardkey);
-	}
-	
-	protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException
-	{
-		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());
-		SessionUtils.setRemovableAttribute("current",null,TableTagConstants.PATH,request.getSession());
-		SessionUtils.setRemovableAttribute("meth",null,TableTagConstants.PATH,request.getSession());
-		SessionUtils.setRemovableAttribute("forwardkey",null,TableTagConstants.PATH,request.getSession());
-		SessionUtils.setRemovableAttribute("action",null,TableTagConstants.PATH,request.getSession());
-		SessionUtils.removeAttribute(Constants.SEARCH_RESULTS,request);
-	}
-	
-	protected void addSeachValues(String searchString , String officeId,String officeName,HttpServletRequest request) throws PageExpiredException{
-		
-		SessionUtils.setAttribute(Constants.SEARCH_STRING,searchString,request);
-		SessionUtils.setAttribute(Constants.BRANCH_ID,officeId,request);
-		SessionUtils.setAttribute(Constants.OFFICE_NAME,officeName,request);
-		
-	}
-	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		cleanUpSearch(request);
-		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,getSearchResult(form),request);
-		return mapping.findForward(ActionForwards.search_success.toString());
-	}
-	
-	protected QueryResult getSearchResult(ActionForm form) throws Exception{
-		return null;
-	}
-	
-	
-	private void checkForValidData(HttpServletRequest request) throws PageExpiredException{
-		
-		 SessionUtils.getAttribute(
-				Constants.SEARCH_STRING, request);
-		SessionUtils.getAttribute(
-				Constants.OFFICE_NAME,  request);
-		SessionUtils.getAttribute(
-				Constants.BRANCH_ID,  request);
+        }
+    }
 
-		
-	}
-	protected void checkPermissionForAddingNotes(AccountTypes accountTypes,CustomerLevel customerLevel,
-			UserContext userContext, Short recordOfficeId,
-			Short recordLoanOfficerId) throws ApplicationException {
-		if (!isPermissionAllowed(accountTypes, customerLevel, userContext,
-				recordOfficeId, recordLoanOfficerId))
-			throw new CustomerException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
+    public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
 
-	private boolean isPermissionAllowed(AccountTypes accountTypes,CustomerLevel customerLevel,
-			UserContext userContext, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isAddingNotesPermittedForAccounts(
-				accountTypes, customerLevel, userContext, recordOfficeId,
-				recordLoanOfficerId);
-	}
+        // Integer current =
+        // (Integer)SessionUtils.getAttribute("current",request);
+
+        // if( current ==null) throw new
+        // PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+        // SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
+        checkForValidData(request);
+        SessionUtils.setRemovableAttribute("meth", "previous", TableTagConstants.PATH, request.getSession());
+        setPerspective(request);
+        String forwardkey = (String) SessionUtils.getAttribute("forwardkey", request.getSession());
+        if (forwardkey == null)
+            throw new PageExpiredException();
+        return mapping.findForward(forwardkey);
+    }
+
+    public ActionForward searchNext(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        // Integer current=1;
+        // if(null !=SessionUtils.getAttribute("current",request.getSession()))
+        // {
+        // current=(Integer)SessionUtils.getAttribute("current",request.getSession());
+        // }
+        // SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
+        checkForValidData(request);
+        SessionUtils.setRemovableAttribute("meth", "next", TableTagConstants.PATH, request.getSession());
+        setPerspective(request);
+        String forwardkey = (String) SessionUtils.getAttribute("forwardkey", request.getSession());
+        if (forwardkey == null) {
+            throw new PageExpiredException();
+        }
+        return mapping.findForward(forwardkey);
+    }
+
+    protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException {
+        SessionUtils.setRemovableAttribute("TableCache", null, TableTagConstants.PATH, request.getSession());
+        SessionUtils.setRemovableAttribute("current", null, TableTagConstants.PATH, request.getSession());
+        SessionUtils.setRemovableAttribute("meth", null, TableTagConstants.PATH, request.getSession());
+        SessionUtils.setRemovableAttribute("forwardkey", null, TableTagConstants.PATH, request.getSession());
+        SessionUtils.setRemovableAttribute("action", null, TableTagConstants.PATH, request.getSession());
+        SessionUtils.removeAttribute(Constants.SEARCH_RESULTS, request);
+    }
+
+    protected void addSeachValues(String searchString, String officeId, String officeName, HttpServletRequest request)
+            throws PageExpiredException {
+
+        SessionUtils.setAttribute(Constants.SEARCH_STRING, searchString, request);
+        SessionUtils.setAttribute(Constants.BRANCH_ID, officeId, request);
+        SessionUtils.setAttribute(Constants.OFFICE_NAME, officeName, request);
+
+    }
+
+    public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        cleanUpSearch(request);
+        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getSearchResult(form), request);
+        return mapping.findForward(ActionForwards.search_success.toString());
+    }
+
+    protected QueryResult getSearchResult(ActionForm form) throws Exception {
+        return null;
+    }
+
+    private void checkForValidData(HttpServletRequest request) throws PageExpiredException {
+
+        SessionUtils.getAttribute(Constants.SEARCH_STRING, request);
+        SessionUtils.getAttribute(Constants.OFFICE_NAME, request);
+        SessionUtils.getAttribute(Constants.BRANCH_ID, request);
+
+    }
+
+    protected void checkPermissionForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel,
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
+        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId))
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+    }
+
+    private boolean isPermissionAllowed(AccountTypes accountTypes, CustomerLevel customerLevel,
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isAddingNotesPermittedForAccounts(accountTypes, customerLevel, userContext,
+                recordOfficeId, recordLoanOfficerId);
+    }
 }
