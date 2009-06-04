@@ -425,6 +425,18 @@
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
         <outputDirectory>${basedir}/target/mifos/WEB-INF/classes</outputDirectory>
         <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
+
+        <resources>
+            <resource>
+                <directory>${sql.resources.src.directory}</directory>
+                <filtering>true</filtering>
+                <targetPath>sql</targetPath>
+            </resource>
+            <resource>
+                <directory>${modules.root.dir}/application/src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
