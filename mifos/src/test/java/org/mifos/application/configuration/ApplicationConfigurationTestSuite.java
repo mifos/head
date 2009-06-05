@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.configuration;
 
 import junit.framework.Test;
@@ -33,28 +33,25 @@ import org.mifos.application.configuration.struts.tag.CustomFieldsListTagIntegra
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceIntegrationTest;
 
 public class ApplicationConfigurationTestSuite extends TestSuite {
-	
-	public static void main (String[] args)
-	{
-		Test testSuite = suite();
-		TestRunner.run (testSuite);
-	}
-	
 
-	public static Test suite()
-	{
-		TestSuite testSuite = new ApplicationConfigurationTestSuite();
-		testSuite.addTestSuite(ApplicationConfigurationPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(ConfigurationIntegrationTest.class);
-		testSuite.addTestSuite(LabelConfigurationActionTest.class);
-		testSuite.addTestSuite(HiddenMandatoryConfigurationActionTest.class);
-		testSuite.addTestSuite(LookupOptionsActionTest.class);
-		testSuite.addTestSuite(CustomFieldsActionTest.class);
-		testSuite.addTestSuite(CustomFieldCategoryListTagTest.class);
-		testSuite.addTestSuite(CustomFieldsListTagIntegrationTest.class);
-		testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
-		return testSuite;
-		
-	}
+    public static void main(String[] args) {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
+
+    public static Test suite() {
+        TestSuite testSuite = new ApplicationConfigurationTestSuite();
+        testSuite.addTestSuite(ApplicationConfigurationPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(ConfigurationIntegrationTest.class);
+        testSuite.addTestSuite(LabelConfigurationActionTest.class);
+        testSuite.addTestSuite(HiddenMandatoryConfigurationActionTest.class);
+        testSuite.addTestSuite(LookupOptionsActionTest.class);
+        testSuite.addTestSuite(CustomFieldsActionTest.class);
+        testSuite.addTestSuite(CustomFieldCategoryListTagTest.class);
+        testSuite.addTestSuite(CustomFieldsListTagIntegrationTest.class);
+        testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
+        return testSuite;
+
+    }
 
 }

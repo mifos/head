@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
@@ -49,189 +49,163 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTest {
 
-	public ProductStatusHelperIntegrationTest() throws SystemException, ApplicationException {
+    public ProductStatusHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     LoanOfferingBO product;
 
-	ProductStatusHelper productStatusHelper;
+    ProductStatusHelper productStatusHelper;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		ProductStatus productStatus = new ProductStatus();
-		productStatus.name = "ProductStatus";
-		productStatusHelper = (ProductStatusHelper) productStatus
-				.getTaskHelper();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ProductStatus productStatus = new ProductStatus();
+        productStatus.name = "ProductStatus";
+        productStatusHelper = (ProductStatusHelper) productStatus.getTaskHelper();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(product);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.removeObject(product);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testExecute() throws PersistenceException, BatchJobException {
-		createInactiveLoanOffering();
+    public void testExecute() throws PersistenceException, BatchJobException {
+        createInactiveLoanOffering();
 
-		productStatusHelper.execute(System.currentTimeMillis());
+        productStatusHelper.execute(System.currentTimeMillis());
 
-		product = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, product.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
-	}
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+        assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+    }
 
-	public void testExecuteFailure() throws PersistenceException {
-		createInactiveLoanOffering();
+    public void testExecuteFailure() throws PersistenceException {
+        createInactiveLoanOffering();
 
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			productStatusHelper.execute(System.currentTimeMillis());
-			fail("unexpected absence of exception");
-		} catch (BatchJobException e) {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            productStatusHelper.execute(System.currentTimeMillis());
+            fail("unexpected absence of exception");
+        } catch (BatchJobException e) {
             fail("unexpected exception");
-		} catch (SessionException e) {
-			assertTrue(true);
-		}
-		StaticHibernateUtil.closeSession();
+        } catch (SessionException e) {
+            assertTrue(true);
+        }
+        StaticHibernateUtil.closeSession();
 
-		product = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, product.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
-	}
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+        assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
+    }
 
-	public void testExecuteTask() throws PersistenceException, BatchJobException {
-		createInactiveLoanOffering();
+    public void testExecuteTask() throws PersistenceException, BatchJobException {
+        createInactiveLoanOffering();
 
-		productStatusHelper.executeTask();
+        productStatusHelper.executeTask();
 
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertNotNull(tasks);
-		assertEquals(1, tasks.size());
-		for (Task task : tasks) {
-			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
-					.getStatus());
-			assertEquals("ProductStatus", task.getTask());
-			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
-					.getDescription());
-			TestObjectFactory.removeObject(task);
-		}
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        for (Task task : tasks) {
+            assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
+            assertEquals("ProductStatus", task.getTask());
+            assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
+            TestObjectFactory.removeObject(task);
+        }
 
-		product = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, product.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
-	}
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+        assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
+    }
 
-	public void testExecuteTaskFailure() throws PersistenceException {
-		createInactiveLoanOffering();
+    public void testExecuteTaskFailure() throws PersistenceException {
+        createInactiveLoanOffering();
 
-		TestObjectFactory.simulateInvalidConnection();
-		productStatusHelper.executeTask();
-		StaticHibernateUtil.closeSession();
+        TestObjectFactory.simulateInvalidConnection();
+        productStatusHelper.executeTask();
+        StaticHibernateUtil.closeSession();
 
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertEquals(0, tasks.size());
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertEquals(0, tasks.size());
 
-		product = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, product.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
-	}
+        product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
+        assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
+    }
 
-	public void testRegisterStartup() throws BatchJobException {
-		productStatusHelper.registerStartup(System.currentTimeMillis());
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertNotNull(tasks);
-		assertEquals(1, tasks.size());
-		for (Task task : tasks) {
-			assertEquals(TaskStatus.INCOMPLETE.getValue().shortValue(), task
-					.getStatus());
-			assertEquals("ProductStatus", task.getTask());
-			assertEquals(SchedulerConstants.START, task.getDescription());
-			TestObjectFactory.removeObject(task);
-		}
-	}
+    public void testRegisterStartup() throws BatchJobException {
+        productStatusHelper.registerStartup(System.currentTimeMillis());
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        for (Task task : tasks) {
+            assertEquals(TaskStatus.INCOMPLETE.getValue().shortValue(), task.getStatus());
+            assertEquals("ProductStatus", task.getTask());
+            assertEquals(SchedulerConstants.START, task.getDescription());
+            TestObjectFactory.removeObject(task);
+        }
+    }
 
-	public void testIsTaskAllowedToRun() {
-		assertTrue(productStatusHelper.isTaskAllowedToRun());
-	}
+    public void testIsTaskAllowedToRun() {
+        assertTrue(productStatusHelper.isTaskAllowedToRun());
+    }
 
-	public void testRegisterStartupFailure() {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			productStatusHelper.registerStartup(System.currentTimeMillis());
-			fail();
-		} catch (BatchJobException e) {
-			assertTrue(true);
-		}
-	}
+    public void testRegisterStartupFailure() {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            productStatusHelper.registerStartup(System.currentTimeMillis());
+            fail();
+        } catch (BatchJobException e) {
+            assertTrue(true);
+        }
+    }
 
-	public void testRegisterCompletion() throws BatchJobException {
-		productStatusHelper.registerStartup(System.currentTimeMillis());
-		productStatusHelper.registerCompletion(0,
-				SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertNotNull(tasks);
-		assertEquals(1, tasks.size());
-		for (Task task : tasks) {
-			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
-					.getStatus());
-			assertEquals("ProductStatus", task.getTask());
-			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
-					.getDescription());
-			TestObjectFactory.removeObject(task);
-		}
-	}
+    public void testRegisterCompletion() throws BatchJobException {
+        productStatusHelper.registerStartup(System.currentTimeMillis());
+        productStatusHelper.registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        for (Task task : tasks) {
+            assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
+            assertEquals("ProductStatus", task.getTask());
+            assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
+            TestObjectFactory.removeObject(task);
+        }
+    }
 
-	public void testRegisterCompletionFailure() throws BatchJobException {
-		productStatusHelper.registerStartup(System.currentTimeMillis());
+    public void testRegisterCompletionFailure() throws BatchJobException {
+        productStatusHelper.registerStartup(System.currentTimeMillis());
 
-		TestObjectFactory.simulateInvalidConnection();
-		productStatusHelper.registerCompletion(0,
-				SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
-		StaticHibernateUtil.closeSession();
+        TestObjectFactory.simulateInvalidConnection();
+        productStatusHelper.registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
+        StaticHibernateUtil.closeSession();
 
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertNotNull(tasks);
-		assertEquals(1, tasks.size());
-		for (Task task : tasks) {
-			assertEquals(TaskStatus.INCOMPLETE.getValue().shortValue(), task
-					.getStatus());
-			assertEquals("ProductStatus", task.getTask());
-			assertEquals(SchedulerConstants.START, task.getDescription());
-			TestObjectFactory.removeObject(task);
-		}
-	}
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        for (Task task : tasks) {
+            assertEquals(TaskStatus.INCOMPLETE.getValue().shortValue(), task.getStatus());
+            assertEquals("ProductStatus", task.getTask());
+            assertEquals(SchedulerConstants.START, task.getDescription());
+            TestObjectFactory.removeObject(task);
+        }
+    }
 
-	private void createInactiveLoanOffering() throws PersistenceException {
-		Date startDate = new Date(System.currentTimeMillis());
+    private void createInactiveLoanOffering() throws PersistenceException {
+        Date startDate = new Date(System.currentTimeMillis());
 
-		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
-		product = TestObjectFactory.createLoanOffering("Loan Offering",
-				"LOAN", ApplicableTo.GROUPS,
-				startDate, PrdStatus.LOAN_ACTIVE,
-				300.0, 1.2, 3, 
-				InterestType.FLAT, frequency);
-		LoanOfferingBOIntegrationTest.setStatus(product,new PrdOfferingPersistence()
-				.getPrdStatus(PrdStatus.LOAN_INACTIVE));
-		TestObjectFactory.updateObject(product);
-		StaticHibernateUtil.closeSession();
-	}
+        MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
+                LOAN_INSTALLMENT, MONDAY));
+        product = TestObjectFactory.createLoanOffering("Loan Offering", "LOAN", ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency);
+        LoanOfferingBOIntegrationTest.setStatus(product, new PrdOfferingPersistence()
+                .getPrdStatus(PrdStatus.LOAN_INACTIVE));
+        TestObjectFactory.updateObject(product);
+        StaticHibernateUtil.closeSession();
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
@@ -43,7 +43,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrationTest {
-	public CollSheetSavingsDetailsEntityIntegrationTest() throws SystemException, ApplicationException {
+    public CollSheetSavingsDetailsEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -51,189 +51,153 @@ public class CollSheetSavingsDetailsEntityIntegrationTest extends MifosIntegrati
 
     private CustomerBO group;
 
-	private CustomerBO center;
+    private CustomerBO center;
 
-	private CustomerBO client1;
+    private CustomerBO client1;
 
-	private CustomerBO client2;
+    private CustomerBO client2;
 
-	private SavingsBO savings;
+    private SavingsBO savings;
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(savings);
+        TestObjectFactory.cleanUp(client1);
+        TestObjectFactory.cleanUp(client2);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testForMandatoryAccountWithNoPreviousPayments()
-			throws Exception {
+    public void testForMandatoryAccountWithNoPreviousPayments() throws Exception {
 
-		savings = createSavingsAccount(SavingsType.MANDATORY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		// obtaining the last installment
-		// Scenario: Mandatory savings Account: None of the previous
-		// installments have been paid and hence with a deposit
-		// of 200, total overdue amount is 400 and due amount for next meeting
-		// date is 200
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
-
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("100.00"));
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
-        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
-		accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        savings = createSavingsAccount(SavingsType.MANDATORY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        // obtaining the last installment
+        // Scenario: Mandatory savings Account: None of the previous
+        // installments have been paid and hence with a deposit
+        // of 200, total overdue amount is 400 and due amount for next meeting
+        // date is 200
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
         assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
 
-	}
-
-	public void testForMandatoryAccountWithPartialPayment()
-			throws Exception {
-
-		savings = createSavingsAccount(SavingsType.MANDATORY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		// obtaining the last installment
-		// Scenario: Mandatory savings Account: For the first installment a
-		// partial payment of Rs 100 has been done and hence with a deposit
-		// of 200, total overdue amount is Rs 300 and due amount for next
-		// meeting date is Rs 200
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("100.00"));
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
         assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
-	}
-
-	public void testForMandatoryAccountWithFullPayment()
-			throws Exception {
-
-		savings = createSavingsAccount(SavingsType.MANDATORY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		// obtaining the last installment
-		// Scenario: Mandatory savings Account: For the first installment a full
-		// payment of Rs 200 has been done and hence with a deposit
-		// of 200, total overdue amount is Rs 200 and due amount for next
-		// meeting date is Rs 200
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        accountActionDate.setPaymentStatus(PaymentStatus.PAID);
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
         assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
-	}
 
-	public void testForVoluntaryAccountWithPartialPayment()
-			throws Exception {
+    }
 
-		savings = createSavingsAccount(SavingsType.VOLUNTARY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		// obtaining the last installment
-		// Scenario: Voluntary savings Account: For the first installment a full
-		// payment of Rs 200 has been done and hence with a deposit
-		// of 200, total overdue amount is Rs 0 and due amount for next meeting
-		// date is Rs 200
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("100.00"));
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+    public void testForMandatoryAccountWithPartialPayment() throws Exception {
+
+        savings = createSavingsAccount(SavingsType.MANDATORY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        // obtaining the last installment
+        // Scenario: Mandatory savings Account: For the first installment a
+        // partial payment of Rs 100 has been done and hence with a deposit
+        // of 200, total overdue amount is Rs 300 and due amount for next
+        // meeting date is Rs 200
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(300.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
         assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
-	}
+    }
 
-	public void testForVoluntaryAccountWithFullPayment()
-			throws Exception {
+    public void testForMandatoryAccountWithFullPayment() throws Exception {
 
-		savings = createSavingsAccount(SavingsType.VOLUNTARY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		// obtaining the last installment
-		// Scenario: Voluntary savings Account: For the first installment a full
-		// payment of Rs 200 has been done and hence with a deposit
-		// of 200, total overdue amount is Rs 0 and due amount for next meeting
-		// date is Rs 200
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        savings = createSavingsAccount(SavingsType.MANDATORY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        // obtaining the last installment
+        // Scenario: Mandatory savings Account: For the first installment a full
+        // payment of Rs 200 has been done and hence with a deposit
+        // of 200, total overdue amount is Rs 200 and due amount for next
+        // meeting date is Rs 200
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        accountActionDate.setPaymentStatus(PaymentStatus.PAID);
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
         assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
-	}
+    }
 
-	public void testTotalSavingsAmountDueForVoluntaryAccount()
-			throws Exception {
+    public void testForVoluntaryAccountWithPartialPayment() throws Exception {
 
-		savings = createSavingsAccount(SavingsType.VOLUNTARY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
-	}
+        savings = createSavingsAccount(SavingsType.VOLUNTARY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        // obtaining the last installment
+        // Scenario: Voluntary savings Account: For the first installment a full
+        // payment of Rs 200 has been done and hence with a deposit
+        // of 200, total overdue amount is Rs 0 and due amount for next meeting
+        // date is Rs 200
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("100.00"));
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+    }
 
-	public void testTotalSavingsAmountDueForMandatoryAccount()
-			throws Exception {
+    public void testForVoluntaryAccountWithFullPayment() throws Exception {
 
-		savings = createSavingsAccount(SavingsType.MANDATORY);
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
-				.getAccountActionDate((short) 1);
-		SavingsBOIntegrationTest.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID);
-		collSheetSavingsDetail.addAccountDetails(savings
-				.getAccountActionDate((short) 3));
-		assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
-	}
+        savings = createSavingsAccount(SavingsType.VOLUNTARY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        // obtaining the last installment
+        // Scenario: Voluntary savings Account: For the first installment a full
+        // payment of Rs 200 has been done and hence with a deposit
+        // of 200, total overdue amount is Rs 0 and due amount for next meeting
+        // date is Rs 200
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        accountActionDate.setPaymentStatus(PaymentStatus.PAID);
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue().getAmountDoubleValue(), DELTA);
+        assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue().getAmountDoubleValue(), DELTA);
+    }
 
-	private SavingsBO createSavingsAccount(SavingsType savingsType) 
-	throws Exception {
-		Date startDate = new Date(System.currentTimeMillis());
+    public void testTotalSavingsAmountDueForVoluntaryAccount() throws Exception {
 
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = 
-			TestObjectFactory.createSavingsProduct("SavingPrd1", 
-				ApplicableTo.GROUPS, 
-				startDate, PrdStatus.SAVINGS_ACTIVE, 
-				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
-				1.2, 200.0, 200.0, 
-				savingsType, InterestCalcType.MINIMUM_BALANCE, 
-				meetingIntCalc, meetingIntPost);
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				group);
-		return TestObjectFactory.createSavingsAccount("43245434", client1,
-				(short) 16, startDate,
-				savingsOffering);
+        savings = createSavingsAccount(SavingsType.VOLUNTARY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        accountActionDate.setPaymentStatus(PaymentStatus.PAID);
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
+    }
 
-	}
+    public void testTotalSavingsAmountDueForMandatoryAccount() throws Exception {
+
+        savings = createSavingsAccount(SavingsType.MANDATORY);
+        CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+        SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
+        SavingsBOIntegrationTest.setDepositPaid(accountActionDate, new Money("200.00"));
+        accountActionDate.setPaymentStatus(PaymentStatus.PAID);
+        collSheetSavingsDetail.addAccountDetails(savings.getAccountActionDate((short) 3));
+        assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue().getAmountDoubleValue(), DELTA);
+    }
+
+    private SavingsBO createSavingsAccount(SavingsType savingsType) throws Exception {
+        Date startDate = new Date(System.currentTimeMillis());
+
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.GROUPS,
+                startDate, PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0,
+                savingsType, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        return TestObjectFactory.createSavingsAccount("43245434", client1, (short) 16, startDate, savingsOffering);
+
+    }
 }

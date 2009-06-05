@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master;
 
 import junit.framework.Test;
@@ -28,14 +28,14 @@ import org.mifos.application.master.business.service.MasterBusinessServiceIntegr
 import org.mifos.application.master.persistence.MasterPersistenceIntegrationTest;
 
 public class MasterTestSuite extends TestSuite {
-	
-	public static Test suite() throws Exception {
-		MasterTestSuite testSuite = new MasterTestSuite();
-		testSuite.addTestSuite(MasterPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(MasterBusinessServiceIntegrationTest.class);
-		testSuite.addTest(CustomFieldDefinitionEntityTest.suite());
-		testSuite.addTest(MessageLookupTest.suite());
-		return testSuite;
-	}
+
+    public static Test suite() throws Exception {
+        MasterTestSuite testSuite = new MasterTestSuite();
+        testSuite.addTestSuite(MasterPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(MasterBusinessServiceIntegrationTest.class);
+        testSuite.addTest(CustomFieldDefinitionEntityTest.suite());
+        testSuite.addTest(MessageLookupTest.suite());
+        return testSuite;
+    }
 
 }

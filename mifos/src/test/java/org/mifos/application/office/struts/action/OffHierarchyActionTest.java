@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.struts.action;
 
 import java.util.List;
@@ -40,130 +40,127 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OffHierarchyActionTest extends MifosMockStrutsTestCase {
 
-	private static final int OFFICE_LEVELS = 5;
+    private static final int OFFICE_LEVELS = 5;
 
-	private static final String CONFIGURED = "1";
+    private static final String CONFIGURED = "1";
 
-	public OffHierarchyActionTest() throws SystemException, ApplicationException {
-		super();
-	}
+    public OffHierarchyActionTest() throws SystemException, ApplicationException {
+        super();
+    }
 
-	private String flowKey;
+    private String flowKey;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		UserContext userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, OffHierarchyAction.class);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        UserContext userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, OffHierarchyAction.class);
+    }
 
-	@Override
-	protected void tearDown()throws Exception{			
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testLoad() throws PageExpiredException {
-		setRequestPathInfo("/offhierarchyaction.do");
-		addRequestParameter("method", "load");
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.load_success.toString());
+    public void testLoad() throws PageExpiredException {
+        setRequestPathInfo("/offhierarchyaction.do");
+        addRequestParameter("method", "load");
 
-		List<OfficeLevelEntity> officeLevels = (List<OfficeLevelEntity>) SessionUtils
-				.getAttribute(OfficeConstants.OFFICE_LEVELS, request);
-		assertEquals(OFFICE_LEVELS, officeLevels.size());
-		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-			assertTrue(officeLevelEntity.isConfigured());
-		}
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.load_success.toString());
 
-		OffHierarchyActionForm offHierarchyActionForm = (OffHierarchyActionForm) request
-				.getSession().getAttribute("offhierarchyactionform");
-		assertEquals(CONFIGURED, offHierarchyActionForm.getHeadOffice());
-		assertEquals(CONFIGURED, offHierarchyActionForm.getRegionalOffice());
-		assertEquals(CONFIGURED, offHierarchyActionForm.getSubRegionalOffice());
-		assertEquals(CONFIGURED, offHierarchyActionForm.getAreaOffice());
-		assertEquals(CONFIGURED, offHierarchyActionForm.getBranchOffice());
-	}
+        List<OfficeLevelEntity> officeLevels = (List<OfficeLevelEntity>) SessionUtils.getAttribute(
+                OfficeConstants.OFFICE_LEVELS, request);
+        assertEquals(OFFICE_LEVELS, officeLevels.size());
+        for (OfficeLevelEntity officeLevelEntity : officeLevels) {
+            assertTrue(officeLevelEntity.isConfigured());
+        }
 
-	public void testUpdate() throws Exception {
-		setRequestPathInfo("/offhierarchyaction.do");
-		addRequestParameter("method", "load");
-		actionPerform();
+        OffHierarchyActionForm offHierarchyActionForm = (OffHierarchyActionForm) request.getSession().getAttribute(
+                "offhierarchyactionform");
+        assertEquals(CONFIGURED, offHierarchyActionForm.getHeadOffice());
+        assertEquals(CONFIGURED, offHierarchyActionForm.getRegionalOffice());
+        assertEquals(CONFIGURED, offHierarchyActionForm.getSubRegionalOffice());
+        assertEquals(CONFIGURED, offHierarchyActionForm.getAreaOffice());
+        assertEquals(CONFIGURED, offHierarchyActionForm.getBranchOffice());
+    }
 
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		setRequestPathInfo("/offhierarchyaction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter("regionalOffice", CONFIGURED);
-		addRequestParameter("areaOffice", CONFIGURED);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+    public void testUpdate() throws Exception {
+        setRequestPathInfo("/offhierarchyaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.update_success.toString());
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        setRequestPathInfo("/offhierarchyaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter("regionalOffice", CONFIGURED);
+        addRequestParameter("areaOffice", CONFIGURED);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		UserContext userContext = (UserContext) request.getSession()
-				.getAttribute(Constants.USERCONTEXT);
-		List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence()
-				.getOfficeLevels(userContext.getLocaleId());
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.update_success.toString());
 
-		assertEquals(OFFICE_LEVELS, officeLevels.size());
-		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-			if (officeLevelEntity.getLevel().equals(
-					OfficeLevel.SUBREGIONALOFFICE))
-				assertFalse(officeLevelEntity.isConfigured());
-			else
-				assertTrue(officeLevelEntity.isConfigured());
-		}
+        UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
+        List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence().getOfficeLevels(userContext
+                .getLocaleId());
 
-		resetData();
-	}
+        assertEquals(OFFICE_LEVELS, officeLevels.size());
+        for (OfficeLevelEntity officeLevelEntity : officeLevels) {
+            if (officeLevelEntity.getLevel().equals(OfficeLevel.SUBREGIONALOFFICE))
+                assertFalse(officeLevelEntity.isConfigured());
+            else
+                assertTrue(officeLevelEntity.isConfigured());
+        }
 
-	public void testCancel() throws PageExpiredException {
-		setRequestPathInfo("/offhierarchyaction.do");
-		addRequestParameter("method", "cancel");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.cancel_success.toString());
-	}
+        resetData();
+    }
 
-	public void testCancelForPageExpiration() throws PageExpiredException {
-		setRequestPathInfo("/offhierarchyaction.do");
-		addRequestParameter("method", "cancel");
+    public void testCancel() throws PageExpiredException {
+        setRequestPathInfo("/offhierarchyaction.do");
+        addRequestParameter("method", "cancel");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.cancel_success.toString());
+    }
 
-		actionPerform();
-		verifyActionErrors(new String[] { "exception.framework.PageExpiredException" });
-		verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
-	}
+    public void testCancelForPageExpiration() throws PageExpiredException {
+        setRequestPathInfo("/offhierarchyaction.do");
+        addRequestParameter("method", "cancel");
 
-	public void testUpdateForPageExpiration() throws PageExpiredException {
-		setRequestPathInfo("/offhierarchyaction.do");
-		addRequestParameter("method", "update");
+        actionPerform();
+        verifyActionErrors(new String[] { "exception.framework.PageExpiredException" });
+        verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
+    }
 
-		actionPerform();
-		verifyActionErrors(new String[] { "exception.framework.PageExpiredException" });
-		verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
-	}
+    public void testUpdateForPageExpiration() throws PageExpiredException {
+        setRequestPathInfo("/offhierarchyaction.do");
+        addRequestParameter("method", "update");
 
-	private void resetData()throws Exception {
-		StaticHibernateUtil.getSessionTL();
-		StaticHibernateUtil.startTransaction();
-		OfficeLevelEntity officeLevelEntity = (OfficeLevelEntity) StaticHibernateUtil
-				.getSessionTL().get(OfficeLevelEntity.class,
-						OfficeLevel.SUBREGIONALOFFICE.getValue());
-		officeLevelEntity.update(true);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        actionPerform();
+        verifyActionErrors(new String[] { "exception.framework.PageExpiredException" });
+        verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
+    }
 
-	}
+    private void resetData() throws Exception {
+        StaticHibernateUtil.getSessionTL();
+        StaticHibernateUtil.startTransaction();
+        OfficeLevelEntity officeLevelEntity = (OfficeLevelEntity) StaticHibernateUtil.getSessionTL().get(
+                OfficeLevelEntity.class, OfficeLevel.SUBREGIONALOFFICE.getValue());
+        officeLevelEntity.update(true);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin;
 
 import junit.framework.Test;
@@ -29,29 +29,28 @@ import org.mifos.application.admin.struts.action.ViewOrganizationSettingsActionT
 import org.mifos.application.admin.system.ApplicationInformationTest;
 import org.mifos.application.admin.system.SystemInfoTest;
 
-public class AdminTestSuite extends TestSuite{
+public class AdminTestSuite extends TestSuite {
 
-	public AdminTestSuite() throws Exception {
-		super();
-	}
+    public AdminTestSuite() throws Exception {
+        super();
+    }
 
-	public static void main(String[] args){
-		try{
-			Test testSuite = suite();
-			TestRunner.run (testSuite);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
+    public static void main(String[] args) {
+        try {
+            Test testSuite = suite();
+            TestRunner.run(testSuite);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new AdminTestSuite();
-		testSuite.addTestSuite(AdminActionTest.class);
-		testSuite.addTest(SystemInfoTest.suite());
-		testSuite.addTest(ApplicationInformationTest.suite());
-		testSuite.addTestSuite(ViewOrganizationSettingsActionTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new AdminTestSuite();
+        testSuite.addTestSuite(AdminActionTest.class);
+        testSuite.addTest(SystemInfoTest.suite());
+        testSuite.addTest(ApplicationInformationTest.suite());
+        testSuite.addTestSuite(ViewOrganizationSettingsActionTest.class);
+        return testSuite;
+    }
 }

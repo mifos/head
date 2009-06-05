@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import org.dom4j.DocumentException;
@@ -27,18 +27,19 @@ import org.mifos.framework.exceptions.SystemException;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
-public class MifosFileTagIntegrationTest extends MifosIntegrationTest{
-	public MifosFileTagIntegrationTest() throws SystemException, ApplicationException {
+public class MifosFileTagIntegrationTest extends MifosIntegrationTest {
+    public MifosFileTagIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testrenderInputsForhidden() throws DocumentException{
-		MifosFileTag mifosFileTag = new MifosFileTag();
-		mifosFileTag.setKeyhm("test1");
-		mifosFileTag.setPropertyExpr("test2");
-		StringBuffer inputsForhidden=new StringBuffer();
-		inputsForhidden.append("<input type=\"hidden\" name=\""+mifosFileTag.getKeyhm()+"\" value=\""+mifosFileTag.getPropertyExpr()+"\" />");
-		assertEquals(inputsForhidden.toString(), mifosFileTag.renderInputsForhidden());
-		assertWellFormedFragment(mifosFileTag.renderInputsForhidden());
-	}
+    public void testrenderInputsForhidden() throws DocumentException {
+        MifosFileTag mifosFileTag = new MifosFileTag();
+        mifosFileTag.setKeyhm("test1");
+        mifosFileTag.setPropertyExpr("test2");
+        StringBuffer inputsForhidden = new StringBuffer();
+        inputsForhidden.append("<input type=\"hidden\" name=\"" + mifosFileTag.getKeyhm() + "\" value=\""
+                + mifosFileTag.getPropertyExpr() + "\" />");
+        assertEquals(inputsForhidden.toString(), mifosFileTag.renderInputsForhidden());
+        assertWellFormedFragment(mifosFileTag.renderInputsForhidden());
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework;
 
 import java.text.ParseException;
@@ -42,40 +42,39 @@ import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
- * Inheriting from this instead of TestCase is deprecated,
- * generally speaking.  The reason is that TestCaseInitializer
- * (a) runs too soon (it is more graceful for a long delay
- * to happen in setUp), and (b) initializes too much (most
+ * Inheriting from this instead of TestCase is deprecated, generally speaking.
+ * The reason is that TestCaseInitializer (a) runs too soon (it is more graceful
+ * for a long delay to happen in setUp), and (b) initializes too much (most
  * tests don't need everything which is there).
  * 
- * This base class initializes the database and various other
- * things and so any class derived from this is an integration
- * test.  If a test is not an integration test and does not
- * need the database, then it should not derive from this class.
+ * This base class initializes the database and various other things and so any
+ * class derived from this is an integration test. If a test is not an
+ * integration test and does not need the database, then it should not derive
+ * from this class.
  */
 public class MifosIntegrationTest extends TestCase {
 
-	public MifosIntegrationTest() throws SystemException, ApplicationException {
+    public MifosIntegrationTest() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
-	}
-	
+    }
+
     private StatisticsService statisticsService;
 
-    public void assertEquals(String s , Money one , Money two)
-	{
-		if(one.equals(two))
-			return;
-		 throw new ComparisonFailure(s,one.toString(),two.toString());
-	}
-	
-	public Date getDate(String date) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		return format.parse(date);
-	}
+    public void assertEquals(String s, Money one, Money two) {
+        if (one.equals(two))
+            return;
+        throw new ComparisonFailure(s, one.toString(), two.toString());
+    }
+
+    public Date getDate(String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        return format.parse(date);
+    }
 
     public StatisticsService getStatisticsService() {
         return this.statisticsService;
     }
+
     public void setStatisticsService(StatisticsService service) {
         this.statisticsService = service;
     }
@@ -85,7 +84,7 @@ public class MifosIntegrationTest extends TestCase {
         statisticsService.setSessionFactory(StaticHibernateUtil.getSessionFactory());
         statisticsService.setStatisticsEnabled(true);
     }
-    
+
     /*
      * Gets the test data office with office_id == 1
      */
@@ -94,7 +93,7 @@ public class MifosIntegrationTest extends TestCase {
             return new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
-        }                
+        }
     }
 
     /*
@@ -105,29 +104,29 @@ public class MifosIntegrationTest extends TestCase {
             return new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
-        }                
+        }
     }
 
     /*
      * Gets the test data user personnel_id == 1
-     */    
+     */
     public PersonnelBO getSystemUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);      
+            return new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
-        }                
+        }
     }
-    
+
     /*
      * Gets the test data user personnel_id == 3
-     */    
+     */
     public PersonnelBO getTestUser() {
         try {
-            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);      
+            return new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
-        }                
+        }
     }
 
 }

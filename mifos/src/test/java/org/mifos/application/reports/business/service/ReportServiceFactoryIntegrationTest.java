@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -25,40 +25,33 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
 public class ReportServiceFactoryIntegrationTest extends MifosIntegrationTest {
-	public ReportServiceFactoryIntegrationTest() throws SystemException, ApplicationException {
+    public ReportServiceFactoryIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testInitializingServiceFactoryDoesNotThrowAnyErrors()
-			throws Exception {
-		try {
-			ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
-		}
-		catch (Exception e) {
-			fail("Failed to initiliaze ReportServiceFactory, Error : "
-					+ e.getMessage());
-		}
-	}
+    public void testInitializingServiceFactoryDoesNotThrowAnyErrors() throws Exception {
+        try {
+            ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
+        } catch (Exception e) {
+            fail("Failed to initiliaze ReportServiceFactory, Error : " + e.getMessage());
+        }
+    }
 
-	public void testFetchingBranchReportService() throws Exception {
-		try {
-			ReportServiceFactory.getLoggingEnabledBranchReportService(Integer
-					.valueOf(1));
-		}
-		catch (Exception e) {
-			e.printStackTrace(System.err);
-			fail("Failed to fetch BranchReportService");
-		}
-	}
+    public void testFetchingBranchReportService() throws Exception {
+        try {
+            ReportServiceFactory.getLoggingEnabledBranchReportService(Integer.valueOf(1));
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            fail("Failed to fetch BranchReportService");
+        }
+    }
 
-	public void testBranchCashConfirmationReportService() throws Exception {
-		try {
-			ReportServiceFactory.getBranchCashConfirmationReportService(Integer
-					.valueOf(0));
-		}
-		catch (Exception e) {
-			e.printStackTrace(System.err);
-			fail("Failed to fetch BranchCashConfirmationReportService");
-		}
-	}
+    public void testBranchCashConfirmationReportService() throws Exception {
+        try {
+            ReportServiceFactory.getBranchCashConfirmationReportService(Integer.valueOf(0));
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            fail("Failed to fetch BranchCashConfirmationReportService");
+        }
+    }
 }

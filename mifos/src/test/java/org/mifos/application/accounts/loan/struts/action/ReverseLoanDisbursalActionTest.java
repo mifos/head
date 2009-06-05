@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.Date;
@@ -49,269 +49,253 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 
-	public ReverseLoanDisbursalActionTest() throws SystemException, ApplicationException {
+    public ReverseLoanDisbursalActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
 
-	private LoanBO loan = null;
+    private LoanBO loan = null;
 
-	private CenterBO center = null;
+    private CenterBO center = null;
 
-	protected GroupBO group = null;
+    protected GroupBO group = null;
 
-	private ClientBO client = null;
+    private ClientBO client = null;
 
-	private String flowKey;
+    private String flowKey;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext",
-				TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, MultipleLoanAccountsCreationAction.class);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, MultipleLoanAccountsCreationAction.class);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(loan);
-			TestObjectFactory.cleanUp(client);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-			StaticHibernateUtil.closeSession();
-		}
-		catch (Exception e) {
-			/* throwing exceptions here will often mask whatever the
-			   real failure was */
-			e.printStackTrace();
-		}
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(loan);
+            TestObjectFactory.cleanUp(client);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+            StaticHibernateUtil.closeSession();
+        } catch (Exception e) {
+            /*
+             * throwing exceptions here will often mask whatever the real
+             * failure was
+             */
+            e.printStackTrace();
+        }
+        super.tearDown();
+    }
 
-	public void testSearch() throws Exception {
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "search");
-		performNoErrors();
-		verifyForward(ActionForwards.search_success.toString());
-	}
+    public void testSearch() throws Exception {
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "search");
+        performNoErrors();
+        verifyForward(ActionForwards.search_success.toString());
+    }
 
-	public void testLoadWithoutAccountGlobalNum() throws Exception {
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		actionPerform();
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyActionErrors(new String[] { LoanConstants.ERROR_LOAN_ACCOUNT_ID });
-		verifyInputForward();
-	}
+    public void testLoadWithoutAccountGlobalNum() throws Exception {
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyActionErrors(new String[] { LoanConstants.ERROR_LOAN_ACCOUNT_ID });
+        verifyInputForward();
+    }
 
-	public void testLoadForInvalidAccountNum() throws Exception {
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", "123");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyActionErrors(new String[] { LoanConstants.NOSEARCHRESULTS });
-		verifyForward(ActionForwards.search_success.toString());
-	}
+    public void testLoadForInvalidAccountNum() throws Exception {
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", "123");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyActionErrors(new String[] { LoanConstants.NOSEARCHRESULTS });
+        verifyForward(ActionForwards.search_success.toString());
+    }
 
-	public void testLoadForInvalidAccountState() {
-		createLoanAccount();
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", loan.getGlobalAccountNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyActionErrors(new String[] { LoanConstants.NOSEARCHRESULTS });
-		verifyForward(ActionForwards.search_success.toString());
-	}
+    public void testLoadForInvalidAccountState() {
+        createLoanAccount();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", loan.getGlobalAccountNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyActionErrors(new String[] { LoanConstants.NOSEARCHRESULTS });
+        verifyForward(ActionForwards.search_success.toString());
+    }
 
-	public void testLoad() throws AccountException, PageExpiredException {
-		createLoanAccount();
-		disburseLoan();
+    public void testLoad() throws AccountException, PageExpiredException {
+        createLoanAccount();
+        disburseLoan();
 
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", loan.getGlobalAccountNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		performNoErrors();
-		verifyForward(ActionForwards.load_success.toString());
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", loan.getGlobalAccountNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        performNoErrors();
+        verifyForward(ActionForwards.load_success.toString());
 
-		assertNotNull(SessionUtils
-				.getAttribute(Constants.BUSINESS_KEY, request));
-		assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_LIST,
-				request));
-		assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_SIZE,
-				request));
-		StaticHibernateUtil.closeSession();
-	}
+        assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
+        assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_LIST, request));
+        assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_SIZE, request));
+        StaticHibernateUtil.closeSession();
+    }
 
-	public void testPreviewWithoutNotes() throws AccountException,
-			PageExpiredException {
-		createLoanAccount();
-		disburseLoan();
+    public void testPreviewWithoutNotes() throws AccountException, PageExpiredException {
+        createLoanAccount();
+        disburseLoan();
 
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", loan.getGlobalAccountNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		StaticHibernateUtil.closeSession();
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", loan.getGlobalAccountNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		verifyActionErrors(new String[] { LoanConstants.MANDATORY });
-		verifyInputForward();
-	}
+        verifyActionErrors(new String[] { LoanConstants.MANDATORY });
+        verifyInputForward();
+    }
 
-	public void testPreviewWithNoteGretaerThanMax() throws AccountException,
-			PageExpiredException {
-		createLoanAccount();
-		disburseLoan();
+    public void testPreviewWithNoteGretaerThanMax() throws AccountException, PageExpiredException {
+        createLoanAccount();
+        disburseLoan();
 
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", loan.getGlobalAccountNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		StaticHibernateUtil.closeSession();
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("note", "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789"
-				+ "0123456789012345678901234567890123456789");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", loan.getGlobalAccountNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("note", "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789"
+                + "0123456789012345678901234567890123456789" + "0123456789012345678901234567890123456789");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		verifyActionErrors(new String[] { LoanConstants.MAX_LENGTH });
-		verifyInputForward();
+        verifyActionErrors(new String[] { LoanConstants.MAX_LENGTH });
+        verifyInputForward();
 
-	}
+    }
 
-	public void testPreview() throws AccountException, PageExpiredException {
-		createLoanAccount();
-		disburseLoan();
+    public void testPreview() throws AccountException, PageExpiredException {
+        createLoanAccount();
+        disburseLoan();
 
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", loan.getGlobalAccountNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		StaticHibernateUtil.closeSession();
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("note", "0123456789012345678901234567890123456789");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		performNoErrors();
-		verifyForward(ActionForwards.preview_success.toString());
-	}
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", loan.getGlobalAccountNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("note", "0123456789012345678901234567890123456789");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        performNoErrors();
+        verifyForward(ActionForwards.preview_success.toString());
+    }
 
-	public void testUpdate() throws AccountException, PageExpiredException {
-		createLoanAccount();
-		disburseLoan();
+    public void testUpdate() throws AccountException, PageExpiredException {
+        createLoanAccount();
+        disburseLoan();
 
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("searchString", loan.getGlobalAccountNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		StaticHibernateUtil.closeSession();
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("note", "0123456789012345678901234567890123456789");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		performNoErrors();
-		verifyForward(ActionForwards.update_success.toString());
-		
-		StaticHibernateUtil.closeSession();
-		loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
-				loan.getAccountId());
-	}
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("searchString", loan.getGlobalAccountNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("note", "0123456789012345678901234567890123456789");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        performNoErrors();
+        verifyForward(ActionForwards.update_success.toString());
 
-	public void testCancel() {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "cancel");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		performNoErrors();
-		verifyForward(ActionForwards.cancel_success.toString());
-	}
+        StaticHibernateUtil.closeSession();
+        loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loan.getAccountId());
+    }
 
-	public void testValidate() throws Exception {
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "validate");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		performNoErrors();
-		verifyForward(ActionForwards.search_success.toString());
-	}
+    public void testCancel() {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "cancel");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        performNoErrors();
+        verifyForward(ActionForwards.cancel_success.toString());
+    }
 
-	public void testValidateForPreview() throws Exception {
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "validate");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		request.setAttribute("methodCalled", Methods.preview.toString());
+    public void testValidate() throws Exception {
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "validate");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        performNoErrors();
+        verifyForward(ActionForwards.search_success.toString());
+    }
 
-		performNoErrors();
-		verifyForward(ActionForwards.load_success.toString());
-	}
+    public void testValidateForPreview() throws Exception {
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "validate");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute("methodCalled", Methods.preview.toString());
 
-	public void testVaildateForUpdate() throws Exception {
-		setRequestPathInfo("/reverseloandisbaction.do");
-		addRequestParameter("method", "validate");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		request.setAttribute("methodCalled", Methods.update.toString());
+        performNoErrors();
+        verifyForward(ActionForwards.load_success.toString());
+    }
 
-		performNoErrors();
-		verifyForward(ActionForwards.preview_success.toString());
-	}
+    public void testVaildateForUpdate() throws Exception {
+        setRequestPathInfo("/reverseloandisbaction.do");
+        addRequestParameter("method", "validate");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute("methodCalled", Methods.update.toString());
 
-	private void createInitialCustomers() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-	}
+        performNoErrors();
+        verifyForward(ActionForwards.preview_success.toString());
+    }
 
-	private void createLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		createInitialCustomers();
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, center.getCustomerMeeting().getMeeting());
-		loan = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_APPROVED, startDate, loanOffering);
-	}
+    private void createInitialCustomers() {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+    }
 
-	private void disburseLoan() throws AccountException {
-		loan.setUserContext(userContext);
-		loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group
-				.getPersonnel(), new Date(), Short.valueOf("1"));
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-	}
+    private void createLoanAccount() {
+        Date startDate = new Date(System.currentTimeMillis());
+        createInitialCustomers();
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, center.getCustomerMeeting()
+                .getMeeting());
+        loan = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_APPROVED, startDate,
+                loanOffering);
+    }
+
+    private void disburseLoan() throws AccountException {
+        loan.setUserContext(userContext);
+        loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"));
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+    }
 }

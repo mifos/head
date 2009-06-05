@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.reports.business.service;
 
+package org.mifos.application.reports.business.service;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,23 +32,17 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
-
 public class BranchReportIntegrationTestCase extends MifosIntegrationTest {
 
-	protected static final Date FIRST_JAN_2008 = DateUtils.getDate(2008,
-			Calendar.JANUARY, 1);
-	protected static final Integer BRANCH_ID = Integer.valueOf(2);
-	public static final Short BRANCH_ID_SHORT = NumberUtils
-			.convertIntegerToShort(BRANCH_ID);
-	protected static final String RUN_DATE_STR = ReportsConstants.REPORT_DATE_FORMAT
-			.format(DateUtils.currentDate());
-	public static final Date RUN_DATE = DateUtils
-			.getCurrentDateWithoutTimeStamp();
-	public static final MifosCurrency DEFAULT_CURRENCY = Configuration
-			.getInstance().getSystemConfig().getCurrency();
-	protected static final Short CURRENCY_ID = DEFAULT_CURRENCY.getCurrencyId();
+    protected static final Date FIRST_JAN_2008 = DateUtils.getDate(2008, Calendar.JANUARY, 1);
+    protected static final Integer BRANCH_ID = Integer.valueOf(2);
+    public static final Short BRANCH_ID_SHORT = NumberUtils.convertIntegerToShort(BRANCH_ID);
+    protected static final String RUN_DATE_STR = ReportsConstants.REPORT_DATE_FORMAT.format(DateUtils.currentDate());
+    public static final Date RUN_DATE = DateUtils.getCurrentDateWithoutTimeStamp();
+    public static final MifosCurrency DEFAULT_CURRENCY = Configuration.getInstance().getSystemConfig().getCurrency();
+    protected static final Short CURRENCY_ID = DEFAULT_CURRENCY.getCurrencyId();
 
-	public BranchReportIntegrationTestCase() throws SystemException, ApplicationException {
-		super();
-	}
+    public BranchReportIntegrationTestCase() throws SystemException, ApplicationException {
+        super();
+    }
 }

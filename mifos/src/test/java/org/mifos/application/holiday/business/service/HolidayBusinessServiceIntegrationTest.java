@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.holiday.business.service;
 
 import java.util.Calendar;
@@ -36,51 +36,49 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class HolidayBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
-	public HolidayBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public HolidayBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-
     private HolidayBO holidayEntity;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(holidayEntity);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(holidayEntity);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testGetHolidays() throws Exception {
-		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)1);
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-		// Disable date Validation because startDate is less than today
-		holidayEntity.setValidationEnabled(false);
+    public void testGetHolidays() throws Exception {
+        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
+        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
+        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
+        // Disable date Validation because startDate is less than today
+        holidayEntity.setValidationEnabled(false);
 
-		holidayEntity.save();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        holidayEntity.save();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		List<HolidayBO> holidays = new HolidayBusinessService().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
-		assertNotNull(holidays);
-		assertEquals(1, holidays.size());
-	}
+        List<HolidayBO> holidays = new HolidayBusinessService().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
+        assertNotNull(holidays);
+        assertEquals(1, holidays.size());
+    }
 
-	public void testGetRepaymentRuleTypes() throws Exception {
-		List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService().getRepaymentRuleTypes();
-		assertNotNull(repaymentRules);
-		assertEquals(3, repaymentRules.size());
-	}
-	
-	
-	public void testGetDistinctYears() throws Exception {
-		List<HolidayBO> distinctYears = new HolidayBusinessService().getDistinctYears();
-		assertNotNull(distinctYears);		
-	}
-	
+    public void testGetRepaymentRuleTypes() throws Exception {
+        List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService().getRepaymentRuleTypes();
+        assertNotNull(repaymentRules);
+        assertEquals(3, repaymentRules.size());
+    }
+
+    public void testGetDistinctYears() throws Exception {
+        List<HolidayBO> distinctYears = new HolidayBusinessService().getDistinctYears();
+        assertNotNull(distinctYears);
+    }
+
 }

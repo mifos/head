@@ -17,24 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.cashconfirmationreport;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.reports.business.service.BranchCashConfirmationConfigServiceTest;
-import org.mifos.application.reports.business.service.BranchCashConfirmationReportServiceIntegrationTest;
-//import org.mifos.framework.components.batchjobs.helpers.BranchCashConfirmationReportHelperTest;
+import org.mifos.application.reports.business.service.BranchCashConfirmationReportServiceIntegrationTest; //import org.mifos.framework.components.batchjobs.helpers.BranchCashConfirmationReportHelperTest;
 import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistenceIntegrationTest;
 
 public class BranchCashConfirmationReportTestSuite extends TestSuite {
-	public static Test suite() throws Exception {
-		TestSuite suite = new TestSuite();
-//		suite.addTestSuite(BranchCashConfirmationReportHelperTest.class);
-		suite.addTestSuite(BranchCashConfirmationConfigServiceTest.class);
-		suite.addTestSuite(BranchCashConfirmationReportPersistenceIntegrationTest.class);
-		suite.addTestSuite(BranchCashConfirmationReportServiceIntegrationTest.class);
-		return suite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite suite = new TestSuite();
+        // suite.addTestSuite(BranchCashConfirmationReportHelperTest.class);
+        suite.addTestSuite(BranchCashConfirmationConfigServiceTest.class);
+        suite.addTestSuite(BranchCashConfirmationReportPersistenceIntegrationTest.class);
+        suite.addTestSuite(BranchCashConfirmationReportServiceIntegrationTest.class);
+        return suite;
+    }
 }

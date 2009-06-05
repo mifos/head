@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import java.sql.Date;
@@ -36,27 +36,24 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CollectionSheetBOIntegrationTest extends MifosIntegrationTest {
-	public CollectionSheetBOIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting()
-			throws Exception {
-		Session session = StaticHibernateUtil.getSessionTL();
-		Transaction transaction = session.beginTransaction();
-		Date year2010 = DateUtils.getSqlDate(2010, Calendar.JANUARY, 1);
-		CollectionSheetBO collectionSheet = new CollectionSheetBO();
-		collectionSheet.setCollSheetDate(year2010);
-		collectionSheet.setRunDate(new Date(System.currentTimeMillis()));
-		collectionSheet.create();
-		HashMap queryParameters = new HashMap();
-		queryParameters.put("MEETING_DATE", year2010);
-		List matchingCollectionSheets = new CollectionSheetPersistence()
-				.executeNamedQuery(
-						NamedQueryConstants.COLLECTION_SHEETS_FOR_MEETING_DATE,
-						queryParameters);
-		assertEquals(1, matchingCollectionSheets.size());
-		assertEquals(collectionSheet, matchingCollectionSheets.get(0));
-		transaction.rollback();
-	}
+    public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting() throws Exception {
+        Session session = StaticHibernateUtil.getSessionTL();
+        Transaction transaction = session.beginTransaction();
+        Date year2010 = DateUtils.getSqlDate(2010, Calendar.JANUARY, 1);
+        CollectionSheetBO collectionSheet = new CollectionSheetBO();
+        collectionSheet.setCollSheetDate(year2010);
+        collectionSheet.setRunDate(new Date(System.currentTimeMillis()));
+        collectionSheet.create();
+        HashMap queryParameters = new HashMap();
+        queryParameters.put("MEETING_DATE", year2010);
+        List matchingCollectionSheets = new CollectionSheetPersistence().executeNamedQuery(
+                NamedQueryConstants.COLLECTION_SHEETS_FOR_MEETING_DATE, queryParameters);
+        assertEquals(1, matchingCollectionSheets.size());
+        assertEquals(collectionSheet, matchingCollectionSheets.get(0));
+        transaction.rollback();
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.business;
 
 import java.util.ArrayList;
@@ -60,8 +60,7 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
         this.roleIds = new ArrayList<Short>();
         this.roleIds.add(new Short((short) 1));
         this.customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				CustomFieldType.NUMERIC));
+        customFields.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         this.name = new Name("TestFirstName", null, null, null);
         this.governmentIdNumber = "111111";
         this.dateOfBirth = new Date();
@@ -141,9 +140,10 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
     }
 
     /**
-     * Use this in transactions that you don't plan on committing to the database.  If
-     * you commit more than one of these to the database you'll run into uniqueness
-     * constraints.  Plan on always rolling back the transaction.
+     * Use this in transactions that you don't plan on committing to the
+     * database. If you commit more than one of these to the database you'll run
+     * into uniqueness constraints. Plan on always rolling back the transaction.
+     * 
      * @param officeId
      * @return
      */

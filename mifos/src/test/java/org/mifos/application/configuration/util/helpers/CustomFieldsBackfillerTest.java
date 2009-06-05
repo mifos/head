@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.configuration.util.helpers;
 
 import static org.junit.Assert.assertEquals;
@@ -47,128 +47,118 @@ import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomFieldsBackfillerTest {
-	// reused by unit tests
-	ClientBO client;
-	CustomFieldDefinitionEntity customField;
-	CustomerCustomFieldEntity ccfe;
-	// constants for creating reusable objects
-	private static final String FAVORITE_COLOR = "Green";
-	private static final String CUSTOM_FIELD_LABEL = "Favorite Color";
-	private static final String CUSTOM_FIELD_LABEL2 = "Lucky Number";
+    // reused by unit tests
+    ClientBO client;
+    CustomFieldDefinitionEntity customField;
+    CustomerCustomFieldEntity ccfe;
+    // constants for creating reusable objects
+    private static final String FAVORITE_COLOR = "Green";
+    private static final String CUSTOM_FIELD_LABEL = "Favorite Color";
+    private static final String CUSTOM_FIELD_LABEL2 = "Lucky Number";
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		new TestCaseInitializer().initialize();
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        new TestCaseInitializer().initialize();
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		// create client
-		client = TestObjectFactory.createClient("Joe Client", null,
-				CustomerStatus.CLIENT_PARTIAL);
-	}
+    @Before
+    public void setUp() throws Exception {
+        // create client
+        client = TestObjectFactory.createClient("Joe Client", null, CustomerStatus.CLIENT_PARTIAL);
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		Session session = StaticHibernateUtil.getSessionTL();
+    @After
+    public void tearDown() throws Exception {
+        Session session = StaticHibernateUtil.getSessionTL();
 
-		// Clean up custom field record and association with client.
-		// Don't do this in a test method (like testExistingClientGetsNewField)
-		// because it may not be executed... if an assert fails, for instance,
-		// we'll jump out of the method before cleanup can occur.
-		session.delete(ccfe);
-		session.delete(customField);
+        // Clean up custom field record and association with client.
+        // Don't do this in a test method (like testExistingClientGetsNewField)
+        // because it may not be executed... if an assert fails, for instance,
+        // we'll jump out of the method before cleanup can occur.
+        session.delete(ccfe);
+        session.delete(customField);
 
-		// clean up customer/client
-		TestObjectFactory.cleanUp(client);
-	}
+        // clean up customer/client
+        TestObjectFactory.cleanUp(client);
+    }
 
-	private void createCustomField() throws Exception {
-		YesNoFlag mandatory = YesNoFlag.YES;
-		customField = new CustomFieldDefinitionEntity(CUSTOM_FIELD_LABEL,
-				CustomerLevel.CLIENT.getValue(), CustomFieldType.ALPHA_NUMERIC,
-				EntityType.CLIENT, FAVORITE_COLOR, mandatory);
-		assertNotNull(customField);
-		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
-		persistence.addCustomField(customField);
-		Short englishLocale = new Short("1");
-		MifosConfiguration.getInstance().updateLabelKey(
-				customField.getLookUpEntity().getEntityType(),
-				CUSTOM_FIELD_LABEL, englishLocale);
-	}
+    private void createCustomField() throws Exception {
+        YesNoFlag mandatory = YesNoFlag.YES;
+        customField = new CustomFieldDefinitionEntity(CUSTOM_FIELD_LABEL, CustomerLevel.CLIENT.getValue(),
+                CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, FAVORITE_COLOR, mandatory);
+        assertNotNull(customField);
+        ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
+        persistence.addCustomField(customField);
+        Short englishLocale = new Short("1");
+        MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(),
+                CUSTOM_FIELD_LABEL, englishLocale);
+    }
 
-	private void createNonMandatoryCustomFieldWithoutDefault() throws Exception {
-		YesNoFlag mandatory = YesNoFlag.NO;
-		customField = new CustomFieldDefinitionEntity(CUSTOM_FIELD_LABEL2,
-				CustomerLevel.CLIENT.getValue(), CustomFieldType.NUMERIC,
-				EntityType.CLIENT, "", mandatory);
-		assertNotNull(customField);
-		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
-		persistence.addCustomField(customField);
-		Short englishLocale = new Short("1");
-		MifosConfiguration.getInstance().updateLabelKey(
-				customField.getLookUpEntity().getEntityType(),
-				CUSTOM_FIELD_LABEL, englishLocale);
-	}
+    private void createNonMandatoryCustomFieldWithoutDefault() throws Exception {
+        YesNoFlag mandatory = YesNoFlag.NO;
+        customField = new CustomFieldDefinitionEntity(CUSTOM_FIELD_LABEL2, CustomerLevel.CLIENT.getValue(),
+                CustomFieldType.NUMERIC, EntityType.CLIENT, "", mandatory);
+        assertNotNull(customField);
+        ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
+        persistence.addCustomField(customField);
+        Short englishLocale = new Short("1");
+        MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(),
+                CUSTOM_FIELD_LABEL, englishLocale);
+    }
 
-	/**
-	 * Ensure a newly added field is also added to an existing client.
-	 */
-	@Test
-	public void testExistingClientGetsNewField() throws Exception {
-		createCustomField();
-		assertEquals(CUSTOM_FIELD_LABEL, customField.getLabel());
-		CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
-		// do the actual backfill
-		cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT,
-				CustomerLevel.CLIENT.getValue(), customField);
+    /**
+     * Ensure a newly added field is also added to an existing client.
+     */
+    @Test
+    public void testExistingClientGetsNewField() throws Exception {
+        createCustomField();
+        assertEquals(CUSTOM_FIELD_LABEL, customField.getLabel());
+        CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
+        // do the actual backfill
+        cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT, CustomerLevel.CLIENT.getValue(), customField);
 
-		Session session = StaticHibernateUtil.getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
 
-		// make sure record was added that joins the custom field with the
-		// customer that existed before the custom field was added
-		Query query = session
-				.createQuery("from org.mifos.application.customer.business.CustomerCustomFieldEntity "
-						+ "where fieldId=:fieldId and customer=:customerId");
-		query.setInteger("fieldId", customField.getFieldId());
-		query.setInteger("customerId", client.getCustomerId());
-		ccfe = (CustomerCustomFieldEntity) query.list().get(0);
-		assertNotNull(ccfe);
-		assertEquals(FAVORITE_COLOR, ccfe.getFieldValue());
-	}
+        // make sure record was added that joins the custom field with the
+        // customer that existed before the custom field was added
+        Query query = session.createQuery("from org.mifos.application.customer.business.CustomerCustomFieldEntity "
+                + "where fieldId=:fieldId and customer=:customerId");
+        query.setInteger("fieldId", customField.getFieldId());
+        query.setInteger("customerId", client.getCustomerId());
+        ccfe = (CustomerCustomFieldEntity) query.list().get(0);
+        assertNotNull(ccfe);
+        assertEquals(FAVORITE_COLOR, ccfe.getFieldValue());
+    }
 
-	/**
-	 * Ensure a non-mandatory newly added field (without a default value) is
-	 * also added to an existing client.
-	 */
-	@Test
-	public void testExistingClientGetsNewNonmandatoryFieldWithoutDefault()
-			throws Exception {
-		createNonMandatoryCustomFieldWithoutDefault();
-		assertEquals(CUSTOM_FIELD_LABEL2, customField.getLabel());
-		CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
-		// do the actual backfill
-		cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT,
-				CustomerLevel.CLIENT.getValue(), customField);
+    /**
+     * Ensure a non-mandatory newly added field (without a default value) is
+     * also added to an existing client.
+     */
+    @Test
+    public void testExistingClientGetsNewNonmandatoryFieldWithoutDefault() throws Exception {
+        createNonMandatoryCustomFieldWithoutDefault();
+        assertEquals(CUSTOM_FIELD_LABEL2, customField.getLabel());
+        CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
+        // do the actual backfill
+        cfb.addCustomFieldsForExistingRecords(EntityType.CLIENT, CustomerLevel.CLIENT.getValue(), customField);
 
-		Session session = StaticHibernateUtil.getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
 
-		// make sure record was added that joins the custom field with the
-		// customer that existed before the custom field was added
-		Query query = session
-				.createQuery("from org.mifos.application.customer.business.CustomerCustomFieldEntity "
-						+ "where fieldId=:fieldId and customer=:customerId");
-		query.setInteger("fieldId", customField.getFieldId());
-		query.setInteger("customerId", client.getCustomerId());
-		ccfe = (CustomerCustomFieldEntity) query.list().get(0);
-		assertNotNull(ccfe);
-		Assert.assertTrue(StringUtils.isBlank(ccfe.getFieldValue()));
-	}
+        // make sure record was added that joins the custom field with the
+        // customer that existed before the custom field was added
+        Query query = session.createQuery("from org.mifos.application.customer.business.CustomerCustomFieldEntity "
+                + "where fieldId=:fieldId and customer=:customerId");
+        query.setInteger("fieldId", customField.getFieldId());
+        query.setInteger("customerId", client.getCustomerId());
+        ccfe = (CustomerCustomFieldEntity) query.list().get(0);
+        assertNotNull(ccfe);
+        Assert.assertTrue(StringUtils.isBlank(ccfe.getFieldValue()));
+    }
 
-	// TODO: add additional tests for group, center, office, personnel, loan,
-	// savings.
+    // TODO: add additional tests for group, center, office, personnel, loan,
+    // savings.
 }

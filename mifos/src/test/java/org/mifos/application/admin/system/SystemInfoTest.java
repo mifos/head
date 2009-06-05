@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.system;
 
 import static org.junit.Assert.assertEquals;
@@ -38,83 +38,82 @@ import org.mifos.framework.util.DateTimeService;
 import servletunit.ServletContextSimulator;
 
 public class SystemInfoTest {
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(SystemInfoTest.class);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(SystemInfoTest.class);
+    }
 
-	private SystemInfo info;
+    private SystemInfo info;
 
-	@Before
-	public void setUp() throws Exception {
-		ServletContext servletContext = new ServletContextSimulator();
-		MockDatabaseMetaData metaData = new MockDatabaseMetaData();
-		info = new SystemInfo(metaData, servletContext, Locale.US, false);
-		info.setJavaVendor("Sun");
-		info.setJavaVersion("1.5");
-		info.setSvnRevision(new MockSvnRevision());
-	}
+    @Before
+    public void setUp() throws Exception {
+        ServletContext servletContext = new ServletContextSimulator();
+        MockDatabaseMetaData metaData = new MockDatabaseMetaData();
+        info = new SystemInfo(metaData, servletContext, Locale.US, false);
+        info.setJavaVendor("Sun");
+        info.setJavaVersion("1.5");
+        info.setSvnRevision(new MockSvnRevision());
+    }
 
-	@Test
-	public void testApplicationDatabaseVersion() throws Exception {
-		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info
-				.getApplicationVersion());
-	}
+    @Test
+    public void testApplicationDatabaseVersion() throws Exception {
+        assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
+    }
 
-	@Test
-	public void testDatabaseDetails() throws Exception {
-		assertEquals("vendorName", info.getDatabaseVendor());
-		assertEquals("1.0", info.getDatabaseVersion());
-		assertEquals("driverName", info.getDriverName());
-		assertEquals("2.0", info.getDriverVersion());
-	}
+    @Test
+    public void testDatabaseDetails() throws Exception {
+        assertEquals("vendorName", info.getDatabaseVendor());
+        assertEquals("1.0", info.getDatabaseVersion());
+        assertEquals("driverName", info.getDriverName());
+        assertEquals("2.0", info.getDriverVersion());
+    }
 
-	@Test
-	public void testDatabaseInfos() throws Exception {
-	    String infoSourceValue = "test";
-		info.setInfoSource(infoSourceValue);
-		assertEquals(info.getInfoSource(),infoSourceValue);
-		URI full = new URI("jdbc:mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
-		URI mysqlSpecific = new URI(full.getSchemeSpecificPart());
-		info.setInfoURL(mysqlSpecific);
-		assertEquals("localhost", info.getDatabaseServer()); 
-		assertEquals("mifos", info.getDatabaseName());
-		assertEquals("3305", info.getDatabasePort());
-		info.setInfoUserName("mysql");
-		assertEquals("mysql", info.getDatabaseUser());
-	}
+    @Test
+    public void testDatabaseInfos() throws Exception {
+        String infoSourceValue = "test";
+        info.setInfoSource(infoSourceValue);
+        assertEquals(info.getInfoSource(), infoSourceValue);
+        URI full = new URI("jdbc:mysql://localhost:3305/mifos?useUnicode=true&characterEncoding=UTF-8");
+        URI mysqlSpecific = new URI(full.getSchemeSpecificPart());
+        info.setInfoURL(mysqlSpecific);
+        assertEquals("localhost", info.getDatabaseServer());
+        assertEquals("mifos", info.getDatabaseName());
+        assertEquals("3305", info.getDatabasePort());
+        info.setInfoUserName("mysql");
+        assertEquals("mysql", info.getDatabaseUser());
+    }
 
-	@Test
-	public void testJava() throws Exception {
-		assertEquals("Sun", info.getJavaVendor());
-		assertEquals("1.5", info.getJavaVersion());
-	}
+    @Test
+    public void testJava() throws Exception {
+        assertEquals("Sun", info.getJavaVendor());
+        assertEquals("1.5", info.getJavaVersion());
+    }
 
-	@Test
-	public void testApplicationServer() throws Exception {
-		assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
-	}
+    @Test
+    public void testApplicationServer() throws Exception {
+        assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
+    }
 
-	@Test
-	public void testGetSubversionRevision() throws Exception {
-		assertEquals("123456", info.getSvnRevision());
-	}
+    @Test
+    public void testGetSubversionRevision() throws Exception {
+        assertEquals("123456", info.getSvnRevision());
+    }
 
-	@Test(expected = RuntimeException.class)
-	public void testGetSubversionRevisionFromMissingFile() throws Exception {
-		info.setSvnRevision(new SvnRevision("non-existant.file"));
-	}
-	
-	@Test
-	public void testGetDateTime() {
-	    DateTime referenceDateTime = new DateTime(2008,12,5,1,10,0,0); 
-	    DateTimeService dateTimeService = new DateTimeService();
-	    try {
-	        // set a fixed datetime which is what SystemInfo should get back
-	        dateTimeService.setCurrentDateTimeFixed(referenceDateTime);
-	        assertEquals("System info date time should be from the DateTimeService", 
-	                referenceDateTime, info.getDateTime());
-	    } finally {
-	        dateTimeService.resetToCurrentSystemDateTime();
-	    }
-	}
+    @Test(expected = RuntimeException.class)
+    public void testGetSubversionRevisionFromMissingFile() throws Exception {
+        info.setSvnRevision(new SvnRevision("non-existant.file"));
+    }
+
+    @Test
+    public void testGetDateTime() {
+        DateTime referenceDateTime = new DateTime(2008, 12, 5, 1, 10, 0, 0);
+        DateTimeService dateTimeService = new DateTimeService();
+        try {
+            // set a fixed datetime which is what SystemInfo should get back
+            dateTimeService.setCurrentDateTimeFixed(referenceDateTime);
+            assertEquals("System info date time should be from the DateTimeService", referenceDateTime, info
+                    .getDateTime());
+        } finally {
+            dateTimeService.resetToCurrentSystemDateTime();
+        }
+    }
 }

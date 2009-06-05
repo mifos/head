@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.config;
 
 import junit.framework.Test;
@@ -28,25 +28,24 @@ import org.mifos.config.FiscalCalendarRulesTest;
 
 public class ConfigTestSuite extends TestSuite {
 
-	public ConfigTestSuite() throws Exception {
-	}
+    public ConfigTestSuite() throws Exception {
+    }
 
-	public static void main(String[] args) throws Exception {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
+    public static void main(String[] args) throws Exception {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
 
-	public static Test suite() throws Exception 
-	{
-		TestSuite suite = new ConfigTestSuite();
-		suite.addTest(AccountingRulesIntegrationTest.suite());
-		suite.addTestSuite(LocalizationIntegrationTest.class);
-		suite.addTest(FiscalCalendarRulesTest.suite());
-		suite.addTest(ClientRulesIntegrationTest.suite());
-		suite.addTest(ProcessFlowRulesTest.suite());
-		suite.addTest(ChartOfAccountsConfigTest.suite());
-		suite.addTest(GeneralConfigIntegrationTest.suite());
-		
-		return suite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite suite = new ConfigTestSuite();
+        suite.addTest(AccountingRulesIntegrationTest.suite());
+        suite.addTestSuite(LocalizationIntegrationTest.class);
+        suite.addTest(FiscalCalendarRulesTest.suite());
+        suite.addTest(ClientRulesIntegrationTest.suite());
+        suite.addTest(ProcessFlowRulesTest.suite());
+        suite.addTest(ChartOfAccountsConfigTest.suite());
+        suite.addTest(GeneralConfigIntegrationTest.suite());
+
+        return suite;
+    }
 }

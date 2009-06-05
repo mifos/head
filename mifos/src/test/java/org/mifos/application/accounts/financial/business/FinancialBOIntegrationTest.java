@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business;
 
 import java.util.Iterator;
@@ -33,48 +33,44 @@ import org.mifos.framework.util.helpers.TestConstants;
 
 public class FinancialBOIntegrationTest extends MifosIntegrationTest {
 
-	public FinancialBOIntegrationTest() throws SystemException, ApplicationException {
+    public FinancialBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testGetApplicableDebit() throws FinancialException {
-		FinancialActionBO finActionPrincipal = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
+        FinancialActionBO finActionPrincipal = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
-		Set<COABO> applicableDebitCategory = finActionPrincipal
-				.getApplicableDebitCharts();
+        Set<COABO> applicableDebitCategory = finActionPrincipal.getApplicableDebitCharts();
 
-		assertEquals(applicableDebitCategory.size(), 1);
-		Iterator<COABO> iterSubCategory = applicableDebitCategory.iterator();
-		while (iterSubCategory.hasNext()) {
+        assertEquals(applicableDebitCategory.size(), 1);
+        Iterator<COABO> iterSubCategory = applicableDebitCategory.iterator();
+        while (iterSubCategory.hasNext()) {
 
-			COABO subCategoryCOA = iterSubCategory.next();
-			assertEquals("Bank Account 1", subCategoryCOA.getAccountName());
-		}
+            COABO subCategoryCOA = iterSubCategory.next();
+            assertEquals("Bank Account 1", subCategoryCOA.getAccountName());
+        }
 
-	}
+    }
 
-	public void testGetApplicableCredit() throws FinancialException {
-		FinancialActionBO finActionPrincipal = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
+    public void testGetApplicableCredit() throws FinancialException {
+        FinancialActionBO finActionPrincipal = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
-		Set<COABO> applicableCreditCategory = finActionPrincipal
-				.getApplicableCreditCharts();
+        Set<COABO> applicableCreditCategory = finActionPrincipal.getApplicableCreditCharts();
 
-		assertEquals(TestConstants.FINANCIAL_PRINCIPALPOSTING_SIZE,
-				applicableCreditCategory.size());
-	}
+        assertEquals(TestConstants.FINANCIAL_PRINCIPALPOSTING_SIZE, applicableCreditCategory.size());
+    }
 
-	public void testRoundingCredit() throws FinancialException {
-		FinancialActionBO finActionRounding = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.ROUNDING);
-		Set<COABO> applicableCreditCategory = finActionRounding
-				.getApplicableCreditCharts();
-		assertEquals(applicableCreditCategory.size(), 1);
-		for (COABO coa : applicableCreditCategory) {
-			assertEquals("Income from 999 Account", coa.getAccountName());
-		}
+    public void testRoundingCredit() throws FinancialException {
+        FinancialActionBO finActionRounding = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.ROUNDING);
+        Set<COABO> applicableCreditCategory = finActionRounding.getApplicableCreditCharts();
+        assertEquals(applicableCreditCategory.size(), 1);
+        for (COABO coa : applicableCreditCategory) {
+            assertEquals("Income from 999 Account", coa.getAccountName());
+        }
 
-	}
+    }
 
 }

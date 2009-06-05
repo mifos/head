@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts;
 
 import junit.framework.Test;
@@ -49,44 +49,43 @@ import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.accounts.business.AddAccountActionTest;
 
 public class AccountTestSuite extends TestSuite {
-	
-	AccountTestSuite() throws Exception{
-		super();
-	}
-	
-	public static void main(String[] args) throws Exception {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new AccountTestSuite();
-		testSuite.addTestSuite(AccountPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(AccountBOIntegrationTest.class);
-		testSuite.addTestSuite(AccountFeesEntityIntegrationTest.class);
-		testSuite.addTestSuite(AccountActionDateEntityIntegrationTest.class);
-		testSuite.addTestSuite(AccountServiceIntegrationTest.class);
-		testSuite.addTestSuite(AccountActionTest.class);
-		testSuite.addTestSuite(ApplyAdjustmentActionTest.class);
-		testSuite.addTestSuite(AccountStateEntityIntegrationTestTest.class);
-		testSuite.addTestSuite(AccountActionEntityIntegrationTest.class);
-		testSuite.addTestSuite(LoanTrxnDetailEntityIntegrationTest.class);
-		testSuite.addTestSuite(AccountFeesActionDetailEntityIntegrationTest.class);
-		testSuite.addTestSuite(CustomerAccountBOIntegrationTest.class);
-		testSuite.addTestSuite(AccountPaymentEntityIntegrationTest.class);
-		testSuite.addTestSuite(FinancialBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(ApplyPaymentActionTest.class);
-		testSuite.addTestSuite(NotesActionTest.class);
-		testSuite.addTestSuite(AccountStateMachineIntegrationTest.class);
-		testSuite.addTestSuite(EditStatusActionTest.class);
-		testSuite.addTestSuite(ApplyChargeActionTest.class);		
-		testSuite.addTestSuite(OffsetAccountBOIntegrationTest.class);	
-		testSuite.addTest(AddAccountStateFlagTest.testSuite());
-		testSuite.addTestSuite(AccountStateIntegrationTest.class);
-		testSuite.addTest(AddAccountActionTest.suite());
-		return testSuite;
-		
-	}
-	
-	
+    AccountTestSuite() throws Exception {
+        super();
+    }
+
+    public static void main(String[] args) throws Exception {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
+
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new AccountTestSuite();
+        testSuite.addTestSuite(AccountPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(AccountBOIntegrationTest.class);
+        testSuite.addTestSuite(AccountFeesEntityIntegrationTest.class);
+        testSuite.addTestSuite(AccountActionDateEntityIntegrationTest.class);
+        testSuite.addTestSuite(AccountServiceIntegrationTest.class);
+        testSuite.addTestSuite(AccountActionTest.class);
+        testSuite.addTestSuite(ApplyAdjustmentActionTest.class);
+        testSuite.addTestSuite(AccountStateEntityIntegrationTestTest.class);
+        testSuite.addTestSuite(AccountActionEntityIntegrationTest.class);
+        testSuite.addTestSuite(LoanTrxnDetailEntityIntegrationTest.class);
+        testSuite.addTestSuite(AccountFeesActionDetailEntityIntegrationTest.class);
+        testSuite.addTestSuite(CustomerAccountBOIntegrationTest.class);
+        testSuite.addTestSuite(AccountPaymentEntityIntegrationTest.class);
+        testSuite.addTestSuite(FinancialBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(ApplyPaymentActionTest.class);
+        testSuite.addTestSuite(NotesActionTest.class);
+        testSuite.addTestSuite(AccountStateMachineIntegrationTest.class);
+        testSuite.addTestSuite(EditStatusActionTest.class);
+        testSuite.addTestSuite(ApplyChargeActionTest.class);
+        testSuite.addTestSuite(OffsetAccountBOIntegrationTest.class);
+        testSuite.addTest(AddAccountStateFlagTest.testSuite());
+        testSuite.addTestSuite(AccountStateIntegrationTest.class);
+        testSuite.addTest(AddAccountActionTest.suite());
+        return testSuite;
+
+    }
+
 }

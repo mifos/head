@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel;
 
 import junit.framework.Test;
@@ -32,20 +32,20 @@ import org.mifos.application.personnel.struts.action.PersonActionTest;
 import org.mifos.application.personnel.struts.action.PersonnelNoteActionTest;
 
 public class PersonnelTestSuite extends TestSuite {
-	public PersonnelTestSuite() {
-		super();
-	}
+    public PersonnelTestSuite() {
+        super();
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new PersonnelTestSuite();
-		testSuite.addTestSuite(PersonnelStatusEntityIntegrationTest.class);
-		testSuite.addTestSuite(PersonnelPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(PersonnelBOIntegrationTest.class);
-		testSuite.addTestSuite(PersonActionTest.class);
-		testSuite.addTestSuite(PersonnelNoteActionTest.class);
-		testSuite.addTestSuite(PersonnelSettingsActionTest.class);
-		testSuite.addTestSuite(PersonnelBusinessServiceIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new PersonnelTestSuite();
+        testSuite.addTestSuite(PersonnelStatusEntityIntegrationTest.class);
+        testSuite.addTestSuite(PersonnelPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(PersonnelBOIntegrationTest.class);
+        testSuite.addTestSuite(PersonActionTest.class);
+        testSuite.addTestSuite(PersonnelNoteActionTest.class);
+        testSuite.addTestSuite(PersonnelSettingsActionTest.class);
+        testSuite.addTestSuite(PersonnelBusinessServiceIntegrationTest.class);
+        return testSuite;
+    }
 
 }

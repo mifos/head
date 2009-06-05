@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
@@ -49,141 +49,140 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class TestDatabase implements SessionOpener {
-	
-	private Database database = new Database();
-	
-	/**
-	 * Make a {@link Database} which is empty.
-	 */
-	public static Database makeDatabase() {
-		Database database = new Database();
-		setOptions(database);
-		return database;
-	}
 
-	/**
-	 * Make a {@link TestDatabase} which contains the
-	 * standard data store (all mifos tables, etc).
-	 * This will be slow for the first test which calls
-	 * it, but fast for the rest of a test run.
-	 */
-	public static TestDatabase makeStandard() {
-		/* We do not call DatabaseSetup.initializeHibernate,
-		   at least for now, because we want to make tests
-		   that call it more clearly show themselves
-		   as slow tests. */
+    private Database database = new Database();
 
-		return new TestDatabase();
-	}
+    /**
+     * Make a {@link Database} which is empty.
+     */
+    public static Database makeDatabase() {
+        Database database = new Database();
+        setOptions(database);
+        return database;
+    }
 
-	public static void setOptions(Database database) {
-		database.tableNamesCaseSensitive(true);
-	}
-	
-	private TestDatabase() {
-		database = new Database(DatabaseSetup.getStandardStore());
-		setOptions(database);
-	}
+    /**
+     * Make a {@link TestDatabase} which contains the standard data store (all
+     * mifos tables, etc). This will be slow for the first test which calls it,
+     * but fast for the rest of a test run.
+     */
+    public static TestDatabase makeStandard() {
+        /*
+         * We do not call DatabaseSetup.initializeHibernate, at least for now,
+         * because we want to make tests that call it more clearly show
+         * themselves as slow tests.
+         */
 
-	public void execute(String sql) {
-		database.execute(sql);
-	}
+        return new TestDatabase();
+    }
 
-	public Session openSession() {
-		return DatabaseSetup.mayflySessionFactory()
-			.openSession(database.openConnection());
-	}
-	
-	public Session openSession(Interceptor interceptor) {
-		return DatabaseSetup.mayflySessionFactory().openSession(
-				database.openConnection(), interceptor);
-	}
+    public static void setOptions(Database database) {
+        database.tableNamesCaseSensitive(true);
+    }
 
-	public void dump() throws IOException {
-		/* What we'd really like to do, I guess, is just dump that
-		   data which isn't in standardStore().  Hmm, seems like
-		   a possible mayfly project.  If we did that, it could go
-		   to the console without filling up Eclipse's console buffer. */
-//		OutputStreamWriter writer = new OutputStreamWriter(System.out);
-		Writer writer = new FileWriter("build/database-dump.sql");
-		new SqlDumper().dump(database.dataStore(), writer);
-		writer.flush();
-	}
+    private TestDatabase() {
+        database = new Database(DatabaseSetup.getStandardStore());
+        setOptions(database);
+    }
 
-	public String dumpForComparison() throws IOException {
-		StringWriter writer = new StringWriter();
-		new SqlDumper(false).dump(database.dataStore(), writer);
-		writer.flush();
-		return writer.toString();
-	}
+    public void execute(String sql) {
+        database.execute(sql);
+    }
 
-	public SessionHolder open() {
-		return new SessionHolder(openSession());
-	}
+    public Session openSession() {
+        return DatabaseSetup.mayflySessionFactory().openSession(database.openConnection());
+    }
 
-	public Connection openConnection() {
-		return database.openConnection();
-	}
+    public Session openSession(Interceptor interceptor) {
+        return DatabaseSetup.mayflySessionFactory().openSession(database.openConnection(), interceptor);
+    }
 
-	/**
-	 * This is for tests where it is difficult to pass around the Session.
-	 * 
-	 * Thus, we install it in a static in StaticHibernateUtil.
-	 * 
-	 * Make sure to call {@link StaticHibernateUtil#resetDatabase()} from tearDown.
-	 */
-	public Session installInThreadLocal() {
-		StaticHibernateUtil.closeSession();
-		AuditInterceptor interceptor = new AuditInterceptor();
-		Session session1 = openSession(interceptor);
-		SessionHolder holder = new SessionHolder(session1);
-		holder.setInterceptor(interceptor);
-		StaticHibernateUtil.setThreadLocal(holder);
-		return session1;
-	}
+    public void dump() throws IOException {
+        /*
+         * What we'd really like to do, I guess, is just dump that data which
+         * isn't in standardStore(). Hmm, seems like a possible mayfly project.
+         * If we did that, it could go to the console without filling up
+         * Eclipse's console buffer.
+         */
+        // OutputStreamWriter writer = new OutputStreamWriter(System.out);
+        Writer writer = new FileWriter("build/database-dump.sql");
+        new SqlDumper().dump(database.dataStore(), writer);
+        writer.flush();
+    }
 
-	public static void runUpgradeScripts(Connection connection)
-	throws Exception {
-		runUpgradeScripts(FIRST_NUMBERED_VERSION, connection);
-	}
+    public String dumpForComparison() throws IOException {
+        StringWriter writer = new StringWriter();
+        new SqlDumper(false).dump(database.dataStore(), writer);
+        writer.flush();
+        return writer.toString();
+    }
 
-	public static void runUpgradeScripts(int fromVersion, Connection connection)
-	throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
-	    Assert.assertEquals(fromVersion, persistence.read());
-	    persistence.upgradeDatabase();
-	}
-	
-	/**
-	 * Create a database and upgrade it to the first database version
-	 * with a number.  Should be run on an empty database (no tables).
-	 * @throws IOException 
-	 */
-	public static void upgradeToFirstNumberedVersion(Connection connection) 
-	throws SQLException, IOException {
-		executeScript(connection, "mifosdbcreationscript.sql");
-	    executeScript(connection, "mifosmasterdata.sql");
-	    executeScript(connection, "rmpdbcreationscript.sql");
-	    executeScript(connection, "rmpmasterdata.sql");
-	    executeScript(connection, "Iteration13-DBScripts25092006.sql");
-	    executeScript(connection, "Iteration14-DDL-DBScripts10102006.sql");
-	    executeScript(connection, "Iteration14-DML-DBScripts10102006.sql");
-	    executeScript(connection, "Iteration15-DDL-DBScripts24102006.sql");
-	    executeScript(connection, "Iteration15-DBScripts20061012.sql");
-	    executeScript(connection, "add-version.sql");
-	    executeScript(connection, "Index.sql");
-	}
+    public SessionHolder open() {
+        return new SessionHolder(openSession());
+    }
 
-	/**
-	 * Create a database and upgrade it to the latest checkpoint database 
-	 * version.  Should be run on an empty database (no tables).
-	 * @throws IOException 
-	 */
-	public static void upgradeLatestCheckpointVersion(Connection connection) 
-	throws SQLException, IOException {
-	    executeScript(connection, "latest-schema-checkpoint.sql");
-		executeScript(connection, "latest-data-checkpoint.sql");
-	}
+    public Connection openConnection() {
+        return database.openConnection();
+    }
+
+    /**
+     * This is for tests where it is difficult to pass around the Session.
+     * 
+     * Thus, we install it in a static in StaticHibernateUtil.
+     * 
+     * Make sure to call {@link StaticHibernateUtil#resetDatabase()} from
+     * tearDown.
+     */
+    public Session installInThreadLocal() {
+        StaticHibernateUtil.closeSession();
+        AuditInterceptor interceptor = new AuditInterceptor();
+        Session session1 = openSession(interceptor);
+        SessionHolder holder = new SessionHolder(session1);
+        holder.setInterceptor(interceptor);
+        StaticHibernateUtil.setThreadLocal(holder);
+        return session1;
+    }
+
+    public static void runUpgradeScripts(Connection connection) throws Exception {
+        runUpgradeScripts(FIRST_NUMBERED_VERSION, connection);
+    }
+
+    public static void runUpgradeScripts(int fromVersion, Connection connection) throws Exception {
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
+        Assert.assertEquals(fromVersion, persistence.read());
+        persistence.upgradeDatabase();
+    }
+
+    /**
+     * Create a database and upgrade it to the first database version with a
+     * number. Should be run on an empty database (no tables).
+     * 
+     * @throws IOException
+     */
+    public static void upgradeToFirstNumberedVersion(Connection connection) throws SQLException, IOException {
+        executeScript(connection, "mifosdbcreationscript.sql");
+        executeScript(connection, "mifosmasterdata.sql");
+        executeScript(connection, "rmpdbcreationscript.sql");
+        executeScript(connection, "rmpmasterdata.sql");
+        executeScript(connection, "Iteration13-DBScripts25092006.sql");
+        executeScript(connection, "Iteration14-DDL-DBScripts10102006.sql");
+        executeScript(connection, "Iteration14-DML-DBScripts10102006.sql");
+        executeScript(connection, "Iteration15-DDL-DBScripts24102006.sql");
+        executeScript(connection, "Iteration15-DBScripts20061012.sql");
+        executeScript(connection, "add-version.sql");
+        executeScript(connection, "Index.sql");
+    }
+
+    /**
+     * Create a database and upgrade it to the latest checkpoint database
+     * version. Should be run on an empty database (no tables).
+     * 
+     * @throws IOException
+     */
+    public static void upgradeLatestCheckpointVersion(Connection connection) throws SQLException, IOException {
+        executeScript(connection, "latest-schema-checkpoint.sql");
+        executeScript(connection, "latest-data-checkpoint.sql");
+    }
 
     /**
      * This method was added to work around integration test inter- and
@@ -223,10 +222,11 @@ public class TestDatabase implements SessionOpener {
             // this config file is optional
         }
 
-        //Class.forName(p.getProperty("integration.database.driver"));
+        // Class.forName(p.getProperty("integration.database.driver"));
         String url = "jdbc:mysql://" + p.getProperty("integration.database.host") + ":"
                 + p.getProperty("integration.database.port") + "/" + p.getProperty("integration.database")
                 + "?useUnicode=true&characterEncoding=UTF-8&sessionVariables=FOREIGN_KEY_CHECKS=0";
-        return DriverManager.getConnection(url, p.getProperty("integration.database.user"), p.getProperty("integration.database.password"));
+        return DriverManager.getConnection(url, p.getProperty("integration.database.user"), p
+                .getProperty("integration.database.password"));
     }
 }

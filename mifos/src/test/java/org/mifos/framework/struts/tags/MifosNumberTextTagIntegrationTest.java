@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import org.dom4j.DocumentException;
@@ -28,19 +28,19 @@ import org.mifos.framework.exceptions.SystemException;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 public class MifosNumberTextTagIntegrationTest extends MifosIntegrationTest {
-	
-	public MifosNumberTextTagIntegrationTest() throws SystemException, ApplicationException {
+
+    public MifosNumberTextTagIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testrenderInputsForhidden() throws DocumentException{
-		MifosNumberTextTag mifosNumberTextTag = new MifosNumberTextTag();
-		StringBuilder inputsForhidden=new StringBuilder();
-		inputsForhidden.append("<script src="+"\"pages/framework/js/func.js\""+">");
-		inputsForhidden.append("</script>");
-		inputsForhidden.append("<script src="+"\"pages/framework/js/func_test.js\""+">");
-		inputsForhidden.append("</script>");
-		assertEquals(inputsForhidden.toString(),mifosNumberTextTag.render("test"));
-		assertWellFormedFragment(mifosNumberTextTag.render("test"));
-	}
+    public void testrenderInputsForhidden() throws DocumentException {
+        MifosNumberTextTag mifosNumberTextTag = new MifosNumberTextTag();
+        StringBuilder inputsForhidden = new StringBuilder();
+        inputsForhidden.append("<script src=" + "\"pages/framework/js/func.js\"" + ">");
+        inputsForhidden.append("</script>");
+        inputsForhidden.append("<script src=" + "\"pages/framework/js/func_test.js\"" + ">");
+        inputsForhidden.append("</script>");
+        assertEquals(inputsForhidden.toString(), mifosNumberTextTag.render("test"));
+        assertWellFormedFragment(mifosNumberTextTag.render("test"));
+    }
 }

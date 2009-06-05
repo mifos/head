@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.action;
 
 import org.apache.struts.Globals;
@@ -35,45 +35,43 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 public class ReportsActionTest extends MifosMockStrutsTestCase {
-	public ReportsActionTest() throws SystemException, ApplicationException {
+    public ReportsActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestUtils.makeUser();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestUtils.makeUser();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
+                .shortValue());
+        request.getSession(false).setAttribute("ActivityContext", ac);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testVerifyForwardOfNonExistentReportThrowsSecurityError() {
-		addRequestParameter("viewPath", "report_designer");
-		setRequestPathInfo("/reportsAction.do");
-		addRequestParameter("method", "getReportPage");
-		actionPerform();
-		ActionErrors errors = (ActionErrors) request
-						.getAttribute(Globals.ERROR_KEY);
-		ActionMessage retrievedMessage = (ActionMessage)(errors).get(
-						SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED).next();
-		ActionMessage expectedErrorMessage = new ActionMessage(
-				SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-		assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
-	}
-	
-	public void testSkipConvertFormObjectToBusinessObjectReturnsTrueForAnyMethod() throws Exception {
-		assertTrue(new ReportsAction().skipActionFormToBusinessObjectConversion(null));
-	}
+    public void testVerifyForwardOfNonExistentReportThrowsSecurityError() {
+        addRequestParameter("viewPath", "report_designer");
+        setRequestPathInfo("/reportsAction.do");
+        addRequestParameter("method", "getReportPage");
+        actionPerform();
+        ActionErrors errors = (ActionErrors) request.getAttribute(Globals.ERROR_KEY);
+        ActionMessage retrievedMessage = (ActionMessage) (errors).get(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED)
+                .next();
+        ActionMessage expectedErrorMessage = new ActionMessage(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
+    }
+
+    public void testSkipConvertFormObjectToBusinessObjectReturnsTrueForAnyMethod() throws Exception {
+        assertTrue(new ReportsAction().skipActionFormToBusinessObjectConversion(null));
+    }
 }

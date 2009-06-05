@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.persistence;
 
 import java.util.List;
@@ -29,13 +29,13 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public LoanAccountPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public LoanAccountPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testSelectCoSigningClients() throws Exception {
-		List<CustomerBO> coSigningClients = new AccountPersistence().getCoSigningClientsForGlim(1);
-		assertNotNull(coSigningClients);
-		assertEquals(0, coSigningClients.size());
-	}
+        List<CustomerBO> coSigningClients = new AccountPersistence().getCoSigningClientsForGlim(1);
+        assertNotNull(coSigningClients);
+        assertEquals(0, coSigningClients.size());
+    }
 }

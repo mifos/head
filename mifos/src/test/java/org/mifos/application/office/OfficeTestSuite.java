@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office;
 
 import junit.framework.Test;
@@ -34,21 +34,21 @@ import org.mifos.application.office.struts.action.OffHierarchyActionTest;
 import org.mifos.application.office.struts.action.OfficeActionTest;
 
 public class OfficeTestSuite extends TestSuite {
-	public OfficeTestSuite() throws Exception {
-		super();
-	}
+    public OfficeTestSuite() throws Exception {
+        super();
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new OfficeTestSuite();
-		testSuite.addTestSuite(OfficePersistenceIntegrationTest.class);
-		testSuite.addTestSuite(OfficeActionTest.class);
-		testSuite.addTestSuite(OfficeBOIntegrationTest.class);
-		testSuite.addTestSuite(OfficeBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(OfficeHierarchyPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(OfficeHierarchyBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(OffHierarchyActionTest.class);
-		testSuite.addTestSuite(OfficeStatusEntityIntegrationTest.class);
-		testSuite.addTestSuite(OfficeLevelEntityIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new OfficeTestSuite();
+        testSuite.addTestSuite(OfficePersistenceIntegrationTest.class);
+        testSuite.addTestSuite(OfficeActionTest.class);
+        testSuite.addTestSuite(OfficeBOIntegrationTest.class);
+        testSuite.addTestSuite(OfficeBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(OfficeHierarchyPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(OfficeHierarchyBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(OffHierarchyActionTest.class);
+        testSuite.addTestSuite(OfficeStatusEntityIntegrationTest.class);
+        testSuite.addTestSuite(OfficeLevelEntityIntegrationTest.class);
+        return testSuite;
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.struts.action;
 
 import org.mifos.application.util.helpers.ActionForwards;
@@ -32,41 +32,40 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class ViewOrganizationSettingsActionTest extends MifosMockStrutsTestCase {
-	public ViewOrganizationSettingsActionTest() throws SystemException, ApplicationException {
+    public ViewOrganizationSettingsActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private String flowKey;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		UserContext userContext = TestUtils.makeUser();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		flowKey = createFlow(request, ViewOrganizationSettingsAction.class);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        UserContext userContext = TestUtils.makeUser();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        flowKey = createFlow(request, ViewOrganizationSettingsAction.class);
 
-		// no idea what the next three lines do besides make the test pass.
-		// Copied them from AdminActionTest
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-	}
+        // no idea what the next three lines do besides make the test pass.
+        // Copied them from AdminActionTest
+        ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
+                .shortValue());
+        request.getSession(false).setAttribute("ActivityContext", ac);
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testGet() throws Exception {
-		setRequestPathInfo("/viewOrganizationSettingsAction");
-		addRequestParameter("method", "get");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.load_success.toString());
-		assertNull(SessionUtils.getAttribute(
-				ViewOrganizationSettingsAction.ORGANIZATION_SETTINGS, request));
-	}
+    public void testGet() throws Exception {
+        setRequestPathInfo("/viewOrganizationSettingsAction");
+        addRequestParameter("method", "get");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.load_success.toString());
+        assertNull(SessionUtils.getAttribute(ViewOrganizationSettingsAction.ORGANIZATION_SETTINGS, request));
+    }
 }

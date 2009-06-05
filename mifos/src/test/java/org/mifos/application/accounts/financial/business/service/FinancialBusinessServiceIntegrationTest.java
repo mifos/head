@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service;
 
 import java.sql.Date;
@@ -67,446 +67,358 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTest {
-	public FinancialBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public FinancialBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
+
     private static final double DELTA = 0.00000001;
 
     protected LoanBO loan = null;
 
-	protected SavingsBO savings;
+    protected SavingsBO savings;
 
-	protected SavingsOfferingBO savingsOffering;
+    protected SavingsOfferingBO savingsOffering;
 
-	protected CustomerBO center = null;
+    protected CustomerBO center = null;
 
-	private CustomerBO group = null;
+    private CustomerBO group = null;
 
-	private UserContext userContext;
+    private UserContext userContext;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestUtils.makeUser();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestUtils.makeUser();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(loan);
-			TestObjectFactory.cleanUp(savings);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(loan);
+            TestObjectFactory.cleanUp(savings);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testLoanAdjustmentAccountingEntries() throws Exception {
-		Date currentDate = new Date(System.currentTimeMillis());
-		loan = getLoanAccount();
-		loan.setUserContext(TestUtils.makeUser());
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
-				loan, TestObjectFactory.getMoneyForMFICurrency(630), "1111",
-				currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
-		FinancialBusinessService financialBusinessService = 
-			new FinancialBusinessService();
-		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
-		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,loan);
-		
+    public void testLoanAdjustmentAccountingEntries() throws Exception {
+        Date currentDate = new Date(System.currentTimeMillis());
+        loan = getLoanAccount();
+        loan.setUserContext(TestUtils.makeUser());
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestObjectFactory
+                .getMoneyForMFICurrency(630), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(
+                System.currentTimeMillis()));
+        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
+        AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
+        accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity, loan);
 
-		financialBusinessService.buildAccountingEntries(accountTrxnEntity);
+        financialBusinessService.buildAccountingEntries(accountTrxnEntity);
 
-		TestObjectFactory.updateObject(loan);
-		assertEquals(accountTrxnEntity.getFinancialTransactions().size(), 10);
+        TestObjectFactory.updateObject(loan);
+        assertEquals(accountTrxnEntity.getFinancialTransactions().size(), 10);
 
-		int countNegativeFinTrxn = 0;
-		for (FinancialTransactionBO finTrxn : accountTrxnEntity
-				.getFinancialTransactions()) {
-			if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0)
-				countNegativeFinTrxn++;
-			else
-				assertEquals("Positive finTrxn values", finTrxn
-						.getPostedAmount().getAmountDoubleValue(), 200.0);
-		}
-		assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 9);
-		assertEquals("Positive finTrxn values count", accountTrxnEntity
-				.getFinancialTransactions().size()
-				- countNegativeFinTrxn, 1);
-	}
+        int countNegativeFinTrxn = 0;
+        for (FinancialTransactionBO finTrxn : accountTrxnEntity.getFinancialTransactions()) {
+            if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0)
+                countNegativeFinTrxn++;
+            else
+                assertEquals("Positive finTrxn values", finTrxn.getPostedAmount().getAmountDoubleValue(), 200.0);
+        }
+        assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 9);
+        assertEquals("Positive finTrxn values count", accountTrxnEntity.getFinancialTransactions().size()
+                - countNegativeFinTrxn, 1);
+    }
 
-	private AccountTrxnEntity getAccountTrxnObj(
-			AccountPaymentEntity accountPaymentEntity) throws Exception {
-		MasterPersistence masterPersistenceService = 
-			new MasterPersistence();
-		Date currentDate = new Date(System.currentTimeMillis());
+    private AccountTrxnEntity getAccountTrxnObj(AccountPaymentEntity accountPaymentEntity) throws Exception {
+        MasterPersistence masterPersistenceService = new MasterPersistence();
+        Date currentDate = new Date(System.currentTimeMillis());
 
-		LoanScheduleEntity accountAction = (LoanScheduleEntity) loan
-				.getAccountActionDate(Short.valueOf("1"));
+        LoanScheduleEntity accountAction = (LoanScheduleEntity) loan.getAccountActionDate(Short.valueOf("1"));
 
-		LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(
-				accountPaymentEntity,
-				(AccountActionEntity) 
-					masterPersistenceService.getPersistentObject(
-						AccountActionEntity.class,
-						AccountActionTypes.LOAN_ADJUSTMENT.getValue()), Short
-						.valueOf("1"), accountAction.getActionDate(),
-				TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), 
-				currentDate,
-				TestObjectFactory.getMoneyForMFICurrency(630),
-				"test for loan adjustment", null, TestObjectFactory
-						.getMoneyForMFICurrency(200), TestObjectFactory
-						.getMoneyForMFICurrency(300), new Money(),
-				TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory
-						.getMoneyForMFICurrency(20), null);
+        LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
+                (AccountActionEntity) masterPersistenceService.getPersistentObject(AccountActionEntity.class,
+                        AccountActionTypes.LOAN_ADJUSTMENT.getValue()), Short.valueOf("1"), accountAction
+                        .getActionDate(), TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
+                TestObjectFactory.getMoneyForMFICurrency(630), "test for loan adjustment", null, TestObjectFactory
+                        .getMoneyForMFICurrency(200), TestObjectFactory.getMoneyForMFICurrency(300), new Money(),
+                TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory.getMoneyForMFICurrency(20), null);
 
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
-				.getAccountFeesActionDetails()) {
-			LoanBOIntegrationTest.setFeeAmountPaid(accountFeesActionDetailEntity,TestObjectFactory
-					.getMoneyForMFICurrency(100));
-			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
-					accountTrxnEntity, accountFeesActionDetailEntity
-							.getAccountFee(), accountFeesActionDetailEntity
-							.getFeeAmount());
-			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
-		}
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
+            LoanBOIntegrationTest.setFeeAmountPaid(accountFeesActionDetailEntity, TestObjectFactory
+                    .getMoneyForMFICurrency(100));
+            FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
+                    .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());
+            accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
+        }
 
-		return accountTrxnEntity;
-	}
+        return accountTrxnEntity;
+    }
 
-	private LoanBO getLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
-				startDate,
-				loanOffering);
-	}
+    private LoanBO getLoanAccount() {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+    }
 
-	public void testSavingsAdjustmentDepositAccountingEntries()
-			throws Exception {
-		createInitialObjectsForSavings();
-		SavingsTestHelper helper = new SavingsTestHelper();
-		SavingsPersistence savingsPersistence = new SavingsPersistence();
+    public void testSavingsAdjustmentDepositAccountingEntries() throws Exception {
+        createInitialObjectsForSavings();
+        SavingsTestHelper helper = new SavingsTestHelper();
+        SavingsPersistence savingsPersistence = new SavingsPersistence();
 
-		PersonnelBO createdBy = new PersonnelPersistence()
-				.getPersonnel(userContext.getId());
-		Money depositAmount = new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "1000.0");
-		Money balanceAmount = new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "5000.0");
-		java.util.Date trxnDate = helper.getDate("20/05/2006");
+        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+        Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
+        Money balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "5000.0");
+        java.util.Date trxnDate = helper.getDate("20/05/2006");
 
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
-				savings, depositAmount, balanceAmount, trxnDate,
-				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
-				group);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
-		
-		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, balanceAmount,
+                trxnDate, AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
 
-		savings = savingsPersistence.findById(savings.getAccountId());
-		savings.setUserContext(userContext);
-		payment = savings.getLastPmnt();
-		balanceAmount = new Money(Configuration.getInstance().getSystemConfig()
-				.getCurrency(), "4000.0");
-		AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment,
-				depositAmount.negate(), balanceAmount, trxnDate, trxnDate,
-				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
-				group, "", null);
-		payment.addAccountTrxn(accountTrxn);
-		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
+        SavingsBOIntegrationTest.setBalance(savings, balanceAmount);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		FinancialBusinessService financialBusinessService = 
-			new FinancialBusinessService();
-		financialBusinessService.buildAccountingEntries(accountTrxn);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        savings = savingsPersistence.findById(savings.getAccountId());
+        savings.setUserContext(userContext);
+        payment = savings.getLastPmnt();
+        balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "4000.0");
+        AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment, depositAmount.negate(), balanceAmount,
+                trxnDate, trxnDate, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy, group, "",
+                null);
+        payment.addAccountTrxn(accountTrxn);
+        SavingsBOIntegrationTest.setBalance(savings, balanceAmount);
 
-		savings = savingsPersistence.findById(savings.getAccountId());
-		savings.setUserContext(userContext);
-		payment = savings.getLastPmnt();
-		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
-				.size());
-		for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
-			if (trxn.getAccountActionEntity().getId().equals(
-					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-				assertTrue(true);
-				assertEquals(Integer.valueOf(2).intValue(), trxn
-						.getFinancialTransactions().size());
-				int countNegativeFinTrxn = 0;
-				for (FinancialTransactionBO finTrxn : trxn
-						.getFinancialTransactions()) {
-					if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
-						countNegativeFinTrxn++;
-						assertEquals(1000.0, finTrxn.getPostedAmount().negate().getAmountDoubleValue(), DELTA);
-					} else
-						assertTrue(false);
-				}
+        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
+        financialBusinessService.buildAccountingEntries(accountTrxn);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-				assertEquals("Negative finTrxn values count", 2,
-						countNegativeFinTrxn);
-				assertEquals("Positive finTrxn values count", 0, accountTrxn
-						.getFinancialTransactions().size()
-						- countNegativeFinTrxn);
-			}
-		}
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
-	}
+        savings = savingsPersistence.findById(savings.getAccountId());
+        savings.setUserContext(userContext);
+        payment = savings.getLastPmnt();
+        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+        for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
+            if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
+                assertTrue(true);
+                assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
+                int countNegativeFinTrxn = 0;
+                for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
+                    if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+                        countNegativeFinTrxn++;
+                        assertEquals(1000.0, finTrxn.getPostedAmount().negate().getAmountDoubleValue(), DELTA);
+                    } else
+                        assertTrue(false);
+                }
 
-	public void testSavingsAdjustmentWithdrawalAccountingEntries()
-			throws Exception {
-		createInitialObjectsForSavings();
-		SavingsTestHelper helper = new SavingsTestHelper();
-		SavingsPersistence savingsPersistence = new SavingsPersistence();
+                assertEquals("Negative finTrxn values count", 2, countNegativeFinTrxn);
+                assertEquals("Positive finTrxn values count", 0, accountTrxn.getFinancialTransactions().size()
+                        - countNegativeFinTrxn);
+            }
+        }
+        group = savings.getCustomer();
+        center = group.getParentCustomer();
+    }
 
-		PersonnelBO createdBy = new PersonnelPersistence()
-				.getPersonnel(userContext.getId());
-		Money withdrawalAmount = new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "1000.0");
-		Money balanceAmount = new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), "5000.0");
-		java.util.Date trxnDate = helper.getDate("20/05/2006");
+    public void testSavingsAdjustmentWithdrawalAccountingEntries() throws Exception {
+        createInitialObjectsForSavings();
+        SavingsTestHelper helper = new SavingsTestHelper();
+        SavingsPersistence savingsPersistence = new SavingsPersistence();
 
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
-				savings, withdrawalAmount, balanceAmount, trxnDate,
-				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
-				group);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
-		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+        Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
+        Money balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "5000.0");
+        java.util.Date trxnDate = helper.getDate("20/05/2006");
 
-		savings = savingsPersistence.findById(savings.getAccountId());
-		savings.setUserContext(userContext);
-		payment = savings.getLastPmnt();
-		balanceAmount = new Money(Configuration.getInstance().getSystemConfig()
-				.getCurrency(), "6000.0");
-		AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment,
-				withdrawalAmount, balanceAmount, trxnDate, trxnDate,
-				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
-				group, "correction entry", null);
-		payment.addAccountTrxn(accountTrxn);
-		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
+        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, balanceAmount,
+                trxnDate, AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+        SavingsBOIntegrationTest.setBalance(savings, balanceAmount);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		FinancialBusinessService financialBusinessService = 
-			new FinancialBusinessService();
-		financialBusinessService.buildAccountingEntries(accountTrxn);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        savings = savingsPersistence.findById(savings.getAccountId());
+        savings.setUserContext(userContext);
+        payment = savings.getLastPmnt();
+        balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "6000.0");
+        AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment, withdrawalAmount, balanceAmount, trxnDate,
+                trxnDate, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy, group,
+                "correction entry", null);
+        payment.addAccountTrxn(accountTrxn);
+        SavingsBOIntegrationTest.setBalance(savings, balanceAmount);
 
-		savings = savingsPersistence.findById(savings.getAccountId());
-		savings.setUserContext(userContext);
-		payment = savings.getLastPmnt();
-		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
-				.size());
-		for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
-			if (trxn.getAccountActionEntity().getId().equals(
-					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-				assertTrue(true);
-				assertEquals(Integer.valueOf(2).intValue(), trxn
-						.getFinancialTransactions().size());
-				int countNegativeFinTrxn = 0;
-				for (FinancialTransactionBO finTrxn : trxn
-						.getFinancialTransactions()) {
-					if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
-						countNegativeFinTrxn++;
-					} else
-						assertEquals(1000.0, finTrxn.getPostedAmount().getAmountDoubleValue(), DELTA);
-					assertEquals("correction entry", finTrxn.getNotes());
-				}
+        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
+        financialBusinessService.buildAccountingEntries(accountTrxn);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-				assertEquals("Negative finTrxn values count", 0,
-						countNegativeFinTrxn);
-				assertEquals("Positive finTrxn values count", 2, accountTrxn
-						.getFinancialTransactions().size()
-						- countNegativeFinTrxn);
+        savings = savingsPersistence.findById(savings.getAccountId());
+        savings.setUserContext(userContext);
+        payment = savings.getLastPmnt();
+        assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+        for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
+            if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
+                assertTrue(true);
+                assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
+                int countNegativeFinTrxn = 0;
+                for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
+                    if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+                        countNegativeFinTrxn++;
+                    } else
+                        assertEquals(1000.0, finTrxn.getPostedAmount().getAmountDoubleValue(), DELTA);
+                    assertEquals("correction entry", finTrxn.getNotes());
+                }
 
-			}
-		}
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
-	}
+                assertEquals("Negative finTrxn values count", 0, countNegativeFinTrxn);
+                assertEquals("Positive finTrxn values count", 2, accountTrxn.getFinancialTransactions().size()
+                        - countNegativeFinTrxn);
 
-	public void testWithdrawalEntriesOnSavingsCloseAccount() throws Exception {
-		try {
-			createInitialObjectsForSavings();
-			SavingsTestHelper helper = new SavingsTestHelper();
-			PersonnelBO createdBy = new PersonnelPersistence()
-					.getPersonnel(userContext.getId());
-			Money withdrawalAmount = new Money(Configuration.getInstance()
-					.getSystemConfig().getCurrency(), "1000.7");
-			java.util.Date trxnDate = helper.getDate("20/05/2006");
+            }
+        }
+        group = savings.getCustomer();
+        center = group.getParentCustomer();
+    }
 
-			AccountPaymentEntity payment = helper
-					.createAccountPaymentToPersist(savings, withdrawalAmount,
-							new Money(), trxnDate,
-							AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(),
-							savings, createdBy, group);
+    public void testWithdrawalEntriesOnSavingsCloseAccount() throws Exception {
+        try {
+            createInitialObjectsForSavings();
+            SavingsTestHelper helper = new SavingsTestHelper();
+            PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+            Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.7");
+            java.util.Date trxnDate = helper.getDate("20/05/2006");
 
-			assertEquals(Integer.valueOf(1).intValue(), payment
-					.getAccountTrxns().size());
-			FinancialBusinessService financialBusinessService = 
-				new FinancialBusinessService();
-			AccountPaymentEntityIntegrationTest.addAccountPayment(payment,savings);
-			SavingsTrxnDetailEntity accountTrxn = null;
-			for (AccountTrxnEntity trxn : payment.getAccountTrxns())
-				accountTrxn = (SavingsTrxnDetailEntity) trxn;
-			savings.setUserContext(TestObjectFactory.getContext());
-			savings.changeStatus(AccountState.SAVINGS_CLOSED.getValue(),
-					AccountStateFlag.SAVINGS_REJECTED.getValue(), "");
-			financialBusinessService.buildAccountingEntries(accountTrxn);
-			Set<FinancialTransactionBO> financialTrxns = accountTrxn
-					.getFinancialTransactions();
-			assertEquals(Integer.valueOf(4).intValue(), financialTrxns.size());
+            AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, new Money(),
+                    trxnDate, AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
 
-			int withdrawalTrxns = 0;
-			int roundingTrxns = 0;
-			for (FinancialTransactionBO finTrxn : financialTrxns) {
-				if (finTrxn.getFinancialAction().getId().equals(
-						FinancialActionConstants.ROUNDING.getValue()))
-					roundingTrxns++;
-				else
-					withdrawalTrxns++;
-			}
-			assertEquals(Integer.valueOf(2).intValue(), roundingTrxns);
-			assertEquals(Integer.valueOf(2).intValue(), withdrawalTrxns);
-			assertEquals(new Money("1000.7"), accountTrxn.getWithdrawlAmount());
+            assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+            FinancialBusinessService financialBusinessService = new FinancialBusinessService();
+            AccountPaymentEntityIntegrationTest.addAccountPayment(payment, savings);
+            SavingsTrxnDetailEntity accountTrxn = null;
+            for (AccountTrxnEntity trxn : payment.getAccountTrxns())
+                accountTrxn = (SavingsTrxnDetailEntity) trxn;
+            savings.setUserContext(TestObjectFactory.getContext());
+            savings.changeStatus(AccountState.SAVINGS_CLOSED.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
+                    "");
+            financialBusinessService.buildAccountingEntries(accountTrxn);
+            Set<FinancialTransactionBO> financialTrxns = accountTrxn.getFinancialTransactions();
+            assertEquals(Integer.valueOf(4).intValue(), financialTrxns.size());
 
-			TestObjectFactory.flushandCloseSession();
+            int withdrawalTrxns = 0;
+            int roundingTrxns = 0;
+            for (FinancialTransactionBO finTrxn : financialTrxns) {
+                if (finTrxn.getFinancialAction().getId().equals(FinancialActionConstants.ROUNDING.getValue()))
+                    roundingTrxns++;
+                else
+                    withdrawalTrxns++;
+            }
+            assertEquals(Integer.valueOf(2).intValue(), roundingTrxns);
+            assertEquals(Integer.valueOf(2).intValue(), withdrawalTrxns);
+            assertEquals(new Money("1000.7"), accountTrxn.getWithdrawlAmount());
 
-			savings = new SavingsPersistence().findById(savings.getAccountId());
-			group = savings.getCustomer();
-			center = group.getParentCustomer();
+            TestObjectFactory.flushandCloseSession();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            savings = new SavingsPersistence().findById(savings.getAccountId());
+            group = savings.getCustomer();
+            center = group.getParentCustomer();
 
-	private void createInitialObjectsForSavings() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1",
-				(short) 31, (short) 7);
-		savings = helper.createSavingsAccount("000100000000017",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-				userContext);
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void testLoanWriteOffAccountingEntries() throws Exception {
-		loan = getLoanAccount();
-		loan.setUserContext(TestUtils.makeUser());
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
-				loan, TestObjectFactory.getMoneyForMFICurrency(630), null,
-				null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
-		FinancialBusinessService financialBusinessService = 
-			new FinancialBusinessService();
-		AccountActionDateEntity accountActionDateEntity = loan
-				.getAccountActionDate(Short.valueOf("1"));
-		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan
-				.getUserContext().getId());
-		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
-				accountPaymentEntity,
-				(AccountActionEntity) new MasterPersistence()
-						.getPersistentObject(AccountActionEntity.class,
-								AccountActionTypes.WRITEOFF.getValue()),
-				accountActionDateEntity.getInstallmentId(),
-				accountActionDateEntity.getActionDate(), personnel, new Date(
-						System.currentTimeMillis()),
-				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
-				"Loan Written Off", null,
-				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
-				new Money(), new Money(), new Money(), new Money(), null);
+    private void createInitialObjectsForSavings() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        SavingsTestHelper helper = new SavingsTestHelper();
+        savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1", (short) 31, (short) 7);
+        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
+                AccountStates.SAVINGS_ACC_APPROVED, userContext);
+    }
 
-		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,loan);
-		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
-		TestObjectFactory.updateObject(loan);
-		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity
-				.getFinancialTransactions();
-		assertEquals(finTrxnSet.size(), 2);
-		int countNegativeFinTrxn = 0;
-		for (FinancialTransactionBO finTrxn : finTrxnSet) {
-			if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
-				assertEquals("Negative finTrxn values", finTrxn
-						.getPostedAmount().negate().getAmountDoubleValue(),
-						100.0);
-				countNegativeFinTrxn++;
-			} else
-				assertEquals("Positive finTrxn values", finTrxn
-						.getPostedAmount().getAmountDoubleValue(), 100.0);
-		}
-		assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
-		assertEquals("Positive finTrxn values count", finTrxnSet.size()
-				- countNegativeFinTrxn, 1);
-	}
-	public void testLoanRescheduleAccountingEntries() throws Exception {
-		loan = getLoanAccount();
-		loan.setUserContext(TestUtils.makeUser());
-		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
-				loan, TestObjectFactory.getMoneyForMFICurrency(630), null,
-				null, new PaymentTypeEntity(Short.valueOf("1")),
-				new Date(System.currentTimeMillis()));
-		FinancialBusinessService financialBusinessService = 
-			new FinancialBusinessService();
-		AccountActionDateEntity accountActionDateEntity = loan
-				.getAccountActionDate(Short.valueOf("1"));
-		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan
-				.getUserContext().getId());
-		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
-				accountPaymentEntity,
-				(AccountActionEntity) new MasterPersistence()
-						.getPersistentObject(AccountActionEntity.class,
-								AccountActionTypes.LOAN_RESCHEDULED.getValue()),
-				accountActionDateEntity.getInstallmentId(),
-				accountActionDateEntity.getActionDate(), personnel, new Date(
-						System.currentTimeMillis()),
-				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
-				"Loan Rescheduled", null,
-				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
-				new Money(), new Money(), new Money(), new Money(), null);
+    public void testLoanWriteOffAccountingEntries() throws Exception {
+        loan = getLoanAccount();
+        loan.setUserContext(TestUtils.makeUser());
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestObjectFactory
+                .getMoneyForMFICurrency(630), null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
+                .currentTimeMillis()));
+        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
+        AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
+        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
+                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
+                        AccountActionTypes.WRITEOFF.getValue()), accountActionDateEntity.getInstallmentId(),
+                accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
+                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Written Off", null,
+                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(), new Money(), new Money(),
+                new Money(), null);
 
-		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity,loan);
-		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
-		TestObjectFactory.updateObject(loan);
-		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity
-				.getFinancialTransactions();
-		assertEquals(finTrxnSet.size(), 2);
-		int countNegativeFinTrxn = 0;
-		for (FinancialTransactionBO finTrxn : finTrxnSet) {
-			if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
-				assertEquals("Negative finTrxn values", finTrxn
-						.getPostedAmount().negate().getAmountDoubleValue(),
-						100.0);
-				countNegativeFinTrxn++;
-			} else
-				assertEquals("Positive finTrxn values", finTrxn
-						.getPostedAmount().getAmountDoubleValue(), 100.0);
-		}
-		assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
-		assertEquals("Positive finTrxn values count", finTrxnSet.size()
-				- countNegativeFinTrxn, 1);
-	}
+        accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity, loan);
+        financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
+        TestObjectFactory.updateObject(loan);
+        Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity.getFinancialTransactions();
+        assertEquals(finTrxnSet.size(), 2);
+        int countNegativeFinTrxn = 0;
+        for (FinancialTransactionBO finTrxn : finTrxnSet) {
+            if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+                assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate().getAmountDoubleValue(),
+                        100.0);
+                countNegativeFinTrxn++;
+            } else
+                assertEquals("Positive finTrxn values", finTrxn.getPostedAmount().getAmountDoubleValue(), 100.0);
+        }
+        assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
+        assertEquals("Positive finTrxn values count", finTrxnSet.size() - countNegativeFinTrxn, 1);
+    }
+
+    public void testLoanRescheduleAccountingEntries() throws Exception {
+        loan = getLoanAccount();
+        loan.setUserContext(TestUtils.makeUser());
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestObjectFactory
+                .getMoneyForMFICurrency(630), null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
+                .currentTimeMillis()));
+        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
+        AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
+        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
+                (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
+                        AccountActionTypes.LOAN_RESCHEDULED.getValue()), accountActionDateEntity.getInstallmentId(),
+                accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
+                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Rescheduled", null,
+                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(), new Money(), new Money(),
+                new Money(), null);
+
+        accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity, loan);
+        financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
+        TestObjectFactory.updateObject(loan);
+        Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity.getFinancialTransactions();
+        assertEquals(finTrxnSet.size(), 2);
+        int countNegativeFinTrxn = 0;
+        for (FinancialTransactionBO finTrxn : finTrxnSet) {
+            if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+                assertEquals("Negative finTrxn values", finTrxn.getPostedAmount().negate().getAmountDoubleValue(),
+                        100.0);
+                countNegativeFinTrxn++;
+            } else
+                assertEquals("Positive finTrxn values", finTrxn.getPostedAmount().getAmountDoubleValue(), 100.0);
+        }
+        assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
+        assertEquals("Positive finTrxn values count", finTrxnSet.size() - countNegativeFinTrxn, 1);
+    }
 
 }

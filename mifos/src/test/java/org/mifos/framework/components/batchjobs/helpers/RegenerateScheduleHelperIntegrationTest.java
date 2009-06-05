@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
@@ -72,497 +72,356 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTest {
 
-	public RegenerateScheduleHelperIntegrationTest() throws SystemException, ApplicationException {
+    public RegenerateScheduleHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private MeetingBO meeting;
 
-	private CustomerBO center;
+    private CustomerBO center;
 
-	private CustomerBO client;
+    private CustomerBO client;
 
-	private CustomerBO group;
+    private CustomerBO group;
 
-	private AccountBO accountBO;
+    private AccountBO accountBO;
 
-	private SavingsOfferingBO savingsOffering;
+    private SavingsOfferingBO savingsOffering;
 
-	private LoanOfferingBO loanOfferingBO;
+    private LoanOfferingBO loanOfferingBO;
 
-	private CustomerBO client1;
+    private CustomerBO client1;
 
-	private CustomerBO client2;
+    private CustomerBO client2;
 
-	private SavingsBO savings;
+    private SavingsBO savings;
 
-	private UserContext userContext;
+    private UserContext userContext;
 
-	PersonnelBO createdBy = null;
+    PersonnelBO createdBy = null;
 
-	RegenerateScheduleHelper regenerateScheduleHelper;
+    RegenerateScheduleHelper regenerateScheduleHelper;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
-		regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask
-				.getTaskHelper();
-		userContext = TestUtils.makeUser();
-		createdBy = new PersonnelPersistence()
-				.getPersonnel(userContext.getId());
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
+        regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask.getTaskHelper();
+        userContext = TestUtils.makeUser();
+        createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+    }
 
-	@Override
-	public void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(savings);
-			TestObjectFactory.cleanUp(accountBO);
-			TestObjectFactory.cleanUp(client);
-			TestObjectFactory.cleanUp(client1);
-			TestObjectFactory.cleanUp(client2);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		regenerateScheduleHelper = null;
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    public void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(savings);
+            TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(client);
+            TestObjectFactory.cleanUp(client1);
+            TestObjectFactory.cleanUp(client2);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        regenerateScheduleHelper = null;
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testExcuteWithCustomerAccounts() throws NumberFormatException,
-			SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		CenterBO center1 = TestObjectFactory.createCenter(
-				"Center_Active_test1", meeting);
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
-				CustomerStatus.GROUP_ACTIVE, center1);
-		client = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		ClientBO client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_CLOSED, group);
-		ClientBO client3 = TestObjectFactory.createClient("client3",
-				CustomerStatus.CLIENT_CANCELLED, group1);
-		center.getCustomerMeeting().getMeeting().getMeetingDetails()
-				.setRecurAfter(Short.valueOf("2"));
-		CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(),
-				YesNoFlag.YES.getValue());
+    public void testExcuteWithCustomerAccounts() throws NumberFormatException, SystemException, ApplicationException {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        CenterBO center1 = TestObjectFactory.createCenter("Center_Active_test1", meeting);
+        GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+        ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
+        ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
+        center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
-		List<java.util.Date> meetingDates = center.getCustomerMeeting()
-				.getMeeting().getAllDates((short) 10);
-		meetingDates.remove(0);
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.flushandCloseSession();
+        List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates((short) 10);
+        meetingDates.remove(0);
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.flushandCloseSession();
 
-		regenerateScheduleHelper.execute(System.currentTimeMillis());
-		StaticHibernateUtil.closeSession();
+        regenerateScheduleHelper.execute(System.currentTimeMillis());
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		center1 = TestObjectFactory.getCenter(center1.getCustomerId());
-		group1 = TestObjectFactory.getGroup(group1
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client.getCustomerId());
-		client2 = TestObjectFactory.getClient(client2.getCustomerId());
-		client3 = TestObjectFactory.getClient(client3.getCustomerId());
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        center1 = TestObjectFactory.getCenter(center1.getCustomerId());
+        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+        client2 = TestObjectFactory.getClient(client2.getCustomerId());
+        client3 = TestObjectFactory.getClient(client3.getCustomerId());
 
-		for (AccountActionDateEntity actionDateEntity : center
-				.getCustomerAccount().getAccountActionDates()) {
-			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(0).getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
-			else if (actionDateEntity.getInstallmentId().equals(
-					Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(1).getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
-		}
+        for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
+            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+        }
 
-		for (AccountActionDateEntity actionDateEntity : group
-				.getCustomerAccount().getAccountActionDates()) {
-			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(0).getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
-			else if (actionDateEntity.getInstallmentId().equals(
-					Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(1).getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
-		}
-		assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting()
-				.getUpdatedFlag());
-		TestObjectFactory.cleanUp(client3);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(group1);
-		TestObjectFactory.cleanUp(center1);
-	}
+        for (AccountActionDateEntity actionDateEntity : group.getCustomerAccount().getAccountActionDates()) {
+            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                        .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+        }
+        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
+        TestObjectFactory.cleanUp(client3);
+        TestObjectFactory.cleanUp(client2);
+        TestObjectFactory.cleanUp(group1);
+        TestObjectFactory.cleanUp(center1);
+    }
 
-	public void testExecuteWithLoanAccount() throws Exception {
-		accountBO = getLoanAccount();
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCenter(center.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
-				accountBO.getAccountId());
+    public void testExecuteWithLoanAccount() throws Exception {
+        accountBO = getLoanAccount();
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
 
-		center
-				.getCustomerMeeting()
-				.getMeeting()
-				.getMeetingDetails()
-				.getMeetingRecurrence()
-				.setWeekDay(
-						(WeekDaysEntity) new MasterPersistence()
-								.retrieveMasterEntity(WeekDay.THURSDAY
-										.getValue(), WeekDaysEntity.class, null));
-		CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(),
-				YesNoFlag.YES.getValue());
+        center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
+                (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
+                        WeekDaysEntity.class, null));
+        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
-		AccountActionDateEntity accountActionDateEntity = center
-				.getCustomerAccount().getDetailsOfNextInstallment();
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
+        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();
+        center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
 
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.flushandCloseSession();
-		regenerateScheduleHelper.execute(System.currentTimeMillis());
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.flushandCloseSession();
+        regenerateScheduleHelper.execute(System.currentTimeMillis());
 
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
-						.getActionDate());
-		List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(10);
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+        center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
+        List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(10);
 
-		for (AccountBO account : center.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
-		for (AccountBO account : group.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
-		assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting()
-				.getUpdatedFlag());
+        for (AccountBO account : center.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
+        for (AccountBO account : group.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
+        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
 
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-	}
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+    }
 
-	public void testExecuteWithLoanAccountWithPastInstallmentsdPaid()
-			throws Exception {
-		accountBO = getLoanAccount();
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCenter(center.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class,
-				accountBO.getAccountId());
-		LoanBOIntegrationTest.setDisbursementDate(accountBO, offSetCurrentDate(21));
-		accountBO.getAccountActionDate((short) 1).setPaymentStatus(PaymentStatus.PAID);
-		accountBO.getAccountActionDate((short) 2).setPaymentStatus(PaymentStatus.PAID);
-		accountBO.getAccountActionDate((short) 3).setPaymentStatus(PaymentStatus.PAID);
+    public void testExecuteWithLoanAccountWithPastInstallmentsdPaid() throws Exception {
+        accountBO = getLoanAccount();
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
+        LoanBOIntegrationTest.setDisbursementDate(accountBO, offSetCurrentDate(21));
+        accountBO.getAccountActionDate((short) 1).setPaymentStatus(PaymentStatus.PAID);
+        accountBO.getAccountActionDate((short) 2).setPaymentStatus(PaymentStatus.PAID);
+        accountBO.getAccountActionDate((short) 3).setPaymentStatus(PaymentStatus.PAID);
 
-		center
-				.getCustomerMeeting()
-				.getMeeting()
-				.getMeetingDetails()
-				.getMeetingRecurrence()
-				.setWeekDay(
-						(WeekDaysEntity) new MasterPersistence()
-								.retrieveMasterEntity(WeekDay.THURSDAY
-										.getValue(), WeekDaysEntity.class, null));
-		CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(),
-				YesNoFlag.YES.getValue());
+        center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
+                (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
+                        WeekDaysEntity.class, null));
+        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
-		AccountActionDateEntity accountActionDateEntity = center
-				.getCustomerAccount().getDetailsOfNextInstallment();
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
-						.getActionDate());
+        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();
+        center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
 
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		regenerateScheduleHelper.execute(System.currentTimeMillis());
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.updateObject(accountBO);
+        TestObjectFactory.flushandCloseSession();
+        regenerateScheduleHelper.execute(System.currentTimeMillis());
 
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		List<java.util.Date> meetingDates = null;
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
-						.getActionDate());
-		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
-				(short) 10);
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+        List<java.util.Date> meetingDates = null;
+        center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
+        meetingDates = center.getCustomerMeeting().getMeeting().getAllDates((short) 10);
 
-		for (AccountBO account : center.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
-		for (AccountBO account : group.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
-		assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting()
-				.getUpdatedFlag());
+        for (AccountBO account : center.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
+        for (AccountBO account : group.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
+        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
 
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-	}
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+    }
 
-	public void testExecuteWithSavingsAccount() throws Exception {
-		savings = getSavingAccount();
-		TestObjectFactory.flushandCloseSession();
-		savings = TestObjectFactory.getObject(SavingsBO.class,
-				savings.getAccountId());
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		client1 = TestObjectFactory.getCustomer(client1.getCustomerId());
-		client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
+    public void testExecuteWithSavingsAccount() throws Exception {
+        savings = getSavingAccount();
+        TestObjectFactory.flushandCloseSession();
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        client1 = TestObjectFactory.getCustomer(client1.getCustomerId());
+        client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
 
-		center.getCustomerMeeting().getMeeting().getMeetingDetails()
-				.setRecurAfter(Short.valueOf("1"));
-		CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(),
-				YesNoFlag.YES.getValue());
+        center.getCustomerMeeting().getMeeting().getMeetingDetails().setRecurAfter(Short.valueOf("1"));
+        CustomerBOIntegrationTest.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
-		java.util.Date meetingStartDate = center.getCustomerMeeting().getMeeting()
-				.getMeetingStartDate();
-		AccountActionDateEntity accountActionDateEntity = center
-				.getCustomerAccount().getDetailsOfNextInstallment();
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
-						.getActionDate());
+        java.util.Date meetingStartDate = center.getCustomerMeeting().getMeeting().getMeetingStartDate();
+        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getDetailsOfNextInstallment();
+        center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
 
-		List<java.util.Date> meetingDates = center.getCustomerMeeting()
-				.getMeeting().getAllDates(DateUtils.getLastDayOfNextYear());
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
-				meetingStartDate);
-		meetingDates.remove(0);
+        List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
+                DateUtils.getLastDayOfNextYear());
+        center.getCustomerMeeting().getMeeting().setMeetingStartDate(meetingStartDate);
+        meetingDates.remove(0);
 
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.flushandCloseSession();
-		regenerateScheduleHelper.execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.flushandCloseSession();
+        regenerateScheduleHelper.execute(System.currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
 
-		savings = TestObjectFactory.getObject(SavingsBO.class,
-				savings.getAccountId());
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		client1 = TestObjectFactory.getCustomer(client1.getCustomerId());
-		client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        client1 = TestObjectFactory.getCustomer(client1.getCustomerId());
+        client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
 
-		for (AccountBO account : center.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
-		for (AccountBO account : group.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
-		for (AccountBO account : client1.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
+        for (AccountBO account : center.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
+        for (AccountBO account : group.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
+        for (AccountBO account : client1.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
 
-		for (AccountBO account : client2.getAccounts()) {
-			for (AccountActionDateEntity actionDateEntity : account
-					.getAccountActionDates()) {
-				if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("2")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-				else if (actionDateEntity.getInstallmentId().equals(
-						Short.valueOf("3")))
-					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
-							.getDateWithoutTimeStamp(actionDateEntity
-									.getActionDate().getTime()));
-			}
-		}
+        for (AccountBO account : client2.getAccounts()) {
+            for (AccountActionDateEntity actionDateEntity : account.getAccountActionDates()) {
+                if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+                else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+                    assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()), DateUtils
+                            .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
+        }
 
-		assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting()
-				.getUpdatedFlag());
+        assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting().getUpdatedFlag());
 
-		TestObjectFactory.flushandCloseSession();
+        TestObjectFactory.flushandCloseSession();
 
-		savings = TestObjectFactory.getObject(SavingsBO.class,
-				savings.getAccountId());
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		client1 = TestObjectFactory.getCustomer(client1.getCustomerId());
-		client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
-	}
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        client1 = TestObjectFactory.getCustomer(client1.getCustomerId());
+        client2 = TestObjectFactory.getCustomer(client2.getCustomerId());
+    }
 
-	private SavingsBO getSavingAccount() throws Exception {
-		MeetingBO meeting = TestObjectFactory
-			.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
-		meeting.setMeetingStartDate(new java.util.Date());
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
-				new Short("1"));
-		TestObjectFactory.createMeeting(meeting);
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group1",
-				CustomerStatus.GROUP_ACTIVE, center);
-		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		savingsOffering = TestObjectFactory.createSavingsProduct(
-			"SavingPrd1", ApplicableTo.GROUPS, 
-			new Date(System.currentTimeMillis()), 
-			PrdStatus.SAVINGS_ACTIVE, 
-			300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
-			24.0, 200.0, 200.0, 
-			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
-			meetingIntCalc, meetingIntPost);
-		SavingsBO savings = new SavingsBO(userContext, savingsOffering, group,
-				AccountState.SAVINGS_ACTIVE, savingsOffering
-						.getRecommendedAmount(), TestObjectFactory
-						.getCustomFields());
-		savings.save();
-		StaticHibernateUtil.getTransaction().commit();
-		return savings;
-	}
+    private SavingsBO getSavingAccount() throws Exception {
+        MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
+        meeting.setMeetingStartDate(new java.util.Date());
+        meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));
+        TestObjectFactory.createMeeting(meeting);
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+        client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+        client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
+        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+                EVERY_WEEK, CUSTOMER_MEETING));
+        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+                EVERY_WEEK, CUSTOMER_MEETING));
+        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.GROUPS, new Date(System
+                .currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0,
+                200.0, 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
+        SavingsBO savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_ACTIVE,
+                savingsOffering.getRecommendedAmount(), TestObjectFactory.getCustomFields());
+        savings.save();
+        StaticHibernateUtil.getTransaction().commit();
+        return savings;
+    }
 
-	private AccountBO getLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		loanOfferingBO = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOfferingBO);
-	}
+    private AccountBO getLoanAccount() {
+        Date startDate = new Date(System.currentTimeMillis());
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        loanOfferingBO = TestObjectFactory.createLoanOffering(startDate, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOfferingBO);
+    }
 
-	private java.sql.Date offSetCurrentDate(int noOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
-		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
-	}
+    private java.sql.Date offSetCurrentDate(int noOfDays) {
+        Calendar currentDateCalendar = new GregorianCalendar();
+        int year = currentDateCalendar.get(Calendar.YEAR);
+        int month = currentDateCalendar.get(Calendar.MONTH);
+        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+        currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+        return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+    }
 }

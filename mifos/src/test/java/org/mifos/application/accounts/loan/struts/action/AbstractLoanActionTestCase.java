@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.accounts.loan.struts.action;
 
+package org.mifos.application.accounts.loan.struts.action;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
@@ -54,110 +53,95 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase {
-	public AbstractLoanActionTestCase() throws SystemException, ApplicationException {
+    public AbstractLoanActionTestCase() throws SystemException, ApplicationException {
         super();
     }
 
     protected UserContext userContext;
-	protected CustomerBO center = null;
-	protected CustomerBO group = null;
-	protected CustomerBO client = null;
-	protected List<FeeBO> fees;
-	protected MeetingBO meeting;
-	protected String flowKey;
-	protected LoanOfferingBO loanOffering;
-	protected AccountBO accountBO;
+    protected CustomerBO center = null;
+    protected CustomerBO group = null;
+    protected CustomerBO client = null;
+    protected List<FeeBO> fees;
+    protected MeetingBO meeting;
+    protected String flowKey;
+    protected LoanOfferingBO loanOffering;
+    protected AccountBO accountBO;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		request.getSession(false).setAttribute("ActivityContext",
-				TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, LoanAccountAction.class);
-		fees = getFee();
-		createInitialObjects();
-		loanOffering = getLoanOffering("fdfsdfsd", "ertg", ApplicableTo.GROUPS,
-				WEEKLY, EVERY_WEEK);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, LoanAccountAction.class);
+        fees = getFee();
+        createInitialObjects();
+        loanOffering = getLoanOffering("fdfsdfsd", "ertg", ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
+    }
 
-	private List<FeeBO> getFee() {
-		List<FeeBO> fees = new ArrayList<FeeBO>();
-		FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee(
-				"One Time Amount Fee", FeeCategory.LOAN, "120.0",
-				FeePayment.TIME_OF_DISBURSMENT);
-		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "10.0", RecurrenceType.WEEKLY, (short) 1);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		fees.add(fee1);
-		fees.add(fee3);
-		return fees;
-	}
+    private List<FeeBO> getFee() {
+        List<FeeBO> fees = new ArrayList<FeeBO>();
+        FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee("One Time Amount Fee", FeeCategory.LOAN, "120.0",
+                FeePayment.TIME_OF_DISBURSMENT);
+        FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "10.0",
+                RecurrenceType.WEEKLY, (short) 1);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        fees.add(fee1);
+        fees.add(fee3);
+        return fees;
+    }
 
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-	}
+    private void createInitialObjects() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+    }
 
-	protected LoanOfferingBO getLoanOffering(String name, String shortName,
-			ApplicableTo applicableTo, RecurrenceType meetingFrequency,
-			short recurAfter) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeeting(meetingFrequency, recurAfter, CUSTOMER_MEETING,
-						MONDAY));
-		Date currentDate = new Date(System.currentTimeMillis());
-		return TestObjectFactory.createLoanOffering(name, shortName,
-				applicableTo, currentDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
-				3, InterestType.FLAT, meeting);
-	}
+    protected LoanOfferingBO getLoanOffering(String name, String shortName, ApplicableTo applicableTo,
+            RecurrenceType meetingFrequency, short recurAfter) {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(meetingFrequency,
+                recurAfter, CUSTOMER_MEETING, MONDAY));
+        Date currentDate = new Date(System.currentTimeMillis());
+        return TestObjectFactory.createLoanOffering(name, shortName, applicableTo, currentDate, PrdStatus.LOAN_ACTIVE,
+                300.0, 1.2, 3, InterestType.FLAT, meeting);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		clearRequestParameters();
-		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
-				.getObject(LoanOfferingBO.class, loanOffering
-						.getPrdOfferingId()));
-		for (FeeBO fee : fees) {
-			TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(
-					FeeBO.class, fee.getFeeId()));
-		}
-		try {
-			reloadMembers();
-			TestObjectFactory.cleanUp(accountBO);
-			TestObjectFactory.cleanUp(client);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-		}
-		catch (Exception e) {
-			TestDatabase.resetMySQLDatabase();
-		}
-		StaticHibernateUtil.closeSession();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        clearRequestParameters();
+        TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
+                .getPrdOfferingId()));
+        for (FeeBO fee : fees) {
+            TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId()));
+        }
+        try {
+            reloadMembers();
+            TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(client);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+        } catch (Exception e) {
+            TestDatabase.resetMySQLDatabase();
+        }
+        StaticHibernateUtil.closeSession();
+    }
 
-	private void reloadMembers() {
-		if (accountBO != null) {
-			accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
-					AccountBO.class, accountBO.getAccountId());
-		}
-		if (group != null) {
-			group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class,
-					group.getCustomerId());
-		}
-		if (center != null) {
-			center = (CenterBO) StaticHibernateUtil.getSessionTL().get(
-					CenterBO.class, center.getCustomerId());
-		}
-		if (client != null) {
-			client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-					CustomerBO.class, client.getCustomerId());
-		}
-	}
+    private void reloadMembers() {
+        if (accountBO != null) {
+            accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+        }
+        if (group != null) {
+            group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+        }
+        if (center != null) {
+            center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+        }
+        if (client != null) {
+            client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
+        }
+    }
 }

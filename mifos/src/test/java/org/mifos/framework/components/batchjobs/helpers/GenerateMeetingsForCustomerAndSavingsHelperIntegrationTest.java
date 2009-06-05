@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
@@ -48,162 +48,131 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends
-		MifosIntegrationTest {
-	
-	public GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest() throws SystemException, ApplicationException {
+public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends MifosIntegrationTest {
+
+    public GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CustomerBO group;
 
-	private CustomerBO center;
+    private CustomerBO center;
 
-	private CustomerBO client1;
+    private CustomerBO client1;
 
-	private CustomerBO client2;
+    private CustomerBO client2;
 
-	private SavingsBO savings;
+    private SavingsBO savings;
 
-	private SavingsOfferingBO savingsOffering;
+    private SavingsOfferingBO savingsOffering;
 
-	private UserContext userContext;
+    private UserContext userContext;
 
-	@Override
-	protected void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
         super.setUp();
-		userContext = TestObjectFactory.getContext();
-	}
+        userContext = TestObjectFactory.getContext();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testExecuteForCustomerAccount() throws Exception{
-		StaticHibernateUtil.startTransaction();
-		createCenter();		
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		
-		StaticHibernateUtil.startTransaction();
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		
-		int noOfInstallments=center.getCustomerAccount().getAccountActionDates().size();
-		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-		
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		System.out.println(center.getCustomerAccount().getAccountActionDates().size());
-		assertEquals(noOfInstallments+10,center.getCustomerAccount().getAccountActionDates().size());		
-	}
-	
-	public void testExecuteForSavingsAccount() throws Exception{
-		savings=getSavingsAccountForCenter();
-		int noOfInstallments=savings.getAccountActionDates().size();
-		AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(savings);
-		TestObjectFactory.flushandCloseSession();
-		savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
-		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-		savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
-		assertEquals(noOfInstallments+20,savings.getAccountActionDates().size());
-	}
-	
-	public void testExecuteForSavingsAccountForGroup() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE, center);
-		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering = createSavingsOffering(
-				"dfasdasd1", "sad1", 
-				InterestCalcType.MINIMUM_BALANCE, 
-				SavingsType.VOLUNTARY, 
-				TestGeneralLedgerCode.ASSETS, 
-				TestGeneralLedgerCode.CASH_AND_BANK_BALANCES, 
-				RecommendedAmountUnit.COMPLETE_GROUP);
-		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountState.SAVINGS_ACTIVE, userContext);
-		Date meetingStartDate = savings.getCustomer().getCustomerMeeting()
-				.getMeeting().getStartDate();
-		int noOfInstallments = savings.getAccountActionDates().size();
-		AccountActionDateEntityIntegrationTest
-				.changeInstallmentDatesToPreviousDateExceptLastInstallment(
-						savings, 6);
-		TestObjectFactory.flushandCloseSession();
-		savings = TestObjectFactory.getObject(SavingsBO.class,
-				savings.getAccountId());
-		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper()
-				.execute(System.currentTimeMillis());
-		StaticHibernateUtil.closeSession();
-		savings = TestObjectFactory.getObject(SavingsBO.class,
-				savings.getAccountId());
-		group = TestObjectFactory.getCustomer(group.getCustomerId());
-		center = TestObjectFactory.getCustomer(center.getCustomerId());
-		assertEquals(noOfInstallments + 10, savings.getAccountActionDates()
-				.size());
-		assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
-				meetingStartDate.getTime()).getTime()).toString(), group
-				.getCustomerMeeting().getMeeting().getStartDate().toString());
-	}
-	
-	private void createCenter() throws CustomerException {
-		List<FeeView> feeView = new ArrayList<FeeView>();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active_test",
-				meeting, feeView);
-		// give batch jobs something useful to do
-		// TODO: move this method to a shared util class?
-		AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
-		center.update();
-	}
-	
-	
-	private void createInitialObjects() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-	}
-	
-	private SavingsBO getSavingsAccountForCenter() throws Exception {
-		createInitialObjects();
-		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-		return helper.createSavingsAccount(savingsOffering, center,
-				AccountState.SAVINGS_ACTIVE, userContext);
-	}
-	
-	private SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, InterestCalcType interestCalcType, 
-			SavingsType savingsType,
-			Short depGLCode, Short intGLCode,
-			RecommendedAmountUnit recommendedAmountUnit) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsProduct(
-				offeringName, shortName,
-				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-				PrdStatus.SAVINGS_ACTIVE, 300.0, 
-				recommendedAmountUnit,
-				24.0, 200.0, 200.0, savingsType, interestCalcType,
-				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(savings);
+        TestObjectFactory.cleanUp(client1);
+        TestObjectFactory.cleanUp(client2);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
+
+    public void testExecuteForCustomerAccount() throws Exception {
+        StaticHibernateUtil.startTransaction();
+        createCenter();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        StaticHibernateUtil.startTransaction();
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+
+        int noOfInstallments = center.getCustomerAccount().getAccountActionDates().size();
+        new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        System.out.println(center.getCustomerAccount().getAccountActionDates().size());
+        assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
+    }
+
+    public void testExecuteForSavingsAccount() throws Exception {
+        savings = getSavingsAccountForCenter();
+        int noOfInstallments = savings.getAccountActionDates().size();
+        AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(savings);
+        TestObjectFactory.flushandCloseSession();
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        assertEquals(noOfInstallments + 20, savings.getAccountActionDates().size());
+    }
+
+    public void testExecuteForSavingsAccountForGroup() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        SavingsTestHelper helper = new SavingsTestHelper();
+        savingsOffering = createSavingsOffering("dfasdasd1", "sad1", InterestCalcType.MINIMUM_BALANCE,
+                SavingsType.VOLUNTARY, TestGeneralLedgerCode.ASSETS, TestGeneralLedgerCode.CASH_AND_BANK_BALANCES,
+                RecommendedAmountUnit.COMPLETE_GROUP);
+        savings = helper.createSavingsAccount(savingsOffering, group, AccountState.SAVINGS_ACTIVE, userContext);
+        Date meetingStartDate = savings.getCustomer().getCustomerMeeting().getMeeting().getStartDate();
+        int noOfInstallments = savings.getAccountActionDates().size();
+        AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDateExceptLastInstallment(savings, 6);
+        TestObjectFactory.flushandCloseSession();
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+        StaticHibernateUtil.closeSession();
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+        group = TestObjectFactory.getCustomer(group.getCustomerId());
+        center = TestObjectFactory.getCustomer(center.getCustomerId());
+        assertEquals(noOfInstallments + 10, savings.getAccountActionDates().size());
+        assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTime()).getTime())
+                .toString(), group.getCustomerMeeting().getMeeting().getStartDate().toString());
+    }
+
+    private void createCenter() throws CustomerException {
+        List<FeeView> feeView = new ArrayList<FeeView>();
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeView);
+        // give batch jobs something useful to do
+        // TODO: move this method to a shared util class?
+        AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
+        center.update();
+    }
+
+    private void createInitialObjects() {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+    }
+
+    private SavingsBO getSavingsAccountForCenter() throws Exception {
+        createInitialObjects();
+        client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
+        client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
+        SavingsTestHelper helper = new SavingsTestHelper();
+        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
+        return helper.createSavingsAccount(savingsOffering, center, AccountState.SAVINGS_ACTIVE, userContext);
+    }
+
+    private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName,
+            InterestCalcType interestCalcType, SavingsType savingsType, Short depGLCode, Short intGLCode,
+            RecommendedAmountUnit recommendedAmountUnit) {
+        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        return TestObjectFactory.createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS, new Date(System
+                .currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, recommendedAmountUnit, 24.0, 200.0, 200.0,
+                savingsType, interestCalcType, meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
+    }
 
 }

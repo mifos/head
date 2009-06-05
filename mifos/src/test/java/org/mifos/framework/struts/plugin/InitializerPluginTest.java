@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.plugin;
 
 import java.util.Date;
@@ -36,44 +36,39 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class InitializerPluginTest extends MifosMockStrutsTestCase {
 
-	public InitializerPluginTest() throws SystemException, ApplicationException {
+    public InitializerPluginTest() throws SystemException, ApplicationException {
         super();
     }
 
     private SavingsOfferingBO product;
 
-	@Override
-	public void setUp()throws Exception{
-		super.setUp();
-		
-		request.getSession(true);
-		createFlowAndAddToRequest(SavingsAction.class);
-		request.getSession().setAttribute(Constants.USERCONTEXT, 
-			TestUtils.makeUser());
-		
-		product = TestObjectFactory.createSavingsProduct(
-			"Offering1", "s1", 
-			SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
-			new Date(System.currentTimeMillis()));
-		addRequestParameter("selectedPrdOfferingId", 
-			product.getPrdOfferingId().toString());
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(product);
-		super.tearDown();
-	}
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-	public void testLabelConstants() throws Exception{
-		setRequestPathInfo("/savingsAction.do");
-		addRequestParameter("method","load");
-		addRequestParameter("recordOfficeId","0");
-		addRequestParameter("recordLoanOfficerId","0");
-		performNoErrors();
-		assertEquals(ConfigurationConstants.BRANCHOFFICE,
-			(String)context.getAttribute(
-				"LABEL_"+ ConfigurationConstants.BRANCHOFFICE.toUpperCase()));
-	}
+        request.getSession(true);
+        createFlowAndAddToRequest(SavingsAction.class);
+        request.getSession().setAttribute(Constants.USERCONTEXT, TestUtils.makeUser());
+
+        product = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
+                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
+        addRequestParameter("selectedPrdOfferingId", product.getPrdOfferingId().toString());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.removeObject(product);
+        super.tearDown();
+    }
+
+    public void testLabelConstants() throws Exception {
+        setRequestPathInfo("/savingsAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("recordOfficeId", "0");
+        addRequestParameter("recordLoanOfficerId", "0");
+        performNoErrors();
+        assertEquals(ConfigurationConstants.BRANCHOFFICE, (String) context.getAttribute("LABEL_"
+                + ConfigurationConstants.BRANCHOFFICE.toUpperCase()));
+    }
 
 }

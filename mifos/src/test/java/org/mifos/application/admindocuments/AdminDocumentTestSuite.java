@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments;
 
 import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersistenceIntegrationTest;
@@ -27,13 +27,12 @@ import org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploa
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-
 public class AdminDocumentTestSuite extends TestSuite {
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new AdminDocumentTestSuite();
-		testSuite.addTestSuite(BirtAdminDocumentUploadActionTest.class);
-		testSuite.addTestSuite(AdminDocAccStateMixPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(AdminDocumentPersistenceIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new AdminDocumentTestSuite();
+        testSuite.addTestSuite(BirtAdminDocumentUploadActionTest.class);
+        testSuite.addTestSuite(AdminDocAccStateMixPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(AdminDocumentPersistenceIntegrationTest.class);
+        return testSuite;
+    }
 }

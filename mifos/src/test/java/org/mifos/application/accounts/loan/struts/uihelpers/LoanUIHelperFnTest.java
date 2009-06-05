@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
 import java.util.Date;
@@ -48,89 +48,83 @@ import static org.easymock.classextension.EasyMock.verify;
 
 public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
-	public LoanUIHelperFnTest() throws SystemException, ApplicationException {
+    public LoanUIHelperFnTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext",
-				TestObjectFactory.getActivityContext());
-		createFlow(request, LoanAccountAction.class);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        createFlow(request, LoanAccountAction.class);
+    }
 
-	public void testGetCurrrentDate() {
-		Locale locale = new Locale("EN");
-		assertEquals(DateUtils.getCurrentDate(locale), LoanUIHelperFn
-				.getCurrrentDate(locale));
-	}
+    public void testGetCurrrentDate() {
+        Locale locale = new Locale("EN");
+        assertEquals(DateUtils.getCurrentDate(locale), LoanUIHelperFn.getCurrrentDate(locale));
+    }
 
-	public void testGetMeetingRecurrence() throws Exception {
-		UserContext userContext = TestObjectFactory.getContext();
-		MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY, 
-				EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
-		assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting,
-				userContext));
-	}
+    public void testGetMeetingRecurrence() throws Exception {
+        UserContext userContext = TestObjectFactory.getContext();
+        MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
+        assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting, userContext));
+    }
 
-	public void testGetDoubleValue() {
-		assertEquals("2.2", LoanUIHelperFn.getDoubleValue(new Double(2.2)));
-		assertEquals("0.0", LoanUIHelperFn.getDoubleValue(null));
-	}
+    public void testGetDoubleValue() {
+        assertEquals("2.2", LoanUIHelperFn.getDoubleValue(new Double(2.2)));
+        assertEquals("0.0", LoanUIHelperFn.getDoubleValue(null));
+    }
 
-	public void testRepaymentScheduleInstallment() {
-		RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment();
-		long l = System.currentTimeMillis();
-		repaymentScheduleInstallment.setDueDate(new Date(l));
-		repaymentScheduleInstallment.setFees(new Money("100.0"));
-		repaymentScheduleInstallment.setInstallment(10);
-		repaymentScheduleInstallment.setInterest(new Money("100.0"));
-		repaymentScheduleInstallment.setLocale(new Locale("1"));
-		repaymentScheduleInstallment.setMiscFees(new Money("100.0"));
-		repaymentScheduleInstallment.setMiscPenalty(new Money("100.0"));
-		repaymentScheduleInstallment.setPrincipal(new Money("100.0"));
+    public void testRepaymentScheduleInstallment() {
+        RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment();
+        long l = System.currentTimeMillis();
+        repaymentScheduleInstallment.setDueDate(new Date(l));
+        repaymentScheduleInstallment.setFees(new Money("100.0"));
+        repaymentScheduleInstallment.setInstallment(10);
+        repaymentScheduleInstallment.setInterest(new Money("100.0"));
+        repaymentScheduleInstallment.setLocale(new Locale("1"));
+        repaymentScheduleInstallment.setMiscFees(new Money("100.0"));
+        repaymentScheduleInstallment.setMiscPenalty(new Money("100.0"));
+        repaymentScheduleInstallment.setPrincipal(new Money("100.0"));
 
-		double m = new Money("100").getAmountDoubleValue();
-		assertEquals("Due date", new Date(l), repaymentScheduleInstallment
-				.getDueDate());
-		assertEquals("fees", m, repaymentScheduleInstallment.getFees()
-				.getAmountDoubleValue());
-		assertEquals("Installment", "10", repaymentScheduleInstallment
-				.getInstallment().toString());
-		assertEquals("Interest", m, repaymentScheduleInstallment.getFees()
-				.getAmountDoubleValue());
-		assertEquals("Locale", "1", repaymentScheduleInstallment.getLocale()
-				.toString());
-		assertEquals("Misc fees", m, repaymentScheduleInstallment.getMiscFees()
-				.getAmountDoubleValue());
-		assertEquals("Misc penalty", m, repaymentScheduleInstallment
-				.getMiscPenalty().getAmountDoubleValue());
-		assertEquals("principal", m, repaymentScheduleInstallment
-				.getPrincipal().getAmountDoubleValue());
-	}
-	
-	public void testShouldDisableEditAmountForGlimAccountInDifferentAccountStates() throws Exception {
-		ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
-		expect(configServiceMock.isGlimEnabled()).andReturn(true).anyTimes();
-		replay(configServiceMock);
-		assertTrue("assertion failed",LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_APPROVED, configServiceMock));
-		assertFalse(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_PARTIAL_APPLICATION, configServiceMock));
-		assertFalse(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_PENDING_APPROVAL, configServiceMock));
-		assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_ACTIVE_IN_BAD_STANDING, configServiceMock));
-		assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, configServiceMock));
-		assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_CLOSED_OBLIGATIONS_MET, configServiceMock));
-		verify(configServiceMock);
-	}
+        double m = new Money("100").getAmountDoubleValue();
+        assertEquals("Due date", new Date(l), repaymentScheduleInstallment.getDueDate());
+        assertEquals("fees", m, repaymentScheduleInstallment.getFees().getAmountDoubleValue());
+        assertEquals("Installment", "10", repaymentScheduleInstallment.getInstallment().toString());
+        assertEquals("Interest", m, repaymentScheduleInstallment.getFees().getAmountDoubleValue());
+        assertEquals("Locale", "1", repaymentScheduleInstallment.getLocale().toString());
+        assertEquals("Misc fees", m, repaymentScheduleInstallment.getMiscFees().getAmountDoubleValue());
+        assertEquals("Misc penalty", m, repaymentScheduleInstallment.getMiscPenalty().getAmountDoubleValue());
+        assertEquals("principal", m, repaymentScheduleInstallment.getPrincipal().getAmountDoubleValue());
+    }
+
+    public void testShouldDisableEditAmountForGlimAccountInDifferentAccountStates() throws Exception {
+        ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
+        expect(configServiceMock.isGlimEnabled()).andReturn(true).anyTimes();
+        replay(configServiceMock);
+        assertTrue("assertion failed", LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount",
+                AccountState.LOAN_APPROVED, configServiceMock));
+        assertFalse(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount",
+                AccountState.LOAN_PARTIAL_APPLICATION, configServiceMock));
+        assertFalse(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount",
+                AccountState.LOAN_PENDING_APPROVAL, configServiceMock));
+        assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount",
+                AccountState.LOAN_ACTIVE_IN_BAD_STANDING, configServiceMock));
+        assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount",
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, configServiceMock));
+        assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount",
+                AccountState.LOAN_CLOSED_OBLIGATIONS_MET, configServiceMock));
+        verify(configServiceMock);
+    }
 }

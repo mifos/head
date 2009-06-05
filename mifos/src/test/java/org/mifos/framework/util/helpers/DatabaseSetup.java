@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.io.IOException;
@@ -44,141 +44,119 @@ import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
 public class DatabaseSetup {
-	private static DataStore standardMayflyStore;
-	
-	private static SessionFactory mayflySessionFactory;
+    private static DataStore standardMayflyStore;
 
-	public static void initializeHibernate() {
-			boolean useInMemoryDatabase = false;
-            initializeHibernate(useInMemoryDatabase);
-	}
-	
-	public static void initializeHibernate(boolean useInMemoryDatabase) {
-		MifosLogManager.configureLogging();
+    private static SessionFactory mayflySessionFactory;
 
-		if (HibernateSessionFactory.isConfigured()) {
-			return;
-		}
+    public static void initializeHibernate() {
+        boolean useInMemoryDatabase = false;
+        initializeHibernate(useInMemoryDatabase);
+    }
 
-		if (useInMemoryDatabase) {
-		    setMayfly();
-		} else {
-			setMysql();
-		}
-	}
+    public static void initializeHibernate(boolean useInMemoryDatabase) {
+        MifosLogManager.configureLogging();
 
-	public static void setMysql() {
-	    StaticHibernateUtil.initialize();
-	}
+        if (HibernateSessionFactory.isConfigured()) {
+            return;
+        }
 
-	public static Configuration getHibernateConfiguration() {
-		MifosLogManager.configureLogging();
-		
-		Configuration configuration = new Configuration();
+        if (useInMemoryDatabase) {
+            setMayfly();
+        } else {
+            setMysql();
+        }
+    }
+
+    public static void setMysql() {
+        StaticHibernateUtil.initialize();
+    }
+
+    public static Configuration getHibernateConfiguration() {
+        MifosLogManager.configureLogging();
+
+        Configuration configuration = new Configuration();
         try {
             configuration.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
         } catch (Exception e) {
-            throw new HibernateStartUpException(
-                    HibernateConstants.CFGFILENOTFOUND, e);
+            throw new HibernateStartUpException(HibernateConstants.CFGFILENOTFOUND, e);
         }
-		return configuration;
-	}
+        return configuration;
+    }
 
-	public static Configuration mayflyConfiguration() {
-		String url = JdbcDriver.create(DatabaseSetup.getStandardStore());
+    public static Configuration mayflyConfiguration() {
+        String url = JdbcDriver.create(DatabaseSetup.getStandardStore());
 
-		Configuration configuration = getHibernateConfiguration();
-		configuration.setProperty(
-			"hibernate.connection.driver_class", 
-			"net.sourceforge.mayfly.JdbcDriver");
-		configuration.setProperty(
-			"hibernate.connection.url", url);
-		configuration.setProperty(
-			"hibernate.dialect", 
-			"org.mifos.framework.util.helpers.MayflyDialect");
-		return configuration;
-	}
+        Configuration configuration = getHibernateConfiguration();
+        configuration.setProperty("hibernate.connection.driver_class", "net.sourceforge.mayfly.JdbcDriver");
+        configuration.setProperty("hibernate.connection.url", url);
+        configuration.setProperty("hibernate.dialect", "org.mifos.framework.util.helpers.MayflyDialect");
+        return configuration;
+    }
 
-	public static void setMayfly() {
-		HibernateSessionFactory.setFactory(mayflySessionFactory());
-	}
-	
-	public static synchronized SessionFactory mayflySessionFactory() {
-		if (mayflySessionFactory == null) {
-			mayflySessionFactory = mayflyConfiguration().buildSessionFactory();
-		}
-		return mayflySessionFactory;
-	}
+    public static void setMayfly() {
+        HibernateSessionFactory.setFactory(mayflySessionFactory());
+    }
 
-	public static synchronized DataStore getStandardStore() {
-		if (standardMayflyStore == null) {
-			standardMayflyStore = createStandardStore();
-		}
-		return standardMayflyStore;
-	}
+    public static synchronized SessionFactory mayflySessionFactory() {
+        if (mayflySessionFactory == null) {
+            mayflySessionFactory = mayflyConfiguration().buildSessionFactory();
+        }
+        return mayflySessionFactory;
+    }
 
-	private static DataStore createStandardStore() {
-		Database database = new Database();
-	    // Should be the same as the files in build.xml
-	    executeScript(database, "latest-schema.sql");
-	    executeScript(database, "latest-data.sql");
+    public static synchronized DataStore getStandardStore() {
+        if (standardMayflyStore == null) {
+            standardMayflyStore = createStandardStore();
+        }
+        return standardMayflyStore;
+    }
 
-	    executeScript(database, "testdbinsertionscript.sql");
+    private static DataStore createStandardStore() {
+        Database database = new Database();
+        // Should be the same as the files in build.xml
+        executeScript(database, "latest-schema.sql");
+        executeScript(database, "latest-data.sql");
 
-	    return database.dataStore();
-	}
+        executeScript(database, "testdbinsertionscript.sql");
 
-	public static void executeScript(Database database, String name) {
-	    
+        return database.dataStore();
+    }
+
+    public static void executeScript(Database database, String name) {
+
         Reader sql = SqlResource.getInstance().getAsReader(name);
 
         try {
-	        database.executeScript(sql);
-	    }
-	    catch (MayflyException e) {
-	    	if (e.startLineNumber() == -1) {
-	    		throw e;
-	    	}
-	    	else {
-		        throw new RuntimeException(
-		            "error at line " + e.startLineNumber() +
-		            " column " + e.startColumn() + " in file " + name,
-		            e
-		        );
-	    	}
-	    }
-	    finally {
-	    	try {
-				sql.close();
-			}
-	    	catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-	    }
-	}
-	
-	public static void executeScript(Connection connection, String name) 
-	throws SQLException, IOException {
-		InputStream sql = SqlResource.getInstance().getAsStream(name);
+            database.executeScript(sql);
+        } catch (MayflyException e) {
+            if (e.startLineNumber() == -1) {
+                throw e;
+            } else {
+                throw new RuntimeException("error at line " + e.startLineNumber() + " column " + e.startColumn()
+                        + " in file " + name, e);
+            }
+        } finally {
+            try {
+                sql.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void executeScript(Connection connection, String name) throws SQLException, IOException {
+        InputStream sql = SqlResource.getInstance().getAsStream(name);
         try {
-        	SqlUpgrade.execute(sql, connection);
-	    }
-	    catch (MayflySqlException e) {
-	    	if (e.startLineNumber() == -1) {
-	    		throw e;
-	    	}
-	    	else {
-		        String failingCommand = e.failingCommand();
-				throw new RuntimeException(
-		            "error at line " + e.startLineNumber() +
-		            " column " + e.startColumn() + " in file " + name +
-		            (failingCommand == null ? "" :
-			            "\ncommand was: " + failingCommand)
-			        ,
-		            e
-		        );
-	    	}
-	    }
-	}
+            SqlUpgrade.execute(sql, connection);
+        } catch (MayflySqlException e) {
+            if (e.startLineNumber() == -1) {
+                throw e;
+            } else {
+                String failingCommand = e.failingCommand();
+                throw new RuntimeException("error at line " + e.startLineNumber() + " column " + e.startColumn()
+                        + " in file " + name + (failingCommand == null ? "" : "\ncommand was: " + failingCommand), e);
+            }
+        }
+    }
 
 }

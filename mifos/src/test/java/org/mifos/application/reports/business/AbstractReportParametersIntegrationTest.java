@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.reports.business;
 
+package org.mifos.application.reports.business;
 
 import static org.easymock.classextension.EasyMock.createMock;
 
@@ -30,20 +29,19 @@ import org.mifos.framework.exceptions.SystemException;
 
 public abstract class AbstractReportParametersIntegrationTest extends MifosIntegrationTest {
 
-	public static final String VALID_ID = "0";	
-	
-	Errors errorsMock;
-	protected AbstractReportParameterForm reportParams;
+    public static final String VALID_ID = "0";
 
+    Errors errorsMock;
+    protected AbstractReportParameterForm reportParams;
 
-	public AbstractReportParametersIntegrationTest() throws SystemException, ApplicationException {
-		super();
-	}
+    public AbstractReportParametersIntegrationTest() throws SystemException, ApplicationException {
+        super();
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		errorsMock = createMock(Errors.class);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        errorsMock = createMock(Errors.class);
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.plugin;
 
 import java.util.ArrayList;
@@ -38,77 +38,73 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class EnumPluginTest extends MifosMockStrutsTestCase {
 
-	public EnumPluginTest() throws SystemException, ApplicationException {
+    public EnumPluginTest() throws SystemException, ApplicationException {
         super();
     }
 
     private SavingsOfferingBO product;
 
-	@Override
-	public void setUp()throws Exception {
-		super.setUp();
-		request.getSession(true);
-		createFlowAndAddToRequest(SavingsAction.class);
-		request.getSession().setAttribute(Constants.USERCONTEXT, 
-			TestUtils.makeUser());
-		
-		product = TestObjectFactory.createSavingsProduct(
-			"Offering1", "s1", 
-			SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
-			new Date(System.currentTimeMillis()));
-		addRequestParameter("selectedPrdOfferingId", 
-			product.getPrdOfferingId().toString());
-	}
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        request.getSession(true);
+        createFlowAndAddToRequest(SavingsAction.class);
+        request.getSession().setAttribute(Constants.USERCONTEXT, TestUtils.makeUser());
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(product);
-		super.tearDown();
-	}
+        product = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
+                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
+        addRequestParameter("selectedPrdOfferingId", product.getPrdOfferingId().toString());
+    }
 
-	public void testCustomFieldType() throws Exception{
-		setRequestPathInfo("/savingsAction.do");
-		addRequestParameter("method","load");
-		addRequestParameter("recordOfficeId","0");
-		addRequestParameter("recordLoanOfficerId","0");
-		performNoErrors();
-		Map constantMap = (Map)context.getAttribute("CustomFieldType");
-		assertNotNull(constantMap);
-		assertEquals("NUMERIC", constantMap.get("NUMERIC").toString());
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.removeObject(product);
+        super.tearDown();
+    }
 
-	public void testIfAllConstantFilesAreLoaded(){
-		setRequestPathInfo("/savingsAction.do");
-		addRequestParameter("method","load");
-		addRequestParameter("recordOfficeId","0");
-		addRequestParameter("recordLoanOfficerId","0");
-		performNoErrors();
-		assertNotNull(context.getAttribute("FeeFrequencyType"));
-		assertNotNull(context.getAttribute("FeeCategory"));
-		assertNotNull(context.getAttribute("FeeLevel"));
-		assertNotNull(context.getAttribute("FeePayment"));
-		assertNotNull(context.getAttribute("FeeStatus"));
-		assertNotNull(context.getAttribute("RateAmountFlag"));
-		assertNotNull(context.getAttribute("RecurrenceType"));
-		assertNotNull(context.getAttribute("AccountTypes"));
-		assertNotNull(context.getAttribute("OfficeStatus"));
-		assertNotNull(context.getAttribute("OfficeLevel"));
-		assertNotNull(context.getAttribute("CustomerStatus"));
-		assertNotNull(context.getAttribute("CustomerLevel"));
-		assertNotNull(context.getAttribute("PrdStatus"));
-		assertNotNull(context.getAttribute("AccountState"));
-		assertNotNull(context.getAttribute("RecommendedAmountUnit"));
-	}
+    public void testCustomFieldType() throws Exception {
+        setRequestPathInfo("/savingsAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("recordOfficeId", "0");
+        addRequestParameter("recordLoanOfficerId", "0");
+        performNoErrors();
+        Map constantMap = (Map) context.getAttribute("CustomFieldType");
+        assertNotNull(constantMap);
+        assertEquals("NUMERIC", constantMap.get("NUMERIC").toString());
+    }
 
-	public void testEnumPluginException() throws Exception {
-		EnumPlugin enumPlugin = new EnumPlugin();
-		ArrayList<String> enumPluginClasses = new ArrayList<String>();
-		enumPluginClasses.add("org.mifos.doesNotExist");
-		try {
-			enumPlugin.buildClasses(enumPluginClasses);
-			fail();
-		} catch (EnumsNotLoadedException expected) {
-		}
-	}
+    public void testIfAllConstantFilesAreLoaded() {
+        setRequestPathInfo("/savingsAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("recordOfficeId", "0");
+        addRequestParameter("recordLoanOfficerId", "0");
+        performNoErrors();
+        assertNotNull(context.getAttribute("FeeFrequencyType"));
+        assertNotNull(context.getAttribute("FeeCategory"));
+        assertNotNull(context.getAttribute("FeeLevel"));
+        assertNotNull(context.getAttribute("FeePayment"));
+        assertNotNull(context.getAttribute("FeeStatus"));
+        assertNotNull(context.getAttribute("RateAmountFlag"));
+        assertNotNull(context.getAttribute("RecurrenceType"));
+        assertNotNull(context.getAttribute("AccountTypes"));
+        assertNotNull(context.getAttribute("OfficeStatus"));
+        assertNotNull(context.getAttribute("OfficeLevel"));
+        assertNotNull(context.getAttribute("CustomerStatus"));
+        assertNotNull(context.getAttribute("CustomerLevel"));
+        assertNotNull(context.getAttribute("PrdStatus"));
+        assertNotNull(context.getAttribute("AccountState"));
+        assertNotNull(context.getAttribute("RecommendedAmountUnit"));
+    }
+
+    public void testEnumPluginException() throws Exception {
+        EnumPlugin enumPlugin = new EnumPlugin();
+        ArrayList<String> enumPluginClasses = new ArrayList<String>();
+        enumPluginClasses.add("org.mifos.doesNotExist");
+        try {
+            enumPlugin.buildClasses(enumPluginClasses);
+            fail();
+        } catch (EnumsNotLoadedException expected) {
+        }
+    }
 
 }

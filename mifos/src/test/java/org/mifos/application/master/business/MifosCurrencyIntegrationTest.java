@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -26,24 +26,24 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class MifosCurrencyIntegrationTest extends MifosIntegrationTest {
 
-	public MifosCurrencyIntegrationTest() throws SystemException, ApplicationException {
+    public MifosCurrencyIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
+    public void testEqualsOnCurrencyId() {
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", "$", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", "$", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        assertTrue(currency1.equals(currency2));
+    }
 
-    public void testEqualsOnCurrencyId(){
-		MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1") ,"Dollar","$",Short.valueOf("1"),Float.valueOf("1"),Short.valueOf("1"),Short.valueOf("3"), "USD");
-		MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1") ,"Dollar","$",Short.valueOf("1"),Float.valueOf("1"),Short.valueOf("1"),Short.valueOf("3"), "USD");
-		assertTrue(currency1.equals(currency2)); 
-	}
-	
-	
-	public void testEqualsFailureOnCurrencyId(){
-		MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1") ,"Dollar","$",Short.valueOf("1"),Float.valueOf("1"),Short.valueOf("1"),Short.valueOf("3"),"USD");
-		MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2") ,"Rupees","Rs",Short.valueOf("1"),Float.valueOf("1"),Short.valueOf("1"),Short.valueOf("3"),"USD");
-		assertFalse(currency1.equals(currency2)); 
-	}
-
-	
+    public void testEqualsFailureOnCurrencyId() {
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", "$", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2"), "Rupees", "Rs", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        assertFalse(currency1.equals(currency2));
+    }
 
 }

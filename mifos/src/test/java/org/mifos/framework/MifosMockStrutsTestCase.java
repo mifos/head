@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework;
 
 import java.io.File;
@@ -53,36 +53,31 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
     private boolean strutsConfigSet = false;
 
     private void setStrutsConfig() {
-    	/*
-    	 * Add a pointer to the context directory so that the web.xml 
-    	 * file can be located when running test cases using the junit plugin
-    	 * inside eclipse.
-    	 */
-    	setContextDirectory(new File("src/org/mifos/"));
-    	
+        /*
+         * Add a pointer to the context directory so that the web.xml file can
+         * be located when running test cases using the junit plugin inside
+         * eclipse.
+         */
+        setContextDirectory(new File("src/org/mifos/"));
+
         String className = this.getClass().getName();
         if (className.startsWith("org.mifos.application.customer")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
-        }
-        else if (className.startsWith("org.mifos.application.accounts")) {
+        } else if (className.startsWith("org.mifos.application.accounts")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
-        }
-        else if (className.startsWith("org.mifos.application.reports")) {
+        } else if (className.startsWith("org.mifos.application.reports")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
-        }
-        else if (className.startsWith("org.mifos.application.productdefinition")) {
+        } else if (className.startsWith("org.mifos.application.productdefinition")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
-        }
-        else if (className.startsWith("org.mifos.application.admindocuments")){
+        } else if (className.startsWith("org.mifos.application.admindocuments")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/admindocument-struts-config.xml");
-        }
-        else {
+        } else {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
-        }       
+        }
     }
 
     @Override
-	protected void setUp() throws Exception {
+    protected void setUp() throws Exception {
         super.setUp();
         if (!strutsConfigSet) {
             setStrutsConfig();
@@ -91,107 +86,100 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
     }
 
     protected void addRequestDateParameter(String param, String dateStr) {
-		java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateStr);
-		if (date != null) {
-			Calendar cal = new GregorianCalendar();
-			cal.setTime(date);
+        java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateStr);
+        if (date != null) {
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(date);
 
-			addRequestParameter(param + "DD", Integer.toString(cal
-					.get(Calendar.DAY_OF_MONTH)));
-			addRequestParameter(param + "MM", Integer.toString(cal
-					.get(Calendar.MONTH) + 1));
-			addRequestParameter(param + "YY", Integer.toString(cal
-					.get(Calendar.YEAR)));
-		}
-		else {
-			addRequestParameter(param + "DD", "");
-			addRequestParameter(param + "MM", "");
-			addRequestParameter(param + "YY", "");
-		}
-	}
-	
-	protected int getErrorSize(String field){
-		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
-		return errors != null ? errors.size(field) : 0;
-	}
-	
-	protected int getErrorSize(){
-		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
-		return errors == null ? 0 : errors.size();
-	}
-	
-	protected void matchValues(AuditLogRecord auditLogRecord, String oldValue, String newValue){
-		assertEquals(oldValue, auditLogRecord.getOldValue());
-		assertEquals(newValue, auditLogRecord.getNewValue());
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {		
-		doCleanUp(request);
-		doCleanUp(request.getSession());
-		TestObjectFactory.cleanUpTestObjects();
-		super.tearDown();
-		
-		
-	}
-	public  void doCleanUp(HttpSession session){
-		Enumeration keys = session.getAttributeNames();
-		String attributeKey = null;
-		if(null != keys ){
-			while(keys.hasMoreElements()){
-				
-				attributeKey = (String)keys.nextElement();
-				
-				Object obj = session.getAttribute(attributeKey);
-					session.removeAttribute(attributeKey);
-				if(obj.getClass().getName().equals("java.util.ArrayList"))
-				{
-					
-					List l = (List)obj;
+            addRequestParameter(param + "DD", Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
+            addRequestParameter(param + "MM", Integer.toString(cal.get(Calendar.MONTH) + 1));
+            addRequestParameter(param + "YY", Integer.toString(cal.get(Calendar.YEAR)));
+        } else {
+            addRequestParameter(param + "DD", "");
+            addRequestParameter(param + "MM", "");
+            addRequestParameter(param + "YY", "");
+        }
+    }
 
-					while(l.size() != 0)
-					{
-						l.remove(0);
-					}
-				}
-			}// end-while
-		}// end-if
-		session = null;
-	}// end-doCleanUp
+    protected int getErrorSize(String field) {
+        ActionErrors errors = (ActionErrors) request.getAttribute(Globals.ERROR_KEY);
+        return errors != null ? errors.size(field) : 0;
+    }
 
-	public  void doCleanUp(HttpServletRequest request){
-		Enumeration keys = request.getAttributeNames();
-		String attributeKey = null;
-		if(null != keys ){
-			while(keys.hasMoreElements()){
-				attributeKey = (String)keys.nextElement();
-				request.removeAttribute(attributeKey);
-			}// end-while
-		}// end-if
-		request = null;
-	}// end-doCleanUp
+    protected int getErrorSize() {
+        ActionErrors errors = (ActionErrors) request.getAttribute(Globals.ERROR_KEY);
+        return errors == null ? 0 : errors.size();
+    }
 
-	protected String createFlow(HttpServletRequest request, Class flowClass) {
-		Flow flow = new Flow();
-		String flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow, flowClass.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
-		return flowKey;
-	}
+    protected void matchValues(AuditLogRecord auditLogRecord, String oldValue, String newValue) {
+        assertEquals(oldValue, auditLogRecord.getOldValue());
+        assertEquals(newValue, auditLogRecord.getNewValue());
+    }
 
-	protected String createFlowAndAddToRequest(Class flowClass) {
-		String key = createFlow(request, flowClass);
-		request.setAttribute(Constants.CURRENTFLOWKEY, key);
-		addRequestParameter(Constants.CURRENTFLOWKEY, key);
-		return key;
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        doCleanUp(request);
+        doCleanUp(request.getSession());
+        TestObjectFactory.cleanUpTestObjects();
+        super.tearDown();
+
+    }
+
+    public void doCleanUp(HttpSession session) {
+        Enumeration keys = session.getAttributeNames();
+        String attributeKey = null;
+        if (null != keys) {
+            while (keys.hasMoreElements()) {
+
+                attributeKey = (String) keys.nextElement();
+
+                Object obj = session.getAttribute(attributeKey);
+                session.removeAttribute(attributeKey);
+                if (obj.getClass().getName().equals("java.util.ArrayList")) {
+
+                    List l = (List) obj;
+
+                    while (l.size() != 0) {
+                        l.remove(0);
+                    }
+                }
+            }// end-while
+        }// end-if
+        session = null;
+    }// end-doCleanUp
+
+    public void doCleanUp(HttpServletRequest request) {
+        Enumeration keys = request.getAttributeNames();
+        String attributeKey = null;
+        if (null != keys) {
+            while (keys.hasMoreElements()) {
+                attributeKey = (String) keys.nextElement();
+                request.removeAttribute(attributeKey);
+            }// end-while
+        }// end-if
+        request = null;
+    }// end-doCleanUp
+
+    protected String createFlow(HttpServletRequest request, Class flowClass) {
+        Flow flow = new Flow();
+        String flowKey = String.valueOf(System.currentTimeMillis());
+        FlowManager flowManager = new FlowManager();
+        flowManager.addFLow(flowKey, flow, flowClass.getName());
+        request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);
+        return flowKey;
+    }
+
+    protected String createFlowAndAddToRequest(Class flowClass) {
+        String key = createFlow(request, flowClass);
+        request.setAttribute(Constants.CURRENTFLOWKEY, key);
+        addRequestParameter(Constants.CURRENTFLOWKEY, key);
+        return key;
+    }
 
     protected void performNoErrors() {
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
 
 }

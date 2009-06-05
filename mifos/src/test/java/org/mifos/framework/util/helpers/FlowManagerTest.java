@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import junit.framework.TestCase;
@@ -25,8 +25,8 @@ import junit.framework.TestCase;
 import org.mifos.framework.TestUtils;
 
 public class FlowManagerTest extends TestCase {
-	public void testIsSerializable() throws Exception {
-		FlowManager flowManager = new FlowManager();
-		TestUtils.assertCanSerialize(flowManager);
-	}	
+    public void testIsSerializable() throws Exception {
+        FlowManager flowManager = new FlowManager();
+        TestUtils.assertCanSerialize(flowManager);
+    }
 }

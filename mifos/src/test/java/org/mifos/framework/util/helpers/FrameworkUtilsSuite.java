@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import junit.framework.Test;
@@ -25,9 +25,9 @@ import junit.framework.TestSuite;
 
 public class FrameworkUtilsSuite extends TestSuite {
 
-	public FrameworkUtilsSuite() {
-		super();
-	}
+    public FrameworkUtilsSuite() {
+        super();
+    }
 
     public static Test suite() throws Exception {
         TestSuite suite = new TestSuite();

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components;
 
 import junit.framework.Test;
@@ -28,17 +28,17 @@ import org.mifos.framework.components.logger.MessageIntegrationTest;
 import org.mifos.framework.components.tabletag.TableTagExceptionIntegrationTest;
 import org.mifos.framework.components.taggenerator.TagGeneratorIntegrationTest;
 
-public class ComponentsTestSuite extends TestSuite{
-	public ComponentsTestSuite() {
-		super();
-	}
+public class ComponentsTestSuite extends TestSuite {
+    public ComponentsTestSuite() {
+        super();
+    }
 
-	public static Test suite()throws Exception	{
-		TestSuite testSuite = new ComponentsTestSuite();
-		testSuite.addTestSuite(TagGeneratorIntegrationTest.class);
-		testSuite.addTestSuite(LoggingTest.class);
-		testSuite.addTestSuite(MessageIntegrationTest.class);
-		testSuite.addTestSuite(TableTagExceptionIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new ComponentsTestSuite();
+        testSuite.addTestSuite(TagGeneratorIntegrationTest.class);
+        testSuite.addTestSuite(LoggingTest.class);
+        testSuite.addTestSuite(MessageIntegrationTest.class);
+        testSuite.addTestSuite(TableTagExceptionIntegrationTest.class);
+        return testSuite;
+    }
 }

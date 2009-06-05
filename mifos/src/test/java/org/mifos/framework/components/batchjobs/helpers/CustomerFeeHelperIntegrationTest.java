@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
@@ -66,239 +66,198 @@ import static org.easymock.classextension.EasyMock.verify;
 
 public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTest {
 
-	public CustomerFeeHelperIntegrationTest() throws SystemException, ApplicationException {
+    public CustomerFeeHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CustomerBO center;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testExecute() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("center1_Active_test", meeting);
+    public void testExecute() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("center1_Active_test", meeting);
 
-		for (AccountActionDateEntity accountActionDateEntity : center
-				.getCustomerAccount().getAccountActionDates()) {
-			CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), 1));
-		}
+        for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
+            CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                    .getActionDate(), 1));
+        }
 
-		meeting = center.getCustomerMeeting().getMeeting();
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
-		meeting.setMeetingStartDate(calendar.getTime());
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
-				new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(String
-						.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
+        meeting = center.getCustomerMeeting().getMeeting();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
+        meeting.setMeetingStartDate(calendar.getTime());
+        meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
+                new WeekDaysEntity(WeekDay
+                        .getWeekDay(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
 
-		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount()
-				.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "100",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
-		accountFeeSet.add(accountPeriodicFee);
-		Date lastAppliedFeeDate = offSetDate(new Date(System
-				.currentTimeMillis()), 1);
-		assertEquals(2, accountFeeSet.size());
-		for (Iterator iter = accountFeeSet.iterator(); iter.hasNext();) {
-			AccountFeesEntity accountFeesEntity = (AccountFeesEntity) iter
-					.next();
-			accountFeesEntity.setLastAppliedDate(offSetDate(new Date(System
-					.currentTimeMillis()), 1));
-		}
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCenter(center.getCustomerId());
-		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
-		ApplyCustomerFeeHelper customerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
-				.getTaskHelper();
-		customerFeeHelper.execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCenter(center.getCustomerId());
+        Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "100",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
+        accountFeeSet.add(accountPeriodicFee);
+        Date lastAppliedFeeDate = offSetDate(new Date(System.currentTimeMillis()), 1);
+        assertEquals(2, accountFeeSet.size());
+        for (Iterator iter = accountFeeSet.iterator(); iter.hasNext();) {
+            AccountFeesEntity accountFeesEntity = (AccountFeesEntity) iter.next();
+            accountFeesEntity.setLastAppliedDate(offSetDate(new Date(System.currentTimeMillis()), 1));
+        }
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+        ApplyCustomerFeeHelper customerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask.getTaskHelper();
+        customerFeeHelper.execute(System.currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
 
-		Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount()
-				.getAccountFees();
-		for (AccountFeesEntity periodicFees : periodicFeeSet) {
-			if (periodicFees.getFees().getFeeName().equalsIgnoreCase(
-					"Training_Fee"))
-				assertEquals(lastAppliedFeeDate, DateUtils
-						.getDateWithoutTimeStamp(periodicFees
-								.getLastAppliedDate().getTime()));
-			else {
-				assertEquals(DateUtils.getDateWithoutTimeStamp(offSetDate(
-						lastAppliedFeeDate, -7).getTime()), DateUtils
-						.getDateWithoutTimeStamp(periodicFees
-								.getLastAppliedDate().getTime()));
-			}
-		}
-	}
+        Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
+        for (AccountFeesEntity periodicFees : periodicFeeSet) {
+            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
+                assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
+                        .getTime()));
+            else {
+                assertEquals(DateUtils.getDateWithoutTimeStamp(offSetDate(lastAppliedFeeDate, -7).getTime()), DateUtils
+                        .getDateWithoutTimeStamp(periodicFees.getLastAppliedDate().getTime()));
+            }
+        }
+    }
 
-	public void testExecuteToApplyPeriodicFee() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("center1_Active_test", meeting);
-		for (AccountActionDateEntity accountActionDateEntity : center
-				.getCustomerAccount().getAccountActionDates()) {
-			CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), 1));
-		}
-		meeting = center.getCustomerMeeting().getMeeting();
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
-		meeting.setMeetingStartDate(calendar.getTime());
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
-				new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(String
-						.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
+    public void testExecuteToApplyPeriodicFee() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+                EVERY_SECOND_WEEK, CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("center1_Active_test", meeting);
+        for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
+            CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                    .getActionDate(), 1));
+        }
+        meeting = center.getCustomerMeeting().getMeeting();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
+        meeting.setMeetingStartDate(calendar.getTime());
+        meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
+                new WeekDaysEntity(WeekDay
+                        .getWeekDay(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
 
-		Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount()
-				.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
-				Short.valueOf("1"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
-		accountPeriodicFee.setLastAppliedDate(offSetDate(new Date(System
-				.currentTimeMillis()), 1));
-		accountFeeSet.add(accountPeriodicFee);
+        Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100",
+                RecurrenceType.WEEKLY, Short.valueOf("1"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
+        accountPeriodicFee.setLastAppliedDate(offSetDate(new Date(System.currentTimeMillis()), 1));
+        accountFeeSet.add(accountPeriodicFee);
 
-		assertEquals(2, accountFeeSet.size());
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.flushandCloseSession();
+        assertEquals(2, accountFeeSet.size());
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.flushandCloseSession();
 
-		center = TestObjectFactory.getCenter(center.getCustomerId());
-		ApplyCustomerFeeHelper customerFeeHelper = new ApplyCustomerFeeHelper(
-				new ApplyCustomerFeeTask());
-		customerFeeHelper.execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getCenter(center.getCustomerId());
-		Date lastAppliedFeeDate = null;
-		for (AccountActionDateEntity accountActionDateEntity : center
-				.getCustomerAccount().getAccountActionDates()) {
-			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
-			if (customerScheduleEntity.getInstallmentId().equals(
-					Short.valueOf("2"))) {
-				lastAppliedFeeDate = customerScheduleEntity.getActionDate();
-				assertEquals(2, customerScheduleEntity
-						.getAccountFeesActionDetails().size());
-				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
-						.getAccountFeesActionDetails()) {
-					if (accountFeesActionDetailEntity.getFee().getFeeName()
-							.equalsIgnoreCase("Training_Fee")) {
-						assertEquals(new Money("200.0"),
-								accountFeesActionDetailEntity.getFeeAmount());
-					} else if (accountFeesActionDetailEntity.getFee().getFeeName()
-							.equalsIgnoreCase("Maintenance Fee")) {
-						assertEquals(new Money("200.0"),
-								accountFeesActionDetailEntity.getFeeAmount());
-					}
-				}
-			}
-		}
-		for (CustomerActivityEntity customerActivityEntity : center
-				.getCustomerAccount().getCustomerActivitDetails()) {
-			assertEquals(new Money("200.0"), customerActivityEntity.getAmount());
-		}
-		Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount()
-				.getAccountFees();
-		for (AccountFeesEntity periodicFees : periodicFeeSet) {
-			if (periodicFees.getFees().getFeeName().equalsIgnoreCase(
-					"Training_Fee"))
-				assertEquals(lastAppliedFeeDate, DateUtils
-						.getDateWithoutTimeStamp(periodicFees
-								.getLastAppliedDate().getTime()));
-		}
-	}
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        ApplyCustomerFeeHelper customerFeeHelper = new ApplyCustomerFeeHelper(new ApplyCustomerFeeTask());
+        customerFeeHelper.execute(System.currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        Date lastAppliedFeeDate = null;
+        for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
+            CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
+            if (customerScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
+                lastAppliedFeeDate = customerScheduleEntity.getActionDate();
+                assertEquals(2, customerScheduleEntity.getAccountFeesActionDetails().size());
+                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
+                        .getAccountFeesActionDetails()) {
+                    if (accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Training_Fee")) {
+                        assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
+                    } else if (accountFeesActionDetailEntity.getFee().getFeeName().equalsIgnoreCase("Maintenance Fee")) {
+                        assertEquals(new Money("200.0"), accountFeesActionDetailEntity.getFeeAmount());
+                    }
+                }
+            }
+        }
+        for (CustomerActivityEntity customerActivityEntity : center.getCustomerAccount().getCustomerActivitDetails()) {
+            assertEquals(new Money("200.0"), customerActivityEntity.getAmount());
+        }
+        Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount().getAccountFees();
+        for (AccountFeesEntity periodicFees : periodicFeeSet) {
+            if (periodicFees.getFees().getFeeName().equalsIgnoreCase("Training_Fee"))
+                assertEquals(lastAppliedFeeDate, DateUtils.getDateWithoutTimeStamp(periodicFees.getLastAppliedDate()
+                        .getTime()));
+        }
+    }
 
-	public void testExecuteTask() throws PersistenceException, BatchJobException {
-		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
-		applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
-		ApplyCustomerFeeHelper applyCustomerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
-				.getTaskHelper();
-		applyCustomerFeeHelper.executeTask();
-
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertNotNull(tasks);
-		assertEquals(1, tasks.size());
-		for (Task task : tasks) {
-			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
-					.getStatus());
-			assertEquals("ApplyCustomerFeeTask", task.getTask());
-			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
-					.getDescription());
-			TestObjectFactory.removeObject(task);
-		}
-	}
-
-    public void testExecuteTaskAndForceException() throws PersistenceException, BatchJobException {
+    public void testExecuteTask() throws PersistenceException, BatchJobException {
         ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
         applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
-        ApplyCustomerFeeHelper applyCustomerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
-                .getTaskHelper();
-        AccountPersistence accountPersistenceMock = createMock(AccountPersistence.class);
-        expect(accountPersistenceMock.getAccountsWithYesterdaysInstallment()).andThrow(new PersistenceException("mock exception"));
-        replay(accountPersistenceMock);
-        applyCustomerFeeHelper.setAccountPersistence(accountPersistenceMock);
-        
+        ApplyCustomerFeeHelper applyCustomerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask.getTaskHelper();
         applyCustomerFeeHelper.executeTask();
 
-        Query query = StaticHibernateUtil.getSessionTL().createQuery(
-                "from " +
-                Task.class.getName());
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
         List<Task> tasks = query.list();
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
         for (Task task : tasks) {
-            assertEquals(TaskStatus.FAILED.getValue().shortValue(), task
-                    .getStatus());
+            assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task.getStatus());
+            assertEquals("ApplyCustomerFeeTask", task.getTask());
+            assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task.getDescription());
+            TestObjectFactory.removeObject(task);
+        }
+    }
+
+    public void testExecuteTaskAndForceException() throws PersistenceException, BatchJobException {
+        ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+        applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
+        ApplyCustomerFeeHelper applyCustomerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask.getTaskHelper();
+        AccountPersistence accountPersistenceMock = createMock(AccountPersistence.class);
+        expect(accountPersistenceMock.getAccountsWithYesterdaysInstallment()).andThrow(
+                new PersistenceException("mock exception"));
+        replay(accountPersistenceMock);
+        applyCustomerFeeHelper.setAccountPersistence(accountPersistenceMock);
+
+        applyCustomerFeeHelper.executeTask();
+
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertNotNull(tasks);
+        assertEquals(1, tasks.size());
+        for (Task task : tasks) {
+            assertEquals(TaskStatus.FAILED.getValue().shortValue(), task.getStatus());
             assertEquals("ApplyCustomerFeeTask", task.getTask());
             TestObjectFactory.removeObject(task);
         }
     }
 
-	public void testExecuteFailure() {
-		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
-		applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
-		ApplyCustomerFeeHelper applyCustomerFeeHelper = new ApplyCustomerFeeHelper(
-				applyCustomerFeeTask);
-		TestObjectFactory.simulateInvalidConnection();
-		applyCustomerFeeHelper.executeTask();
-		StaticHibernateUtil.closeSession();
+    public void testExecuteFailure() {
+        ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+        applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
+        ApplyCustomerFeeHelper applyCustomerFeeHelper = new ApplyCustomerFeeHelper(applyCustomerFeeTask);
+        TestObjectFactory.simulateInvalidConnection();
+        applyCustomerFeeHelper.executeTask();
+        StaticHibernateUtil.closeSession();
 
-		Query query = StaticHibernateUtil.getSessionTL().createQuery(
-				"from " +
-				Task.class.getName());
-		List<Task> tasks = query.list();
-		assertEquals(0, tasks.size());
+        Query query = StaticHibernateUtil.getSessionTL().createQuery("from " + Task.class.getName());
+        List<Task> tasks = query.list();
+        assertEquals(0, tasks.size());
 
-	}
+    }
 
-	private java.sql.Date offSetDate(Date date, int noOfDays) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		calendar = new GregorianCalendar(year, month, day - noOfDays);
-		return new java.sql.Date(calendar.getTimeInMillis());
-	}
+    private java.sql.Date offSetDate(Date date, int noOfDays) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar = new GregorianCalendar(year, month, day - noOfDays);
+        return new java.sql.Date(calendar.getTimeInMillis());
+    }
 
 }

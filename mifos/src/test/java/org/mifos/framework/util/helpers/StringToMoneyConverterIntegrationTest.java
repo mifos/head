@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
@@ -29,35 +29,37 @@ import org.mifos.framework.exceptions.SystemException;
  * This class is used to test StringToMoneyConverter.
  */
 public class StringToMoneyConverterIntegrationTest extends MifosIntegrationTest {
-	
-	public StringToMoneyConverterIntegrationTest() throws SystemException, ApplicationException {
-		super();
-	}
-	
-	/**
-	 *This method creates a money object with MFI currency because 
-	 *as of now the converter creates 
-	 *a new Money object with the currency set to MFI currency.
-	 */
-	public void testConvert(){
-		Converter stringToMoney = new StringToMoneyConverter();
-		Money money = new Money(TestObjectFactory.getMFICurrency(),"142.34");
-		assertEquals("testing StringToMoneyConverter should have returned a Money object.",money, (Money)stringToMoney.convert(Money.class, "142.34"));
-	}
-	
-	/**
-	 * Testing converter by passing blank string.
-	 * 
-	 *This method creates a money object with MFI currency because as of now the converter creates 
-	 *a new Money object with the currency set to MFI currency.
-	 */
-	public void testConvertWithEmptyString(){
-		
-		Converter stringToMoney = new StringToMoneyConverter();
-		Money money = new Money(TestObjectFactory.getMFICurrency(),"0");
-		assertEquals("testing StringToMoneyConverter should have returned a Money object with amount set to zero.",money, (Money)stringToMoney.convert(Money.class, ""));
-		
-	}
-	
+
+    public StringToMoneyConverterIntegrationTest() throws SystemException, ApplicationException {
+        super();
+    }
+
+    /**
+     *This method creates a money object with MFI currency because as of now
+     * the converter creates a new Money object with the currency set to MFI
+     * currency.
+     */
+    public void testConvert() {
+        Converter stringToMoney = new StringToMoneyConverter();
+        Money money = new Money(TestObjectFactory.getMFICurrency(), "142.34");
+        assertEquals("testing StringToMoneyConverter should have returned a Money object.", money,
+                (Money) stringToMoney.convert(Money.class, "142.34"));
+    }
+
+    /**
+     * Testing converter by passing blank string.
+     * 
+     *This method creates a money object with MFI currency because as of now
+     * the converter creates a new Money object with the currency set to MFI
+     * currency.
+     */
+    public void testConvertWithEmptyString() {
+
+        Converter stringToMoney = new StringToMoneyConverter();
+        Money money = new Money(TestObjectFactory.getMFICurrency(), "0");
+        assertEquals("testing StringToMoneyConverter should have returned a Money object with amount set to zero.",
+                money, (Money) stringToMoney.convert(Money.class, ""));
+
+    }
 
 }

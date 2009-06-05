@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import static org.easymock.classextension.EasyMock.replay;
@@ -36,81 +36,81 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class CollectionSheetReportParametersIntegrationTest extends AbstractReportParametersIntegrationTest {
 
-	public CollectionSheetReportParametersIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetReportParametersIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    private static final String VALID_REPORT_DATE = "07/03/2007 12:00:00 AM";	
-	
-	public void testValidatorReturnsErrorIfBranchIdIsSelect() throws Exception {
-		reportParams = new CollectionSheetReportParameterForm(String
-				.valueOf(SELECT_BRANCH_OFFICE_SELECTION_ITEM
-						.getId()), AbstractReportParametersIntegrationTest.VALID_ID, AbstractReportParametersIntegrationTest.VALID_ID, VALID_REPORT_DATE);
-		errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM, ReportValidationConstants.BRANCH_ID_INVALID_MSG);
-		replay(errorsMock);
-		reportParams.validate(errorsMock);
-		verify(errorsMock);
-	}
+    private static final String VALID_REPORT_DATE = "07/03/2007 12:00:00 AM";
 
-	public void testValidatorReturnsLoanOfficerInvalidIfLoanOfficerIsSelect()
-			throws Exception {
-		reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, String
-				.valueOf(SELECT_LOAN_OFFICER_SELECTION_ITEM
-						.getId()), AbstractReportParametersIntegrationTest.VALID_ID, VALID_REPORT_DATE);
-		errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM, ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
-		replay(errorsMock);
-		reportParams.validate(errorsMock);
-		verify(errorsMock);
-	}
+    public void testValidatorReturnsErrorIfBranchIdIsSelect() throws Exception {
+        reportParams = new CollectionSheetReportParameterForm(String.valueOf(SELECT_BRANCH_OFFICE_SELECTION_ITEM
+                .getId()), AbstractReportParametersIntegrationTest.VALID_ID,
+                AbstractReportParametersIntegrationTest.VALID_ID, VALID_REPORT_DATE);
+        errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM,
+                ReportValidationConstants.BRANCH_ID_INVALID_MSG);
+        replay(errorsMock);
+        reportParams.validate(errorsMock);
+        verify(errorsMock);
+    }
 
-	public void testValidatorReturnsLoanOfficerInvalidIfLoanOfficerIsNA()
-			throws Exception {
-		reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, String
-				.valueOf(NA_LOAN_OFFICER_SELECTION_ITEM
-						.getId()), AbstractReportParametersIntegrationTest.VALID_ID, VALID_REPORT_DATE);
-		errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM, ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
-		replay(errorsMock);
-		reportParams.validate(errorsMock);
-		verify(errorsMock);
-	}
+    public void testValidatorReturnsLoanOfficerInvalidIfLoanOfficerIsSelect() throws Exception {
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, String
+                .valueOf(SELECT_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersIntegrationTest.VALID_ID,
+                VALID_REPORT_DATE);
+        errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
+                ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
+        replay(errorsMock);
+        reportParams.validate(errorsMock);
+        verify(errorsMock);
+    }
 
-	public void testValidatorReturnsCenterInvalidIfCenterIsSelect()
-			throws Exception {
-		reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, AbstractReportParametersIntegrationTest.VALID_ID,
-				String.valueOf(SELECT_CENTER_SELECTION_ITEM
-						.getId()), VALID_REPORT_DATE);
-		errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM, ReportValidationConstants.CENTER_ID_INVALID_MSG);
-		replay(errorsMock);
-		reportParams.validate(errorsMock);
-		verify(errorsMock);
-	}
+    public void testValidatorReturnsLoanOfficerInvalidIfLoanOfficerIsNA() throws Exception {
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, String
+                .valueOf(NA_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersIntegrationTest.VALID_ID,
+                VALID_REPORT_DATE);
+        errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
+                ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
+        replay(errorsMock);
+        reportParams.validate(errorsMock);
+        verify(errorsMock);
+    }
 
-	public void testValidatorReturnsCenterInvalidIfCenterIsNA()
-			throws Exception {
-		reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, AbstractReportParametersIntegrationTest.VALID_ID,
-				String.valueOf(NA_CENTER_SELECTION_ITEM
-						.getId()), VALID_REPORT_DATE);
-		errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM, ReportValidationConstants.CENTER_ID_INVALID_MSG);
-		replay(errorsMock);
-		reportParams.validate(errorsMock);
-		verify(errorsMock);
-	}
+    public void testValidatorReturnsCenterInvalidIfCenterIsSelect() throws Exception {
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID,
+                AbstractReportParametersIntegrationTest.VALID_ID, String.valueOf(SELECT_CENTER_SELECTION_ITEM.getId()),
+                VALID_REPORT_DATE);
+        errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM,
+                ReportValidationConstants.CENTER_ID_INVALID_MSG);
+        replay(errorsMock);
+        reportParams.validate(errorsMock);
+        verify(errorsMock);
+    }
 
-	public void testValidatorReturnsMeetingDateInvalidIfMeetingDateIsSelect()
-			throws Exception {
-		reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, AbstractReportParametersIntegrationTest.VALID_ID,
-				AbstractReportParametersIntegrationTest.VALID_ID, VALID_REPORT_DATE);
-		replay(errorsMock);
-		reportParams.validate(errorsMock);
-		verify(errorsMock);
-	}
+    public void testValidatorReturnsCenterInvalidIfCenterIsNA() throws Exception {
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID,
+                AbstractReportParametersIntegrationTest.VALID_ID, String.valueOf(NA_CENTER_SELECTION_ITEM.getId()),
+                VALID_REPORT_DATE);
+        errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM,
+                ReportValidationConstants.CENTER_ID_INVALID_MSG);
+        replay(errorsMock);
+        reportParams.validate(errorsMock);
+        verify(errorsMock);
+    }
 
-	public void testReportDateFormat() throws Exception {
-		try {
-			AbstractReportParameterForm.REPORT_DATE_PARAM_FORMAT.parse("01/01/1970 05:30:00 AM");
-		}
-		catch (ParseException e) {			
-			fail("Should be parsing given date");
-		}		
-	}
+    public void testValidatorReturnsMeetingDateInvalidIfMeetingDateIsSelect() throws Exception {
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID,
+                AbstractReportParametersIntegrationTest.VALID_ID, AbstractReportParametersIntegrationTest.VALID_ID,
+                VALID_REPORT_DATE);
+        replay(errorsMock);
+        reportParams.validate(errorsMock);
+        verify(errorsMock);
+    }
+
+    public void testReportDateFormat() throws Exception {
+        try {
+            AbstractReportParameterForm.REPORT_DATE_PARAM_FORMAT.parse("01/01/1970 05:30:00 AM");
+        } catch (ParseException e) {
+            fail("Should be parsing given date");
+        }
+    }
 }

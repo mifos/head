@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business.service;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
     private HashMap<String, AttendanceType> attendance = new HashMap<String, AttendanceType>();
     private HashMap<String, LocalDate> meetingDate = new HashMap<String, LocalDate>();
     private List<ClientAttendanceBO> attendanceByOfficeIdAndMeetingDate = new ArrayList<ClientAttendanceBO>();
-    
+
     @Override
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) {
         return attendance.get(getKey(clientId, meetingDate));
@@ -49,14 +49,14 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
         this.meetingDate.put(key, meetingDate);
     }
 
-    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance, Short officeId){
+    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance, Short officeId) {
         ClientAttendanceBO clientAttendanceBO = new ClientAttendanceBO();
         clientAttendanceBO.setId(clientId);
         clientAttendanceBO.setMeetingDate(meetingDate.toDateMidnight().toDate());
         clientAttendanceBO.setAttendance(attendance);
         attendanceByOfficeIdAndMeetingDate.add(clientAttendanceBO);
     }
-    
+
     @Override
     public List<ClientAttendanceBO> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
         return attendanceByOfficeIdAndMeetingDate;
@@ -65,7 +65,7 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
     private String getKey(Integer clientId, LocalDate meetingDate) {
         return clientId.toString() + "-" + meetingDate.toString();
     }
-    
+
     public int getNumberOfRecords() {
         return attendance.size();
     }

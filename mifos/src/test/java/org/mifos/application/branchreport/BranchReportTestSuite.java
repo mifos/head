@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.branchreport;
 
 import junit.framework.Test;
@@ -37,22 +37,22 @@ import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffSummary
 import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffingLevelSummaryHelperIntegrationTest;
 
 public class BranchReportTestSuite extends TestSuite {
-	public static Test suite() throws Exception {
-		TestSuite suite = new TestSuite();
-		suite.addTestSuite(BranchReportHelperIntegrationTest.class);
-		suite.addTestSuite(BranchReportServiceIntegrationTest.class);
-		suite.addTestSuite(BranchReportPersistenceIntegrationTest.class);
-		suite.addTestSuite(BranchReportParameterFormIntegrationTest.class);
-		suite.addTestSuite(BranchReportParameterValidatorTest.class);
-		suite.addTestSuite(BranchReportClientSummaryHelperIntegrationTest.class);
-		suite.addTestSuite(BranchReportLoanArrearsAgingHelperIntegrationTest.class);
-		suite.addTestSuite(BranchReportStaffSummaryHelperIntegrationTest.class);
-		suite.addTestSuite(BranchReportConfigServiceIntegrationTest.class);
-		suite.addTestSuite(ReportProductOfferingServiceIntegrationTest.class);
-		suite.addTestSuite(BranchReportStaffingLevelSummaryHelperIntegrationTest.class);
-		suite.addTestSuite(BranchReportStaffingLevelSummaryBOTest.class);
-		suite.addTestSuite(ReportParameterValidatorFactoryIntegrationTest.class);
-		suite.addTest(LoanArrearsAgingPeriodTest.suite());
-		return suite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite suite = new TestSuite();
+        suite.addTestSuite(BranchReportHelperIntegrationTest.class);
+        suite.addTestSuite(BranchReportServiceIntegrationTest.class);
+        suite.addTestSuite(BranchReportPersistenceIntegrationTest.class);
+        suite.addTestSuite(BranchReportParameterFormIntegrationTest.class);
+        suite.addTestSuite(BranchReportParameterValidatorTest.class);
+        suite.addTestSuite(BranchReportClientSummaryHelperIntegrationTest.class);
+        suite.addTestSuite(BranchReportLoanArrearsAgingHelperIntegrationTest.class);
+        suite.addTestSuite(BranchReportStaffSummaryHelperIntegrationTest.class);
+        suite.addTestSuite(BranchReportConfigServiceIntegrationTest.class);
+        suite.addTestSuite(ReportProductOfferingServiceIntegrationTest.class);
+        suite.addTestSuite(BranchReportStaffingLevelSummaryHelperIntegrationTest.class);
+        suite.addTestSuite(BranchReportStaffingLevelSummaryBOTest.class);
+        suite.addTestSuite(ReportParameterValidatorFactoryIntegrationTest.class);
+        suite.addTest(LoanArrearsAgingPeriodTest.suite());
+        return suite;
+    }
 }

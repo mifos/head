@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings;
 
 import junit.framework.Test;
@@ -35,22 +35,22 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelperIntegrat
 
 public class SavingsTestSuite extends TestSuite {
 
-	public SavingsTestSuite() throws Exception {
-		super();
-	}
+    public SavingsTestSuite() throws Exception {
+        super();
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new SavingsTestSuite();
-		testSuite.addTestSuite(SavingsPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(SavingsBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(SavingsActionTest.class);
-		testSuite.addTestSuite(SavingsBOIntegrationTest.class);
-		testSuite.addTestSuite(SavingsClosureActionTest.class);
-		testSuite.addTestSuite(SavingsHelperIntegrationTest.class);
-		testSuite.addTestSuite(SavingsApplyAdjustmentActionTest.class);
-		testSuite.addTestSuite(SavingsDepositWithdrawalActionTest.class);
-		testSuite.addTestSuite(SavingsOverDueDepositsTagIntegrationTest.class);
-		return testSuite;
-	}
-	
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new SavingsTestSuite();
+        testSuite.addTestSuite(SavingsPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(SavingsBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(SavingsActionTest.class);
+        testSuite.addTestSuite(SavingsBOIntegrationTest.class);
+        testSuite.addTestSuite(SavingsClosureActionTest.class);
+        testSuite.addTestSuite(SavingsHelperIntegrationTest.class);
+        testSuite.addTestSuite(SavingsApplyAdjustmentActionTest.class);
+        testSuite.addTestSuite(SavingsDepositWithdrawalActionTest.class);
+        testSuite.addTestSuite(SavingsOverDueDepositsTagIntegrationTest.class);
+        return testSuite;
+    }
+
 }

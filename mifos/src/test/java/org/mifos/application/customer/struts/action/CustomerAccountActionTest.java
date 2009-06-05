@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.customer.struts.action;
 
+package org.mifos.application.customer.struts.action;
 
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -37,90 +36,88 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerAccountActionTest extends MifosMockStrutsTestCase {
 
-	public CustomerAccountActionTest() throws SystemException, ApplicationException {
+    public CustomerAccountActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private ClientBO client;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private CenterBO center;
+    private CenterBO center;
 
-	private MeetingBO meeting;
-	
-	private String flowKey;
-	
-	private UserContext userContext;
+    private MeetingBO meeting;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		flowKey = createFlow(request, CustomerAccountAction.class);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-	}
+    private String flowKey;
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    private UserContext userContext;
 
-	public void testLoadClientChargesDetails_client() {
-		initialization("Client");
-		addRequestParameter("globalCustNum", client.getGlobalCustNum());
-		getRequest().getSession().setAttribute("security_param", "Client");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.client_detail_page.toString());
-		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        flowKey = createFlow(request, CustomerAccountAction.class);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+    }
 
-	public void testLoadClientChargesDetails_group() {
-		initialization("Group");
-		addRequestParameter("globalCustNum", group.getGlobalCustNum());
-		getRequest().getSession().setAttribute("security_param", "Group");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.group_detail_page.toString());
-		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-	}
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testLoadClientChargesDetails_center() {
-		initialization("Center");
-		addRequestParameter("globalCustNum", center.getGlobalCustNum());
-		getRequest().getSession().setAttribute("security_param", "Center");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.center_detail_page.toString());
-		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-	}
+    public void testLoadClientChargesDetails_client() {
+        initialization("Client");
+        addRequestParameter("globalCustNum", client.getGlobalCustNum());
+        getRequest().getSession().setAttribute("security_param", "Client");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.client_detail_page.toString());
+        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+    }
 
-	private void initialization(String customer) {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
+    public void testLoadClientChargesDetails_group() {
+        initialization("Group");
+        addRequestParameter("globalCustNum", group.getGlobalCustNum());
+        getRequest().getSession().setAttribute("security_param", "Group");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.group_detail_page.toString());
+        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+    }
 
-		center = TestObjectFactory.createCenter("Center", meeting);
-		if (!(customer == "Center"))
-			group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		if (!(customer == "Center" || customer == "Group"))
-			client = TestObjectFactory.createClient("Client",
-					CustomerStatus.CLIENT_ACTIVE, group);
-		setPath();
-	}
+    public void testLoadClientChargesDetails_center() {
+        initialization("Center");
+        addRequestParameter("globalCustNum", center.getGlobalCustNum());
+        getRequest().getSession().setAttribute("security_param", "Center");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.center_detail_page.toString());
+        assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+    }
 
-	private void setPath() {
-		setRequestPathInfo("/customerAccountAction.do");
-		addRequestParameter("method", "load");
-	}
+    private void initialization(String customer) {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+
+        center = TestObjectFactory.createCenter("Center", meeting);
+        if (!(customer == "Center"))
+            group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        if (!(customer == "Center" || customer == "Group"))
+            client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        setPath();
+    }
+
+    private void setPath() {
+        setRequestPathInfo("/customerAccountAction.do");
+        addRequestParameter("method", "load");
+    }
 
 }

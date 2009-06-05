@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist;
 
 import junit.framework.Test;
@@ -31,17 +31,17 @@ import org.mifos.application.checklist.struts.action.CheckListActionTest;
 
 public class CheckListTestSuite extends TestSuite {
 
-	public static void main(String[] args) {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
+    public static void main(String[] args) {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
 
-	public static Test suite() {
-		TestSuite testSuite = new CheckListTestSuite();
-		testSuite.addTestSuite(CheckListBOIntegrationTest.class);
-		testSuite.addTestSuite(CheckListBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(CheckListPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(CheckListActionTest.class);
-		return testSuite;
-	}
+    public static Test suite() {
+        TestSuite testSuite = new CheckListTestSuite();
+        testSuite.addTestSuite(CheckListBOIntegrationTest.class);
+        testSuite.addTestSuite(CheckListBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(CheckListPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(CheckListActionTest.class);
+        return testSuite;
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.easymock.EasyMock;
@@ -25,16 +25,17 @@ import org.easymock.IArgumentMatcher;
 
 public class MockObjectHelpers {
 
-	public static java.sql.Date eqAnySqlDate() {
-		EasyMock.reportMatcher(new IArgumentMatcher() {
-			public void appendTo(StringBuffer message) {
-				return;
-			}
-	
-			public boolean matches(Object other) {
-				return true;
-			}});
-		return null;
-	}	
+    public static java.sql.Date eqAnySqlDate() {
+        EasyMock.reportMatcher(new IArgumentMatcher() {
+            public void appendTo(StringBuffer message) {
+                return;
+            }
+
+            public boolean matches(Object other) {
+                return true;
+            }
+        });
+        return null;
+    }
 
 }

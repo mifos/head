@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.List;
@@ -34,43 +34,42 @@ import org.mifos.framework.hibernate.helper.QueryResultDTOImpl;
 
 public class CacheIntegrationTest extends MifosIntegrationTest {
 
-	public CacheIntegrationTest() throws SystemException, ApplicationException {
+    public CacheIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private Cache cache = null;
 
-	private QueryResultDTOImpl queryResult = null;
+    private QueryResultDTOImpl queryResult = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		cache = new Cache();
-		queryResult = new QueryResultDTOImpl();
-		Session session = null;
-		QueryResult notesResult = null;
-		notesResult = QueryFactory.getQueryResult("NotesSearch");
-		session = notesResult.getSession();
-		Query query = session
-				.getNamedQuery(NamedQueryConstants.GETALLACCOUNTNOTES);
-		query.setInteger("accountId", 1);
-		queryResult.executeQuery(query);
-		cache.setCacheMap(cache.getCacheMap());
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        cache = new Cache();
+        queryResult = new QueryResultDTOImpl();
+        Session session = null;
+        QueryResult notesResult = null;
+        notesResult = QueryFactory.getQueryResult("NotesSearch");
+        session = notesResult.getSession();
+        Query query = session.getNamedQuery(NamedQueryConstants.GETALLACCOUNTNOTES);
+        query.setInteger("accountId", 1);
+        queryResult.executeQuery(query);
+        cache.setCacheMap(cache.getCacheMap());
 
-		cache = new Cache(queryResult);
-	}
+        cache = new Cache(queryResult);
+    }
 
-	public void testGetCache() throws Exception {
-		List list = cache.getList(1, "newMethod");
-		list = cache.getList(3, "previous");
-		assertNull(list);
-		list = cache.getList(4, "previous");
-		assertNull(list);
-		assertEquals(0, cache.getSize());
-		assertEquals(1, cache.getCacheMap().size());
+    public void testGetCache() throws Exception {
+        List list = cache.getList(1, "newMethod");
+        list = cache.getList(3, "previous");
+        assertNull(list);
+        list = cache.getList(4, "previous");
+        assertNull(list);
+        assertEquals(0, cache.getSize());
+        assertEquals(1, cache.getCacheMap().size());
 
-		list = cache.getList(4, "next");
-		cache.setSize(2);
-		assertEquals(2, cache.getSize());
-	}
+        list = cache.getList(4, "next");
+        cache.setSize(2);
+        assertEquals(2, cache.getSize());
+    }
 }

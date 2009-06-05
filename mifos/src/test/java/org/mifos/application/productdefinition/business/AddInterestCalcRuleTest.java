@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productdefinition.business;
 
+package org.mifos.application.productdefinition.business;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -38,76 +37,61 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.application.master.business.InterestTypesEntity;
 
-
 public class AddInterestCalcRuleTest {
 
-	
+    /*
+     * We need the test case initializer in order to set up the message cache in
+     * MifosConfiguration.
+     */
+    @BeforeClass
+    public static void init() throws SystemException, ApplicationException {
+        new TestCaseInitializer().initialize();
+    }
 
-	/*
-	 * We need the test case initializer in order to set up the
-	 * message cache in MifosConfiguration.
-	 */
-	@BeforeClass
-	public static void init() throws SystemException, ApplicationException {
-		new TestCaseInitializer().initialize();
-	}
-	
+    @Test
+    public void validateLookupValueKeyTest() throws Exception {
+        String validKey = "InterestTypes-DecliningBalance";
+        String format = "InterestTypes-";
+        assertTrue(AddInterestCalcRule.validateLookupValueKey(format, validKey));
+        String invalidKey = "DecliningBalance";
+        assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
+    }
 
-	
-	@Test 
-	public void validateLookupValueKeyTest() throws Exception {
-		String validKey = "InterestTypes-DecliningBalance";
-		String format = "InterestTypes-";
-		assertTrue(AddInterestCalcRule.validateLookupValueKey(format, validKey));
-		String invalidKey = "DecliningBalance";
-		assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
-	}
-	
-	
-	@Test 
-	public void constructorTest() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
-		short newRuleId = 2555;
-		short categoryId = 1;
-		String description = "DecliningBalance";
-		AddInterestCalcRule upgrade = null;
-		try
-		{
-			// use deprecated construtor		
-			upgrade = new AddInterestCalcRule(
-					DatabaseVersionPersistence.APPLICATION_VERSION + 1,
-				newRuleId, categoryId, 
-				"DecliningBalance",description, 
-				TEST_LOCALE,
-				"DecliningBalance");
-		}
-		catch (Exception e)
-		{
-			assertEquals(e.getMessage(), AddInterestCalcRule.wrongConstructor);
-		}
-		String invalidKey ="DecliningBalance";
-		
-		try
-		{
-			// use invalid lookup key format
-			upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId , categoryId, invalidKey, description);	
-		}
-		catch (Exception e)
-		{
-			assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
-		}
-		String goodKey = "InterestTypes-NewDecliningBalance";
-		//	use valid construtor and valid key
-		upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId, categoryId, goodKey, description);	
-		upgrade.upgrade(database.openConnection(), null);
-		Session session = database.openSession();
-		InterestTypesEntity entity = (InterestTypesEntity) session.get(
-				InterestTypesEntity.class, newRuleId);
-		assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
-	}
+    @Test
+    public void constructorTest() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
+        short newRuleId = 2555;
+        short categoryId = 1;
+        String description = "DecliningBalance";
+        AddInterestCalcRule upgrade = null;
+        try {
+            // use deprecated construtor
+            upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
+                    categoryId, "DecliningBalance", description, TEST_LOCALE, "DecliningBalance");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), AddInterestCalcRule.wrongConstructor);
+        }
+        String invalidKey = "DecliningBalance";
 
-	public static junit.framework.Test testSuite() {
-		return new JUnit4TestAdapter(AddInterestCalcRuleTest.class);
-	}
+        try {
+            // use invalid lookup key format
+            upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
+                    categoryId, invalidKey, description);
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
+        }
+        String goodKey = "InterestTypes-NewDecliningBalance";
+        // use valid construtor and valid key
+        upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId, categoryId,
+                goodKey, description);
+        upgrade.upgrade(database.openConnection(), null);
+        Session session = database.openSession();
+        InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
+        assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
+    }
+
+    public static junit.framework.Test testSuite() {
+        return new JUnit4TestAdapter(AddInterestCalcRuleTest.class);
+    }
 
 }

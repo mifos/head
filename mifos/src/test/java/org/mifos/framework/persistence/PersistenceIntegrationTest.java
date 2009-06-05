@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import net.sourceforge.mayfly.Database;
@@ -34,34 +34,35 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class PersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public PersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public PersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testConnection() {
-		LoanPersistence loanPersistance = new LoanPersistence();
-		assertNotNull(loanPersistance.getConnection());
-		StaticHibernateUtil.closeSession();
-	}
+        LoanPersistence loanPersistance = new LoanPersistence();
+        assertNotNull(loanPersistance.getConnection());
+        StaticHibernateUtil.closeSession();
+    }
 
-	public void xtestNonUniqueObjectException() throws Exception {
-		/* The question is whether this is the kind of hibernate situation
-		   which produces a NonUniqueObjectException.  As written, this
-		   test doesn't even get that far (having trouble inserting into
-		   a table with an auto-increment column). */
-		SessionFactory factory = DatabaseSetup.mayflySessionFactory();
-		Database database = new Database(DatabaseSetup.getStandardStore());
-		Session firstSession = factory.openSession(database.openConnection());
+    public void xtestNonUniqueObjectException() throws Exception {
+        /*
+         * The question is whether this is the kind of hibernate situation which
+         * produces a NonUniqueObjectException. As written, this test doesn't
+         * even get that far (having trouble inserting into a table with an
+         * auto-increment column).
+         */
+        SessionFactory factory = DatabaseSetup.mayflySessionFactory();
+        Database database = new Database(DatabaseSetup.getStandardStore());
+        Session firstSession = factory.openSession(database.openConnection());
 
-		GLCodeEntity firstEntity = new GLCodeEntity((short)77, "code1");
-		firstSession.save(firstEntity);
-		
-		Session secondSession = factory.openSession(database.openConnection());
-		assertEquals("code1", firstEntity.getGlcode());
-		
-		GLCodeEntity refetched = (GLCodeEntity)
-			secondSession.get(GLCodeEntity.class, firstEntity.getGlcodeId());
-		assertEquals("code1", refetched.getGlcode());
-	}
+        GLCodeEntity firstEntity = new GLCodeEntity((short) 77, "code1");
+        firstSession.save(firstEntity);
+
+        Session secondSession = factory.openSession(database.openConnection());
+        assertEquals("code1", firstEntity.getGlcode());
+
+        GLCodeEntity refetched = (GLCodeEntity) secondSession.get(GLCodeEntity.class, firstEntity.getGlcodeId());
+        assertEquals("code1", refetched.getGlcode());
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 import junit.framework.JUnit4TestAdapter;
@@ -31,31 +31,30 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTest {
 
-	public FinancialActionConstantsIntegrationTest() throws SystemException, ApplicationException {
+    public FinancialActionConstantsIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     /*
-	 * Verify that the number of elements in the enum 
-	 * {@link FinancialActionConstants} matches 
-	 * the number of elements in the corresponding table
-	 * "financial_actions".
-	 */
-	@Test
-	public void testGetFinancialAction() {
-		Query queryFinancialAction = StaticHibernateUtil.getSessionTL()
-			.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
-		// NOTE: the following 2 database entries are not currently represented
-		// in the enum.  Should they be added to the enum or removed from the db?
-		//   FIN_ACTION_ID = 15 (Interest_Posting)
-		//   FIN_ACTION_ID = 17 (Customer_Adjustment)
-		// The (-2) adjustment to the assert compensates for this difference
+     * Verify that the number of elements in the enum {@link
+     * FinancialActionConstants} matches the number of elements in the
+     * corresponding table "financial_actions".
+     */
+    @Test
+    public void testGetFinancialAction() {
+        Query queryFinancialAction = StaticHibernateUtil.getSessionTL().getNamedQuery(
+                FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
+        // NOTE: the following 2 database entries are not currently represented
+        // in the enum. Should they be added to the enum or removed from the db?
+        // FIN_ACTION_ID = 15 (Interest_Posting)
+        // FIN_ACTION_ID = 17 (Customer_Adjustment)
+        // The (-2) adjustment to the assert compensates for this difference
 
-		assertEquals(FinancialActionConstants.values().length, queryFinancialAction.list().size() - 2);
-	}
+        assertEquals(FinancialActionConstants.values().length, queryFinancialAction.list().size() - 2);
+    }
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(FinancialActionConstantsIntegrationTest.class);
-	}
-	
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(FinancialActionConstantsIntegrationTest.class);
+    }
+
 }

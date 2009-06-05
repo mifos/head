@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.system;
 
 import static org.junit.Assert.assertEquals;
@@ -29,14 +29,14 @@ import org.mifos.core.service.ApplicationInformationDto;
 import org.mifos.core.service.ApplicationInformationService;
 
 public class ApplicationInformationTest {
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(ApplicationInformationTest.class);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ApplicationInformationTest.class);
+    }
 
     private static final String BUILD_ID = "ID_1";
     private static final String BUILD_NUMBER = "BUILD_1";
     private static final String SVN_REVISION = "123456";
-    
+
     private ApplicationInformationService applicationInfoService;
 
     @Before
@@ -48,7 +48,7 @@ public class ApplicationInformationTest {
         applicationInformationDto.setSvnRevision(SVN_REVISION);
         applicationInfoService.setApplicationInformation(applicationInformationDto);
     }
-    
+
     @Test
     public void testGetApplicationInformation() {
         assertEquals(applicationInfoService.getApplicationInformation().getBuildId(), BUILD_ID);

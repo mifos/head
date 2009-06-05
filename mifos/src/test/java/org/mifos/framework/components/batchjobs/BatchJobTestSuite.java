@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs;
 
 import junit.framework.Test;
@@ -41,28 +41,28 @@ import org.mifos.framework.components.batchjobs.persistence.TaskPersistenceInteg
 
 public class BatchJobTestSuite extends TestSuite {
 
-	public BatchJobTestSuite() {
-		super();
-	}
+    public BatchJobTestSuite() {
+        super();
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new BatchJobTestSuite();
-		testSuite.addTestSuite(LoanArrearsTaskIntegrationTest.class);
-		testSuite.addTestSuite(LoanArrearsHelperIntegrationTest.class);
-		testSuite.addTestSuite(SavingsIntCalcHelperIntegrationTest.class);
-		testSuite.addTestSuite(SavingsIntPostingHelperIntegrationTest.class);
-		testSuite.addTestSuite(CustomerFeeHelperIntegrationTest.class);
-		testSuite.addTestSuite(RegenerateScheduleHelperIntegrationTest.class);
-		testSuite.addTestSuite(ApplyCustomerFeeChangesHelperIntegrationTest.class);
-		testSuite.addTestSuite(ProductStatusHelperIntegrationTest.class);
-		testSuite.addTestSuite(LoanArrearsAgingHelperIntegrationTest.class);
-		testSuite.addTestSuite(PortfolioAtRiskHelperIntegrationTest.class);
-		testSuite.addTestSuite(MifosSchedulerIntegrationTest.class);
-		testSuite.addTestSuite(TaskPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest.class);
-		testSuite.addTestSuite(CollectionSheetHelperIntegrationTest.class);
-		testSuite.addTestSuite(ApplyHolidayChangesHelperIntegrationTest.class);
-		testSuite.addTestSuite(PortfolioAtRiskCalculationIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new BatchJobTestSuite();
+        testSuite.addTestSuite(LoanArrearsTaskIntegrationTest.class);
+        testSuite.addTestSuite(LoanArrearsHelperIntegrationTest.class);
+        testSuite.addTestSuite(SavingsIntCalcHelperIntegrationTest.class);
+        testSuite.addTestSuite(SavingsIntPostingHelperIntegrationTest.class);
+        testSuite.addTestSuite(CustomerFeeHelperIntegrationTest.class);
+        testSuite.addTestSuite(RegenerateScheduleHelperIntegrationTest.class);
+        testSuite.addTestSuite(ApplyCustomerFeeChangesHelperIntegrationTest.class);
+        testSuite.addTestSuite(ProductStatusHelperIntegrationTest.class);
+        testSuite.addTestSuite(LoanArrearsAgingHelperIntegrationTest.class);
+        testSuite.addTestSuite(PortfolioAtRiskHelperIntegrationTest.class);
+        testSuite.addTestSuite(MifosSchedulerIntegrationTest.class);
+        testSuite.addTestSuite(TaskPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest.class);
+        testSuite.addTestSuite(CollectionSheetHelperIntegrationTest.class);
+        testSuite.addTestSuite(ApplyHolidayChangesHelperIntegrationTest.class);
+        testSuite.addTestSuite(PortfolioAtRiskCalculationIntegrationTest.class);
+        return testSuite;
+    }
 }

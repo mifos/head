@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application;
 
 import junit.framework.TestSuite;
@@ -69,56 +69,21 @@ import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterIntegrationTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-    ConfigTestSuite.class,
-    ConfigurationManagerTest.class, 
-    ProductMixTestSuite.class,
-    FastTests.class,
-    SecurityTestSuite.class,
-    CollectionSheetTestSuite.class,
-    CustomerTestSuite.class,
-    ApplicationConfigurationTestSuite.class,         
-    MasterTestSuite.class,
-    AccountTestSuite.class,
-    FinancialTestSuite.class,
-    StringToMoneyConverterIntegrationTest.class,
-    ConfigurationTestSuite.class,
-    BatchJobTestSuite.class,
-    LoanTestSuite.class,
-    SavingsTestSuite.class,
-    ProductDefinitionTestSuite.class,
-    ReportsTestSuite.class,
-    FeeTestSuite.class,
-    FieldConfigurationTestSuite.class,
-    OfficeTestSuite.class,
-    ComponentsTestSuite.class,
-    PersonnelTestSuite.class,
-    RolesAndPermissionTestSuite.class,
-    MeetingTestSuite.class,
-    LoginTestSuite.class,
-    FundTestSuite.class,
-    AuditLogTestSuite.class,
-    CheckListTestSuite.class,
-    AdminTestSuite.class,
-    StrutsTestSuite.class,
-    HibernateIntegrationTest.class,
-    LatestTestAfterCheckpointBaseTest.class,
-    MayflyMiscTest.class,
-    MenuParserIntegrationTest.class,
-    HibernateHelperIntegrationTest.class,
-    PersistenceIntegrationTest.class,
-    FrameworkUtilsSuite.class,
-    HolidayTestSuite.class,
-    SurveysTestSuite.class,
-    PPITestSuite.class,
-    ApplicationAcceptedPaymentTypeTestSuite.class,
-    CollectionSheetTestSuite.class,
-    CollectionSheetReportTestSuite.class,         
-    BranchReportTestSuite.class,         
-    BranchCashConfirmationReportTestSuite.class,
-    IntegrationTests.class
-})
+@Suite.SuiteClasses( { ConfigTestSuite.class, ConfigurationManagerTest.class, ProductMixTestSuite.class,
+        FastTests.class, SecurityTestSuite.class, CollectionSheetTestSuite.class, CustomerTestSuite.class,
+        ApplicationConfigurationTestSuite.class, MasterTestSuite.class, AccountTestSuite.class,
+        FinancialTestSuite.class, StringToMoneyConverterIntegrationTest.class, ConfigurationTestSuite.class,
+        BatchJobTestSuite.class, LoanTestSuite.class, SavingsTestSuite.class, ProductDefinitionTestSuite.class,
+        ReportsTestSuite.class, FeeTestSuite.class, FieldConfigurationTestSuite.class, OfficeTestSuite.class,
+        ComponentsTestSuite.class, PersonnelTestSuite.class, RolesAndPermissionTestSuite.class, MeetingTestSuite.class,
+        LoginTestSuite.class, FundTestSuite.class, AuditLogTestSuite.class, CheckListTestSuite.class,
+        AdminTestSuite.class, StrutsTestSuite.class, HibernateIntegrationTest.class,
+        LatestTestAfterCheckpointBaseTest.class, MayflyMiscTest.class, MenuParserIntegrationTest.class,
+        HibernateHelperIntegrationTest.class, PersistenceIntegrationTest.class, FrameworkUtilsSuite.class,
+        HolidayTestSuite.class, SurveysTestSuite.class, PPITestSuite.class,
+        ApplicationAcceptedPaymentTypeTestSuite.class, CollectionSheetTestSuite.class,
+        CollectionSheetReportTestSuite.class, BranchReportTestSuite.class, BranchCashConfirmationReportTestSuite.class,
+        IntegrationTests.class })
 public class ApplicationTestSuite extends TestSuite {
     // placeholder class for above annotations
 }
-

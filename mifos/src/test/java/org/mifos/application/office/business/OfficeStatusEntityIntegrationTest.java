@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business;
 
 import org.mifos.application.office.util.helpers.OfficeStatus;
@@ -26,16 +26,16 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
 public class OfficeStatusEntityIntegrationTest extends MifosIntegrationTest {
-	
-	public OfficeStatusEntityIntegrationTest() throws SystemException, ApplicationException {
+
+    public OfficeStatusEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testGetOfficeStatus()throws Exception{
-		
-		OfficeStatusEntity officeStatus = new OfficeStatusEntity(OfficeStatus.ACTIVE);
-		
-		assertEquals(OfficeStatus.ACTIVE,officeStatus.getStatus());
-	}
+    public void testGetOfficeStatus() throws Exception {
+
+        OfficeStatusEntity officeStatus = new OfficeStatusEntity(OfficeStatus.ACTIVE);
+
+        assertEquals(OfficeStatus.ACTIVE, officeStatus.getStatus());
+    }
 
 }

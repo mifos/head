@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.framework.components.batchjobs.helpers;
 
+package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.Date;
 import java.util.List;
@@ -35,79 +34,78 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-
 public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTest {
-	public ApplyHolidayChangesHelperIntegrationTest() throws SystemException, ApplicationException {
+    public ApplyHolidayChangesHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private HolidayBO holidayEntity;
-	private ApplyHolidayChangesHelper applyHolidayChangesHelper;
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		ApplyHolidayChangesTask applyHolidayChangesTask = new ApplyHolidayChangesTask();
-		applyHolidayChangesHelper = (ApplyHolidayChangesHelper)applyHolidayChangesTask.getTaskHelper();
-	}
-	
-	@Override
-	public void tearDown() throws Exception {
-		applyHolidayChangesHelper = null;
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testExecuteAgainstAppliedHolidays() throws Exception {		
-		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)1);
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-		holidayEntity.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
-		// Disable date Validation because startDate is less than today
-		holidayEntity.setValidationEnabled(false);
+    private ApplyHolidayChangesHelper applyHolidayChangesHelper;
 
-		holidayEntity.save();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		
-		////////Meat&Potato//////////
-		applyHolidayChangesHelper.execute(System.currentTimeMillis());
-		StaticHibernateUtil.closeSession();
-		//////////////////
-		
-		List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
-		
-		//There should not be any UnappliedHolidays
-		assertNotNull(holidays);
-		assertEquals(holidays.size(), 0);
-		
-		TestObjectFactory.cleanUpHolidays(holidays);
-		holidayEntity = null;
-	}
-	
-	public void testExecuteAgainst_Un_AppliedHolidays() throws Exception {		
-		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)1);
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-		// Disable date Validation because startDate is less than today
-		holidayEntity.setValidationEnabled(false);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ApplyHolidayChangesTask applyHolidayChangesTask = new ApplyHolidayChangesTask();
+        applyHolidayChangesHelper = (ApplyHolidayChangesHelper) applyHolidayChangesTask.getTaskHelper();
+    }
 
-		holidayEntity.save();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		
-		////////Meat&Potato//////////
-		applyHolidayChangesHelper.execute(System.currentTimeMillis());
-		StaticHibernateUtil.closeSession();
-		//////////////////
-		
-		List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
-		
-		//There should not be any UnappliedHolidays
-		assertNotNull(holidays);
-		assertEquals(holidays.size(), 0);
-		
-		TestObjectFactory.cleanUpHolidays(holidays);
-		holidayEntity = null;
-	}
+    @Override
+    public void tearDown() throws Exception {
+        applyHolidayChangesHelper = null;
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
+
+    public void testExecuteAgainstAppliedHolidays() throws Exception {
+        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
+        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
+        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
+        holidayEntity.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
+        // Disable date Validation because startDate is less than today
+        holidayEntity.setValidationEnabled(false);
+
+        holidayEntity.save();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        // //////Meat&Potato//////////
+        applyHolidayChangesHelper.execute(System.currentTimeMillis());
+        StaticHibernateUtil.closeSession();
+        // ////////////////
+
+        List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
+
+        // There should not be any UnappliedHolidays
+        assertNotNull(holidays);
+        assertEquals(holidays.size(), 0);
+
+        TestObjectFactory.cleanUpHolidays(holidays);
+        holidayEntity = null;
+    }
+
+    public void testExecuteAgainst_Un_AppliedHolidays() throws Exception {
+        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
+        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
+        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
+        // Disable date Validation because startDate is less than today
+        holidayEntity.setValidationEnabled(false);
+
+        holidayEntity.save();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        // //////Meat&Potato//////////
+        applyHolidayChangesHelper.execute(System.currentTimeMillis());
+        StaticHibernateUtil.closeSession();
+        // ////////////////
+
+        List<HolidayBO> holidays = new HolidayPersistence().getUnAppliedHolidays();
+
+        // There should not be any UnappliedHolidays
+        assertNotNull(holidays);
+        assertEquals(holidays.size(), 0);
+
+        TestObjectFactory.cleanUpHolidays(holidays);
+        holidayEntity = null;
+    }
 }

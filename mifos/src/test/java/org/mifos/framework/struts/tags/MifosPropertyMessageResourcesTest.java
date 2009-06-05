@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import static org.junit.Assert.assertEquals;
@@ -34,25 +34,25 @@ import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class MifosPropertyMessageResourcesTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		TestCaseInitializer initializer = new TestCaseInitializer();
-		initializer.initialize();
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        TestCaseInitializer initializer = new TestCaseInitializer();
+        initializer.initialize();
+    }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@Test
-	public void testGetMessageLocaleString() {
-		MifosPropertyMessageResourcesFactory factory = new MifosPropertyMessageResourcesFactory();
-		MessageResources resource = factory.createResources(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
-		
-		// get a simple resource bundle entry
-		assertEquals("Admin", resource.getMessage(TestUtils.ukLocale(), "Account.Admin"));
-		// get a LookupValue 
-		assertEquals("Branch Office", resource.getMessage(TestUtils.ukLocale(), ConfigurationConstants.BRANCHOFFICE));
-	}
+    @Test
+    public void testGetMessageLocaleString() {
+        MifosPropertyMessageResourcesFactory factory = new MifosPropertyMessageResourcesFactory();
+        MessageResources resource = factory.createResources(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+
+        // get a simple resource bundle entry
+        assertEquals("Admin", resource.getMessage(TestUtils.ukLocale(), "Account.Admin"));
+        // get a LookupValue
+        assertEquals("Branch Office", resource.getMessage(TestUtils.ukLocale(), ConfigurationConstants.BRANCHOFFICE));
+    }
 
 }

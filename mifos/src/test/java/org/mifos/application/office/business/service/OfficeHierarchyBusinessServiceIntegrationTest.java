@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business.service;
 
 import java.util.List;
@@ -32,41 +32,36 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeHierarchyBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
-	private static final int OFFICE_LEVELS = 5;
+    private static final int OFFICE_LEVELS = 5;
 
-	public OfficeHierarchyBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
-		super();
-	}
+    public OfficeHierarchyBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+        super();
+    }
 
-	public void testGetOfficeLevels() throws Exception {
-		List<OfficeLevelEntity> officeLevels = 
-			new OfficeHierarchyBusinessService()
-				.getOfficeLevels(TestObjectFactory.TEST_LOCALE);
-		assertEquals(OFFICE_LEVELS, officeLevels.size());
-		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
-			assertTrue(officeLevelEntity.isConfigured());
-		}
-	}
+    public void testGetOfficeLevels() throws Exception {
+        List<OfficeLevelEntity> officeLevels = new OfficeHierarchyBusinessService()
+                .getOfficeLevels(TestObjectFactory.TEST_LOCALE);
+        assertEquals(OFFICE_LEVELS, officeLevels.size());
+        for (OfficeLevelEntity officeLevelEntity : officeLevels) {
+            assertTrue(officeLevelEntity.isConfigured());
+        }
+    }
 
-	/**
-	 * Test that we wrap a PersistenceException in a ServiceException.
-	 * (isn't there an easier way to get whatever user-visible
-	 * behavior is desired on those exceptions?)
-	 */
-	public void testGetOfficeLevelsFailure() throws Exception {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			new OfficeHierarchyBusinessService()
-				.getOfficeLevels(TestObjectFactory.TEST_LOCALE);
-			fail();
-		}
-		catch (ServiceException e) {
-			assertEquals("exception.framework.ApplicationException", 
-				e.getKey());
-		}
-		finally {
-			StaticHibernateUtil.closeSession();
-		}
-	}
+    /**
+     * Test that we wrap a PersistenceException in a ServiceException. (isn't
+     * there an easier way to get whatever user-visible behavior is desired on
+     * those exceptions?)
+     */
+    public void testGetOfficeLevelsFailure() throws Exception {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            new OfficeHierarchyBusinessService().getOfficeLevels(TestObjectFactory.TEST_LOCALE);
+            fail();
+        } catch (ServiceException e) {
+            assertEquals("exception.framework.ApplicationException", e.getKey());
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business;
 
 import org.mifos.application.office.exceptions.OfficeException;
@@ -31,33 +31,28 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeLevelEntityIntegrationTest extends MifosIntegrationTest {
 
-	
-	
-	public OfficeLevelEntityIntegrationTest() throws SystemException, ApplicationException {
+    public OfficeLevelEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testUpdateLevelFailureIfOfficePresent() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-		OfficeBO regionalOffice = TestObjectFactory.createOffice(
-				OfficeLevel.REGIONALOFFICE, parent, "Office_Regional", "OFB");
-		StaticHibernateUtil.closeSession();
-		regionalOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(
-				OfficeBO.class, regionalOffice.getOfficeId());
-		try{
-		OfficeLevelEntity officeLevelEntity = regionalOffice.getLevel();
-		officeLevelEntity.update(false);
-		assertFalse(true);
-		}
-		catch(OfficeException oe){
-			assertTrue(true);
-			assertEquals(oe.getKey(),OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
-		}
-		
-		TestObjectFactory.cleanUp(regionalOffice);
-		
+        OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+        OfficeBO regionalOffice = TestObjectFactory.createOffice(OfficeLevel.REGIONALOFFICE, parent, "Office_Regional",
+                "OFB");
+        StaticHibernateUtil.closeSession();
+        regionalOffice = (OfficeBO) StaticHibernateUtil.getSessionTL()
+                .get(OfficeBO.class, regionalOffice.getOfficeId());
+        try {
+            OfficeLevelEntity officeLevelEntity = regionalOffice.getLevel();
+            officeLevelEntity.update(false);
+            assertFalse(true);
+        } catch (OfficeException oe) {
+            assertTrue(true);
+            assertEquals(oe.getKey(), OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
+        }
 
-	}
+        TestObjectFactory.cleanUp(regionalOffice);
 
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.business.service;
 
 import static java.util.Arrays.asList;
@@ -64,220 +64,195 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
-	public LoanBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public LoanBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     protected AccountBO accountBO = null;
 
-	protected CustomerBO center = null;
+    protected CustomerBO center = null;
 
-	protected CustomerBO group = null;
+    protected CustomerBO group = null;
 
-	protected AccountPersistence accountPersistence;
+    protected AccountPersistence accountPersistence;
 
-	protected LoanBusinessService loanBusinessService;
+    protected LoanBusinessService loanBusinessService;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		loanBusinessService = new LoanBusinessService();
-		accountPersistence = new AccountPersistence();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        loanBusinessService = new LoanBusinessService();
+        accountPersistence = new AccountPersistence();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(
-					AccountBO.class, accountBO.getAccountId());
-			group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
-					group.getCustomerId());
-			center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-					CustomerBO.class, center.getCustomerId());
-			TestObjectFactory.cleanUp(accountBO);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+            group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
+            center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+            TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
 
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testFindBySystemId() throws Exception {
-		accountBO = getLoanAccount();
-		loanBusinessService = new LoanBusinessService();
-		LoanBO loanBO = loanBusinessService.findBySystemId(accountBO
-				.getGlobalAccountNum());
-		assertEquals(loanBO.getGlobalAccountNum(), accountBO
-				.getGlobalAccountNum());
-		assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
-	}
-	public void testFindIndividualLoans() throws Exception {
-		accountBO = getLoanAccount();
-		loanBusinessService = new LoanBusinessService();
-		List<LoanBO> listLoanBO = loanBusinessService.findIndividualLoans(accountBO
-				.getAccountId().toString());
-		assertEquals(0,listLoanBO.size());
-	}	
-	public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
-		accountBO = getLoanAccount();
-		loanBusinessService = new LoanBusinessService();
-		List<LoanBO> loanBO = loanBusinessService
-				.getLoanAccountsActiveInGoodBadStanding(accountBO.getCustomer()
-						.getCustomerId());
-		assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType()
-				.getAccountTypeId());
-		assertNotNull(loanBO.size());
+    public void testFindBySystemId() throws Exception {
+        accountBO = getLoanAccount();
+        loanBusinessService = new LoanBusinessService();
+        LoanBO loanBO = loanBusinessService.findBySystemId(accountBO.getGlobalAccountNum());
+        assertEquals(loanBO.getGlobalAccountNum(), accountBO.getGlobalAccountNum());
+        assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
+    }
 
-	}
+    public void testFindIndividualLoans() throws Exception {
+        accountBO = getLoanAccount();
+        loanBusinessService = new LoanBusinessService();
+        List<LoanBO> listLoanBO = loanBusinessService.findIndividualLoans(accountBO.getAccountId().toString());
+        assertEquals(0, listLoanBO.size());
+    }
 
-	public void testGetRecentActivityView() throws SystemException,
-			NumberFormatException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
-				startDate,
-				loanOffering);
-		StaticHibernateUtil.closeSession();
+    public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
+        accountBO = getLoanAccount();
+        loanBusinessService = new LoanBusinessService();
+        List<LoanBO> loanBO = loanBusinessService.getLoanAccountsActiveInGoodBadStanding(accountBO.getCustomer()
+                .getCustomerId());
+        assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType().getAccountTypeId());
+        assertNotNull(loanBO.size());
 
-		applyPayments();
+    }
 
-		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-		List<LoanActivityView> loanRecentActivityView = loanBusinessService
-				.getRecentActivityView(accountBO.getGlobalAccountNum(), Short
-						.valueOf("1"));
+    public void testGetRecentActivityView() throws SystemException, NumberFormatException, ApplicationException {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
+        StaticHibernateUtil.closeSession();
 
-		assertEquals(3, loanRecentActivityView.size());
-		assertNotNull(loanRecentActivityView);
-	}
+        applyPayments();
 
-	private void applyPayments() throws PersistenceException, AccountException {
-		Set<AccountActionDateEntity> actionDates = 
-			accountBO.getAccountActionDates();
-		// Is this always true or does it depend on System.currentTimeMillis?
-//		assertEquals(6, actionDates.size());
-		for (AccountActionDateEntity actionDate : actionDates) {
-			assertNotNull(actionDate);
-			accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-			PaymentData paymentData = createPaymentViewObject(accountBO);
-			accountBO.applyPaymentWithPersist(paymentData);
-			TestObjectFactory.updateObject(accountBO);
-		}
-	}
+        accountBO = accountPersistence.getAccount(accountBO.getAccountId());
+        List<LoanActivityView> loanRecentActivityView = loanBusinessService.getRecentActivityView(accountBO
+                .getGlobalAccountNum(), Short.valueOf("1"));
 
-	public void testGetAllActivityView() throws SystemException,
-			NumberFormatException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-		StaticHibernateUtil.closeSession();
+        assertEquals(3, loanRecentActivityView.size());
+        assertNotNull(loanRecentActivityView);
+    }
 
-		applyPayments();
+    private void applyPayments() throws PersistenceException, AccountException {
+        Set<AccountActionDateEntity> actionDates = accountBO.getAccountActionDates();
+        // Is this always true or does it depend on System.currentTimeMillis?
+        // assertEquals(6, actionDates.size());
+        for (AccountActionDateEntity actionDate : actionDates) {
+            assertNotNull(actionDate);
+            accountBO = accountPersistence.getAccount(accountBO.getAccountId());
+            PaymentData paymentData = createPaymentViewObject(accountBO);
+            accountBO.applyPaymentWithPersist(paymentData);
+            TestObjectFactory.updateObject(accountBO);
+        }
+    }
 
-		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-		List<LoanActivityView> loanAllActivityView = loanBusinessService
-				.getAllActivityView(accountBO.getGlobalAccountNum(), Short
-						.valueOf("1"));
+    public void testGetAllActivityView() throws SystemException, NumberFormatException, ApplicationException {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
+        StaticHibernateUtil.closeSession();
 
-		assertNotNull(loanAllActivityView);
-		assertEquals(6, loanAllActivityView.size());
-		for(LoanActivityView view : loanAllActivityView) {
-			assertNotNull(view.getActivity());
-			assertNotNull(view.getUserPrefferedDate());
-			assertNotNull(view.getActionDate().getTime());
-			assertEquals(new Money("100.0"),view.getFees());
-			assertNotNull(view.getId());
-			assertEquals(new Money("12.0"),view.getInterest());
-			assertNull(view.getLocale());
-			assertEquals(new Money("0.0"),view.getPenalty());
-			assertEquals(new Money("100.0"),view.getPrincipal());
-			assertEquals(new Money("212.0"),view.getTotal());
-			assertNotNull(view.getTimeStamp());
-			assertEquals(new Money("-100.0"),view.getRunningBalanceFees());
-			assertEquals(new Money("24.0"),view.getRunningBalanceInterest());
-			assertEquals(new Money("0.0"),view.getRunningBalancePenalty());
-			assertEquals(new Money("200.0"),view.getRunningBalancePrinciple());
-			break;
-		}
-	}
+        applyPayments();
 
-	public void testGetAllLoanAccounts() throws Exception {
-		accountBO = getLoanAccount();
-		loanBusinessService = new LoanBusinessService();
-		List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
-		assertNotNull(loanAccounts);
-		assertEquals(1,loanAccounts.size());
-	}
+        accountBO = accountPersistence.getAccount(accountBO.getAccountId());
+        List<LoanActivityView> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
+                .getGlobalAccountNum(), Short.valueOf("1"));
 
-	private AccountBO getLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-	}
+        assertNotNull(loanAllActivityView);
+        assertEquals(6, loanAllActivityView.size());
+        for (LoanActivityView view : loanAllActivityView) {
+            assertNotNull(view.getActivity());
+            assertNotNull(view.getUserPrefferedDate());
+            assertNotNull(view.getActionDate().getTime());
+            assertEquals(new Money("100.0"), view.getFees());
+            assertNotNull(view.getId());
+            assertEquals(new Money("12.0"), view.getInterest());
+            assertNull(view.getLocale());
+            assertEquals(new Money("0.0"), view.getPenalty());
+            assertEquals(new Money("100.0"), view.getPrincipal());
+            assertEquals(new Money("212.0"), view.getTotal());
+            assertNotNull(view.getTimeStamp());
+            assertEquals(new Money("-100.0"), view.getRunningBalanceFees());
+            assertEquals(new Money("24.0"), view.getRunningBalanceInterest());
+            assertEquals(new Money("0.0"), view.getRunningBalancePenalty());
+            assertEquals(new Money("200.0"), view.getRunningBalancePrinciple());
+            break;
+        }
+    }
 
-	private PaymentData createPaymentViewObject(AccountBO accountBO) {
-		PaymentData paymentData = PaymentData.createPaymentData(new Money(TestObjectFactory
-				.getMFICurrency(), "212.0"), accountBO.getPersonnel(), Short
-				.valueOf("1"), new Date(System.currentTimeMillis()));
-		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
-		paymentData.setRecieptNum("423423");
-		return paymentData;
-	}
-	
-	public void testgetActiveLoansForAllClientsUnderGroup() throws Exception {
-		int groupLoanAccountId = 1;
-		GroupBO groupMock = createMock(GroupBO.class);
-		CustomerBO clientMock = createMock(ClientBO.class);
-		LoanBO groupLoanMock = createMock(LoanBO.class);
-		ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
-		LoanBO loanMock1 = createMock(LoanBO.class);
-		LoanBO loanMock2 = createMock(LoanBO.class);
-		AccountBusinessService accountBusinessServiceMock = createMock(AccountBusinessService.class);
+    public void testGetAllLoanAccounts() throws Exception {
+        accountBO = getLoanAccount();
+        loanBusinessService = new LoanBusinessService();
+        List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
+        assertNotNull(loanAccounts);
+        assertEquals(1, loanAccounts.size());
+    }
 
-		expect(accountBusinessServiceMock.getCoSigningClientsForGlim(groupLoanAccountId))
-				.andReturn(Arrays.asList(clientMock));
-		expect(configServiceMock.isGlimEnabled()).andReturn(true);
-		expect(loanMock1.isActiveLoanAccount()).andReturn(true);
-		expect(loanMock2.isActiveLoanAccount()).andReturn(false);
-		expect(groupLoanMock.getAccountId()).andReturn(groupLoanAccountId);
-		
-		expect(clientMock.getAccounts()).andReturn(
-				new HashSet(asList(loanMock1, loanMock2)));
+    private AccountBO getLoanAccount() {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+    }
 
-		replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock,
-				configServiceMock, accountBusinessServiceMock);
+    private PaymentData createPaymentViewObject(AccountBO accountBO) {
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(TestObjectFactory.getMFICurrency(), "212.0"),
+                accountBO.getPersonnel(), Short.valueOf("1"), new Date(System.currentTimeMillis()));
+        paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
+        paymentData.setRecieptNum("423423");
+        return paymentData;
+    }
 
-		assertEquals(asList(loanMock1), new LoanBusinessService(
-				new LoanPersistence(), configServiceMock,
-				accountBusinessServiceMock)
-				.getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
+    public void testgetActiveLoansForAllClientsUnderGroup() throws Exception {
+        int groupLoanAccountId = 1;
+        GroupBO groupMock = createMock(GroupBO.class);
+        CustomerBO clientMock = createMock(ClientBO.class);
+        LoanBO groupLoanMock = createMock(LoanBO.class);
+        ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
+        LoanBO loanMock1 = createMock(LoanBO.class);
+        LoanBO loanMock2 = createMock(LoanBO.class);
+        AccountBusinessService accountBusinessServiceMock = createMock(AccountBusinessService.class);
 
-		verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock,
-				configServiceMock, accountBusinessServiceMock);
-		
-	}
-	
+        expect(accountBusinessServiceMock.getCoSigningClientsForGlim(groupLoanAccountId)).andReturn(
+                Arrays.asList(clientMock));
+        expect(configServiceMock.isGlimEnabled()).andReturn(true);
+        expect(loanMock1.isActiveLoanAccount()).andReturn(true);
+        expect(loanMock2.isActiveLoanAccount()).andReturn(false);
+        expect(groupLoanMock.getAccountId()).andReturn(groupLoanAccountId);
+
+        expect(clientMock.getAccounts()).andReturn(new HashSet(asList(loanMock1, loanMock2)));
+
+        replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
+                accountBusinessServiceMock);
+
+        assertEquals(asList(loanMock1), new LoanBusinessService(new LoanPersistence(), configServiceMock,
+                accountBusinessServiceMock).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
+
+        verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
+                accountBusinessServiceMock);
+
+    }
+
 }

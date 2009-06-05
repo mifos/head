@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
@@ -44,55 +44,47 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountIntegrationTest extends MifosIntegrationTest {
-	public AccountIntegrationTest() throws SystemException, ApplicationException {
+    public AccountIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    protected LoanBO accountBO=null;
-	protected CustomerBO center=null;
-	protected CustomerBO group=null;
-	protected AccountPersistence accountPersistence;
+    protected LoanBO accountBO = null;
+    protected CustomerBO center = null;
+    protected CustomerBO group = null;
+    protected AccountPersistence accountPersistence;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
 
-		accountBO = createLoanAccount();
-		accountPersistence = new AccountPersistence();
-	}
+        accountBO = createLoanAccount();
+        accountPersistence = new AccountPersistence();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {		
-		try {
-			TestObjectFactory.cleanUp(accountBO);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-			accountPersistence = null;
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+            accountPersistence = null;
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public LoanBO createLoanAccount()
-	{ 
-        MeetingBO meeting = TestObjectFactory.createMeeting(
-        	TestObjectFactory.getNewMeetingForToday(
-        		WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-        center=TestObjectFactory.createCenter("Center",meeting);
-        group=TestObjectFactory.createGroupUnderCenter(
-        	"Group", CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-        	"Loan", ApplicableTo.GROUPS,
-        	new Date(System.currentTimeMillis()),
-        	PrdStatus.LOAN_ACTIVE,
-        	300.0,1.2,(short)3,
-        	InterestType.FLAT, meeting);
-        return TestObjectFactory.createLoanAccount(
-        	"42423142341",group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
-        	new Date(System.currentTimeMillis()),loanOffering);
-   }
+    public LoanBO createLoanAccount() {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, new Date(System
+                .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                new Date(System.currentTimeMillis()), loanOffering);
+    }
 
 }

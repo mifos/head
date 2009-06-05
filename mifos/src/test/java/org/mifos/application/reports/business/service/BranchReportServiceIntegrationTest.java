@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import static org.apache.commons.collections.CollectionUtils.exists;
@@ -62,202 +62,171 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
-	public BranchReportServiceIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private BranchReportClientSummaryBO activeClientsCountSummary;;
-	private BranchReportClientSummaryBO centerCountClientSummary;
-	private BranchReportClientSummaryBO activeBorrowersCountSummary;
+    private BranchReportClientSummaryBO centerCountClientSummary;
+    private BranchReportClientSummaryBO activeBorrowersCountSummary;
 
-	private Session session;
-	private Transaction transaction;
-	private OfficeBusinessService officeBusinessServiceMock;
-	private IBranchReportService branchReportService;
-	private BranchReportBO branchReport;
-	private BranchReportLoanArrearsAgingBO loanArrearReportForFirstWeek;
-	private BranchReportLoanArrearsAgingBO loanArrearReportForSecondWeek;
-	private BranchReportLoanArrearsAgingBO loanArrearReportForThirdWeek;
+    private Session session;
+    private Transaction transaction;
+    private OfficeBusinessService officeBusinessServiceMock;
+    private IBranchReportService branchReportService;
+    private BranchReportBO branchReport;
+    private BranchReportLoanArrearsAgingBO loanArrearReportForFirstWeek;
+    private BranchReportLoanArrearsAgingBO loanArrearReportForSecondWeek;
+    private BranchReportLoanArrearsAgingBO loanArrearReportForThirdWeek;
 
-	public void testReturnsClientSummaryForGivenBranchAndRunDate()
-			throws Exception {
-		session.save(branchReport);
-		List<BranchReportClientSummaryBO> retrievedClientSummaries = branchReportService
-				.getClientSummaryInfo(BRANCH_ID, RUN_DATE_STR);
-		assertNotNull(retrievedClientSummaries);
-		assertEquals(3, retrievedClientSummaries.size());
+    public void testReturnsClientSummaryForGivenBranchAndRunDate() throws Exception {
+        session.save(branchReport);
+        List<BranchReportClientSummaryBO> retrievedClientSummaries = branchReportService.getClientSummaryInfo(
+                BRANCH_ID, RUN_DATE_STR);
+        assertNotNull(retrievedClientSummaries);
+        assertEquals(3, retrievedClientSummaries.size());
 
-		assertTrue(exists(retrievedClientSummaries, PredicateUtils
-				.equalPredicate(centerCountClientSummary)));
+        assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(centerCountClientSummary)));
 
-		assertTrue(exists(retrievedClientSummaries, PredicateUtils
-				.equalPredicate(activeClientsCountSummary)));
+        assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeClientsCountSummary)));
 
-		assertTrue(exists(retrievedClientSummaries, PredicateUtils
-				.equalPredicate(activeBorrowersCountSummary)));
-	}
+        assertTrue(exists(retrievedClientSummaries, PredicateUtils.equalPredicate(activeBorrowersCountSummary)));
+    }
 
-	public void testReturnsLoanArrearsAgingInfo() throws Exception {
-		session.save(branchReport);
-		List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingInfo = branchReportService
-				.getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
-		assertEquals(3, retrievedLoanArrearsAgingInfo.size());
-		assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils
-				.equalPredicate(loanArrearReportForFirstWeek)));
-		assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils
-				.equalPredicate(loanArrearReportForSecondWeek)));
-		assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils
-				.equalPredicate(loanArrearReportForThirdWeek)));
-	}
+    public void testReturnsLoanArrearsAgingInfo() throws Exception {
+        session.save(branchReport);
+        List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingInfo = branchReportService
+                .getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
+        assertEquals(3, retrievedLoanArrearsAgingInfo.size());
+        assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForFirstWeek)));
+        assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForSecondWeek)));
+        assertTrue(exists(retrievedLoanArrearsAgingInfo, PredicateUtils.equalPredicate(loanArrearReportForThirdWeek)));
+    }
 
-	public void testServiceReturnsHeaderInformation() throws Exception {
-		session.save(branchReport);
-		OfficeBO office = OfficecFixture.createOffice(BRANCH_ID_SHORT);
-		expect(officeBusinessServiceMock.getOffice(BRANCH_ID_SHORT)).andReturn(
-				office);
-		replay(officeBusinessServiceMock);
-		BranchReportHeaderDTO returnedHeaderDTO = branchReportService
-				.getBranchReportHeaderDTO(BRANCH_ID, RUN_DATE_STR);
-		verify(officeBusinessServiceMock);
-		assertEquals(new BranchReportHeaderDTO(office, null, ReportUtils
-				.parseReportDate(RUN_DATE_STR)), returnedHeaderDTO);
-	}
+    public void testServiceReturnsHeaderInformation() throws Exception {
+        session.save(branchReport);
+        OfficeBO office = OfficecFixture.createOffice(BRANCH_ID_SHORT);
+        expect(officeBusinessServiceMock.getOffice(BRANCH_ID_SHORT)).andReturn(office);
+        replay(officeBusinessServiceMock);
+        BranchReportHeaderDTO returnedHeaderDTO = branchReportService.getBranchReportHeaderDTO(BRANCH_ID, RUN_DATE_STR);
+        verify(officeBusinessServiceMock);
+        assertEquals(new BranchReportHeaderDTO(office, null, ReportUtils.parseReportDate(RUN_DATE_STR)),
+                returnedHeaderDTO);
+    }
 
-	public void testRemovesSpecifiedBranchReport() throws Exception {
-		session.save(branchReport);
-		branchReportService.removeBranchReport(branchReport);
+    public void testRemovesSpecifiedBranchReport() throws Exception {
+        session.save(branchReport);
+        branchReportService.removeBranchReport(branchReport);
 
-		List<BranchReportClientSummaryBO> clientSummaryInfo = branchReportService
-				.getClientSummaryInfo(BRANCH_ID, RUN_DATE_STR);
-		assertNotNull(clientSummaryInfo);
-		assertEquals(0, clientSummaryInfo.size());
+        List<BranchReportClientSummaryBO> clientSummaryInfo = branchReportService.getClientSummaryInfo(BRANCH_ID,
+                RUN_DATE_STR);
+        assertNotNull(clientSummaryInfo);
+        assertEquals(0, clientSummaryInfo.size());
 
-		List<BranchReportLoanArrearsAgingBO> loanArrearsAgingInfo = branchReportService
-				.getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
-		assertNotNull(loanArrearsAgingInfo);
-		assertEquals(0, loanArrearsAgingInfo.size());
-	}
+        List<BranchReportLoanArrearsAgingBO> loanArrearsAgingInfo = branchReportService.getLoanArrearsAgingInfo(
+                BRANCH_ID, RUN_DATE_STR);
+        assertNotNull(loanArrearsAgingInfo);
+        assertEquals(0, loanArrearsAgingInfo.size());
+    }
 
-	public void testServiceReturnsFalseIfBranchReportDataNotPresent()
-			throws Exception {
-		assertFalse(branchReportService
-				.isReportDataPresentForRundateAndBranchId("2", "01/01/2008"));
-	}
+    public void testServiceReturnsFalseIfBranchReportDataNotPresent() throws Exception {
+        assertFalse(branchReportService.isReportDataPresentForRundateAndBranchId("2", "01/01/2008"));
+    }
 
-	public void testServiceReturnsTrueIfBranchReportDataPresent()
-			throws Exception {
-		session.save(branchReport);
-		assertTrue(branchReportService
-				.isReportDataPresentForRundateAndBranchId(BRANCH_ID.toString(),
-						RUN_DATE_STR));
-	}
+    public void testServiceReturnsTrueIfBranchReportDataPresent() throws Exception {
+        session.save(branchReport);
+        assertTrue(branchReportService.isReportDataPresentForRundateAndBranchId(BRANCH_ID.toString(), RUN_DATE_STR));
+    }
 
-	public void testServiceReturnsFalseIfBranchReportDataNotPresentForGivenDate()
-			throws Exception {
-		assertFalse(branchReportService.isReportDataPresentForRundate(DateUtils
-				.getDate(2008, Calendar.JANUARY, 1)));
-	}
+    public void testServiceReturnsFalseIfBranchReportDataNotPresentForGivenDate() throws Exception {
+        assertFalse(branchReportService.isReportDataPresentForRundate(DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+    }
 
-	public void testServiceReturnsTrueIfBranchReportDataPresentForGivenDate()
-			throws Exception {
-		session.save(branchReport);
-		assertTrue(branchReportService.isReportDataPresentForRundate(RUN_DATE));
-	}
+    public void testServiceReturnsTrueIfBranchReportDataPresentForGivenDate() throws Exception {
+        session.save(branchReport);
+        assertTrue(branchReportService.isReportDataPresentForRundate(RUN_DATE));
+    }
 
-	public void testGetStaffSummaryReportReturnsStaffSummaryForBranchAndDate()
-			throws Exception {
-		BranchReportBO branchReportWithStaffSummary = createBranchReportWithStaffSummary(
-				BRANCH_ID_SHORT, RUN_DATE);
-		BranchReportBO otherBranchReportWithStaffSummary = createBranchReportWithStaffSummary(
-				BRANCH_ID_SHORT, FIRST_JAN_2008);
-		session.save(branchReportWithStaffSummary);
-		session.save(otherBranchReportWithStaffSummary);
-		List<BranchReportStaffSummaryBO> retrievedStaffSummary = branchReportService
-				.getStaffSummary(BRANCH_ID, RUN_DATE_STR);
-		assertEquals(1, retrievedStaffSummary.size());
-		assertSameCollections(branchReportWithStaffSummary.getStaffSummaries(),
-				retrievedStaffSummary);
-	}
+    public void testGetStaffSummaryReportReturnsStaffSummaryForBranchAndDate() throws Exception {
+        BranchReportBO branchReportWithStaffSummary = createBranchReportWithStaffSummary(BRANCH_ID_SHORT, RUN_DATE);
+        BranchReportBO otherBranchReportWithStaffSummary = createBranchReportWithStaffSummary(BRANCH_ID_SHORT,
+                FIRST_JAN_2008);
+        session.save(branchReportWithStaffSummary);
+        session.save(otherBranchReportWithStaffSummary);
+        List<BranchReportStaffSummaryBO> retrievedStaffSummary = branchReportService.getStaffSummary(BRANCH_ID,
+                RUN_DATE_STR);
+        assertEquals(1, retrievedStaffSummary.size());
+        assertSameCollections(branchReportWithStaffSummary.getStaffSummaries(), retrievedStaffSummary);
+    }
 
-	//TODO TW Add test data and have better test
-	public void testExtractLoanArrearsAgingInPeriod() throws Exception {
-		BranchReportLoanArrearsAgingBO loanArrearsAgingInfoInPeriod = branchReportService
-				.extractLoanArrearsAgingInfoInPeriod(BRANCH_ID_SHORT,
-						LoanArrearsAgingPeriod.ONE_WEEK, DEFAULT_CURRENCY);
-		assertNotNull(loanArrearsAgingInfoInPeriod);
-		//TODO TW more assertions based on test data
-	}
+    // TODO TW Add test data and have better test
+    public void testExtractLoanArrearsAgingInPeriod() throws Exception {
+        BranchReportLoanArrearsAgingBO loanArrearsAgingInfoInPeriod = branchReportService
+                .extractLoanArrearsAgingInfoInPeriod(BRANCH_ID_SHORT, LoanArrearsAgingPeriod.ONE_WEEK, DEFAULT_CURRENCY);
+        assertNotNull(loanArrearsAgingInfoInPeriod);
+        // TODO TW more assertions based on test data
+    }
 
-	public void testResultsForStaffingLevelAreSorted()
-			throws PersistenceException, ServiceException {
-		BranchReportPersistence branchReportPersistenceMock = createMock(BranchReportPersistence.class);
-		branchReportService = new BranchReportService(
-				officeBusinessServiceMock, new PersonnelBusinessService(),
-				branchReportPersistenceMock);
-		ArrayList<BranchReportStaffingLevelSummaryBO> staffingLevelResult = new ArrayList<BranchReportStaffingLevelSummaryBO>();
-		BranchReportStaffingLevelSummaryBO totalStaffSummaryBO = BranchReportBOFixture
-				.createStaffingLevelBO(Integer.valueOf(-1));
-		staffingLevelResult.add(totalStaffSummaryBO);
-		staffingLevelResult.add(BranchReportBOFixture
-				.createStaffingLevelBO(Integer.valueOf(2)));
-		staffingLevelResult.add(BranchReportBOFixture
-				.createStaffingLevelBO(Integer.valueOf(1)));
-		expect(
-				branchReportPersistenceMock
-						.getBranchReportStaffingLevelSummary(BRANCH_ID_SHORT,
-								RUN_DATE)).andReturn(staffingLevelResult);
-		replay(branchReportPersistenceMock);
-		List<BranchReportStaffingLevelSummaryBO> retrievedStaffingLevel = branchReportService
-				.getStaffingLevelSummary(BRANCH_ID, RUN_DATE_STR);
-		verify(branchReportPersistenceMock);
-		BranchReportStaffingLevelSummaryBO lastBO = null;
-		for (BranchReportStaffingLevelSummaryBO summaryBO : retrievedStaffingLevel) {
-			if (lastBO != null)
-				assertEquals(1, summaryBO.compareTo(lastBO));
-			lastBO = summaryBO;
-		}
-		assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));
-	}
+    public void testResultsForStaffingLevelAreSorted() throws PersistenceException, ServiceException {
+        BranchReportPersistence branchReportPersistenceMock = createMock(BranchReportPersistence.class);
+        branchReportService = new BranchReportService(officeBusinessServiceMock, new PersonnelBusinessService(),
+                branchReportPersistenceMock);
+        ArrayList<BranchReportStaffingLevelSummaryBO> staffingLevelResult = new ArrayList<BranchReportStaffingLevelSummaryBO>();
+        BranchReportStaffingLevelSummaryBO totalStaffSummaryBO = BranchReportBOFixture.createStaffingLevelBO(Integer
+                .valueOf(-1));
+        staffingLevelResult.add(totalStaffSummaryBO);
+        staffingLevelResult.add(BranchReportBOFixture.createStaffingLevelBO(Integer.valueOf(2)));
+        staffingLevelResult.add(BranchReportBOFixture.createStaffingLevelBO(Integer.valueOf(1)));
+        expect(branchReportPersistenceMock.getBranchReportStaffingLevelSummary(BRANCH_ID_SHORT, RUN_DATE)).andReturn(
+                staffingLevelResult);
+        replay(branchReportPersistenceMock);
+        List<BranchReportStaffingLevelSummaryBO> retrievedStaffingLevel = branchReportService.getStaffingLevelSummary(
+                BRANCH_ID, RUN_DATE_STR);
+        verify(branchReportPersistenceMock);
+        BranchReportStaffingLevelSummaryBO lastBO = null;
+        for (BranchReportStaffingLevelSummaryBO summaryBO : retrievedStaffingLevel) {
+            if (lastBO != null)
+                assertEquals(1, summaryBO.compareTo(lastBO));
+            lastBO = summaryBO;
+        }
+        assertEquals(0, totalStaffSummaryBO.compareTo(lastBO));
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		branchReport = new BranchReportBO(BRANCH_ID_SHORT, RUN_DATE);
-		populateClientSummary();
-		populateLoanArrearSummary();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        branchReport = new BranchReportBO(BRANCH_ID_SHORT, RUN_DATE);
+        populateClientSummary();
+        populateLoanArrearSummary();
 
-		session = StaticHibernateUtil.getSessionTL();
-		transaction = session.beginTransaction();
-		officeBusinessServiceMock = createMock(OfficeBusinessService.class);
-		branchReportService = new BranchReportService(
-				officeBusinessServiceMock, new PersonnelBusinessService(),
-				new BranchReportPersistence());
-	}
+        session = StaticHibernateUtil.getSessionTL();
+        transaction = session.beginTransaction();
+        officeBusinessServiceMock = createMock(OfficeBusinessService.class);
+        branchReportService = new BranchReportService(officeBusinessServiceMock, new PersonnelBusinessService(),
+                new BranchReportPersistence());
+    }
 
-	private void populateClientSummary() {
-		activeClientsCountSummary = createBranchReportClientSummaryBO(ACTIVE_CLIENTS_COUNT);
-		centerCountClientSummary = createBranchReportClientSummaryBO(CENTER_COUNT);
-		activeBorrowersCountSummary = createBranchReportClientSummaryBO(ACTIVE_BORROWERS_COUNT);
-		branchReport.addClientSummary(centerCountClientSummary);
-		branchReport.addClientSummary(activeClientsCountSummary);
-		branchReport.addClientSummary(activeBorrowersCountSummary);
-	}
+    private void populateClientSummary() {
+        activeClientsCountSummary = createBranchReportClientSummaryBO(ACTIVE_CLIENTS_COUNT);
+        centerCountClientSummary = createBranchReportClientSummaryBO(CENTER_COUNT);
+        activeBorrowersCountSummary = createBranchReportClientSummaryBO(ACTIVE_BORROWERS_COUNT);
+        branchReport.addClientSummary(centerCountClientSummary);
+        branchReport.addClientSummary(activeClientsCountSummary);
+        branchReport.addClientSummary(activeBorrowersCountSummary);
+    }
 
-	private void populateLoanArrearSummary() {
-		loanArrearReportForFirstWeek = new BranchReportLoanArrearsAgingBO(
-				LoanArrearsAgingPeriod.ONE_WEEK);
-		loanArrearReportForSecondWeek = new BranchReportLoanArrearsAgingBO(
-				LoanArrearsAgingPeriod.TWO_WEEK);
-		loanArrearReportForThirdWeek = new BranchReportLoanArrearsAgingBO(
-				LoanArrearsAgingPeriod.THREE_WEEK);
-		branchReport.addLoanArrearsAging(loanArrearReportForFirstWeek);
-		branchReport.addLoanArrearsAging(loanArrearReportForSecondWeek);
-		branchReport.addLoanArrearsAging(loanArrearReportForThirdWeek);
-	}
+    private void populateLoanArrearSummary() {
+        loanArrearReportForFirstWeek = new BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod.ONE_WEEK);
+        loanArrearReportForSecondWeek = new BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod.TWO_WEEK);
+        loanArrearReportForThirdWeek = new BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod.THREE_WEEK);
+        branchReport.addLoanArrearsAging(loanArrearReportForFirstWeek);
+        branchReport.addLoanArrearsAging(loanArrearReportForSecondWeek);
+        branchReport.addLoanArrearsAging(loanArrearReportForThirdWeek);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		transaction.rollback();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        transaction.rollback();
+        super.tearDown();
+    }
 }

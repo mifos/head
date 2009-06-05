@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys;
 
 import junit.framework.Test;
@@ -31,15 +31,15 @@ import org.mifos.application.surveys.struts.action.SurveysActionTest;
 import org.mifos.application.surveys.struts.tag.QuestionTagIntegrationTest;
 
 public class SurveysTestSuite extends TestSuite {
-	
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new SurveysTestSuite();
-		testSuite.addTestSuite(SurveyIntegrationTest.class);
-		testSuite.addTestSuite(SurveysActionTest.class);
-		testSuite.addTestSuite(QuestionsActionTest.class);
-		testSuite.addTestSuite(SurveyInstanceActionTest.class);
-		testSuite.addTestSuite(QuestionTagIntegrationTest.class);
-		testSuite.addTest(SurveysPersistenceIntegrationTest.suite());
-		return testSuite;
-	}
+
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new SurveysTestSuite();
+        testSuite.addTestSuite(SurveyIntegrationTest.class);
+        testSuite.addTestSuite(SurveysActionTest.class);
+        testSuite.addTestSuite(QuestionsActionTest.class);
+        testSuite.addTestSuite(SurveyInstanceActionTest.class);
+        testSuite.addTestSuite(QuestionTagIntegrationTest.class);
+        testSuite.addTest(SurveysPersistenceIntegrationTest.suite());
+        return testSuite;
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan;
 
 import junit.framework.Test;
@@ -45,32 +45,32 @@ import org.mifos.application.accounts.loan.struts.uihelpers.LoanActivityTagInteg
 import org.mifos.application.accounts.loan.struts.uihelpers.LoanRepayTagIntegrationTest;
 
 public class LoanTestSuite extends TestSuite {
-	public static void main(String[] args) {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
+    public static void main(String[] args) {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
 
-	public static Test suite() {
-		TestSuite testSuite = new LoanTestSuite();
+    public static Test suite() {
+        TestSuite testSuite = new LoanTestSuite();
         testSuite.addTest(LoanAccountActionTest.testSuite());
-		testSuite.addTest(LoanCalculationTest.testSuite());
-		testSuite.addTestSuite(LoanPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(LoanBOIntegrationTest.class);
-		testSuite.addTestSuite(RepayLoanActionTest.class);
-		testSuite.addTestSuite(LoanBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(LoanActivityActionTest.class);
-		testSuite.addTestSuite(LoanAccountActionEasyMockTest.class);
-		testSuite.addTestSuite(AccountStatusActionTest.class);
-		testSuite.addTestSuite(LoanScheduleEntityIntegrationTest.class);
-		testSuite.addTestSuite(LoanUIHelperFnTest.class);
-		testSuite.addTestSuite(LoanActivityTagIntegrationTest.class);
-		testSuite.addTestSuite(LoanRepayTagIntegrationTest.class);
-		testSuite.addTestSuite(MultipleLoanAccountsCreationActionTest.class);
-		testSuite.addTestSuite(LoanBOForReversalIntegrationTest.class);
+        testSuite.addTest(LoanCalculationTest.testSuite());
+        testSuite.addTestSuite(LoanPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(LoanBOIntegrationTest.class);
+        testSuite.addTestSuite(RepayLoanActionTest.class);
+        testSuite.addTestSuite(LoanBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(LoanActivityActionTest.class);
+        testSuite.addTestSuite(LoanAccountActionEasyMockTest.class);
+        testSuite.addTestSuite(AccountStatusActionTest.class);
+        testSuite.addTestSuite(LoanScheduleEntityIntegrationTest.class);
+        testSuite.addTestSuite(LoanUIHelperFnTest.class);
+        testSuite.addTestSuite(LoanActivityTagIntegrationTest.class);
+        testSuite.addTestSuite(LoanRepayTagIntegrationTest.class);
+        testSuite.addTestSuite(MultipleLoanAccountsCreationActionTest.class);
+        testSuite.addTestSuite(LoanBOForReversalIntegrationTest.class);
         testSuite.addTest(LoanBORedoDisbursalTest.testSuite());
         testSuite.addTestSuite(ReverseLoanDisbursalActionTest.class);
         testSuite.addTestSuite(LoanAccountActionIndividualLoansIntegrationTest.class);
         testSuite.addTestSuite(LoanAccountActionFormIntegrationTest.class);
-		return testSuite;
-	}
+        return testSuite;
+    }
 }

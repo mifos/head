@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrationTest {
-	public ApplyCustomerFeeChangesHelperIntegrationTest() throws SystemException, ApplicationException {
+    public ApplyCustomerFeeChangesHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -62,361 +62,311 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
 
     CustomerBO center = null;
 
-	CustomerBO group = null;
+    CustomerBO group = null;
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("center1", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("center1", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			List<CustomerBO> customerList = new ArrayList<CustomerBO>();
-			if (group != null)
-				customerList.add(group);
-			if (center != null)
-				customerList.add(center);
-			TestObjectFactory.cleanUp(customerList);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            List<CustomerBO> customerList = new ArrayList<CustomerBO>();
+            if (group != null)
+                customerList.add(group);
+            if (center != null)
+                customerList.add(center);
+            TestObjectFactory.cleanUp(customerList);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testExecuteAmountUpdated() throws Exception {
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, new Double("10.0"));
-		accountFeeSet.add(accountPeriodicFee);
-		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
-				.getAccountActionDate(Short.valueOf("1"));
-		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, trainingFee, accountPeriodicFee, new Money(
-						"10.0"));
-		CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
-		accountActionDate.addAccountFeesAction(accountFeesaction);
-		TestObjectFactory.flushandCloseSession();
+    public void testExecuteAmountUpdated() throws Exception {
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                new Double("10.0"));
+        accountFeeSet.add(accountPeriodicFee);
+        CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short
+                .valueOf("1"));
+        AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
+                accountPeriodicFee, new Money("10.0"));
+        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+                "0.0"));
+        accountActionDate.addAccountFeesAction(accountFeesaction);
+        TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
-				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestUtils.makeUser());
-		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
-				.getMoneyForMFICurrency("5"));
-		trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
-		trainingFee.save();
-		TestObjectFactory.flushandCloseSession();
-		ApplyCustomerFeeChangesTask task = new ApplyCustomerFeeChangesTask();
-		((ApplyCustomerFeeChangesHelper) task
-				.getTaskHelper()).execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
+        trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
+        trainingFee.setUserContext(TestUtils.makeUser());
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
+        trainingFee.save();
+        TestObjectFactory.flushandCloseSession();
+        ApplyCustomerFeeChangesTask task = new ApplyCustomerFeeChangesTask();
+        ((ApplyCustomerFeeChangesHelper) task.getTaskHelper()).execute(System.currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
 
-		CustomerScheduleEntity installment = (CustomerScheduleEntity) center
-				.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
+        CustomerScheduleEntity installment = (CustomerScheduleEntity) center.getCustomerAccount().getAccountActionDate(
+                Short.valueOf("1"));
 
-		AccountFeesActionDetailEntity accountFeesAction = installment
-				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
-		StaticHibernateUtil.closeSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
-		group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
-				group.getCustomerId());
-	}
+        AccountFeesActionDetailEntity accountFeesAction = installment.getAccountFeesAction(accountPeriodicFee
+                .getAccountFeeId());
+        assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+        StaticHibernateUtil.closeSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+        group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
+    }
 
-	public void testExecuteStatusUpdatedToInactive() throws Exception {
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
-		.getAccountActionDate(Short.valueOf("1"));
-		CustomerAccountBOIntegrationTest.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
-		TestObjectFactory.updateObject(center);
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
-		customerAccount = center.getCustomerAccount();
-		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, new Double("10.0"));
-		accountFeeSet.add(accountPeriodicFee);
-		accountActionDate = (CustomerScheduleEntity) customerAccount
-				.getAccountActionDate(Short.valueOf("2"));
-		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, trainingFee, accountPeriodicFee, new Money(
-						"10.0"));
-		CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
-		accountActionDate.addAccountFeesAction(accountFeesaction);
-		TestObjectFactory.flushandCloseSession();
+    public void testExecuteStatusUpdatedToInactive() throws Exception {
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short
+                .valueOf("1"));
+        CustomerAccountBOIntegrationTest.setActionDate(accountActionDate, offSetDate(accountActionDate.getActionDate(),
+                -1));
+        TestObjectFactory.updateObject(center);
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+        customerAccount = center.getCustomerAccount();
+        Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                new Double("10.0"));
+        accountFeeSet.add(accountPeriodicFee);
+        accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short.valueOf("2"));
+        AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
+                accountPeriodicFee, new Money("10.0"));
+        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+                "0.0"));
+        accountActionDate.addAccountFeesAction(accountFeesaction);
+        TestObjectFactory.flushandCloseSession();
 
-		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
-				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
-		trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
-		trainingFee.updateStatus(FeeStatus.INACTIVE);
+        trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
+        trainingFee.setUserContext(TestUtils.makeUserWithLocales());
+        trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
+        trainingFee.updateStatus(FeeStatus.INACTIVE);
 
-		trainingFee.update();
-		TestObjectFactory.flushandCloseSession();
-		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
-		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
-				.getTaskHelper()).execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
+        trainingFee.update();
+        TestObjectFactory.flushandCloseSession();
+        ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+        ((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask.getTaskHelper()).execute(System
+                .currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
 
-		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("2"));
+        AccountActionDateEntity installment = center.getCustomerAccount().getAccountActionDate(Short.valueOf("2"));
 
-		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
-				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertNull(accountFeesAction);
-	}
+        AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
+                .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
+        assertNull(accountFeesAction);
+    }
 
-	public void testExecuteStatusInactiveAndAmountUpdated() throws Exception {
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
-		.getAccountActionDate(Short.valueOf("1"));
-		CustomerAccountBOIntegrationTest.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
-		TestObjectFactory.updateObject(center);
-		StaticHibernateUtil.closeSession();
-		
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
-		customerAccount = center.getCustomerAccount();
-		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
-		accountFeeSet.add(accountPeriodicFee);
-		accountActionDate = (CustomerScheduleEntity) customerAccount
-				.getAccountActionDate(Short.valueOf("2"));
-		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, trainingFee, accountPeriodicFee, new Money(
-						"10.0"));
-		CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
-		accountActionDate.addAccountFeesAction(accountFeesaction);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+    public void testExecuteStatusInactiveAndAmountUpdated() throws Exception {
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short
+                .valueOf("1"));
+        CustomerAccountBOIntegrationTest.setActionDate(accountActionDate, offSetDate(accountActionDate.getActionDate(),
+                -1));
+        TestObjectFactory.updateObject(center);
+        StaticHibernateUtil.closeSession();
 
-		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
-				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
-		trainingFee
-				.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
-		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
-				.getMoneyForMFICurrency("5"));
-		trainingFee.updateStatus(FeeStatus.INACTIVE);
-		trainingFee.update();
-		TestObjectFactory.flushandCloseSession();
-		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
-		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
-				.getTaskHelper()).execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+        customerAccount = center.getCustomerAccount();
+        Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
+        accountFeeSet.add(accountPeriodicFee);
+        accountActionDate = (CustomerScheduleEntity) customerAccount.getAccountActionDate(Short.valueOf("2"));
+        AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
+                accountPeriodicFee, new Money("10.0"));
+        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+                "0.0"));
+        accountActionDate.addAccountFeesAction(accountFeesaction);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("2"));
+        trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
+        trainingFee.setUserContext(TestUtils.makeUserWithLocales());
+        trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        trainingFee.updateStatus(FeeStatus.INACTIVE);
+        trainingFee.update();
+        TestObjectFactory.flushandCloseSession();
+        ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+        ((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask.getTaskHelper()).execute(System
+                .currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
 
-		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
-				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertNull(accountFeesAction);
+        AccountActionDateEntity installment = center.getCustomerAccount().getAccountActionDate(Short.valueOf("2"));
 
-		AccountFeesEntity accountFee = center.getCustomerAccount()
-				.getAccountFees(trainingFee.getFeeId());
+        AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
+                .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
+        assertNull(accountFeesAction);
 
-		assertNotNull(accountFee);
-		assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
-	}
+        AccountFeesEntity accountFee = center.getCustomerAccount().getAccountFees(trainingFee.getFeeId());
 
-	public void testExecuteStatusInactiveToActive() throws Exception {
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
-		accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
-		accountFeeSet.add(accountPeriodicFee);
-		trainingFee.updateStatus(FeeStatus.INACTIVE);
-		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
-		trainingFee.update();
-		TestObjectFactory.flushandCloseSession();
+        assertNotNull(accountFee);
+        assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
+    }
 
-		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
-				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
-		trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
-		trainingFee.updateStatus(FeeStatus.ACTIVE);
-		trainingFee.update();
-		TestObjectFactory.flushandCloseSession();
-		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
-		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
-				.getTaskHelper()).execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
+    public void testExecuteStatusInactiveToActive() throws Exception {
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
+        accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
+        accountFeeSet.add(accountPeriodicFee);
+        trainingFee.updateStatus(FeeStatus.INACTIVE);
+        trainingFee.setUserContext(TestUtils.makeUserWithLocales());
+        trainingFee.update();
+        TestObjectFactory.flushandCloseSession();
 
-		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("1"));
+        trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
+        trainingFee.setUserContext(TestUtils.makeUserWithLocales());
+        trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
+        trainingFee.updateStatus(FeeStatus.ACTIVE);
+        trainingFee.update();
+        TestObjectFactory.flushandCloseSession();
+        ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+        ((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask.getTaskHelper()).execute(System
+                .currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
 
-		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
-				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertNotNull(accountFeesAction);
-		assertEquals(2, ((CustomerScheduleEntity) installment)
-				.getAccountFeesActionDetails().size());
-	}
+        AccountActionDateEntity installment = center.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
 
-	public void testExecuteStatusInactiveToActiveAndAmountChanged()
-			throws Exception {
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
-		accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
-		accountFeeSet.add(accountPeriodicFee);
-		trainingFee.updateStatus(FeeStatus.INACTIVE);
-		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
-		trainingFee.update();
-		TestObjectFactory.flushandCloseSession();
+        AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
+                .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
+        assertNotNull(accountFeesAction);
+        assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
+    }
 
-		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
-				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
-		trainingFee
-				.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
-		trainingFee.updateStatus(FeeStatus.ACTIVE);
-		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
-				.getMoneyForMFICurrency("5"));
-		trainingFee.update();
-		TestObjectFactory.flushandCloseSession();
-		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
-				.execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
+    public void testExecuteStatusInactiveToActiveAndAmountChanged() throws Exception {
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
+        accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
+        accountFeeSet.add(accountPeriodicFee);
+        trainingFee.updateStatus(FeeStatus.INACTIVE);
+        trainingFee.setUserContext(TestUtils.makeUserWithLocales());
+        trainingFee.update();
+        TestObjectFactory.flushandCloseSession();
 
-		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("1"));
+        trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
+        trainingFee.setUserContext(TestUtils.makeUserWithLocales());
+        trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
+        trainingFee.updateStatus(FeeStatus.ACTIVE);
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        trainingFee.update();
+        TestObjectFactory.flushandCloseSession();
+        new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask()).execute(System.currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
 
-		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
-				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertNotNull(accountFeesAction);
-		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
-		assertEquals(2, ((CustomerScheduleEntity) installment)
-				.getAccountFeesActionDetails().size());
-		AccountFeesEntity accountFee = center.getCustomerAccount()
-				.getAccountFees(trainingFee.getFeeId());
-		assertNotNull(accountFee);
-		assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
-	}
+        AccountActionDateEntity installment = center.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
 
-	public void testExecuteAmountUpdatedForMultipleAccount() throws Exception {
-		CustomerAccountBO centerAccount = center.getCustomerAccount();
-		CustomerAccountBO groupAccount = group.getCustomerAccount();
-		Set<AccountFeesEntity> accountFeeSet = centerAccount.getAccountFees();
-		Set<AccountFeesEntity> groupFeeSet = groupAccount.getAccountFees();
+        AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
+                .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
+        assertNotNull(accountFeesAction);
+        assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+        assertEquals(2, ((CustomerScheduleEntity) installment).getAccountFeesActionDetails().size());
+        AccountFeesEntity accountFee = center.getCustomerAccount().getAccountFees(trainingFee.getFeeId());
+        assertNotNull(accountFee);
+        assertEquals(5.0, accountFee.getAccountFeeAmount().getAmountDoubleValue(), DELTA);
+    }
 
-		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
-				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
-				RecurrenceType.WEEKLY, Short.valueOf("2"));
+    public void testExecuteAmountUpdatedForMultipleAccount() throws Exception {
+        CustomerAccountBO centerAccount = center.getCustomerAccount();
+        CustomerAccountBO groupAccount = group.getCustomerAccount();
+        Set<AccountFeesEntity> accountFeeSet = centerAccount.getAccountFees();
+        Set<AccountFeesEntity> groupFeeSet = groupAccount.getAccountFees();
 
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
+        FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
+                RecurrenceType.WEEKLY, Short.valueOf("2"));
 
-		AccountFeesEntity groupaccountPeriodicFee = new AccountFeesEntity(group
-				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
-				.getFeeAmount().getAmountDoubleValue());
-		accountFeeSet.add(accountPeriodicFee);
-		groupFeeSet.add(groupaccountPeriodicFee);
-		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) centerAccount
-				.getAccountActionDate(Short.valueOf("1"));
-		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-				accountActionDate, trainingFee, accountPeriodicFee, new Money(
-						"10.0"));
-		CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
-		accountActionDate.addAccountFeesAction(accountFeesaction);
-		CustomerScheduleEntity groupaccountActionDate = (CustomerScheduleEntity) groupAccount
-				.getAccountActionDate(Short.valueOf("1"));
-		AccountFeesActionDetailEntity groupaccountFeesaction = new CustomerFeeScheduleEntity(
-				groupaccountActionDate, trainingFee, groupaccountPeriodicFee,
-				new Money("10.0"));
-		CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) groupaccountFeesaction,new Money("0.0"));
-		groupaccountActionDate.addAccountFeesAction(groupaccountFeesaction);
+        AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
 
-		TestObjectFactory.flushandCloseSession();
+        AccountFeesEntity groupaccountPeriodicFee = new AccountFeesEntity(group.getCustomerAccount(), trainingFee,
+                ((AmountFeeBO) trainingFee).getFeeAmount().getAmountDoubleValue());
+        accountFeeSet.add(accountPeriodicFee);
+        groupFeeSet.add(groupaccountPeriodicFee);
+        CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) centerAccount.getAccountActionDate(Short
+                .valueOf("1"));
+        AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(accountActionDate, trainingFee,
+                accountPeriodicFee, new Money("10.0"));
+        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction, new Money(
+                "0.0"));
+        accountActionDate.addAccountFeesAction(accountFeesaction);
+        CustomerScheduleEntity groupaccountActionDate = (CustomerScheduleEntity) groupAccount
+                .getAccountActionDate(Short.valueOf("1"));
+        AccountFeesActionDetailEntity groupaccountFeesaction = new CustomerFeeScheduleEntity(groupaccountActionDate,
+                trainingFee, groupaccountPeriodicFee, new Money("10.0"));
+        CustomerAccountBOIntegrationTest.setFeeAmountPaid((CustomerFeeScheduleEntity) groupaccountFeesaction,
+                new Money("0.0"));
+        groupaccountActionDate.addAccountFeesAction(groupaccountFeesaction);
 
-		trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class,
-				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestUtils.makeUser());
-		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
-				.getMoneyForMFICurrency("5"));
-		trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
-		trainingFee.save();
-		TestObjectFactory.flushandCloseSession();
-		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
-				.execute(System.currentTimeMillis());
-		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(
-				CustomerBO.class, center.getCustomerId());
-		group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class,
-				group.getCustomerId());
-		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("1"));
+        TestObjectFactory.flushandCloseSession();
 
-		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
-				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
-		assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+        trainingFee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, trainingFee.getFeeId());
+        trainingFee.setUserContext(TestUtils.makeUser());
+        ((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory.getMoneyForMFICurrency("5"));
+        trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
+        trainingFee.save();
+        TestObjectFactory.flushandCloseSession();
+        new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask()).execute(System.currentTimeMillis());
+        TestObjectFactory.flushandCloseSession();
+        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+        group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
+        AccountActionDateEntity installment = center.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
 
-		AccountActionDateEntity groupinstallment = group.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("1"));
+        AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
+                .getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
+        assertEquals(5.0, accountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
 
-		AccountFeesActionDetailEntity groupaccountFeesAction = ((CustomerScheduleEntity) groupinstallment)
-				.getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
-		assertEquals(5.0, groupaccountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
-	}
-	
-	public void testBatchJobException(){
-		List<String> error = new ArrayList<String>();
-		error.add("error1");
-		error.add("error2");
-		BatchJobException batchJobException = 
-			new BatchJobException("error.invailddata",error);
-		assertEquals("error.invailddata", batchJobException.getKey());
-		assertEquals("error1,error2", batchJobException.getErrorMessage());
-	}
-	
-	private java.sql.Date offSetDate(Date date , int noOfDays) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		calendar = new GregorianCalendar(year, month, day + noOfDays);
-		return new java.sql.Date(calendar.getTimeInMillis());
-	}
+        AccountActionDateEntity groupinstallment = group.getCustomerAccount().getAccountActionDate(Short.valueOf("1"));
+
+        AccountFeesActionDetailEntity groupaccountFeesAction = ((CustomerScheduleEntity) groupinstallment)
+                .getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
+        assertEquals(5.0, groupaccountFeesAction.getFeeAmount().getAmountDoubleValue(), DELTA);
+    }
+
+    public void testBatchJobException() {
+        List<String> error = new ArrayList<String>();
+        error.add("error1");
+        error.add("error2");
+        BatchJobException batchJobException = new BatchJobException("error.invailddata", error);
+        assertEquals("error.invailddata", batchJobException.getKey());
+        assertEquals("error1,error2", batchJobException.getErrorMessage());
+    }
+
+    private java.sql.Date offSetDate(Date date, int noOfDays) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar = new GregorianCalendar(year, month, day + noOfDays);
+        return new java.sql.Date(calendar.getTimeInMillis());
+    }
 
 }

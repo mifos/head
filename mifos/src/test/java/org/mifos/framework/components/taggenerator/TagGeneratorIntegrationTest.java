@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.taggenerator;
 
 import java.util.ArrayList;
@@ -48,157 +48,142 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TagGeneratorIntegrationTest extends MifosIntegrationTest {
-	public TagGeneratorIntegrationTest() throws SystemException, ApplicationException {
+    public TagGeneratorIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CustomerBO group;
 
-	private CustomerBO center;
+    private CustomerBO center;
 
-	private SavingsBO savings;
+    private SavingsBO savings;
 
-	private SavingsOfferingBO savingsOffering;
+    private SavingsOfferingBO savingsOffering;
 
-	private UserContext userContext;
+    private UserContext userContext;
 
-	private PersonnelBO personnel;
+    private PersonnelBO personnel;
 
-	private OfficeBO branchOffice;
+    private OfficeBO branchOffice;
 
-	Object randomNum = null;
+    Object randomNum = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestUtils.makeUser();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestUtils.makeUser();
 
-		randomNum = new Random().nextLong();
-	}
+        randomNum = new Random().nextLong();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		branchOffice = null;
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(personnel);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        branchOffice = null;
+        TestObjectFactory.cleanUp(savings);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        TestObjectFactory.cleanUp(personnel);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testSavingsAccountLinkWithoutSelfLink() throws Exception {
-		createInitialObjectsForSavings();
-		String createdLink = TagGenerator.createHeaderLinks(savings, false,
-				randomNum);
-		assertEquals(true, createdLink.contains("custSearchAction"));
-		assertEquals(true, createdLink.contains("TestBranchOffice"));
-		assertEquals(true, createdLink.contains("centerCustAction"));
-		assertEquals(true, createdLink.contains("Center_Active_test"));
-		assertEquals(true, createdLink.contains("groupCustAction"));
-		assertEquals(true, createdLink.contains("Group_Active_test"));
-		assertEquals(true, createdLink.contains("prd1"));
-	}
+    public void testSavingsAccountLinkWithoutSelfLink() throws Exception {
+        createInitialObjectsForSavings();
+        String createdLink = TagGenerator.createHeaderLinks(savings, false, randomNum);
+        assertEquals(true, createdLink.contains("custSearchAction"));
+        assertEquals(true, createdLink.contains("TestBranchOffice"));
+        assertEquals(true, createdLink.contains("centerCustAction"));
+        assertEquals(true, createdLink.contains("Center_Active_test"));
+        assertEquals(true, createdLink.contains("groupCustAction"));
+        assertEquals(true, createdLink.contains("Group_Active_test"));
+        assertEquals(true, createdLink.contains("prd1"));
+    }
 
-	public void testSavingsAccountLinkWithSelfLink() throws Exception {
-		createInitialObjectsForSavings();
-		String createdLink = TagGenerator.createHeaderLinks(savings, true,
-				randomNum);
-		assertEquals(true, createdLink.contains("custSearchAction"));
-		assertEquals(true, createdLink.contains("TestBranchOffice"));
-		assertEquals(true, createdLink.contains("centerCustAction"));
-		assertEquals(true, createdLink.contains("Center_Active_test"));
-		assertEquals(true, createdLink.contains("groupCustAction"));
-		assertEquals(true, createdLink.contains("Group_Active_test"));
-		assertEquals(true, createdLink.contains("savingsAction"));
-	}
+    public void testSavingsAccountLinkWithSelfLink() throws Exception {
+        createInitialObjectsForSavings();
+        String createdLink = TagGenerator.createHeaderLinks(savings, true, randomNum);
+        assertEquals(true, createdLink.contains("custSearchAction"));
+        assertEquals(true, createdLink.contains("TestBranchOffice"));
+        assertEquals(true, createdLink.contains("centerCustAction"));
+        assertEquals(true, createdLink.contains("Center_Active_test"));
+        assertEquals(true, createdLink.contains("groupCustAction"));
+        assertEquals(true, createdLink.contains("Group_Active_test"));
+        assertEquals(true, createdLink.contains("savingsAction"));
+    }
 
-	public void testPersonnelLinkWithoutSelfLink() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-		String createdLink = TagGenerator.createHeaderLinks(personnel, false,
-				randomNum);
-		assertEquals(false, createdLink.contains("PersonAction"));
-		assertEquals(true, createdLink.contains("TestBranchOffice"));
-	}
+    public void testPersonnelLinkWithoutSelfLink() throws Exception {
+        branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+        createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
+        String createdLink = TagGenerator.createHeaderLinks(personnel, false, randomNum);
+        assertEquals(false, createdLink.contains("PersonAction"));
+        assertEquals(true, createdLink.contains("TestBranchOffice"));
+    }
 
-	public void testPersonnelLinkWithSelfLink() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-		String createdLink = TagGenerator.createHeaderLinks(personnel, true,
-				randomNum);
-		assertEquals(true, createdLink.contains("PersonAction"));
-		assertEquals(true, createdLink.contains("TestBranchOffice"));
-	}
+    public void testPersonnelLinkWithSelfLink() throws Exception {
+        branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+        createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
+        String createdLink = TagGenerator.createHeaderLinks(personnel, true, randomNum);
+        assertEquals(true, createdLink.contains("PersonAction"));
+        assertEquals(true, createdLink.contains("TestBranchOffice"));
+    }
 
-	public void testTagGeneratorFactory() throws Exception {
-		createInitialObjectsForSavings();
-		TagGenerator tagGenerator = TagGeneratorFactory.getInstance()
-				.getGenerator(center);
-		if (tagGenerator instanceof CustomerTagGenerator)
-			assertTrue(true);
+    public void testTagGeneratorFactory() throws Exception {
+        createInitialObjectsForSavings();
+        TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(center);
+        if (tagGenerator instanceof CustomerTagGenerator)
+            assertTrue(true);
 
-		tagGenerator = TagGeneratorFactory.getInstance().getGenerator(group);
-		if (tagGenerator instanceof CustomerTagGenerator)
-			assertTrue(true);
+        tagGenerator = TagGeneratorFactory.getInstance().getGenerator(group);
+        if (tagGenerator instanceof CustomerTagGenerator)
+            assertTrue(true);
 
-		tagGenerator = TagGeneratorFactory.getInstance().getGenerator(savings);
-		if (tagGenerator instanceof AccountTagGenerator)
-			assertTrue(true);
+        tagGenerator = TagGeneratorFactory.getInstance().getGenerator(savings);
+        if (tagGenerator instanceof AccountTagGenerator)
+            assertTrue(true);
 
-	}
+    }
 
-	public void testTagGeneratorFactoryPageExpired() throws Exception {
-		try {
-			TagGeneratorFactory.getInstance().getGenerator(null);
-			fail();
-		} catch (PageExpiredException e) {
-			assertTrue(true);
-		}
-	}
+    public void testTagGeneratorFactoryPageExpired() throws Exception {
+        try {
+            TagGeneratorFactory.getInstance().getGenerator(null);
+            fail();
+        } catch (PageExpiredException e) {
+            assertTrue(true);
+        }
+    }
 
-	public void testTagGeneratorFactoryForPersonnel() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-		TagGenerator tagGenerator = TagGeneratorFactory.getInstance()
-				.getGenerator(personnel);
-		tagGenerator = TagGeneratorFactory.getInstance()
-				.getGenerator(personnel);
-		if (tagGenerator instanceof PersonnelTagGenerator)
-			assertTrue(true);
-	}
+    public void testTagGeneratorFactoryForPersonnel() throws Exception {
+        branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+        createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
+        TagGenerator tagGenerator = TagGeneratorFactory.getInstance().getGenerator(personnel);
+        tagGenerator = TagGeneratorFactory.getInstance().getGenerator(personnel);
+        if (tagGenerator instanceof PersonnelTagGenerator)
+            assertTrue(true);
+    }
 
-	private void createInitialObjectsForSavings() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering = helper.createSavingsOffering("prd1", "cdfg");
-		savings = helper.createSavingsAccount("000100000000017",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-				userContext);
-	}
+    private void createInitialObjectsForSavings() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        SavingsTestHelper helper = new SavingsTestHelper();
+        savingsOffering = helper.createSavingsOffering("prd1", "cdfg");
+        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
+                AccountStates.SAVINGS_ACC_APPROVED, userContext);
+    }
 
-	private PersonnelBO createPersonnel(OfficeBO office,
-			PersonnelLevel personnelLevel) throws Exception {
-		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				CustomFieldType.NUMERIC));
-		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
-				"abcd", "abcd", "abcd");
-		Name name = new Name("XYZ", null, null, null);
-		java.util.Date date = new java.util.Date();
-		personnel = new PersonnelBO(personnelLevel, office, Integer
-				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
-				"xyz@yahoo.com", null, customFieldView, name, "111111", date,
-				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
-		personnel.save();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(
-				PersonnelBO.class, personnel.getPersonnelId());
-		return personnel;
-	}
+    private PersonnelBO createPersonnel(OfficeBO office, PersonnelLevel personnelLevel) throws Exception {
+        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+        customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
+        Name name = new Name("XYZ", null, null, null);
+        java.util.Date date = new java.util.Date();
+        personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
+                "xyz@yahoo.com", null, customFieldView, name, "111111", date, Integer.valueOf("1"), Integer
+                        .valueOf("1"), date, date, address, userContext.getId());
+        personnel.save();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+        return personnel;
+    }
 }

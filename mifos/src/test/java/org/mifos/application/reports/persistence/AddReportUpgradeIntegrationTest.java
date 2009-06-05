@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.persistence;
 
 import java.sql.Connection;
@@ -37,53 +37,49 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTest {
     }
 
     private static final short ACTIVITY_ID = 1;
-	private static final int HIGHER_UPGRADE_VERSION = 185;
-	private static final short REPORT_CATEGORY_ID = (short) 6;
-	private static final short TEST_REPORT_ID = (short) 4;
-	private static final int LOWER_UPGRADE_VERSION = 184;
-	private Session session;
-	private Transaction transaction;
-	private Connection connection;
+    private static final int HIGHER_UPGRADE_VERSION = 185;
+    private static final short REPORT_CATEGORY_ID = (short) 6;
+    private static final short TEST_REPORT_ID = (short) 4;
+    private static final int LOWER_UPGRADE_VERSION = 184;
+    private Session session;
+    private Transaction transaction;
+    private Connection connection;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		session = StaticHibernateUtil.getSessionTL();
-		connection = session.connection();
-		transaction = session.beginTransaction();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        session = StaticHibernateUtil.getSessionTL();
+        connection = session.connection();
+        transaction = session.beginTransaction();
+    }
 
-	public void testShouldNotThrowErrorWhenUpgradingForVer184WithActivityIdNull()
-			throws Exception {
-		AddReport addReport = createReport(LOWER_UPGRADE_VERSION);
+    public void testShouldNotThrowErrorWhenUpgradingForVer184WithActivityIdNull() throws Exception {
+        AddReport addReport = createReport(LOWER_UPGRADE_VERSION);
 
-		try {
-			addReport.doUpgrade(connection);
-		}
-		catch (Exception e) {
-			e.printStackTrace(System.err);
-			fail("Should not throw error when inserting report:");
-		}
-	}
+        try {
+            addReport.doUpgrade(connection);
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            fail("Should not throw error when inserting report:");
+        }
+    }
 
-	private AddReport createReport(int version) {
-		return new AddReport(version, TEST_REPORT_ID, REPORT_CATEGORY_ID,
-				"TestReportForUpgrade", "test_report_upgrade", "design string",
-				ACTIVITY_ID);
-	}
+    private AddReport createReport(int version) {
+        return new AddReport(version, TEST_REPORT_ID, REPORT_CATEGORY_ID, "TestReportForUpgrade",
+                "test_report_upgrade", "design string", ACTIVITY_ID);
+    }
 
-	public void testShouldUpgradeForDBVersion185OrMoreWithAcivityId()
-			throws Exception {
-		AddReport addReport = createReport(HIGHER_UPGRADE_VERSION);
-		addReport.doUpgrade(connection);
-		ReportsBO report = new ReportsPersistence().getReport(TEST_REPORT_ID);
-		assertNotNull(report.getActivityId());
-		assertNotNull(report.getIsActive());
-	}
+    public void testShouldUpgradeForDBVersion185OrMoreWithAcivityId() throws Exception {
+        AddReport addReport = createReport(HIGHER_UPGRADE_VERSION);
+        addReport.doUpgrade(connection);
+        ReportsBO report = new ReportsPersistence().getReport(TEST_REPORT_ID);
+        assertNotNull(report.getActivityId());
+        assertNotNull(report.getIsActive());
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		transaction.rollback();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        transaction.rollback();
+        super.tearDown();
+    }
 }

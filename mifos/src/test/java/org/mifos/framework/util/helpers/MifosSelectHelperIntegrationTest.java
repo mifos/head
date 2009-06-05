@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -27,20 +27,20 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class MifosSelectHelperIntegrationTest extends MifosIntegrationTest {
 
-	public MifosSelectHelperIntegrationTest() throws SystemException, ApplicationException {
+    public MifosSelectHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testGetInstance() {
-		MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
-		assertNotNull(mifosSelectHelper);
-	}
+        MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
+        assertNotNull(mifosSelectHelper);
+    }
 
-	public void testGetValue() {
-		MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
-		String[] prdCarStatusIds = mifosSelectHelper.getValue(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID);
-		assertEquals("org.mifos.application.productdefinition.business.PrdStatusEntity", prdCarStatusIds[0]);
-		assertEquals(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, prdCarStatusIds[1]);
-	}
+    public void testGetValue() {
+        MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
+        String[] prdCarStatusIds = mifosSelectHelper.getValue(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID);
+        assertEquals("org.mifos.application.productdefinition.business.PrdStatusEntity", prdCarStatusIds[0]);
+        assertEquals(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, prdCarStatusIds[1]);
+    }
 
 }

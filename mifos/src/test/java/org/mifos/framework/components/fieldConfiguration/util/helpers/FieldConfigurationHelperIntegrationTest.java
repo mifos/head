@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import org.mifos.application.ApplicationTestSuite;
@@ -28,43 +28,35 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
 public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTest {
-	
-	public FieldConfigurationHelperIntegrationTest() throws SystemException, ApplicationException {
+
+    public FieldConfigurationHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    /** TODO: These tests only pass when run as part of
-	 * {@link ApplicationTestSuite}, not when run by themselves
-	 * on a fresh test database.
-	 * There must be some state which is left around or set up
-	 * by some other part of the test suite.
-	 */
+    /**
+     * TODO: These tests only pass when run as part of
+     * {@link ApplicationTestSuite}, not when run by themselves on a fresh test
+     * database. There must be some state which is left around or set up by some
+     * other part of the test suite.
+     */
 
-	public void testGetConfiguredFieldName() throws Exception{
-		String fieldName=FieldConfigurationHelper.getConfiguredFieldName(
-			"Center.Address3",
-			TestUtils
-			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-		assertEquals("Village",fieldName);
-		fieldName=FieldConfigurationHelper.getConfiguredFieldName(
-			"Center.SomeField",
-			TestUtils
-			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-		assertEquals(null,fieldName);
-	}
-	
-	public void testGetLocalSpecificFieldNames() throws Exception{
-		String fieldName=FieldConfigurationHelper.getLocalSpecificFieldNames(
-			"Center.Address3",
-			TestUtils
-			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-		assertEquals("Village",fieldName);
+    public void testGetConfiguredFieldName() throws Exception {
+        String fieldName = FieldConfigurationHelper.getConfiguredFieldName("Center.Address3", TestUtils
+                .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
+        assertEquals("Village", fieldName);
+        fieldName = FieldConfigurationHelper.getConfiguredFieldName("Center.SomeField", TestUtils
+                .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
+        assertEquals(null, fieldName);
+    }
 
-		fieldName=FieldConfigurationHelper.getLocalSpecificFieldNames(
-			"Center.SomeField",
-			TestUtils
-			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
-		assertEquals("Center.SomeField",fieldName);
-	}
+    public void testGetLocalSpecificFieldNames() throws Exception {
+        String fieldName = FieldConfigurationHelper.getLocalSpecificFieldNames("Center.Address3", TestUtils
+                .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
+        assertEquals("Village", fieldName);
+
+        fieldName = FieldConfigurationHelper.getLocalSpecificFieldNames("Center.SomeField", TestUtils
+                .makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
+        assertEquals("Center.SomeField", fieldName);
+    }
 
 }

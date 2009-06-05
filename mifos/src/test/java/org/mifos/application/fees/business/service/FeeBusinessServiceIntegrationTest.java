@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business.service;
 
 import java.util.List;
@@ -35,105 +35,96 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeeBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
-	public FeeBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+    public FeeBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private FeeBO fee1;
-	private FeeBO fee2;
+    private FeeBO fee2;
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(fee2);
-		TestObjectFactory.cleanUp(fee1);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(fee2);
+        TestObjectFactory.cleanUp(fee1);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testGetFee() {
-		fee1 = TestObjectFactory.createOneTimeAmountFee(
-				"Customer_OneTime_AmountFee", FeeCategory.CENTER, "100",
-				FeePayment.UPFRONT);
-		StaticHibernateUtil.commitTransaction();
+    public void testGetFee() {
+        fee1 = TestObjectFactory.createOneTimeAmountFee("Customer_OneTime_AmountFee", FeeCategory.CENTER, "100",
+                FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
 
-		FeeBO dbFee = new FeeBusinessService().getFee(fee1.getFeeId());
-		assertNotNull(dbFee);
-		assertEquals(dbFee.getFeeName(), fee1.getFeeName());
-		fee1 = dbFee;
-	}
+        FeeBO dbFee = new FeeBusinessService().getFee(fee1.getFeeId());
+        assertNotNull(dbFee);
+        assertEquals(dbFee.getFeeName(), fee1.getFeeName());
+        fee1 = dbFee;
+    }
 
-	public void testRetrieveFeesForCustomer() throws Exception {
-		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1",
-				FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short
-						.valueOf("2"));
-		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1",
-				FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short
-						.valueOf("2"));
-		StaticHibernateUtil.commitTransaction();
+    public void testRetrieveFeesForCustomer() throws Exception {
+        fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
+                RecurrenceType.MONTHLY, Short.valueOf("2"));
+        fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",
+                RecurrenceType.MONTHLY, Short.valueOf("2"));
+        StaticHibernateUtil.commitTransaction();
 
-		List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFees();
-		assertNotNull(feeList);
-		assertEquals(1, feeList.size());
-		assertEquals("CustomerFee1", feeList.get(0).getFeeName());
-	}
+        List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFees();
+        assertNotNull(feeList);
+        assertEquals(1, feeList.size());
+        assertEquals("CustomerFee1", feeList.get(0).getFeeName());
+    }
 
-	public void testRetrieveFeesForCustomerFailure() throws Exception {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			new FeeBusinessService().retrieveCustomerFees();
-			fail();
-		}
-		catch (ServiceException e) {
-			assertTrue(true);
-		}
-	}
+    public void testRetrieveFeesForCustomerFailure() throws Exception {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            new FeeBusinessService().retrieveCustomerFees();
+            fail();
+        } catch (ServiceException e) {
+            assertTrue(true);
+        }
+    }
 
-	public void testRetrieveFeesForProduct() throws Exception {
-		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1",
-				FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
-		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1",
-				FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short.valueOf("2"));
-		StaticHibernateUtil.commitTransaction();
-		
-		List<FeeBO> feeList = new FeeBusinessService().retrieveProductFees();
-		assertNotNull(feeList);
-		assertEquals(1, feeList.size());
-		assertEquals("ProductFee1", feeList.get(0).getFeeName());
-	}
+    public void testRetrieveFeesForProduct() throws Exception {
+        fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
+                RecurrenceType.MONTHLY, Short.valueOf("2"));
+        fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",
+                RecurrenceType.MONTHLY, Short.valueOf("2"));
+        StaticHibernateUtil.commitTransaction();
 
-	public void testRetrieveFeesForProductFailure() throws Exception {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			new FeeBusinessService().retrieveProductFees();
-			fail();
-		}
-		catch (ServiceException e) {
-			assertTrue(true);
-		}
-	}
+        List<FeeBO> feeList = new FeeBusinessService().retrieveProductFees();
+        assertNotNull(feeList);
+        assertEquals(1, feeList.size());
+        assertEquals("ProductFee1", feeList.get(0).getFeeName());
+    }
 
-	public void testRetrieveCustomerFeesByCategaroyType() throws Exception {
-		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1",
-				FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
-		StaticHibernateUtil.commitTransaction();
-		
-		List<FeeBO> feeList = new FeeBusinessService()
-				.retrieveCustomerFeesByCategaroyType(FeeCategory.CENTER);
-		assertNotNull(feeList);
-		assertEquals(1, feeList.size());
-		assertEquals("CustomerFee1", feeList.get(0).getFeeName());
-	}
+    public void testRetrieveFeesForProductFailure() throws Exception {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            new FeeBusinessService().retrieveProductFees();
+            fail();
+        } catch (ServiceException e) {
+            assertTrue(true);
+        }
+    }
 
-	public void testRetrieveCustomerFeesByCategaroyTypeFailure()
-			throws Exception {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			new FeeBusinessService()
-					.retrieveCustomerFeesByCategaroyType(FeeCategory.ALLCUSTOMERS);
-			fail();
-		}
-		catch (ServiceException e) {
-			assertTrue(true);
-		}
-	}
+    public void testRetrieveCustomerFeesByCategaroyType() throws Exception {
+        fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
+                RecurrenceType.MONTHLY, Short.valueOf("2"));
+        StaticHibernateUtil.commitTransaction();
+
+        List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFeesByCategaroyType(FeeCategory.CENTER);
+        assertNotNull(feeList);
+        assertEquals(1, feeList.size());
+        assertEquals("CustomerFee1", feeList.get(0).getFeeName());
+    }
+
+    public void testRetrieveCustomerFeesByCategaroyTypeFailure() throws Exception {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            new FeeBusinessService().retrieveCustomerFeesByCategaroyType(FeeCategory.ALLCUSTOMERS);
+            fail();
+        } catch (ServiceException e) {
+            assertTrue(true);
+        }
+    }
 }

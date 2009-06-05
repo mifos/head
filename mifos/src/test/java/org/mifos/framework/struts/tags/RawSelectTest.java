@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import java.util.HashMap;
@@ -30,25 +30,25 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class RawSelectTest extends TestCase {
 
-	public RawSelectTest() throws SystemException, ApplicationException {
+    public RawSelectTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testRawSelect() {
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("key", "value");
-		data.put("key1", "value1");
-		RawSelect rawSelect = new RawSelect();
-		rawSelect.setData(data);
-		rawSelect.setMultiple("multiple");
-		rawSelect.setName("name");
-		rawSelect.setSize("1");
-		rawSelect.setStyle("style");
-		assertEquals(2, rawSelect.getData().size());
-		assertEquals("multiple", rawSelect.getMultiple());
-		assertEquals("name", rawSelect.getName());
-		assertEquals("1", rawSelect.getSize());
-		assertEquals("style", rawSelect.getStyle());
-		assertTrue(rawSelect.toString().contains("Select the item"));
-	}
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("key", "value");
+        data.put("key1", "value1");
+        RawSelect rawSelect = new RawSelect();
+        rawSelect.setData(data);
+        rawSelect.setMultiple("multiple");
+        rawSelect.setName("name");
+        rawSelect.setSize("1");
+        rawSelect.setStyle("style");
+        assertEquals(2, rawSelect.getData().size());
+        assertEquals("multiple", rawSelect.getMultiple());
+        assertEquals("name", rawSelect.getName());
+        assertEquals("1", rawSelect.getSize());
+        assertEquals("style", rawSelect.getStyle());
+        assertTrue(rawSelect.toString().contains("Select the item"));
+    }
 }

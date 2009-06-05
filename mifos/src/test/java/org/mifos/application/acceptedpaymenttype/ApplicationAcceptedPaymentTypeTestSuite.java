@@ -17,8 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.acceptedpaymenttype;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
@@ -26,25 +27,20 @@ import junit.textui.TestRunner;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistenceIntegrationTest;
 import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeActionIntegrationTest;
 
-
-
 public class ApplicationAcceptedPaymentTypeTestSuite extends TestSuite {
-	
-	public static void main (String[] args)
-	{
-		Test testSuite = suite();
-		TestRunner.run (testSuite);
-	}
-	
 
-	public static Test suite()
-	{
-		TestSuite testSuite = new ApplicationAcceptedPaymentTypeTestSuite();
-		testSuite.addTestSuite(AcceptedPaymentTypeActionIntegrationTest.class);
-		testSuite.addTestSuite(AcceptedPaymentTypePersistenceIntegrationTest.class);
-		
-		return testSuite;
-		
-	}
+    public static void main(String[] args) {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
+
+    public static Test suite() {
+        TestSuite testSuite = new ApplicationAcceptedPaymentTypeTestSuite();
+        testSuite.addTestSuite(AcceptedPaymentTypeActionIntegrationTest.class);
+        testSuite.addTestSuite(AcceptedPaymentTypePersistenceIntegrationTest.class);
+
+        return testSuite;
+
+    }
 
 }

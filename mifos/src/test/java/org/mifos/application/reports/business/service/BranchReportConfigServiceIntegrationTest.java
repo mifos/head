@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import org.mifos.application.master.business.MifosCurrency;
@@ -30,51 +30,46 @@ import org.springframework.core.io.ClassPathResource;
 
 public class BranchReportConfigServiceIntegrationTest extends MifosIntegrationTest {
 
-	public BranchReportConfigServiceIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportConfigServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private BranchReportConfigService branchReportConfigService;
 
-	public void testGetDaysInArrears() throws ServiceException {
-		Integer daysInArrears = branchReportConfigService.getGracePeriodDays();
-		assertNotNull(daysInArrears);
-	}
+    public void testGetDaysInArrears() throws ServiceException {
+        Integer daysInArrears = branchReportConfigService.getGracePeriodDays();
+        assertNotNull(daysInArrears);
+    }
 
-	public void testGetLoanCyclePeriod() throws Exception {
-		Integer loanCyclePeriod = branchReportConfigService
-				.getLoanCyclePeriod();
-		assertNotNull(loanCyclePeriod);
-	}
+    public void testGetLoanCyclePeriod() throws Exception {
+        Integer loanCyclePeriod = branchReportConfigService.getLoanCyclePeriod();
+        assertNotNull(loanCyclePeriod);
+    }
 
-	public void testGetReplacementFieldId() throws Exception {
-		Short replacementFieldId = branchReportConfigService
-				.getReplacementFieldId();
-		assertNotNull(replacementFieldId);
-	}
+    public void testGetReplacementFieldId() throws Exception {
+        Short replacementFieldId = branchReportConfigService.getReplacementFieldId();
+        assertNotNull(replacementFieldId);
+    }
 
-	public void testGetReplacementFieldValue() throws Exception {
-		String replacementFieldValue = branchReportConfigService
-				.getReplacementFieldValue();
-		assertNotNull(replacementFieldValue);
-	}
+    public void testGetReplacementFieldValue() throws Exception {
+        String replacementFieldValue = branchReportConfigService.getReplacementFieldValue();
+        assertNotNull(replacementFieldValue);
+    }
 
-	public void testGetCurrency() throws Exception {
-		MifosCurrency currency = branchReportConfigService.getCurrency();
-		assertNotNull(currency);
-	}
-	
-	public void testGetDaysInArrearsForRisk() throws Exception {
-		Integer daysInArrearsForRisk = branchReportConfigService.getDaysInArrearsForRisk();
-		assertNotNull(daysInArrearsForRisk);
-	}
+    public void testGetCurrency() throws Exception {
+        MifosCurrency currency = branchReportConfigService.getCurrency();
+        assertNotNull(currency);
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		ClassPathResource branchReportConfig = new ClassPathResource(
-				FilePaths.BRANCH_REPORT_CONFIG);
-		branchReportConfigService = new BranchReportConfigService(
-				branchReportConfig);
-	}
+    public void testGetDaysInArrearsForRisk() throws Exception {
+        Integer daysInArrearsForRisk = branchReportConfigService.getDaysInArrearsForRisk();
+        assertNotNull(daysInArrearsForRisk);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ClassPathResource branchReportConfig = new ClassPathResource(FilePaths.BRANCH_REPORT_CONFIG);
+        branchReportConfigService = new BranchReportConfigService(branchReportConfig);
+    }
 }

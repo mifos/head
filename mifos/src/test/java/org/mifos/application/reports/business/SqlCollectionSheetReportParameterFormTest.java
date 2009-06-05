@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import static org.easymock.classextension.EasyMock.createMock;
@@ -29,14 +29,14 @@ import org.mifos.application.reports.business.validator.Errors;
 
 public class SqlCollectionSheetReportParameterFormTest {
 
-	@Test
-	public void testValidateAcceptsDateEvenIfItHasExtraCharactersAtTheEnd() {
-		SqlCollectionSheetReportParameterForm form = new SqlCollectionSheetReportParameterForm(
-				"1", "1", "1", "23/06/2008ss");
-		Errors errorsMock = createMock(Errors.class);
-		replay(errorsMock);
-		form.validate(errorsMock);
-		verify(errorsMock);
-	}
+    @Test
+    public void testValidateAcceptsDateEvenIfItHasExtraCharactersAtTheEnd() {
+        SqlCollectionSheetReportParameterForm form = new SqlCollectionSheetReportParameterForm("1", "1", "1",
+                "23/06/2008ss");
+        Errors errorsMock = createMock(Errors.class);
+        replay(errorsMock);
+        form.validate(errorsMock);
+        verify(errorsMock);
+    }
 
 }

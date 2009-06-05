@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.fieldConfiguration.persistence;
 
 import java.util.List;
@@ -31,26 +31,22 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
 public class FieldConfigurationPersistenceIntegrationTest extends MifosIntegrationTest {
-	
-	public FieldConfigurationPersistenceIntegrationTest() throws SystemException, ApplicationException {
+
+    public FieldConfigurationPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    private FieldConfigurationPersistence fieldConfigurationPersistence=
-		new FieldConfigurationPersistence();
-	
-	public void testGetEntityMasterList() throws PersistenceException {
-		List<EntityMaster> entityMasterList = 
-			fieldConfigurationPersistence.getEntityMasterList();
-		assertEquals(22, entityMasterList.size());
-	}
-	
-	public void testGetListOfFields() 
-	throws NumberFormatException, PersistenceException {
-		List<FieldConfigurationEntity> fieldList =
-			fieldConfigurationPersistence.getListOfFields(
-				EntityType.LOAN.getValue());
-		assertEquals(5, fieldList.size());
-	}
+    private FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
+
+    public void testGetEntityMasterList() throws PersistenceException {
+        List<EntityMaster> entityMasterList = fieldConfigurationPersistence.getEntityMasterList();
+        assertEquals(22, entityMasterList.size());
+    }
+
+    public void testGetListOfFields() throws NumberFormatException, PersistenceException {
+        List<FieldConfigurationEntity> fieldList = fieldConfigurationPersistence.getListOfFields(EntityType.LOAN
+                .getValue());
+        assertEquals(5, fieldList.size());
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees;
 
 import junit.framework.Test;
@@ -31,26 +31,26 @@ import org.mifos.application.fees.struts.action.FeeActionTest;
 
 public class FeeTestSuite extends TestSuite {
 
-	public FeeTestSuite() {
-		super();
-	}
+    public FeeTestSuite() {
+        super();
+    }
 
-	public static void main(String[] args) {
-		try {
-			Test testSuite = suite();
-			TestRunner.run(testSuite);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public static void main(String[] args) {
+        try {
+            Test testSuite = suite();
+            TestRunner.run(testSuite);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	public static Test suite() throws Exception {
-		FeeTestSuite testSuite = new FeeTestSuite();
-		testSuite.addTestSuite(FeeActionTest.class);
-		testSuite.addTestSuite(FeeBOIntegrationTest.class);
-		testSuite.addTestSuite(FeePersistenceIntegrationTest.class);
-		testSuite.addTestSuite(FeeBusinessServiceIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        FeeTestSuite testSuite = new FeeTestSuite();
+        testSuite.addTestSuite(FeeActionTest.class);
+        testSuite.addTestSuite(FeeBOIntegrationTest.class);
+        testSuite.addTestSuite(FeePersistenceIntegrationTest.class);
+        testSuite.addTestSuite(FeeBusinessServiceIntegrationTest.class);
+        return testSuite;
+    }
 }

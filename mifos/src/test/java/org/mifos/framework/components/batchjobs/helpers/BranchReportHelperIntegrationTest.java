@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import static org.mifos.framework.util.AssertionUtils.assertNotEmpty;
@@ -51,146 +51,139 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTestCase {
 
-	public BranchReportHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private BranchReportHelper branchReportHelper;
-	private Session session;
-	private Transaction transaction;
+    private Session session;
+    private Transaction transaction;
 
-	@Test
-	public void testBatchCreatesRowForBranchReportBatchBO()
-			throws PersistenceException, ServiceException, BatchJobException {
-		branchReportHelper = new BranchReportHelper(new BranchReportTask());
-		OfficeBO office = new OfficeBusinessService()
-				.getOffice(BRANCH_ID_SHORT);
-		BranchReportBO generatedBranchReport = branchReportHelper
-				.createBranchReport(session, office, RUN_DATE);
-		IBranchReportService branchReportService = new BranchReportService();
-		BranchReportBO retrievedBranchReports =  branchReportService.getBranchReport(BRANCH_ID_SHORT, RUN_DATE);
-		
-		assertBranchReport(generatedBranchReport, retrievedBranchReports);
-		assertClientSummaryReport(generatedBranchReport.getClientSummaries(),branchReportService);
-		assertLoanArrearsAging(generatedBranchReport.getLoanArrearsAging(),branchReportService);
-		assertStaffSummary(generatedBranchReport.getStaffSummaries(),branchReportService);
-		assertStaffingLevelSummary(generatedBranchReport.getStaffingLevelSummaries(), branchReportService);
-		assertLoanDetails(generatedBranchReport.getLoanDetails(),branchReportService);
-		assertLoanArrearsProfile(generatedBranchReport.getLoanArrearsProfile(),branchReportService);
-	}
+    @Test
+    public void testBatchCreatesRowForBranchReportBatchBO() throws PersistenceException, ServiceException,
+            BatchJobException {
+        branchReportHelper = new BranchReportHelper(new BranchReportTask());
+        OfficeBO office = new OfficeBusinessService().getOffice(BRANCH_ID_SHORT);
+        BranchReportBO generatedBranchReport = branchReportHelper.createBranchReport(session, office, RUN_DATE);
+        IBranchReportService branchReportService = new BranchReportService();
+        BranchReportBO retrievedBranchReports = branchReportService.getBranchReport(BRANCH_ID_SHORT, RUN_DATE);
 
-	private void assertLoanArrearsProfile(
-			Set<BranchReportLoanArrearsProfileBO> loanArrearsProfile,
-			IBranchReportService branchReportService) throws ServiceException {
-		List<BranchReportLoanArrearsProfileBO> retrievedLoanArrearsProfile = branchReportService
-				.getLoanArrearsProfile(BRANCH_ID, RUN_DATE_STR);
-		assertSameCollections(loanArrearsProfile, retrievedLoanArrearsProfile);
-	}
+        assertBranchReport(generatedBranchReport, retrievedBranchReports);
+        assertClientSummaryReport(generatedBranchReport.getClientSummaries(), branchReportService);
+        assertLoanArrearsAging(generatedBranchReport.getLoanArrearsAging(), branchReportService);
+        assertStaffSummary(generatedBranchReport.getStaffSummaries(), branchReportService);
+        assertStaffingLevelSummary(generatedBranchReport.getStaffingLevelSummaries(), branchReportService);
+        assertLoanDetails(generatedBranchReport.getLoanDetails(), branchReportService);
+        assertLoanArrearsProfile(generatedBranchReport.getLoanArrearsProfile(), branchReportService);
+    }
 
-	private void assertLoanDetails(Set<BranchReportLoanDetailsBO> loanDetails,
-			IBranchReportService branchReportService) throws ServiceException {
-		List<BranchReportLoanDetailsBO> retrievedLoanDetails = branchReportService
-				.getLoanDetails(BRANCH_ID, RUN_DATE_STR);
-		assertSameCollections(loanDetails, retrievedLoanDetails);
-	}
+    private void assertLoanArrearsProfile(Set<BranchReportLoanArrearsProfileBO> loanArrearsProfile,
+            IBranchReportService branchReportService) throws ServiceException {
+        List<BranchReportLoanArrearsProfileBO> retrievedLoanArrearsProfile = branchReportService.getLoanArrearsProfile(
+                BRANCH_ID, RUN_DATE_STR);
+        assertSameCollections(loanArrearsProfile, retrievedLoanArrearsProfile);
+    }
 
-	private void assertStaffingLevelSummary(
-			Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries,
-			IBranchReportService branchReportService) throws ServiceException {
-		List<BranchReportStaffingLevelSummaryBO> retrievedStaffingLevelSummaries = branchReportService
-				.getStaffingLevelSummary(BRANCH_ID, RUN_DATE_STR);
-		assertSameCollections(staffingLevelSummaries,
-				retrievedStaffingLevelSummaries);
-	}
-	
-	private boolean compareBranchReports(BranchReportBO generatedBranchReport, BranchReportBO retrievedBranchReports)
-	{
-		boolean result = false;
-		assertEquals(generatedBranchReport.getBranchId(), retrievedBranchReports.getBranchId());
-		assertEquals(generatedBranchReport.getBranchReportId(), retrievedBranchReports.getBranchReportId());
-		assertEquals(generatedBranchReport.getClientSummaries().size(), retrievedBranchReports.getClientSummaries().size());
-		assertEquals(generatedBranchReport.getLoanArrearsAging().size(), retrievedBranchReports.getLoanArrearsAging().size());
-		assertEquals(generatedBranchReport.getLoanArrearsProfile().size(),retrievedBranchReports.getLoanArrearsProfile().size());
-		assertEquals(generatedBranchReport.getLoanDetails().size(), retrievedBranchReports.getLoanDetails().size());
-		assertEquals(generatedBranchReport.getStaffingLevelSummaries().size(), retrievedBranchReports.getStaffingLevelSummaries().size());
-		assertEquals(generatedBranchReport.getStaffSummaries().size(), retrievedBranchReports.getStaffSummaries().size());
-		result = true;
-		return result;
-	}
+    private void assertLoanDetails(Set<BranchReportLoanDetailsBO> loanDetails, IBranchReportService branchReportService)
+            throws ServiceException {
+        List<BranchReportLoanDetailsBO> retrievedLoanDetails = branchReportService.getLoanDetails(BRANCH_ID,
+                RUN_DATE_STR);
+        assertSameCollections(loanDetails, retrievedLoanDetails);
+    }
 
-	private void assertBranchReport(BranchReportBO generatedBranchReport,
-			BranchReportBO retrievedBranchReports)
-			throws ServiceException {
-		assertNotNull(retrievedBranchReports);
-		// now that generatedBranchReport is flushed the generatedBranchReport and retrievedBranchReports
-		// are not equal any more, we have to compare on the contents. It is replaced with compareBranchReport
-		//assertEquals(generatedBranchReport, retrievedBranchReports);
-		assertTrue(compareBranchReports(generatedBranchReport, retrievedBranchReports));
-	}
+    private void assertStaffingLevelSummary(Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries,
+            IBranchReportService branchReportService) throws ServiceException {
+        List<BranchReportStaffingLevelSummaryBO> retrievedStaffingLevelSummaries = branchReportService
+                .getStaffingLevelSummary(BRANCH_ID, RUN_DATE_STR);
+        assertSameCollections(staffingLevelSummaries, retrievedStaffingLevelSummaries);
+    }
 
-	private void assertStaffSummary(
-			Set<BranchReportStaffSummaryBO> generatedStaffSummaries,
-			IBranchReportService branchReportService) throws ServiceException {
-		List<BranchReportStaffSummaryBO> retrievedStaffSummaries = branchReportService
-				.getStaffSummary(BRANCH_ID, RUN_DATE_STR);
-		//TODO TW insert test data for loan officer staff summary report
-		//		assertNotEmpty(generatedStaffSummaries);
-		assertSameCollections(generatedStaffSummaries, retrievedStaffSummaries);
-	}
-	
-	private boolean find(BranchReportLoanArrearsAgingBO loanArrearsAging, List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingReports)
-	{
-		boolean result = false;
-		for (BranchReportLoanArrearsAgingBO bo : retrievedLoanArrearsAgingReports)
-		{
-			if (bo.getArrearsAgingId().equals(loanArrearsAging.getArrearsAgingId()))
-			{
-				assertEquals(bo.getPeriodDescription(), loanArrearsAging.getPeriodDescription());
-				assertEquals(bo.getAgingPeriod(), loanArrearsAging.getAgingPeriod());
-				assertEquals(bo.getAmountAging(), loanArrearsAging.getAmountAging());
-				assertEquals(bo.getAmountOutstandingAging(), loanArrearsAging.getAmountOutstandingAging());
-				result = true;
-				return result;
-			}
-		}
-		return result;
-	}
-	
+    private boolean compareBranchReports(BranchReportBO generatedBranchReport, BranchReportBO retrievedBranchReports) {
+        boolean result = false;
+        assertEquals(generatedBranchReport.getBranchId(), retrievedBranchReports.getBranchId());
+        assertEquals(generatedBranchReport.getBranchReportId(), retrievedBranchReports.getBranchReportId());
+        assertEquals(generatedBranchReport.getClientSummaries().size(), retrievedBranchReports.getClientSummaries()
+                .size());
+        assertEquals(generatedBranchReport.getLoanArrearsAging().size(), retrievedBranchReports.getLoanArrearsAging()
+                .size());
+        assertEquals(generatedBranchReport.getLoanArrearsProfile().size(), retrievedBranchReports
+                .getLoanArrearsProfile().size());
+        assertEquals(generatedBranchReport.getLoanDetails().size(), retrievedBranchReports.getLoanDetails().size());
+        assertEquals(generatedBranchReport.getStaffingLevelSummaries().size(), retrievedBranchReports
+                .getStaffingLevelSummaries().size());
+        assertEquals(generatedBranchReport.getStaffSummaries().size(), retrievedBranchReports.getStaffSummaries()
+                .size());
+        result = true;
+        return result;
+    }
 
-	private void assertLoanArrearsAging(
-			Set<BranchReportLoanArrearsAgingBO> generatedLoanArrearsAgingReport,
-			IBranchReportService branchReportService) throws ServiceException {
-		List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingReports = branchReportService
-				.getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
-		assertNotEmpty(generatedLoanArrearsAgingReport);
-		Iterator iterator= generatedLoanArrearsAgingReport.iterator();
-		while (iterator.hasNext()){
-			BranchReportLoanArrearsAgingBO loanArrearsAging = (BranchReportLoanArrearsAgingBO)iterator.next();
-			assertTrue(find(loanArrearsAging, retrievedLoanArrearsAgingReports));
-		}
-		
-	}
+    private void assertBranchReport(BranchReportBO generatedBranchReport, BranchReportBO retrievedBranchReports)
+            throws ServiceException {
+        assertNotNull(retrievedBranchReports);
+        // now that generatedBranchReport is flushed the generatedBranchReport
+        // and retrievedBranchReports
+        // are not equal any more, we have to compare on the contents. It is
+        // replaced with compareBranchReport
+        // assertEquals(generatedBranchReport, retrievedBranchReports);
+        assertTrue(compareBranchReports(generatedBranchReport, retrievedBranchReports));
+    }
 
-	private void assertClientSummaryReport(
-			Set<BranchReportClientSummaryBO> generatedClientSummaryReport,
-			IBranchReportService branchReportService) throws ServiceException {
-		List<BranchReportClientSummaryBO> retrievedBranchReportClientSummaries = branchReportService
-				.getClientSummaryInfo(BRANCH_ID, RUN_DATE_STR);
-		assertNotEmpty(generatedClientSummaryReport);
-		assertSameCollections(generatedClientSummaryReport,
-				retrievedBranchReportClientSummaries);
-	}
+    private void assertStaffSummary(Set<BranchReportStaffSummaryBO> generatedStaffSummaries,
+            IBranchReportService branchReportService) throws ServiceException {
+        List<BranchReportStaffSummaryBO> retrievedStaffSummaries = branchReportService.getStaffSummary(BRANCH_ID,
+                RUN_DATE_STR);
+        // TODO TW insert test data for loan officer staff summary report
+        // assertNotEmpty(generatedStaffSummaries);
+        assertSameCollections(generatedStaffSummaries, retrievedStaffSummaries);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		transaction.rollback();
-		super.tearDown();
-	}
+    private boolean find(BranchReportLoanArrearsAgingBO loanArrearsAging,
+            List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingReports) {
+        boolean result = false;
+        for (BranchReportLoanArrearsAgingBO bo : retrievedLoanArrearsAgingReports) {
+            if (bo.getArrearsAgingId().equals(loanArrearsAging.getArrearsAgingId())) {
+                assertEquals(bo.getPeriodDescription(), loanArrearsAging.getPeriodDescription());
+                assertEquals(bo.getAgingPeriod(), loanArrearsAging.getAgingPeriod());
+                assertEquals(bo.getAmountAging(), loanArrearsAging.getAmountAging());
+                assertEquals(bo.getAmountOutstandingAging(), loanArrearsAging.getAmountOutstandingAging());
+                result = true;
+                return result;
+            }
+        }
+        return result;
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		session = StaticHibernateUtil.getSessionTL();
-		transaction = session.beginTransaction();
-	}
+    private void assertLoanArrearsAging(Set<BranchReportLoanArrearsAgingBO> generatedLoanArrearsAgingReport,
+            IBranchReportService branchReportService) throws ServiceException {
+        List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsAgingReports = branchReportService
+                .getLoanArrearsAgingInfo(BRANCH_ID, RUN_DATE_STR);
+        assertNotEmpty(generatedLoanArrearsAgingReport);
+        Iterator iterator = generatedLoanArrearsAgingReport.iterator();
+        while (iterator.hasNext()) {
+            BranchReportLoanArrearsAgingBO loanArrearsAging = (BranchReportLoanArrearsAgingBO) iterator.next();
+            assertTrue(find(loanArrearsAging, retrievedLoanArrearsAgingReports));
+        }
+
+    }
+
+    private void assertClientSummaryReport(Set<BranchReportClientSummaryBO> generatedClientSummaryReport,
+            IBranchReportService branchReportService) throws ServiceException {
+        List<BranchReportClientSummaryBO> retrievedBranchReportClientSummaries = branchReportService
+                .getClientSummaryInfo(BRANCH_ID, RUN_DATE_STR);
+        assertNotEmpty(generatedClientSummaryReport);
+        assertSameCollections(generatedClientSummaryReport, retrievedBranchReportClientSummaries);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        transaction.rollback();
+        super.tearDown();
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        session = StaticHibernateUtil.getSessionTL();
+        transaction = session.beginTransaction();
+    }
 }

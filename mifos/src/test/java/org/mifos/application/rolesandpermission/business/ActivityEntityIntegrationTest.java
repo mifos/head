@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.rolesandpermission.business;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -26,24 +26,24 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ActivityEntityIntegrationTest extends MifosIntegrationTest {
-	
-	public ActivityEntityIntegrationTest() throws SystemException, ApplicationException {
+
+    public ActivityEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    private ActivityEntity activityEntity=null;
+    private ActivityEntity activityEntity = null;
 
-	public void testGetActivity(){
-		activityEntity=getActivityEntity(Short.valueOf("1"));
-		assertNull(activityEntity.getActivityName());
-		assertNull(activityEntity.getDescription());
-		activityEntity.setLocaleId(Short.valueOf("1"));
-		assertEquals("Organization Management",activityEntity.getActivityName());
-		assertEquals("Organization Management",activityEntity.getDescription());
-	}
+    public void testGetActivity() {
+        activityEntity = getActivityEntity(Short.valueOf("1"));
+        assertNull(activityEntity.getActivityName());
+        assertNull(activityEntity.getDescription());
+        activityEntity.setLocaleId(Short.valueOf("1"));
+        assertEquals("Organization Management", activityEntity.getActivityName());
+        assertEquals("Organization Management", activityEntity.getDescription());
+    }
 
-	private ActivityEntity getActivityEntity(Short id) {
-		return (ActivityEntity)TestObjectFactory.getObject(ActivityEntity.class,id);
-	}
+    private ActivityEntity getActivityEntity(Short id) {
+        return (ActivityEntity) TestObjectFactory.getObject(ActivityEntity.class, id);
+    }
 
 }

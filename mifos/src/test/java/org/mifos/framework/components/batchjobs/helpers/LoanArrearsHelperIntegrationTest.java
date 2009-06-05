@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.sql.Date;
@@ -43,94 +43,85 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTest {
 
-	public LoanArrearsHelperIntegrationTest() throws SystemException, ApplicationException {
+    public LoanArrearsHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private LoanArrearsHelper loanArrearHelper;
 
-	CustomerBO center = null;
+    CustomerBO center = null;
 
-	CustomerBO group = null;
+    CustomerBO group = null;
 
-	MeetingBO meeting = null;
+    MeetingBO meeting = null;
 
-	AccountBO loanAccount = null;
+    AccountBO loanAccount = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		LoanArrearsTask arrearsTask = new LoanArrearsTask();
-		loanArrearHelper = (LoanArrearsHelper)arrearsTask.getTaskHelper();
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		loanAccount = getLoanAccount(group, meeting);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        LoanArrearsTask arrearsTask = new LoanArrearsTask();
+        loanArrearHelper = (LoanArrearsHelper) arrearsTask.getTaskHelper();
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        loanAccount = getLoanAccount(group, meeting);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(loanAccount);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		loanArrearHelper = null;
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(loanAccount);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        loanArrearHelper = null;
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testExecute() throws Exception {
-		int statusChangeHistorySize = loanAccount
-				.getAccountStatusChangeHistory().size();
-		loanArrearHelper.execute(System.currentTimeMillis());
-		loanAccount = new AccountPersistence().getAccount(loanAccount
-				.getAccountId());
-		assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
-				loanAccount.getState());
-		assertEquals(statusChangeHistorySize + 1, loanAccount
-				.getAccountStatusChangeHistory().size());
-	}
+    public void testExecute() throws Exception {
+        int statusChangeHistorySize = loanAccount.getAccountStatusChangeHistory().size();
+        loanArrearHelper.execute(System.currentTimeMillis());
+        loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
+        assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
+        assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
+    }
 
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting)
-			throws AccountException {
-		Date currentdate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				currentdate, meeting);
-		loanAccount = TestObjectFactory.createLoanAccount("42423142341",
-				customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
-				currentdate, loanOffering);
-		setDisbursementDateAsOldDate(loanAccount);
-		loanAccount.update();
-		StaticHibernateUtil.commitTransaction();
-		return loanAccount;
-	}
+    private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) throws AccountException {
+        Date currentdate = new Date(System.currentTimeMillis());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(currentdate, meeting);
+        loanAccount = TestObjectFactory.createLoanAccount("42423142341", customer,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, currentdate, loanOffering);
+        setDisbursementDateAsOldDate(loanAccount);
+        loanAccount.update();
+        StaticHibernateUtil.commitTransaction();
+        return loanAccount;
+    }
 
-	private void setDisbursementDateAsOldDate(AccountBO account) {
-		Date startDate = offSetCurrentDate(15);
-		LoanBO loan = (LoanBO) account;
-		LoanBOIntegrationTest.modifyDisbursmentDate(loan,startDate);
-		for (AccountActionDateEntity actionDate : loan.getAccountActionDates())
-			LoanBOIntegrationTest.setActionDate(actionDate,offSetGivenDate(
-					actionDate.getActionDate(), 18));
-	}
+    private void setDisbursementDateAsOldDate(AccountBO account) {
+        Date startDate = offSetCurrentDate(15);
+        LoanBO loan = (LoanBO) account;
+        LoanBOIntegrationTest.modifyDisbursmentDate(loan, startDate);
+        for (AccountActionDateEntity actionDate : loan.getAccountActionDates())
+            LoanBOIntegrationTest.setActionDate(actionDate, offSetGivenDate(actionDate.getActionDate(), 18));
+    }
 
-	private java.sql.Date offSetGivenDate(Date date, int numberOfDays) {
-		Calendar dateCalendar = new GregorianCalendar();
-		dateCalendar.setTimeInMillis(date.getTime());
-		int year = dateCalendar.get(Calendar.YEAR);
-		int month = dateCalendar.get(Calendar.MONTH);
-		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
-		dateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
-		return new java.sql.Date(dateCalendar.getTimeInMillis());
-	}
+    private java.sql.Date offSetGivenDate(Date date, int numberOfDays) {
+        Calendar dateCalendar = new GregorianCalendar();
+        dateCalendar.setTimeInMillis(date.getTime());
+        int year = dateCalendar.get(Calendar.YEAR);
+        int month = dateCalendar.get(Calendar.MONTH);
+        int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
+        dateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+        return new java.sql.Date(dateCalendar.getTimeInMillis());
+    }
 
-	private java.sql.Date offSetCurrentDate(int noOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
-		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
-	}
+    private java.sql.Date offSetCurrentDate(int noOfDays) {
+        Calendar currentDateCalendar = new GregorianCalendar();
+        int year = currentDateCalendar.get(Calendar.YEAR);
+        int month = currentDateCalendar.get(Calendar.MONTH);
+        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+        currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+        return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+    }
 
 }

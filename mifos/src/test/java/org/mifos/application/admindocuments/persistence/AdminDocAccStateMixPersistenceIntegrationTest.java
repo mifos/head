@@ -27,39 +27,28 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
-
 public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public AdminDocAccStateMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public AdminDocAccStateMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-
     private AdminDocAccStateMixPersistence reportsPersistence;
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		reportsPersistence = new AdminDocAccStateMixPersistence();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        reportsPersistence = new AdminDocAccStateMixPersistence();
+    }
 
-	
-	public void testGetAllAdminDocuments() throws PersistenceException {
-		List<AdminDocAccStateMixBO>  listadmindoc = reportsPersistence
-		.getAllMixedAdminDocuments();
-		assertEquals(0, listadmindoc.size());
-	}
-	
-	
-	public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
-		List<AdminDocAccStateMixBO>  admindoc = reportsPersistence
-		.getMixByAdminDocuments(Short.valueOf("1"));
-		assertEquals(0, admindoc.size());
-	}
+    public void testGetAllAdminDocuments() throws PersistenceException {
+        List<AdminDocAccStateMixBO> listadmindoc = reportsPersistence.getAllMixedAdminDocuments();
+        assertEquals(0, listadmindoc.size());
+    }
+
+    public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
+        List<AdminDocAccStateMixBO> admindoc = reportsPersistence.getMixByAdminDocuments(Short.valueOf("1"));
+        assertEquals(0, admindoc.size());
+    }
 
 }
-
-
-
-
-

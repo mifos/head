@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
@@ -34,14 +34,12 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanOfferingBOFixture {
-	
-	public static LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
-			String shortName) {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
-		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0,
-				1.2, 3, InterestType.FLAT, frequency);
-	}
+
+    public static LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
+                LOAN_INSTALLMENT, MONDAY));
+        return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency);
+    }
 }

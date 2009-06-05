@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security;
 
 import junit.framework.Test;
@@ -29,12 +29,12 @@ import org.mifos.framework.security.util.SecurityHelperIntegrationTest;
 
 public class SecurityTestSuite extends TestSuite {
 
-    public static Test suite() throws Exception{
+    public static Test suite() throws Exception {
         TestSuite suite = new SecurityTestSuite();
         suite.addTestSuite(SecurityHelperIntegrationTest.class);
         suite.addTestSuite(LoginFilterTest.class);
         suite.addTest(AddActivityTest.testSuite());
-		suite.addTest(ActivityMapperIntegrationTest.suite());
+        suite.addTest(ActivityMapperIntegrationTest.suite());
         return suite;
     }
 }

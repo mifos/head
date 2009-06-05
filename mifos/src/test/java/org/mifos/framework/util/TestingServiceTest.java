@@ -35,7 +35,7 @@ import org.mifos.service.test.TestMode;
 public class TestingServiceTest {
     static StandardTestingService standardTestingService = null;
     static TestMode savedTestMode = null;
-    
+
     @BeforeClass
     public static void setUpBeforeClass() {
         MifosLogManager.configureLogging();
@@ -43,7 +43,7 @@ public class TestingServiceTest {
         savedTestMode = standardTestingService.getTestMode();
         standardTestingService.setTestMode(TestMode.ACCEPTANCE);
     }
-    
+
     @AfterClass
     public static void tearDownAfterClass() {
         standardTestingService.setTestMode(savedTestMode);
@@ -57,7 +57,7 @@ public class TestingServiceTest {
 
     @Test
     public void testGetDefaultSettingsFilename() {
-        
+
         String actual = standardTestingService.getDefaultSettingsFilename(standardTestingService.getTestMode());
         Assert.assertEquals("acceptanceDatabase.properties", actual);
     }

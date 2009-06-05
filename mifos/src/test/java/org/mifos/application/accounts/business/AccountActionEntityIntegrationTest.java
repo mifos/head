@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.util.Set;
@@ -37,40 +37,39 @@ import org.mifos.framework.persistence.TestDatabase;
 /**
  * Also see {@link AccountActionEntityTest}.
  */
-public class AccountActionEntityIntegrationTest extends MifosIntegrationTest {	
-	
-	public AccountActionEntityIntegrationTest() throws SystemException, ApplicationException {
+public class AccountActionEntityIntegrationTest extends MifosIntegrationTest {
+
+    public AccountActionEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private Session session;
-	private AccountActionEntity accountActionEntity;
+    private AccountActionEntity accountActionEntity;
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		session = StaticHibernateUtil.getSessionTL();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        session = StaticHibernateUtil.getSessionTL();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		StaticHibernateUtil.closeSession();
-		session=null;
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        session = null;
+        super.tearDown();
+    }
 
-	public void testGetAccountAction(){
-		Short id = 1;
-		accountActionEntity = getAccountActionEntityObject(id);
-		assertEquals("Loan Repayment", accountActionEntity.getName());
-	}
+    public void testGetAccountAction() {
+        Short id = 1;
+        accountActionEntity = getAccountActionEntityObject(id);
+        assertEquals("Loan Repayment", accountActionEntity.getName());
+    }
 
-	public void testBasics() throws Exception {
+    public void testBasics() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
-        
+
         Session session = database.openSession();
-        AccountActionEntity action = (AccountActionEntity) 
-            session.get(AccountActionEntity.class, 
+        AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class,
                 AccountActionTypes.PAYMENT.getValue());
 
         LookUpValueEntity lookUpValue = action.getLookUpValue();
@@ -78,42 +77,39 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTest {
         assertEquals(new Integer(191), lookUpValue.getLookUpId());
 
         MifosLookUpEntity lookUpEntity = lookUpValue.getLookUpEntity();
-        assertEquals(MifosLookUpEntity.ACCOUNT_ACTION, 
-            lookUpEntity.getEntityId().shortValue());
+        assertEquals(MifosLookUpEntity.ACCOUNT_ACTION, lookUpEntity.getEntityId().shortValue());
         assertEquals("AccountAction", lookUpEntity.getEntityType());
 
-        Set<LookUpValueLocaleEntity> valueLocales = 
-            lookUpValue.getLookUpValueLocales();
+        Set<LookUpValueLocaleEntity> valueLocales = lookUpValue.getLookUpValueLocales();
         assertEquals(1, valueLocales.size());
         LookUpValueLocaleEntity valueLocale = valueLocales.iterator().next();
-        assertEquals(1, (int)valueLocale.getLocaleId());
+        assertEquals(1, (int) valueLocale.getLocaleId());
         assertEquals("Payment", MessageLookup.getInstance().lookup(lookUpValue));
 
         assertEquals("Payment", action.getName());
         session.close();
     }
-    
+
     public void testEnum() throws Exception {
         AccountActionTypes myEnum = AccountActionTypes.FEE_REPAYMENT;
         AccountActionEntity entity = new AccountActionEntity(myEnum);
         assertEquals(myEnum.getValue(), entity.getId());
-        
+
         AccountActionTypes out = entity.asEnum();
         assertEquals(myEnum, out);
     }
-    
+
     public void testFromBadInt() throws Exception {
         try {
             AccountActionTypes.fromInt(9999);
             fail();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             assertEquals("no account action 9999", e.getMessage());
         }
     }
-    
-	private AccountActionEntity getAccountActionEntityObject(Short id) {
-		return (AccountActionEntity)session.get(AccountActionEntity.class,id);
-	}
-	
+
+    private AccountActionEntity getAccountActionEntityObject(Short id) {
+        return (AccountActionEntity) session.get(AccountActionEntity.class, id);
+    }
+
 }

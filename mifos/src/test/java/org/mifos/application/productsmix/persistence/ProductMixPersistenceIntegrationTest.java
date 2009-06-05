@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productsmix.persistence;
 
+package org.mifos.application.productsmix.persistence;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -34,52 +33,48 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public ProductMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public ProductMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     MeetingBO meeting;
-	MeetingBO meeting1;
-	SavingsOfferingBO saving1;
-	SavingsOfferingBO saving2;
-	ProductMixBO prdmix;
-	ProductMixPersistence productMixPersistence = new ProductMixPersistence();
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+    MeetingBO meeting1;
+    SavingsOfferingBO saving1;
+    SavingsOfferingBO saving2;
+    ProductMixBO prdmix;
+    ProductMixPersistence productMixPersistence = new ProductMixPersistence();
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(prdmix);	
-		TestObjectFactory.cleanUp(saving1);
-		TestObjectFactory.cleanUp(saving2);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testGetAllProductMix() throws PersistenceException {				
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		meeting1 = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1",meeting,meeting);
-		saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2",meeting1,meeting1);
-		prdmix= TestObjectFactory.createAllowedProductsMix(saving1,saving2);		
-		assertEquals(1, (productMixPersistence.getAllProductMix()).size());
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-	}	
-	
-	public void testGetNotAllowedProducts() throws PersistenceException {				
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		meeting1 = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1",meeting,meeting);
-		saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2",meeting1,meeting1);
-		prdmix= TestObjectFactory.createAllowedProductsMix(saving1,saving2);		
-		assertEquals(1, (productMixPersistence.getNotAllowedProducts(saving1.getPrdOfferingId())).size());
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(prdmix);
+        TestObjectFactory.cleanUp(saving1);
+        TestObjectFactory.cleanUp(saving2);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	}	
+    public void testGetAllProductMix() throws PersistenceException {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
+        saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
+        prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
+        assertEquals(1, (productMixPersistence.getAllProductMix()).size());
+
+    }
+
+    public void testGetNotAllowedProducts() throws PersistenceException {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
+        saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
+        prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
+        assertEquals(1, (productMixPersistence.getNotAllowedProducts(saving1.getPrdOfferingId())).size());
+
+    }
 }

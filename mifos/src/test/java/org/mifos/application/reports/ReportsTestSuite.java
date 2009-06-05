@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports;
 
 import junit.framework.Test;
@@ -29,14 +29,14 @@ import org.mifos.application.reports.struts.action.ReportsUserParamsActionTest;
 import org.mifos.application.reports.struts.action.ReportsActionTest;
 
 public class ReportsTestSuite extends TestSuite {
-	
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new ReportsTestSuite();		
-		testSuite.addTestSuite(ReportsPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(ReportsActionTest.class);
-		testSuite.addTestSuite(ReportsUserParamsActionTest.class);
-		testSuite.addTestSuite(AddReportUpgradeIntegrationTest.class);
-		return testSuite;
-	}
+
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new ReportsTestSuite();
+        testSuite.addTestSuite(ReportsPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(ReportsActionTest.class);
+        testSuite.addTestSuite(ReportsUserParamsActionTest.class);
+        testSuite.addTestSuite(AddReportUpgradeIntegrationTest.class);
+        return testSuite;
+    }
 
 }

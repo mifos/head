@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial;
 
 import junit.framework.Test;
@@ -33,29 +33,29 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialInitialize
 import org.mifos.application.accounts.financial.util.helpers.FinancialRulesTest;
 
 public class FinancialTestSuite extends TestSuite {
-	
-	public FinancialTestSuite() throws Exception {
-		super();
-	}
-	public static void main (String[] args)throws Exception
-	{
-		Test testSuite = suite();
-		
-		TestRunner.run (testSuite);
-	}
-	public static Test suite() throws Exception
-	{
-		TestSuite testSuite = new FinancialTestSuite();
-		testSuite.addTestSuite(FinancialActionCacheIntegrationTest.class);
-		testSuite.addTest(FinancialInitializerTest.suite());
-		testSuite.addTest(ChartOfAccountsCacheTest.suite());
-		testSuite.addTest(FinancialRulesTest.testSuite());
-		testSuite.addTestSuite(COABOIntegrationTest.class);
-		testSuite.addTestSuite(FinancialBOIntegrationTest.class);
-		testSuite.addTest(FinancialActionConstantsIntegrationTest.suite());
 
-		return testSuite;
-		
-	}
+    public FinancialTestSuite() throws Exception {
+        super();
+    }
+
+    public static void main(String[] args) throws Exception {
+        Test testSuite = suite();
+
+        TestRunner.run(testSuite);
+    }
+
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new FinancialTestSuite();
+        testSuite.addTestSuite(FinancialActionCacheIntegrationTest.class);
+        testSuite.addTest(FinancialInitializerTest.suite());
+        testSuite.addTest(ChartOfAccountsCacheTest.suite());
+        testSuite.addTest(FinancialRulesTest.testSuite());
+        testSuite.addTestSuite(COABOIntegrationTest.class);
+        testSuite.addTestSuite(FinancialBOIntegrationTest.class);
+        testSuite.addTest(FinancialActionConstantsIntegrationTest.suite());
+
+        return testSuite;
+
+    }
 
 }

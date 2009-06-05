@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -28,28 +28,25 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialActionCacheIntegrationTest extends MifosIntegrationTest {
-	
 
-	public FinancialActionCacheIntegrationTest() throws SystemException, ApplicationException {
+    public FinancialActionCacheIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
+    public void testFinancialActionCache() throws FinancialException {
 
-    public void testFinancialActionCache() throws FinancialException
-	{
-		
-		FinancialActionCache.addToCache(createFinancialAction());
-		
-		FinancialActionBO principalAction = FinancialActionCache.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
-		assertEquals(principalAction.getId().shortValue(),1);
-		
-	}
-	
-	
-	private FinancialActionBO createFinancialAction()
-	{
-		return (FinancialActionBO)StaticHibernateUtil.getSessionTL().get(FinancialActionBO.class,FinancialActionConstants.PRINCIPALPOSTING.value);
+        FinancialActionCache.addToCache(createFinancialAction());
 
-	}
+        FinancialActionBO principalAction = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
+        assertEquals(principalAction.getId().shortValue(), 1);
+
+    }
+
+    private FinancialActionBO createFinancialAction() {
+        return (FinancialActionBO) StaticHibernateUtil.getSessionTL().get(FinancialActionBO.class,
+                FinancialActionConstants.PRINCIPALPOSTING.value);
+
+    }
 
 }

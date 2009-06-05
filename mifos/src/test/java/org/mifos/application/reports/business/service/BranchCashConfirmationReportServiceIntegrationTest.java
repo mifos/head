@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import static org.easymock.EasyMock.expect;
@@ -42,49 +42,43 @@ import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmatio
 
 public class BranchCashConfirmationReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
-	public BranchCashConfirmationReportServiceIntegrationTest() throws Exception {
+    public BranchCashConfirmationReportServiceIntegrationTest() throws Exception {
         super();
     }
 
     private BranchCashConfirmationReportPersistence persistenceMock;
-	private BranchCashConfirmationReportService service;
+    private BranchCashConfirmationReportService service;
 
-	public void testGetCenterIssues() throws ServiceException {
-		BranchCashConfirmationReportBO reportBO = new BranchCashConfirmationReportBO(
-				BRANCH_ID_SHORT, RUN_DATE);
-		BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO(
-				"SOME PRODUCT", ZERO);
-		reportBO.addCenterIssue(issueBO);
-		BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO(
-				"SOMEMORE", ZERO);
-		reportBO.addCenterIssue(anotherIssue);
-		Session session = StaticHibernateUtil.getSessionTL();
-		Transaction transaction = session.beginTransaction();
-		session.save(reportBO);
-		List<BranchCashConfirmationInfoBO> centerIssues = ReportServiceFactory
-				.getBranchCashConfirmationReportService(null).getCenterIssues(
-						BRANCH_ID, RUN_DATE_STR);
-		assertNotNull(centerIssues);
-		assertEquals(2, centerIssues.size());
-		assertTrue(centerIssues.contains(issueBO));
-		assertTrue(centerIssues.contains(anotherIssue));
-		transaction.rollback();
-	}
+    public void testGetCenterIssues() throws ServiceException {
+        BranchCashConfirmationReportBO reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
+        BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", ZERO);
+        reportBO.addCenterIssue(issueBO);
+        BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", ZERO);
+        reportBO.addCenterIssue(anotherIssue);
+        Session session = StaticHibernateUtil.getSessionTL();
+        Transaction transaction = session.beginTransaction();
+        session.save(reportBO);
+        List<BranchCashConfirmationInfoBO> centerIssues = ReportServiceFactory.getBranchCashConfirmationReportService(
+                null).getCenterIssues(BRANCH_ID, RUN_DATE_STR);
+        assertNotNull(centerIssues);
+        assertEquals(2, centerIssues.size());
+        assertTrue(centerIssues.contains(issueBO));
+        assertTrue(centerIssues.contains(anotherIssue));
+        transaction.rollback();
+    }
 
-	public void testGetDisbursements() throws Exception {
-		expect(persistenceMock.getDisbursements(BRANCH_ID_SHORT, RUN_DATE))
-				.andReturn(
-						new ArrayList<BranchCashConfirmationDisbursementBO>());
-		replay(persistenceMock);
-		service.getDisbursements(BRANCH_ID, RUN_DATE_STR);
-		verify(persistenceMock);
-	}
+    public void testGetDisbursements() throws Exception {
+        expect(persistenceMock.getDisbursements(BRANCH_ID_SHORT, RUN_DATE)).andReturn(
+                new ArrayList<BranchCashConfirmationDisbursementBO>());
+        replay(persistenceMock);
+        service.getDisbursements(BRANCH_ID, RUN_DATE_STR);
+        verify(persistenceMock);
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		persistenceMock = createMock(BranchCashConfirmationReportPersistence.class);
-		service = new BranchCashConfirmationReportService(persistenceMock,
-				new OfficeBusinessService());
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        persistenceMock = createMock(BranchCashConfirmationReportPersistence.class);
+        service = new BranchCashConfirmationReportService(persistenceMock, new OfficeBusinessService());
+    }
 }

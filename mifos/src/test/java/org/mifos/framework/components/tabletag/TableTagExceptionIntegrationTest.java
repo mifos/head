@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -29,17 +29,17 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TableTagExceptionIntegrationTest extends MifosIntegrationTest {
 
-	public TableTagExceptionIntegrationTest() throws SystemException, ApplicationException {
+    public TableTagExceptionIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testTableTagException() throws Exception {
-		try {
-			UserContext userContext = TestObjectFactory.getContext();
-			Text.getImage(this, "name", userContext.getPreferredLocale());
-			fail();
-		} catch (TableTagException tte) {
-			assertEquals("exception.framework.TableTagException", tte.getKey());
-		}
-	}
+        try {
+            UserContext userContext = TestObjectFactory.getContext();
+            Text.getImage(this, "name", userContext.getPreferredLocale());
+            fail();
+        } catch (TableTagException tte) {
+            assertEquals("exception.framework.TableTagException", tte.getKey());
+        }
+    }
 }

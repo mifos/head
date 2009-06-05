@@ -17,18 +17,18 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business;
 
 public class OfficecFixture {
 
-	public static OfficeBO createOffice(String searchId) {
-		OfficeBO office = new OfficeBO();
-		office.setSearchId(searchId);
-		return office;
-	}
+    public static OfficeBO createOffice(String searchId) {
+        OfficeBO office = new OfficeBO();
+        office.setSearchId(searchId);
+        return office;
+    }
 
-	public static OfficeBO createOffice(Short officeId) {
-		return new OfficeBO(officeId, "Some Office", null, null);
-	}
+    public static OfficeBO createOffice(Short officeId) {
+        return new OfficeBO(officeId, "Some Office", null, null);
+    }
 }

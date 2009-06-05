@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition;
 
 import junit.framework.Test;
@@ -40,28 +40,27 @@ import org.mifos.application.productdefinition.business.AddInterestCalcRuleTest;
 
 public class ProductDefinitionTestSuite extends TestSuite {
 
-	public ProductDefinitionTestSuite() throws Exception {
-		super();
-	}
+    public ProductDefinitionTestSuite() throws Exception {
+        super();
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new ProductDefinitionTestSuite();
-		testSuite.addTestSuite(PrdOfferingPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(SavingsOfferingBOIntegrationTest.class);
-		testSuite.addTestSuite(PrdCategoryStatusEntityIntegrationTest.class);
-		testSuite.addTestSuite(ProductCategoryBOIntegrationTest.class);
-		testSuite.addTestSuite(ProductCategoryBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(ProductCategoryPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(SavingsPrdPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(PrdCategoryActionTest.class);
-		testSuite.addTestSuite(SavingsPrdBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(SavingsPrdActionTest.class);
-		testSuite.addTestSuite(LoanOfferingBOIntegrationTest.class);
-		testSuite.addTestSuite(LoanPrdBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(LoanPrdActionTest.class);
-		testSuite.addTest(AddInterestCalcRuleTest.testSuite());
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new ProductDefinitionTestSuite();
+        testSuite.addTestSuite(PrdOfferingPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(SavingsOfferingBOIntegrationTest.class);
+        testSuite.addTestSuite(PrdCategoryStatusEntityIntegrationTest.class);
+        testSuite.addTestSuite(ProductCategoryBOIntegrationTest.class);
+        testSuite.addTestSuite(ProductCategoryBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(ProductCategoryPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(SavingsPrdPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(PrdCategoryActionTest.class);
+        testSuite.addTestSuite(SavingsPrdBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(SavingsPrdActionTest.class);
+        testSuite.addTestSuite(LoanOfferingBOIntegrationTest.class);
+        testSuite.addTestSuite(LoanPrdBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(LoanPrdActionTest.class);
+        testSuite.addTest(AddInterestCalcRuleTest.testSuite());
+        return testSuite;
+    }
 
 }
-

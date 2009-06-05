@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting;
 
 import java.util.Date;
@@ -93,11 +93,11 @@ public class MeetingTemplateImpl implements MeetingTemplate {
     }
 
     public static MeetingTemplateImpl createWeeklyMeetingTemplateOnMondaysStartingFrom(Date startDate) {
-    	return new MeetingTemplateImpl(startDate, WeekDay.MONDAY);
+        return new MeetingTemplateImpl(startDate, WeekDay.MONDAY);
     }
 
     public static MeetingTemplateImpl createWeeklyMeetingTemplateStartingFrom(Date startDate) {
-    	return new MeetingTemplateImpl(startDate);
+        return new MeetingTemplateImpl(startDate);
     }
-    
+
 }

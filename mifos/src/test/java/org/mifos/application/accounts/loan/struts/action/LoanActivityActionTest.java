@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.Date;
@@ -39,71 +39,66 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanActivityActionTest extends MifosMockStrutsTestCase {
 
-	public LoanActivityActionTest() throws SystemException, ApplicationException {
+    public LoanActivityActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
 
-	protected AccountBO accountBO = null;
+    protected AccountBO accountBO = null;
 
-	protected CustomerBO center = null;
+    protected CustomerBO center = null;
 
-	protected CustomerBO group = null;
-	
-	private String flowKey;
+    protected CustomerBO group = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, LoanActivityAction.class);
-	}
+    private String flowKey;
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(accountBO);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, LoanActivityAction.class);
+    }
 
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
 
-	public void testGetAllActivity() {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(
-			AccountState.LOAN_APPROVED, startDate, 1);
-		LoanBO loan = (LoanBO) accountBO;
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter("method", "getAllActivity");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
-		actionPerform();
-		verifyForward("getAllActivity_success");
-	}
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	private AccountBO getLoanAccount(AccountState state, Date startDate,
-			int disbursalType) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, state, startDate, loanOffering,
-				disbursalType);
+    public void testGetAllActivity() {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        Date startDate = new Date(System.currentTimeMillis());
+        accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
+        LoanBO loan = (LoanBO) accountBO;
+        setRequestPathInfo("/loanAccountAction.do");
+        addRequestParameter("method", "getAllActivity");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+        actionPerform();
+        verifyForward("getAllActivity_success");
+    }
 
-	}
+    private AccountBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
+                loanOffering, disbursalType);
+
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application;
 
 import junit.framework.Test;
@@ -65,82 +65,78 @@ import org.mifos.framework.util.helpers.MoneyTest;
 import org.mifos.framework.util.helpers.StringUtilsTest;
 
 /**
- * Tests which run quickly (say, <10ms per test, or some such,
- * so that the whole run can be done in seconds or at most a
- * minute or two).
+ * Tests which run quickly (say, <10ms per test, or some such, so that the whole
+ * run can be done in seconds or at most a minute or two).
  * 
- * Test setup should also be fast (say, <1-2 seconds).
- * This currently means that a fast test cannot inherit from
- * {@link MifosIntegrationTest}, call Hibernate, or other things
- * which take many seconds to start up.
+ * Test setup should also be fast (say, <1-2 seconds). This currently means that
+ * a fast test cannot inherit from {@link MifosIntegrationTest}, call Hibernate,
+ * or other things which take many seconds to start up.
  * 
- * It is also true that tests here do not depend on the MySQL
- * test database.  We want to keep it that way (partly
- * for speed, partly for isolation from other test runs and the
- * like).
+ * It is also true that tests here do not depend on the MySQL test database. We
+ * want to keep it that way (partly for speed, partly for isolation from other
+ * test runs and the like).
  * 
- * If your only reason for wanting {@link MifosIntegrationTest} is logging,
- * you can call {@link MifosLogManager#configureLogging()} (this seems
- * fast enough).  Another choice is to pass around a {@link TestLogger}
- * (see {@link RoleActivityEntityTest} for an example) - this does a
- * better job of avoiding side effects, strange dependencies on
- * configuration files, etc, and is what we'll need to do if we want 
- * to assert on log messages, for example.
+ * If your only reason for wanting {@link MifosIntegrationTest} is logging, you
+ * can call {@link MifosLogManager#configureLogging()} (this seems fast enough).
+ * Another choice is to pass around a {@link TestLogger} (see
+ * {@link RoleActivityEntityTest} for an example) - this does a better job of
+ * avoiding side effects, strange dependencies on configuration files, etc, and
+ * is what we'll need to do if we want to assert on log messages, for example.
  */
 public class FastTests extends TestSuite {
 
-	public static Test suite() throws Exception {
-		TestSuite suite = new FastTests();
-		suite.addTest(MoneyTest.suite());
-		suite.addTestSuite(MifosCurrencyTest.class);
-		suite.addTestSuite(DateUtilsTest.class);
-		suite.addTestSuite(CustomFieldViewTest.class);
-		suite.addTestSuite(MifosTagUtilsTest.class);
-		suite.addTestSuite(FrameworkExceptionTest.class);
-		suite.addTestSuite(WeekDayTest.class);
-		
-		suite.addTestSuite(CustomerActionFormTest.class);
-		suite.addTestSuite(LoanPrdActionFormTest.class);
-		suite.addTestSuite(ClientCustActionFormTest.class);
+    public static Test suite() throws Exception {
+        TestSuite suite = new FastTests();
+        suite.addTest(MoneyTest.suite());
+        suite.addTestSuite(MifosCurrencyTest.class);
+        suite.addTestSuite(DateUtilsTest.class);
+        suite.addTestSuite(CustomFieldViewTest.class);
+        suite.addTestSuite(MifosTagUtilsTest.class);
+        suite.addTestSuite(FrameworkExceptionTest.class);
+        suite.addTestSuite(WeekDayTest.class);
 
-		suite.addTestSuite(OfficeListTagTest.class);
+        suite.addTestSuite(CustomerActionFormTest.class);
+        suite.addTestSuite(LoanPrdActionFormTest.class);
+        suite.addTestSuite(ClientCustActionFormTest.class);
 
-		suite.addTestSuite(TableTagTest.class);
-		suite.addTest(MifosSelectTest.suite());
-		suite.addTestSuite(XmlBuilderTest.class);
-		suite.addTestSuite(MethodInvokerTest.class);
-		suite.addTestSuite(ConvertionUtilTest.class);
-		suite.addTestSuite(TableTagParserTest.class);
-		suite.addTestSuite(DispatcherTest.class);
-		suite.addTestSuite(CreateReportTest.class);
-		
-		suite.addTestSuite(DatabaseInitFilterTest.class);
-		suite.addTest(DatabaseVersionPersistenceTest.suite());
-		suite.addTest(UpgradeTest.suite());
-		suite.addTest(CompositeUpgradeTest.suite());
-		
-		suite.addTestSuite(RoleActivityEntityTest.class);
-		suite.addTestSuite(TaskTest.class);
-		suite.addTestSuite(KeyTest.class);
-		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
-		suite.addTestSuite(LoanCycleCounterTest.class);
-		suite.addTestSuite(AccountBOIntegrationTest.class);
-		suite.addTestSuite(PrdOfferingBOIntegrationTest.class);
-		
-		suite.addTest(QuestionTest.suite());
-		
-		suite.addTestSuite(CustomerStatusFlagTest.class);
+        suite.addTestSuite(OfficeListTagTest.class);
 
-		suite.addTestSuite(ValidatorsTest.class);
-		
-		suite.addTest(XmlPPIParserTest.suite());
-		
-		suite.addTest(StringUtilsTest.suite());
-		suite.addTest(ChapterNumSortTest.suite());
-		suite.addTest(ProperlyAdaptedJUnit4Test.suite());
-		suite.addTest(LocalizationConverterTest.suite());
-		suite.addTest(TestingServiceTest.suite());
-		return suite;
-	}
+        suite.addTestSuite(TableTagTest.class);
+        suite.addTest(MifosSelectTest.suite());
+        suite.addTestSuite(XmlBuilderTest.class);
+        suite.addTestSuite(MethodInvokerTest.class);
+        suite.addTestSuite(ConvertionUtilTest.class);
+        suite.addTestSuite(TableTagParserTest.class);
+        suite.addTestSuite(DispatcherTest.class);
+        suite.addTestSuite(CreateReportTest.class);
+
+        suite.addTestSuite(DatabaseInitFilterTest.class);
+        suite.addTest(DatabaseVersionPersistenceTest.suite());
+        suite.addTest(UpgradeTest.suite());
+        suite.addTest(CompositeUpgradeTest.suite());
+
+        suite.addTestSuite(RoleActivityEntityTest.class);
+        suite.addTestSuite(TaskTest.class);
+        suite.addTestSuite(KeyTest.class);
+        suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
+        suite.addTestSuite(LoanCycleCounterTest.class);
+        suite.addTestSuite(AccountBOIntegrationTest.class);
+        suite.addTestSuite(PrdOfferingBOIntegrationTest.class);
+
+        suite.addTest(QuestionTest.suite());
+
+        suite.addTestSuite(CustomerStatusFlagTest.class);
+
+        suite.addTestSuite(ValidatorsTest.class);
+
+        suite.addTest(XmlPPIParserTest.suite());
+
+        suite.addTest(StringUtilsTest.suite());
+        suite.addTest(ChapterNumSortTest.suite());
+        suite.addTest(ProperlyAdaptedJUnit4Test.suite());
+        suite.addTest(LocalizationConverterTest.suite());
+        suite.addTest(TestingServiceTest.suite());
+        return suite;
+    }
 
 }

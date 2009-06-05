@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 import static org.junit.Assert.assertEquals;
@@ -29,56 +29,51 @@ import org.junit.Test;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class FinancialRulesTest {
-	public static junit.framework.Test testSuite() {
-		return new JUnit4TestAdapter(FinancialRulesTest.class);
-	}
+    public static junit.framework.Test testSuite() {
+        return new JUnit4TestAdapter(FinancialRulesTest.class);
+    }
 
-	@BeforeClass
-	public static void init() throws Exception {
-		// initialize Spring, Hibernate, etc.
-		new TestCaseInitializer().initialize();
-	}
+    @BeforeClass
+    public static void init() throws Exception {
+        // initialize Spring, Hibernate, etc.
+        new TestCaseInitializer().initialize();
+    }
 
-	@Test
-	public void testSupportedActions() throws Exception {
-		assertEquals("11201", FinancialRules.getInstance()
-				.getGLAccountForAction(
-						FinancialActionConstants.PRINCIPALPOSTING,
-						FinancialConstants.DEBIT));
-		assertEquals("13100", FinancialRules.getInstance()
-				.getGLAccountForAction(
-						FinancialActionConstants.PRINCIPALPOSTING,
-						FinancialConstants.CREDIT));
-	}
+    @Test
+    public void testSupportedActions() throws Exception {
+        assertEquals("11201", FinancialRules.getInstance().getGLAccountForAction(
+                FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
+        assertEquals("13100", FinancialRules.getInstance().getGLAccountForAction(
+                FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT));
+    }
 
-	/**
-	 * Ensure a lookup for a category of a nonexistant financial action fails.
-	 */
-	@Test(expected = RuntimeException.class)
-	public void testUnsupportedAction01() throws Exception {
-		FinancialRules.getInstance().getGLAccountForAction((short) -1,
-				FinancialConstants.DEBIT);
-	}
+    /**
+     * Ensure a lookup for a category of a nonexistant financial action fails.
+     */
+    @Test(expected = RuntimeException.class)
+    public void testUnsupportedAction01() throws Exception {
+        FinancialRules.getInstance().getGLAccountForAction((short) -1, FinancialConstants.DEBIT);
+    }
 
-	/**
-	 * Reversal adjustments aren't supported. If support is to be added, a mapping
-	 * must also be added to the bean config file used by {@link FinancialRules}.
-	 */
-	public void testUnsupportedAction02() throws Exception {
-		assertNull(FinancialRules.getInstance().getGLAccountForAction(
-				FinancialActionConstants.REVERSAL_ADJUSTMENT,
-				FinancialConstants.CREDIT));
-	}
+    /**
+     * Reversal adjustments aren't supported. If support is to be added, a
+     * mapping must also be added to the bean config file used by
+     * {@link FinancialRules}.
+     */
+    public void testUnsupportedAction02() throws Exception {
+        assertNull(FinancialRules.getInstance().getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT,
+                FinancialConstants.CREDIT));
+    }
 
-	/**
-	 * Reversal adjustments aren't supported. If support is to be added, a mapping
-	 * must also be added to the bean config file used by {@link FinancialRules}
-	 */
-	public void testUnsupportedAction03() throws Exception {
-		assertNull(FinancialRules.getInstance().getGLAccountForAction(
-				FinancialActionConstants.REVERSAL_ADJUSTMENT,
-				FinancialConstants.DEBIT));
-	}
-	
-	// TODO: test override functionality of FinancialRules Spring bean config
+    /**
+     * Reversal adjustments aren't supported. If support is to be added, a
+     * mapping must also be added to the bean config file used by
+     * {@link FinancialRules}
+     */
+    public void testUnsupportedAction03() throws Exception {
+        assertNull(FinancialRules.getInstance().getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT,
+                FinancialConstants.DEBIT));
+    }
+
+    // TODO: test override functionality of FinancialRules Spring bean config
 }

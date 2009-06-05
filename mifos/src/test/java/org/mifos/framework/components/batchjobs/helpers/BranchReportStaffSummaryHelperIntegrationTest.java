@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.Date;
@@ -40,44 +40,40 @@ import org.springframework.core.io.Resource;
 
 public class BranchReportStaffSummaryHelperIntegrationTest extends MifosIntegrationTest {
 
-	public BranchReportStaffSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportStaffSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private static final Date RUN_DATE = DateUtils.currentDate();
-	private static final Short BRANCH_ID_SHORT = Short.valueOf("2");
+    private static final Short BRANCH_ID_SHORT = Short.valueOf("2");
 
-	@Test
-	public void testPopulateStaffSummary() throws BatchJobException {
-		BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID_SHORT,
-				RUN_DATE);
-		BranchReportStaffSummaryHelper staffSummaryHelper = new BranchReportStaffSummaryHelper(
-				branchReportBO, new BranchReportService(),
-				getConfigServiceStub());
-		staffSummaryHelper.populateStaffSummary();
-		Set<BranchReportStaffSummaryBO> staffSummaries = branchReportBO
-				.getStaffSummaries();
-		assertNotNull(staffSummaries);
-	}
+    @Test
+    public void testPopulateStaffSummary() throws BatchJobException {
+        BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID_SHORT, RUN_DATE);
+        BranchReportStaffSummaryHelper staffSummaryHelper = new BranchReportStaffSummaryHelper(branchReportBO,
+                new BranchReportService(), getConfigServiceStub());
+        staffSummaryHelper.populateStaffSummary();
+        Set<BranchReportStaffSummaryBO> staffSummaries = branchReportBO.getStaffSummaries();
+        assertNotNull(staffSummaries);
+    }
 
-	private BranchReportConfigService getConfigServiceStub() {
-		return new BranchReportConfigService(null) {
+    private BranchReportConfigService getConfigServiceStub() {
+        return new BranchReportConfigService(null) {
 
-			@Override
-			protected void initConfig(Resource configResource) {
-			}
+            @Override
+            protected void initConfig(Resource configResource) {
+            }
 
-			@Override
-			public Integer getGracePeriodDays() {
-				return Integer.valueOf(1);
-			}
+            @Override
+            public Integer getGracePeriodDays() {
+                return Integer.valueOf(1);
+            }
 
-			@Override
-			public MifosCurrency getCurrency() throws ServiceException {
-				return Configuration.getInstance().getSystemConfig()
-						.getCurrency();
-			}
-		};
-	}
+            @Override
+            public MifosCurrency getCurrency() throws ServiceException {
+                return Configuration.getInstance().getSystemConfig().getCurrency();
+            }
+        };
+    }
 
 }

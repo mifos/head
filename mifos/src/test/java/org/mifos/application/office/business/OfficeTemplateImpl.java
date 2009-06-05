@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business;
 
 import java.util.ArrayList;
@@ -39,18 +39,16 @@ public class OfficeTemplateImpl implements OfficeTemplate {
 
     private OfficeTemplateImpl(OfficeLevel officeLevel) {
         this.officeLevel = officeLevel;
-        address = new Address(
-                "Address Line1", null, null, "Seattle",
-                "WA", "USA", "98117", "206-555-1212");
+        address = new Address("Address Line1", null, null, "Seattle", "WA", "USA", "98117", "206-555-1212");
         this.officeName = "TestOfficeName";
         this.shortName = "TON";
         this.parentOfficeId = TestObjectFactory.HEAD_OFFICE;
 
         this.customFieldViews = new ArrayList<CustomFieldView>();
-		CustomFieldView customFieldView = new CustomFieldView();
-		customFieldView.setFieldId(Short.valueOf("1"));
-		customFieldView.setFieldValue("CustomField1Value");
-		customFieldViews.add(customFieldView);
+        CustomFieldView customFieldView = new CustomFieldView();
+        customFieldView.setFieldId(Short.valueOf("1"));
+        customFieldView.setFieldValue("CustomField1Value");
+        customFieldViews.add(customFieldView);
     }
 
     public OfficeLevel getOfficeLevel() {
@@ -61,10 +59,10 @@ public class OfficeTemplateImpl implements OfficeTemplate {
         return officeName;
     }
 
-    public Short getParentOfficeId()
-    {
+    public Short getParentOfficeId() {
         return parentOfficeId;
     }
+
     public void setParentOfficeId(Short id) {
         this.parentOfficeId = id;
     }
@@ -86,9 +84,10 @@ public class OfficeTemplateImpl implements OfficeTemplate {
     }
 
     /**
-     * Use this in transactions that you don't plan on committing to the database.  If
-     * you commit more than one of these to the database you'll run into uniqueness
-     * constraints.  Plan on always rolling back the transaction.
+     * Use this in transactions that you don't plan on committing to the
+     * database. If you commit more than one of these to the database you'll run
+     * into uniqueness constraints. Plan on always rolling back the transaction.
+     * 
      * @param officeLevel
      * @return
      */

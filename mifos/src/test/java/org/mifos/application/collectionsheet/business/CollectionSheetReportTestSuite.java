@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import junit.framework.Test;
@@ -30,17 +30,16 @@ import org.mifos.application.reports.business.service.CollectionSheetServiceInte
 import org.mifos.application.reports.business.service.ReportProductOfferingServiceIntegrationTest;
 import org.mifos.application.reports.business.service.ReportServiceFactoryIntegrationTest;
 
-
 public class CollectionSheetReportTestSuite extends TestSuite {
-	public static Test suite() throws Exception {
-		TestSuite suite = new TestSuite();
-		suite.addTestSuite(CollectionSheetBOIntegrationTest.class);
-		suite.addTestSuite(CollectionSheetReportServiceIntegrationTest.class);
-		suite.addTestSuite(CollectionSheetServiceIntegrationTest.class);
-		suite.addTestSuite(ReportServiceFactoryIntegrationTest.class);
-		suite.addTestSuite(ReportProductOfferingServiceIntegrationTest.class);
-		suite.addTestSuite(CascadingReportParameterServiceIntegrationTest.class);
-		suite.addTestSuite(CollectionSheetReportPersistenceIntegrationTest.class);
-		return suite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite suite = new TestSuite();
+        suite.addTestSuite(CollectionSheetBOIntegrationTest.class);
+        suite.addTestSuite(CollectionSheetReportServiceIntegrationTest.class);
+        suite.addTestSuite(CollectionSheetServiceIntegrationTest.class);
+        suite.addTestSuite(ReportServiceFactoryIntegrationTest.class);
+        suite.addTestSuite(ReportProductOfferingServiceIntegrationTest.class);
+        suite.addTestSuite(CascadingReportParameterServiceIntegrationTest.class);
+        suite.addTestSuite(CollectionSheetReportPersistenceIntegrationTest.class);
+        return suite;
+    }
 }

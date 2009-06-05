@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ppi;
 
 import junit.framework.Test;
@@ -31,15 +31,15 @@ import org.mifos.application.ppi.helpers.XmlPPIParserTest;
 import org.mifos.application.ppi.struts.action.PPIActionTest;
 
 public class PPITestSuite extends TestSuite {
-	
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new PPITestSuite();
-		testSuite.addTest(XmlPPIParserTest.suite());
-		testSuite.addTest(PPIChoiceIntegrationTest.suite());
-		testSuite.addTest(PPISurveyIntegrationTest.suite());
-		testSuite.addTestSuite(PPIActionTest.class);
-		testSuite.addTest(PpiLikelihoodTest.suite());
-		testSuite.addTest(PpiSurveyInstanceTest.suite());
-		return testSuite;
-	}
+
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new PPITestSuite();
+        testSuite.addTest(XmlPPIParserTest.suite());
+        testSuite.addTest(PPIChoiceIntegrationTest.suite());
+        testSuite.addTest(PPISurveyIntegrationTest.suite());
+        testSuite.addTestSuite(PPIActionTest.class);
+        testSuite.addTest(PpiLikelihoodTest.suite());
+        testSuite.addTest(PpiSurveyInstanceTest.suite());
+        return testSuite;
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit;
 
 import junit.framework.Test;
@@ -29,17 +29,16 @@ import org.mifos.framework.components.audit.util.AuditInterceptorIntegrationTest
 
 public class AuditLogTestSuite extends TestSuite {
 
-	public AuditLogTestSuite() {
-		super();
-	}
+    public AuditLogTestSuite() {
+        super();
+    }
 
-	public static Test suite()throws Exception
-	{
-		TestSuite testSuite = new AuditLogTestSuite();
-		testSuite.addTestSuite(AuditBusinessServiceTest.class);
-		testSuite.addTestSuite(AuditPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(AuditInterceptorIntegrationTest.class);
-		return testSuite;
-		
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new AuditLogTestSuite();
+        testSuite.addTestSuite(AuditBusinessServiceTest.class);
+        testSuite.addTestSuite(AuditPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(AuditInterceptorIntegrationTest.class);
+        return testSuite;
+
+    }
 }

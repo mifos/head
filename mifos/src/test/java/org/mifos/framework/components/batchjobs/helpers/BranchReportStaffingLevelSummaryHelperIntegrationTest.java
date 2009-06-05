@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.Collection;
@@ -37,35 +37,29 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends MifosIntegrationTest {
-	public BranchReportStaffingLevelSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportStaffingLevelSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public static final Short BRANCH_ID = Short.valueOf("2");
 
-	public void testPopulateStaffingLevelSummary() throws BatchJobException,
-			ServiceException {
-		BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(
-				Integer.valueOf(1), BRANCH_ID, DateUtils.currentDate());
-		new BranchReportStaffingLevelSummaryHelper(branchReport,
-				new BranchReportService()).populateStaffingLevelSummary();
-		assertStaffingLevelSummaries(branchReport);
-	}
+    public void testPopulateStaffingLevelSummary() throws BatchJobException, ServiceException {
+        BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(Integer.valueOf(1), BRANCH_ID, DateUtils
+                .currentDate());
+        new BranchReportStaffingLevelSummaryHelper(branchReport, new BranchReportService())
+                .populateStaffingLevelSummary();
+        assertStaffingLevelSummaries(branchReport);
+    }
 
-	private void assertStaffingLevelSummaries(BranchReportBO branchReport)
-			throws ServiceException {
-		Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = branchReport
-				.getStaffingLevelSummaries();
-		assertEquals(1, staffingLevelSummaries.size());
-		Collection retrievedRolenames = CollectionUtils.collect(
-				staffingLevelSummaries, new Transformer() {
-					public Object transform(Object input) {
-						return ((BranchReportStaffingLevelSummaryBO) input)
-								.getRolename();
-					}
-				});
-		assertEquals(1, retrievedRolenames.size());
-		assertTrue(retrievedRolenames
-				.contains(BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME));
-	}
+    private void assertStaffingLevelSummaries(BranchReportBO branchReport) throws ServiceException {
+        Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = branchReport.getStaffingLevelSummaries();
+        assertEquals(1, staffingLevelSummaries.size());
+        Collection retrievedRolenames = CollectionUtils.collect(staffingLevelSummaries, new Transformer() {
+            public Object transform(Object input) {
+                return ((BranchReportStaffingLevelSummaryBO) input).getRolename();
+            }
+        });
+        assertEquals(1, retrievedRolenames.size());
+        assertTrue(retrievedRolenames.contains(BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME));
+    }
 }

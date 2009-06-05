@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.struts.action;
 
 import java.util.List;
@@ -53,7 +53,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeeActionTest extends MifosMockStrutsTestCase {
 
-	public FeeActionTest() throws SystemException, ApplicationException {
+    public FeeActionTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -61,696 +61,618 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
     private final static String GLOCDE_ID = "47";
 
-	private FeeBO fee;
+    private FeeBO fee;
 
-	private FeeBO fee1;
+    private FeeBO fee1;
 
-	private FeeBO fee2;
+    private FeeBO fee2;
 
-	private FeeBO fee3;
+    private FeeBO fee3;
 
-	private String flowKey;
+    private String flowKey;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		UserContext userContext = TestUtils.makeUser();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		flowKey = createFlow(request, FeeAction.class);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        UserContext userContext = TestUtils.makeUser();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
+                .shortValue());
+        request.getSession(false).setAttribute("ActivityContext", ac);
+        flowKey = createFlow(request, FeeAction.class);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(fee);
-			TestObjectFactory.cleanUp(fee1);
-			TestObjectFactory.cleanUp(fee2);
-			TestObjectFactory.cleanUp(fee3);
-			StaticHibernateUtil.closeSession();
-		}
-		catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(fee);
+            TestObjectFactory.cleanUp(fee1);
+            TestObjectFactory.cleanUp(fee2);
+            TestObjectFactory.cleanUp(fee3);
+            StaticHibernateUtil.closeSession();
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        super.tearDown();
+    }
 
-	public void testLoad() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "load");
+    public void testLoad() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "load");
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.load_success.toString());
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.load_success.toString());
 
-		assertEquals("The size of master data for categories",
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.CATEGORYLIST, request)).size(), 5);
-		assertEquals(
-				"The size of master data for loan time of charges for one time fees  : ",
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.TIMEOFCHARGES, request)).size(), 3);
-		assertEquals(
-				"The size of master data for customer  time of charges for one time fees master : ",
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.CUSTOMERTIMEOFCHARGES, request)).size(), 1);
-		assertEquals("The size of master data for loan formula : ",
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.FORMULALIST, request)).size(), 3);
-		assertEquals("The size of master data for GLCodes of fees : ",
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.GLCODE_LIST, request)).size(), 7);
+        assertEquals("The size of master data for categories", ((List<MasterDataEntity>) SessionUtils.getAttribute(
+                FeeConstants.CATEGORYLIST, request)).size(), 5);
+        assertEquals("The size of master data for loan time of charges for one time fees  : ",
+                ((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.TIMEOFCHARGES, request)).size(), 3);
+        assertEquals("The size of master data for customer  time of charges for one time fees master : ",
+                ((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES, request))
+                        .size(), 1);
+        assertEquals("The size of master data for loan formula : ", ((List<MasterDataEntity>) SessionUtils
+                .getAttribute(FeeConstants.FORMULALIST, request)).size(), 3);
+        assertEquals("The size of master data for GLCodes of fees : ", ((List<MasterDataEntity>) SessionUtils
+                .getAttribute(FeeConstants.GLCODE_LIST, request)).size(), 7);
 
-	}
+    }
 
-	public void testFailurePreviewWithAllValuesNull() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		assertEquals(5, getErrorSize());
-		assertEquals("Fee Name", 1, getErrorSize("feeName"));
-		assertEquals("Fee Applies to Product/Customer", 1,
-				getErrorSize("categoryType"));
-		assertEquals("Periodic or OneTime Fee", 1,
-				getErrorSize("feeFrequencyType"));
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		verifyInputForward();
-	}
+    public void testFailurePreviewWithAllValuesNull() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        assertEquals(5, getErrorSize());
+        assertEquals("Fee Name", 1, getErrorSize("feeName"));
+        assertEquals("Fee Applies to Product/Customer", 1, getErrorSize("categoryType"));
+        assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWithFeeNameNotNull() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testFailurePreviewWithFeeNameNotNull() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		assertEquals(4, getErrorSize());
-		assertEquals("Fee Name", 0, getErrorSize("feeName"));
-		assertEquals("Fee Applies to Product/Customer", 1,
-				getErrorSize("categoryType"));
-		assertEquals("Periodic or OneTime Fee", 1,
-				getErrorSize("feeFrequencyType"));
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		verifyInputForward();
-	}
+        assertEquals(4, getErrorSize());
+        assertEquals("Fee Name", 0, getErrorSize("feeName"));
+        assertEquals("Fee Applies to Product/Customer", 1, getErrorSize("categoryType"));
+        assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWithFeeCategoryNotNull() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("categoryType", FeeCategory.CENTER.getValue()
-				.toString());
-		actionPerform();
+    public void testFailurePreviewWithFeeCategoryNotNull() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+        actionPerform();
 
-		assertEquals(3, getErrorSize());
-		assertEquals("Periodic or OneTime Fee", 1,
-				getErrorSize("feeFrequencyType"));
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		verifyInputForward();
-	}
+        assertEquals(3, getErrorSize());
+        assertEquals("Periodic or OneTime Fee", 1, getErrorSize("feeFrequencyType"));
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWith_FeeFrequencyOneTime() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter("categoryType", FeeCategory.CENTER.getValue()
-				.toString());
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME
-				.getValue().toString());
-		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
-				.toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testFailurePreviewWith_FeeFrequencyOneTime() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME.getValue().toString());
+        addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		assertEquals(2, getErrorSize());
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		verifyInputForward();
-	}
+        assertEquals(2, getErrorSize());
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWith_FeeFrequencyPeriodic() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter("categoryType", FeeCategory.CENTER.getValue()
-				.toString());
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.MONTHLY
-				.getValue().toString());
-		addRequestParameter("monthRecurAfter", "2");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testFailurePreviewWith_FeeFrequencyPeriodic() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.MONTHLY.getValue().toString());
+        addRequestParameter("monthRecurAfter", "2");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		assertEquals(2, getErrorSize());
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		verifyInputForward();
-	}
+        assertEquals(2, getErrorSize());
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWith_RateEnteredWithoutFormula()
-			throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter("categoryType", FeeCategory.LOAN.getValue()
-				.toString());
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
-				.getValue().toString());
-		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("rate", "10");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testFailurePreviewWith_RateEnteredWithoutFormula() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
+        addRequestParameter("weekRecurAfter", "2");
+        addRequestParameter("rate", "10");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		assertEquals(2, getErrorSize());
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		assertEquals("Fee Rate or Formula", 1, getErrorSize("RateAndFormula"));
-		verifyInputForward();
-	}
+        assertEquals(2, getErrorSize());
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        assertEquals("Fee Rate or Formula", 1, getErrorSize("RateAndFormula"));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWith_RateAndAmountEnteredWithoutFormula()
-	throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "LoanFee");
-		addRequestParameter("categoryType", FeeCategory.LOAN.getValue()
-				.toString());
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
-				.getValue().toString());
-		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("amount", "200");
-		addRequestParameter("rate", "10");
-		addRequestParameter("glCode", GLOCDE_ID);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testFailurePreviewWith_RateAndAmountEnteredWithoutFormula() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "LoanFee");
+        addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
+        addRequestParameter("weekRecurAfter", "2");
+        addRequestParameter("amount", "200");
+        addRequestParameter("rate", "10");
+        addRequestParameter("glCode", GLOCDE_ID);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		assertEquals(1, getErrorSize());
-		assertEquals("Fee Rate or Formula", 1, getErrorSize(FeeConstants.RATE_OR_AMOUNT));
-		verifyInputForward();
-	}
+        assertEquals(1, getErrorSize());
+        assertEquals("Fee Rate or Formula", 1, getErrorSize(FeeConstants.RATE_OR_AMOUNT));
+        verifyInputForward();
+    }
 
-	public void testFailurePreviewWith_AmountNotNull() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter("categoryType", FeeCategory.CENTER.getValue()
-				.toString());
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.MONTHLY
-				.getValue().toString());
-		addRequestParameter("monthRecurAfter", "2");
-		addRequestParameter("amount", "200");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testFailurePreviewWith_AmountNotNull() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter("categoryType", FeeCategory.CENTER.getValue().toString());
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.MONTHLY.getValue().toString());
+        addRequestParameter("monthRecurAfter", "2");
+        addRequestParameter("amount", "200");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		assertEquals(1, getErrorSize());
-		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
-		verifyInputForward();
-	}
+        assertEquals(1, getErrorSize());
+        assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+        verifyInputForward();
+    }
 
-	public void testSuccessfulPreview() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("feeName", "CustomerFee");
-		addRequestParameter("categoryType", FeeCategory.LOAN.getValue()
-				.toString());
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
-				.getValue().toString());
-		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("rate", "10");
-		addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue()
-				.toString());
-		addRequestParameter("glCode", GLOCDE_ID);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		assertEquals(0, getErrorSize());
-		verifyForward(ActionForwards.preview_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
+    public void testSuccessfulPreview() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("feeName", "CustomerFee");
+        addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
+        addRequestParameter("weekRecurAfter", "2");
+        addRequestParameter("rate", "10");
+        addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
+        addRequestParameter("glCode", GLOCDE_ID);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        assertEquals(0, getErrorSize());
+        verifyForward(ActionForwards.preview_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
 
-	public void testSuccessfulCreateOneTimeFee() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "load");
-		actionPerform();
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue()
-				.toString());
-		addRequestParameter("amount", "100");
-		addRequestParameter("feeName", "Customer_One_time");
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME
-				.getValue().toString());
-		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
-				.toString());
-		addRequestParameter("glCode", GLOCDE_ID);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.create_success.toString());
+    public void testSuccessfulCreateOneTimeFee() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
+        addRequestParameter("amount", "100");
+        addRequestParameter("feeName", "Customer_One_time");
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME.getValue().toString());
+        addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue().toString());
+        addRequestParameter("glCode", GLOCDE_ID);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.create_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm
-				.getFeeIdValue());
-		assertEquals("Customer_One_time", fee.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getId());
-		assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-		assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
-		assertTrue(fee.isOneTime());
-		assertFalse(fee.isCustomerDefaultFee());
-		assertTrue(fee.isActive());
-	}
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
+        assertEquals("Customer_One_time", fee.getFeeName());
+        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+        assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
+        assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+        assertTrue(fee.isOneTime());
+        assertFalse(fee.isCustomerDefaultFee());
+        assertTrue(fee.isActive());
+    }
 
-	public void testSuccessfulCreateOneTimeAdminFee() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue()
-				.toString());
-		addRequestParameter("amount", "100");
-		addRequestParameter("customerDefaultFee", "1");
-		addRequestParameter("feeName", "Customer_One_time_Default_Fee");
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME
-				.getValue().toString());
-		addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue()
-				.toString());
-		addRequestParameter("glCode", GLOCDE_ID);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
+    public void testSuccessfulCreateOneTimeAdminFee() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
+        addRequestParameter("amount", "100");
+        addRequestParameter("customerDefaultFee", "1");
+        addRequestParameter("feeName", "Customer_One_time_Default_Fee");
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.ONETIME.getValue().toString());
+        addRequestParameter("customerCharge", FeePayment.UPFRONT.getValue().toString());
+        addRequestParameter("glCode", GLOCDE_ID);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
-				(String) request.getSession().getAttribute(
-						"org.apache.struts.action.TOKEN"));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.create_success.toString());
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter("org.apache.struts.taglib.html.TOKEN", (String) request.getSession().getAttribute(
+                "org.apache.struts.action.TOKEN"));
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.create_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm
-				.getFeeIdValue());
-		assertEquals("Customer_One_time_Default_Fee", fee.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getId());
-		assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-		assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
-		assertTrue(fee.isOneTime());
-		assertTrue(fee.isCustomerDefaultFee());
-		assertTrue(fee.isActive());
-	}
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
+        assertEquals("Customer_One_time_Default_Fee", fee.getFeeName());
+        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+        assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
+        assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+        assertTrue(fee.isOneTime());
+        assertTrue(fee.isCustomerDefaultFee());
+        assertTrue(fee.isActive());
+    }
 
-	public void testSuccessfulCreatePeriodicFee() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue()
-				.toString());
-		addRequestParameter("amount", "100");
-		addRequestParameter("customerDefaultFee", "1");
-		addRequestParameter("feeName", "Customer Periodic Fee");
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
-				.getValue().toString());
-		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCode", GLOCDE_ID);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
+    public void testSuccessfulCreatePeriodicFee() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("categoryType", FeeCategory.ALLCUSTOMERS.getValue().toString());
+        addRequestParameter("amount", "100");
+        addRequestParameter("customerDefaultFee", "1");
+        addRequestParameter("feeName", "Customer Periodic Fee");
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
+        addRequestParameter("weekRecurAfter", "2");
+        addRequestParameter("glCode", GLOCDE_ID);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
-				(String) request.getSession().getAttribute(
-						"org.apache.struts.action.TOKEN"));
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.create_success.toString());
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter("org.apache.struts.taglib.html.TOKEN", (String) request.getSession().getAttribute(
+                "org.apache.struts.action.TOKEN"));
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.create_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm
-				.getFeeIdValue());
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
 
-		assertEquals("Customer Periodic Fee", fee.getFeeName());
-		assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType()
-				.getId());
-		assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
-		assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
-		assertTrue(fee.isPeriodic());
-		assertTrue(fee.isCustomerDefaultFee());
-		assertTrue(fee.isActive());
-	}
+        assertEquals("Customer Periodic Fee", fee.getFeeName());
+        assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), fee.getCategoryType().getId());
+        assertEquals(RateAmountFlag.AMOUNT, fee.getFeeType());
+        assertEquals(new Money("100.0"), ((AmountFeeBO) fee).getFeeAmount());
+        assertTrue(fee.isPeriodic());
+        assertTrue(fee.isCustomerDefaultFee());
+        assertTrue(fee.isActive());
+    }
 
-	public void testSuccessfulCreatePeriodicFeeWithFormula() throws Exception {
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", FeeCategory.LOAN.getValue()
-				.toString());
-		addRequestParameter("rate", "23");
-		addRequestParameter("amount", "");
-		addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue()
-				.toString());
-		addRequestParameter("feeName", "Loan_Periodic_Fee");
-		addRequestParameter("customerDefaultFee", "0");
-		addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC
-				.getValue().toString());
-		addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY
-				.getValue().toString());
-		addRequestParameter("weekRecurAfter", "2");
-		addRequestParameter("glCode", GLOCDE_ID);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
+    public void testSuccessfulCreatePeriodicFeeWithFormula() throws Exception {
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("categoryType", FeeCategory.LOAN.getValue().toString());
+        addRequestParameter("rate", "23");
+        addRequestParameter("amount", "");
+        addRequestParameter("feeFormula", FeeFormula.AMOUNT.getValue().toString());
+        addRequestParameter("feeName", "Loan_Periodic_Fee");
+        addRequestParameter("customerDefaultFee", "0");
+        addRequestParameter("feeFrequencyType", FeeFrequencyType.PERIODIC.getValue().toString());
+        addRequestParameter("feeRecurrenceType", RecurrenceType.WEEKLY.getValue().toString());
+        addRequestParameter("weekRecurAfter", "2");
+        addRequestParameter("glCode", GLOCDE_ID);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter("org.apache.struts.taglib.html.TOKEN",
-				(String) request.getSession().getAttribute(
-						"org.apache.struts.action.TOKEN"));
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.create_success.toString());
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter("org.apache.struts.taglib.html.TOKEN", (String) request.getSession().getAttribute(
+                "org.apache.struts.action.TOKEN"));
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.create_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm
-				.getFeeIdValue());
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
 
-		assertEquals("Loan_Periodic_Fee", fee.getFeeName());
-		assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
-		assertEquals(RateAmountFlag.RATE, fee.getFeeType());
-		assertEquals(23.0, ((RateFeeBO) fee).getRate(), DELTA);
+        assertEquals("Loan_Periodic_Fee", fee.getFeeName());
+        assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
+        assertEquals(RateAmountFlag.RATE, fee.getFeeType());
+        assertEquals(23.0, ((RateFeeBO) fee).getRate(), DELTA);
         assertEquals(((RateFeeBO) fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue(), DELTA);
-		assertTrue(fee.isPeriodic());
-		assertTrue(fee.isActive());
-	}
+        assertTrue(fee.isPeriodic());
+        assertTrue(fee.isActive());
+    }
 
-	public void testSuccessfulManage_AmountFee() throws Exception {
-		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100.0", FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.manage_success.toString());
+    public void testSuccessfulManage_AmountFee() throws Exception {
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100.0",
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.manage_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		assertEquals("100.0", actionForm.getAmount());
-		assertNull(actionForm.getRate());
-		assertNull(actionForm.getFeeFormula());
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        assertEquals("100.0", actionForm.getAmount());
+        assertNull(actionForm.getRate());
+        assertNull(actionForm.getFeeFormula());
 
-		assertEquals("The size of master data for status", 2,
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.STATUSLIST, request)).size());
-	}
+        assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+                FeeConstants.STATUSLIST, request)).size());
+    }
 
-	public void testSuccessfulManage_RateFee() throws Exception {
-		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
-				FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.manage_success.toString());
+    public void testSuccessfulManage_RateFee() throws Exception {
+        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.manage_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		assertEquals("24.0", actionForm.getRate());
-		assertEquals(FeeFormula.AMOUNT.getValue().toString(), actionForm
-				.getFeeFormula());
-		assertNull(actionForm.getAmount());
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        assertEquals("24.0", actionForm.getRate());
+        assertEquals(FeeFormula.AMOUNT.getValue().toString(), actionForm.getFeeFormula());
+        assertNull(actionForm.getAmount());
 
-		assertEquals("The size of master data for status", 2,
-				((List<MasterDataEntity>) SessionUtils.getAttribute(
-						FeeConstants.STATUSLIST, request)).size());
-	}
+        assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+                FeeConstants.STATUSLIST, request)).size());
+    }
 
-	public void testFailureEditPreviewForAmount() throws PageExpiredException {
-		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter("amount", "");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		assertEquals(1, getErrorSize());
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		verifyInputForward();
-	}
+    public void testFailureEditPreviewForAmount() throws PageExpiredException {
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter("amount", "");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        assertEquals(1, getErrorSize());
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        verifyInputForward();
+    }
 
-	public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
-		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter("amount", "0");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		assertEquals(1, getErrorSize());
-		assertEquals("Fee Amount", 1, getErrorSize("amount"));
-		verifyInputForward();
-	}
+    public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter("amount", "0");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        assertEquals(1, getErrorSize());
+        assertEquals("Fee Amount", 1, getErrorSize("amount"));
+        verifyInputForward();
+    }
 
-	public void testFailureEditPreviewForRate() throws Exception {
-		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
-				FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("rate", "");
-		actionPerform();
-		assertEquals(1, getErrorSize());
-		assertEquals("RateAndFormula", 1, getErrorSize("RateAndFormula"));
-		verifyInputForward();
-	}
+    public void testFailureEditPreviewForRate() throws Exception {
+        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("rate", "");
+        actionPerform();
+        assertEquals(1, getErrorSize());
+        assertEquals("RateAndFormula", 1, getErrorSize("RateAndFormula"));
+        verifyInputForward();
+    }
 
-	public void testSuccessfulEditPreview() throws Exception {
-		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testSuccessfulEditPreview() throws Exception {
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("amount", "200.0");
-		addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue()
-				.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.editpreview_success.toString());
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("amount", "200.0");
+        addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue().toString());
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.editpreview_success.toString());
 
-		FeeActionForm actionForm = (FeeActionForm) request.getSession()
-				.getAttribute("feeactionform");
-		assertEquals(new Money("200"), actionForm.getAmountValue());
-		assertEquals(FeeStatus.INACTIVE, actionForm.getFeeStatusValue());
-		assertNull(actionForm.getRate());
-		assertNull(actionForm.getFeeFormula());
-	}
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        assertEquals(new Money("200"), actionForm.getAmountValue());
+        assertEquals(FeeStatus.INACTIVE, actionForm.getFeeStatusValue());
+        assertNull(actionForm.getRate());
+        assertNull(actionForm.getFeeFormula());
+    }
 
-	public void testSuccessfulUpdate_AmountFee() throws Exception {
-		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testSuccessfulUpdate_AmountFee() throws Exception {
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("amount", "200.0");
-		addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue()
-				.toString());
-		actionPerform();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("amount", "200.0");
+        addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue().toString());
+        actionPerform();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.update_success.toString());
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.update_success.toString());
 
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-		assertFalse(fee.isActive());
-		assertEquals(new Money("200.0"), ((AmountFeeBO) fee).getFeeAmount());
-	}
-	public void testSuccessfulGetFee() throws Exception {
-		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "get");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("feeId",fee.getFeeId().toString());
-		actionPerform();
-		fee = (FeeBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-		assertNotNull(fee);
-	}
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+        assertFalse(fee.isActive());
+        assertEquals(new Money("200.0"), ((AmountFeeBO) fee).getFeeAmount());
+    }
 
-	public void testSuccessfulUpdate_RateFee() throws Exception {
-		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
-				FeePayment.UPFRONT);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+    public void testSuccessfulGetFee() throws Exception {
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "get");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("feeId", fee.getFeeId().toString());
+        actionPerform();
+        fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        assertNotNull(fee);
+    }
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "editPreview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("rate", "30");
-		actionPerform();
+    public void testSuccessfulUpdate_RateFee() throws Exception {
+        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
 
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.update_success.toString());
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "editPreview");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("rate", "30");
+        actionPerform();
 
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-		assertTrue(fee.isActive());
-		assertEquals(30.0, ((RateFeeBO) fee).getRate(), DELTA);
-	}
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.update_success.toString());
 
-	public void testSuccessfulViewAllFees() throws Exception {
-		StaticHibernateUtil.startTransaction();
-		fee = TestObjectFactory.createOneTimeRateFee("Group_Fee",
-				FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		fee1 = TestObjectFactory.createOneTimeRateFee("Customer_Fee",
-				FeeCategory.ALLCUSTOMERS, 20.0, FeeFormula.AMOUNT,
-				FeePayment.UPFRONT);
-		fee2 = TestObjectFactory.createOneTimeRateFee("Loan_Fee1",
-				FeeCategory.LOAN, 30.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		fee3 = TestObjectFactory
-				.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER, 40.0,
-						FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		setRequestPathInfo("/feeaction.do");
-		addRequestParameter("method", "viewAll");
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+        assertTrue(fee.isActive());
+        assertEquals(30.0, ((RateFeeBO) fee).getRate(), DELTA);
+    }
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.viewAll_success.toString());
-		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		List<FeeBO> customerFees = (List<FeeBO>) SessionUtils.getAttribute(
-				FeeConstants.CUSTOMER_FEES, request);
-		List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(
-				FeeConstants.PRODUCT_FEES, request);
-		assertEquals(3, customerFees.size());
-		assertEquals(1, productFees.size());
+    public void testSuccessfulViewAllFees() throws Exception {
+        StaticHibernateUtil.startTransaction();
+        fee = TestObjectFactory.createOneTimeRateFee("Group_Fee", FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT);
+        fee1 = TestObjectFactory.createOneTimeRateFee("Customer_Fee", FeeCategory.ALLCUSTOMERS, 20.0,
+                FeeFormula.AMOUNT, FeePayment.UPFRONT);
+        fee2 = TestObjectFactory.createOneTimeRateFee("Loan_Fee1", FeeCategory.LOAN, 30.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT);
+        fee3 = TestObjectFactory.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER, 40.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "viewAll");
 
-		assertEquals("Center_Fee", customerFees.get(0).getFeeName());
-		assertEquals("Customer_Fee", customerFees.get(1).getFeeName());
-		assertEquals("Group_Fee", customerFees.get(2).getFeeName());
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.viewAll_success.toString());
+        flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        List<FeeBO> customerFees = (List<FeeBO>) SessionUtils.getAttribute(FeeConstants.CUSTOMER_FEES, request);
+        List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(FeeConstants.PRODUCT_FEES, request);
+        assertEquals(3, customerFees.size());
+        assertEquals(1, productFees.size());
 
-		assertEquals("Loan_Fee1", productFees.get(0).getFeeName());
+        assertEquals("Center_Fee", customerFees.get(0).getFeeName());
+        assertEquals("Customer_Fee", customerFees.get(1).getFeeName());
+        assertEquals("Group_Fee", customerFees.get(2).getFeeName());
 
-		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
-		fee1 = (FeeBO) TestObjectFactory
-				.getObject(FeeBO.class, fee1.getFeeId());
-		fee2 = (FeeBO) TestObjectFactory
-				.getObject(FeeBO.class, fee2.getFeeId());
-		fee3 = (FeeBO) TestObjectFactory
-				.getObject(FeeBO.class, fee3.getFeeId());
-	}
+        assertEquals("Loan_Fee1", productFees.get(0).getFeeName());
 
-	public void testFeeCategory() throws Exception {
-		try {
-			FeeCategory.getFeeCategory(Short.valueOf((short)999));
-			fail();
-		} catch (PropertyNotFoundException pnfe) {
-		}
-	}
+        fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+        fee1 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee1.getFeeId());
+        fee2 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee2.getFeeId());
+        fee3 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee3.getFeeId());
+    }
+
+    public void testFeeCategory() throws Exception {
+        try {
+            FeeCategory.getFeeCategory(Short.valueOf((short) 999));
+            fail();
+        } catch (PropertyNotFoundException pnfe) {
+        }
+    }
 }

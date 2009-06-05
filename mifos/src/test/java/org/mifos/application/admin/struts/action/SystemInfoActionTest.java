@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.struts.action;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -30,32 +30,32 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 public class SystemInfoActionTest extends MifosMockStrutsTestCase {
-	public SystemInfoActionTest() throws SystemException, ApplicationException {
+    public SystemInfoActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestUtils.makeUser();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		ActivityContext ac = new ActivityContext((short) 227, userContext.getBranchId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-	}
 
-	@Override
-	protected void tearDown() throws Exception{
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestUtils.makeUser();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        ActivityContext ac = new ActivityContext((short) 227, userContext.getBranchId().shortValue());
+        request.getSession(false).setAttribute("ActivityContext", ac);
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+    }
 
-	public void testVerifyAdminForward() {
-		setRequestPathInfo("/systemInfoAction.do");
-		addRequestParameter("method", "load");
-		performNoErrors();
-		verifyForwardPath("/pages/application/admin/jsp/sysinfo.jsp");
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
+
+    public void testVerifyAdminForward() {
+        setRequestPathInfo("/systemInfoAction.do");
+        addRequestParameter("method", "load");
+        performNoErrors();
+        verifyForwardPath("/pages/application/admin/jsp/sysinfo.jsp");
+    }
 }

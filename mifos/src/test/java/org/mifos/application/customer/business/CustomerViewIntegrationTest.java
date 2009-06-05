@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -26,28 +26,25 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class CustomerViewIntegrationTest extends MifosIntegrationTest {
 
-	public CustomerViewIntegrationTest() throws SystemException, ApplicationException {
+    public CustomerViewIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testCustomerView() throws Exception {
-		CustomerView customerView = new CustomerView(Integer.valueOf("1"),
-				"Customer", "001global", Short.valueOf("2"));
+        CustomerView customerView = new CustomerView(Integer.valueOf("1"), "Customer", "001global", Short.valueOf("2"));
 
-		assertEquals(1, customerView.getCustomerId().intValue());
-		assertEquals("Customer", customerView.getDisplayName());
-		assertEquals("001global", customerView.getGlobalCustNum());
-		assertEquals(2, customerView.getStatusId().shortValue());
+        assertEquals(1, customerView.getCustomerId().intValue());
+        assertEquals("Customer", customerView.getDisplayName());
+        assertEquals("001global", customerView.getGlobalCustNum());
+        assertEquals(2, customerView.getStatusId().shortValue());
 
-		CustomerView customerView1 = new CustomerView(Integer.valueOf("1"),
-				"Customer", "001global", Short.valueOf("2"),
-				Short.valueOf("2"), Integer.valueOf("1"), Short.valueOf("2"),
-				Short.valueOf("3"));
-		assertEquals(2, customerView1.getCustomerLevelId().shortValue());
-		assertEquals(2, customerView1.getOfficeId().shortValue());
-		assertEquals(3, customerView1.getPersonnelId().shortValue());
-		assertEquals(1, customerView1.getVersionNo().intValue());
+        CustomerView customerView1 = new CustomerView(Integer.valueOf("1"), "Customer", "001global",
+                Short.valueOf("2"), Short.valueOf("2"), Integer.valueOf("1"), Short.valueOf("2"), Short.valueOf("3"));
+        assertEquals(2, customerView1.getCustomerLevelId().shortValue());
+        assertEquals(2, customerView1.getOfficeId().shortValue());
+        assertEquals(3, customerView1.getPersonnelId().shortValue());
+        assertEquals(1, customerView1.getVersionNo().intValue());
 
-	}
+    }
 
 }

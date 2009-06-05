@@ -17,19 +17,16 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.mifos.application.customer.client.business.service.StandardClientServiceIntegrationTest;
- 
+
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-    StandardClientServiceIntegrationTest.class
-})
+@Suite.SuiteClasses( { StandardClientServiceIntegrationTest.class })
 public class IntegrationTests {
-    // the class remains completely empty, 
+    // the class remains completely empty,
     // being used only as a holder for the above annotations
 }
-

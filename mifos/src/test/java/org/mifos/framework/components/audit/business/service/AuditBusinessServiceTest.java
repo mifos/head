@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.business.service;
 
 import java.sql.Date;
@@ -35,51 +35,45 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AuditBusinessServiceTest extends MifosIntegrationTest{
+public class AuditBusinessServiceTest extends MifosIntegrationTest {
 
-	
-	public AuditBusinessServiceTest() throws SystemException, ApplicationException {
+    public AuditBusinessServiceTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testGetAuditLogRecords() throws Exception {
-		AuditLog auditLog = new AuditLog(1, (short)2, "Mifos", 
-				new Date(System.currentTimeMillis()), (short)3);
-		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
-		AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1",
-				"test_1", "new_test_1", auditLog);
-		auditLogRecords.add(auditLogRecord);
-		auditLog.addAuditLogRecords(auditLogRecords);
-		auditLog.save();
-		AuditBusinessService auditBusinessService = new AuditBusinessService();
-		List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short)2,1);
-		assertEquals(1,auditLogViewList.size());
-		auditLog = getAuditLog(1, (short)2);
-		TestObjectFactory.cleanUp(auditLog);
-	}
-	
-	public void testGetAuditLogRecordsPasswordChange() throws Exception {
-		AuditLog auditLog = new AuditLog(1, (short)2, "Mifos", 
-				new Date(System.currentTimeMillis()), (short)3);
-		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
-		AuditLogRecord auditLogRecord = new AuditLogRecord("Password",
-				"test_1", "new_test_1", auditLog);
-		auditLogRecords.add(auditLogRecord);
-		auditLog.addAuditLogRecords(auditLogRecords);
-		auditLog.save();
-		AuditBusinessService auditBusinessService = new AuditBusinessService();
-		List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short)2,1);
-		assertEquals(1,auditLogViewList.size());
-		AuditLogView auditLogView = auditLogViewList.get(0);
-		assertEquals(AuditConstants.HIDDEN_PASSWORD,auditLogView.getOldValue());
-		assertEquals(AuditConstants.HIDDEN_PASSWORD,auditLogView.getNewValue());
-		auditLog = getAuditLog(1, (short)2);
-		TestObjectFactory.cleanUp(auditLog);
-	}
-	
-	private AuditLog getAuditLog(Integer entityId, Short entityType) {
-		return (AuditLog) StaticHibernateUtil.getSessionTL().createQuery(
-				"from AuditLog al where al.entityId=" + entityId
-						+ " and al.entityType=" + entityType).uniqueResult();
-	}
+        AuditLog auditLog = new AuditLog(1, (short) 2, "Mifos", new Date(System.currentTimeMillis()), (short) 3);
+        Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
+        AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
+        auditLogRecords.add(auditLogRecord);
+        auditLog.addAuditLogRecords(auditLogRecords);
+        auditLog.save();
+        AuditBusinessService auditBusinessService = new AuditBusinessService();
+        List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short) 2, 1);
+        assertEquals(1, auditLogViewList.size());
+        auditLog = getAuditLog(1, (short) 2);
+        TestObjectFactory.cleanUp(auditLog);
+    }
+
+    public void testGetAuditLogRecordsPasswordChange() throws Exception {
+        AuditLog auditLog = new AuditLog(1, (short) 2, "Mifos", new Date(System.currentTimeMillis()), (short) 3);
+        Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
+        AuditLogRecord auditLogRecord = new AuditLogRecord("Password", "test_1", "new_test_1", auditLog);
+        auditLogRecords.add(auditLogRecord);
+        auditLog.addAuditLogRecords(auditLogRecords);
+        auditLog.save();
+        AuditBusinessService auditBusinessService = new AuditBusinessService();
+        List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short) 2, 1);
+        assertEquals(1, auditLogViewList.size());
+        AuditLogView auditLogView = auditLogViewList.get(0);
+        assertEquals(AuditConstants.HIDDEN_PASSWORD, auditLogView.getOldValue());
+        assertEquals(AuditConstants.HIDDEN_PASSWORD, auditLogView.getNewValue());
+        auditLog = getAuditLog(1, (short) 2);
+        TestObjectFactory.cleanUp(auditLog);
+    }
+
+    private AuditLog getAuditLog(Integer entityId, Short entityType) {
+        return (AuditLog) StaticHibernateUtil.getSessionTL().createQuery(
+                "from AuditLog al where al.entityId=" + entityId + " and al.entityType=" + entityType).uniqueResult();
+    }
 }

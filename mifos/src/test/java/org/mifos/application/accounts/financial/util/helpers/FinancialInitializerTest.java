@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 import static org.junit.Assert.assertEquals;
@@ -34,35 +34,34 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class FinancialInitializerTest {
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(FinancialInitializerTest.class);
-	}
-	
-	@BeforeClass
-	public static void setUpBeforeClass() throws SystemException, ApplicationException {
-		new TestCaseInitializer().initialize();
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(FinancialInitializerTest.class);
+    }
 
-	@Test
-	public void testAssetsCategoryIsCached() throws Exception {
-		String assetsGlCode = "10000";
-		COABO account1 = ChartOfAccountsCache.get(assetsGlCode);
-		assertEquals(GLCategoryType.ASSET, account1.getCategoryType());
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws SystemException, ApplicationException {
+        new TestCaseInitializer().initialize();
+    }
 
-	@Test
-	public void testFinancialActionInitializer() throws FinancialException {
-		FinancialInitializer.initalizeFinancialAction();
-		FinancialActionBO financialActionPrincipal = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
+    @Test
+    public void testAssetsCategoryIsCached() throws Exception {
+        String assetsGlCode = "10000";
+        COABO account1 = ChartOfAccountsCache.get(assetsGlCode);
+        assertEquals(GLCategoryType.ASSET, account1.getCategoryType());
+    }
 
-		assertEquals(financialActionPrincipal.getId().shortValue(),
-				FinancialActionConstants.PRINCIPALPOSTING.value);
-	}
+    @Test
+    public void testFinancialActionInitializer() throws FinancialException {
+        FinancialInitializer.initalizeFinancialAction();
+        FinancialActionBO financialActionPrincipal = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
-	@Test(expected=FinancialException.class)
-	public void testCOACacherException() throws Exception {
-		ChartOfAccountsCache.get("-1");
-	}
+        assertEquals(financialActionPrincipal.getId().shortValue(), FinancialActionConstants.PRINCIPALPOSTING.value);
+    }
+
+    @Test(expected = FinancialException.class)
+    public void testCOACacherException() throws Exception {
+        ChartOfAccountsCache.get("-1");
+    }
 
 }

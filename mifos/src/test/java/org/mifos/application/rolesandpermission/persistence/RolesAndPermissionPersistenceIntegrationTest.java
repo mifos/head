@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.rolesandpermission.persistence;
 
 import java.util.List;
@@ -31,30 +31,28 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public RolesAndPermissionPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public RolesAndPermissionPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testGetRole() throws Exception {
-		RoleBO role = new RolesPermissionsPersistence().getRole("Admin");
-		assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE,
-			role.getActivities().size());
-	}
+        RoleBO role = new RolesPermissionsPersistence().getRole("Admin");
+        assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
+    }
 
-	public void testGetActivities() throws Exception{
-		List<ActivityEntity> activities = new RolesPermissionsPersistence().getActivities();
-		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
-	}
+    public void testGetActivities() throws Exception {
+        List<ActivityEntity> activities = new RolesPermissionsPersistence().getActivities();
+        assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
+    }
 
-	public void testGetRoles() throws Exception{
-		List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
-		assertEquals(2, roles.size());
-	}
+    public void testGetRoles() throws Exception {
+        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
+        assertEquals(2, roles.size());
+    }
 
-	public void testGetRoleForGivenId() throws Exception {
-		RoleBO role = new RolesPermissionsPersistence().getRole((short)1);
-		assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE,
-			role.getActivities().size());
-	}
+    public void testGetRoleForGivenId() throws Exception {
+        RoleBO role = new RolesPermissionsPersistence().getRole((short) 1);
+        assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
+    }
 
 }

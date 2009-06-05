@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productsmix.struts.action;
 
 import java.sql.Date;
@@ -60,351 +60,331 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class ProductMixActionTest extends MifosMockStrutsTestCase {
 
-	public ProductMixActionTest() throws SystemException, ApplicationException {
+    public ProductMixActionTest() throws SystemException, ApplicationException {
         super();
     }
+
     private LoanOfferingBO loanOffering;
-	private LoanOfferingBO loanOffering1;
-	private SavingsOfferingBO savingProduct;
-	private SavingsOfferingBO savingProduct2;
-	private PrdOfferingBO productOffering;
-	MeetingBO meeting;
-	MeetingBO meeting1;
-	SavingsOfferingBO saving1;
-	SavingsOfferingBO saving2;
-	ProductMixBO prdmix;
-	
+    private LoanOfferingBO loanOffering1;
+    private SavingsOfferingBO savingProduct;
+    private SavingsOfferingBO savingProduct2;
+    private PrdOfferingBO productOffering;
+    MeetingBO meeting;
+    MeetingBO meeting1;
+    SavingsOfferingBO saving1;
+    SavingsOfferingBO saving2;
+    ProductMixBO prdmix;
 
-	private String flowKey;
+    private String flowKey;
 
-	UserContext userContext = null;
+    UserContext userContext = null;
 
+    @Override
+    protected void tearDown() throws Exception {
+        /*
+         * List<ProductMixBO> prdmixBO = (List<ProductMixBO>)
+         * StaticHibernateUtil.getSessionTL().get(
+         * ProductMixBO.class,productOffering.getPrdOfferingId());
+         */
 
-	@Override
-	protected void tearDown() throws Exception {
-		/*List<ProductMixBO> prdmixBO = (List<ProductMixBO>) StaticHibernateUtil.getSessionTL().get(
-				ProductMixBO.class,productOffering.getPrdOfferingId());*/
-		
-		try {
-			TestObjectFactory.removeObject(loanOffering);
-			TestObjectFactory.removeObject(loanOffering1);
-			TestObjectFactory.removeObject(savingProduct);
-			TestObjectFactory.removeObject(savingProduct2);
+        try {
+            TestObjectFactory.removeObject(loanOffering);
+            TestObjectFactory.removeObject(loanOffering1);
+            TestObjectFactory.removeObject(savingProduct);
+            TestObjectFactory.removeObject(savingProduct2);
 
-			// HACK: reload the productOffering in the new session to avoid 
-			// org.hibernate.StaleObjectStateException issues
-			productOffering = (PrdOfferingBO)StaticHibernateUtil.getSessionTL().get(PrdOfferingBO.class, productOffering.getPrdOfferingId());
-			TestObjectFactory.removeObject(productOffering);
-			TestObjectFactory.removeObject(prdmix);	
-			TestObjectFactory.removeObject(saving1);
-			TestObjectFactory.removeObject(saving2);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
+            // HACK: reload the productOffering in the new session to avoid
+            // org.hibernate.StaleObjectStateException issues
+            productOffering = (PrdOfferingBO) StaticHibernateUtil.getSessionTL().get(PrdOfferingBO.class,
+                    productOffering.getPrdOfferingId());
+            TestObjectFactory.removeObject(productOffering);
+            TestObjectFactory.removeObject(prdmix);
+            TestObjectFactory.removeObject(saving1);
+            TestObjectFactory.removeObject(saving2);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
 
-		super.tearDown();
-	}
+        super.tearDown();
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
         userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		ActivityContext ac = TestObjectFactory.getActivityContext();
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		flowKey = createFlow(request, ProductMixAction.class);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-			
-		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
-		loanOffering1 = createLoanOfferingBO("Loan Offering1",
-		"LOA1");
-		productOffering= createLoanOfferingBO("Loan Offering as product Offring","PO");
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        ActivityContext ac = TestObjectFactory.getActivityContext();
+        request.getSession(false).setAttribute("ActivityContext", ac);
+        flowKey = createFlow(request, ProductMixAction.class);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
-		createSavingsOffering();
-	}
-	public void testCreate() throws Exception {
-		
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "loadDefaultAllowedProduct");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering,
-				request);
-		
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.OLDNOTALLOWEDPRODUCTLIST, null, request);
-		addRequestParameter("prdOfferingId", productOffering.getPrdOfferingId().toString());
-		addRequestParameter("productInstance", productOffering.getPrdOfferingId().toString());
-		addRequestParameter("productType", productOffering.getPrdType().getProductTypeID().toString());
+        loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        loanOffering1 = createLoanOfferingBO("Loan Offering1", "LOA1");
+        productOffering = createLoanOfferingBO("Loan Offering as product Offring", "PO");
 
-		actionPerform();
-		List<PrdOfferingBO> allowedPrdOfferingList = (List<PrdOfferingBO>) SessionUtils
-		.getAttribute(ProductDefinitionConstants.ALLOWEDPRODUCTLIST,
-				request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.NOTALLOWEDPRODUCTLIST, allowedPrdOfferingList,
-				request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.OLDNOTALLOWEDPRODUCTLIST, null, request);
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering,
-				request);
-		addRequestParameter("productInstance",productOffering.getPrdOfferingId().toString() );
+        createSavingsOffering();
+    }
 
-		actionPerform();
-		
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.create_success.toString());
-		cleanUpAfterCreate();
-		StaticHibernateUtil.closeSession();
-	}
-	
-	private void cleanUpAfterCreate() throws PersistenceException,
-			ProductDefinitionException {
-		StaticHibernateUtil.startTransaction();
-		List<ProductMixBO> productList = (new ProductMixPersistence()
-				.getAllProductMix());
-		for (ProductMixBO tempPrdMix : productList) {
-			tempPrdMix.delete();
-		}
-		StaticHibernateUtil.commitTransaction();
-	}
+    public void testCreate() throws Exception {
 
-	public void testGet_success() throws Exception {
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering,
-				request);
-		addRequestParameter("prdOfferingId", savingProduct.getPrdOfferingId().toString());
-		addRequestParameter("productType", savingProduct.getPrdType().getProductTypeID().toString());
-		
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "get");
-		
-		actionPerform();
-		actionPerform();		
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.get_success.toString());
-		
-	}
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "loadDefaultAllowedProduct");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering, request);
 
-	public void testLoad() throws Exception {
-		
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "load");
-		ProductMixActionForm productMixActionForm = (ProductMixActionForm) request
-		.getSession().getAttribute("productMixActionForm");
-		assertNull(productMixActionForm);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.OLDNOTALLOWEDPRODUCTLIST, null, request);
+        addRequestParameter("prdOfferingId", productOffering.getPrdOfferingId().toString());
+        addRequestParameter("productInstance", productOffering.getPrdOfferingId().toString());
+        addRequestParameter("productType", productOffering.getPrdType().getProductTypeID().toString());
 
-		actionPerform();
-		List<ProductTypeEntity>  productTypeList = (List<ProductTypeEntity>)  
-		SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,request);
-		
-		assertNotNull(productTypeList);
-		
-		assertTrue(""+productTypeList.size(),1==productTypeList.size());
-		productMixActionForm = (ProductMixActionForm) request
-		.getSession().getAttribute("productMixActionForm");
+        actionPerform();
+        List<PrdOfferingBO> allowedPrdOfferingList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.ALLOWEDPRODUCTLIST, request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.NOTALLOWEDPRODUCTLIST, allowedPrdOfferingList,
+                request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.OLDNOTALLOWEDPRODUCTLIST, null, request);
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering, request);
+        addRequestParameter("productInstance", productOffering.getPrdOfferingId().toString());
 
-		assertNotNull(productMixActionForm);
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.load_success.toString());
-	}
+        actionPerform();
 
-	public void testSuccessfullLoadParent_Loan() throws Exception {
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "loadParent");
-		
-		addRequestParameter("productType", ProductType.LOAN.getValue().toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.create_success.toString());
+        cleanUpAfterCreate();
+        StaticHibernateUtil.closeSession();
+    }
 
-		actionPerform();
-		/*List<ProductTypeEntity>  productTypeList = (List<ProductTypeEntity>)  
-		SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,request);
-		assertNotNull(productTypeList);*/
-		ProductMixActionForm productMixActionForm = (ProductMixActionForm) request
-		.getSession().getAttribute("productMixActionForm");
-		assertNotNull(productMixActionForm);
-		List<LoanOfferingBO> loanOffInstance = (List<LoanOfferingBO>) SessionUtils
-				.getAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST,
-						request);
+    private void cleanUpAfterCreate() throws PersistenceException, ProductDefinitionException {
+        StaticHibernateUtil.startTransaction();
+        List<ProductMixBO> productList = (new ProductMixPersistence().getAllProductMix());
+        for (ProductMixBO tempPrdMix : productList) {
+            tempPrdMix.delete();
+        }
+        StaticHibernateUtil.commitTransaction();
+    }
 
-		assertTrue(3 == loanOffInstance.size());	
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.load_success.toString());
-		
-	}
-	
-	
-	public void testSuccessfullLoadParent_Savings() throws Exception {
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "loadParent");
-		
-		addRequestParameter("productType", ProductType.SAVINGS.getValue().toString());
+    public void testGet_success() throws Exception {
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering, request);
+        addRequestParameter("prdOfferingId", savingProduct.getPrdOfferingId().toString());
+        addRequestParameter("productType", savingProduct.getPrdType().getProductTypeID().toString());
 
-		actionPerform();
-		List<SavingsOfferingBO> savingOffInstance = (List<SavingsOfferingBO>) SessionUtils
-		.getAttribute(ProductDefinitionConstants.PRODUCTINSTANCELIST,
-				request);
-	
-		assertNotNull(savingOffInstance);	
-		SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,request);
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "get");
 
-		ProductMixActionForm productMixActionForm = (ProductMixActionForm) request
-		.getSession().getAttribute("productMixActionForm");
-		assertNotNull(productMixActionForm);
+        actionPerform();
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.get_success.toString());
 
-		assertTrue(1 == savingOffInstance.size());	
+    }
 
-		assertNotNull(savingOffInstance);
+    public void testLoad() throws Exception {
 
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.load_success.toString());
-		
-	}
-	
-	public void testViewAllProductMix() throws Exception {
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "load");
+        ProductMixActionForm productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute(
+                "productMixActionForm");
+        assertNull(productMixActionForm);
 
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "viewAllProductMix");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		UserContext userContext2 = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		assertEquals(userContext, userContext2);
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.viewAllProductMix_success.toString());
-		
-	}
-	
-	public void testGet() throws Exception {
+        actionPerform();
+        List<ProductTypeEntity> productTypeList = (List<ProductTypeEntity>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.PRODUCTTYPELIST, request);
 
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering,
-				request);
-		addRequestParameter("prdOfferingId", savingProduct.getPrdOfferingId().toString());
-		addRequestParameter("productType", savingProduct.getPrdType().getProductTypeID().toString());
-		
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "get");
-		
-		actionPerform();
-		List<PrdOfferingBO> allPrdOfferingList=(List<PrdOfferingBO> )SessionUtils.getAttribute(ProductDefinitionConstants.ALLOWEDPRODUCTLIST,
-				 request);
-		assertNotNull(allPrdOfferingList);
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.get_success.toString());
-		
-	}
-	
-	public void testManage() throws Exception {
-		createNotAllowedProduct("Eddikhar","Edk");
+        assertNotNull(productTypeList);
 
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "manage");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-				
-		addRequestParameter("productInstance", savingProduct.getPrdOfferingId().toString());
-		addRequestParameter("productType", savingProduct.getPrdType().getProductTypeID().toString());
+        assertTrue("" + productTypeList.size(), 1 == productTypeList.size());
+        productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute("productMixActionForm");
 
-		actionPerform();
-	/*	List<PrdOfferingBO> productMixList = (List<PrdOfferingBO>) SessionUtils
-		.getAttribute(ProductDefinitionConstants.PRODUCTMIXLIST,
-				request);
-		
-		assertNotNull(productMixList);
-		
-		assertTrue(1 == productMixList.size());	
-*/
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.manage_success.toString());
-		
-	}
+        assertNotNull(productMixActionForm);
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.load_success.toString());
+    }
 
-	public void testLoadDefaultAllowedProduct() throws Exception {
-		createNotAllowedProduct("epargne1","zz");
+    public void testSuccessfullLoadParent_Loan() throws Exception {
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "loadParent");
 
-		setRequestPathInfo("/productMixAction.do");
-		addRequestParameter("method", "loadDefaultAllowedProduct");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering,
-				request);
-		addRequestParameter("productType", ProductType.LOAN.getValue().toString());
-		addRequestParameter("productInstance", "2");
-		
-		actionPerform();
-		List<PrdOfferingBO> allowedPrdOfferingList = (List<PrdOfferingBO>) SessionUtils
-		.getAttribute(ProductDefinitionConstants.ALLOWEDPRODUCTLIST,
-				request);
-		List<PrdOfferingBO> allPrdOfferingList = (List<PrdOfferingBO>) SessionUtils
-		.getAttribute(ProductDefinitionConstants.PRODUCTOFFERINGLIST,
-				request);
-		
-		assertNotNull(allowedPrdOfferingList);
-		assertNotNull(allPrdOfferingList);	
-		SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,request);
+        addRequestParameter("productType", ProductType.LOAN.getValue().toString());
 
-		assertTrue(3 == allowedPrdOfferingList.size());	
+        actionPerform();
+        /*
+         * List<ProductTypeEntity> productTypeList = (List<ProductTypeEntity>)
+         * SessionUtils
+         * .getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,request);
+         * assertNotNull(productTypeList);
+         */
+        ProductMixActionForm productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute(
+                "productMixActionForm");
+        assertNotNull(productMixActionForm);
+        List<LoanOfferingBO> loanOffInstance = (List<LoanOfferingBO>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.PRODUCTINSTANCELIST, request);
 
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.load_success.toString());
-		
-	}
-	
-	
-	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
-			String shortName) {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
-		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				ApplicableTo.GROUPS, startDate, 
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, frequency);
-	}
+        assertTrue(3 == loanOffInstance.size());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.load_success.toString());
 
-	private void createSavingsOffering() throws Exception {
-		String prdName = "Eddikhar";
-		String prdShortName = "SSK";
-		createSavingsOfferingBO(prdName, prdShortName);
+    }
 
-	}
-	private SavingsOfferingBO createSavingsOfferingBO(String productName,
-			String shortName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingProduct = TestObjectFactory.createSavingsProduct(
-			productName, shortName, ApplicableTo.CLIENTS, 
-			new Date(System.currentTimeMillis()), 
-			PrdStatus.SAVINGS_ACTIVE, 300.0, 
-			RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
-			200.0, 200.0, 
-			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
-			meetingIntCalc, meetingIntPost);
-		return savingProduct;
-	}
-	private SavingsOfferingBO createNotAllowedProduct(String productName,
-			String shortName) throws PersistenceException {
-		
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		meeting1 = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1",meeting,meeting);
-		saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2",meeting1,meeting1);
-		prdmix= TestObjectFactory.createAllowedProductsMix(saving1,saving2);		
+    public void testSuccessfullLoadParent_Savings() throws Exception {
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "loadParent");
 
+        addRequestParameter("productType", ProductType.SAVINGS.getValue().toString());
 
-		return savingProduct2;
-	}
+        actionPerform();
+        List<SavingsOfferingBO> savingOffInstance = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.PRODUCTINSTANCELIST, request);
+
+        assertNotNull(savingOffInstance);
+        SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, request);
+
+        ProductMixActionForm productMixActionForm = (ProductMixActionForm) request.getSession().getAttribute(
+                "productMixActionForm");
+        assertNotNull(productMixActionForm);
+
+        assertTrue(1 == savingOffInstance.size());
+
+        assertNotNull(savingOffInstance);
+
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.load_success.toString());
+
+    }
+
+    public void testViewAllProductMix() throws Exception {
+
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "viewAllProductMix");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        UserContext userContext2 = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
+                .getSession());
+        assertEquals(userContext, userContext2);
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.viewAllProductMix_success.toString());
+
+    }
+
+    public void testGet() throws Exception {
+
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering, request);
+        addRequestParameter("prdOfferingId", savingProduct.getPrdOfferingId().toString());
+        addRequestParameter("productType", savingProduct.getPrdType().getProductTypeID().toString());
+
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "get");
+
+        actionPerform();
+        List<PrdOfferingBO> allPrdOfferingList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.ALLOWEDPRODUCTLIST, request);
+        assertNotNull(allPrdOfferingList);
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.get_success.toString());
+
+    }
+
+    public void testManage() throws Exception {
+        createNotAllowedProduct("Eddikhar", "Edk");
+
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        addRequestParameter("productInstance", savingProduct.getPrdOfferingId().toString());
+        addRequestParameter("productType", savingProduct.getPrdType().getProductTypeID().toString());
+
+        actionPerform();
+        /*
+         * List<PrdOfferingBO> productMixList = (List<PrdOfferingBO>)
+         * SessionUtils .getAttribute(ProductDefinitionConstants.PRODUCTMIXLIST,
+         * request);
+         * 
+         * assertNotNull(productMixList);
+         * 
+         * assertTrue(1 == productMixList.size());
+         */
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.manage_success.toString());
+
+    }
+
+    public void testLoadDefaultAllowedProduct() throws Exception {
+        createNotAllowedProduct("epargne1", "zz");
+
+        setRequestPathInfo("/productMixAction.do");
+        addRequestParameter("method", "loadDefaultAllowedProduct");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, productOffering, request);
+        addRequestParameter("productType", ProductType.LOAN.getValue().toString());
+        addRequestParameter("productInstance", "2");
+
+        actionPerform();
+        List<PrdOfferingBO> allowedPrdOfferingList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.ALLOWEDPRODUCTLIST, request);
+        List<PrdOfferingBO> allPrdOfferingList = (List<PrdOfferingBO>) SessionUtils.getAttribute(
+                ProductDefinitionConstants.PRODUCTOFFERINGLIST, request);
+
+        assertNotNull(allowedPrdOfferingList);
+        assertNotNull(allPrdOfferingList);
+        SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, request);
+
+        assertTrue(3 == allowedPrdOfferingList.size());
+
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.load_success.toString());
+
+    }
+
+    private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
+        Date startDate = new Date(System.currentTimeMillis());
+        MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
+                LOAN_INSTALLMENT, MONDAY));
+        return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency);
+    }
+
+    private void createSavingsOffering() throws Exception {
+        String prdName = "Eddikhar";
+        String prdShortName = "SSK";
+        createSavingsOfferingBO(prdName, prdShortName);
+
+    }
+
+    private SavingsOfferingBO createSavingsOfferingBO(String productName, String shortName) {
+        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        savingProduct = TestObjectFactory.createSavingsProduct(productName, shortName, ApplicableTo.CLIENTS, new Date(
+                System.currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL,
+                1.2, 200.0, 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc,
+                meetingIntPost);
+        return savingProduct;
+    }
+
+    private SavingsOfferingBO createNotAllowedProduct(String productName, String shortName) throws PersistenceException {
+
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        meeting1 = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        saving1 = ProductMixTestHelper.createSavingOffering("Savings Product1", "S1", meeting, meeting);
+        saving2 = ProductMixTestHelper.createSavingOffering("Savings Product2", "S2", meeting1, meeting1);
+        prdmix = TestObjectFactory.createAllowedProductsMix(saving1, saving2);
+
+        return savingProduct2;
+    }
 
 }

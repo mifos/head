@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business.service;
 
 import java.io.IOException;
@@ -58,10 +58,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 
-@ContextConfiguration(locations={"classpath:integration-test-context.xml"})
+@ContextConfiguration(locations = { "classpath:integration-test-context.xml" })
 public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBase {
 
-	private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
+    private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
     private StandardClientService clientService;
     private int client1Id = 123456;
     private AttendanceType client1Attendance = AttendanceType.PRESENT;
@@ -71,12 +71,12 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
 
     @Autowired
     private DriverManagerDataSource dataSource;
-    
+
     @Autowired
     private DatabaseTestUtils databaseTestUtils;
 
     @Before
-	public void setUp() throws Exception {
+    public void setUp() throws Exception {
         initializeMifosSoftware();
 
         clientService = new StandardClientService();
@@ -84,11 +84,11 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         clientService.setClientAttendanceDao(clientAttendanceDao);
 
         databaseTestUtils.deleteDataFromTables(dataSource, CUSTOMER_ATTENDANCE);
-	}
+    }
 
     @After
     public void tearDown() throws Exception {
-	}
+    }
 
     @Test
     public void testGetClientAttendanceTwoIds() throws Exception {
@@ -96,7 +96,8 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
         clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, null));
         clientAttendanceDtos.add(getClientAttendanceDto(client2Id, meetingDate, null));
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService.getClientAttendance(clientAttendanceDtos);
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService
+                .getClientAttendance(clientAttendanceDtos);
         Assert.assertEquals(2, clientAttendance.size());
         Assert.assertEquals(client1Id, (int) clientAttendance.get(client1Id).getClientId());
         Assert.assertEquals(client1Attendance, clientAttendance.get(client1Id).getAttendance());
@@ -112,7 +113,7 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         clientService.setClientAttendance(clientAttendanceDtos);
         databaseTestUtils.verifyTable(getAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
     }
-    
+
     @Test
     public void testSetClientAttendanceReplaceOneId() throws Exception {
         initializeData();
@@ -120,11 +121,12 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         AttendanceType expectedAttendance = AttendanceType.APPROVED_LEAVE;
         clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, expectedAttendance));
         clientService.setClientAttendance(clientAttendanceDtos);
-        Map<Integer, ClientAttendanceDto> actualClientAttendanceDtos = clientService.getClientAttendance(clientAttendanceDtos);
+        Map<Integer, ClientAttendanceDto> actualClientAttendanceDtos = clientService
+                .getClientAttendance(clientAttendanceDtos);
         Assert.assertEquals(expectedAttendance, actualClientAttendanceDtos.get(client1Id).getAttendance());
         databaseTestUtils.verifyTable(getReplacedAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
     }
-    
+
     @Test
     public void testGetBulkEntryClientAttendance() throws SystemException, ApplicationException {
 
@@ -146,40 +148,45 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        List<ClientAttendanceDto> clientAttendanceDtos = (List<ClientAttendanceDto>) clientService.getClientAttendanceList(
-                meetingDate, client.getOffice().getOfficeId());
+        List<ClientAttendanceDto> clientAttendanceDtos = (List<ClientAttendanceDto>) clientService
+                .getClientAttendanceList(meetingDate, client.getOffice().getOfficeId());
 
         Assert.assertEquals(clientAttendanceDtos.size(), 1);
 
     }
 
-    
     private ClientAttendanceDto getClientAttendanceDto(int clientId, LocalDate meetingDate, AttendanceType attendance) {
         return new ClientAttendanceDto(clientId, meetingDate, attendance);
     }
-    
+
     private void initializeMifosSoftware() {
         MifosLogManager.configureLogging();
         DatabaseSetup.initializeHibernate();
     }
-    
+
     private void initializeData() throws DataSetException, IOException, SQLException, DatabaseUnitException {
         getAttendanceDataSet().insert(dataSource);
     }
 
     private SimpleDataSet getAttendanceDataSet() {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
-        attendanceDataSet.row("CUSTOMER", "CUSTOMER_ID=123456", "CUSTOMER_LEVEL_ID=1", "VERSION_NO=1", "DISCRIMINATOR=CLIENT");
-        attendanceDataSet.row("CUSTOMER", "CUSTOMER_ID=123457", "CUSTOMER_LEVEL_ID=1", "VERSION_NO=1", "DISCRIMINATOR=CLIENT");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123456", "ATTENDANCE=1");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123457", "ATTENDANCE=2");
+        attendanceDataSet.row("CUSTOMER", "CUSTOMER_ID=123456", "CUSTOMER_LEVEL_ID=1", "VERSION_NO=1",
+                "DISCRIMINATOR=CLIENT");
+        attendanceDataSet.row("CUSTOMER", "CUSTOMER_ID=123457", "CUSTOMER_LEVEL_ID=1", "VERSION_NO=1",
+                "DISCRIMINATOR=CLIENT");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123456",
+                "ATTENDANCE=1");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123457",
+                "ATTENDANCE=2");
         return attendanceDataSet;
     }
 
     private SimpleDataSet getReplacedAttendanceDataSet() {
         SimpleDataSet attendanceDataSet = new SimpleDataSet();
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123456", "ATTENDANCE=3");
-        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123457", "ATTENDANCE=2");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=1", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123456",
+                "ATTENDANCE=3");
+        attendanceDataSet.row(CUSTOMER_ATTENDANCE, "ID=2", "MEETING_DATE=2009-02-14", "CUSTOMER_ID=123457",
+                "ATTENDANCE=2");
         return attendanceDataSet;
     }
 }

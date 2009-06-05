@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -31,33 +31,29 @@ import org.junit.Test;
  * would come before 1.4.10 in the sequence.
  */
 public class ChapterNumSortTest {
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(ChapterNumSortTest.class);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ChapterNumSortTest.class);
+    }
 
-	@Test
-	public void chapterNumberOrder() {
-		String[] dottedNums = { "1.4.10", "2", "1.4", "1.15.3", "1.4", "0.1",
-				"1.4.2" };
-		String[] expected = { "0.1", "1.4", "1.4", "1.4.2", "1.4.10", "1.15.3",
-				"2" };
-		String[] actual = ChapterNumSorter.sortChapterNumbers(dottedNums);
-		assertArrayEquals(expected, actual);
-	}
+    @Test
+    public void chapterNumberOrder() {
+        String[] dottedNums = { "1.4.10", "2", "1.4", "1.15.3", "1.4", "0.1", "1.4.2" };
+        String[] expected = { "0.1", "1.4", "1.4", "1.4.2", "1.4.10", "1.15.3", "2" };
+        String[] actual = ChapterNumSorter.sortChapterNumbers(dottedNums);
+        assertArrayEquals(expected, actual);
+    }
 
-	@Test
-	public void chapterNumberOrderWithGarbage() {
-		String[] dottedNums = { "1", "3", "", "blah", "2.1", "-3" };
-		String[] expected = { "1", "2.1", "3" };
-		String[] actual = ChapterNumSorter.sortChapterNumbers(dottedNums);
-		assertArrayEquals(expected, actual);
-	}
+    @Test
+    public void chapterNumberOrderWithGarbage() {
+        String[] dottedNums = { "1", "3", "", "blah", "2.1", "-3" };
+        String[] expected = { "1", "2.1", "3" };
+        String[] actual = ChapterNumSorter.sortChapterNumbers(dottedNums);
+        assertArrayEquals(expected, actual);
+    }
 
-	@Test
-	public void simpleCompare() {
-		assertEquals(1, ChapterNum.fromString("1.4.1").compareTo(
-				ChapterNum.fromString("1.4.0")));
-		assertEquals(-1, ChapterNum.fromString("1.4.1").compareTo(
-				ChapterNum.fromString("1.4.10")));
-	}
+    @Test
+    public void simpleCompare() {
+        assertEquals(1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.0")));
+        assertEquals(-1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.10")));
+    }
 }

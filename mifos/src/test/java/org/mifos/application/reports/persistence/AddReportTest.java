@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.persistence;
 
 import static org.junit.Assert.assertEquals;
@@ -34,44 +34,32 @@ import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
-
 public class AddReportTest {
 
-	@Test
-	public void startFromStandardStore() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
-		upgradeAndCheck(database);
-	}
+    @Test
+    public void startFromStandardStore() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
+        upgradeAndCheck(database);
+    }
 
-	private Upgrade upgradeAndCheck(TestDatabase database) 
-	throws IOException, SQLException, ApplicationException {
-		short newId = 17032;
-		AddReport upgrade = new AddReport(
-			DatabaseVersionPersistence.APPLICATION_VERSION + 1,
-			newId,
-			ReportsCategoryBO.ANALYSIS,
-			"Detailed Aging of Portfolio at Risk",
-			"aging_portfolio_at_risk",
-			"DetailedAgingPortfolioAtRisk.rptdesign"
-			);
-		upgrade.upgrade(database.openConnection(), null);
-		ReportsBO fetched = (ReportsBO) 
-			database.openSession().get(ReportsBO.class, newId);
-		assertEquals(newId, (int) fetched.getReportId());
-		assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
-		assertEquals(null, fetched.getActivityId());
-		assertEquals("Detailed Aging of Portfolio at Risk", 
-			fetched.getReportName());
-		assertEquals("aging_portfolio_at_risk", 
-			fetched.getReportIdentifier());
-		assertEquals(ReportsCategoryBO.ANALYSIS, 
-			(int) fetched.getReportsCategoryBO().getReportCategoryId());
-		
-		ReportsJasperMap map = fetched.getReportsJasperMap();
-		assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", 
-			map.getReportJasper());
-		
-		return upgrade;
-	}
+    private Upgrade upgradeAndCheck(TestDatabase database) throws IOException, SQLException, ApplicationException {
+        short newId = 17032;
+        AddReport upgrade = new AddReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+                ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk", "aging_portfolio_at_risk",
+                "DetailedAgingPortfolioAtRisk.rptdesign");
+        upgrade.upgrade(database.openConnection(), null);
+        ReportsBO fetched = (ReportsBO) database.openSession().get(ReportsBO.class, newId);
+        assertEquals(newId, (int) fetched.getReportId());
+        assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
+        assertEquals(null, fetched.getActivityId());
+        assertEquals("Detailed Aging of Portfolio at Risk", fetched.getReportName());
+        assertEquals("aging_portfolio_at_risk", fetched.getReportIdentifier());
+        assertEquals(ReportsCategoryBO.ANALYSIS, (int) fetched.getReportsCategoryBO().getReportCategoryId());
+
+        ReportsJasperMap map = fetched.getReportsJasperMap();
+        assertEquals("DetailedAgingPortfolioAtRisk.rptdesign", map.getReportJasper());
+
+        return upgrade;
+    }
 
 }

@@ -17,18 +17,18 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 public interface TestConstants {
 
-	public static final String APPROVED="Application Approved";
-	public static final short PAYMENTTYPES_NUMBER=1;
-	public static final int SAVINGS_CUSTOMFIELDS_NUMBER=1;
-	
-	public static final int FINANCIAL_DIRECTINCOME_SIZE=10;
-	public static final int FINANCIAL_PRINCIPALPOSTING_SIZE=10;
-	
-	public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
+    public static final String APPROVED = "Application Approved";
+    public static final short PAYMENTTYPES_NUMBER = 1;
+    public static final int SAVINGS_CUSTOMFIELDS_NUMBER = 1;
+
+    public static final int FINANCIAL_DIRECTINCOME_SIZE = 10;
+    public static final int FINANCIAL_PRINCIPALPOSTING_SIZE = 10;
+
+    public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
 
 }

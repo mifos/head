@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.Calendar;
@@ -56,9 +56,9 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationTest{
-	
-	public PortfolioAtRiskCalculationIntegrationTest() throws SystemException, ApplicationException {
+public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationTest {
+
+    public PortfolioAtRiskCalculationIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -66,184 +66,156 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
 
     private AccountBO account1 = null;
 
-	private AccountBO account2 = null;
+    private AccountBO account2 = null;
 
-	private CenterBO center;
+    private CenterBO center;
 
-	private CenterBO center1 = null;
+    private CenterBO center1 = null;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private GroupBO group1;
+    private GroupBO group1;
 
-	private ClientBO client;
+    private ClientBO client;
 
-	private ClientBO client1 = null;
+    private ClientBO client1 = null;
 
-	private ClientBO client2 = null;
+    private ClientBO client2 = null;
 
-	private OfficeBO officeBO;
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+    private OfficeBO officeBO;
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(account2);
-			TestObjectFactory.cleanUp(account1);
-			TestObjectFactory.cleanUp(client1);
-			TestObjectFactory.cleanUp(client2);
-			TestObjectFactory.cleanUp(client);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(group1);
-			TestObjectFactory.cleanUp(center);
-			TestObjectFactory.cleanUp(center1);
-			TestObjectFactory.cleanUp(officeBO);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	private void createInitialObject() {
-		Date startDate = new Date(System.currentTimeMillis());
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loandsdasd", "fsad", startDate, meeting);
-		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-		loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd",
-				ApplicableTo.CLIENTS, startDate, 
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, meeting);
-		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(account2);
+            TestObjectFactory.cleanUp(account1);
+            TestObjectFactory.cleanUp(client1);
+            TestObjectFactory.cleanUp(client2);
+            TestObjectFactory.cleanUp(client);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(group1);
+            TestObjectFactory.cleanUp(center);
+            TestObjectFactory.cleanUp(center1);
+            TestObjectFactory.cleanUp(officeBO);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	
-	private void createPayment(LoanBO loan, Money amountPaid) throws Exception
-	{
-		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = LoanCalculationTest.getSortedAccountActionDateEntity(actionDateEntities, 
-				6);
-        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
+    private void createInitialObject() {
+        Date startDate = new Date(System.currentTimeMillis());
+
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loandsdasd", "fsad", startDate, meeting);
+        account1 = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+        loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd", ApplicableTo.CLIENTS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting);
+        account2 = TestObjectFactory.createLoanAccount("42427777341", client,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
+    }
+
+    private void createPayment(LoanBO loan, Money amountPaid) throws Exception {
+        Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = LoanCalculationTest
+                .getSortedAccountActionDateEntity(actionDateEntities, 6);
+        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
         LoanScheduleEntity loanSchedule = paymentsArray[0];
         Short paymentTypeId = PaymentTypes.CASH.getValue();
-        PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
-		loan.applyPayment(paymentData, true);
-		paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
-		loan.applyPayment(paymentData, true);
-	}
-	
-	private void changeFirstInstallmentDate(AccountBO accountBO,
-			int numberOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day
-				- numberOfDays);
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			LoanBOIntegrationTest.setActionDate(accountActionDateEntity,new java.sql.Date(
-					currentDateCalendar.getTimeInMillis()));
-			break;
-		}
-	}
-	
-	public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
-		createInitialObject();
-		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
-		
-		for (AccountBO account : group.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				changeFirstInstallmentDate(account, 31);
-				((LoanBO)account).handleArrears();
-			}
-		}
-		for (AccountBO account : client.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				changeFirstInstallmentDate(account, 31);
-				((LoanBO)account).handleArrears();
-			}
-		}
-		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group.getOffice().getOfficeId(), 
-				     group.getOffice().getSearchId());
-		assertEquals(1.0, portfolioAtRisk, DELTA);
-				
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
-		account1 = TestObjectFactory.getObject(AccountBO.class,
-				account1.getAccountId());
-		account2 = TestObjectFactory.getObject(AccountBO.class,
-				account2.getAccountId());
-	}
-	
-	public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
-		createInitialObject();
-		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
-		
-		for (AccountBO account : group.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				LoanBO loan = (LoanBO)account;
-				createPayment(loan, new Money("200"));
-			}
-		}
-		for (AccountBO account : client.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				LoanBO loan = (LoanBO)account;
-				changeFirstInstallmentDate(account, 31);
-				createPayment(loan, new Money("200"));
-				loan.handleArrears();
-			}
-		}
-		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group.getOffice().getOfficeId(), 
-			     group.getOffice().getSearchId());
-		assertEquals(0.5, portfolioAtRisk, DELTA);
-		
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
-		account1 = TestObjectFactory.getObject(AccountBO.class,
-				account1.getAccountId());
-		account2 = TestObjectFactory.getObject(AccountBO.class,
-				account2.getAccountId());
-	}
-	
+        PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
+                .getActionDate());
+        loan.applyPayment(paymentData, true);
+        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
+                .getActionDate());
+        loan.applyPayment(paymentData, true);
+    }
 
+    private void changeFirstInstallmentDate(AccountBO accountBO, int numberOfDays) {
+        Calendar currentDateCalendar = new GregorianCalendar();
+        int year = currentDateCalendar.get(Calendar.YEAR);
+        int month = currentDateCalendar.get(Calendar.MONTH);
+        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+        currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
+        for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
+            LoanBOIntegrationTest.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
+                    .getTimeInMillis()));
+            break;
+        }
+    }
+
+    public void testGeneratePortfolioAtRiskForTaskNoPayment() throws Exception {
+        createInitialObject();
+        TestObjectFactory.flushandCloseSession();
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+
+        for (AccountBO account : group.getAccounts()) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+                changeFirstInstallmentDate(account, 31);
+                ((LoanBO) account).handleArrears();
+            }
+        }
+        for (AccountBO account : client.getAccounts()) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+                changeFirstInstallmentDate(account, 31);
+                ((LoanBO) account).handleArrears();
+            }
+        }
+        TestObjectFactory.flushandCloseSession();
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
+                .getOffice().getOfficeId(), group.getOffice().getSearchId());
+        assertEquals(1.0, portfolioAtRisk, DELTA);
+
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+        account1 = TestObjectFactory.getObject(AccountBO.class, account1.getAccountId());
+        account2 = TestObjectFactory.getObject(AccountBO.class, account2.getAccountId());
+    }
+
+    public void testGeneratePortfolioAtRiskForTaskSomePayments() throws Exception {
+        createInitialObject();
+        TestObjectFactory.flushandCloseSession();
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+
+        for (AccountBO account : group.getAccounts()) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+                LoanBO loan = (LoanBO) account;
+                createPayment(loan, new Money("200"));
+            }
+        }
+        for (AccountBO account : client.getAccounts()) {
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+                LoanBO loan = (LoanBO) account;
+                changeFirstInstallmentDate(account, 31);
+                createPayment(loan, new Money("200"));
+                loan.handleArrears();
+            }
+        }
+        TestObjectFactory.flushandCloseSession();
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
+                .getOffice().getOfficeId(), group.getOffice().getSearchId());
+        assertEquals(0.5, portfolioAtRisk, DELTA);
+
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+        account1 = TestObjectFactory.getObject(AccountBO.class, account1.getAccountId());
+        account2 = TestObjectFactory.getObject(AccountBO.class, account2.getAccountId());
+    }
 
 }

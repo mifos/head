@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import org.mifos.framework.exceptions.ServiceException;
@@ -31,38 +31,32 @@ import junit.framework.TestCase;
 
 public class BranchCashConfirmationConfigServiceTest extends TestCase {
 
-	private HOCashConfirmationConfigService hOCashConfirmationConfigService;
+    private HOCashConfirmationConfigService hOCashConfirmationConfigService;
 
-	public void testGetActionDate() {
-		assertEquals(DateUtils.currentDate(),
-				hOCashConfirmationConfigService.getActionDate());
-	}
+    public void testGetActionDate() {
+        assertEquals(DateUtils.currentDate(), hOCashConfirmationConfigService.getActionDate());
+    }
 
-	public void testGetProductOfferingsForRecoveries() throws ServiceException {
-		assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short
-				.valueOf("2"), Short.valueOf("3")),
-				hOCashConfirmationConfigService
-						.getProductOfferingsForRecoveries());
-	}
+    public void testGetProductOfferingsForRecoveries() throws ServiceException {
+        assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2"), Short.valueOf("3")),
+                hOCashConfirmationConfigService.getProductOfferingsForRecoveries());
+    }
 
-	public void testGetProductOfferingsForIssues() throws Exception {
-		assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short
-				.valueOf("2"), Short.valueOf("3")), hOCashConfirmationConfigService
-				.getProductOfferingsForIssues());
-	}
+    public void testGetProductOfferingsForIssues() throws Exception {
+        assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2"), Short.valueOf("3")),
+                hOCashConfirmationConfigService.getProductOfferingsForIssues());
+    }
 
-	public void testGetProductOfferingsForDisbursements() throws Exception {
-		assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short
-				.valueOf("2")), hOCashConfirmationConfigService
-				.getProductOfferingsForDisbursements());
-	}
+    public void testGetProductOfferingsForDisbursements() throws Exception {
+        assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short.valueOf("2")), hOCashConfirmationConfigService
+                .getProductOfferingsForDisbursements());
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		Resource branchCashConfirmationReportConfig = new ClassPathResource(
-				FilePaths.HO_CASH_CONFIRMATION_REPORT_CONFIG);
-		hOCashConfirmationConfigService = new HOCashConfirmationConfigService(
-				branchCashConfirmationReportConfig);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        Resource branchCashConfirmationReportConfig = new ClassPathResource(
+                FilePaths.HO_CASH_CONFIRMATION_REPORT_CONFIG);
+        hOCashConfirmationConfigService = new HOCashConfirmationConfigService(branchCashConfirmationReportConfig);
+    }
 
 }

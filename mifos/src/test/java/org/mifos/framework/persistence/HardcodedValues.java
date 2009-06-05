@@ -17,39 +17,37 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import org.apache.commons.lang.StringUtils;
 
 public class HardcodedValues {
 
-	private static final String LOOKUP_VALUE = "insert into lookup_value";
-	private static final String LOOKUP_ID = "lookup_id";
-	private static final String LOOKUP_VALUE_LOCALE = "insert into lookup_value_locale";
-	private static final String LOCALE_ID = "locale_id";
+    private static final String LOOKUP_VALUE = "insert into lookup_value";
+    private static final String LOOKUP_ID = "lookup_id";
+    private static final String LOOKUP_VALUE_LOCALE = "insert into lookup_value_locale";
+    private static final String LOCALE_ID = "locale_id";
 
-	/*
-	 * This checks that a sql script does not try to insert a hardcoded lookup_id into
-	 * the lookup_value table
-	 */
-	public static boolean checkLookupValue(String sql) {
-		if (StringUtils.containsIgnoreCase(sql, LOOKUP_VALUE) 
-				&& StringUtils.containsIgnoreCase(sql, LOOKUP_ID)) {
-			return false;
-		}
-		return true;
-	}
+    /*
+     * This checks that a sql script does not try to insert a hardcoded
+     * lookup_id into the lookup_value table
+     */
+    public static boolean checkLookupValue(String sql) {
+        if (StringUtils.containsIgnoreCase(sql, LOOKUP_VALUE) && StringUtils.containsIgnoreCase(sql, LOOKUP_ID)) {
+            return false;
+        }
+        return true;
+    }
 
-	/*
-	 * This checks that a sql script does not try to insert a hardcoded locale_id into
-	 * the lookup_value_locale table
-	 */
-	public static boolean checkLookupValueLocale(String sql) {
-		if (StringUtils.containsIgnoreCase(sql, LOOKUP_VALUE_LOCALE)
-				&& StringUtils.containsIgnoreCase(sql, LOCALE_ID)) {
-			return false;
-		}
-		return true;
-	}
+    /*
+     * This checks that a sql script does not try to insert a hardcoded
+     * locale_id into the lookup_value_locale table
+     */
+    public static boolean checkLookupValueLocale(String sql) {
+        if (StringUtils.containsIgnoreCase(sql, LOOKUP_VALUE_LOCALE) && StringUtils.containsIgnoreCase(sql, LOCALE_ID)) {
+            return false;
+        }
+        return true;
+    }
 }

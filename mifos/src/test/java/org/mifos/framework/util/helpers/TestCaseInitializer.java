@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
@@ -54,11 +54,13 @@ public class TestCaseInitializer {
     public synchronized void initialize() throws SystemException, ApplicationException {
         if (initialized == false) {
             initialized = true;
-            /* Make sure TestingService is aware that we're running integration tests.
-             * This is for integration test cases that use a database, but could
-             * also apply to other "black box" tests. */
+            /*
+             * Make sure TestingService is aware that we're running integration
+             * tests. This is for integration test cases that use a database,
+             * but could also apply to other "black box" tests.
+             */
             new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-            
+
             MifosLogManager.configureLogging();
             DatabaseSetup.initializeHibernate();
             // add this because it is added to Application Initializer

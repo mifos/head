@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fund.persistence;
 
 import java.util.List;
@@ -33,56 +33,60 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FundPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public FundPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public FundPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     public void testGetFundNameCountWithoutData() throws PersistenceException {
-		assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund1"));
-	}
+        assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund1"));
+    }
 
-	public void testGetFundNameCountWithDifferentName()	throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
-		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
-		assertEquals(Long.valueOf("0"),new FundPersistence().getFundNameCount("Fund2"));
-		TestObjectFactory.removeObject(fund);
+    public void testGetFundNameCountWithDifferentName() throws Exception {
+        FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
+                (short) 1);
+        FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
+        assertEquals(Long.valueOf("0"), new FundPersistence().getFundNameCount("Fund2"));
+        TestObjectFactory.removeObject(fund);
 
-	}
+    }
 
-	public void testGetFundNameCountWithSameName() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
-		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
-		assertEquals(Long.valueOf("1"), new FundPersistence().getFundNameCount("Fund1"));
-		TestObjectFactory.removeObject(fund);
-	}
-	
-	public void testGetFund() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
-		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
-		assertEquals("Fund1", new FundPersistence().getFund("Fund1").getFundName());
-		TestObjectFactory.removeObject(fund);
-	}
-	
-	public void testGetFundCodes() throws Exception{
-		List<FundCodeEntity> funds = new FundPersistence().getFundCodes();
-		assertEquals(5,funds.size());
-	}
-	
-	public void testGetSourcesOfFund() throws Exception {
-		List<FundBO> funds = new FundPersistence().getSourcesOfFund();
-		assertNotNull(funds);
-		assertEquals(5, funds.size());
-	}
-	
-	public void testGetFundById() throws Exception {
-		FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
-		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
-		StaticHibernateUtil.closeSession();
+    public void testGetFundNameCountWithSameName() throws Exception {
+        FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
+                (short) 1);
+        FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
+        assertEquals(Long.valueOf("1"), new FundPersistence().getFundNameCount("Fund1"));
+        TestObjectFactory.removeObject(fund);
+    }
 
-		fund = new FundPersistence().getFund(fund.getFundId());
-		assertNotNull(fund);
-		assertEquals("Fund1", fund.getFundName());
-		assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
-		TestObjectFactory.removeObject(fund);
-	}
+    public void testGetFund() throws Exception {
+        FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
+                (short) 1);
+        FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
+        assertEquals("Fund1", new FundPersistence().getFund("Fund1").getFundName());
+        TestObjectFactory.removeObject(fund);
+    }
+
+    public void testGetFundCodes() throws Exception {
+        List<FundCodeEntity> funds = new FundPersistence().getFundCodes();
+        assertEquals(5, funds.size());
+    }
+
+    public void testGetSourcesOfFund() throws Exception {
+        List<FundBO> funds = new FundPersistence().getSourcesOfFund();
+        assertNotNull(funds);
+        assertEquals(5, funds.size());
+    }
+
+    public void testGetFundById() throws Exception {
+        FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
+                (short) 1);
+        FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
+        StaticHibernateUtil.closeSession();
+
+        fund = new FundPersistence().getFund(fund.getFundId());
+        assertNotNull(fund);
+        assertEquals("Fund1", fund.getFundName());
+        assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
+        TestObjectFactory.removeObject(fund);
+    }
 }

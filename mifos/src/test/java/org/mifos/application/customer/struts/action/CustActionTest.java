@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.action;
 
 import java.util.Date;
@@ -50,149 +50,147 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustActionTest extends MifosMockStrutsTestCase {
 
-	public CustActionTest() throws SystemException, ApplicationException {
+    public CustActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CenterBO center;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private ClientBO client;
+    private ClientBO client;
 
-	private MeetingBO meeting;
+    private MeetingBO meeting;
 
-	private String flowKey;
+    private String flowKey;
 
-	private SavingsTestHelper helper = new SavingsTestHelper();
+    private SavingsTestHelper helper = new SavingsTestHelper();
 
-	private SavingsOfferingBO savingsOffering;
+    private SavingsOfferingBO savingsOffering;
 
-	private LoanBO loan1;
+    private LoanBO loan1;
 
-	private SavingsBO savings1;
-	
-	private LoanBO loan2;
+    private SavingsBO savings1;
 
-	private SavingsBO savings2;
-	
-	private LoanBO loan3;
+    private LoanBO loan2;
 
-	private SavingsBO savings3;
-	
-	private UserContext userContext;
+    private SavingsBO savings2;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, CustAction.class);
-	}
+    private LoanBO loan3;
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(loan1);
-		TestObjectFactory.cleanUp(savings1);
-		TestObjectFactory.cleanUp(loan2);
-		TestObjectFactory.cleanUp(savings2);
-		TestObjectFactory.cleanUp(loan3);
-		TestObjectFactory.cleanUp(savings3);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		userContext = null;
-		super.tearDown();
-	}
-	public void testGetClosedAccounts() throws Exception{
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createCustomers();
-		createAccounts();
-		setRequestPathInfo("/custAction.do");
-		addRequestParameter("method", "getClosedAccounts");
-		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("globalCustNum", group.getGlobalCustNum());
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.getAllClosedAccounts.toString());
-		
-		assertEquals("Size of closed savings accounts should be 1 for group",1,((List<AccountBO>)SessionUtils.getAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST,request)).size());
-		assertEquals("Size of closed loan accounts should be 1 for group",1,((List<AccountBO>)SessionUtils.getAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST,request)).size());
-	}
+    private SavingsBO savings3;
 
-	public void testGetBackToGroupDetailsPage() throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createCustomers();
-		setRequestPathInfo("/custAction.do");
-		addRequestParameter("method", "getBackToDetailsPage");
-		addRequestParameter("input", "group");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.group_detail_page.toString());
-	}
-	
-	public void testGetBackToCenterDetailsPage() throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createCustomers();
-		setRequestPathInfo("/custAction.do");
-		addRequestParameter("method", "getBackToDetailsPage");
-		addRequestParameter("input", "center");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.center_detail_page.toString());
-	}
-	
-	public void testGetBackToClientDetailsPage() throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createCustomers();
-		setRequestPathInfo("/custAction.do");
-		addRequestParameter("method", "getBackToDetailsPage");
-		addRequestParameter("input", "client");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.client_detail_page.toString());
-	}
+    private UserContext userContext;
 
-	private void createCustomers() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center",
-				meeting);
-		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
 
-	private LoanBO getLoanAccount(CustomerBO customerBO,String offeringName,String shortName ) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				offeringName, shortName, startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customerBO, 
-			AccountState.LOAN_APPROVED, startDate, loanOffering);
-	}
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, CustAction.class);
+    }
 
-	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
-		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
-		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
-				AccountState.SAVINGS_PARTIAL_APPLICATION.getValue(), 
-				startDate, savingsOffering);
-	}
-	
-	private void createAccounts() throws Exception {
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(loan1);
+        TestObjectFactory.cleanUp(savings1);
+        TestObjectFactory.cleanUp(loan2);
+        TestObjectFactory.cleanUp(savings2);
+        TestObjectFactory.cleanUp(loan3);
+        TestObjectFactory.cleanUp(savings3);
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        userContext = null;
+        super.tearDown();
+    }
+
+    public void testGetClosedAccounts() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createCustomers();
+        createAccounts();
+        setRequestPathInfo("/custAction.do");
+        addRequestParameter("method", "getClosedAccounts");
+        addRequestParameter("customerId", group.getCustomerId().toString());
+        addRequestParameter("globalCustNum", group.getGlobalCustNum());
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.getAllClosedAccounts.toString());
+
+        assertEquals("Size of closed savings accounts should be 1 for group", 1, ((List<AccountBO>) SessionUtils
+                .getAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST, request)).size());
+        assertEquals("Size of closed loan accounts should be 1 for group", 1, ((List<AccountBO>) SessionUtils
+                .getAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST, request)).size());
+    }
+
+    public void testGetBackToGroupDetailsPage() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createCustomers();
+        setRequestPathInfo("/custAction.do");
+        addRequestParameter("method", "getBackToDetailsPage");
+        addRequestParameter("input", "group");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.group_detail_page.toString());
+    }
+
+    public void testGetBackToCenterDetailsPage() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createCustomers();
+        setRequestPathInfo("/custAction.do");
+        addRequestParameter("method", "getBackToDetailsPage");
+        addRequestParameter("input", "center");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.center_detail_page.toString());
+    }
+
+    public void testGetBackToClientDetailsPage() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createCustomers();
+        setRequestPathInfo("/custAction.do");
+        addRequestParameter("method", "getBackToDetailsPage");
+        addRequestParameter("input", "client");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.client_detail_page.toString());
+    }
+
+    private void createCustomers() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+    }
+
+    private LoanBO getLoanAccount(CustomerBO customerBO, String offeringName, String shortName) {
+        Date startDate = new Date(System.currentTimeMillis());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", customerBO, AccountState.LOAN_APPROVED, startDate,
+                loanOffering);
+    }
+
+    private SavingsBO getSavingsAccount(CustomerBO customerBO, String offeringName, String shortName) throws Exception {
+        Date startDate = new Date(System.currentTimeMillis());
+        savingsOffering = helper.createSavingsOffering(offeringName, shortName);
+        return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
+                AccountState.SAVINGS_PARTIAL_APPLICATION.getValue(), startDate, savingsOffering);
+    }
+
+    private void createAccounts() throws Exception {
         savings1 = getSavingsAccount(group, "fsaf6", "ads6");
         savings1.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), AccountStateFlag.SAVINGS_BLACKLISTED
                 .getValue(), "status changed for savings");

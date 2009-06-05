@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.sql.Date;
@@ -56,148 +56,139 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTest {
 
-	public CollectionSheetHelperIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CenterBO center;
-	private GroupBO group;
-	private MeetingBO meeting;
-	private SavingsTestHelper helper = new SavingsTestHelper();
-	private SavingsOfferingBO savingsOffering;
-	private LoanBO loanBO;
-	private SavingsBO savingsBO;
-	private ConfigurationManager configMgr = ConfigurationManager.getInstance();
-	private int initialDaysInAdvance;
+    private GroupBO group;
+    private MeetingBO meeting;
+    private SavingsTestHelper helper = new SavingsTestHelper();
+    private SavingsOfferingBO savingsOffering;
+    private LoanBO loanBO;
+    private SavingsBO savingsBO;
+    private ConfigurationManager configMgr = ConfigurationManager.getInstance();
+    private int initialDaysInAdvance;
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		initialDaysInAdvance = configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        initialDaysInAdvance = configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
+    }
 
-	@Override
-	public void tearDown()throws Exception  {
-		configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, initialDaysInAdvance);
-		TestObjectFactory.cleanUp(loanBO);
-		TestObjectFactory.cleanUp(savingsBO);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testOneDayInAdvance() throws Exception {
-		int daysInAdvance = 1;
-		configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
-		basicTest(daysInAdvance);
-	}
-	
-	public void testFiveDaysInAdvance() throws Exception {
-		int daysInAdvance = 5;
-		configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
-		basicTest(daysInAdvance);
-	}
-	
-	private void basicTest(int daysInAdvance) throws Exception {
-		createInitialObjects();
-		loanBO = getLoanAccount(group, meeting);
-		savingsBO = getSavingsAccount(center,"SAVINGS_OFFERING", "SAV");
-		CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
-		
-		assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
+    @Override
+    public void tearDown() throws Exception {
+        configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, initialDaysInAdvance);
+        TestObjectFactory.cleanUp(loanBO);
+        TestObjectFactory.cleanUp(savingsBO);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-		for (AccountActionDateEntity accountActionDateEntity : center
-				.getCustomerAccount().getAccountActionDates()) {
-			CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
-		}
-		
-		for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-			LoanBOIntegrationTest.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
-		}
-		
-		for(AccountActionDateEntity accountActionDateEntity : savingsBO.getAccountActionDates()) {
-			SavingsBOIntegrationTest.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
-		}
-		
-		long runTime = System.currentTimeMillis();
-		collectionSheetHelper.execute(runTime);
-		
-		List<CollectionSheetBO> collectionSheets = getCollectionSheets();
-		assertEquals("Size of collectionSheets should be 1",1,collectionSheets.size());
-		
-		CollectionSheetBO collectionSheet = collectionSheets.get(0);
-		
-		// we need to trim off time information so that we can 
-		// match the value returned by a java.sql.Date object which
-		// also truncates all time information
-		Calendar collectionSheetDate = new GregorianCalendar();
-		collectionSheetDate.setTimeInMillis(runTime);
-		collectionSheetDate.set(Calendar.HOUR_OF_DAY, 0);
-		collectionSheetDate.set(Calendar.MINUTE, 0);
-		collectionSheetDate.set(Calendar.SECOND, 0);
-		collectionSheetDate.set(Calendar.MILLISECOND, 0);
-		long normalizedRunTime = collectionSheetDate.getTimeInMillis();
-		
-		collectionSheetDate.roll(Calendar.DATE, collectionSheetHelper.getDaysInAdvance());
-		long normalizedCollectionSheetTime = collectionSheetDate.getTimeInMillis();
-		
-		assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);  
-		assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime); 
-		
-		clearCollectionSheets(collectionSheets);
-	}
-	
-	private void clearCollectionSheets(List<CollectionSheetBO> collectionSheets) {
-		for(CollectionSheetBO collectionSheetBO : collectionSheets)
-			TestObjectFactory.cleanUp(collectionSheetBO);
-	}
-	
-	private SavingsBO getSavingsAccount(CustomerBO customer, String offeringName, String shortName)
-			throws Exception {
-		savingsOffering = helper.createSavingsOffering(offeringName, shortName);
-		return TestObjectFactory.createSavingsAccount("000100000000017",
-				customer, AccountStates.SAVINGS_ACC_APPROVED, new Date(System
-						.currentTimeMillis()), savingsOffering);
-	}
+    public void testOneDayInAdvance() throws Exception {
+        int daysInAdvance = 1;
+        configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
+        basicTest(daysInAdvance);
+    }
 
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeeting(RecurrenceType.WEEKLY, TestObjectFactory.EVERY_WEEK, 
-						MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-	}
+    public void testFiveDaysInAdvance() throws Exception {
+        int daysInAdvance = 5;
+        configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
+        basicTest(daysInAdvance);
+    }
 
-	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, 
-				meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
-				startDate, loanOffering);
+    private void basicTest(int daysInAdvance) throws Exception {
+        createInitialObjects();
+        loanBO = getLoanAccount(group, meeting);
+        savingsBO = getSavingsAccount(center, "SAVINGS_OFFERING", "SAV");
+        CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
 
-	}
-	
-	private java.sql.Date offSetDate(Date date, int noOfDays) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		calendar = new GregorianCalendar(year, month, day + noOfDays);
-		return new java.sql.Date(calendar.getTimeInMillis());
-	}
-	
-	private List<CollectionSheetBO> getCollectionSheets() {
-		Query query = StaticHibernateUtil
-				.getSessionTL()
-				.createQuery(
-						"from org.mifos.application.collectionsheet.business.CollectionSheetBO");
-		return query.list();
-	}
+        assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
+
+        for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
+            CustomerAccountBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                    .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
+        }
+
+        for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+            LoanBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                    .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
+        }
+
+        for (AccountActionDateEntity accountActionDateEntity : savingsBO.getAccountActionDates()) {
+            SavingsBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                    .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
+        }
+
+        long runTime = System.currentTimeMillis();
+        collectionSheetHelper.execute(runTime);
+
+        List<CollectionSheetBO> collectionSheets = getCollectionSheets();
+        assertEquals("Size of collectionSheets should be 1", 1, collectionSheets.size());
+
+        CollectionSheetBO collectionSheet = collectionSheets.get(0);
+
+        // we need to trim off time information so that we can
+        // match the value returned by a java.sql.Date object which
+        // also truncates all time information
+        Calendar collectionSheetDate = new GregorianCalendar();
+        collectionSheetDate.setTimeInMillis(runTime);
+        collectionSheetDate.set(Calendar.HOUR_OF_DAY, 0);
+        collectionSheetDate.set(Calendar.MINUTE, 0);
+        collectionSheetDate.set(Calendar.SECOND, 0);
+        collectionSheetDate.set(Calendar.MILLISECOND, 0);
+        long normalizedRunTime = collectionSheetDate.getTimeInMillis();
+
+        collectionSheetDate.roll(Calendar.DATE, collectionSheetHelper.getDaysInAdvance());
+        long normalizedCollectionSheetTime = collectionSheetDate.getTimeInMillis();
+
+        assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);
+        assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime);
+
+        clearCollectionSheets(collectionSheets);
+    }
+
+    private void clearCollectionSheets(List<CollectionSheetBO> collectionSheets) {
+        for (CollectionSheetBO collectionSheetBO : collectionSheets)
+            TestObjectFactory.cleanUp(collectionSheetBO);
+    }
+
+    private SavingsBO getSavingsAccount(CustomerBO customer, String offeringName, String shortName) throws Exception {
+        savingsOffering = helper.createSavingsOffering(offeringName, shortName);
+        return TestObjectFactory.createSavingsAccount("000100000000017", customer, AccountStates.SAVINGS_ACC_APPROVED,
+                new Date(System.currentTimeMillis()), savingsOffering);
+    }
+
+    private void createInitialObjects() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY,
+                TestObjectFactory.EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY));
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+    }
+
+    private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+        Date startDate = new Date(System.currentTimeMillis());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+
+    }
+
+    private java.sql.Date offSetDate(Date date, int noOfDays) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar = new GregorianCalendar(year, month, day + noOfDays);
+        return new java.sql.Date(calendar.getTimeInMillis());
+    }
+
+    private List<CollectionSheetBO> getCollectionSheets() {
+        Query query = StaticHibernateUtil.getSessionTL().createQuery(
+                "from org.mifos.application.collectionsheet.business.CollectionSheetBO");
+        return query.list();
+    }
 }

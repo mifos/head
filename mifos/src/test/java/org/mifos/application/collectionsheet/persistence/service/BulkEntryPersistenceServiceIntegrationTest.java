@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.persistence.service;
 
 import java.util.ArrayList;
@@ -51,123 +51,110 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class BulkEntryPersistenceServiceIntegrationTest extends MifosIntegrationTest {
 
-	public BulkEntryPersistenceServiceIntegrationTest() throws SystemException, ApplicationException {
+    public BulkEntryPersistenceServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CustomerBO center;
 
-	private CustomerBO group;
+    private CustomerBO group;
 
-	private CustomerBO client;
+    private CustomerBO client;
 
-	private AccountBO account;
+    private AccountBO account;
 
     private ClientAttendanceBO clientAttendance;
 
     private AccountPersistence accountPersistence;
-    
+
     private BulkEntryPersistenceService bulkEntryPersistanceService;
-    
+
     private CustomerPersistence customerPersistence;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		accountPersistence = new AccountPersistence();
-		bulkEntryPersistanceService = new BulkEntryPersistenceService();
-		customerPersistence = new CustomerPersistence();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        accountPersistence = new AccountPersistence();
+        bulkEntryPersistanceService = new BulkEntryPersistenceService();
+        customerPersistence = new CustomerPersistence();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(account);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(account);
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testGetAccount() throws Exception{
-		Date startDate = new Date(System.currentTimeMillis());
+    public void testGetAccount() throws Exception {
+        Date startDate = new Date(System.currentTimeMillis());
 
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-		StaticHibernateUtil.closeSession();
-		account = accountPersistence.getAccount(account.getAccountId());
-		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
-				"Loan");
-	}
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+        StaticHibernateUtil.closeSession();
+        account = accountPersistence.getAccount(account.getAccountId());
+        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+    }
 
-	public void testSuccessfulLoanUpdate() throws Exception {
-		Date startDate = new Date(System.currentTimeMillis());
+    public void testSuccessfulLoanUpdate() throws Exception {
+        Date startDate = new Date(System.currentTimeMillis());
 
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-		StaticHibernateUtil.closeSession();
-		account = accountPersistence.getAccount(account.getAccountId());
-		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
-				"Loan");
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+        StaticHibernateUtil.closeSession();
+        account = accountPersistence.getAccount(account.getAccountId());
+        assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
-		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
-		accntActionDates.add(account.getAccountActionDates().iterator().next());
-		Date currentDate = startDate;
-		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
-				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"100.0"), null, account.getPersonnel(), "423423", Short
-						.valueOf("1"), currentDate, currentDate);
+        List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+        accntActionDates.add(account.getAccountActionDates().iterator().next());
+        Date currentDate = startDate;
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, new Money(
+                TestObjectFactory.getMFICurrency(), "100.0"), null, account.getPersonnel(), "423423", Short
+                .valueOf("1"), currentDate, currentDate);
 
-		account.applyPaymentWithPersist(paymentData);
-		StaticHibernateUtil.commitTransaction();
-		assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
-				.getAmountDoubleValue(), Double.valueOf("100.0"));
-	}
-    
-public void testGetBulkEntryClientAttendanceActionView() throws PersistenceException{
-        
+        account.applyPaymentWithPersist(paymentData);
+        StaticHibernateUtil.commitTransaction();
+        assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid().getAmountDoubleValue(), Double.valueOf("100.0"));
+    }
+
+    public void testGetBulkEntryClientAttendanceActionView() throws PersistenceException {
+
         createInitialObjects();
         java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        
+
         clientAttendance = new ClientAttendanceBO();
         clientAttendance.setAttendance(AttendanceType.PRESENT);
         clientAttendance.setMeetingDate(meetingDate);
-        ((ClientBO)client).addClientAttendance(clientAttendance );
+        ((ClientBO) client).addClientAttendance(clientAttendance);
         customerPersistence.createOrUpdate(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        
-        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = 
-            bulkEntryPersistanceService
+
+        List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistanceService
                 .getClientAttendance(meetingDate, client.getOffice().getOfficeId());
-        assertEquals(collectionSheetEntryClientAttendanceView.size(),1);
+        assertEquals(collectionSheetEntryClientAttendanceView.size(), 1);
     }
-    
+
     private void createInitialObjects() {
-            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-        
-                .getTypicalMeeting());
-            center = TestObjectFactory.createCenter("Center", meeting);
-            group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-            client = TestObjectFactory.createClient("Client", 
-            		CustomerStatus.CLIENT_ACTIVE,
-                    group);
-                        
-            StaticHibernateUtil.closeSession();
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+
+        .getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+
+        StaticHibernateUtil.closeSession();
     }
 
 }

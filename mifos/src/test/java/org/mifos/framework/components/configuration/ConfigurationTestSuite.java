@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration;
 
 import junit.framework.Test;
@@ -31,18 +31,17 @@ import org.mifos.framework.components.configuration.util.helpers.ConfigurationIn
 
 public class ConfigurationTestSuite extends TestSuite {
 
-	public ConfigurationTestSuite() {
-		super();
-	}
+    public ConfigurationTestSuite() {
+        super();
+    }
 
-	public static Test suite()throws Exception
-	{
-		TestSuite testSuite = new ConfigurationTestSuite();
-		testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(MifosCurrencyIntegrationTest.class);
-		testSuite.addTestSuite(ConfigurationIntializerIntegrationTest.class);
-		testSuite.addTestSuite(ConfigurationIntegrationTest.class);
-		testSuite.addTestSuite(ConfigurationKeyValueIntegerIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new ConfigurationTestSuite();
+        testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(MifosCurrencyIntegrationTest.class);
+        testSuite.addTestSuite(ConfigurationIntializerIntegrationTest.class);
+        testSuite.addTestSuite(ConfigurationIntegrationTest.class);
+        testSuite.addTestSuite(ConfigurationKeyValueIntegerIntegrationTest.class);
+        return testSuite;
+    }
 }

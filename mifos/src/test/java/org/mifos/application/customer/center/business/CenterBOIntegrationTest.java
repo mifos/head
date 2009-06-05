@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.center.business;
 
 import java.util.ArrayList;
@@ -70,564 +70,475 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterBOIntegrationTest extends MifosIntegrationTest {
 
-	public CenterBOIntegrationTest() throws SystemException, ApplicationException {
+    public CenterBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private CenterBO center;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private ClientBO client;
+    private ClientBO client;
 
-	private Short officeId = 1;
-	private OfficeBO officeBo;
+    private Short officeId = 1;
+    private OfficeBO officeBo;
 
-	private Short personnelId = 3;
-	private PersonnelBO personnelBo;
+    private Short personnelId = 3;
+    private PersonnelBO personnelBo;
 
-	private MeetingBO meeting;
+    private MeetingBO meeting;
 
     private OfficePersistence officePersistence = new OfficePersistence();
-    
+
     private MasterPersistence masterPersistence = new MasterPersistence();
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		officeBo = officePersistence.getOffice(officeId);
-		personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        officeBo = officePersistence.getOffice(officeId);
+        personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			TestObjectFactory.cleanUp(client);
-			TestObjectFactory.cleanUp(group);
-			TestObjectFactory.cleanUp(center);
-		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
-			TestDatabase.resetMySQLDatabase();
-		}
-		StaticHibernateUtil.closeSession();
-		super.tearDown();		
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        try {
+            TestObjectFactory.cleanUp(client);
+            TestObjectFactory.cleanUp(group);
+            TestObjectFactory.cleanUp(center);
+        } catch (Exception e) {
+            // TODO Whoops, cleanup didnt work, reset db
+            TestDatabase.resetMySQLDatabase();
+        }
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public static void setPerformanceHistoryDetails(
-			CenterPerformanceHistory centerPerformanceHistory,
-			Integer numberOfGroups, Integer numberOfClients,
-			Money totalOutstandingPortfolio, Money totalSavings,
-			Money portfolioAtRisk) {
-		centerPerformanceHistory.setPerformanceHistoryDetails(numberOfGroups,
-				numberOfClients, totalOutstandingPortfolio, totalSavings,
-				portfolioAtRisk);
-	}
+    public static void setPerformanceHistoryDetails(CenterPerformanceHistory centerPerformanceHistory,
+            Integer numberOfGroups, Integer numberOfClients, Money totalOutstandingPortfolio, Money totalSavings,
+            Money portfolioAtRisk) {
+        centerPerformanceHistory.setPerformanceHistoryDetails(numberOfGroups, numberOfClients,
+                totalOutstandingPortfolio, totalSavings, portfolioAtRisk);
+    }
 
-	public void testSuccessfulUpdateForLogging() throws Exception {
-		createCustomers();
-		Date mfiJoiningDate = getDate("11/12/2005");
-		String externalId = "1234";
-		Address address = new Address();
-		address.setCity("Bangalore");
-		address.setLine1("Aditi");
+    public void testSuccessfulUpdateForLogging() throws Exception {
+        createCustomers();
+        Date mfiJoiningDate = getDate("11/12/2005");
+        String externalId = "1234";
+        Address address = new Address();
+        address.setCity("Bangalore");
+        address.setLine1("Aditi");
 
-		center.setUserContext(TestUtils.makeUserWithLocales());
-		StaticHibernateUtil.getInterceptor().createInitialValueMap(center);
-		center.update(TestUtils.makeUser(), personnelId,
-				externalId, mfiJoiningDate, address, null, null);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        center.setUserContext(TestUtils.makeUserWithLocales());
+        StaticHibernateUtil.getInterceptor().createInitialValueMap(center);
+        center.update(TestUtils.makeUser(), personnelId, externalId, mfiJoiningDate, address, null, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
+        center = TestObjectFactory.getCenter(center.getCustomerId());
 
-		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
-				EntityType.CENTER, center.getCustomerId());
-		assertEquals(1, auditLogList.size());
-		AuditLog auditLog = auditLogList.get(0);
+        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CENTER, center.getCustomerId());
+        assertEquals(1, auditLogList.size());
+        AuditLog auditLog = auditLogList.get(0);
 
-		assertEquals(EntityType.CENTER.getValue(), auditLog.getEntityType());
-		Set<AuditLogRecord> records = auditLog.getAuditLogRecords();
-		assertEquals(5, records.size());
-		for (AuditLogRecord auditLogRecord : records) {
-			String fieldName = auditLogRecord.getFieldName();
-			if (fieldName.equalsIgnoreCase("Address1")) {
-				assertEquals("-", auditLogRecord.getOldValue());
-				assertEquals("Aditi", auditLogRecord.getNewValue());
-			} else if (fieldName.equalsIgnoreCase(
-					"City/District")) {
-				assertEquals("-", auditLogRecord.getOldValue());
-				assertEquals("Bangalore", auditLogRecord.getNewValue());
-			} else if (fieldName.equalsIgnoreCase(
-					"Loan Officer Assigned")) {
-				assertEquals("mifos", auditLogRecord.getOldValue());
-				assertEquals("loan officer", auditLogRecord.getNewValue());
-			} else if (fieldName.equalsIgnoreCase(
-					"MFI Joining Date")) {
-				assertEquals("-", auditLogRecord.getOldValue());
-				assertEquals("11/12/2005", auditLogRecord.getNewValue());
-			} else if (fieldName.equalsIgnoreCase(
-					"External Id")) {
-				assertEquals("-", auditLogRecord.getOldValue());
-				assertEquals("1234", auditLogRecord.getNewValue());
-			}
-			else {
-				fail("unrecognized field name " + fieldName);
-			}
-		}
+        assertEquals(EntityType.CENTER.getValue(), auditLog.getEntityType());
+        Set<AuditLogRecord> records = auditLog.getAuditLogRecords();
+        assertEquals(5, records.size());
+        for (AuditLogRecord auditLogRecord : records) {
+            String fieldName = auditLogRecord.getFieldName();
+            if (fieldName.equalsIgnoreCase("Address1")) {
+                assertEquals("-", auditLogRecord.getOldValue());
+                assertEquals("Aditi", auditLogRecord.getNewValue());
+            } else if (fieldName.equalsIgnoreCase("City/District")) {
+                assertEquals("-", auditLogRecord.getOldValue());
+                assertEquals("Bangalore", auditLogRecord.getNewValue());
+            } else if (fieldName.equalsIgnoreCase("Loan Officer Assigned")) {
+                assertEquals("mifos", auditLogRecord.getOldValue());
+                assertEquals("loan officer", auditLogRecord.getNewValue());
+            } else if (fieldName.equalsIgnoreCase("MFI Joining Date")) {
+                assertEquals("-", auditLogRecord.getOldValue());
+                assertEquals("11/12/2005", auditLogRecord.getNewValue());
+            } else if (fieldName.equalsIgnoreCase("External Id")) {
+                assertEquals("-", auditLogRecord.getOldValue());
+                assertEquals("1234", auditLogRecord.getNewValue());
+            } else {
+                fail("unrecognized field name " + fieldName);
+            }
+        }
 
-		StaticHibernateUtil.closeSession();
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		TestObjectFactory.cleanUpChangeLog();
-	}
+        StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        TestObjectFactory.cleanUpChangeLog();
+    }
 
-	public void testCreateWithoutName() throws Exception {
-		try {
-			meeting = getMeeting();
-			center = new CenterBO(TestUtils.makeUser(), "", null,
-					null, null, null, null, officeBo, meeting, personnelBo, new CustomerPersistence());
-			fail();
-		} catch (CustomerException ce) {
-			assertNull(center);
-			assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
-		}
-		TestObjectFactory.removeObject(meeting);
-	}
+    public void testCreateWithoutName() throws Exception {
+        try {
+            meeting = getMeeting();
+            center = new CenterBO(TestUtils.makeUser(), "", null, null, null, null, null, officeBo, meeting,
+                    personnelBo, new CustomerPersistence());
+            fail();
+        } catch (CustomerException ce) {
+            assertNull(center);
+            assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
+        }
+        TestObjectFactory.removeObject(meeting);
+    }
 
-	public void testCreateWithoutLO() throws Exception {
-		try {
-			meeting = getMeeting();
-			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, officeBo, meeting, null, new CustomerPersistence());
-			fail();
-		} catch (CustomerException ce) {
-			assertNull(center);
-			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
-		}
-		TestObjectFactory.removeObject(meeting);
-	}
+    public void testCreateWithoutLO() throws Exception {
+        try {
+            meeting = getMeeting();
+            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null, officeBo, meeting,
+                    null, new CustomerPersistence());
+            fail();
+        } catch (CustomerException ce) {
+            assertNull(center);
+            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
+        }
+        TestObjectFactory.removeObject(meeting);
+    }
 
-	public void testCreateWithoutMeeting() throws Exception {
-		try {
-			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, officeBo, meeting, personnelBo, new CustomerPersistence());
-			fail();
-		} catch (CustomerException ce) {
-			assertNull(center);
-			assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
-		}
-	}
+    public void testCreateWithoutMeeting() throws Exception {
+        try {
+            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null, officeBo, meeting,
+                    personnelBo, new CustomerPersistence());
+            fail();
+        } catch (CustomerException ce) {
+            assertNull(center);
+            assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
+        }
+    }
 
-	public void testCreateWithoutOffice() throws Exception {
-		try {
-			meeting = getMeeting();
-			center = new CenterBO(TestUtils.makeUser(), "Center",
-					null, null, null, null, null, null, meeting, personnelBo, new CustomerPersistence());
-			fail();
-		} catch (CustomerException ce) {
-			assertNull(center);
-			assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
-		}
-		TestObjectFactory.removeObject(meeting);
-	}
+    public void testCreateWithoutOffice() throws Exception {
+        try {
+            meeting = getMeeting();
+            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null, null, meeting,
+                    personnelBo, new CustomerPersistence());
+            fail();
+        } catch (CustomerException ce) {
+            assertNull(center);
+            assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
+        }
+        TestObjectFactory.removeObject(meeting);
+    }
 
-	public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
-		String name = "Center1";
-		meeting = getMeeting();
-		center = new CenterBO(TestUtils.makeUser(), name, null,
-				null, null, null, null, officeBo, meeting, personnelBo, new CustomerPersistence());
-		new CenterPersistence().saveCenter(center);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		assertEquals(name, center.getDisplayName());
-		assertEquals(officeId, center.getOffice().getOfficeId());
-	}
+    public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
+        String name = "Center1";
+        meeting = getMeeting();
+        center = new CenterBO(TestUtils.makeUser(), name, null, null, null, null, null, officeBo, meeting, personnelBo,
+                new CustomerPersistence());
+        new CenterPersistence().saveCenter(center);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        assertEquals(name, center.getDisplayName());
+        assertEquals(officeId, center.getOffice().getOfficeId());
+    }
 
-	public void testSuccessfulCreateWithoutFee() throws Exception {
-		String name = "Center1";
-		meeting = getMeeting();
-		center = new CenterBO(TestUtils.makeUser(), name, null,
-				getCustomFields(), null, null, null, officeBo, meeting,
-				personnelBo, new CustomerPersistence());
-		new CenterPersistence().saveCenter(center);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		assertEquals(name, center.getDisplayName());
-		assertEquals(officeId, center.getOffice().getOfficeId());
-		assertEquals(2, center.getCustomFields().size());
-	}
+    public void testSuccessfulCreateWithoutFee() throws Exception {
+        String name = "Center1";
+        meeting = getMeeting();
+        center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), null, null, null, officeBo, meeting,
+                personnelBo, new CustomerPersistence());
+        new CenterPersistence().saveCenter(center);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        assertEquals(name, center.getDisplayName());
+        assertEquals(officeId, center.getOffice().getOfficeId());
+        assertEquals(2, center.getCustomFields().size());
+    }
 
-	public void testFailureCreate_DuplicateName() throws Exception {
-		String name = "Center1";
-		center = TestObjectFactory.createCenter(name,
-				getMeeting());
-		StaticHibernateUtil.closeSession();
+    public void testFailureCreate_DuplicateName() throws Exception {
+        String name = "Center1";
+        center = TestObjectFactory.createCenter(name, getMeeting());
+        StaticHibernateUtil.closeSession();
 
-		String externalId = "12345";
-		Date mfiJoiningDate = getDate("11/12/2005");
-		meeting = getMeeting();
-		List<FeeView> fees = getFees();
-		try {
-			center = new CenterBO(TestUtils.makeUser(), name,
-					null, null, fees, externalId, mfiJoiningDate, officeBo,
-					meeting, personnelBo, new CustomerPersistence());
-			fail();
-		} catch (CustomerException e) {
-			assertEquals(
-				CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
-		}
-		removeFees(fees);
-	}
+        String externalId = "12345";
+        Date mfiJoiningDate = getDate("11/12/2005");
+        meeting = getMeeting();
+        List<FeeView> fees = getFees();
+        try {
+            center = new CenterBO(TestUtils.makeUser(), name, null, null, fees, externalId, mfiJoiningDate, officeBo,
+                    meeting, personnelBo, new CustomerPersistence());
+            fail();
+        } catch (CustomerException e) {
+            assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
+        }
+        removeFees(fees);
+    }
 
-	public void testFailureDuplicateName() throws Exception {
-		String name = "Center1";
-		center = TestObjectFactory.createCenter(name,
-				getMeeting());
-		StaticHibernateUtil.closeSession();
+    public void testFailureDuplicateName() throws Exception {
+        String name = "Center1";
+        center = TestObjectFactory.createCenter(name, getMeeting());
+        StaticHibernateUtil.closeSession();
 
-		String externalId = "12345";
-		Date mfiJoiningDate = getDate("11/12/2005");
-		meeting = getMeeting();
-		UserContext userContext = TestUtils.makeUser();
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			center = new CenterBO(userContext, name, null, null, null,
-					externalId, mfiJoiningDate, officeBo, meeting, personnelBo, new CustomerPersistence());
-			fail();
-		} catch (CustomerException e) {
-			assertTrue(true);
-		} finally {
-			StaticHibernateUtil.closeSession();
-		}
-	}
+        String externalId = "12345";
+        Date mfiJoiningDate = getDate("11/12/2005");
+        meeting = getMeeting();
+        UserContext userContext = TestUtils.makeUser();
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            center = new CenterBO(userContext, name, null, null, null, externalId, mfiJoiningDate, officeBo, meeting,
+                    personnelBo, new CustomerPersistence());
+            fail();
+        } catch (CustomerException e) {
+            assertTrue(true);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
 
-	public void testSuccessfulCreate() throws Exception {
-		String name = "Center1";
-		String externalId = "12345";
-		Date mfiJoiningDate = getDate("11/12/2005");
-		meeting = getMeeting();
-		List<FeeView> fees = getFees();
-		center = new CenterBO(TestUtils.makeUser(), name, null,
-				getCustomFields(), fees, externalId, mfiJoiningDate, 
-				new OfficePersistence().getOffice(officeId),
-				meeting, 
-				new PersonnelPersistence().getPersonnel(personnelId), new CustomerPersistence());
-		new CenterPersistence().saveCenter(center);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		assertEquals(name, center.getDisplayName());
-		assertEquals(externalId, center.getExternalId());
-		assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center
-				.getMfiJoiningDate().getTime()));
-		assertEquals(officeId, center.getOffice().getOfficeId());
-		assertEquals(2, center.getCustomFields().size());
-		assertEquals(AccountState.CUSTOMER_ACCOUNT_ACTIVE.getValue(), center
-				.getCustomerAccount().getAccountState().getId());
-		// check if values in account fees are entered.
-		assertNotNull(center.getCustomerAccount().getAccountFees(
-				fees.get(0).getFeeIdValue()));
-		assertNotNull(center.getCustomerAccount().getAccountFees(
-				fees.get(1).getFeeIdValue()));
+    public void testSuccessfulCreate() throws Exception {
+        String name = "Center1";
+        String externalId = "12345";
+        Date mfiJoiningDate = getDate("11/12/2005");
+        meeting = getMeeting();
+        List<FeeView> fees = getFees();
+        center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), fees, externalId, mfiJoiningDate,
+                new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
+                        .getPersonnel(personnelId), new CustomerPersistence());
+        new CenterPersistence().saveCenter(center);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        assertEquals(name, center.getDisplayName());
+        assertEquals(externalId, center.getExternalId());
+        assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center.getMfiJoiningDate().getTime()));
+        assertEquals(officeId, center.getOffice().getOfficeId());
+        assertEquals(2, center.getCustomFields().size());
+        assertEquals(AccountState.CUSTOMER_ACCOUNT_ACTIVE.getValue(), center.getCustomerAccount().getAccountState()
+                .getId());
+        // check if values in account fees are entered.
+        assertNotNull(center.getCustomerAccount().getAccountFees(fees.get(0).getFeeIdValue()));
+        assertNotNull(center.getCustomerAccount().getAccountFees(fees.get(1).getFeeIdValue()));
 
-	}
+    }
 
-	public void testUpdateFailure() throws Exception {
-		createCustomers();
-		try {
-			center.update(TestUtils.makeUser(), null, "1234",
-					null, null, null, null);
-			fail();
-		} catch (CustomerException ce) {
-			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
-		}
-	}
+    public void testUpdateFailure() throws Exception {
+        createCustomers();
+        try {
+            center.update(TestUtils.makeUser(), null, "1234", null, null, null, null);
+            fail();
+        } catch (CustomerException ce) {
+            assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
+        }
+    }
 
-	public void testSuccessfulUpdate() throws Exception {
-		createCustomers();
-		Date mfiJoiningDate = getDate("11/12/2005");
-		String city = "Bangalore";
-		String addressLine1 = "Aditi";
-		String externalId = "1234";
-		Address address = new Address();
-		address.setCity(city);
-		address.setLine1(addressLine1);
+    public void testSuccessfulUpdate() throws Exception {
+        createCustomers();
+        Date mfiJoiningDate = getDate("11/12/2005");
+        String city = "Bangalore";
+        String addressLine1 = "Aditi";
+        String externalId = "1234";
+        Address address = new Address();
+        address.setCity(city);
+        address.setLine1(addressLine1);
 
-		center.update(TestUtils.makeUser(), personnelId,
-				externalId, mfiJoiningDate, address, null, null);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        center.update(TestUtils.makeUser(), personnelId, externalId, mfiJoiningDate, address, null, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
+        center = TestObjectFactory.getCenter(center.getCustomerId());
 
-		assertEquals(city, center.getCustomerAddressDetail().getAddress()
-				.getCity());
-		assertEquals(addressLine1, center.getCustomerAddressDetail()
-				.getAddress().getLine1());
-		assertEquals(externalId, center.getExternalId());
-		assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center
-				.getMfiJoiningDate().getTime()));
-		assertEquals(personnelId, center.getPersonnel().getPersonnelId());
-	}
+        assertEquals(city, center.getCustomerAddressDetail().getAddress().getCity());
+        assertEquals(addressLine1, center.getCustomerAddressDetail().getAddress().getLine1());
+        assertEquals(externalId, center.getExternalId());
+        assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center.getMfiJoiningDate().getTime()));
+        assertEquals(personnelId, center.getPersonnel().getPersonnelId());
+    }
 
-	public void testSuccessfulUpdateWithoutLO_in_InActiveState()
-			throws Exception {
-	    CustomerPersistence customerPersistence = new CustomerPersistence();
-	    PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-		createCustomers();
-		client.changeStatus(CustomerStatus.CLIENT_CANCELLED, 
-				CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW, 
-				"client cancelled");
-		client.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+    public void testSuccessfulUpdateWithoutLO_in_InActiveState() throws Exception {
+        CustomerPersistence customerPersistence = new CustomerPersistence();
+        PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+        createCustomers();
+        client.changeStatus(CustomerStatus.CLIENT_CANCELLED, CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW,
+                "client cancelled");
+        client.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
-				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
-				"group cancelled");
-		group.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        group.changeStatus(CustomerStatus.GROUP_CANCELLED, CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, "group cancelled");
+        group.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
-				"Center_Inactive");
-		center.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "Center_Inactive");
+        center.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
+        center = TestObjectFactory.getCenter(center.getCustomerId());
 
-		StaticHibernateUtil.startTransaction();
-		center.update(TestUtils.makeUser(), null, center
-				.getExternalId(), center.getMfiJoiningDate(), center
-				.getAddress(), null, null);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.startTransaction();
+        center.update(TestUtils.makeUser(), null, center.getExternalId(), center.getMfiJoiningDate(), center
+                .getAddress(), null, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
 
-		assertNull(center.getPersonnel());
-		assertNull(group.getPersonnel());
-		assertNull(client.getPersonnel());
-	}
+        assertNull(center.getPersonnel());
+        assertNull(group.getPersonnel());
+        assertNull(client.getPersonnel());
+    }
 
-	public void testUpdateLOsForAllChildren() throws Exception {
-		createCustomers();
-		assertEquals(center.getPersonnel().getPersonnelId(), group
-				.getPersonnel().getPersonnelId());
-		assertEquals(center.getPersonnel().getPersonnelId(), client
-				.getPersonnel().getPersonnelId());
-		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
-		StaticHibernateUtil.closeSession();
-		StaticHibernateUtil.startTransaction();
-		center.update(TestUtils.makeUser(), newLO
-				.getPersonnelId(), center.getExternalId(), center
-				.getMfiJoiningDate(), center.getAddress(), null, null);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
-		assertEquals(newLO.getPersonnelId(), center.getPersonnel()
-				.getPersonnelId());
-		assertEquals(newLO.getPersonnelId(), group.getPersonnel()
-				.getPersonnelId());
-		assertEquals(newLO.getPersonnelId(), client.getPersonnel()
-				.getPersonnelId());
-	}
+    public void testUpdateLOsForAllChildren() throws Exception {
+        createCustomers();
+        assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
+        assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
+        PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
+        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.startTransaction();
+        center.update(TestUtils.makeUser(), newLO.getPersonnelId(), center.getExternalId(), center.getMfiJoiningDate(),
+                center.getAddress(), null, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+        assertEquals(newLO.getPersonnelId(), center.getPersonnel().getPersonnelId());
+        assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
+        assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
+    }
 
-	public void testUpdateMeeting_SaveToUpdateLater() throws Exception {
-		createCustomers();
-		String oldMeetingPlace = "Delhi";
-		MeetingBO centerMeeting = center.getCustomerMeeting().getMeeting();
-		String meetingPlace = "Bangalore";
-		MeetingBO newMeeting = new MeetingBO(WeekDay.MONDAY, centerMeeting
-				.getMeetingDetails().getRecurAfter(), centerMeeting
-				.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-		StaticHibernateUtil.closeSession();
+    public void testUpdateMeeting_SaveToUpdateLater() throws Exception {
+        createCustomers();
+        String oldMeetingPlace = "Delhi";
+        MeetingBO centerMeeting = center.getCustomerMeeting().getMeeting();
+        String meetingPlace = "Bangalore";
+        MeetingBO newMeeting = new MeetingBO(WeekDay.MONDAY, centerMeeting.getMeetingDetails().getRecurAfter(),
+                centerMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		center.setUserContext(TestObjectFactory.getContext());
-		center.updateMeeting(newMeeting);
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        center.setUserContext(TestObjectFactory.getContext());
+        center.updateMeeting(newMeeting);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
 
-		assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting()
-				.getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting()
-				.getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting()
-				.getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-		assertEquals(WeekDay.MONDAY, center.getCustomerMeeting()
-				.getUpdatedMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.MONDAY, group.getCustomerMeeting()
-				.getUpdatedMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.MONDAY, client.getCustomerMeeting()
-				.getUpdatedMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
 
-		assertEquals(oldMeetingPlace, center.getCustomerMeeting().getMeeting()
-				.getMeetingPlace());
-		assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting()
-				.getMeetingPlace());
-		assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting()
-				.getMeetingPlace());
+        assertEquals(oldMeetingPlace, center.getCustomerMeeting().getMeeting().getMeetingPlace());
+        assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+        assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
 
-		assertEquals(meetingPlace, center.getCustomerMeeting()
-				.getUpdatedMeeting().getMeetingPlace());
-		assertEquals(meetingPlace, group.getCustomerMeeting()
-				.getUpdatedMeeting().getMeetingPlace());
-		assertEquals(meetingPlace, client.getCustomerMeeting()
-				.getUpdatedMeeting().getMeetingPlace());
-	}
+        assertEquals(meetingPlace, center.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+        assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+        assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+    }
 
-	public void testUpdateMeeting_updateWithSaveMeeting() throws Exception {
-		testUpdateMeeting_SaveToUpdateLater();
-		Integer updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting()
-				.getMeetingId();
-		center.changeUpdatedMeeting();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		center = TestObjectFactory.getCenter(center
-				.getCustomerId());
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		client = TestObjectFactory.getClient(client
-				.getCustomerId());
+    public void testUpdateMeeting_updateWithSaveMeeting() throws Exception {
+        testUpdateMeeting_SaveToUpdateLater();
+        Integer updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
+        center.changeUpdatedMeeting();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        center = TestObjectFactory.getCenter(center.getCustomerId());
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
 
-		assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getMeeting()
-				.getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting()
-				.getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting()
-				.getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-		assertNull(center.getCustomerMeeting().getUpdatedMeeting());
-		assertNull(group.getCustomerMeeting().getUpdatedMeeting());
-		assertNull(client.getCustomerMeeting().getUpdatedMeeting());
+        assertNull(center.getCustomerMeeting().getUpdatedMeeting());
+        assertNull(group.getCustomerMeeting().getUpdatedMeeting());
+        assertNull(client.getCustomerMeeting().getUpdatedMeeting());
 
-		MeetingBO meeting = new MeetingPersistence().getMeeting(updatedMeeting);
-		assertNull(meeting);
-	}
+        MeetingBO meeting = new MeetingPersistence().getMeeting(updatedMeeting);
+        assertNull(meeting);
+    }
 
-	public void testCenterSearchResultsView(){
-		
-		CenterSearchResults searchResults = new CenterSearchResults();
-		searchResults.setCenterName("Center");
-		searchResults.setCenterSystemId("1234");
-		searchResults.setParentOfficeId(Short.valueOf("1"));
-		searchResults.setParentOfficeName("BO");
-		assertEquals("Center",searchResults.getCenterName());
-		assertEquals("1234",searchResults.getCenterSystemId());
-		assertEquals(Short.valueOf("1").shortValue(),searchResults.getParentOfficeId());
-		assertEquals("BO",searchResults.getParentOfficeName());
-		
-	}
-	
-	public void testSearchIdOnlyUniquePerOffice() throws Exception {
-		Date startDate = new Date();
+    public void testCenterSearchResultsView() {
 
-		StaticHibernateUtil.startTransaction();
-		
-		// In real life, would be another branch rather than an area
-		OfficeBO branch1 = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
-		
-		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short)1,
-			startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
+        CenterSearchResults searchResults = new CenterSearchResults();
+        searchResults.setCenterName("Center");
+        searchResults.setCenterSystemId("1234");
+        searchResults.setParentOfficeId(Short.valueOf("1"));
+        searchResults.setParentOfficeName("BO");
+        assertEquals("Center", searchResults.getCenterName());
+        assertEquals("1234", searchResults.getCenterSystemId());
+        assertEquals(Short.valueOf("1").shortValue(), searchResults.getParentOfficeId());
+        assertEquals("BO", searchResults.getParentOfficeName());
 
-		PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-		center = new CenterBO(TestUtils.makeUser(), 
-			"center1", null, null, null, null, startDate, 
-			branch1, meeting,
-			systemUser, new CustomerPersistence());
-		StaticHibernateUtil.getSessionTL().save(center);
+    }
 
-		CenterBO center2 = new CenterBO(TestUtils.makeUser(), 
-				"center2", null, null, null, null, startDate, 
-				new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), 
-				    meeting, systemUser, new CustomerPersistence());
-		
-		CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), 
-				"sameBranch", null, null, null, null, startDate, 
-				branch1, meeting,
-				systemUser, new CustomerPersistence());
-		StaticHibernateUtil.getSessionTL().save(center);
-		StaticHibernateUtil.commitTransaction();
-		
-		assertEquals("1.1", center.getSearchId());
-		assertEquals("1.1", center2.getSearchId());
-		assertEquals("1.2", sameBranch.getSearchId());
-	}
+    public void testSearchIdOnlyUniquePerOffice() throws Exception {
+        Date startDate = new Date();
 
-	private void createCustomers() throws Exception {
-		meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK,
-				new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-		center = TestObjectFactory.createCenter("Center",
-				meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-	}
+        StaticHibernateUtil.startTransaction();
 
-	private MeetingBO getMeeting() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		return meeting;
-	}
+        // In real life, would be another branch rather than an area
+        OfficeBO branch1 = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 
-	private List<CustomFieldView> getCustomFields() {
-		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-		fields.add(new CustomFieldView(Short.valueOf("5"), "value1",
-				CustomFieldType.ALPHA_NUMERIC));
-		fields.add(new CustomFieldView(Short.valueOf("6"), "value2",
-				CustomFieldType.ALPHA_NUMERIC));
-		return fields;
-	}
+        MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short) 1, startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
 
-	private List<FeeView> getFees() {
-		List<FeeView> fees = new ArrayList<FeeView>();
-		AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory
-				.createPeriodicAmountFee("PeriodicAmountFee",
-						FeeCategory.CENTER, "200", RecurrenceType.WEEKLY, Short
-								.valueOf("2"));
-		AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory
-				.createOneTimeAmountFee("OneTimeAmountFee",
-						FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
-		fees.add(new FeeView(TestObjectFactory.getContext(), fee2));
-		StaticHibernateUtil.commitTransaction();
-		return fees;
-	}
+        PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+        center = new CenterBO(TestUtils.makeUser(), "center1", null, null, null, null, startDate, branch1, meeting,
+                systemUser, new CustomerPersistence());
+        StaticHibernateUtil.getSessionTL().save(center);
 
-	private void removeFees(List<FeeView> feesToRemove) {
-		for (FeeView fee : feesToRemove) {
-			TestObjectFactory.cleanUp(new FeePersistence().getFee(fee
-					.getFeeIdValue()));
-		}
-	}
+        CenterBO center2 = new CenterBO(TestUtils.makeUser(), "center2", null, null, null, null, startDate,
+                new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), meeting, systemUser,
+                new CustomerPersistence());
+
+        CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), "sameBranch", null, null, null, null, startDate,
+                branch1, meeting, systemUser, new CustomerPersistence());
+        StaticHibernateUtil.getSessionTL().save(center);
+        StaticHibernateUtil.commitTransaction();
+
+        assertEquals("1.1", center.getSearchId());
+        assertEquals("1.1", center2.getSearchId());
+        assertEquals("1.2", sameBranch.getSearchId());
+    }
+
+    private void createCustomers() throws Exception {
+        meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK, new Date(),
+                MeetingType.CUSTOMER_MEETING, "Delhi");
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+    }
+
+    private MeetingBO getMeeting() {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        return meeting;
+    }
+
+    private List<CustomFieldView> getCustomFields() {
+        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
+        fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
+        return fields;
+    }
+
+    private List<FeeView> getFees() {
+        List<FeeView> fees = new ArrayList<FeeView>();
+        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
+                FeeCategory.CENTER, "200", RecurrenceType.WEEKLY, Short.valueOf("2"));
+        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee",
+                FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
+        fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
+        fees.add(new FeeView(TestObjectFactory.getContext(), fee2));
+        StaticHibernateUtil.commitTransaction();
+        return fees;
+    }
+
+    private void removeFees(List<FeeView> feesToRemove) {
+        for (FeeView fee : feesToRemove) {
+            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+        }
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productsmix.business;
 
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -31,44 +31,42 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixBOIntegrationTest extends MifosIntegrationTest {
-	
 
-	public ProductMixBOIntegrationTest() throws SystemException, ApplicationException {
+    public ProductMixBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private SavingsOfferingBO savingsOffering;
-	private SavingsTestHelper helper = new SavingsTestHelper();
-	private ProductMixBO prdMix; 
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		savingsOffering = helper.createSavingsOffering("Eddikhar", "Edd");
-	}
+    private SavingsTestHelper helper = new SavingsTestHelper();
+    private ProductMixBO prdMix;
 
-	@Override
-	protected void tearDown() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        savingsOffering = helper.createSavingsOffering("Eddikhar", "Edd");
+    }
 
-		TestObjectFactory.removeObject(prdMix);
-		TestObjectFactory.removeObject(savingsOffering);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	
-	public void testUpdate() throws PersistenceException, ProductDefinitionException {
-		prdMix = new ProductMixBO(savingsOffering,savingsOffering);
-		prdMix.update();
-		assertEquals(savingsOffering.getPrdOfferingId(),prdMix.getPrdOfferingId().getPrdOfferingId());
-		assertEquals(savingsOffering.getPrdOfferingId(),prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
-	}
-	
-	public void testDelete() throws PersistenceException, ProductDefinitionException {
-		prdMix = new ProductMixBO(savingsOffering,savingsOffering);
-		prdMix.update();		
-		assertEquals(savingsOffering.getPrdOfferingId(),prdMix.getPrdOfferingId().getPrdOfferingId());
-		prdMix.delete();
-		
-	}
+    @Override
+    protected void tearDown() throws Exception {
+
+        TestObjectFactory.removeObject(prdMix);
+        TestObjectFactory.removeObject(savingsOffering);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
+
+    public void testUpdate() throws PersistenceException, ProductDefinitionException {
+        prdMix = new ProductMixBO(savingsOffering, savingsOffering);
+        prdMix.update();
+        assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
+        assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingNotAllowedId().getPrdOfferingId());
+    }
+
+    public void testDelete() throws PersistenceException, ProductDefinitionException {
+        prdMix = new ProductMixBO(savingsOffering, savingsOffering);
+        prdMix.update();
+        assertEquals(savingsOffering.getPrdOfferingId(), prdMix.getPrdOfferingId().getPrdOfferingId());
+        prdMix.delete();
+
+    }
 }

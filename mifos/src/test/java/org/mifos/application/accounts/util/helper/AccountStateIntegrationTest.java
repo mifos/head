@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helper;
 
 import java.util.Collections;
@@ -36,55 +36,53 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.application.master.MessageLookup;
 
 public class AccountStateIntegrationTest extends MifosIntegrationTest {
-	public AccountStateIntegrationTest() throws SystemException, ApplicationException {
+    public AccountStateIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private AccountPersistence accountPersistence;
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		accountPersistence = new AccountPersistence();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        accountPersistence = new AccountPersistence();
+    }
 
-	/*
-	 * Check that the values in the enumerated type AccountState
-	 * match with the Entity values in terms of ids, state names,
-	 * and the text that they eventually resolve to.
-	 */
-	public void testRetrieveAllAccountStateList() throws NumberFormatException,
-			PersistenceException {
-		List<AccountStateEntity> accountStateEntityList = accountPersistence
-				.retrieveAllAccountStateList(ProductType.SAVINGS.getValue());
-		assertNotNull(accountStateEntityList);
-		assertEquals(6, accountStateEntityList.size());
+    /*
+     * Check that the values in the enumerated type AccountState match with the
+     * Entity values in terms of ids, state names, and the text that they
+     * eventually resolve to.
+     */
+    public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
+        List<AccountStateEntity> accountStateEntityList = accountPersistence
+                .retrieveAllAccountStateList(ProductType.SAVINGS.getValue());
+        assertNotNull(accountStateEntityList);
+        assertEquals(6, accountStateEntityList.size());
 
-		List<AccountStateEntity> accountStateEntityList2 = accountPersistence
-				.retrieveAllAccountStateList(ProductType.LOAN.getValue());
-		assertNotNull(accountStateEntityList2);
-		assertEquals(12, accountStateEntityList2.size());
+        List<AccountStateEntity> accountStateEntityList2 = accountPersistence
+                .retrieveAllAccountStateList(ProductType.LOAN.getValue());
+        assertNotNull(accountStateEntityList2);
+        assertEquals(12, accountStateEntityList2.size());
 
-		accountStateEntityList.addAll(accountStateEntityList2);
-		
-		// order by id
-		Collections.sort(accountStateEntityList, new Comparator<AccountStateEntity>() {
-			public int compare(AccountStateEntity state1, AccountStateEntity state2) {
-				return state1.getId().compareTo(state2.getId());
-			}
-		});
-		
-		assertEquals(AccountState.values().length, accountStateEntityList.size());
-		
-		Iterator<AccountStateEntity> stateListIterator = accountStateEntityList.iterator();
-		for (AccountState state : AccountState.values()) {
-			AccountStateEntity stateInDatabase = stateListIterator.next();
-			assertEquals(state.getValue(), stateInDatabase.getId());
-			assertEquals(state.getPropertiesKey(), stateInDatabase.getLookUpValue().getLookUpName());
-			assertEquals(MessageLookup.getInstance().lookup(state), MessageLookup.getInstance().lookup(stateInDatabase));
-		}
-		
-	}
+        accountStateEntityList.addAll(accountStateEntityList2);
 
+        // order by id
+        Collections.sort(accountStateEntityList, new Comparator<AccountStateEntity>() {
+            public int compare(AccountStateEntity state1, AccountStateEntity state2) {
+                return state1.getId().compareTo(state2.getId());
+            }
+        });
+
+        assertEquals(AccountState.values().length, accountStateEntityList.size());
+
+        Iterator<AccountStateEntity> stateListIterator = accountStateEntityList.iterator();
+        for (AccountState state : AccountState.values()) {
+            AccountStateEntity stateInDatabase = stateListIterator.next();
+            assertEquals(state.getValue(), stateInDatabase.getId());
+            assertEquals(state.getPropertiesKey(), stateInDatabase.getLookUpValue().getLookUpName());
+            assertEquals(MessageLookup.getInstance().lookup(state), MessageLookup.getInstance().lookup(stateInDatabase));
+        }
+
+    }
 
 }

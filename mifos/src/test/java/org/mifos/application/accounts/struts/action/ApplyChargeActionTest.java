@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.action;
 
 import java.sql.Date;
@@ -46,143 +46,139 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ApplyChargeActionTest extends MifosMockStrutsTestCase {
 
-	public ApplyChargeActionTest() throws SystemException, ApplicationException {
+    public ApplyChargeActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private AccountBO accountBO;
 
-	private UserContext userContext;
-	
-	private CustomerBO client;
+    private UserContext userContext;
 
-	private CustomerBO group;
+    private CustomerBO client;
 
-	private CustomerBO center;
-	
-	private MeetingBO meeting;
-	
-	private String flowKey;
+    private CustomerBO group;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, ApplyChargeAction.class);
-	}
+    private CustomerBO center;
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    private MeetingBO meeting;
 
-	public void testLoad() throws Exception{
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		setRequestPathInfo("/applyChargeAction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyForward("load_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		
-		assertNotNull(SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,request));
-		assertEquals("Size of the list should be 2",2,((List<ApplicableCharge>)SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,request)).size());
-	}
-	
-	public void testCancel() throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,
-				getAccountBusinessService().getAccount(accountBO.getAccountId()), request
-						);
-		setRequestPathInfo("/applyChargeAction.do");
-		addRequestParameter("method", "cancel");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyForward("loanDetails_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
-	
-	public void testUpdateSuccess() {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		setRequestPathInfo("/applyChargeAction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter("chargeType","-1");
-		addRequestParameter("charge", "18");
-		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyForward("loanDetails_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		
-	}
-	
-	public void testUpdateFailureWith_Rate_GreaterThan999() {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createInitialObjects();
-		accountBO = getLoanAccount(client,meeting);
-		setRequestPathInfo("/applyChargeAction.do");
-		addRequestParameter("method", "update");
-		addRequestParameter("chargeType","-1");
-		addRequestParameter("chargeAmount","999999");
-		addRequestParameter("selectedChargeFormula","%LoanAmount");
-		addRequestParameter("charge", "18");
-		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		assertEquals("Rate", 1,
-				getErrorSize(AccountConstants.RATE));
-		
-	}
-	
-	public void testValidate() throws Exception {
-		setRequestPathInfo("/applyChargeAction.do");
-		addRequestParameter("method", "validate");
-		request.setAttribute("methodCalled", "update");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.update_failure.toString());
-	}
-	
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",CustomerStatus.CLIENT_ACTIVE,group);
-	}
-	
-	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer, 
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
+    private String flowKey;
 
-	}
-	
-	private AccountBusinessService getAccountBusinessService()
-			throws ServiceException {
-		return new AccountBusinessService();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, ApplyChargeAction.class);
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(accountBO);
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
+
+    public void testLoad() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        accountBO = getLoanAccount(client, meeting);
+        setRequestPathInfo("/applyChargeAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("accountId", accountBO.getAccountId().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        actionPerform();
+        verifyForward("load_success");
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+
+        assertNotNull(SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, request));
+        assertEquals("Size of the list should be 2", 2, ((List<ApplicableCharge>) SessionUtils.getAttribute(
+                AccountConstants.APPLICABLE_CHARGE_LIST, request)).size());
+    }
+
+    public void testCancel() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        accountBO = getLoanAccount(client, meeting);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, getAccountBusinessService().getAccount(
+                accountBO.getAccountId()), request);
+        setRequestPathInfo("/applyChargeAction.do");
+        addRequestParameter("method", "cancel");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        actionPerform();
+        verifyForward("loanDetails_success");
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
+
+    public void testUpdateSuccess() {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        accountBO = getLoanAccount(client, meeting);
+        setRequestPathInfo("/applyChargeAction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter("chargeType", "-1");
+        addRequestParameter("charge", "18");
+        addRequestParameter("accountId", accountBO.getAccountId().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        actionPerform();
+        verifyForward("loanDetails_success");
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+
+    }
+
+    public void testUpdateFailureWith_Rate_GreaterThan999() {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        accountBO = getLoanAccount(client, meeting);
+        setRequestPathInfo("/applyChargeAction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter("chargeType", "-1");
+        addRequestParameter("chargeAmount", "999999");
+        addRequestParameter("selectedChargeFormula", "%LoanAmount");
+        addRequestParameter("charge", "18");
+        addRequestParameter("accountId", accountBO.getAccountId().toString());
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        actionPerform();
+        assertEquals("Rate", 1, getErrorSize(AccountConstants.RATE));
+
+    }
+
+    public void testValidate() throws Exception {
+        setRequestPathInfo("/applyChargeAction.do");
+        addRequestParameter("method", "validate");
+        request.setAttribute("methodCalled", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.update_failure.toString());
+    }
+
+    private void createInitialObjects() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+    }
+
+    private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+        Date startDate = new Date(System.currentTimeMillis());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        return TestObjectFactory.createLoanAccount("42423142341", customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+                startDate, loanOffering);
+
+    }
+
+    private AccountBusinessService getAccountBusinessService() throws ServiceException {
+        return new AccountBusinessService();
+    }
 
 }

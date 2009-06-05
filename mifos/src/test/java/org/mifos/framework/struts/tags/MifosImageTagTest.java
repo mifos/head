@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import static org.junit.Assert.assertEquals;
@@ -31,19 +31,19 @@ import org.junit.Test;
 public class MifosImageTagTest {
 
     @Test
-    public void testRender() throws JspException, DocumentException{
-		MifosImageTag mifosImageTag = new MifosImageTag();
-		String path = "customer";
-		mifosImageTag.setModuleName(path);
-		mifosImageTag.setId("3");
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("<html>");
-		stringBuilder.append("<body>");
-		String str = "\"pages/framework/images/status_activegreen.gif\"";
-		stringBuilder.append("<img src="+str+" />");
-		stringBuilder.append("</body>");
-		stringBuilder.append("</html>");
-		assertEquals(stringBuilder.toString(),mifosImageTag.render());
-		assertWellFormedFragment(mifosImageTag.render());
-	}
+    public void testRender() throws JspException, DocumentException {
+        MifosImageTag mifosImageTag = new MifosImageTag();
+        String path = "customer";
+        mifosImageTag.setModuleName(path);
+        mifosImageTag.setId("3");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<html>");
+        stringBuilder.append("<body>");
+        String str = "\"pages/framework/images/status_activegreen.gif\"";
+        stringBuilder.append("<img src=" + str + " />");
+        stringBuilder.append("</body>");
+        stringBuilder.append("</html>");
+        assertEquals(stringBuilder.toString(), mifosImageTag.render());
+        assertWellFormedFragment(mifosImageTag.render());
+    }
 }

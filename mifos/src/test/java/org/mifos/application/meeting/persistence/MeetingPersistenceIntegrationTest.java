@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.persistence;
 
 import java.util.Date;
@@ -32,27 +32,28 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-public class MeetingPersistenceIntegrationTest extends MifosIntegrationTest{
+public class MeetingPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public MeetingPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public MeetingPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testGetWeekDaysList() throws Exception{
-		List<WeekDay> weekDaysList = new MeetingPersistence().getWorkingDays();
-		assertNotNull(weekDaysList);
-		//assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());
-		assertEquals(Integer.valueOf("7").intValue(),weekDaysList.size());
-	}
-	
-	public void testGetMeeting() throws Exception{
-		MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-		meeting.save();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
-		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
-		assertNotNull(meeting);
-		assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
-		assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
-	}
+    public void testGetWeekDaysList() throws Exception {
+        List<WeekDay> weekDaysList = new MeetingPersistence().getWorkingDays();
+        assertNotNull(weekDaysList);
+        // assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());
+        assertEquals(Integer.valueOf("7").intValue(), weekDaysList.size());
+    }
+
+    public void testGetMeeting() throws Exception {
+        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING,
+                "Delhi");
+        meeting.save();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        assertNotNull(meeting);
+        assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
+        assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+    }
 }

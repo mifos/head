@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts;
 
 import junit.framework.TestSuite;
@@ -41,27 +41,14 @@ import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
 import org.mifos.framework.util.LocalizationConverterIntegrationTest;
 
-	@RunWith(Suite.class)
-	@Suite.SuiteClasses({	
-		ConstPluginTest.class,
-		EnumPluginTest.class,
-		InitializerPluginTest.class,
-		BaseActionFormIntegrationTest.class,
-		DateTagTest.class,
-		RawButtonTest.class,
-		RawSelectTest.class,
-		MifosCheckBoxTagIntegrationTest.class,
-		MifosTextareaTagIntegrationTest.class,
-		MifosFileTagIntegrationTest.class,
-		MifosLabelTagIntegrationTest.class,
-		MifosImageTagTest.class,
-		MifosFileTagIntegrationTest.class,
-		MifosAlphaNumTextTagIntegrationTest.class,
-		MifosNumberTextTagIntegrationTest.class,
-		LocalizationConverterIntegrationTest.class,
-		MifosPropertyMessageResourcesTest.class
-	})
-	
-	public class StrutsTestSuite extends TestSuite {
-	    // placeholder class
-	}
+@RunWith(Suite.class)
+@Suite.SuiteClasses( { ConstPluginTest.class, EnumPluginTest.class, InitializerPluginTest.class,
+        BaseActionFormIntegrationTest.class, DateTagTest.class, RawButtonTest.class, RawSelectTest.class,
+        MifosCheckBoxTagIntegrationTest.class, MifosTextareaTagIntegrationTest.class,
+        MifosFileTagIntegrationTest.class, MifosLabelTagIntegrationTest.class, MifosImageTagTest.class,
+        MifosFileTagIntegrationTest.class, MifosAlphaNumTextTagIntegrationTest.class,
+        MifosNumberTextTagIntegrationTest.class, LocalizationConverterIntegrationTest.class,
+        MifosPropertyMessageResourcesTest.class })
+public class StrutsTestSuite extends TestSuite {
+    // placeholder class
+}

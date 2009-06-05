@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.configuration.struts.tag;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
@@ -35,64 +35,50 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTest {
 
-	public CustomFieldsListTagIntegrationTest() throws SystemException, ApplicationException {
+    public CustomFieldsListTagIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		userContext = TestUtils.makeUser();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
 
-	public void testGetListRow() throws Exception {
-		String categoryName = "Personnel";
-		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, 
-				categoryName);
-		MasterPersistence master = new MasterPersistence();
-		CustomFieldDefinitionEntity customField = master.retrieveCustomFieldsDefinition(EntityType.LOAN).get(0);
-		XmlBuilder link = tag.getRow(customField, userContext, 1);
-		String sequenceNum = "1";
-		String label = "External Loan Id";
-		String dataType = "Text";
-		String defaultValue = "\u00a0";
-		String mandatory = "No";
-		String fieldId = "7";
+        userContext = TestUtils.makeUser();
+    }
 
-		assertEquals("<tr>\n"
-				+ "<td width=\"11%\" class=\"drawtablerow\">"
-				+ sequenceNum
-				+ "</td>\n"
-				+ "<td width=\"22%\" class=\"drawtablerow\">"
-				+ label
-				+ "</td>\n"
-				+ "<td width=\"21%\" class=\"drawtablerow\">"
-				+ dataType
-				+ "</td>\n"
-				+ "<td width=\"21%\" class=\"drawtablerow\">"
-				+ defaultValue
-				+ "</td>\n"
-				+ "<td width=\"17%\" class=\"drawtablerow\">"
-				+ mandatory
-				+ "</td>\n"
-				+ "<td width=\"8%\" align=\"right\" class=\"drawtablerow\">"
-				+ "<a href=\"action?method=method&amp;customFieldIdStr=" + fieldId + "&amp;currentFlowKey=flow\">Edit</a>"
-				+ "</td>\n"
-				+ "</tr>\n",
-				link.getOutput());
-	}
+    public void testGetListRow() throws Exception {
+        String categoryName = "Personnel";
+        CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);
+        MasterPersistence master = new MasterPersistence();
+        CustomFieldDefinitionEntity customField = master.retrieveCustomFieldsDefinition(EntityType.LOAN).get(0);
+        XmlBuilder link = tag.getRow(customField, userContext, 1);
+        String sequenceNum = "1";
+        String label = "External Loan Id";
+        String dataType = "Text";
+        String defaultValue = "\u00a0";
+        String mandatory = "No";
+        String fieldId = "7";
 
-	public void testGetCustomFieldsList() throws Exception {
-		String categoryName = "Personnel";
-		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);
-		String html = tag.getCustomFieldsList(userContext);
-		
-		assertWellFormedFragment(html);
-		
-		StringAssert.assertContains("External Id", html);			
-	}
+        assertEquals("<tr>\n" + "<td width=\"11%\" class=\"drawtablerow\">" + sequenceNum + "</td>\n"
+                + "<td width=\"22%\" class=\"drawtablerow\">" + label + "</td>\n"
+                + "<td width=\"21%\" class=\"drawtablerow\">" + dataType + "</td>\n"
+                + "<td width=\"21%\" class=\"drawtablerow\">" + defaultValue + "</td>\n"
+                + "<td width=\"17%\" class=\"drawtablerow\">" + mandatory + "</td>\n"
+                + "<td width=\"8%\" align=\"right\" class=\"drawtablerow\">"
+                + "<a href=\"action?method=method&amp;customFieldIdStr=" + fieldId
+                + "&amp;currentFlowKey=flow\">Edit</a>" + "</td>\n" + "</tr>\n", link.getOutput());
+    }
+
+    public void testGetCustomFieldsList() throws Exception {
+        String categoryName = "Personnel";
+        CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);
+        String html = tag.getCustomFieldsList(userContext);
+
+        assertWellFormedFragment(html);
+
+        StringAssert.assertContains("External Id", html);
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import java.util.regex.Pattern;
@@ -30,42 +30,41 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
 public class ActivityMapperIntegrationTest extends MifosIntegrationTest {
-	public ActivityMapperIntegrationTest() throws SystemException, ApplicationException {
+    public ActivityMapperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     Pattern allowableActionName = Pattern.compile("([a-zA-Z])+");
 
-	@Test public void testNamesAcceptable() {
-		for (ActionSecurity security 
-			: ActivityMapper.getInstance().getAllSecurity()) {
-			String name = security.getActionName();
-			assertTrue(
-				"unacceptable action name " + name,
-				acceptableName(name));
-		}
-	}
-	
-	@Test public void testMachinery() {
-		assertTrue(acceptableName("openSesame"));
-		assertFalse(acceptableName("/bin/sh"));
-		assertFalse(acceptableName("/openSesame"));
-		assertFalse(acceptableName("open,sesame"));
-		assertFalse(acceptableName("open sesame"));
-		assertFalse(acceptableName("openSesame "));
-		assertFalse(acceptableName(""));
-		assertFalse(acceptableName(null));
-	}
+    @Test
+    public void testNamesAcceptable() {
+        for (ActionSecurity security : ActivityMapper.getInstance().getAllSecurity()) {
+            String name = security.getActionName();
+            assertTrue("unacceptable action name " + name, acceptableName(name));
+        }
+    }
 
-	private boolean acceptableName(String name) {
-		if (name == null) {
-			return false;
-		}
-		return allowableActionName.matcher(name).matches();
-	}
+    @Test
+    public void testMachinery() {
+        assertTrue(acceptableName("openSesame"));
+        assertFalse(acceptableName("/bin/sh"));
+        assertFalse(acceptableName("/openSesame"));
+        assertFalse(acceptableName("open,sesame"));
+        assertFalse(acceptableName("open sesame"));
+        assertFalse(acceptableName("openSesame "));
+        assertFalse(acceptableName(""));
+        assertFalse(acceptableName(null));
+    }
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(ActivityMapperIntegrationTest.class);
-	}
+    private boolean acceptableName(String name) {
+        if (name == null) {
+            return false;
+        }
+        return allowableActionName.matcher(name).matches();
+    }
+
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ActivityMapperIntegrationTest.class);
+    }
 
 }

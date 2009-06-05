@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.holiday;
 
 import junit.framework.Test;
@@ -33,20 +33,20 @@ import org.mifos.application.holiday.persistence.AddRepaymentRuleTest;
 
 public class HolidayTestSuite extends TestSuite {
 
-	public static void main(String[] args) {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
+    public static void main(String[] args) {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
 
-	public static Test suite() {
-		TestSuite testSuite = new HolidayTestSuite();
-		testSuite.addTestSuite(HolidayBOIntegrationTest.class);
-		testSuite.addTestSuite(HolidayBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(HolidayPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(HolidayActionTest.class);
-		testSuite.addTestSuite(HolidayUtilsIntegrationTest.class);
-		testSuite.addTest(AddRepaymentRuleTest.testSuite());
-		
-		return testSuite;
-	}
+    public static Test suite() {
+        TestSuite testSuite = new HolidayTestSuite();
+        testSuite.addTestSuite(HolidayBOIntegrationTest.class);
+        testSuite.addTestSuite(HolidayBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(HolidayPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(HolidayActionTest.class);
+        testSuite.addTestSuite(HolidayUtilsIntegrationTest.class);
+        testSuite.addTest(AddRepaymentRuleTest.testSuite());
+
+        return testSuite;
+    }
 }

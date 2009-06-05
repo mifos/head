@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.config;
 
 import java.util.NoSuchElementException;
@@ -33,26 +33,25 @@ import org.mifos.framework.util.helpers.FilePaths;
 
 public class ConfigurationManagerTest {
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(ConfigurationManagerTest.class);
-	}
-	
-	Configuration configuration;
-	private static final String badKey = "Bad Key";
-	
-	@BeforeClass
-	public static void init() throws Exception {
-		MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
-	}
-	
-	@Before
-	public void before() {
-		configuration = ConfigurationManager.getInstance().getConfiguration();
-	}
-	
-	
-	@Test(expected=NoSuchElementException.class)
-	public void testGetUndefinedProperty() {
-		configuration.getShort(badKey);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ConfigurationManagerTest.class);
+    }
+
+    Configuration configuration;
+    private static final String badKey = "Bad Key";
+
+    @BeforeClass
+    public static void init() throws Exception {
+        MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
+    }
+
+    @Before
+    public void before() {
+        configuration = ConfigurationManager.getInstance().getConfiguration();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testGetUndefinedProperty() {
+        configuration.getShort(badKey);
+    }
 }

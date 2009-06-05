@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.holiday.struts.action;
 
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
@@ -33,49 +33,48 @@ import org.mifos.framework.util.helpers.SessionUtils;
 
 public class HolidayActionTest extends MifosMockStrutsTestCase {
 
-	public HolidayActionTest() throws SystemException, ApplicationException {
+    public HolidayActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private String flowKey;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		UserContext userContext = TestUtils.makeUser();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		//addRequestParameter("recordLoanOfficerId", "1");
-		//addRequestParameter("recordOfficeId", "1");
-		//ActivityContext ac = new ActivityContext((short) 0, userContext
-		//		.getBranchId().shortValue(), userContext.getId().shortValue());
-		//request.getSession(false).setAttribute("ActivityContext", ac);
-		flowKey = createFlow(request, HolidayAction.class);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        UserContext userContext = TestUtils.makeUser();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        // addRequestParameter("recordLoanOfficerId", "1");
+        // addRequestParameter("recordOfficeId", "1");
+        // ActivityContext ac = new ActivityContext((short) 0, userContext
+        // .getBranchId().shortValue(), userContext.getId().shortValue());
+        // request.getSession(false).setAttribute("ActivityContext", ac);
+        flowKey = createFlow(request, HolidayAction.class);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
- 
-	public void testLoad() throws Exception {
-		setRequestPathInfo("/holidayAction");
-		addRequestParameter("method", "load");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.load_success.toString());
-		assertNotNull(SessionUtils.getAttribute(
-				HolidayConstants.REPAYMENTRULETYPES, request)); //HOLIDAY_MASTERDATA
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testGetHolidays() throws Exception {
-		setRequestPathInfo("/holidayAction");
-		addRequestParameter("method", "getHolidays");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.get_success.toString());		
-		assertNull(SessionUtils.getAttribute("noOfYears", request));		
-	}
+    public void testLoad() throws Exception {
+        setRequestPathInfo("/holidayAction");
+        addRequestParameter("method", "load");
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.load_success.toString());
+        assertNotNull(SessionUtils.getAttribute(HolidayConstants.REPAYMENTRULETYPES, request)); // HOLIDAY_MASTERDATA
+    }
+
+    public void testGetHolidays() throws Exception {
+        setRequestPathInfo("/holidayAction");
+        addRequestParameter("method", "getHolidays");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.get_success.toString());
+        assertNull(SessionUtils.getAttribute("noOfYears", request));
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productsmix;
 
 import junit.framework.Test;
@@ -29,28 +29,28 @@ import org.mifos.application.productsmix.business.service.ProductMixBusinessServ
 import org.mifos.application.productsmix.persistence.ProductMixPersistenceIntegrationTest;
 import org.mifos.application.productsmix.struts.action.ProductMixActionTest;
 
-public class ProductMixTestSuite extends TestSuite{
-	public ProductMixTestSuite() {
-		super();
-	}
+public class ProductMixTestSuite extends TestSuite {
+    public ProductMixTestSuite() {
+        super();
+    }
 
-	public static void main(String[] args) {
-		try {
-			Test testSuite = suite();
-			TestRunner.run(testSuite);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public static void main(String[] args) {
+        try {
+            Test testSuite = suite();
+            TestRunner.run(testSuite);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new ProductMixTestSuite();
-		testSuite.addTestSuite(ProductMixBOIntegrationTest.class);
-		testSuite.addTestSuite(ProductMixBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(ProductMixPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(ProductMixActionTest.class);
-		
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new ProductMixTestSuite();
+        testSuite.addTestSuite(ProductMixBOIntegrationTest.class);
+        testSuite.addTestSuite(ProductMixBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(ProductMixPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(ProductMixActionTest.class);
+
+        return testSuite;
+    }
 }

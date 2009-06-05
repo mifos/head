@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.plugin;
 
 import java.lang.reflect.Field;
@@ -39,80 +39,77 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ConstPluginTest extends MifosMockStrutsTestCase {
 
-	public ConstPluginTest() throws SystemException, ApplicationException {
+    public ConstPluginTest() throws SystemException, ApplicationException {
         super();
     }
 
     private SavingsOfferingBO product;
 
-	@Override
-	public void setUp()throws Exception {
-		super.setUp();
-		
-		request.getSession(true);
-		createFlowAndAddToRequest(SavingsAction.class);
-		request.getSession().setAttribute(Constants.USERCONTEXT, 
-			TestUtils.makeUser());
-		
-		product = TestObjectFactory.createSavingsProduct(
-			"Offering1", "s1", 
-			SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
-			new Date(System.currentTimeMillis()));
-		addRequestParameter("selectedPrdOfferingId", 
-			product.getPrdOfferingId().toString());
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(product);
-		super.tearDown();
-	}
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-	/**
-	 *This method performs an action to load Plugins defined in struts-config.xml.
-	 */
-	public void testMasterConstants() throws Exception{
-		setRequestPathInfo("/savingsAction.do");
-		addRequestParameter("method","load");
-		addRequestParameter("recordOfficeId","0");
-		addRequestParameter("recordLoanOfficerId","0");
-		performNoErrors();
-		Map constantMap = (Map)context.getAttribute("MasterConstants");
-		assertNotNull(constantMap);
-		assertEquals("PaymentType",constantMap.get("PAYMENT_TYPE"));
-		assertEquals(Short.valueOf("1"),constantMap.get("CUSTOMFIELD_NUMBER"));
-	}
+        request.getSession(true);
+        createFlowAndAddToRequest(SavingsAction.class);
+        request.getSession().setAttribute(Constants.USERCONTEXT, TestUtils.makeUser());
 
-	public void testIfAllConstantFilesAreLoaded(){
-		setRequestPathInfo("/savingsAction.do");
-		addRequestParameter("method","load");
-		addRequestParameter("recordOfficeId","0");
-		addRequestParameter("recordLoanOfficerId","0");
-		performNoErrors();
-		assertNotNull(context.getAttribute("Constants"));
-		assertNotNull(context.getAttribute("MasterConstants"));
-		assertNotNull(context.getAttribute("CustomerConstants"));
-		assertNotNull(context.getAttribute("AccountStates"));
-		assertNotNull(context.getAttribute("SavingsConstants"));
-	}
+        product = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
+                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
+        addRequestParameter("selectedPrdOfferingId", product.getPrdOfferingId().toString());
+    }
 
-	public void testConstantsPluginException() throws Exception {
-		ConstPlugin constPlugin = new ConstPlugin();
-		ArrayList<String> constPluginClasses = new ArrayList<String>();
-		constPluginClasses.add("org.mifos.doesNotExist");
-		try {
-			Class doesNotExistClass = ConstPlugin.class;
-			Field[] fields = doesNotExistClass.getDeclaredFields();
-			Field field = fields[0];
-			ConstPlugin.checkModifiers(field);
-		} catch (ConstantsNotLoadedException expected) {
-		}
+    @Override
+    protected void tearDown() throws Exception {
+        TestObjectFactory.removeObject(product);
+        super.tearDown();
+    }
 
-		try {
-			constPlugin.buildClasses(constPluginClasses);
-			fail();
-		} catch (ConstantsNotLoadedException expected) {
-		}
-	}
+    /**
+     *This method performs an action to load Plugins defined in
+     * struts-config.xml.
+     */
+    public void testMasterConstants() throws Exception {
+        setRequestPathInfo("/savingsAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("recordOfficeId", "0");
+        addRequestParameter("recordLoanOfficerId", "0");
+        performNoErrors();
+        Map constantMap = (Map) context.getAttribute("MasterConstants");
+        assertNotNull(constantMap);
+        assertEquals("PaymentType", constantMap.get("PAYMENT_TYPE"));
+        assertEquals(Short.valueOf("1"), constantMap.get("CUSTOMFIELD_NUMBER"));
+    }
+
+    public void testIfAllConstantFilesAreLoaded() {
+        setRequestPathInfo("/savingsAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("recordOfficeId", "0");
+        addRequestParameter("recordLoanOfficerId", "0");
+        performNoErrors();
+        assertNotNull(context.getAttribute("Constants"));
+        assertNotNull(context.getAttribute("MasterConstants"));
+        assertNotNull(context.getAttribute("CustomerConstants"));
+        assertNotNull(context.getAttribute("AccountStates"));
+        assertNotNull(context.getAttribute("SavingsConstants"));
+    }
+
+    public void testConstantsPluginException() throws Exception {
+        ConstPlugin constPlugin = new ConstPlugin();
+        ArrayList<String> constPluginClasses = new ArrayList<String>();
+        constPluginClasses.add("org.mifos.doesNotExist");
+        try {
+            Class doesNotExistClass = ConstPlugin.class;
+            Field[] fields = doesNotExistClass.getDeclaredFields();
+            Field field = fields[0];
+            ConstPlugin.checkModifiers(field);
+        } catch (ConstantsNotLoadedException expected) {
+        }
+
+        try {
+            constPlugin.buildClasses(constPluginClasses);
+            fail();
+        } catch (ConstantsNotLoadedException expected) {
+        }
+    }
 
 }

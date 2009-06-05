@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.fieldConfiguration.business;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -25,14 +25,15 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTest{
+public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTest {
 
-	public FieldConfigurationEntityIntegrationTest() throws SystemException, ApplicationException {
+    public FieldConfigurationEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public void testGetFieldConfigurationEntity(){
-		FieldConfigurationEntity fieldConfigurationEntity=(FieldConfigurationEntity)StaticHibernateUtil.getSessionTL().get(FieldConfigurationEntity.class,Integer.valueOf("1"));
-		assertEquals(fieldConfigurationEntity.getFieldName(),"SecondLastName");
-	}
+    public void testGetFieldConfigurationEntity() {
+        FieldConfigurationEntity fieldConfigurationEntity = (FieldConfigurationEntity) StaticHibernateUtil
+                .getSessionTL().get(FieldConfigurationEntity.class, Integer.valueOf("1"));
+        assertEquals(fieldConfigurationEntity.getFieldName(), "SecondLastName");
+    }
 }

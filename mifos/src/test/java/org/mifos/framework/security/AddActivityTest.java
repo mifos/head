@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security;
 
 import static org.junit.Assert.assertEquals;
@@ -54,140 +54,123 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AddActivityTest {
 
-	/*
-	 * We need the test case initializer in order to set up the
-	 * message cache in MifosConfiguration.
-	 */
-	@BeforeClass
-	public static void init() throws SystemException, ApplicationException {
-		new TestCaseInitializer().initialize();
-	}
-	
-	@Test
-	public void startFromStandardStore() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
-		upgradeAndCheck(database);
-	}
+    /*
+     * We need the test case initializer in order to set up the message cache in
+     * MifosConfiguration.
+     */
+    @BeforeClass
+    public static void init() throws SystemException, ApplicationException {
+        new TestCaseInitializer().initialize();
+    }
 
-	@Test
-	public void startFromSystemWithAddedLookupValues() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
+    @Test
+    public void startFromStandardStore() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
+        upgradeAndCheck(database);
+    }
 
-		Session writer = database.openSession();
-		for (int i = 0; i < 10; ++i) {
-			LookUpValueEntity entity = new LookUpValueEntity();
-			entity.setLookUpName("test look up value " + i);
-			MifosLookUpEntity mifosLookUpEntity = new MifosLookUpEntity();
-			mifosLookUpEntity.setEntityId((short) 87);
-			entity.setLookUpEntity(mifosLookUpEntity);
-			writer.save(entity);
-		}
-		writer.close();
+    @Test
+    public void startFromSystemWithAddedLookupValues() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
 
-		upgradeAndCheck(database);
-	}
+        Session writer = database.openSession();
+        for (int i = 0; i < 10; ++i) {
+            LookUpValueEntity entity = new LookUpValueEntity();
+            entity.setLookUpName("test look up value " + i);
+            MifosLookUpEntity mifosLookUpEntity = new MifosLookUpEntity();
+            mifosLookUpEntity.setEntityId((short) 87);
+            entity.setLookUpEntity(mifosLookUpEntity);
+            writer.save(entity);
+        }
+        writer.close();
 
-	private Upgrade upgradeAndCheck(TestDatabase database) throws IOException,
-			SQLException, ApplicationException {
-		short newId = 17032;
-		int databaseVersion = 172;
-		AddActivity upgrade = new AddActivity(
-				databaseVersion + 1, newId,
-				SecurityConstants.LOAN_MANAGEMENT, TEST_LOCALE,
-				"Can use the executive washroom");
-		upgrade.upgrade(database.openConnection(), null);
+        upgradeAndCheck(database);
+    }
 
-		// now reinitialize the cache from the Mayfly database
-		database.installInThreadLocal();
-		MifosConfiguration.getInstance().init();
-		
-		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
-				ActivityEntity.class, newId);
-		fetched.setLocaleId(TEST_LOCALE);
+    private Upgrade upgradeAndCheck(TestDatabase database) throws IOException, SQLException, ApplicationException {
+        short newId = 17032;
+        int databaseVersion = 172;
+        AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, SecurityConstants.LOAN_MANAGEMENT,
+                TEST_LOCALE, "Can use the executive washroom");
+        upgrade.upgrade(database.openConnection(), null);
 
-		assertEquals("Can use the executive washroom", fetched.getActivityName());
-		
-		assertEquals(SecurityConstants.LOAN_MANAGEMENT, (short) fetched.getParent()
-				.getId());
+        // now reinitialize the cache from the Mayfly database
+        database.installInThreadLocal();
+        MifosConfiguration.getInstance().init();
 
-		ActivityContext activityContext = new ActivityContext(newId,
-				TestObjectFactory.HEAD_OFFICE);
-		AuthorizationManager authorizer = AuthorizationManager.getInstance();
-		authorizer.init(database.openSession());
+        ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
+        fetched.setLocaleId(TEST_LOCALE);
 
-		UserContext admin = TestUtils
-				.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
-		assertTrue(authorizer.isActivityAllowed(admin, activityContext));
+        assertEquals("Can use the executive washroom", fetched.getActivityName());
 
-		UserContext nonAdmin = TestUtils.makeUser(TestUtils.DUMMY_ROLE);
-		assertFalse(authorizer.isActivityAllowed(nonAdmin, activityContext));
-		return upgrade;
-	}
+        assertEquals(SecurityConstants.LOAN_MANAGEMENT, (short) fetched.getParent().getId());
 
-	@Test
-	public void noParent() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
+        ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
+        AuthorizationManager authorizer = AuthorizationManager.getInstance();
+        authorizer.init(database.openSession());
 
-		short newId = 17032;
-		int databaseVersion = 172;
-		AddActivity upgrade = new AddActivity(
-				databaseVersion + 1, newId,
-				null, TEST_LOCALE, "Can use the executive washroom");
-		upgrade.upgrade(database.openConnection(), null);
-		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
-				ActivityEntity.class, newId);
-		assertEquals(null, fetched.getParent());
-	}
-	
-	@Test 
-	public void validateLookupValueKeyTest() throws Exception {
-		String validKey = "Permissions-CanCreateFunds";
-		String format = "Permissions-";
-		assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
-		String invalidKey = "CanCreateFunds";
-		assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
-	}
-	
-	@Test 
-	public void constructorTest() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
-		short newId = 30000;
-		AddActivity upgrade = null;
-		try
-		{
-			// use deprecated construtor
-			upgrade = new AddActivity(
-					DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
-				null, TEST_LOCALE, "NewActivity");
-		}
-		catch (Exception e)
-		{
-			assertEquals(e.getMessage(), AddActivity.wrongConstructor);
-		}
-		String invalidKey ="NewActivity";
-		
-		try
-		{
-			// use invalid lookup key format
-			upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1,invalidKey, newId, null);	
-		}
-		catch (Exception e)
-		{
-			assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
-		}
-		String goodKey = "Permissions-NewActivity";
-		//	use valid construtor and valid key
-		upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);	
-		upgrade.upgrade(database.openConnection(), null);
-		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
-				ActivityEntity.class, newId);
-		assertEquals(null, fetched.getParent());
-		assertEquals(null, fetched.getActivityName());
-		assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
-	}
+        UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
+        assertTrue(authorizer.isActivityAllowed(admin, activityContext));
 
-	public static junit.framework.Test testSuite() {
-		return new JUnit4TestAdapter(AddActivityTest.class);
-	}
+        UserContext nonAdmin = TestUtils.makeUser(TestUtils.DUMMY_ROLE);
+        assertFalse(authorizer.isActivityAllowed(nonAdmin, activityContext));
+        return upgrade;
+    }
+
+    @Test
+    public void noParent() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
+
+        short newId = 17032;
+        int databaseVersion = 172;
+        AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, null, TEST_LOCALE,
+                "Can use the executive washroom");
+        upgrade.upgrade(database.openConnection(), null);
+        ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
+        assertEquals(null, fetched.getParent());
+    }
+
+    @Test
+    public void validateLookupValueKeyTest() throws Exception {
+        String validKey = "Permissions-CanCreateFunds";
+        String format = "Permissions-";
+        assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
+        String invalidKey = "CanCreateFunds";
+        assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
+    }
+
+    @Test
+    public void constructorTest() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
+        short newId = 30000;
+        AddActivity upgrade = null;
+        try {
+            // use deprecated construtor
+            upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, null, TEST_LOCALE,
+                    "NewActivity");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), AddActivity.wrongConstructor);
+        }
+        String invalidKey = "NewActivity";
+
+        try {
+            // use invalid lookup key format
+            upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, invalidKey, newId, null);
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
+        }
+        String goodKey = "Permissions-NewActivity";
+        // use valid construtor and valid key
+        upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);
+        upgrade.upgrade(database.openConnection(), null);
+        ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
+        assertEquals(null, fetched.getParent());
+        assertEquals(null, fetched.getActivityName());
+        assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
+    }
+
+    public static junit.framework.Test testSuite() {
+        return new JUnit4TestAdapter(AddActivityTest.class);
+    }
 
 }

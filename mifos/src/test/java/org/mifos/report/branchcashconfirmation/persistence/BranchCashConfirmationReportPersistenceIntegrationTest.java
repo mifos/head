@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.report.branchcashconfirmation.persistence;
 
 import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
@@ -46,164 +46,136 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
 import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
 
-public class BranchCashConfirmationReportPersistenceIntegrationTest extends
-		BranchReportIntegrationTestCase {
-	public BranchCashConfirmationReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
+public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
+    public BranchCashConfirmationReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     @SuppressWarnings("unused")
-	private static final int DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB = 3;
-	private static final List<Short> DISBURSEMENT_PRODUCT_OFFERING_IDS = Arrays
-			.asList(new Short[] { 1, 2 });
-	private Session session;
-	private Transaction transaction;
-	private BranchCashConfirmationReportPersistence persistence;
-	private BranchCashConfirmationReportBO reportBO;
-	private MifosCurrency currency;
-	private BranchCashConfirmationReportBO firstJanReportBO;
+    private static final int DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB = 3;
+    private static final List<Short> DISBURSEMENT_PRODUCT_OFFERING_IDS = Arrays.asList(new Short[] { 1, 2 });
+    private Session session;
+    private Transaction transaction;
+    private BranchCashConfirmationReportPersistence persistence;
+    private BranchCashConfirmationReportBO reportBO;
+    private MifosCurrency currency;
+    private BranchCashConfirmationReportBO firstJanReportBO;
 
-	public void testRetrievesTheReportFromDB() throws Exception {
-		session.save(firstJanReportBO);
-		List<BranchCashConfirmationReportBO> fetchedReports = persistence
-				.getBranchCashConfirmationReportsForDate(FIRST_JAN_2008);
-		assertNotNull(fetchedReports);
-		assertEquals(1, fetchedReports.size());
-		assertEquals(firstJanReportBO, fetchedReports.get(0));
-	}
+    public void testRetrievesTheReportFromDB() throws Exception {
+        session.save(firstJanReportBO);
+        List<BranchCashConfirmationReportBO> fetchedReports = persistence
+                .getBranchCashConfirmationReportsForDate(FIRST_JAN_2008);
+        assertNotNull(fetchedReports);
+        assertEquals(1, fetchedReports.size());
+        assertEquals(firstJanReportBO, fetchedReports.get(0));
+    }
 
-	public void testReturnsEmptyListIfReportForGivenDateAndBranchDoesNotExist()
-			throws Exception {
-		List<BranchCashConfirmationReportBO> report = persistence
-				.getBranchCashConfirmationReportsForDateAndBranch(Short
-						.valueOf("3"), FIRST_JAN_2008);
-		assertNotNull(report);
-		assertTrue(report.isEmpty());
-	}
+    public void testReturnsEmptyListIfReportForGivenDateAndBranchDoesNotExist() throws Exception {
+        List<BranchCashConfirmationReportBO> report = persistence.getBranchCashConfirmationReportsForDateAndBranch(
+                Short.valueOf("3"), FIRST_JAN_2008);
+        assertNotNull(report);
+        assertTrue(report.isEmpty());
+    }
 
-	public void testReturnsReportListIfReportForGivenDateAndBranchExist()
-			throws Exception {
-		session.save(firstJanReportBO);
-		List<BranchCashConfirmationReportBO> report = persistence
-				.getBranchCashConfirmationReportsForDateAndBranch(
-						BRANCH_ID_SHORT, FIRST_JAN_2008);
-		assertNotNull(report);
-		assertEquals(1, report.size());
-	}
+    public void testReturnsReportListIfReportForGivenDateAndBranchExist() throws Exception {
+        session.save(firstJanReportBO);
+        List<BranchCashConfirmationReportBO> report = persistence.getBranchCashConfirmationReportsForDateAndBranch(
+                BRANCH_ID_SHORT, FIRST_JAN_2008);
+        assertNotNull(report);
+        assertEquals(1, report.size());
+    }
 
-	public void testRemovesTheReportFromDB() throws Exception {
-		BranchCashConfirmationReportBO newReport = new BranchCashConfirmationReportBO(
-				Short.valueOf("1"), RUN_DATE);
-		session.save(newReport);
-		persistence.delete(newReport);
-		List<BranchCashConfirmationReportBO> fetchedReports = persistence
-				.getBranchCashConfirmationReportsForDate(RUN_DATE);
-		assertNotNull(fetchedReports);
-		assertTrue(fetchedReports.isEmpty());
-	}
+    public void testRemovesTheReportFromDB() throws Exception {
+        BranchCashConfirmationReportBO newReport = new BranchCashConfirmationReportBO(Short.valueOf("1"), RUN_DATE);
+        session.save(newReport);
+        persistence.delete(newReport);
+        List<BranchCashConfirmationReportBO> fetchedReports = persistence
+                .getBranchCashConfirmationReportsForDate(RUN_DATE);
+        assertNotNull(fetchedReports);
+        assertTrue(fetchedReports.isEmpty());
+    }
 
-	public void testRetrieveIssueReportForGivenDateAndBranch() throws Exception {
-		BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO(
-				"SOME PRODUCT", ZERO);
-		reportBO.addCenterIssue(issueBO);
-		BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO(
-				"SOMEMORE", ZERO);
-		reportBO.addCenterIssue(anotherIssue);
-		session.save(reportBO);
-		List<BranchCashConfirmationInfoBO> retrievedIssues = persistence
-				.getCenterIssues(BRANCH_ID_SHORT, RUN_DATE);
-		assertNotNull(retrievedIssues);
-		assertEquals(2, retrievedIssues.size());
-		assertTrue(retrievedIssues.contains(issueBO));
-		assertTrue(retrievedIssues.contains(anotherIssue));
-	}
+    public void testRetrieveIssueReportForGivenDateAndBranch() throws Exception {
+        BranchCashConfirmationInfoBO issueBO = new BranchCashConfirmationIssueBO("SOME PRODUCT", ZERO);
+        reportBO.addCenterIssue(issueBO);
+        BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", ZERO);
+        reportBO.addCenterIssue(anotherIssue);
+        session.save(reportBO);
+        List<BranchCashConfirmationInfoBO> retrievedIssues = persistence.getCenterIssues(BRANCH_ID_SHORT, RUN_DATE);
+        assertNotNull(retrievedIssues);
+        assertEquals(2, retrievedIssues.size());
+        assertTrue(retrievedIssues.contains(issueBO));
+        assertTrue(retrievedIssues.contains(anotherIssue));
+    }
 
-	public void testRetrievesCenterRecoveryReport() throws Exception {
-		BranchCashConfirmationCenterRecoveryBO recoveryReport = new BranchCashConfirmationCenterRecoveryBO(
-				"PRDOFF1", ZERO, ZERO, ZERO);
-		reportBO.addCenterRecovery(recoveryReport);
-		session.save(reportBO);
-		List<BranchCashConfirmationCenterRecoveryBO> retrievedRecoveryReport = persistence
-				.getCenterRecoveries(BRANCH_ID_SHORT, RUN_DATE);
-		assertNotNull(retrievedRecoveryReport);
-		assertEquals(1, retrievedRecoveryReport.size());
-		assertEquals(recoveryReport, retrievedRecoveryReport.get(0));
-	}
+    public void testRetrievesCenterRecoveryReport() throws Exception {
+        BranchCashConfirmationCenterRecoveryBO recoveryReport = new BranchCashConfirmationCenterRecoveryBO("PRDOFF1",
+                ZERO, ZERO, ZERO);
+        reportBO.addCenterRecovery(recoveryReport);
+        session.save(reportBO);
+        List<BranchCashConfirmationCenterRecoveryBO> retrievedRecoveryReport = persistence.getCenterRecoveries(
+                BRANCH_ID_SHORT, RUN_DATE);
+        assertNotNull(retrievedRecoveryReport);
+        assertEquals(1, retrievedRecoveryReport.size());
+        assertEquals(recoveryReport, retrievedRecoveryReport.get(0));
+    }
 
-	public void testExtractDisbursementReturnsEmptyListIfNoneExists()
-			throws Exception {
-		List<Object[]> disbursements = persistence.extractDisbursements(
-				currency, AccountTypes.LOAN_ACCOUNT,
-				DISBURSEMENT_PRODUCT_OFFERING_IDS, DateUtils.currentDate());
-		assertNotNull(disbursements);
-		assertTrue("disbursements should be empty", disbursements.isEmpty());
-	}
+    public void testExtractDisbursementReturnsEmptyListIfNoneExists() throws Exception {
+        List<Object[]> disbursements = persistence.extractDisbursements(currency, AccountTypes.LOAN_ACCOUNT,
+                DISBURSEMENT_PRODUCT_OFFERING_IDS, DateUtils.currentDate());
+        assertNotNull(disbursements);
+        assertTrue("disbursements should be empty", disbursements.isEmpty());
+    }
 
-	//TODO TW Test depends on inserting data into db breaking existing tests
-	public void xtestExtractDisbursementsForGivenProductsAndDate()
-			throws Exception {
-		List<Object[]> disbursements = persistence.extractDisbursements(
-				currency, AccountTypes.LOAN_ACCOUNT,
-				DISBURSEMENT_PRODUCT_OFFERING_IDS, FIRST_JAN_2008);
-		assertNotNull(disbursements);
-		assertFalse("disbursments should not be empty", disbursements.isEmpty());
-		AssertionUtils
-				.assertSameCollections(
-						Arrays
-								.asList(new Object[] {
-										Short.valueOf("3"),
-										"TESTPRDOFFERING1",
-										BigDecimal.ZERO
-												.setScale(DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB) }),
-						Arrays.asList(disbursements.get(0)));
-	}
+    // TODO TW Test depends on inserting data into db breaking existing tests
+    public void xtestExtractDisbursementsForGivenProductsAndDate() throws Exception {
+        List<Object[]> disbursements = persistence.extractDisbursements(currency, AccountTypes.LOAN_ACCOUNT,
+                DISBURSEMENT_PRODUCT_OFFERING_IDS, FIRST_JAN_2008);
+        assertNotNull(disbursements);
+        assertFalse("disbursments should not be empty", disbursements.isEmpty());
+        AssertionUtils
+                .assertSameCollections(Arrays.asList(new Object[] { Short.valueOf("3"), "TESTPRDOFFERING1",
+                        BigDecimal.ZERO.setScale(DIGITS_AFTER_DECIMAL_FOR_AMOUNT_IN_DB) }), Arrays.asList(disbursements
+                        .get(0)));
+    }
 
-	public void testRetrievesDisbursementsReturnsEmptyListIfNoneExists()
-			throws Exception {
-		List<BranchCashConfirmationDisbursementBO> disbursements = persistence
-				.getDisbursements(BRANCH_ID_SHORT, RUN_DATE);
-		assertNotNull("retrieved disbursements should not be null",
-				disbursements);
-		assertTrue("retrieved disbursements should be empty", disbursements
-				.isEmpty());
-	}
+    public void testRetrievesDisbursementsReturnsEmptyListIfNoneExists() throws Exception {
+        List<BranchCashConfirmationDisbursementBO> disbursements = persistence.getDisbursements(BRANCH_ID_SHORT,
+                RUN_DATE);
+        assertNotNull("retrieved disbursements should not be null", disbursements);
+        assertTrue("retrieved disbursements should be empty", disbursements.isEmpty());
+    }
 
-	public void testRetrievesDisbursementsForGivenDateAndBranch()
-			throws Exception {
-		BranchCashConfirmationDisbursementBO disbursement = new BranchCashConfirmationDisbursementBO(
-				"SOME PRODUCT", MoneyFactory.ZERO);
-		BranchCashConfirmationDisbursementBO anotherDisbursement = new BranchCashConfirmationDisbursementBO(
-				"ANOTHER PRODUCT", MoneyFactory.ZERO);
-		reportBO.addDisbursement(disbursement);
-		reportBO.addDisbursement(anotherDisbursement);
-		session.save(reportBO);
-		List<BranchCashConfirmationDisbursementBO> retrievedDisbursements = persistence
-				.getDisbursements(BRANCH_ID_SHORT, RUN_DATE);
-		assertNotNull("retrieved disbursements should not be null",
-				retrievedDisbursements);
-		assertFalse("retrieved disbursements should not be empty",
-				retrievedDisbursements.isEmpty());
-		AssertionUtils.assertSameCollections(CollectionUtils.asList(
-				disbursement, anotherDisbursement), retrievedDisbursements);
-	}
+    public void testRetrievesDisbursementsForGivenDateAndBranch() throws Exception {
+        BranchCashConfirmationDisbursementBO disbursement = new BranchCashConfirmationDisbursementBO("SOME PRODUCT",
+                MoneyFactory.ZERO);
+        BranchCashConfirmationDisbursementBO anotherDisbursement = new BranchCashConfirmationDisbursementBO(
+                "ANOTHER PRODUCT", MoneyFactory.ZERO);
+        reportBO.addDisbursement(disbursement);
+        reportBO.addDisbursement(anotherDisbursement);
+        session.save(reportBO);
+        List<BranchCashConfirmationDisbursementBO> retrievedDisbursements = persistence.getDisbursements(
+                BRANCH_ID_SHORT, RUN_DATE);
+        assertNotNull("retrieved disbursements should not be null", retrievedDisbursements);
+        assertFalse("retrieved disbursements should not be empty", retrievedDisbursements.isEmpty());
+        AssertionUtils.assertSameCollections(CollectionUtils.asList(disbursement, anotherDisbursement),
+                retrievedDisbursements);
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		session = StaticHibernateUtil.getSessionTL();
-		transaction = session.beginTransaction();
-		persistence = new BranchCashConfirmationReportPersistence(
-				new PrdOfferingPersistence());
-		reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
-		firstJanReportBO = new BranchCashConfirmationReportBO(
-				BRANCH_ID_SHORT, FIRST_JAN_2008);
-		currency = new MifosCurrency(Short.valueOf("2"), null, null, null,
-				null, null, null, null);
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        session = StaticHibernateUtil.getSessionTL();
+        transaction = session.beginTransaction();
+        persistence = new BranchCashConfirmationReportPersistence(new PrdOfferingPersistence());
+        reportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, RUN_DATE);
+        firstJanReportBO = new BranchCashConfirmationReportBO(BRANCH_ID_SHORT, FIRST_JAN_2008);
+        currency = new MifosCurrency(Short.valueOf("2"), null, null, null, null, null, null, null);
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		transaction.rollback();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        transaction.rollback();
+        super.tearDown();
+    }
 }

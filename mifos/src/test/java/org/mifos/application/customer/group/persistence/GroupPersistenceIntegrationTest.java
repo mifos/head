@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.customer.group.persistence;
 
+package org.mifos.application.customer.group.persistence;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.CenterTemplate;
@@ -54,63 +53,60 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupPersistenceIntegrationTest extends MifosIntegrationTest {
-	public GroupPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public GroupPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private MeetingBO meeting;
 
-	private CustomerBO center;
+    private CustomerBO center;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private GroupPersistence groupPersistence;
+    private GroupPersistence groupPersistence;
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
 
     @Override
-	protected void setUp() throws Exception {
+    protected void setUp() throws Exception {
         this.officePersistence = new OfficePersistence();
         this.centerPersistence = new CenterPersistence();
         this.groupPersistence = new GroupPersistence();
         initializeStatisticsService();
         super.setUp();
-	}
+    }
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testUpdateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk() throws Exception
-	{
-		createGroup();
-		double portfolioAtRisk = 0.567;
-		Integer groupId = group.getCustomerId();
-		boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk
-		(portfolioAtRisk, groupId);
-		assertTrue(result);
-		group = TestObjectFactory.getGroup(group.getCustomerId());
-		assertEquals(1, group.getUpdatedBy().intValue());
-		java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-		assertEquals(1, group.getUpdatedBy().intValue());
-		assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
-		assertEquals(new Money("0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
-				
-	}
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-    public void testCreateGroup()
-            throws PersistenceException, OfficeException,
-            MeetingException, CustomerException, ValidationException {
+    public void testUpdateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk() throws Exception {
+        createGroup();
+        double portfolioAtRisk = 0.567;
+        Integer groupId = group.getCustomerId();
+        boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(
+                portfolioAtRisk, groupId);
+        assertTrue(result);
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        assertEquals(1, group.getUpdatedBy().intValue());
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+        assertEquals(1, group.getUpdatedBy().intValue());
+        assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
+        assertEquals(new Money("0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+
+    }
+
+    public void testCreateGroup() throws PersistenceException, OfficeException, MeetingException, CustomerException,
+            ValidationException {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
         try {
             UserContext userContext = TestUtils.makeUser();
 
-            OfficeTemplate template =
-                    OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
+            OfficeTemplate template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
             OfficeBO office = getOfficePersistence().createOffice(userContext, template);
 
             MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
@@ -123,60 +119,58 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTest {
 
             assertNotNull(group.getCustomerId());
             assertTrue(group.isActive());
-        }
-        finally {
+        } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
-    
 
-    public void testGetGroupBySystemId() throws PersistenceException{
-		createGroup();
-		group = groupPersistence.findBySystemId(group.getGlobalCustNum());
-		assertEquals("Group_Active_test", group.getDisplayName());
-	}
+    public void testGetGroupBySystemId() throws PersistenceException {
+        createGroup();
+        group = groupPersistence.findBySystemId(group.getGlobalCustNum());
+        assertEquals("Group_Active_test", group.getDisplayName());
+    }
 
-	
-	public void testSearch() throws Exception{
-		createGroup();
-		QueryResult queryResult = groupPersistence.search(group.getDisplayName(),Short.valueOf("1"));
-		assertNotNull(queryResult);
-		assertEquals(1,queryResult.getSize());
-		assertEquals(1,queryResult.get(0,10).size());
-	}
-	
-	
-	public void testSearchForAddingClientToGroup() throws Exception{
-		createGroup_ON_HOLD_STATUS();
-		QueryResult queryResult = groupPersistence.searchForAddingClientToGroup(group.getDisplayName(),Short.valueOf("1"));
-		assertNotNull(queryResult);
-		assertEquals(0,queryResult.getSize());
-		assertEquals(0,queryResult.get(0,10).size());
-	}
-		
-	private CenterBO createCenter() {
-		return createCenter("Center_Active_test");
-	}
+    public void testSearch() throws Exception {
+        createGroup();
+        QueryResult queryResult = groupPersistence.search(group.getDisplayName(), Short.valueOf("1"));
+        assertNotNull(queryResult);
+        assertEquals(1, queryResult.getSize());
+        assertEquals(1, queryResult.get(0, 10).size());
+    }
 
-	private CenterBO createCenter(String name) {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		return TestObjectFactory.createCenter(name, meeting);
-	}
-	private void createGroup(){
-		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-		StaticHibernateUtil.closeSession();
+    public void testSearchForAddingClientToGroup() throws Exception {
+        createGroup_ON_HOLD_STATUS();
+        QueryResult queryResult = groupPersistence.searchForAddingClientToGroup(group.getDisplayName(), Short
+                .valueOf("1"));
+        assertNotNull(queryResult);
+        assertEquals(0, queryResult.getSize());
+        assertEquals(0, queryResult.get(0, 10).size());
+    }
 
-		
-	}
-	private void createGroup_ON_HOLD_STATUS(){
-		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
-		StaticHibernateUtil.closeSession();
-	
-	}
+    private CenterBO createCenter() {
+        return createCenter("Center_Active_test");
+    }
+
+    private CenterBO createCenter(String name) {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        return TestObjectFactory.createCenter(name, meeting);
+    }
+
+    private void createGroup() {
+        center = createCenter();
+        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        StaticHibernateUtil.closeSession();
+
+    }
+
+    private void createGroup_ON_HOLD_STATUS() {
+        center = createCenter();
+        group = TestObjectFactory.createGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
+        StaticHibernateUtil.closeSession();
+
+    }
+
     public OfficePersistence getOfficePersistence() {
         return officePersistence;
     }

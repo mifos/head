@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.util.helpers;
 
 import org.mifos.framework.MifosIntegrationTest;
@@ -30,48 +30,47 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class ConfigurationIntializerIntegrationTest extends MifosIntegrationTest{
-	public ConfigurationIntializerIntegrationTest() throws SystemException, ApplicationException {
+public class ConfigurationIntializerIntegrationTest extends MifosIntegrationTest {
+    public ConfigurationIntializerIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private ConfigurationInitializer configInitializer;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		configInitializer= new ConfigurationInitializer();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        configInitializer = new ConfigurationInitializer();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown() throws Exception {
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testCreateSystemCache() throws Exception{
-		SystemConfiguration configuration = 
-			configInitializer.createSystemConfiguration();
-		assertNotNull(configuration);
-		assertNotNull(configuration.getCurrency());
-		assertNotNull(configuration.getMifosTimeZone());
-	}
+    public void testCreateSystemCache() throws Exception {
+        SystemConfiguration configuration = configInitializer.createSystemConfiguration();
+        assertNotNull(configuration);
+        assertNotNull(configuration.getCurrency());
+        assertNotNull(configuration.getMifosTimeZone());
+    }
 
- 	public void testCreateOfficeCache() throws Exception{
- 		configInitializer.initialize();
- 		OfficeCache officeCache = configInitializer.createOfficeCache();
- 		assertNotNull(officeCache);
-	}
+    public void testCreateOfficeCache() throws Exception {
+        configInitializer.initialize();
+        OfficeCache officeCache = configInitializer.createOfficeCache();
+        assertNotNull(officeCache);
+    }
 
-	public void testStartUpException() throws Exception {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			configInitializer.initialize();
-			fail();
-		} catch (StartUpException sue) {
-			assertEquals(ExceptionConstants.STARTUP_EXCEPTION, sue.getKey());
-		} finally {
-			StaticHibernateUtil.closeSession();
-		}
-	}
+    public void testStartUpException() throws Exception {
+        TestObjectFactory.simulateInvalidConnection();
+        try {
+            configInitializer.initialize();
+            fail();
+        } catch (StartUpException sue) {
+            assertEquals(ExceptionConstants.STARTUP_EXCEPTION, sue.getKey());
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
 }

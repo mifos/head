@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.action;
 
 import java.sql.Date;
@@ -45,257 +45,235 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 
-	public CustHistoricalDataActionTest() throws SystemException, ApplicationException {
+    public CustHistoricalDataActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private ClientBO client;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private CenterBO center;
+    private CenterBO center;
 
-	private MeetingBO meeting;
-	
-	private String flowKey;
+    private MeetingBO meeting;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		UserContext userContext = TestObjectFactory.getContext();
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		
-		flowKey = createFlow(request, CustHistoricalDataAction.class);
-	}
+    private String flowKey;
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
-	
-	public void testGetHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
-		createInitialObjects();
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "getHistoricalData");
-		addRequestParameter("globalCustNum", group.getGlobalCustNum());
-		getRequest().getSession().setAttribute("security_param", "Group");
-		actionPerform();
-		verifyForward(ActionForwards.getHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		assertEquals(new java.sql.Date(DateUtils
-				.getCurrentDateWithoutTimeStamp().getTime()).toString(), SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE,request).toString());
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        UserContext userContext = TestObjectFactory.getContext();
+        request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
 
-	public void testGetHistoricalDataWhenCustHistoricalDataIsNotNull()
-			throws Exception {
-		createInitialObjects();
-		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
-				group);
-		customerHistoricalDataEntity.setMfiJoiningDate(offSetCurrentDate(10));
-		Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
-		group.updateHistoricalData(customerHistoricalDataEntity);
-		group.update();
-		StaticHibernateUtil.commitTransaction();
-		assertEquals(mfiDate,new Date(group.getMfiJoiningDate().getTime()));
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "getHistoricalData");
-		addRequestParameter("globalCustNum", group.getGlobalCustNum());
-		getRequest().getSession().setAttribute("security_param", "Group");
-		actionPerform();
-		verifyForward(ActionForwards.getHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		assertEquals(new java.sql.Date(DateUtils
-				.getDateWithoutTimeStamp(mfiDate.getTime()).getTime()).toString(), SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE,request).toString());
-	}
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 
-	public void testLoadHistoricalDataWhenCustHistoricalDataIsNull() {
-		createInitialObjects();
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "getHistoricalData");
-		addRequestParameter("globalCustNum", group.getGlobalCustNum());
-		getRequest().getSession().setAttribute("security_param", "Group");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		flowKey = (String)request.getAttribute(Constants.CURRENTFLOWKEY);
-		verifyForward(ActionForwards.getHistoricalData_success.toString());
-		
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "loadHistoricalData");
-		getRequest().getSession().setAttribute("security_param", "Group");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.loadHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
+        flowKey = createFlow(request, CustHistoricalDataAction.class);
+    }
 
-	public void testPreviewHistoricalData() {
-		createInitialObjects();
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "previewHistoricalData");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.previewHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
-	
-	public void testPreviewHistoricalDataLargeNotes() {
-		createInitialObjects();
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "previewHistoricalData");
-		addRequestParameter(
-				"commentNotes",
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyInputForward();
-		verifyActionErrors(new String[] { CustomerConstants.MAXIMUM_LENGTH });
-	}
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testPreviousHistoricalData() {
-		createInitialObjects();
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "previousHistoricalData");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.previousHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
+    public void testGetHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
+        createInitialObjects();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "getHistoricalData");
+        addRequestParameter("globalCustNum", group.getGlobalCustNum());
+        getRequest().getSession().setAttribute("security_param", "Group");
+        actionPerform();
+        verifyForward(ActionForwards.getHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        assertEquals(new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime()).toString(), SessionUtils
+                .getAttribute(CustomerConstants.MFIJOININGDATE, request).toString());
+    }
 
-	public void testCancelHistoricalData() {
-		createInitialObjects();
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "cancelHistoricalData");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("type", "Group");
-		actionPerform();
-		verifyForward(ActionForwards.group_detail_page.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
+    public void testGetHistoricalDataWhenCustHistoricalDataIsNotNull() throws Exception {
+        createInitialObjects();
+        CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(group);
+        customerHistoricalDataEntity.setMfiJoiningDate(offSetCurrentDate(10));
+        Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
+        group.updateHistoricalData(customerHistoricalDataEntity);
+        group.update();
+        StaticHibernateUtil.commitTransaction();
+        assertEquals(mfiDate, new Date(group.getMfiJoiningDate().getTime()));
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "getHistoricalData");
+        addRequestParameter("globalCustNum", group.getGlobalCustNum());
+        getRequest().getSession().setAttribute("security_param", "Group");
+        actionPerform();
+        verifyForward(ActionForwards.getHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(mfiDate.getTime()).getTime()).toString(),
+                SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE, request).toString());
+    }
 
-	public void testUpdateHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createInitialObjects();
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "updateHistoricalData");
-		addRequestParameter("productName", "Test");
-		addRequestParameter("loanAmount", "100");
-		addRequestParameter("totalAmountPaid", "50");
-		addRequestParameter("interestPaid", "10");
-		addRequestParameter("missedPaymentsCount", "1");
-		addRequestParameter("totalPaymentsCount", "2");
-		addRequestParameter("commentNotes", "Test notes");
-		addRequestParameter("loanCycleNumber", "1");
-		addRequestParameter("type", "Group");
-		addRequestParameter("mfiJoiningDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
-		.getAttribute("UserContext")).getPreferredLocale()));
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.updateHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		assertEquals("Test", group.getHistoricalData().getProductName());
-		assertEquals("Test notes", group.getHistoricalData().getNotes());
-		assertEquals(new Money("100"), group.getHistoricalData()
-				.getLoanAmount());
-		assertEquals(new Money("50"), group.getHistoricalData()
-				.getTotalAmountPaid());
-		assertEquals(new Money("10"), group.getHistoricalData()
-				.getInterestPaid());
-		assertEquals(1, group.getHistoricalData().getMissedPaymentsCount()
-				.intValue());
-		assertEquals(2, group.getHistoricalData().getTotalPaymentsCount()
-				.intValue());
-		assertEquals(1, group.getHistoricalData().getLoanCycleNumber()
-				.intValue());
-	}
+    public void testLoadHistoricalDataWhenCustHistoricalDataIsNull() {
+        createInitialObjects();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "getHistoricalData");
+        addRequestParameter("globalCustNum", group.getGlobalCustNum());
+        getRequest().getSession().setAttribute("security_param", "Group");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+        verifyForward(ActionForwards.getHistoricalData_success.toString());
 
-	public void testUpdateHistoricalDataWhenCustHistoricalDataIsNotNull()
-			throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		createInitialObjects();
-		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
-				group);
-		group.updateHistoricalData(customerHistoricalDataEntity);
-		group.update();
-		StaticHibernateUtil.commitTransaction();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "loadHistoricalData");
+        getRequest().getSession().setAttribute("security_param", "Group");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.loadHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
 
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
-		setRequestPathInfo("/custHistoricalDataAction.do");
-		addRequestParameter("method", "updateHistoricalData");
-		addRequestParameter("productName", "Test");
-		addRequestParameter("loanAmount", "200");
-		addRequestParameter("totalAmountPaid", "150");
-		addRequestParameter("interestPaid", "50");
-		addRequestParameter("missedPaymentsCount", "2");
-		addRequestParameter("totalPaymentsCount", "3");
-		addRequestParameter("commentNotes", "Test notes");
-		addRequestParameter("loanCycleNumber", "2");
-		addRequestParameter("type", "Group");
-		addRequestParameter("mfiJoiningDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
-		.getAttribute("UserContext")).getPreferredLocale()));
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward(ActionForwards.updateHistoricalData_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		group = TestObjectFactory.getGroup(group
-				.getCustomerId());
-		assertEquals("Test", group.getHistoricalData().getProductName());
-		assertEquals("Test notes", group.getHistoricalData().getNotes());
-		assertEquals(new Money("200"), group.getHistoricalData()
-				.getLoanAmount());
-		assertEquals(new Money("150"), group.getHistoricalData()
-				.getTotalAmountPaid());
-		assertEquals(new Money("50"), group.getHistoricalData()
-				.getInterestPaid());
-		assertEquals(2, group.getHistoricalData().getMissedPaymentsCount()
-				.intValue());
-		assertEquals(3, group.getHistoricalData().getTotalPaymentsCount()
-				.intValue());
-		assertEquals(2, group.getHistoricalData().getLoanCycleNumber()
-				.intValue());
-	}
+    public void testPreviewHistoricalData() {
+        createInitialObjects();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "previewHistoricalData");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.previewHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
 
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-	}
+    public void testPreviewHistoricalDataLargeNotes() {
+        createInitialObjects();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "previewHistoricalData");
+        addRequestParameter("commentNotes", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyInputForward();
+        verifyActionErrors(new String[] { CustomerConstants.MAXIMUM_LENGTH });
+    }
 
-	private java.sql.Date offSetCurrentDate(int noOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
-		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
-	}
+    public void testPreviousHistoricalData() {
+        createInitialObjects();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "previousHistoricalData");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.previousHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
+
+    public void testCancelHistoricalData() {
+        createInitialObjects();
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "cancelHistoricalData");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("type", "Group");
+        actionPerform();
+        verifyForward(ActionForwards.group_detail_page.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+    }
+
+    public void testUpdateHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "updateHistoricalData");
+        addRequestParameter("productName", "Test");
+        addRequestParameter("loanAmount", "100");
+        addRequestParameter("totalAmountPaid", "50");
+        addRequestParameter("interestPaid", "10");
+        addRequestParameter("missedPaymentsCount", "1");
+        addRequestParameter("totalPaymentsCount", "2");
+        addRequestParameter("commentNotes", "Test notes");
+        addRequestParameter("loanCycleNumber", "1");
+        addRequestParameter("type", "Group");
+        addRequestParameter("mfiJoiningDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+                .getAttribute("UserContext")).getPreferredLocale()));
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.updateHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        assertEquals("Test", group.getHistoricalData().getProductName());
+        assertEquals("Test notes", group.getHistoricalData().getNotes());
+        assertEquals(new Money("100"), group.getHistoricalData().getLoanAmount());
+        assertEquals(new Money("50"), group.getHistoricalData().getTotalAmountPaid());
+        assertEquals(new Money("10"), group.getHistoricalData().getInterestPaid());
+        assertEquals(1, group.getHistoricalData().getMissedPaymentsCount().intValue());
+        assertEquals(2, group.getHistoricalData().getTotalPaymentsCount().intValue());
+        assertEquals(1, group.getHistoricalData().getLoanCycleNumber().intValue());
+    }
+
+    public void testUpdateHistoricalDataWhenCustHistoricalDataIsNotNull() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        createInitialObjects();
+        CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(group);
+        group.updateHistoricalData(customerHistoricalDataEntity);
+        group.update();
+        StaticHibernateUtil.commitTransaction();
+
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
+        setRequestPathInfo("/custHistoricalDataAction.do");
+        addRequestParameter("method", "updateHistoricalData");
+        addRequestParameter("productName", "Test");
+        addRequestParameter("loanAmount", "200");
+        addRequestParameter("totalAmountPaid", "150");
+        addRequestParameter("interestPaid", "50");
+        addRequestParameter("missedPaymentsCount", "2");
+        addRequestParameter("totalPaymentsCount", "3");
+        addRequestParameter("commentNotes", "Test notes");
+        addRequestParameter("loanCycleNumber", "2");
+        addRequestParameter("type", "Group");
+        addRequestParameter("mfiJoiningDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+                .getAttribute("UserContext")).getPreferredLocale()));
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.updateHistoricalData_success.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        assertEquals("Test", group.getHistoricalData().getProductName());
+        assertEquals("Test notes", group.getHistoricalData().getNotes());
+        assertEquals(new Money("200"), group.getHistoricalData().getLoanAmount());
+        assertEquals(new Money("150"), group.getHistoricalData().getTotalAmountPaid());
+        assertEquals(new Money("50"), group.getHistoricalData().getInterestPaid());
+        assertEquals(2, group.getHistoricalData().getMissedPaymentsCount().intValue());
+        assertEquals(3, group.getHistoricalData().getTotalPaymentsCount().intValue());
+        assertEquals(2, group.getHistoricalData().getLoanCycleNumber().intValue());
+    }
+
+    private void createInitialObjects() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+    }
+
+    private java.sql.Date offSetCurrentDate(int noOfDays) {
+        Calendar currentDateCalendar = new GregorianCalendar();
+        int year = currentDateCalendar.get(Calendar.YEAR);
+        int month = currentDateCalendar.get(Calendar.MONTH);
+        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+        currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+        return new java.sql.Date(currentDateCalendar.getTimeInMillis());
+    }
 }

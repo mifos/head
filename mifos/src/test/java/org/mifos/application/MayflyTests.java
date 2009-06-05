@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application;
 
 import junit.framework.Test;
@@ -36,32 +36,33 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * Tests that are known to pass with Mayfly, if you enable Mayfly in
  * {@link DatabaseSetup}.
  * 
- * Does not include tests which are hardcoded to always use Mayfly,
- * like {@link LatestTestAfterCheckpointBaseTest} or {@link DatabaseVersionPersistenceTest}.
+ * Does not include tests which are hardcoded to always use Mayfly, like
+ * {@link LatestTestAfterCheckpointBaseTest} or
+ * {@link DatabaseVersionPersistenceTest}.
  */
 public class MayflyTests extends TestSuite {
-	
-	public static Test suite() throws Exception {
-		TestSuite suite = new MayflyTests();
-		suite.addTestSuite(FeePersistenceIntegrationTest.class);
-		//suite.addTestSuite(CenterBOIntegrationTest.class);
-		
-		// Hung up on SELECT DISTINCT vs ORDER BY
-		// Also has other failures - apparently unrelated
-		//CustomerPersistenceIntegrationTest
-		
-		/* Failing in getMaxOfficeId.
-		   Perhaps Integer vs. Long as return from getObject (but that's
-		   unconfirmed)? */
-		//suite.addTestSuite(OfficePersistenceIntegrationTest.class);
 
-		suite.addTestSuite(SavingsBOIntegrationTest.class);
-		suite.addTestSuite(ApplyAdjustmentActionTest.class);
-		suite.addTestSuite(FeeActionTest.class);
-		suite.addTestSuite(HolidayUtilsIntegrationTest.class);
-		
-		suite.addTestSuite(MayflyMiscTest.class);
-		return suite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite suite = new MayflyTests();
+        suite.addTestSuite(FeePersistenceIntegrationTest.class);
+        // suite.addTestSuite(CenterBOIntegrationTest.class);
+
+        // Hung up on SELECT DISTINCT vs ORDER BY
+        // Also has other failures - apparently unrelated
+        // CustomerPersistenceIntegrationTest
+
+        /*
+         * Failing in getMaxOfficeId. Perhaps Integer vs. Long as return from
+         * getObject (but that's unconfirmed)?
+         */
+        // suite.addTestSuite(OfficePersistenceIntegrationTest.class);
+        suite.addTestSuite(SavingsBOIntegrationTest.class);
+        suite.addTestSuite(ApplyAdjustmentActionTest.class);
+        suite.addTestSuite(FeeActionTest.class);
+        suite.addTestSuite(HolidayUtilsIntegrationTest.class);
+
+        suite.addTestSuite(MayflyMiscTest.class);
+        return suite;
+    }
 
 }

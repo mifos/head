@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.util.helpers;
 
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
@@ -28,11 +28,11 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.WEDNESDAY;
 import junit.framework.TestCase;
 
 public class WeekDayTest extends TestCase {
-	
-	public void testNext() throws Exception {
-		assertEquals(MONDAY, SUNDAY.next());
-		assertEquals(WEDNESDAY, TUESDAY.next());
-		assertEquals(SUNDAY, SATURDAY.next());
-	}
+
+    public void testNext() throws Exception {
+        assertEquals(MONDAY, SUNDAY.next());
+        assertEquals(WEDNESDAY, TUESDAY.next());
+        assertEquals(SUNDAY, SATURDAY.next());
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
@@ -28,30 +28,30 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class BundleKeyIntegrationTest extends MifosIntegrationTest {
 
-	public BundleKeyIntegrationTest() throws SystemException, ApplicationException {
+    public BundleKeyIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private BundleKey bundleKey = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		Locale locale = new Locale("EN");
-		bundleKey = new BundleKey(locale, "Key");
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        Locale locale = new Locale("EN");
+        bundleKey = new BundleKey(locale, "Key");
+    }
 
-	public void testHashCode() {
-		assertEquals(905023, bundleKey.hashCode());
-	}
+    public void testHashCode() {
+        assertEquals(905023, bundleKey.hashCode());
+    }
 
-	public void testEqualsObject() {
-		assertTrue(bundleKey.equals(bundleKey));
-		assertFalse(bundleKey.equals(null));
-		Locale locale = new Locale("EN");
-		assertFalse(bundleKey.equals(new BundleKey(locale, "wrongKey")));
-		locale = new Locale("SP");
-		assertFalse(bundleKey.equals(new BundleKey(locale, "Key")));
-	}
+    public void testEqualsObject() {
+        assertTrue(bundleKey.equals(bundleKey));
+        assertFalse(bundleKey.equals(null));
+        Locale locale = new Locale("EN");
+        assertFalse(bundleKey.equals(new BundleKey(locale, "wrongKey")));
+        locale = new Locale("SP");
+        assertFalse(bundleKey.equals(new BundleKey(locale, "Key")));
+    }
 
 }

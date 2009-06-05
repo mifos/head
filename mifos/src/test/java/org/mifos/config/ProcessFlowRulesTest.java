@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.config;
 
 import static org.junit.Assert.assertFalse;
@@ -46,69 +46,66 @@ public class ProcessFlowRulesTest {
         new TestCaseInitializer().initialize();
     }
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(ProcessFlowRulesTest.class);
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ProcessFlowRulesTest.class);
+    }
 
-	@Test
-	public void testOverrideNeeded() throws Exception {
-		assertTrue(ProcessFlowRules.needsOverride(false, true));
-	}
+    @Test
+    public void testOverrideNeeded() throws Exception {
+        assertTrue(ProcessFlowRules.needsOverride(false, true));
+    }
 
-	@Test
-	public void testOverrideNotNecessary() throws Exception {
-		assertFalse(ProcessFlowRules.needsOverride(false, false));
-		assertFalse(ProcessFlowRules.needsOverride(true, true));
-	}
+    @Test
+    public void testOverrideNotNecessary() throws Exception {
+        assertFalse(ProcessFlowRules.needsOverride(false, false));
+        assertFalse(ProcessFlowRules.needsOverride(true, true));
+    }
 
-	@Test
-	public void testOverrideValidation() throws Exception {
-		assertTrue(ProcessFlowRules.isValidOverride(true, true));
-		assertTrue(ProcessFlowRules.isValidOverride(false, true));
-		assertTrue(ProcessFlowRules.isValidOverride(false, false));
-		assertFalse(ProcessFlowRules.isValidOverride(true, false));
-	}
+    @Test
+    public void testOverrideValidation() throws Exception {
+        assertTrue(ProcessFlowRules.isValidOverride(true, true));
+        assertTrue(ProcessFlowRules.isValidOverride(false, true));
+        assertTrue(ProcessFlowRules.isValidOverride(false, false));
+        assertFalse(ProcessFlowRules.isValidOverride(true, false));
+    }
 
-	@Test(expected = ConfigurationException.class)
-	public void testInvalidOverride() throws Exception {
-		ProcessFlowRules.needsOverride(true, false);
-	}
+    @Test(expected = ConfigurationException.class)
+    public void testInvalidOverride() throws Exception {
+        ProcessFlowRules.needsOverride(true, false);
+    }
 
-	@AfterClass
-	public static void tearDownAfterClass() {
-		AccountPersistence ap = new AccountPersistence();
-		AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(
-				AccountStateEntity.class,
-				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-		ase.setIsOptional(false);
-		StaticHibernateUtil.commitTransaction();
-	}
+    @AfterClass
+    public static void tearDownAfterClass() {
+        AccountPersistence ap = new AccountPersistence();
+        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
+                AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
+        ase.setIsOptional(false);
+        StaticHibernateUtil.commitTransaction();
+    }
 
-	@Test
-	public void testValidOverrideAgainstDb() throws Exception {
-		CustomerPersistence cp = new CustomerPersistence();
-		CustomerStatusEntity cse = (CustomerStatusEntity) cp
-				.loadPersistentObject(CustomerStatusEntity.class,
-						CustomerStatus.CLIENT_PENDING.getValue());
-		assertTrue(cse.getIsOptional());
-		cse.setIsOptional(false);
-		StaticHibernateUtil.commitTransaction();
-		assertFalse(cse.getIsOptional());
-		assertTrue(ProcessFlowRules.isClientPendingApprovalStateEnabled());
-		ProcessFlowRules.init();
-		assertTrue(cse.getIsOptional());
-	}
+    @Test
+    public void testValidOverrideAgainstDb() throws Exception {
+        CustomerPersistence cp = new CustomerPersistence();
+        CustomerStatusEntity cse = (CustomerStatusEntity) cp.loadPersistentObject(CustomerStatusEntity.class,
+                CustomerStatus.CLIENT_PENDING.getValue());
+        assertTrue(cse.getIsOptional());
+        cse.setIsOptional(false);
+        StaticHibernateUtil.commitTransaction();
+        assertFalse(cse.getIsOptional());
+        assertTrue(ProcessFlowRules.isClientPendingApprovalStateEnabled());
+        ProcessFlowRules.init();
+        assertTrue(cse.getIsOptional());
+    }
 
-	@Test(expected = ConfigurationException.class)
-	public void testInvalidOverrideAgainstDb() throws Exception {
-		AccountPersistence ap = new AccountPersistence();
-		AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(
-				AccountStateEntity.class,
-				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-		ase.setIsOptional(true);
-		StaticHibernateUtil.commitTransaction();
-		assertTrue(ase.getIsOptional());
-		assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
-		ProcessFlowRules.init();
-	}
+    @Test(expected = ConfigurationException.class)
+    public void testInvalidOverrideAgainstDb() throws Exception {
+        AccountPersistence ap = new AccountPersistence();
+        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
+                AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
+        ase.setIsOptional(true);
+        StaticHibernateUtil.commitTransaction();
+        assertTrue(ase.getIsOptional());
+        assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
+        ProcessFlowRules.init();
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.group.business;
 
 import static org.easymock.EasyMock.expect;
@@ -40,68 +40,70 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
+public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrationTest {
 
-public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrationTest{
-	
-	public GroupPerformanceHistoryEntityIntegrationTest() throws SystemException, ApplicationException {
+    public GroupPerformanceHistoryEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private LoanBO loan;
-	private ConfigurationBusinessService configServiceMock;
-	private AccountBusinessService accountBusinessServiceMock;
-	private LoanOfferingBO loanOffering;
-	private CustomerBO customerMock;
-	private ClientPerformanceHistoryEntity clientPerfHistoryMock;
+    private ConfigurationBusinessService configServiceMock;
+    private AccountBusinessService accountBusinessServiceMock;
+    private LoanOfferingBO loanOffering;
+    private CustomerBO customerMock;
+    private ClientPerformanceHistoryEntity clientPerfHistoryMock;
 
+    public void testUpdateOnDisbursementGetsCoSigningClientsForGlim() throws Exception {
+        expect(configServiceMock.isGlimEnabled()).andReturn(true);
+        clientPerfHistoryMock.updateOnDisbursement(loanOffering);
 
-	public void testUpdateOnDisbursementGetsCoSigningClientsForGlim() throws Exception {
-		expect(configServiceMock.isGlimEnabled()).andReturn(true);
-		clientPerfHistoryMock.updateOnDisbursement(loanOffering);
+        expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
+        expectLastCall().atLeastOnce();
 
-		expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
-		expectLastCall().atLeastOnce();
-		
-		expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(Arrays.asList(customerMock));
-		replay(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
-		
-		new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan, MoneyFactory.ZERO);
-		verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
-	}
+        expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(
+                Arrays.asList(customerMock));
+        replay(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
 
-	public void testUpdateOnDisbursementDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
-		expect(configServiceMock.isGlimEnabled()).andReturn(false);
-		replay(configServiceMock, accountBusinessServiceMock);
-		new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan, MoneyFactory.ZERO);
-		verify(configServiceMock, accountBusinessServiceMock);
-	}	
+        new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan,
+                MoneyFactory.ZERO);
+        verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
+    }
 
-	public void testUpdateOnWriteOffDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
-		expect(configServiceMock.isGlimEnabled()).andReturn(false);
-		replay(configServiceMock, accountBusinessServiceMock);
-		new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnWriteOff(loan);
-		verify(configServiceMock, accountBusinessServiceMock);
-	}	
-	
-	public void testUpdateOnWriteOffGetsCoSigningClientsForGlim() throws Exception {
-		expect(configServiceMock.isGlimEnabled()).andReturn(true);
-		expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
-		expectLastCall().atLeastOnce();
-		clientPerfHistoryMock.updateOnWriteOff(loanOffering);
-		expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(Arrays.asList(customerMock));
-		replay(configServiceMock, accountBusinessServiceMock,customerMock,clientPerfHistoryMock);
-		new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnWriteOff(loan);
-		verify(configServiceMock, accountBusinessServiceMock,customerMock,clientPerfHistoryMock);
-	}
-	
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		loanOffering = LoanOfferingBO.createInstanceForTest((short)1);
-		loan = LoanBO.createInstanceForTest(loanOffering);
-		configServiceMock = createMock(ConfigurationBusinessService.class);
-		accountBusinessServiceMock = createMock(AccountBusinessService.class);
-		clientPerfHistoryMock = createMock(ClientPerformanceHistoryEntity.class);		
-		customerMock = createMock(CustomerBO.class);
-	}	
+    public void testUpdateOnDisbursementDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
+        expect(configServiceMock.isGlimEnabled()).andReturn(false);
+        replay(configServiceMock, accountBusinessServiceMock);
+        new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnDisbursement(loan,
+                MoneyFactory.ZERO);
+        verify(configServiceMock, accountBusinessServiceMock);
+    }
+
+    public void testUpdateOnWriteOffDoesNotGetCoSigningClientsIfNotGlim() throws Exception {
+        expect(configServiceMock.isGlimEnabled()).andReturn(false);
+        replay(configServiceMock, accountBusinessServiceMock);
+        new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnWriteOff(loan);
+        verify(configServiceMock, accountBusinessServiceMock);
+    }
+
+    public void testUpdateOnWriteOffGetsCoSigningClientsForGlim() throws Exception {
+        expect(configServiceMock.isGlimEnabled()).andReturn(true);
+        expect(customerMock.getPerformanceHistory()).andReturn(clientPerfHistoryMock);
+        expectLastCall().atLeastOnce();
+        clientPerfHistoryMock.updateOnWriteOff(loanOffering);
+        expect(accountBusinessServiceMock.getCoSigningClientsForGlim(loan.getAccountId())).andReturn(
+                Arrays.asList(customerMock));
+        replay(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
+        new GroupPerformanceHistoryEntity(configServiceMock, accountBusinessServiceMock).updateOnWriteOff(loan);
+        verify(configServiceMock, accountBusinessServiceMock, customerMock, clientPerfHistoryMock);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        loanOffering = LoanOfferingBO.createInstanceForTest((short) 1);
+        loan = LoanBO.createInstanceForTest(loanOffering);
+        configServiceMock = createMock(ConfigurationBusinessService.class);
+        accountBusinessServiceMock = createMock(AccountBusinessService.class);
+        clientPerfHistoryMock = createMock(ClientPerformanceHistoryEntity.class);
+        customerMock = createMock(CustomerBO.class);
+    }
 }

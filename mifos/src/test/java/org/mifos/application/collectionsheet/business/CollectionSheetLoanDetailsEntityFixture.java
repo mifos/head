@@ -17,20 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.collectionsheet.business;
 
+package org.mifos.application.collectionsheet.business;
 
 public class CollectionSheetLoanDetailsEntityFixture {
 
-	public static CollSheetLnDetailsEntity createLoanDetails() {
-		return new CollSheetLnDetailsEntity();
-	}
+    public static CollSheetLnDetailsEntity createLoanDetails() {
+        return new CollSheetLnDetailsEntity();
+    }
 
-	public static CollSheetLnDetailsEntity createLoanDetails(Integer accountId) {
-		CollSheetLnDetailsEntity collectionSheet = new CollSheetLnDetailsEntity();
-		collectionSheet.setAccountId(accountId);
-		return collectionSheet;
-	}
+    public static CollSheetLnDetailsEntity createLoanDetails(Integer accountId) {
+        CollSheetLnDetailsEntity collectionSheet = new CollSheetLnDetailsEntity();
+        collectionSheet.setAccountId(accountId);
+        return collectionSheet;
+    }
 
 }

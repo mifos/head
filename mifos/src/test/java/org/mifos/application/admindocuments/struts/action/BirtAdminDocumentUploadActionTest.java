@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments.struts.action;
 
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
@@ -39,123 +39,117 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
-
 public class BirtAdminDocumentUploadActionTest extends MifosMockStrutsTestCase {
 
-	public BirtAdminDocumentUploadActionTest() throws SystemException, ApplicationException {
+    public BirtAdminDocumentUploadActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     @Override
-	protected void setUp() throws Exception {
+    protected void setUp() throws Exception {
 
-		super.setUp();
-	}
+        super.setUp();
+    }
 
-	public void testGetBirtAdminDocumentUploadPage() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "getBirtAdminDocumentUploadPage");
-		actionPerform(); 
-		verifyNoActionErrors();
-	}
-	
+    public void testGetBirtAdminDocumentUploadPage() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "getBirtAdminDocumentUploadPage");
+        actionPerform();
+        verifyNoActionErrors();
+    }
 
-	public void testShouldSubmitSucessWhenUploadNewAdminDocument() throws Exception {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+    public void testShouldSubmitSucessWhenUploadNewAdminDocument() throws Exception {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 
-		BirtAdminDocumentUploadActionForm form = new BirtAdminDocumentUploadActionForm();
-		form.setAdminiDocumentTitle("testShouldSubmitSucessWhenUploadNewAdminDocumentWithAVeryLongNameThatExceedsOneHundredCharactersInLength");
-		form.setIsActive("1");
-		form.setFile(new MockFormFile("testFileName1.rptdesign"));
-		setActionForm(form);
+        BirtAdminDocumentUploadActionForm form = new BirtAdminDocumentUploadActionForm();
+        form
+                .setAdminiDocumentTitle("testShouldSubmitSucessWhenUploadNewAdminDocumentWithAVeryLongNameThatExceedsOneHundredCharactersInLength");
+        form.setIsActive("1");
+        form.setFile(new MockFormFile("testFileName1.rptdesign"));
+        setActionForm(form);
 
-		addRequestParameter("method", "upload");
-		actionPerform();
+        addRequestParameter("method", "upload");
+        actionPerform();
 
-		AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
-		assertNotNull(adminDocument);
-		ReportsPersistence rp = new ReportsPersistence();
-		ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(
-				ReportsJasperMap.class, adminDocument.getAdmindocId());
-		assertNotNull(jasper);
+        AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
+        assertNotNull(adminDocument);
+        ReportsPersistence rp = new ReportsPersistence();
+        ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, adminDocument
+                .getAdmindocId());
+        assertNotNull(jasper);
 
-		verifyNoActionErrors();
-		verifyForward("create_success");
+        verifyNoActionErrors();
+        verifyForward("create_success");
 
-		removeReport(adminDocument.getAdmindocId());
+        removeReport(adminDocument.getAdmindocId());
 
-	}
+    }
 
-	private void removeReport(Short reportId) throws PersistenceException {
+    private void removeReport(Short reportId) throws PersistenceException {
 
-		AdminDocumentPersistence reportPersistence = new AdminDocumentPersistence();
-		reportPersistence.getSession().clear();
-		ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(
-				AdminDocumentBO.class, reportId);
+        AdminDocumentPersistence reportPersistence = new AdminDocumentPersistence();
+        reportPersistence.getSession().clear();
+        ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(AdminDocumentBO.class, reportId);
 
-		RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
-		ActivityEntity activityEntity = (ActivityEntity) permPersistence
-				.getPersistentObject(ActivityEntity.class, report
-						.getActivityId());
-		reportPersistence.delete(report);
+        RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
+        ActivityEntity activityEntity = (ActivityEntity) permPersistence.getPersistentObject(ActivityEntity.class,
+                report.getActivityId());
+        reportPersistence.delete(report);
 
-		LookUpValueEntity anLookUp = activityEntity
-				.getActivityNameLookupValues();
+        LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
 
-		permPersistence.delete(activityEntity);
-		permPersistence.delete(anLookUp);
+        permPersistence.delete(activityEntity);
+        permPersistence.delete(anLookUp);
 
-		StaticHibernateUtil.commitTransaction();
-	}
-	
-	public void testLoadProductInstance() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "loadProductInstance");
-		actionPerform();
-		verifyNoActionErrors();
-	}
-	
-	public void testGetViewBirtAdminDocumentPage() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "loadProductInstance");
-		actionPerform();
-		verifyNoActionErrors();
-	}
-	
-	public void testUpload() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "upload");
-		actionPerform();
-		verifyNoActionErrors();
-	}
-	
-	public void testEdit() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "edit");
-		addRequestParameter("admindocId", "1");
-		actionPerform();
-		AdminDocumentBO adminDocument = (AdminDocumentBO) request
-				.getAttribute(Constants.BUSINESS_KEY);
-		assertEquals("1", adminDocument.getAdmindocId().toString());
-		verifyNoActionErrors();
-		verifyForward(ActionForwards.edit_success.toString());
-		
+        StaticHibernateUtil.commitTransaction();
+    }
 
-	}
-	public void testEditThenUpload() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "editThenUpload");
-		actionPerform();
-		verifyNoActionErrors();
-	}	
-	
-	public void testDownloadAdminDocument() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "downloadAdminDocument");
-		addRequestParameter("admindocId", "1");
-		actionPerform();
-		verifyNoActionErrors();
-	}
-	
+    public void testLoadProductInstance() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "loadProductInstance");
+        actionPerform();
+        verifyNoActionErrors();
+    }
+
+    public void testGetViewBirtAdminDocumentPage() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "loadProductInstance");
+        actionPerform();
+        verifyNoActionErrors();
+    }
+
+    public void testUpload() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "upload");
+        actionPerform();
+        verifyNoActionErrors();
+    }
+
+    public void testEdit() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "edit");
+        addRequestParameter("admindocId", "1");
+        actionPerform();
+        AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
+        assertEquals("1", adminDocument.getAdmindocId().toString());
+        verifyNoActionErrors();
+        verifyForward(ActionForwards.edit_success.toString());
+
+    }
+
+    public void testEditThenUpload() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "editThenUpload");
+        actionPerform();
+        verifyNoActionErrors();
+    }
+
+    public void testDownloadAdminDocument() {
+        setRequestPathInfo("/birtAdminDocumentUploadAction.do");
+        addRequestParameter("method", "downloadAdminDocument");
+        addRequestParameter("admindocId", "1");
+        actionPerform();
+        verifyNoActionErrors();
+    }
 
 }

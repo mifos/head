@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import java.io.IOException;
@@ -26,34 +26,31 @@ import java.sql.SQLException;
 
 import net.sourceforge.mayfly.Database;
 
-
 final class DummyUpgrade extends Upgrade {
-	private StringBuilder log = new StringBuilder();
+    private StringBuilder log = new StringBuilder();
 
-	DummyUpgrade(int higherVersion) {
-		super(higherVersion);
-	}
+    DummyUpgrade(int higherVersion) {
+        super(higherVersion);
+    }
 
-	@Override
-	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-		log.append("upgrade to " + higherVersion() + "\n");
-		if (connection != null) {
-			upgradeVersion(connection);
-		}
-	}
-	
-	String getLog() {
-		return log.toString();
-	}
+    @Override
+    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+            throws IOException, SQLException {
+        log.append("upgrade to " + higherVersion() + "\n");
+        if (connection != null) {
+            upgradeVersion(connection);
+        }
+    }
 
-	public static Database databaseWithVersionTable(int version) {
-		Database database = TestDatabase.makeDatabase();
-		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-		database.execute(
-			"insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" +
-			version +
-			")");
-		return database;
-	}
+    String getLog() {
+        return log.toString();
+    }
+
+    public static Database databaseWithVersionTable(int version) {
+        Database database = TestDatabase.makeDatabase();
+        database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + version + ")");
+        return database;
+    }
 
 }

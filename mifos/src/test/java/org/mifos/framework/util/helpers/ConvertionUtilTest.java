@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
@@ -30,25 +30,20 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 // TODO: fix spelling of this class name
 public class ConvertionUtilTest extends TestCase {
 
-	public void testPopulateBusinessObjectFail() throws Exception {
-		try {
-			BaseActionForm baseActionForm = new BaseActionForm();
-			ConvertionUtil.populateBusinessObject(baseActionForm, null,
-					new Locale("EN"));
-			fail();
-		} catch (ValueObjectConversionException e) {
-			assertEquals(
-				"exception.framework.SystemException.ValueObjectConversionException",
-				e.getKey());
-		}
+    public void testPopulateBusinessObjectFail() throws Exception {
+        try {
+            BaseActionForm baseActionForm = new BaseActionForm();
+            ConvertionUtil.populateBusinessObject(baseActionForm, null, new Locale("EN"));
+            fail();
+        } catch (ValueObjectConversionException e) {
+            assertEquals("exception.framework.SystemException.ValueObjectConversionException", e.getKey());
+        }
 
-		try {
-			ConvertionUtil.populateBusinessObject(null, null, new Locale("EN"));
-			fail();
-		} catch (ValueObjectConversionException e) {
-			assertEquals(
-				"exception.framework.SystemException.ValueObjectConversionException",
-				e.getKey());
-		}
-	}
+        try {
+            ConvertionUtil.populateBusinessObject(null, null, new Locale("EN"));
+            fail();
+        } catch (ValueObjectConversionException e) {
+            assertEquals("exception.framework.SystemException.ValueObjectConversionException", e.getKey());
+        }
+    }
 }

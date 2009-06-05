@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.struts.action;
 
 import java.util.Date;
@@ -59,347 +59,301 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsClosureActionTest extends MifosMockStrutsTestCase {
-	public SavingsClosureActionTest() throws SystemException, ApplicationException {
+    public SavingsClosureActionTest() throws SystemException, ApplicationException {
         super();
     }
 
     private UserContext userContext;
 
-	private CustomerBO group;
+    private CustomerBO group;
 
-	private CustomerBO center;
+    private CustomerBO center;
 
-	private SavingsBO savings;
+    private SavingsBO savings;
 
-	private SavingsBO newSavings;
+    private SavingsBO newSavings;
 
-	private SavingsOfferingBO savingsOffering;
+    private SavingsOfferingBO savingsOffering;
 
-	private CustomerBO client1;
+    private CustomerBO client1;
 
-	private CustomerBO client2;
+    private CustomerBO client2;
 
-	private CustomerBO client3;
+    private CustomerBO client3;
 
-	private CustomerBO client4;
+    private CustomerBO client4;
 
-	private SavingsTestHelper helper = new SavingsTestHelper();
-	
-	private String flowKey;
+    private SavingsTestHelper helper = new SavingsTestHelper();
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestUtils.makeUser();
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
-		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY,
-				userContext);
-		request.getSession(false).setAttribute("ActivityContext",
-				TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, SavingsClosureAction.class);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-	}
+    private String flowKey;
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(newSavings);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(client3);
-		TestObjectFactory.cleanUp(client4);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        userContext = TestUtils.makeUser();
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
+        request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+        flowKey = createFlow(request, SavingsClosureAction.class);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+    }
 
-	public void testSuccessfulLoad_Client() throws Exception {
-		createInitialObjects();
-		createClients();
-		savingsOffering = TestObjectFactory.createSavingsProduct(
-			"Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				client1, AccountState.SAVINGS_ACTIVE);
-		StaticHibernateUtil.closeSession();
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "load");
-		actionPerform();
-		verifyForward("load_success");
-		savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY,request);
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(savings);
+        TestObjectFactory.cleanUp(newSavings);
+        TestObjectFactory.cleanUp(client1);
+        TestObjectFactory.cleanUp(client2);
+        TestObjectFactory.cleanUp(client3);
+        TestObjectFactory.cleanUp(client4);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-		savings = (SavingsBO)StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
-		Hibernate.initialize(savings.getAccountPayments());
-		Hibernate.initialize(savings.getAccountFees());
-		Hibernate.initialize(savings.getAccountActionDates());
-		assertNotNull(SessionUtils.getAttribute(
-				MasterConstants.PAYMENT_TYPE,request));
-		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
-		assertNull(clientList);
-		
-		group = new CustomerPersistence().getCustomer(group
-				.getCustomerId());
-		center = new CustomerPersistence().getCustomer(center
-				.getCustomerId());
-		client1 = new CustomerPersistence()
-				.getCustomer(client1.getCustomerId());
-		client2 = new CustomerPersistence()
-				.getCustomer(client2.getCustomerId());
-		client3 = new CustomerPersistence()
-				.getCustomer(client3.getCustomerId());
-		client4 = new CustomerPersistence()
-				.getCustomer(client4.getCustomerId());
-	}
-	
-	public void testSuccessfullLoad() throws Exception {
-		createInitialObjects();
-		createClients();
-		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountState.SAVINGS_ACTIVE);
-		StaticHibernateUtil.closeSession();
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "load");
-		actionPerform();
-		verifyForward("load_success");
-		savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY,request);
-		savings = (SavingsBO)StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
-		Hibernate.initialize(savings.getAccountPayments());
-		Hibernate.initialize(savings.getAccountFees());
-		Hibernate.initialize(savings.getAccountActionDates());
-		assertNotNull(SessionUtils.getAttribute(
-				MasterConstants.PAYMENT_TYPE,request));
-		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
-		assertNotNull(clientList);
-		assertEquals(2, clientList.size());
-		
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
-		client1 = new CustomerPersistence()
-				.getCustomer(client1.getCustomerId());
-		client2 = new CustomerPersistence()
-				.getCustomer(client2.getCustomerId());
-		client3 = new CustomerPersistence()
-				.getCustomer(client3.getCustomerId());
-		client4 = new CustomerPersistence()
-				.getCustomer(client4.getCustomerId());
-	}
+    public void testSuccessfulLoad_Client() throws Exception {
+        createInitialObjects();
+        createClients();
+        savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
+                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
+        savings = createSavingsAccount("000X00000000017", savingsOffering, client1, AccountState.SAVINGS_ACTIVE);
+        StaticHibernateUtil.closeSession();
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        verifyForward("load_success");
+        savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-	public void testSuccessfullPreview()throws Exception {
-		AccountPaymentEntity payment = new AccountPaymentEntity(null,
-				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request);
-		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", DateUtils.makeDateAsSentFromBrowser());
-		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("customerId", "1");
-		addRequestParameter("notes", "notes");
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward("preview_success");
-	}
-	
-	public void testSuccessfullPreviewWithBlankPaymentId()throws Exception {
-		AccountPaymentEntity payment = new AccountPaymentEntity(null,
-				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request);
-		addRequestParameter("receiptId", "101");		
-		addRequestParameter("receiptDate", "");
-		addRequestParameter("paymentTypeId", "");
-		addRequestParameter("customerId", "1");
-		addRequestParameter("notes", "notes");
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward("preview_success");
-	}
-	
-	public void testSuccessfullPreviewWithNullPaymentId()throws Exception {
-		AccountPaymentEntity payment = new AccountPaymentEntity(null,
-				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request);
-		addRequestParameter("receiptId", "101");		
-		addRequestParameter("receiptDate", "");
+        savings = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
+        Hibernate.initialize(savings.getAccountPayments());
+        Hibernate.initialize(savings.getAccountFees());
+        Hibernate.initialize(savings.getAccountActionDates());
+        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
+                request);
+        assertNull(clientList);
 
-		// paymentTypeId is left null
-		
-		addRequestParameter("customerId", "1");
-		addRequestParameter("notes", "notes");
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyForward("preview_success");
-	}
-	
-	public void testPreviewDateValidation()throws Exception {
-		AccountPaymentEntity payment = new AccountPaymentEntity(null,
-				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request);
-		addRequestParameter("receiptId", "101");
-		String badDate = "3/20/2005"; // an invalid date
-		addRequestParameter("receiptDate", badDate);
-		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("customerId", "1");
-		addRequestParameter("notes", "notes");
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyActionErrors(new String[] {AccountConstants.ERROR_INVALIDDATE});
-	}
+        group = new CustomerPersistence().getCustomer(group.getCustomerId());
+        center = new CustomerPersistence().getCustomer(center.getCustomerId());
+        client1 = new CustomerPersistence().getCustomer(client1.getCustomerId());
+        client2 = new CustomerPersistence().getCustomer(client2.getCustomerId());
+        client3 = new CustomerPersistence().getCustomer(client3.getCustomerId());
+        client4 = new CustomerPersistence().getCustomer(client4.getCustomerId());
+    }
 
-	public void testSuccessfullPreview_withoutReceipt()throws Exception {
-		AccountPaymentEntity payment = new AccountPaymentEntity(null,
-				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request);
-		addRequestParameter("receiptId", "");
-		addRequestParameter("receiptDate", "");
-		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("customerId", "1");
-		addRequestParameter("notes", "notes");
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyForward("preview_success");
-	}	
-	
-	public void testSuccessfullPrevious() {
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "previous");
-		actionPerform();
-		verifyForward("previous_success");
-	}
+    public void testSuccessfullLoad() throws Exception {
+        createInitialObjects();
+        createClients();
+        savingsOffering = createSavingsOffering();
+        savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
+        StaticHibernateUtil.closeSession();
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        verifyForward("load_success");
+        savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        savings = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
+        Hibernate.initialize(savings.getAccountPayments());
+        Hibernate.initialize(savings.getAccountFees());
+        Hibernate.initialize(savings.getAccountActionDates());
+        assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
+        List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
+                request);
+        assertNotNull(clientList);
+        assertEquals(2, clientList.size());
 
-	public void testSuccessfullCancel() throws Exception {
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "cancel");
-		actionPerform();
-		verifyForward("close_success");
-	}
-	
-	public void testSuccessfullCloseAccount() throws Exception {
-		createInitialObjects();
-		createClients();
-		savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
-		savings = helper.createSavingsAccount("000X00000000017",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-				userContext);
-		SavingsBOIntegrationTest.setActivationDate(savings,helper.getDate("20/05/2006"));
-		PersonnelBO createdBy = new PersonnelPersistence()
-				.getPersonnel(userContext.getId());
-		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
-				savings,
-				new Money(TestObjectFactory.getMFICurrency(), "1000.0"),
-				new Money(TestObjectFactory.getMFICurrency(), "1000.0"), helper
-						.getDate("30/05/2006"),
-				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
-				group);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(payment1,savings);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+        group = savings.getCustomer();
+        center = group.getParentCustomer();
+        client1 = new CustomerPersistence().getCustomer(client1.getCustomerId());
+        client2 = new CustomerPersistence().getCustomer(client2.getCustomerId());
+        client3 = new CustomerPersistence().getCustomer(client3.getCustomerId());
+        client4 = new CustomerPersistence().getCustomer(client4.getCustomerId());
+    }
 
-		Money balanceAmount = new Money(TestObjectFactory.getMFICurrency(),
-				"1500.0");
-		AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(
-				savings,
-				new Money(TestObjectFactory.getMFICurrency(), "500.0"),
-				balanceAmount, helper.getDate("15/06/2006"),
-				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
-				group);
-		AccountPaymentEntityIntegrationTest.addAccountPayment(payment2,savings);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+    public void testSuccessfullPreview() throws Exception {
+        AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
+                .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
+        SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
+        addRequestParameter("receiptId", "101");
+        addRequestParameter("receiptDate", DateUtils.makeDateAsSentFromBrowser());
+        addRequestParameter("paymentTypeId", "1");
+        addRequestParameter("customerId", "1");
+        addRequestParameter("notes", "notes");
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "preview");
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward("preview_success");
+    }
 
-		Money interestAmount = new Money(TestObjectFactory.getMFICurrency(),
-				"40");
-		SavingsBOIntegrationTest.setInterestToBePosted(savings,interestAmount);
-		SavingsBOIntegrationTest.setBalance(savings,balanceAmount);
-		savings.update();
-		StaticHibernateUtil.commitTransaction();
-		StaticHibernateUtil.closeSession();
+    public void testSuccessfullPreviewWithBlankPaymentId() throws Exception {
+        AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
+                .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
+        SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
+        addRequestParameter("receiptId", "101");
+        addRequestParameter("receiptDate", "");
+        addRequestParameter("paymentTypeId", "");
+        addRequestParameter("customerId", "1");
+        addRequestParameter("notes", "notes");
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "preview");
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward("preview_success");
+    }
 
-		savings = new SavingsPersistence().findById(savings.getAccountId());
-		savings.setUserContext(userContext);
+    public void testSuccessfullPreviewWithNullPaymentId() throws Exception {
+        AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
+                .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
+        SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
+        addRequestParameter("receiptId", "101");
+        addRequestParameter("receiptDate", "");
 
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "load");
-		actionPerform();
-		verifyForward("load_success");
+        // paymentTypeId is left null
 
-		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", DateUtils.makeDateAsSentFromBrowser());
-		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("customerId", "1");
-		addRequestParameter("notes", "closing account");
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "preview");
-		actionPerform();
+        addRequestParameter("customerId", "1");
+        addRequestParameter("notes", "notes");
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "preview");
+        actionPerform();
+        verifyNoActionErrors();
+        verifyForward("preview_success");
+    }
 
-		setRequestPathInfo("/savingsClosureAction.do");
-		addRequestParameter("method", "close");
-		actionPerform();
-		
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward("close_success");
-		savings = TestObjectFactory.getObject(SavingsBO.class,
-				savings.getAccountId());
-		
-		assertEquals(new Money(), savings.getSavingsBalance());
-		assertEquals(AccountState.SAVINGS_CLOSED.getValue(), savings.getAccountState().getId());
-	}
+    public void testPreviewDateValidation() throws Exception {
+        AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
+                .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
+        SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
+        addRequestParameter("receiptId", "101");
+        String badDate = "3/20/2005"; // an invalid date
+        addRequestParameter("receiptDate", badDate);
+        addRequestParameter("paymentTypeId", "1");
+        addRequestParameter("customerId", "1");
+        addRequestParameter("notes", "notes");
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "preview");
+        actionPerform();
+        verifyActionErrors(new String[] { AccountConstants.ERROR_INVALIDDATE });
+    }
 
-	
-	private void createInitialObjects() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-	}
+    public void testSuccessfullPreview_withoutReceipt() throws Exception {
+        AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
+                .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
+        SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
+        addRequestParameter("receiptId", "");
+        addRequestParameter("receiptDate", "");
+        addRequestParameter("paymentTypeId", "1");
+        addRequestParameter("customerId", "1");
+        addRequestParameter("notes", "notes");
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "preview");
+        actionPerform();
+        verifyForward("preview_success");
+    }
 
-	private void createClients() {
-		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_CLOSED, group);
-		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		client3 = TestObjectFactory.createClient("client3",
-				CustomerStatus.CLIENT_PARTIAL, group);
-		client4 = TestObjectFactory.createClient("client4",
-				CustomerStatus.CLIENT_HOLD, group);
-	}
+    public void testSuccessfullPrevious() {
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "previous");
+        actionPerform();
+        verifyForward("previous_success");
+    }
 
-	private SavingsOfferingBO createSavingsOffering() {
-		Date currentDate = new Date(System.currentTimeMillis());
-		return TestObjectFactory.createSavingsProduct(
-			"SavingPrd1", "S", currentDate);
-	}
+    public void testSuccessfullCancel() throws Exception {
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "cancel");
+        actionPerform();
+        verifyForward("close_success");
+    }
 
-	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering, CustomerBO group,
-			AccountState state) throws Exception {
-		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				state, new Date(), savingsOffering, userContext);
-	}
+    public void testSuccessfullCloseAccount() throws Exception {
+        createInitialObjects();
+        createClients();
+        savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
+        savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
+                AccountStates.SAVINGS_ACC_APPROVED, userContext);
+        SavingsBOIntegrationTest.setActivationDate(savings, helper.getDate("20/05/2006"));
+        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
+        AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(savings, new Money(TestObjectFactory
+                .getMFICurrency(), "1000.0"), new Money(TestObjectFactory.getMFICurrency(), "1000.0"), helper
+                .getDate("30/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(payment1, savings);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        Money balanceAmount = new Money(TestObjectFactory.getMFICurrency(), "1500.0");
+        AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings, new Money(TestObjectFactory
+                .getMFICurrency(), "500.0"), balanceAmount, helper.getDate("15/06/2006"),
+                AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
+        AccountPaymentEntityIntegrationTest.addAccountPayment(payment2, savings);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        Money interestAmount = new Money(TestObjectFactory.getMFICurrency(), "40");
+        SavingsBOIntegrationTest.setInterestToBePosted(savings, interestAmount);
+        SavingsBOIntegrationTest.setBalance(savings, balanceAmount);
+        savings.update();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings.setUserContext(userContext);
+
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        verifyForward("load_success");
+
+        addRequestParameter("receiptId", "101");
+        addRequestParameter("receiptDate", DateUtils.makeDateAsSentFromBrowser());
+        addRequestParameter("paymentTypeId", "1");
+        addRequestParameter("customerId", "1");
+        addRequestParameter("notes", "closing account");
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "preview");
+        actionPerform();
+
+        setRequestPathInfo("/savingsClosureAction.do");
+        addRequestParameter("method", "close");
+        actionPerform();
+
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward("close_success");
+        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+
+        assertEquals(new Money(), savings.getSavingsBalance());
+        assertEquals(AccountState.SAVINGS_CLOSED.getValue(), savings.getAccountState().getId());
+    }
+
+    private void createInitialObjects() {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+    }
+
+    private void createClients() {
+        client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_CLOSED, group);
+        client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_ACTIVE, group);
+        client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_PARTIAL, group);
+        client4 = TestObjectFactory.createClient("client4", CustomerStatus.CLIENT_HOLD, group);
+    }
+
+    private SavingsOfferingBO createSavingsOffering() {
+        Date currentDate = new Date(System.currentTimeMillis());
+        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate);
+    }
+
+    private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering,
+            CustomerBO group, AccountState state) throws Exception {
+        return TestObjectFactory.createSavingsAccount(globalAccountNum, group, state, new Date(), savingsOffering,
+                userContext);
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import static org.junit.Assert.assertEquals;
@@ -32,94 +32,84 @@ import net.sourceforge.mayfly.Database;
 
 import org.junit.Test;
 
-
 public class CompositeUpgradeTest {
-	
-	@Test public void basics() throws Exception {
-		DummyUpgrade upgradeOne = new DummyUpgrade(53);
-		DummyUpgrade upgradeTwo = new DummyUpgrade(53);
-		Upgrade composite =
-			new CompositeUpgrade(upgradeOne, upgradeTwo);
-		assertEquals(53, composite.higherVersion());
-		Connection data = simpleDatabase(52);
-		composite.upgrade(data, null);
-		assertEquals("upgrade to 53\n", upgradeOne.getLog());
-		assertEquals("upgrade to 53\n", upgradeTwo.getLog());
-		
-		assertEquals(53, new DatabaseVersionPersistence(data).read());
-	}
-	
-	@Test public void mismatch() throws Exception {
-		DummyUpgrade upgradeOne = new DummyUpgrade(111);
-		DummyUpgrade upgradeTwo = new DummyUpgrade(112);
-		try {
-			new CompositeUpgrade(upgradeOne, upgradeTwo);
-			fail();
-		}
-		catch (RuntimeException e) {
-			assertEquals(
-				"got upgrades to 111 and 112 but expected matching versions", 
-				e.getMessage());
-		}
-	}
-	
-	@Test public void empty() throws Exception {
-		try {
-			new CompositeUpgrade();
-			fail();
-		}
-		catch (RuntimeException e) {
-			assertEquals(
-				"must specify at least one upgrade", 
-				e.getMessage());
-		}
-	}
 
-	StringBuilder log;
+    @Test
+    public void basics() throws Exception {
+        DummyUpgrade upgradeOne = new DummyUpgrade(53);
+        DummyUpgrade upgradeTwo = new DummyUpgrade(53);
+        Upgrade composite = new CompositeUpgrade(upgradeOne, upgradeTwo);
+        assertEquals(53, composite.higherVersion());
+        Connection data = simpleDatabase(52);
+        composite.upgrade(data, null);
+        assertEquals("upgrade to 53\n", upgradeOne.getLog());
+        assertEquals("upgrade to 53\n", upgradeTwo.getLog());
 
-	@Test public void order() throws Exception {
-		log = new StringBuilder();
-		Upgrade composite =
-			new CompositeUpgrade(
-				new MyUpgrade("first"), 
-				new MyUpgrade("second"), 
-				new MyUpgrade("third"));
+        assertEquals(53, new DatabaseVersionPersistence(data).read());
+    }
 
-		Connection data = simpleDatabase(52);
-		composite.upgrade(data, null);
+    @Test
+    public void mismatch() throws Exception {
+        DummyUpgrade upgradeOne = new DummyUpgrade(111);
+        DummyUpgrade upgradeTwo = new DummyUpgrade(112);
+        try {
+            new CompositeUpgrade(upgradeOne, upgradeTwo);
+            fail();
+        } catch (RuntimeException e) {
+            assertEquals("got upgrades to 111 and 112 but expected matching versions", e.getMessage());
+        }
+    }
 
-		assertEquals(
-			"upgrading first\n" +
-			"upgrading second\n" +
-			"upgrading third\n",
-			log.toString());
+    @Test
+    public void empty() throws Exception {
+        try {
+            new CompositeUpgrade();
+            fail();
+        } catch (RuntimeException e) {
+            assertEquals("must specify at least one upgrade", e.getMessage());
+        }
+    }
 
-		assertEquals(52, new DatabaseVersionPersistence(data).read());
-	}
-	
-	class MyUpgrade extends Upgrade {
+    StringBuilder log;
 
-		private final String which;
+    @Test
+    public void order() throws Exception {
+        log = new StringBuilder();
+        Upgrade composite = new CompositeUpgrade(new MyUpgrade("first"), new MyUpgrade("second"),
+                new MyUpgrade("third"));
 
-		MyUpgrade(String which) {
-			super(53);
-			this.which = which;
-		}
+        Connection data = simpleDatabase(52);
+        composite.upgrade(data, null);
 
-		@Override
-		public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-			log.append("upgrading " + which + "\n");
-		}
-		
-	}
-	
-	private Connection simpleDatabase(int version) {
-		Database database = DummyUpgrade.databaseWithVersionTable(version);
-		return database.openConnection();
-	}
-	
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(CompositeUpgradeTest.class);
-	}
+        assertEquals("upgrading first\n" + "upgrading second\n" + "upgrading third\n", log.toString());
+
+        assertEquals(52, new DatabaseVersionPersistence(data).read());
+    }
+
+    class MyUpgrade extends Upgrade {
+
+        private final String which;
+
+        MyUpgrade(String which) {
+            super(53);
+            this.which = which;
+        }
+
+        @Override
+        public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+                throws IOException, SQLException {
+            log.append("upgrading " + which + "\n");
+        }
+
+    }
+
+    private Connection simpleDatabase(int version) {
+        Database database = DummyUpgrade.databaseWithVersionTable(version);
+        return database.openConnection();
+    }
+
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(CompositeUpgradeTest.class);
+    }
 
 }

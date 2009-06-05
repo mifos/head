@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ppi.business;
 
 import static org.junit.Assert.assertEquals;
@@ -55,104 +55,100 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
-	@Test
-	public void retrievePPIChoice() throws Exception {
-		Question question = 
-			new Question("question1", "what is your question", AnswerType.CHOICE);
-		PPIChoice ppiChoice = new PPIChoice("Hello World");
-		question.addChoice(ppiChoice);
-		ppiChoice.setPoints(34);
-		new SurveysPersistence().createOrUpdate(question);
-		int choiceId = ppiChoice.getChoiceId();
+    @Test
+    public void retrievePPIChoice() throws Exception {
+        Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
+        PPIChoice ppiChoice = new PPIChoice("Hello World");
+        question.addChoice(ppiChoice);
+        ppiChoice.setPoints(34);
+        new SurveysPersistence().createOrUpdate(question);
+        int choiceId = ppiChoice.getChoiceId();
 
-		database.installInThreadLocal();
-		
-		PPIChoice retrievedChoice = new PPIPersistence().getPPIChoice(choiceId);
-		assertEquals("Hello World", retrievedChoice.getChoiceText());
-	}
-	
-	@Test
-	public void retrieveRegularChoice() throws Exception {
-		Question question = 
-			new Question("question1", "what is your question", AnswerType.CHOICE);
-		QuestionChoice regularChoice = new QuestionChoice("Hello World");
-		question.addChoice(regularChoice);
-		new SurveysPersistence().createOrUpdate(question);
-		int choiceId = regularChoice.getChoiceId();
+        database.installInThreadLocal();
 
-		database.installInThreadLocal();
-		
-		QuestionChoice retrievedChoice = (QuestionChoice)
-			new SurveysPersistence().getPersistentObject(QuestionChoice.class, choiceId);
-		assertEquals("Hello World", retrievedChoice.getChoiceText());
-		assertFalse(retrievedChoice instanceof PPIChoice);
-		
-		assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
-	}
-	
-	@Test public void notFound() throws Exception {
-		QuestionChoice retrieved = new PPIPersistence().getPPIChoice(123456);
-		assertEquals(null, retrieved);
-	}
-	
-	 @Test
-	 @Ignore
- 	/* Test throws a SQLException: Attempt to read SQL NULL as an object
- 	 * When trying to retrieve responses from db.*/
-	public void viaResponses() throws Exception {
-		Question question = 
-			new Question("question1", "what is your question", AnswerType.CHOICE);
-		PPIChoice ppiChoice = new PPIChoice("Hello World");
-		question.addChoice(ppiChoice);
-		ppiChoice.setPoints(34);
-		new SurveysPersistence().createOrUpdate(question);
-		
-		SurveyInstance instance = new SurveyInstance(); 
-		PPISurvey survey = 
-			new PPISurvey("name", SurveyState.ACTIVE, SurveyType.CLIENT, Country.INDIA);
-		SurveyQuestion surveyQuestion = survey.addQuestion(question, true);
-		instance.setSurvey(
-				survey);
-		instance.setDateConducted(new Date(new DateMidnight("2004-06-27").getMillis()));
-		PersonnelBO systemUser = makeSystemUser();
-		instance.setOfficer(systemUser);
-		instance.setCreator(systemUser);
-		Set<SurveyResponse> surveyResponses = new HashSet<SurveyResponse>();
-		SurveyResponse surveyResponse = new SurveyResponse(instance, surveyQuestion);
-		surveyResponse.setChoiceValue(ppiChoice);
-		surveyResponses.add(surveyResponse);
-		instance.setSurveyResponses(surveyResponses);
-		assertEquals(1, instance.getSurveyResponses().size());
-		
-		new SurveysPersistence().createOrUpdate(instance);
-		new SurveysPersistence().createOrUpdate(surveyResponse);
-		int instanceId = instance.getInstanceId();
-		database.installInThreadLocal();
-		
-		PPIPersistence ppiPersistence = new PPIPersistence();
-		SurveyInstance retrievedInstance = ppiPersistence.getInstance(instanceId);
-		assertFalse(null == retrievedInstance);
-		assertFalse(null == retrievedInstance.getSurveyResponses());
-		assertEquals(1, retrievedInstance.getSurveyResponses().size());
-		//List<SurveyResponse> responseList =
-			//ppiPersistence.retrieveResponsesByInstance(retrievedInstance);
-		QuestionChoice retrievedChoice = ((SurveyResponse)retrievedInstance.getSurveyResponses().toArray()[0])
-		                                         .getChoiceValue(); 
-		ObjectAssert.assertInstanceOf(PPIChoice.class, retrievedChoice);
-	}
-	
-	private PersonnelBO makeSystemUser() throws Exception {
-		Date date = new Date(new DateMidnight("2004-06-27").getMillis());
-		Name name = new Name("XYZ", null, null, null);
-		return new PersonnelBO(PersonnelLevel.LOAN_OFFICER, null,
-			Integer.valueOf("1"), TestObjectFactory.TEST_LOCALE, "PASSWORD",
-			"a test officer", "xyz@yahoo.com", null, null, name,
-			"govId", date, Integer.valueOf("1"), Integer.valueOf("1"),
-			date, date, null, PersonnelConstants.SYSTEM_USER);
-	}
-	
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(PPIChoiceIntegrationTest.class);
-	}
+        PPIChoice retrievedChoice = new PPIPersistence().getPPIChoice(choiceId);
+        assertEquals("Hello World", retrievedChoice.getChoiceText());
+    }
+
+    @Test
+    public void retrieveRegularChoice() throws Exception {
+        Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
+        QuestionChoice regularChoice = new QuestionChoice("Hello World");
+        question.addChoice(regularChoice);
+        new SurveysPersistence().createOrUpdate(question);
+        int choiceId = regularChoice.getChoiceId();
+
+        database.installInThreadLocal();
+
+        QuestionChoice retrievedChoice = (QuestionChoice) new SurveysPersistence().getPersistentObject(
+                QuestionChoice.class, choiceId);
+        assertEquals("Hello World", retrievedChoice.getChoiceText());
+        assertFalse(retrievedChoice instanceof PPIChoice);
+
+        assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
+    }
+
+    @Test
+    public void notFound() throws Exception {
+        QuestionChoice retrieved = new PPIPersistence().getPPIChoice(123456);
+        assertEquals(null, retrieved);
+    }
+
+    @Test
+    @Ignore
+    /*
+     * Test throws a SQLException: Attempt to read SQL NULL as an object When
+     * trying to retrieve responses from db.
+     */
+    public void viaResponses() throws Exception {
+        Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
+        PPIChoice ppiChoice = new PPIChoice("Hello World");
+        question.addChoice(ppiChoice);
+        ppiChoice.setPoints(34);
+        new SurveysPersistence().createOrUpdate(question);
+
+        SurveyInstance instance = new SurveyInstance();
+        PPISurvey survey = new PPISurvey("name", SurveyState.ACTIVE, SurveyType.CLIENT, Country.INDIA);
+        SurveyQuestion surveyQuestion = survey.addQuestion(question, true);
+        instance.setSurvey(survey);
+        instance.setDateConducted(new Date(new DateMidnight("2004-06-27").getMillis()));
+        PersonnelBO systemUser = makeSystemUser();
+        instance.setOfficer(systemUser);
+        instance.setCreator(systemUser);
+        Set<SurveyResponse> surveyResponses = new HashSet<SurveyResponse>();
+        SurveyResponse surveyResponse = new SurveyResponse(instance, surveyQuestion);
+        surveyResponse.setChoiceValue(ppiChoice);
+        surveyResponses.add(surveyResponse);
+        instance.setSurveyResponses(surveyResponses);
+        assertEquals(1, instance.getSurveyResponses().size());
+
+        new SurveysPersistence().createOrUpdate(instance);
+        new SurveysPersistence().createOrUpdate(surveyResponse);
+        int instanceId = instance.getInstanceId();
+        database.installInThreadLocal();
+
+        PPIPersistence ppiPersistence = new PPIPersistence();
+        SurveyInstance retrievedInstance = ppiPersistence.getInstance(instanceId);
+        assertFalse(null == retrievedInstance);
+        assertFalse(null == retrievedInstance.getSurveyResponses());
+        assertEquals(1, retrievedInstance.getSurveyResponses().size());
+        // List<SurveyResponse> responseList =
+        // ppiPersistence.retrieveResponsesByInstance(retrievedInstance);
+        QuestionChoice retrievedChoice = ((SurveyResponse) retrievedInstance.getSurveyResponses().toArray()[0])
+                .getChoiceValue();
+        ObjectAssert.assertInstanceOf(PPIChoice.class, retrievedChoice);
+    }
+
+    private PersonnelBO makeSystemUser() throws Exception {
+        Date date = new Date(new DateMidnight("2004-06-27").getMillis());
+        Name name = new Name("XYZ", null, null, null);
+        return new PersonnelBO(PersonnelLevel.LOAN_OFFICER, null, Integer.valueOf("1"), TestObjectFactory.TEST_LOCALE,
+                "PASSWORD", "a test officer", "xyz@yahoo.com", null, null, name, "govId", date, Integer.valueOf("1"),
+                Integer.valueOf("1"), date, date, null, PersonnelConstants.SYSTEM_USER);
+    }
+
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(PPIChoiceIntegrationTest.class);
+    }
 
 }

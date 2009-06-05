@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.center.persistence;
 
 import java.util.Date;
@@ -48,8 +48,8 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CenterPersistenceIntegrationTest extends MifosIntegrationTest{
-	public CenterPersistenceIntegrationTest() throws SystemException, ApplicationException {
+public class CenterPersistenceIntegrationTest extends MifosIntegrationTest {
+    public CenterPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -58,7 +58,7 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTest{
     private CenterPersistence centerPersistence;
 
     @Override
-	public void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         officePersistence = new OfficePersistence();
         centerPersistence = new CenterPersistence();
@@ -66,19 +66,17 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTest{
     }
 
     @Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
     }
 
-    public void testCreateCenter()
-            throws PersistenceException, OfficeException,
-            MeetingException, CustomerException, ValidationException {
+    public void testCreateCenter() throws PersistenceException, OfficeException, MeetingException, CustomerException,
+            ValidationException {
         UserContext userContext = TestUtils.makeUser();
         long beforeTransactionCount = getStatisticsService().getSuccessfulTransactionCount();
-        OfficeTemplate template =
-                OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
+        OfficeTemplate template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
         try {
             OfficeBO office = getOfficePersistence().createOffice(userContext, template);
             MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
@@ -87,8 +85,7 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTest{
 
             assertNotNull(center.getCustomerId());
             assertTrue(center.isActive());
-        }
-        finally {
+        } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
         long afterTransactionCount = getStatisticsService().getSuccessfulTransactionCount();
@@ -96,41 +93,41 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTest{
     }
 
     public void testIsCenterExists_true() throws Exception {
-		String centerName="NewCenter";
-		center = TestObjectFactory.createCenter(centerName,getMeeting());
-		StaticHibernateUtil.closeSession();
-		assertTrue(new CenterPersistence().isCenterExists(centerName));
-	}
-	
-	public void testIsCenterExists_false() throws PersistenceException {
-		String centerName="NewCenter";
-		center = TestObjectFactory.createCenter(centerName,getMeeting());
-		StaticHibernateUtil.closeSession();
-		assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
-	}
-	
-	public void testGetCenter() throws Exception {
-		String centerName="NewCenter";
-		center = TestObjectFactory.createCenter(centerName,getMeeting());
-		StaticHibernateUtil.closeSession();
-		center = new CenterPersistence().getCenter(center.getCustomerId());
-		assertEquals(centerName, center.getDisplayName());
-	}
-	
-	private MeetingBO getMeeting() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		meeting.setMeetingStartDate(new Date());
-		return meeting;
-	}
-	public void testSearch() throws Exception{
-		String centerName="NewCenter";
-		center = TestObjectFactory.createCenter(centerName,getMeeting());
-	   QueryResult queryResult=	new CenterPersistence().search(center.getDisplayName(),Short.valueOf("1"));
-	   assertNotNull(queryResult);
-	   assertEquals(1,queryResult.getSize());
-	   assertEquals(1,queryResult.get(0,10).size());
-	}
+        String centerName = "NewCenter";
+        center = TestObjectFactory.createCenter(centerName, getMeeting());
+        StaticHibernateUtil.closeSession();
+        assertTrue(new CenterPersistence().isCenterExists(centerName));
+    }
+
+    public void testIsCenterExists_false() throws PersistenceException {
+        String centerName = "NewCenter";
+        center = TestObjectFactory.createCenter(centerName, getMeeting());
+        StaticHibernateUtil.closeSession();
+        assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
+    }
+
+    public void testGetCenter() throws Exception {
+        String centerName = "NewCenter";
+        center = TestObjectFactory.createCenter(centerName, getMeeting());
+        StaticHibernateUtil.closeSession();
+        center = new CenterPersistence().getCenter(center.getCustomerId());
+        assertEquals(centerName, center.getDisplayName());
+    }
+
+    private MeetingBO getMeeting() {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        meeting.setMeetingStartDate(new Date());
+        return meeting;
+    }
+
+    public void testSearch() throws Exception {
+        String centerName = "NewCenter";
+        center = TestObjectFactory.createCenter(centerName, getMeeting());
+        QueryResult queryResult = new CenterPersistence().search(center.getDisplayName(), Short.valueOf("1"));
+        assertNotNull(queryResult);
+        assertEquals(1, queryResult.getSize());
+        assertEquals(1, queryResult.get(0, 10).size());
+    }
 
     OfficePersistence getOfficePersistence() {
         return officePersistence;

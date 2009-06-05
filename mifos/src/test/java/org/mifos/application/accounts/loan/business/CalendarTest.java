@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.business;
 
 import java.util.Calendar;
@@ -33,72 +33,69 @@ public class CalendarTest {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         calendar.add(Calendar.DATE, -numberOfDays);
-        Date pastDate =  DateUtils.getDateWithoutTimeStamp(calendar.getTime());
+        Date pastDate = DateUtils.getDateWithoutTimeStamp(calendar.getTime());
         return pastDate;
     }
 
-	Date getFirstDateForWeek(GregorianCalendar gc, Date startDate, int meetingDayOfWeek) {
-		gc.setTime(startDate);
+    Date getFirstDateForWeek(GregorianCalendar gc, Date startDate, int meetingDayOfWeek) {
+        gc.setTime(startDate);
 
-		// Jump to next week if the required weekday has passed for current week
-		if (gc.get(Calendar.DAY_OF_WEEK) > meetingDayOfWeek) {
-			gc.add(Calendar.WEEK_OF_MONTH, 1);
-		}
-		
-		// Set the day of week as the require weekday
-		gc.set(Calendar.DAY_OF_WEEK, meetingDayOfWeek);
-		return gc.getTime();
-	}
+        // Jump to next week if the required weekday has passed for current week
+        if (gc.get(Calendar.DAY_OF_WEEK) > meetingDayOfWeek) {
+            gc.add(Calendar.WEEK_OF_MONTH, 1);
+        }
 
-	@Test
-	public void testDayOfWeek() {
-		Date twoWeeksAgo = createPreviousDate(14);
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(twoWeeksAgo);
-		
-		Assert.assertEquals(cal.get(Calendar.DAY_OF_WEEK), 1);
-		System.out.println("two weeks ago: " + cal.getTime());
-		
-		Date nextMondayAfterTwoWeeksAgo = createPreviousDate(13);
-		System.out.println("Expected: " + nextMondayAfterTwoWeeksAgo);
-		Date computed = getFirstDateForWeek(cal, twoWeeksAgo, 2);
-		System.out.println ("actual: " + cal.getTime());
-		Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(nextMondayAfterTwoWeeksAgo),
-				     DateUtils.getDateWithoutTimeStamp(computed));
-	}
-		
+        // Set the day of week as the require weekday
+        gc.set(Calendar.DAY_OF_WEEK, meetingDayOfWeek);
+        return gc.getTime();
+    }
 
-		@Test
-		public void testDayOfWeek2() {
-			Date twoWeeksAgo = createPreviousDate(14);
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.setFirstDayOfWeek(2);
-			cal.setTime(twoWeeksAgo);
-			
-			Assert.assertEquals(cal.get(Calendar.DAY_OF_WEEK), 1);
-			System.out.println("two weeks ago: " + cal.getTime());
-			
-			Date nextMondayAfterTwoWeeksAgo = createPreviousDate(13);
-			System.out.println("Expected: " + nextMondayAfterTwoWeeksAgo);
-			Date computed = getFirstDateForWeek(cal, twoWeeksAgo, 2);
-			System.out.println ("actual: " + cal.getTime());
-			Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(nextMondayAfterTwoWeeksAgo),
-					     DateUtils.getDateWithoutTimeStamp(computed));
-			
-	}
+    @Test
+    public void testDayOfWeek() {
+        Date twoWeeksAgo = createPreviousDate(14);
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(twoWeeksAgo);
 
-		/*
-		@Test
-		public void testDayOfWeek3() {
-			//Wednesday, June 4, 2008
-			GregorianCalendar aWednesdayCal = new GregorianCalendar(2008, 5, 4);
-			Date aWednesday = aWednesdayCal.getTime();
-			
-			
-			Date computed = getFirstDateForWeek(new GregorianCalendar, aWednesday, 2);
-			System.out.println ("actual: " + cal.getTime());
-			Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(nextMondayAfterTwoWeeksAgo),
-					     DateUtils.getDateWithoutTimeStamp(computed));
-		}
-		*/
+        Assert.assertEquals(cal.get(Calendar.DAY_OF_WEEK), 1);
+        System.out.println("two weeks ago: " + cal.getTime());
+
+        Date nextMondayAfterTwoWeeksAgo = createPreviousDate(13);
+        System.out.println("Expected: " + nextMondayAfterTwoWeeksAgo);
+        Date computed = getFirstDateForWeek(cal, twoWeeksAgo, 2);
+        System.out.println("actual: " + cal.getTime());
+        Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(nextMondayAfterTwoWeeksAgo), DateUtils
+                .getDateWithoutTimeStamp(computed));
+    }
+
+    @Test
+    public void testDayOfWeek2() {
+        Date twoWeeksAgo = createPreviousDate(14);
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setFirstDayOfWeek(2);
+        cal.setTime(twoWeeksAgo);
+
+        Assert.assertEquals(cal.get(Calendar.DAY_OF_WEEK), 1);
+        System.out.println("two weeks ago: " + cal.getTime());
+
+        Date nextMondayAfterTwoWeeksAgo = createPreviousDate(13);
+        System.out.println("Expected: " + nextMondayAfterTwoWeeksAgo);
+        Date computed = getFirstDateForWeek(cal, twoWeeksAgo, 2);
+        System.out.println("actual: " + cal.getTime());
+        Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(nextMondayAfterTwoWeeksAgo), DateUtils
+                .getDateWithoutTimeStamp(computed));
+
+    }
+
+    /*
+     * @Test public void testDayOfWeek3() { //Wednesday, June 4, 2008
+     * GregorianCalendar aWednesdayCal = new GregorianCalendar(2008, 5, 4); Date
+     * aWednesday = aWednesdayCal.getTime();
+     * 
+     * 
+     * Date computed = getFirstDateForWeek(new GregorianCalendar, aWednesday,
+     * 2); System.out.println ("actual: " + cal.getTime());
+     * Assert.assertEquals(DateUtils
+     * .getDateWithoutTimeStamp(nextMondayAfterTwoWeeksAgo),
+     * DateUtils.getDateWithoutTimeStamp(computed)); }
+     */
 }

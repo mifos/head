@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client;
 
 import java.io.InputStream;
@@ -55,14 +55,11 @@ public class ClientTemplateImpl extends CustomerTemplateImpl implements ClientTe
         this.officeId = officeId;
         this.parentCustomerId = parentCustomerId;
         this.formedById = PersonnelConstants.SYSTEM_USER;
-        this.clientDetail = new ClientDetailView(1, 1, 1,
-					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
-							.valueOf("41"));
-        this.clientNameDetail = new ClientNameDetailView(
-					NameType.MAYBE_CLIENT, TestObjectFactory.SAMPLE_SALUTATION, getDisplayName(),
-					"middle", getDisplayName(), "secondLast");
-        this.spouseNameDetail = new ClientNameDetailView(
-				NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION,
+        this.clientDetail = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
+                .valueOf("41"));
+        this.clientNameDetail = new ClientNameDetailView(NameType.MAYBE_CLIENT, TestObjectFactory.SAMPLE_SALUTATION,
+                getDisplayName(), "middle", getDisplayName(), "secondLast");
+        this.spouseNameDetail = new ClientNameDetailView(NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION,
                 "TestMaybeClient", "middle", getDisplayName(), "secondLast");
         // TODO: this should be fixed - I mean really...
         this.dateOfBirth = new Date(1222333444000L);

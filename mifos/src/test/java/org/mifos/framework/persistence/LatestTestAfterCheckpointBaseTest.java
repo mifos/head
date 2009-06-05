@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import static org.junit.Assert.assertEquals;
@@ -50,112 +50,109 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  */
 
 public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
-	
-	@Test
-	public void simple() throws Exception {
-		Database database = TestDatabase.makeDatabase();
-		loadLatest(database);
-		String latestDump = new SqlDumper().dump(database.dataStore());
 
-		database = TestDatabase.makeDatabase();
-		applyUpgrades(database);
-		String upgradeDump = new SqlDumper().dump(database.dataStore());
-		assertEquals(latestDump, upgradeDump);
-	}
+    @Test
+    public void simple() throws Exception {
+        Database database = TestDatabase.makeDatabase();
+        loadLatest(database);
+        String latestDump = new SqlDumper().dump(database.dataStore());
 
-	private void applyUpgrades(Database database) {
-		database.execute("create table foo(x integer)");
-		database.execute("insert into foo(x) values(5)");
-		database.execute("alter table foo add column y integer default 7");
-	}
+        database = TestDatabase.makeDatabase();
+        applyUpgrades(database);
+        String upgradeDump = new SqlDumper().dump(database.dataStore());
+        assertEquals(latestDump, upgradeDump);
+    }
 
-	private void loadLatest(Database database) {
-		database.execute("create table foo(x integer, y integer default 7)");
-		database.execute("insert into foo(x, y) values(5,7)");
-	}
+    private void applyUpgrades(Database database) {
+        database.execute("create table foo(x integer)");
+        database.execute("insert into foo(x) values(5)");
+        database.execute("alter table foo add column y integer default 7");
+    }
 
-	@Test
-	public void realSchemaFromCheckpoint() throws Exception {
-		Database database = TestDatabase.makeDatabase();
-		loadRealLatest(database);
-		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION,
-				version(database));
-		String latestDump = new SqlDumper(false).dump(database.dataStore());
+    private void loadLatest(Database database) {
+        database.execute("create table foo(x integer, y integer default 7)");
+        database.execute("insert into foo(x, y) values(5,7)");
+    }
 
-		DataStore upgraded = applyRealUpgradesFromCheckpoint();
-		String upgradeDump = new SqlDumper(false).dump(upgraded);
-		assertEquals(latestDump, upgradeDump);
-	}
+    @Test
+    public void realSchemaFromCheckpoint() throws Exception {
+        Database database = TestDatabase.makeDatabase();
+        loadRealLatest(database);
+        assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
+        String latestDump = new SqlDumper(false).dump(database.dataStore());
 
-	
-	private DataStore applyRealUpgradesFromCheckpoint() throws Exception {
-		Database database = new Database(latestCheckpointVersion());
+        DataStore upgraded = applyRealUpgradesFromCheckpoint();
+        String upgradeDump = new SqlDumper(false).dump(upgraded);
+        assertEquals(latestDump, upgradeDump);
+    }
 
-	    TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, database.openConnection());
-	    return database.dataStore();
-	}
-	
-	@Test
-	public void dropTables() throws Exception {
-		Database database = TestDatabase.makeDatabase();
-		String blankDB = new SqlDumper().dump(database.dataStore());
-		DatabaseSetup.executeScript(database, "latest-schema.sql");
-		DatabaseSetup.executeScript(database, "mifosdroptables.sql");
-		String cleanedDB = new SqlDumper().dump(database.dataStore());
-		assertEquals(blankDB, cleanedDB);
-	}
-	
-	/**
-	 * The idea here is to figure out whether we are dropping tables
-	 * in the right order to deal with foreign keys.  I'm not sure
-	 * we fully succeed, however.
-	 */
-	@Test
-	public void dropTablesWithData() throws Exception {
-		TestDatabase database = TestDatabase.makeStandard();
-		DatabaseSetup.executeScript(
-			database.openConnection(), "mifosdroptables.sql");
-		assertEquals("", database.dumpForComparison());
-	}
-	
-	private static DataStore latestCheckpointVersion;
+    private DataStore applyRealUpgradesFromCheckpoint() throws Exception {
+        Database database = new Database(latestCheckpointVersion());
 
-	private DataStore latestCheckpointVersion() throws Exception {
-		if (latestCheckpointVersion == null) {
-			Database database = TestDatabase.makeDatabase();
-			TestDatabase.upgradeLatestCheckpointVersion(database.openConnection());
-			latestCheckpointVersion = database.dataStore();
-		}
-		return latestCheckpointVersion;
-	}
-	
-	@Test
-	public void afterLookupValuesAfterCheckpoint() throws Exception {
-		Database database = new Database(latestCheckpointVersion());
-		
-		int nextLookupId = largestLookupId(database.openConnection()) + 1;
-		database.execute("insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
-				"VALUES(" + nextLookupId + ", 19,' ')");
-		database.execute("insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
-				"VALUES(1," + nextLookupId + ",'Martian')");
-		
-		upgrade(LATEST_CHECKPOINT_VERSION, database.dataStore());
-		
-		// Assert that custom values have been retained
-		ResultSet rs = database.query("select * from lookup_value where lookup_id=" + nextLookupId);
-		rs.next();
-		assertEquals(19, rs.getInt("entity_id"));
-		assertEquals(" ", rs.getString("lookup_name"));
-		
-		rs = database.query("select * from lookup_value_locale where lookup_id=" + nextLookupId);
-		rs.next();
-		assertEquals(1, rs.getInt("locale_id"));
-		assertEquals("Martian", rs.getString("lookup_value"));
-		rs.close();
-	}
+        TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, database.openConnection());
+        return database.dataStore();
+    }
 
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(LatestTestAfterCheckpointBaseTest.class);
-	}
+    @Test
+    public void dropTables() throws Exception {
+        Database database = TestDatabase.makeDatabase();
+        String blankDB = new SqlDumper().dump(database.dataStore());
+        DatabaseSetup.executeScript(database, "latest-schema.sql");
+        DatabaseSetup.executeScript(database, "mifosdroptables.sql");
+        String cleanedDB = new SqlDumper().dump(database.dataStore());
+        assertEquals(blankDB, cleanedDB);
+    }
+
+    /**
+     * The idea here is to figure out whether we are dropping tables in the
+     * right order to deal with foreign keys. I'm not sure we fully succeed,
+     * however.
+     */
+    @Test
+    public void dropTablesWithData() throws Exception {
+        TestDatabase database = TestDatabase.makeStandard();
+        DatabaseSetup.executeScript(database.openConnection(), "mifosdroptables.sql");
+        assertEquals("", database.dumpForComparison());
+    }
+
+    private static DataStore latestCheckpointVersion;
+
+    private DataStore latestCheckpointVersion() throws Exception {
+        if (latestCheckpointVersion == null) {
+            Database database = TestDatabase.makeDatabase();
+            TestDatabase.upgradeLatestCheckpointVersion(database.openConnection());
+            latestCheckpointVersion = database.dataStore();
+        }
+        return latestCheckpointVersion;
+    }
+
+    @Test
+    public void afterLookupValuesAfterCheckpoint() throws Exception {
+        Database database = new Database(latestCheckpointVersion());
+
+        int nextLookupId = largestLookupId(database.openConnection()) + 1;
+        database.execute("insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " + "VALUES(" + nextLookupId
+                + ", 19,' ')");
+        database.execute("insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " + "VALUES(1,"
+                + nextLookupId + ",'Martian')");
+
+        upgrade(LATEST_CHECKPOINT_VERSION, database.dataStore());
+
+        // Assert that custom values have been retained
+        ResultSet rs = database.query("select * from lookup_value where lookup_id=" + nextLookupId);
+        rs.next();
+        assertEquals(19, rs.getInt("entity_id"));
+        assertEquals(" ", rs.getString("lookup_name"));
+
+        rs = database.query("select * from lookup_value_locale where lookup_id=" + nextLookupId);
+        rs.next();
+        assertEquals(1, rs.getInt("locale_id"));
+        assertEquals("Martian", rs.getString("lookup_value"));
+        rs.close();
+    }
+
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(LatestTestAfterCheckpointBaseTest.class);
+    }
 
 }

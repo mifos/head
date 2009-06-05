@@ -17,16 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.ui;
 
 import static org.mifos.framework.util.helpers.NumberUtils.*;
-public class SelectionItemFixture {
-	public static SelectionItem createSelectionItem(Integer id) {
-		return new SelectionItem(id, "");
-	}
 
-	public static SelectionItem createSelectionItem(Short personnelId) {
-		return new SelectionItem(convertShortToInteger(personnelId), "");
-	}
+public class SelectionItemFixture {
+    public static SelectionItem createSelectionItem(Integer id) {
+        return new SelectionItem(id, "");
+    }
+
+    public static SelectionItem createSelectionItem(Short personnelId) {
+        return new SelectionItem(convertShortToInteger(personnelId), "");
+    }
 }

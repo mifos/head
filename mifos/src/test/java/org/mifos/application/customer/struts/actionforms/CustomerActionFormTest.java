@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.actionforms;
 
 import junit.framework.TestCase;
@@ -25,18 +25,17 @@ import junit.framework.TestCase;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
 
 public class CustomerActionFormTest extends TestCase {
-	
-	public void testNullInCustomerId() throws Exception {
-		CustomerActionForm form = new GroupCustActionForm();
-		form.setCustomerId(null);
-		assertNull(form.getCustomerId());
 
-		try {
-			form.getCustomerIdAsInt();
-			fail();
-		}
-		catch (NullPointerException expected) {
-		}
-	}
+    public void testNullInCustomerId() throws Exception {
+        CustomerActionForm form = new GroupCustActionForm();
+        form.setCustomerId(null);
+        assertNull(form.getCustomerId());
+
+        try {
+            form.getCustomerIdAsInt();
+            fail();
+        } catch (NullPointerException expected) {
+        }
+    }
 
 }

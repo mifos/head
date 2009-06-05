@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.rolesandpermission;
 
 import junit.framework.Test;
@@ -34,20 +34,20 @@ import org.mifos.application.rolesandpermission.utils.helpers.RoleTempleteBuilde
 
 public class RolesAndPermissionTestSuite extends TestSuite {
 
-	public RolesAndPermissionTestSuite() throws Exception {
-		super();
-	}
+    public RolesAndPermissionTestSuite() throws Exception {
+        super();
+    }
 
-	public static Test suite() throws Exception {
-		TestSuite testSuite = new RolesAndPermissionTestSuite();
-		testSuite.addTestSuite(ActivityEntityIntegrationTest.class);
-		testSuite.addTestSuite(RoleActivityEntityIntegrationTest.class);
-		testSuite.addTestSuite(RoleBOIntegrationTest.class);
-		testSuite.addTestSuite(RolesPermissionsBusinessServiceIntegrationTest.class);
-		testSuite.addTestSuite(RolesAndPermissionPersistenceIntegrationTest.class);
-		testSuite.addTestSuite(RolesPermissionsActionTest.class);
-		testSuite.addTestSuite(RoleTempleteBuilderIntegrationTest.class);
-		testSuite.addTestSuite(ActivityTagIntegrationTest.class);
-		return testSuite;
-	}
+    public static Test suite() throws Exception {
+        TestSuite testSuite = new RolesAndPermissionTestSuite();
+        testSuite.addTestSuite(ActivityEntityIntegrationTest.class);
+        testSuite.addTestSuite(RoleActivityEntityIntegrationTest.class);
+        testSuite.addTestSuite(RoleBOIntegrationTest.class);
+        testSuite.addTestSuite(RolesPermissionsBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(RolesAndPermissionPersistenceIntegrationTest.class);
+        testSuite.addTestSuite(RolesPermissionsActionTest.class);
+        testSuite.addTestSuite(RoleTempleteBuilderIntegrationTest.class);
+        testSuite.addTestSuite(ActivityTagIntegrationTest.class);
+        return testSuite;
+    }
 }

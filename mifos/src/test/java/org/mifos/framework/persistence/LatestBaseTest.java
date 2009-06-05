@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import static org.junit.Assert.assertEquals;
@@ -42,68 +42,63 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * scripts on the test classes that extend this base class.
  */
 public class LatestBaseTest {
-	
 
-	protected int version(Database database) throws SQLException {
-		return new DatabaseVersionPersistence(database.openConnection()).read();
-	}
+    protected int version(Database database) throws SQLException {
+        return new DatabaseVersionPersistence(database.openConnection()).read();
+    }
 
-	/**
-	 * Similar to what we get from {@link DatabaseSetup#getStandardStore()}
-	 * but without testdbinsertionscript.sql.
-	 */
-	protected void loadRealLatest(Database database) {
-	    DatabaseSetup.executeScript(database, "latest-schema.sql");
-	    DatabaseSetup.executeScript(database, "latest-data.sql");
-	}
+    /**
+     * Similar to what we get from {@link DatabaseSetup#getStandardStore()} but
+     * without testdbinsertionscript.sql.
+     */
+    protected void loadRealLatest(Database database) {
+        DatabaseSetup.executeScript(database, "latest-schema.sql");
+        DatabaseSetup.executeScript(database, "latest-data.sql");
+    }
 
-	protected int largestLookupId(Connection connection) throws SQLException {
-		Statement statement = connection.createStatement();
-		ResultSet results = statement.executeQuery(
-			"select max(lookup_id) from LOOKUP_VALUE");
-		if (!results.next()) {
-			throw new SystemException(SystemException.DEFAULT_KEY, 
-				"Did not find an existing lookup_id in lookup_value table");
-		}
-		int largestLookupId = results.getInt(1);
-		results.close();
-		statement.close();
-		return largestLookupId;
-	}
+    protected int largestLookupId(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
+        if (!results.next()) {
+            throw new SystemException(SystemException.DEFAULT_KEY,
+                    "Did not find an existing lookup_id in lookup_value table");
+        }
+        int largestLookupId = results.getInt(1);
+        results.close();
+        statement.close();
+        return largestLookupId;
+    }
 
-	protected DataStore upgrade(int fromVersion, DataStore current) throws Exception {
-		for (int currentVersion = fromVersion; 
-			currentVersion < APPLICATION_VERSION;
-			++currentVersion) {
-			int higherVersion = currentVersion + 1;
-			try {
-				current = upgrade(current, higherVersion);
-			}
-			catch (Exception failure) {
-				throw new Exception("Cannot upgrade to " + higherVersion,
-					failure);
-			}
-		}
-		return current;
-	}
+    protected DataStore upgrade(int fromVersion, DataStore current) throws Exception {
+        for (int currentVersion = fromVersion; currentVersion < APPLICATION_VERSION; ++currentVersion) {
+            int higherVersion = currentVersion + 1;
+            try {
+                current = upgrade(current, higherVersion);
+            } catch (Exception failure) {
+                throw new Exception("Cannot upgrade to " + higherVersion, failure);
+            }
+        }
+        return current;
+    }
 
-	protected DataStore upgrade(DataStore current, int nextVersion) throws Exception {
-		Database database = new Database(current);
-		DatabaseVersionPersistence persistence =
-			new DatabaseVersionPersistence(database.openConnection());
-		Upgrade upgrade = persistence.findUpgrade(nextVersion);
-		if (upgrade instanceof SqlUpgrade)
-			assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
-		
-		upgrade.upgrade(database.openConnection(), persistence);
-		return database.dataStore();
-	}
+    protected DataStore upgrade(DataStore current, int nextVersion) throws Exception {
+        Database database = new Database(current);
+        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(database.openConnection());
+        Upgrade upgrade = persistence.findUpgrade(nextVersion);
+        if (upgrade instanceof SqlUpgrade)
+            assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
 
-	private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
-		String[] sqlStatements = upgrade.readFile((InputStream) upgrade.sql().getContent());
-		for (int i = 0; i < sqlStatements.length; i++) {
-			Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues.checkLookupValue(sqlStatements[i]));
-			Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup value locales", HardcodedValues.checkLookupValueLocale(sqlStatements[i]));
-		}
-	}
+        upgrade.upgrade(database.openConnection(), persistence);
+        return database.dataStore();
+    }
+
+    private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
+        String[] sqlStatements = upgrade.readFile((InputStream) upgrade.sql().getContent());
+        for (int i = 0; i < sqlStatements.length; i++) {
+            Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues
+                    .checkLookupValue(sqlStatements[i]));
+            Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup value locales", HardcodedValues
+                    .checkLookupValueLocale(sqlStatements[i]));
+        }
+    }
 }

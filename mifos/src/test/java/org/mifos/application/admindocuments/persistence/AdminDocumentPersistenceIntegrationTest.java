@@ -27,39 +27,28 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
-
 public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTest {
 
-	public AdminDocumentPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public AdminDocumentPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-
     private AdminDocumentPersistence reportsPersistence;
 
-	@Override
-	protected void setUp() throws Exception {
-	    super.setUp();
-		reportsPersistence = new AdminDocumentPersistence();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        reportsPersistence = new AdminDocumentPersistence();
+    }
 
-	
-	public void testGetAllAdminDocuments() throws PersistenceException {
-		List<AdminDocumentBO>  listadmindoc = reportsPersistence
-		.getAllAdminDocuments();
-		assertEquals(0, listadmindoc.size());
-	}
-	
-	
-	public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
-		AdminDocumentBO  admindoc = reportsPersistence
-		.getAdminDocumentById(Short.valueOf("1"));
-		assertEquals(null, admindoc);
-	}
+    public void testGetAllAdminDocuments() throws PersistenceException {
+        List<AdminDocumentBO> listadmindoc = reportsPersistence.getAllAdminDocuments();
+        assertEquals(0, listadmindoc.size());
+    }
+
+    public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
+        AdminDocumentBO admindoc = reportsPersistence.getAdminDocumentById(Short.valueOf("1"));
+        assertEquals(null, admindoc);
+    }
 
 }
-
-
-
-
-

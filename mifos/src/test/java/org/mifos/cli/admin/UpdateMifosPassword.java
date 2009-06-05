@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.cli.admin;
 
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -26,16 +26,15 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
- * @deprecated in favor of <code>sql/init_mifos_password.sql</code> script.
- *             Will be removed in a future release.
+ * @deprecated in favor of <code>sql/init_mifos_password.sql</code> script. Will
+ *             be removed in a future release.
  */
 public class UpdateMifosPassword extends BaseMifosCommandLine {
-    public static void main(String[] args)
-            throws PersistenceException {
+    public static void main(String[] args) throws PersistenceException {
         System.out.println("changing password to " + args[0]);
         initializeApplication();
         System.out.println("application initialized");
-        new PersonnelPersistence().getPersonnel((short)1).updatePassword(args[0], (short)1);
+        new PersonnelPersistence().getPersonnel((short) 1).updatePassword(args[0], (short) 1);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         System.out.println("done");

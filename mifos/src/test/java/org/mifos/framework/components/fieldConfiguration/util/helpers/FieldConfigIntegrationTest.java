@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import java.util.List;
@@ -33,61 +33,60 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
-public class FieldConfigIntegrationTest extends MifosIntegrationTest{
-	
-	public FieldConfigIntegrationTest() throws SystemException, ApplicationException {
+public class FieldConfigIntegrationTest extends MifosIntegrationTest {
+
+    public FieldConfigIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
+    private FieldConfigurationPersistence persistence = new FieldConfigurationPersistence();
 
-    private FieldConfigurationPersistence persistence =
-		new FieldConfigurationPersistence();
-	
-	private FieldConfig fieldConfig = FieldConfig.getInstance();
-	
-	public void testIsFieldHidden() throws HibernateProcessException, PersistenceException {
-		EntityMasterData.getInstance().init();
-		List<EntityMaster> entityMasterList=persistence.getEntityMasterList();
-		for(EntityMaster entityMaster : entityMasterList){
-			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),persistence.getListOfFields(entityMaster.getId()));
-		}
-		assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"),false);
-		assertEquals(fieldConfig.isFieldHidden("Group.City"),true);
-		fieldConfig.getEntityFieldMap().clear();
-	}
+    private FieldConfig fieldConfig = FieldConfig.getInstance();
 
-	public void testIsFieldMandatory() throws HibernateProcessException, PersistenceException {
-		EntityMasterData.getInstance().init();
-		List<EntityMaster> entityMasterList=persistence.getEntityMasterList();
-		for(EntityMaster entityMaster : entityMasterList){
-			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),persistence.getListOfFields(entityMaster.getId()));
-		}
-		assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"),true);
-		fieldConfig.getEntityFieldMap().clear();
-	}
-	
-	
-	public void testInit() throws HibernateProcessException, ApplicationException{
-		EntityMasterData.getInstance().init();
-		fieldConfig.init();
-		Map<Short,List<FieldConfigurationEntity>> entityMandatoryMap=fieldConfig.getEntityMandatoryFieldMap();
-		assertEquals(22, entityMandatoryMap.size());
-		
-		List<FieldConfigurationEntity> listOfMandatoryFields=entityMandatoryMap.get(Short.valueOf("22"));
-		assertEquals(1, listOfMandatoryFields.size());
-		
-		List<FieldConfigurationEntity> listOfFields=fieldConfig.getEntityFieldMap().get(Short.valueOf("22"));
-		assertEquals(5, listOfFields.size());
-		
-		for(FieldConfigurationEntity fieldConfigurationEntity : listOfMandatoryFields){
-			assertEquals(fieldConfigurationEntity.getFieldName(),"PurposeOfLoan");
-		}
-		
-		assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"),false);
-		assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"),true);
+    public void testIsFieldHidden() throws HibernateProcessException, PersistenceException {
+        EntityMasterData.getInstance().init();
+        List<EntityMaster> entityMasterList = persistence.getEntityMasterList();
+        for (EntityMaster entityMaster : entityMasterList) {
+            fieldConfig.getEntityFieldMap()
+                    .put(entityMaster.getId(), persistence.getListOfFields(entityMaster.getId()));
+        }
+        assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"), false);
+        assertEquals(fieldConfig.isFieldHidden("Group.City"), true);
+        fieldConfig.getEntityFieldMap().clear();
+    }
 
-		fieldConfig.getEntityFieldMap().clear();
-		fieldConfig.getEntityMandatoryFieldMap().clear();
-	}
-	
+    public void testIsFieldMandatory() throws HibernateProcessException, PersistenceException {
+        EntityMasterData.getInstance().init();
+        List<EntityMaster> entityMasterList = persistence.getEntityMasterList();
+        for (EntityMaster entityMaster : entityMasterList) {
+            fieldConfig.getEntityFieldMap()
+                    .put(entityMaster.getId(), persistence.getListOfFields(entityMaster.getId()));
+        }
+        assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"), true);
+        fieldConfig.getEntityFieldMap().clear();
+    }
+
+    public void testInit() throws HibernateProcessException, ApplicationException {
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+        Map<Short, List<FieldConfigurationEntity>> entityMandatoryMap = fieldConfig.getEntityMandatoryFieldMap();
+        assertEquals(22, entityMandatoryMap.size());
+
+        List<FieldConfigurationEntity> listOfMandatoryFields = entityMandatoryMap.get(Short.valueOf("22"));
+        assertEquals(1, listOfMandatoryFields.size());
+
+        List<FieldConfigurationEntity> listOfFields = fieldConfig.getEntityFieldMap().get(Short.valueOf("22"));
+        assertEquals(5, listOfFields.size());
+
+        for (FieldConfigurationEntity fieldConfigurationEntity : listOfMandatoryFields) {
+            assertEquals(fieldConfigurationEntity.getFieldName(), "PurposeOfLoan");
+        }
+
+        assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"), false);
+        assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"), true);
+
+        fieldConfig.getEntityFieldMap().clear();
+        fieldConfig.getEntityMandatoryFieldMap().clear();
+    }
+
 }

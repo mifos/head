@@ -53,7 +53,8 @@ public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrat
         expect(childLoanMock2.getParentAccount()).andReturn(parentLoanMock2);
 
         replay(parentLoanMock1, parentLoanMock2, childLoanMock1, childLoanMock2);
-        GroupPerformanceHistoryUpdater.ClientAccountWithParentAccountMatcher matcher = new GroupPerformanceHistoryUpdater.ClientAccountWithParentAccountMatcher(parentLoanMock1);
+        GroupPerformanceHistoryUpdater.ClientAccountWithParentAccountMatcher matcher = new GroupPerformanceHistoryUpdater.ClientAccountWithParentAccountMatcher(
+                parentLoanMock1);
         assertTrue(matcher.evaluate(childLoanMock1));
         assertFalse(matcher.evaluate(childLoanMock2));
         verify(parentLoanMock1, parentLoanMock2, childLoanMock1, childLoanMock2);

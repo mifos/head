@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer;
 
 import junit.framework.TestSuite;
@@ -59,42 +59,19 @@ import org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFnTest;
 import org.mifos.application.customer.util.helpers.CustomerHelpersIntegrationTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-    CenterPersistenceIntegrationTest.class,
-    CustomerPersistenceIntegrationTest.class,
-    CustomerBusinessServiceIntegrationTest.class,
-    CustomerTrxnDetailEntityIntegrationTest.class,
-    CustomerApplyAdjustmentActionTest.class,
-    CustomerActionTest.class,
-    EditCustomerStatusActionTest.class,
-    CustomerNotesActionTest.class,
-    ClientIntegrationTest.class,
-    ClientBoTest.class,
-    CustomerBOIntegrationTest.class,
-    CustomerUIHelperFnTest.class,
-    CenterBOIntegrationTest.class,
-    CenterBusinessServiceIntegrationTest.class,
-    CenterActionTest.class,
-    ClientCustActionTest.class,
-    ClientTransferActionTest.class,
-    AddGroupMembershipActionTest.class,
-    CustHistoricalDataActionTest.class,
-    GroupBusinessServiceIntegrationTest.class,
-    GroupPersistenceIntegrationTest.class,
-    GroupActionTest.class,
-    GroupBOIntegrationTest.class,
-    CustActionTest.class,
-    GroupTransferActionTest.class,
-    CustomerAccountActionTest.class,
-    ClientPersistenceIntegrationTest.class,
-    ClientBusinessServiceIntegrationTest.class,
-    CustSearchActionTest.class,
-    CustomerViewIntegrationTest.class,
-    CustomerHelpersIntegrationTest.class,
-    GroupPerformanceHistoryUpdaterIntegrationTest.class,
-    GroupPerformanceHistoryEntityIntegrationTest.class   
-})
-
+@Suite.SuiteClasses( { CenterPersistenceIntegrationTest.class, CustomerPersistenceIntegrationTest.class,
+        CustomerBusinessServiceIntegrationTest.class, CustomerTrxnDetailEntityIntegrationTest.class,
+        CustomerApplyAdjustmentActionTest.class, CustomerActionTest.class, EditCustomerStatusActionTest.class,
+        CustomerNotesActionTest.class, ClientIntegrationTest.class, ClientBoTest.class,
+        CustomerBOIntegrationTest.class, CustomerUIHelperFnTest.class, CenterBOIntegrationTest.class,
+        CenterBusinessServiceIntegrationTest.class, CenterActionTest.class, ClientCustActionTest.class,
+        ClientTransferActionTest.class, AddGroupMembershipActionTest.class, CustHistoricalDataActionTest.class,
+        GroupBusinessServiceIntegrationTest.class, GroupPersistenceIntegrationTest.class, GroupActionTest.class,
+        GroupBOIntegrationTest.class, CustActionTest.class, GroupTransferActionTest.class,
+        CustomerAccountActionTest.class, ClientPersistenceIntegrationTest.class,
+        ClientBusinessServiceIntegrationTest.class, CustSearchActionTest.class, CustomerViewIntegrationTest.class,
+        CustomerHelpersIntegrationTest.class, GroupPerformanceHistoryUpdaterIntegrationTest.class,
+        GroupPerformanceHistoryEntityIntegrationTest.class })
 public class CustomerTestSuite extends TestSuite {
     // placeholder class for above annotations
 }

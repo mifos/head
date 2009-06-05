@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.struts.uihelpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
@@ -70,312 +70,269 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-
 public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTest {
 
-	public BulkEntryDisplayHelperIntegrationTest() throws SystemException, ApplicationException {
+    public BulkEntryDisplayHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     CustomerBO center;
 
-	CustomerBO group;
+    CustomerBO group;
 
-	ClientBO client;
+    ClientBO client;
 
-	AccountBO account;
+    AccountBO account;
 
-	LoanBO groupAccount;
+    LoanBO groupAccount;
 
-	LoanBO clientAccount;
+    LoanBO clientAccount;
 
-	private SavingsBO centerSavingsAccount;
+    private SavingsBO centerSavingsAccount;
 
-	private SavingsBO groupSavingsAccount;
+    private SavingsBO groupSavingsAccount;
 
-	private SavingsBO clientSavingsAccount;
+    private SavingsBO clientSavingsAccount;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(centerSavingsAccount);
-		TestObjectFactory.cleanUp(groupSavingsAccount);
-		TestObjectFactory.cleanUp(clientSavingsAccount);
-		TestObjectFactory.cleanUp(groupAccount);
-		TestObjectFactory.cleanUp(clientAccount);
-		TestObjectFactory.cleanUp(account);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    @Override
+    public void tearDown() throws Exception {
+        TestObjectFactory.cleanUp(centerSavingsAccount);
+        TestObjectFactory.cleanUp(groupSavingsAccount);
+        TestObjectFactory.cleanUp(clientSavingsAccount);
+        TestObjectFactory.cleanUp(groupAccount);
+        TestObjectFactory.cleanUp(clientAccount);
+        TestObjectFactory.cleanUp(account);
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-	public void testBuildTableHeadings() {
-		LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering",
-				"LOAN");
-		java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP", currentDate);
-		List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
-		List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
-		loanProducts.add(loanOffering);
-		savingsProducts.add(savingsOffering);
-		UserContext userContext = TestObjectFactory.getContext();
-		String result = new BulkEntryDisplayHelper().buildTableHeadings(
-				loanProducts, savingsProducts, userContext.getPreferredLocale()).toString();
-		StringAssert.assertContains("LOAN", result);
-		StringAssert.assertContains("SAVP", result);
+    public void testBuildTableHeadings() {
+        LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+        java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
+        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP",
+                currentDate);
+        List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
+        List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
+        loanProducts.add(loanOffering);
+        savingsProducts.add(savingsOffering);
+        UserContext userContext = TestObjectFactory.getContext();
+        String result = new BulkEntryDisplayHelper().buildTableHeadings(loanProducts, savingsProducts,
+                userContext.getPreferredLocale()).toString();
+        StringAssert.assertContains("LOAN", result);
+        StringAssert.assertContains("SAVP", result);
 
-		StringAssert.assertContains("Due/Collections", result);
-		StringAssert.assertContains("Issues/Withdrawals", result);
-		StringAssert.assertContains("Client Name", result);
-		StringAssert.assertContains("A/C Collections", result);
-		StringAssert.assertContains("Attn", result);
+        StringAssert.assertContains("Due/Collections", result);
+        StringAssert.assertContains("Issues/Withdrawals", result);
+        StringAssert.assertContains("Client Name", result);
+        StringAssert.assertContains("A/C Collections", result);
+        StringAssert.assertContains("Attn", result);
 
-		TestObjectFactory.removeObject(loanOffering);
-		TestObjectFactory.removeObject(savingsOffering);
-	}
+        TestObjectFactory.removeObject(loanOffering);
+        TestObjectFactory.removeObject(savingsOffering);
+    }
 
-	public void testGetEndTable() {
-		String result = new BulkEntryDisplayHelper().getEndTable(3).toString();
-		StringAssert.assertContains("</table>", result);
-		StringAssert.assertContains("</tr>", result);
-		StringAssert.assertContains("<tr>", result);
-		StringAssert.assertContains("<td", result);
-		StringAssert.assertContains("</td", result);
-	}
-	
-	public void testBuildForCenterForGetMethod() throws Exception {
-		CollectionSheetEntryBO bulkEntry = createBulkEntry();
-		StringBuilder builder = new StringBuilder();
-		
-		// Assert that the extracted attendance types are the ones expected
-		final String[] EXPECTED_ATTENDANCE_TYPES = {"P", "A", "AA", "L"};
-		List<CustomValueListElement> attendanceTypesCustomValueList = new MasterDataService().getMasterData(
-				MasterConstants.ATTENDENCETYPES, (short) 1,
-				"org.mifos.application.master.business.CustomerAttendanceType",
-				"attendanceId").getCustomValueListElements();
-		List<String> attendanceTypesLookupValueList = new ArrayList<String>();
-		for(CustomValueListElement attendanceTypeCustomValueListElement: attendanceTypesCustomValueList) {
-			attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
-		}
-		assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
-		
-		HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
-		
-		new BulkEntryDisplayHelper().buildForCenter(bulkEntry
-				.getBulkEntryParent(), bulkEntry.getLoanProducts(), bulkEntry
-				.getSavingsProducts(), clientAttendance, attendanceTypesCustomValueList, builder, Methods.get
-				.toString(), TestObjectFactory.getContext(), (short) 1);
-		String result = builder.toString();
+    public void testGetEndTable() {
+        String result = new BulkEntryDisplayHelper().getEndTable(3).toString();
+        StringAssert.assertContains("</table>", result);
+        StringAssert.assertContains("</tr>", result);
+        StringAssert.assertContains("<tr>", result);
+        StringAssert.assertContains("<td", result);
+        StringAssert.assertContains("</td", result);
+    }
 
-		StringAssert.assertContains("Group", result);
-		StringAssert.assertContains("Client", result);
-		StringAssert
-				.assertNotContains("<option value= \"\"></option>)", result);
-		StringAssert.assertContains(groupAccount.getLoanBalance().toString(),
-				result);
-		StringAssert.assertContains(clientAccount.getLoanBalance().toString(),
-				result);
-		StringAssert.assertContains("0.0", result);
+    public void testBuildForCenterForGetMethod() throws Exception {
+        CollectionSheetEntryBO bulkEntry = createBulkEntry();
+        StringBuilder builder = new StringBuilder();
 
-		StringAssert.assertContains("enteredAmount", result);
-		StringAssert.assertContains("depositAmountEntered", result);
-		StringAssert.assertContains("withDrawalAmountEntered", result);
-	}
+        // Assert that the extracted attendance types are the ones expected
+        final String[] EXPECTED_ATTENDANCE_TYPES = { "P", "A", "AA", "L" };
+        List<CustomValueListElement> attendanceTypesCustomValueList = new MasterDataService().getMasterData(
+                MasterConstants.ATTENDENCETYPES, (short) 1,
+                "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
+                .getCustomValueListElements();
+        List<String> attendanceTypesLookupValueList = new ArrayList<String>();
+        for (CustomValueListElement attendanceTypeCustomValueListElement : attendanceTypesCustomValueList) {
+            attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
+        }
+        assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
 
-	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
-			String shortName) {
-		Date startDate = new Date(System.currentTimeMillis());
+        HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
 
-		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
-		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				ApplicableTo.GROUPS, startDate, 
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, frequency);
-	}
+        new BulkEntryDisplayHelper().buildForCenter(bulkEntry.getBulkEntryParent(), bulkEntry.getLoanProducts(),
+                bulkEntry.getSavingsProducts(), clientAttendance, attendanceTypesCustomValueList, builder, Methods.get
+                        .toString(), TestObjectFactory.getContext(), (short) 1);
+        String result = builder.toString();
 
-	private CollectionSheetEntryBO createBulkEntry() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client", 
-				CustomerStatus.CLIENT_ACTIVE,
-				group);
-		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan2345", "313f", startDate, meeting);
-		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
-				startDate, loanOffering1);
-		clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, 
-				startDate, 1,
-				loanOffering2);
-		java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-		SavingsOfferingBO savingsOffering1 = 
-			TestObjectFactory.createSavingsProduct(
-					"SavingPrd1", "ased", currentDate);
-		SavingsOfferingBO savingsOffering2 = 
-			TestObjectFactory.createSavingsProduct(
-					"SavingPrd2", "cvdf", currentDate);
-		SavingsOfferingBO savingsOffering3 = 
-			TestObjectFactory.createSavingsProduct(
-					"SavingPrd3", "zxsd", currentDate);
+        StringAssert.assertContains("Group", result);
+        StringAssert.assertContains("Client", result);
+        StringAssert.assertNotContains("<option value= \"\"></option>)", result);
+        StringAssert.assertContains(groupAccount.getLoanBalance().toString(), result);
+        StringAssert.assertContains(clientAccount.getLoanBalance().toString(), result);
+        StringAssert.assertContains("0.0", result);
 
-		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43244334", center, Short.valueOf("16"), startDate,
-				savingsOffering1);
-		groupSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43234434", group, Short.valueOf("16"), startDate,
-				savingsOffering2);
-		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43245434", client, Short.valueOf("16"), startDate,
-				savingsOffering3);
+        StringAssert.assertContains("enteredAmount", result);
+        StringAssert.assertContains("depositAmountEntered", result);
+        StringAssert.assertContains("withDrawalAmountEntered", result);
+    }
 
-		CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
+    private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
+        Date startDate = new Date(System.currentTimeMillis());
 
-		CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(
-				getCusomerView(center));
-		SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
-		centerSavingsAccountView.setDepositAmountEntered("100");
-		centerSavingsAccountView.setWithDrawalAmountEntered("10");
-		bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
-		bulkEntryParent
-				.setCustomerAccountDetails(getCustomerAccountView(center));
+        MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
+                LOAN_INSTALLMENT, MONDAY));
+        return TestObjectFactory.createLoanOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, startDate,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency);
+    }
 
-		CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
-		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
-		SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
-		groupSavingsAccountView.setDepositAmountEntered("100");
-		groupSavingsAccountView.setWithDrawalAmountEntered("10");
-		bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
-		bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
-		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
+    private CollectionSheetEntryBO createBulkEntry() throws Exception {
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+                CUSTOMER_MEETING));
+        Date startDate = new Date(System.currentTimeMillis());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
+        LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", startDate, meeting);
+        groupAccount = TestObjectFactory.createLoanAccount("42423142341", group,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering1);
+        clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1, loanOffering2);
+        java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
+        SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "ased", currentDate);
+        SavingsOfferingBO savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "cvdf", currentDate);
+        SavingsOfferingBO savingsOffering3 = TestObjectFactory.createSavingsProduct("SavingPrd3", "zxsd", currentDate);
 
-		CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(
-				getCusomerView(client));
-		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
-		clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
-		SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
-		clientSavingsAccountView.setDepositAmountEntered("100");
-		clientSavingsAccountView.setWithDrawalAmountEntered("10");
-		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
-		bulkEntrySubChild.setAttendence(new Short("2"));
-		bulkEntrySubChild.addSavingsAccountDetail(clientSavingsAccountView);
-		bulkEntrySubChild
-				.setCustomerAccountDetails(getCustomerAccountView(client));
+        centerSavingsAccount = TestObjectFactory.createSavingsAccount("43244334", center, Short.valueOf("16"),
+                startDate, savingsOffering1);
+        groupSavingsAccount = TestObjectFactory.createSavingsAccount("43234434", group, Short.valueOf("16"), startDate,
+                savingsOffering2);
+        clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
+                startDate, savingsOffering3);
 
-		bulkEntryChild.addChildNode(bulkEntrySubChild);
-		bulkEntryParent.addChildNode(bulkEntryChild);
+        CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
 
-		bulkEntryChild.getLoanAccountDetails().get(0).setPrdOfferingId(
-				groupLoanAccountView.getPrdOfferingId());
-		bulkEntryChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
-		bulkEntrySubChild.getLoanAccountDetails().get(0)
-				.setDisBursementAmountEntered(
-						clientAccount.getLoanAmount().toString());
-		bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(
-				clientLoanAccountView.getPrdOfferingId());
-		List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
-		loanProducts.add(loanOffering1);
-		loanProducts.add(loanOffering2);
-		List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
-		savingsProducts.add(savingsOffering1);
-		savingsProducts.add(savingsOffering2);
-		savingsProducts.add(savingsOffering3);
-		bulkEntry.setLoanProducts(loanProducts);
-		bulkEntry.setSavingsProducts(savingsProducts);
-		bulkEntry.setTotalCustomers(3);
-		bulkEntry.setBulkEntryParent(bulkEntryParent);
-		bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
-		bulkEntry.setReceiptId("324343242");
-		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
-		bulkEntry.setPaymentType(getPaymentTypeView());
-		bulkEntry.setTransactionDate(new java.sql.Date(System
-				.currentTimeMillis()));
+        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
+        SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
+        centerSavingsAccountView.setDepositAmountEntered("100");
+        centerSavingsAccountView.setWithDrawalAmountEntered("10");
+        bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
+        bulkEntryParent.setCustomerAccountDetails(getCustomerAccountView(center));
 
-		return bulkEntry;
+        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group));
+        LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
+        SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
+        groupSavingsAccountView.setDepositAmountEntered("100");
+        groupSavingsAccountView.setWithDrawalAmountEntered("10");
+        bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
+        bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
+        bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-	}
+        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client));
+        LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
+        clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
+        SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
+        clientSavingsAccountView.setDepositAmountEntered("100");
+        clientSavingsAccountView.setWithDrawalAmountEntered("10");
+        bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
+        bulkEntrySubChild.setAttendence(new Short("2"));
+        bulkEntrySubChild.addSavingsAccountDetail(clientSavingsAccountView);
+        bulkEntrySubChild.setCustomerAccountDetails(getCustomerAccountView(client));
 
-	private LoanBO getLoanAccount(AccountState state, Date startDate,
-			int disbursalType, LoanOfferingBO loanOfferingBO) {
-		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, state, startDate, loanOfferingBO,
-				disbursalType);
+        bulkEntryChild.addChildNode(bulkEntrySubChild);
+        bulkEntryParent.addChildNode(bulkEntryChild);
 
-	}
+        bulkEntryChild.getLoanAccountDetails().get(0).setPrdOfferingId(groupLoanAccountView.getPrdOfferingId());
+        bulkEntryChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
+        bulkEntrySubChild.getLoanAccountDetails().get(0).setDisBursementAmountEntered(
+                clientAccount.getLoanAmount().toString());
+        bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(clientLoanAccountView.getPrdOfferingId());
+        List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
+        loanProducts.add(loanOffering1);
+        loanProducts.add(loanOffering2);
+        List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
+        savingsProducts.add(savingsOffering1);
+        savingsProducts.add(savingsOffering2);
+        savingsProducts.add(savingsOffering3);
+        bulkEntry.setLoanProducts(loanProducts);
+        bulkEntry.setSavingsProducts(savingsProducts);
+        bulkEntry.setTotalCustomers(3);
+        bulkEntry.setBulkEntryParent(bulkEntryParent);
+        bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
+        bulkEntry.setReceiptId("324343242");
+        bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
+        bulkEntry.setPaymentType(getPaymentTypeView());
+        bulkEntry.setTransactionDate(new java.sql.Date(System.currentTimeMillis()));
 
-	private LoanAccountView getLoanAccountView(LoanBO account) {
-		LoanAccountView accountView = TestObjectFactory
-				.getLoanAccountView(account);
-		List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
-		actionDates.add(account.getAccountActionDate((short) 1));
-		accountView.addTrxnDetails(TestObjectFactory
-				.getBulkEntryAccountActionViews(actionDates));
+        return bulkEntry;
 
-		return accountView;
-	}
+    }
 
-	private SavingsAccountView getSavingsAccountView(SavingsBO account) {
-		SavingsAccountView accountView = new SavingsAccountView(account
-				.getAccountId(), account.getType(),
-				account.getSavingsOffering());
-		accountView.addAccountTrxnDetail(TestObjectFactory
-				.getBulkEntryAccountActionView(account
-						.getAccountActionDate((short) 1)));
+    private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType, LoanOfferingBO loanOfferingBO) {
+        return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
+                loanOfferingBO, disbursalType);
 
-		return accountView;
-	}
+    }
 
-	private CustomerView getCusomerView(CustomerBO customer) {
-		CustomerView customerView = new CustomerView();
-		customerView.setCustomerId(customer.getCustomerId());
-		customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
-		customerView.setCustomerSearchId(customer.getSearchId());
-		customerView.setDisplayName(customer.getDisplayName());
-		customerView.setGlobalCustNum(customer.getGlobalCustNum());
-		customerView.setOfficeId(customer.getOffice().getOfficeId());
-		if (null != customer.getParentCustomer())
-			customerView.setParentCustomerId(customer.getParentCustomer()
-					.getCustomerId());
-		customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
-		customerView.setStatusId(customer.getCustomerStatus().getId());
-		return customerView;
-	}
+    private LoanAccountView getLoanAccountView(LoanBO account) {
+        LoanAccountView accountView = TestObjectFactory.getLoanAccountView(account);
+        List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
+        actionDates.add(account.getAccountActionDate((short) 1));
+        accountView.addTrxnDetails(TestObjectFactory.getBulkEntryAccountActionViews(actionDates));
 
-	private PersonnelView getPersonnelView(PersonnelBO personnel) {
-		PersonnelView personnelView = new PersonnelView(personnel
-				.getPersonnelId(), personnel.getDisplayName());
-		return personnelView;
-	}
+        return accountView;
+    }
 
-	private PaymentTypeView getPaymentTypeView() {
-		PaymentTypeView paymentTypeView = new PaymentTypeView();
-		paymentTypeView.setPaymentTypeId(Short.valueOf("1"));
-		return paymentTypeView;
-	}
+    private SavingsAccountView getSavingsAccountView(SavingsBO account) {
+        SavingsAccountView accountView = new SavingsAccountView(account.getAccountId(), account.getType(), account
+                .getSavingsOffering());
+        accountView.addAccountTrxnDetail(TestObjectFactory.getBulkEntryAccountActionView(account
+                .getAccountActionDate((short) 1)));
 
-	private CustomerAccountView getCustomerAccountView(CustomerBO customer) {
-		CustomerAccountView customerAccountView = new CustomerAccountView(
-				customer.getCustomerAccount().getAccountId());
+        return accountView;
+    }
 
-		List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
-		accountAction.add(customer.getCustomerAccount().getAccountActionDate(
-				Short.valueOf("1")));
-		customerAccountView.setAccountActionDates(TestObjectFactory
-				.getBulkEntryAccountActionViews(accountAction));
-		customerAccountView.setCustomerAccountAmountEntered("100.0");
-		customerAccountView.setValidCustomerAccountAmountEntered(true);
-		return customerAccountView;
-	}
+    private CustomerView getCusomerView(CustomerBO customer) {
+        CustomerView customerView = new CustomerView();
+        customerView.setCustomerId(customer.getCustomerId());
+        customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
+        customerView.setCustomerSearchId(customer.getSearchId());
+        customerView.setDisplayName(customer.getDisplayName());
+        customerView.setGlobalCustNum(customer.getGlobalCustNum());
+        customerView.setOfficeId(customer.getOffice().getOfficeId());
+        if (null != customer.getParentCustomer())
+            customerView.setParentCustomerId(customer.getParentCustomer().getCustomerId());
+        customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
+        customerView.setStatusId(customer.getCustomerStatus().getId());
+        return customerView;
+    }
+
+    private PersonnelView getPersonnelView(PersonnelBO personnel) {
+        PersonnelView personnelView = new PersonnelView(personnel.getPersonnelId(), personnel.getDisplayName());
+        return personnelView;
+    }
+
+    private PaymentTypeView getPaymentTypeView() {
+        PaymentTypeView paymentTypeView = new PaymentTypeView();
+        paymentTypeView.setPaymentTypeId(Short.valueOf("1"));
+        return paymentTypeView;
+    }
+
+    private CustomerAccountView getCustomerAccountView(CustomerBO customer) {
+        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId());
+
+        List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
+        accountAction.add(customer.getCustomerAccount().getAccountActionDate(Short.valueOf("1")));
+        customerAccountView.setAccountActionDates(TestObjectFactory.getBulkEntryAccountActionViews(accountAction));
+        customerAccountView.setCustomerAccountAmountEntered("100.0");
+        customerAccountView.setValidCustomerAccountAmountEntered(true);
+        return customerAccountView;
+    }
 
 }

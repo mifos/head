@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate;
 
 import junitx.framework.ObjectAssert;
@@ -31,32 +31,29 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HibernateIntegrationTest extends MifosIntegrationTest {
 
-	public HibernateIntegrationTest() throws SystemException, ApplicationException {
+    public HibernateIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-	public void testHibernateSessionFactoryForNullConfig() {
-		try {
-			HibernateSessionFactory.setConfiguration(null);
-			fail();
-		} catch (HibernateStartUpException outer) {
-			assertEquals("exception.framework.SystemException",
-					outer.getKey());
-			ObjectAssert.assertInstanceOf(
-				NullPointerException.class, 
-				outer.getCause());
-		}
-	}
+    public void testHibernateSessionFactoryForNullConfig() {
+        try {
+            HibernateSessionFactory.setConfiguration(null);
+            fail();
+        } catch (HibernateStartUpException outer) {
+            assertEquals("exception.framework.SystemException", outer.getKey());
+            ObjectAssert.assertInstanceOf(NullPointerException.class, outer.getCause());
+        }
+    }
 
-	public void testHibernateUtilIsSessionOpen() {
-		StaticHibernateUtil.getSessionTL();
-		assertTrue(StaticHibernateUtil.isSessionOpen());
-		StaticHibernateUtil.closeSession();
-	}
+    public void testHibernateUtilIsSessionOpen() {
+        StaticHibernateUtil.getSessionTL();
+        assertTrue(StaticHibernateUtil.isSessionOpen());
+        StaticHibernateUtil.closeSession();
+    }
 
-	public void testHibernateUtilIsSessionOpenForClosedSession() {
-		StaticHibernateUtil.closeSession();
-		assertFalse(StaticHibernateUtil.isSessionOpen());
-	}
+    public void testHibernateUtilIsSessionOpenForClosedSession() {
+        StaticHibernateUtil.closeSession();
+        assertFalse(StaticHibernateUtil.isSessionOpen());
+    }
 
 }

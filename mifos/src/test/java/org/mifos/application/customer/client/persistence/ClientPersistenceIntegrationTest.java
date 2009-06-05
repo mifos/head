@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.persistence;
 
 import java.util.Calendar;
@@ -63,47 +63,47 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
-	public ClientPersistenceIntegrationTest() throws SystemException, ApplicationException {
+    public ClientPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
     private static final Integer UNKNOWN_CUSTOMER_ID = Integer.valueOf(0);
 
-	private static final String DEFAULT_CLIENT_NAME = "Active Client";
+    private static final String DEFAULT_CLIENT_NAME = "Active Client";
 
-	private static final Date DEFAULT_DOB = DateUtils.getDate(1983, Calendar.JANUARY, 1);
+    private static final Date DEFAULT_DOB = DateUtils.getDate(1983, Calendar.JANUARY, 1);
 
-	private static final String GOVT_ID = "1234";
+    private static final String GOVT_ID = "1234";
 
-	private SavingsOfferingBO savingsOffering1;
+    private SavingsOfferingBO savingsOffering1;
 
-	private SavingsOfferingBO savingsOffering2;
+    private SavingsOfferingBO savingsOffering2;
 
-	private SavingsOfferingBO savingsOffering3;
+    private SavingsOfferingBO savingsOffering3;
 
-	private SavingsOfferingBO savingsOffering4;
+    private SavingsOfferingBO savingsOffering4;
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
     private GroupPersistence groupPersistence;
     private ClientPersistence clientPersistence;
 
-	private MeetingBO meeting;
+    private MeetingBO meeting;
 
-	private CenterBO center;
+    private CenterBO center;
 
-	private GroupBO group;
+    private GroupBO group;
 
-	private ClientBO client;
+    private ClientBO client;
 
-	private ClientBO client1;
+    private ClientBO client1;
 
-	private ClientBO localTestClient;
+    private ClientBO localTestClient;
 
-	private ClientBO clientWithSameGovtId;
+    private ClientBO clientWithSameGovtId;
 
     @Override
-	protected void setUp() throws Exception {
-    	super.setUp();
+    protected void setUp() throws Exception {
+        super.setUp();
         this.officePersistence = new OfficePersistence();
         this.centerPersistence = new CenterPersistence();
         this.groupPersistence = new GroupPersistence();
@@ -112,30 +112,28 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
     }
 
     @Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(savingsOffering1);
-		TestObjectFactory.removeObject(savingsOffering2);
-		TestObjectFactory.removeObject(savingsOffering3);
-		TestObjectFactory.removeObject(savingsOffering4);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(localTestClient );
-		TestObjectFactory.cleanUp(clientWithSameGovtId );
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		StaticHibernateUtil.closeSession();
-		super.tearDown();
-	}
+    protected void tearDown() throws Exception {
+        TestObjectFactory.removeObject(savingsOffering1);
+        TestObjectFactory.removeObject(savingsOffering2);
+        TestObjectFactory.removeObject(savingsOffering3);
+        TestObjectFactory.removeObject(savingsOffering4);
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(client1);
+        TestObjectFactory.cleanUp(localTestClient);
+        TestObjectFactory.cleanUp(clientWithSameGovtId);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
+        StaticHibernateUtil.closeSession();
+        super.tearDown();
+    }
 
-    public void testCreateClient()
-            throws PersistenceException, OfficeException,
-            MeetingException, CustomerException, ValidationException {
+    public void testCreateClient() throws PersistenceException, OfficeException, MeetingException, CustomerException,
+            ValidationException {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
         try {
             UserContext userContext = TestUtils.makeUser();
 
-            OfficeTemplate template =
-                    OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
+            OfficeTemplate template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
             OfficeBO office = getOfficePersistence().createOffice(userContext, template);
 
             MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
@@ -146,14 +144,13 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
             GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());
             GroupBO group = getGroupPersistence().createGroup(userContext, groupTemplate);
 
-            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate(
-                    office.getOfficeId(), group.getCustomerId());
+            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate(office.getOfficeId(),
+                    group.getCustomerId());
             ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
 
             assertNotNull(client.getCustomerId());
             assertTrue(client.isActive());
-        }
-        finally {
+        } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
         assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
@@ -162,218 +159,192 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
     public void testCreateClientInvalidParentCustomer() throws PersistenceException, CustomerException {
         try {
             UserContext userContext = TestUtils.makeUser();
-            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate(
-                    (short)1, -11);
+            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate((short) 1, -11);
             try {
                 ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
                 fail("should not have been able to create client " + client.getDisplayName());
             } catch (ValidationException e) {
                 assertTrue(e.getMessage().equals(CustomerConstants.INVALID_PARENT));
             }
-        }
-        finally {
+        } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
     }
 
     public void testRetrieveOfferingsApplicableToClient() throws Exception {
-		Date currentTimestamp = new Date(System.currentTimeMillis());
-		savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1",
-				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, currentTimestamp);
-		savingsOffering2 = TestObjectFactory.createSavingsProduct("Offering2",
-				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS, currentTimestamp);
-		savingsOffering3 = TestObjectFactory.createSavingsProduct("Offering3",
-				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS, currentTimestamp);
-		savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4",
-				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS, currentTimestamp);
-		StaticHibernateUtil.closeSession();
-		List<SavingsOfferingBO> offerings = new ClientPersistence()
-				.retrieveOfferingsApplicableToClient();
-		assertEquals(2, offerings.size());
-		for (SavingsOfferingBO offering : offerings) {
-			if (offering.getPrdOfferingId().equals(
-					savingsOffering1.getPrdOfferingId()))
-				assertTrue(true);
-			if (offering.getPrdOfferingId().equals(
-					savingsOffering2.getPrdOfferingId()))
-				assertTrue(true);
-		}
-		StaticHibernateUtil.closeSession();
-	}
+        Date currentTimestamp = new Date(System.currentTimeMillis());
+        savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
+                ApplicableTo.CLIENTS, currentTimestamp);
+        savingsOffering2 = TestObjectFactory.createSavingsProduct("Offering2", "s2", SavingsType.VOLUNTARY,
+                ApplicableTo.CLIENTS, currentTimestamp);
+        savingsOffering3 = TestObjectFactory.createSavingsProduct("Offering3", "s3", SavingsType.MANDATORY,
+                ApplicableTo.GROUPS, currentTimestamp);
+        savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4", "s4", SavingsType.VOLUNTARY,
+                ApplicableTo.CENTERS, currentTimestamp);
+        StaticHibernateUtil.closeSession();
+        List<SavingsOfferingBO> offerings = new ClientPersistence().retrieveOfferingsApplicableToClient();
+        assertEquals(2, offerings.size());
+        for (SavingsOfferingBO offering : offerings) {
+            if (offering.getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId()))
+                assertTrue(true);
+            if (offering.getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId()))
+                assertTrue(true);
+        }
+        StaticHibernateUtil.closeSession();
+    }
 
-	public void testGetActiveClientsUnderParent() throws PersistenceException {
-		setUpClients();
-		List<ClientBO> clients = new ClientPersistence()
-				.getActiveClientsUnderParent(center.getSearchId(), center
-						.getOffice().getOfficeId());
-		assertEquals(2, clients.size());
-	}
+    public void testGetActiveClientsUnderParent() throws PersistenceException {
+        setUpClients();
+        List<ClientBO> clients = new ClientPersistence().getActiveClientsUnderParent(center.getSearchId(), center
+                .getOffice().getOfficeId());
+        assertEquals(2, clients.size());
+    }
 
-	private void setUpClients() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-						.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-						CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-						CustomerStatus.CLIENT_ACTIVE, group);
-		client1 = TestObjectFactory.createClient("Client Two",
-						CustomerStatus.CLIENT_ACTIVE, group);
-	}
+    private void setUpClients() {
+        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        client1 = TestObjectFactory.createClient("Client Two", CustomerStatus.CLIENT_ACTIVE, group);
+    }
 
-	public void testShouldThrowExceptionWhenTryingToCreateACustomerWithSameGovtId() throws Exception {
-		setUpClients();
-		localTestClient = createActiveClientWithGovtId();
-		try {
-			TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group, null, GOVT_ID, new Date(1222333444000L));
-			fail("Should have thrown exception on creating a duplicate client with same government id");
-		}
-		catch (RuntimeException e) {
-			assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, ((CustomerException)e.getCause()).getKey());
-		}
-	}
-	
-	public void testShouldNotThrowExceptionWhenTryingToCreateACustomerWithSameGovtIdWhenOldIsInClosedState() throws Exception {
-		setUpClients();
-		localTestClient = createClosedClientWithGovtId();
-		try {
-			clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group, null, GOVT_ID, new Date(1222333444000L));
-		}
-		catch (RuntimeException e) {
-			fail("Should not have thrown exception on creating a duplicate client with same government id when old is closed");
-		}
-	}
-	
-	public void testShouldNotThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAClosedClient() throws Exception {
-		setUpClients();
-		localTestClient = createClosedClientWithGovtId();
-		clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
-		try {
-			clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, 
-			        DateUtils.getDate(1980, Calendar.JANUARY, 1));
-			StaticHibernateUtil.commitTransaction();
-		}
-		catch (RuntimeException e) {
-			fail("Should not throw error when updating to a government id of closed client");
-		}
-	}
-	
-	public void testShouldThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAnActiveClient() throws Exception {
-		setUpClients();
-		localTestClient = createActiveClientWithGovtId();
-		clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
-		try {
-			clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, 
-			        DateUtils.getDate(1980, Calendar.JANUARY, 1));
-			StaticHibernateUtil.commitTransaction();
-			fail("Should throw error when updating to a government id of active client");
-		}
-		catch (CustomerException e) {
-			assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, e.getKey());
-		}
-	}
+    public void testShouldThrowExceptionWhenTryingToCreateACustomerWithSameGovtId() throws Exception {
+        setUpClients();
+        localTestClient = createActiveClientWithGovtId();
+        try {
+            TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group, null, GOVT_ID,
+                    new Date(1222333444000L));
+            fail("Should have thrown exception on creating a duplicate client with same government id");
+        } catch (RuntimeException e) {
+            assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, ((CustomerException) e.getCause()).getKey());
+        }
+    }
 
-	public void testShouldReturnTrueForDuplicacyCheckOnGovtIdIfClientWithGovtIdPresentInClosedState() throws Exception {
-		setUpClients();
-		localTestClient = createClosedClientWithGovtId();
-		assertTrue(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(GOVT_ID));
-	}
+    public void testShouldNotThrowExceptionWhenTryingToCreateACustomerWithSameGovtIdWhenOldIsInClosedState()
+            throws Exception {
+        setUpClients();
+        localTestClient = createClosedClientWithGovtId();
+        try {
+            clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE,
+                    group, null, GOVT_ID, new Date(1222333444000L));
+        } catch (RuntimeException e) {
+            fail("Should not have thrown exception on creating a duplicate client with same government id when old is closed");
+        }
+    }
 
-	public void testShouldReturnFalseForDuplicayCheckOnGovtIdIfClientWithGovtIdPresentInActiveState() throws Exception {
-		setUpClients();
-		localTestClient = createActiveClientWithGovtId();
-		assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(GOVT_ID));
-	}
-	
-	public void testShouldReturnFalseForDuplicacyCheckOnGovtIdIfClientWithNullGovtIdInClosedState() throws Exception {
-		setUpClients();
-		localTestClient = createClosedClient("Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), null);
-		assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(null));
-	}
-	
-	public void testShouldReturnFalseForDuplicacyCheckOnGovtIdIfClientWithEmptyGovtIdInClosedState() throws Exception {
-		setUpClients();
-		localTestClient = createClosedClient("Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), StringUtils.EMPTY);
-		assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(StringUtils.EMPTY));
-	}
-	
-	public void testShouldReturnFalseForDuplicacyCheckOnGovtIdForNonClosedClientIfGovtIdIsNull()
-			throws Exception {
-		setUpClients();
-		localTestClient = createActiveClient(DEFAULT_CLIENT_NAME, new Date(1222333444000L), null);
-		assertFalse(clientPersistence
-				.checkForDuplicacyOnGovtIdForNonClosedClients(null,
-						localTestClient.getCustomerId()));
-	}
-	
-	public void testShouldReturnFalseForDuplicacyCheckOnGovtIdForNonClosedClientIfGovtIdIsEmpty()
-			throws Exception {
-		setUpClients();
-		localTestClient = createActiveClientWithGovtId();
-		assertFalse(clientPersistence
-				.checkForDuplicacyOnGovtIdForNonClosedClients(
-						StringUtils.EMPTY, localTestClient.getCustomerId()));
-	}
-	
-	public void testShouldReturnTrueForDuplicacyCheckOnNameIfPrevClientInNonClosedState()
-			throws Exception {
-		setUpClients();
-		localTestClient = createActiveClientWithNameAndDob(DEFAULT_CLIENT_NAME,
-				DEFAULT_DOB);
-		assertTrue(clientPersistence
-				.checkForDuplicacyForNonClosedClientsOnNameAndDob(
-						DEFAULT_CLIENT_NAME, DEFAULT_DOB,UNKNOWN_CUSTOMER_ID));
-	}
-	
-	public void testShouldReturnFalseForDuplicacyCheckOnNameIfPrevClientInClosedState()
-			throws Exception {
-		setUpClients();
-		localTestClient = createCloseClientWithNameAndDob(DEFAULT_CLIENT_NAME,
-				DEFAULT_DOB);
-		assertFalse(clientPersistence
-				.checkForDuplicacyForNonClosedClientsOnNameAndDob(
-						DEFAULT_CLIENT_NAME, DEFAULT_DOB, UNKNOWN_CUSTOMER_ID));
-	}
-	
-	public void testShouldReturnTrueIfClientWithSameNameAndDobInClosedState()
-			throws Exception {
-		setUpClients();
-		localTestClient = createCloseClientWithNameAndDob(DEFAULT_CLIENT_NAME,
-				DEFAULT_DOB);
-		assertTrue(clientPersistence
-				.checkForDuplicacyForClosedClientsOnNameAndDob(
-						DEFAULT_CLIENT_NAME, DEFAULT_DOB));
-	}
-	
-	private ClientBO createCloseClientWithNameAndDob(String clientName, Date dob) {
-		return createClosedClient(clientName, dob, GOVT_ID);
-	}
+    public void testShouldNotThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAClosedClient() throws Exception {
+        setUpClients();
+        localTestClient = createClosedClientWithGovtId();
+        clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
+        try {
+            clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, DateUtils.getDate(1980,
+                    Calendar.JANUARY, 1));
+            StaticHibernateUtil.commitTransaction();
+        } catch (RuntimeException e) {
+            fail("Should not throw error when updating to a government id of closed client");
+        }
+    }
 
-	private ClientBO createActiveClientWithNameAndDob(String displayName, Date dateOfBirth) {
-		return createActiveClient(displayName, dateOfBirth, GOVT_ID);
-	}
+    public void testShouldThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAnActiveClient() throws Exception {
+        setUpClients();
+        localTestClient = createActiveClientWithGovtId();
+        clientWithSameGovtId = TestObjectFactory.createClient("Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
+        try {
+            clientWithSameGovtId.updatePersonalInfo("Duplicate Client", GOVT_ID, DateUtils.getDate(1980,
+                    Calendar.JANUARY, 1));
+            StaticHibernateUtil.commitTransaction();
+            fail("Should throw error when updating to a government id of active client");
+        } catch (CustomerException e) {
+            assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, e.getKey());
+        }
+    }
 
-	private ClientBO createActiveClientWithGovtId() {
-		return createActiveClient(DEFAULT_CLIENT_NAME, DEFAULT_DOB, GOVT_ID);
-	}
+    public void testShouldReturnTrueForDuplicacyCheckOnGovtIdIfClientWithGovtIdPresentInClosedState() throws Exception {
+        setUpClients();
+        localTestClient = createClosedClientWithGovtId();
+        assertTrue(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(GOVT_ID));
+    }
 
-	private ClientBO createActiveClient(String displayName, Date dateOfBirth, String governmentId) {
-		return TestObjectFactory.createClient(displayName,
-				CustomerStatus.CLIENT_ACTIVE, group, null, governmentId,
-				dateOfBirth);
-	}
-	
-	private ClientBO createClosedClientWithGovtId() {
-		return createClosedClient("Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), GOVT_ID);
-	}
+    public void testShouldReturnFalseForDuplicayCheckOnGovtIdIfClientWithGovtIdPresentInActiveState() throws Exception {
+        setUpClients();
+        localTestClient = createActiveClientWithGovtId();
+        assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(GOVT_ID));
+    }
 
-	private ClientBO createClosedClient(String displayName, Date dateOfBirth, String governmentId) {
-		return TestObjectFactory.createClient(displayName,
-				CustomerStatus.CLIENT_CLOSED, group, null, governmentId,
-				dateOfBirth);
-	}
+    public void testShouldReturnFalseForDuplicacyCheckOnGovtIdIfClientWithNullGovtIdInClosedState() throws Exception {
+        setUpClients();
+        localTestClient = createClosedClient("Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), null);
+        assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(null));
+    }
 
-	public OfficePersistence getOfficePersistence() {
+    public void testShouldReturnFalseForDuplicacyCheckOnGovtIdIfClientWithEmptyGovtIdInClosedState() throws Exception {
+        setUpClients();
+        localTestClient = createClosedClient("Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1),
+                StringUtils.EMPTY);
+        assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(StringUtils.EMPTY));
+    }
+
+    public void testShouldReturnFalseForDuplicacyCheckOnGovtIdForNonClosedClientIfGovtIdIsNull() throws Exception {
+        setUpClients();
+        localTestClient = createActiveClient(DEFAULT_CLIENT_NAME, new Date(1222333444000L), null);
+        assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForNonClosedClients(null, localTestClient
+                .getCustomerId()));
+    }
+
+    public void testShouldReturnFalseForDuplicacyCheckOnGovtIdForNonClosedClientIfGovtIdIsEmpty() throws Exception {
+        setUpClients();
+        localTestClient = createActiveClientWithGovtId();
+        assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForNonClosedClients(StringUtils.EMPTY, localTestClient
+                .getCustomerId()));
+    }
+
+    public void testShouldReturnTrueForDuplicacyCheckOnNameIfPrevClientInNonClosedState() throws Exception {
+        setUpClients();
+        localTestClient = createActiveClientWithNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB);
+        assertTrue(clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB,
+                UNKNOWN_CUSTOMER_ID));
+    }
+
+    public void testShouldReturnFalseForDuplicacyCheckOnNameIfPrevClientInClosedState() throws Exception {
+        setUpClients();
+        localTestClient = createCloseClientWithNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB);
+        assertFalse(clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(DEFAULT_CLIENT_NAME,
+                DEFAULT_DOB, UNKNOWN_CUSTOMER_ID));
+    }
+
+    public void testShouldReturnTrueIfClientWithSameNameAndDobInClosedState() throws Exception {
+        setUpClients();
+        localTestClient = createCloseClientWithNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB);
+        assertTrue(clientPersistence.checkForDuplicacyForClosedClientsOnNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB));
+    }
+
+    private ClientBO createCloseClientWithNameAndDob(String clientName, Date dob) {
+        return createClosedClient(clientName, dob, GOVT_ID);
+    }
+
+    private ClientBO createActiveClientWithNameAndDob(String displayName, Date dateOfBirth) {
+        return createActiveClient(displayName, dateOfBirth, GOVT_ID);
+    }
+
+    private ClientBO createActiveClientWithGovtId() {
+        return createActiveClient(DEFAULT_CLIENT_NAME, DEFAULT_DOB, GOVT_ID);
+    }
+
+    private ClientBO createActiveClient(String displayName, Date dateOfBirth, String governmentId) {
+        return TestObjectFactory.createClient(displayName, CustomerStatus.CLIENT_ACTIVE, group, null, governmentId,
+                dateOfBirth);
+    }
+
+    private ClientBO createClosedClientWithGovtId() {
+        return createClosedClient("Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), GOVT_ID);
+    }
+
+    private ClientBO createClosedClient(String displayName, Date dateOfBirth, String governmentId) {
+        return TestObjectFactory.createClient(displayName, CustomerStatus.CLIENT_CLOSED, group, null, governmentId,
+                dateOfBirth);
+    }
+
+    public OfficePersistence getOfficePersistence() {
         return officePersistence;
     }
 
