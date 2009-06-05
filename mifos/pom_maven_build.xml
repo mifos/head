@@ -11,6 +11,11 @@
         <artifactId>mifos-parent</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
+    <scm>
+        <url>https://mifos.dev.java.net/svn/mifos/</url>
+        <connection>scm:svn:https://guest@mifos.dev.java.net/svn/mifos/</connection>
+        <developerConnection>scm:svn:https://guest@mifos.dev.java.net/svn/mifos/</developerConnection>
+    </scm>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
@@ -433,7 +438,8 @@
                 <targetPath>sql</targetPath>
             </resource>
             <resource>
-                <directory>${modules.root.dir}/application/src/main/resources</directory>
+                <directory>${modules.root.dir}/mifos/src/main/resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
 
@@ -597,6 +603,24 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.0-mifos-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- An extra update might pull in more changes... rely on Hudson to do the update instead. -->
+                    <doUpdate>false</doUpdate>
+                    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
