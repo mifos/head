@@ -38,12 +38,6 @@ public class ActivityTagIntegrationTest extends MifosIntegrationTest {
         super();
     }
 
-    public void testPopulateLocaleID() throws Exception {
-        List<ActivityEntity> activities = getActivities();
-        new ActivityTag().populateLocaleID(activities, Short.valueOf("1"));
-        assertEquals(Short.valueOf("1"), activities.get(0).getLocaleId());
-    }
-
     public void testConvertToIdSet() throws Exception {
         Set<Short> activities = new ActivityTag().convertToIdSet(getActivities());
         assertNotNull(activities);

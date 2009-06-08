@@ -56,8 +56,6 @@ public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTest {
 
     public void testGetRolesTemplete() throws Exception {
         List<ActivityEntity> activities = new RolesPermissionsBusinessService().getActivities();
-        for (ActivityEntity activityEntity : activities)
-            activityEntity.setLocaleId(Short.valueOf("1"));
         StringBuilder stringBuilder = new RoleTempleteBuilder().getRolesTemplete(activities);
         assertNotNull(stringBuilder);
         assertTrue(stringBuilder.toString().contains("Can create new role"));

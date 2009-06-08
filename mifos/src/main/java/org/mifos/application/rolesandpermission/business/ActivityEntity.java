@@ -36,9 +36,6 @@ public class ActivityEntity extends PersistentObject {
 	private final LookUpValueEntity activityNameLookupValues;
 
 	private final LookUpValueEntity descriptionLookupValues;
-
-	private Short localeId;
-
 	private final Set<RoleActivityEntity> roles = 
 		new HashSet<RoleActivityEntity>();
 
@@ -79,29 +76,12 @@ public class ActivityEntity extends PersistentObject {
 		return descriptionLookupValues;
 	}
 
-	public Short getLocaleId() {
-		return localeId;
-	}
-
-	public void setLocaleId(Short localeId) {
-		this.localeId = localeId;
-	}
-
 	public String getDescription() {
-		// can we get rid of this null check?
-		if (localeId == null) {
-			return null;
-		}
 		return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
 	}
 
 	public String getActivityName() {
-		// can we get rid of this null check?
-		if (localeId == null) {
-			return null;
-		}
 		return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
-
 	}
 
 	public void setParent(ActivityEntity parent) {

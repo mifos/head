@@ -54,7 +54,6 @@ public class ActivityTag extends TagSupport {
 			activities = (List<ActivityEntity>) SessionUtils.getAttribute(
 					RolesAndPermissionConstants.ACTIVITYLIST,
 					(HttpServletRequest) pageContext.getRequest());
-			populateLocaleID(activities, userContext.getLocaleId());
 			RoleBO role = (RoleBO) SessionUtils.getAttribute(
 					Constants.BUSINESS_KEY, (HttpServletRequest) pageContext
 							.getRequest());
@@ -79,13 +78,6 @@ public class ActivityTag extends TagSupport {
 			throw new JspException(e1);
 		}
 		return EVAL_PAGE;
-	}
-
-	 void populateLocaleID(List<ActivityEntity> activities,
-			Short localeId) {
-		for (ActivityEntity activityEntity : activities) {
-			activityEntity.setLocaleId(localeId);
-		}
 	}
 
 	 static Set<Short> convertToIdSet(List<ActivityEntity> activityList) {

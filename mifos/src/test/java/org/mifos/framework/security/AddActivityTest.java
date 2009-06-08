@@ -99,7 +99,6 @@ public class AddActivityTest {
         MifosConfiguration.getInstance().init();
 
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
-        fetched.setLocaleId(TEST_LOCALE);
 
         assertEquals("Can use the executive washroom", fetched.getActivityName());
 
@@ -165,7 +164,7 @@ public class AddActivityTest {
         upgrade.upgrade(database.openConnection(), null);
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
         assertEquals(null, fetched.getParent());
-        assertEquals(null, fetched.getActivityName());
+        assertEquals(goodKey, fetched.getActivityName());
         assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
     }
 
