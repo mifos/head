@@ -6,6 +6,15 @@
     <packaging>pom</packaging>
     <version>0.0.4-SNAPSHOT</version>
     <name>Mifos - Parent</name>
+    <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
+    <issueManagement>
+    	<system>CollabNet Issuezilla</system>
+        <url>https://mifos.dev.java.net/issues/</url>
+    </issueManagement>
+    <ciManagement>
+    	<system>Hudson</system>
+    	<url>https://neem.mifos.org:8843/hudson/view/Main/</url>
+    </ciManagement>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -13,7 +22,8 @@
         </license>
     </licenses>
     <scm>
-        <url>https://mifos.dev.java.net/svn/mifos/</url>
+        <connection>scm:svn:https://mifos.dev.java.net/svn/mifos/</connection>
+        <url>https://mifos.dev.java.net/source/browse/</url>
     </scm>
 
     <modules>
@@ -312,6 +322,10 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <organization>
+    	<name>Mifos</name>
+    	<url>http://mifos.org</url>
+    </organization>
 
     <build>
         <pluginManagement>
