@@ -52,9 +52,11 @@ import org.mifos.framework.util.helpers.PreviousRequestValues;
 
 public class MifosRequestProcessor extends TilesRequestProcessor {
     private MifosLogger LOG = null;
+    private MifosLogger HITLOG = null;
 
     public MifosRequestProcessor() {
-        LOG = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+        LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+        HITLOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORK_STRUTS_LOGGER);
     }
 
     private ActivityContext setActivityContextFromRequest(HttpServletRequest request, Short activityId) {
@@ -217,8 +219,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
                 String nextName = (String) requestAttributes.nextElement();
                 if (nextName.startsWith(Constants.STORE_ATTRIBUTE)
                         || nextName.equalsIgnoreCase(Constants.CURRENTFLOWKEY)) {
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-                            "The attribute name is  " + nextName + " and value is : " + request.getAttribute(nextName));
+                    LOG.debug(nextName + "=" + request.getAttribute(nextName));
                     previousRequestValues.getPreviousRequestValueMap().put(nextName, request.getAttribute(nextName));
                 }
 
@@ -239,6 +240,10 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
             } catch (Exception e) {
                 // FIXME: yikes, what is being swallowed here?
             }
+        }
+
+        if (null != forward) {
+            HITLOG.info("forward.path=" + forward.getPath());
         }
 
         return forward;
