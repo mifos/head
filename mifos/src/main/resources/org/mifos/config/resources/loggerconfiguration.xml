@@ -1,211 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <!--
-Log4j configuration file for MIFOS.  The intention is to move this
-to conf/log4j.xml (is that a reference to jboss?  If so we also need
-a solution for other servlet containers), but this has not yet been done.  
-
-Also, there
-should be a my.log4j.xml or some such mechanism for overriding
-the location of Mifos_log.log.
+See http://www.mifos.org/developers/wiki/LoggerConfiguration for information on
+customizing this logging configuration.
 -->
 
+<!-- add debug="true" as an attribute of the log4j:configuration tag to debug
+how log4j is setting up logging. -->
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-  
-  <!--Console Appender: A logger attached to this appender logs all statements to the console --> 
-  <appender name="MifosAppender" class="org.apache.log4j.ConsoleAppender">
-    <!-- Appender is associated with the pattern layout which prints the Level of 
-         logging,the category, the class , method, the line number from where the log statement was issued , 
-         the log statement and the date 
-    -->
-    <layout class="org.mifos.framework.components.logger.MifosPatternLayout">
-<!--    <layout class="org.apache.log4j.PatternLayout"> -->
-		<param name="ConversionPattern" value="%-3p, %c, %C{1}, %M , %L, %m, %d{dd MMM yyyy HH:mm:ss}%n"/>
-	</layout>
-  </appender>
-  
-  <!--Daily rolling Appender: A logger attached to this appender logs all statements to the specified file.
-   	   The underlying file is rolled over at midnight. 
-      
-  --> 
-  <appender name="MifosRollingFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
-    <!-- Name of the file. At midnight a new file with the name Mifos_log.log.date is created -->
-    <param name="File" value="Mifos_log.log"/>
-    <!-- Rolling Schedule: Rolls over at midnight. Hence new file will be rolling.log.newDate -->
-    <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-  
-	<!--Layout class for the Daily Rolling File Appender -->
-	<layout class="org.mifos.framework.components.logger.MifosPatternLayout"> 
-	<!-- Appender is associated with the pattern layout which prints the Level of 
-         logging,the category, the class , method, the line number from where the log statement was issued , 
-         the log statement and the date 
-    -->
-	<param name="ConversionPattern" value="%-3p, %c, %C{1}, %M , %L, %m, %d{dd MMM yyyy HH:mm:ss}%n"/>
-		
-	</layout> 
-  </appender>
-  
-  
-  <!--JDBC Appender: A logger attached to this appender logs all statements to 
-      the database. 
-  --> 
 
-  <appender name="MifosJDBCAppender" class="org.mifos.framework.components.logger.MifosJDBCAppender"> 
-	<!--<param name="Threshold" value="ERROR"/> -->
-	<!-- Parameters being passed for testing. The actual parameters will be retrieved from a data source -->
-	<param name="driver" value="com.mysql.jdbc.Driver"/> 
-	<!--Test parameter: Location of the database -->
-	<param name="URL" value="jdbc:mysql://localhost:3306/test"/> 
-	<!--Test parameter: User name of the user -->
-	<param name="user" value="root"/> 
-	<!--Test parameter: Password of the user -->
-	<param name="password" value="mysql"/> 
-	<!--Layout class for the JDBC Appender -->
-	<layout class="org.mifos.framework.components.logger.MifosPatternLayout"> 
-	<!-- Appender is associated with the pattern layout which prints the Level of 
-         logging,the category, the class , method, the line number from where the log statement was issued , 
-         the log statement and the date 
-    -->
-	<param name="ConversionPattern" value="INSERT INTO logmessages (LEVEL,MODULE_NAME,CLASS_NAME,METHOD_NAME,LINE_NUMBER,MESSAGE,DATE ) 
-		VALUES ('%-3p',  '%c', '%C{1}','%M','%L', '%m', '%d{dd MMM yyyy HH:mm:ss}')"/> 
-		
-	</layout> 
-  </appender> 
-  
-  <!-- Category type org.mifos. -->
-  <category name="org.mifos" additivity="false"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-	
-	<!-- Denotes the console appender -->
-	<appender-ref ref="MifosAppender"/> 
-	
-	<!-- Denotes the daily rolling file appender -->
-	<appender-ref ref="MifosRollingFileAppender"/>
-	
-	<!-- Denotes the jdbc appender -->
-	<!-- <appender-ref ref="MifosJDBCAppender"/>-->
+    <appender name="MifosAppender" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.mifos.framework.components.logger.MifosPatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-dd-MM/hh:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n"/>
+        </layout>
+    </appender>
 
- </category>
- 
- <!-- Category type org.mifos.framework -->
-  <category name="org.mifos.framework" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- Category type org.mifos.application.customer.customernote for CustomerNote -->
-  <category name="org.mifos.application.customer.customernote" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <category name="org.mifos.application.customer.business.CustomerBO" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
+    <appender name="MifosRollingFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="Mifos.log"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.mifos.framework.components.logger.MifosPatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-dd-MM/hh:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n"/>
+        </layout>
+    </appender>
 
-    <!-- Category type org.mifos.application.personnel for Personnel  -->
-  <category name="org.mifos.application.personnel" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-
-  <!-- Category type org.mifos.framework.components.configuration for Configuration  -->
-  <category name="org.mifos.framework.components.configuration" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-    <!-- Category type org.mifos.application.group for Group  -->
-  <category name="org.mifos.application.group" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-    <!-- Category type org.mifos.application.center for Center  -->
-  <category name="org.mifos.application.center" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-   <!-- Category type org.mifos.application.center for Center  -->
-  <category name="org.mifos.application.client" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- Category type org.mifos.application.login for Login  -->
-  <category name="org.mifos.application.login" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- Category type org.mifos.application.productdefinition for Product Definition  -->
-  <category name="org.mifos.application.productdefinition" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- Logger for  Accounts  -->
-  <category name="org.mifos.application.accounts" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- Logger for  Customer Search  -->
-  <category name="org.mifos.application.customersearch" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- Logger for  Fees  -->
-  <category name="org.mifos.application.fees" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  <!-- roles and permission logger -->
-  <category name="org.mifos.application.roleandpermission" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-<!-- roles and permission logger -->   
-
-   <!-- meeting logger --> 
-   <category name="org.mifos.application.meeting" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>  
-   
-  <!-- meeting logger -->
-
-  <!-- office logger -->
-   <category name="org.mifos.application.office" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-  
-  <!--  office logger -->
-  <category name="org.mifos.framework.components.repaymentschedule" additivity="true"> 
-  	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-  	<priority value="ERROR"/> 
-  </category>
-  
-  <category name="org.mifos.framework.components.audit" additivity="true"> 
-  	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-  	<priority value="ERROR"/> 
-  </category>
-  
-  <!-- CollectionSheet  logger -->
-   <category name="org.mifos.application.collectionsheet" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
-	<priority value="ERROR"/> 
-  </category>
-   
-  <!-- Root Logger -->
-  <root>
-    <priority value ="ERROR" />
-    <appender-ref ref="MifosAppender"/>
-  </root>
-
+    <root>
+        <!-- Any log statement of level less than this priority will not be logged -->
+        <priority value="ERROR"/>
+        <appender-ref ref="MifosAppender"/>
+        <appender-ref ref="MifosRollingFileAppender"/>
+    </root>
 </log4j:configuration>
