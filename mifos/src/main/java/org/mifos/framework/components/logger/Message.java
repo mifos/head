@@ -55,14 +55,10 @@ public class Message {
 	  this.loggedUser=loggedUser;
 	  this.userOffice=userOffice;
   }//end-constructor
-  /** 
-   * This method is overridden to append the user id and office id to the actual message passed by the user.
-   * @return The string with the message, userid and office id 
-   */
+
   @Override
 public String toString() {
-	  String str=this.message + ApplicationConfig.getUserIdMarker() + this.loggedUser + " " + ApplicationConfig.getOfficeMarker()  + this.userOffice;
-	  return(str);
+	  return this.message;
   }//end-method toString
   /** 
    * Function to obtain the office id of the user logging the statement

@@ -65,7 +65,8 @@ public class LoggingTest extends TestCase {
         logger.debug("test debug message", false, null);
         assertEquals(1, logger.nonKeyCount());
         assertEquals(Level.DEBUG, logger.nonKeyLevel(0));
-        assertEquals("test debug message " + "Logged in user is test-user  from test-office", logger.nonKeyMessage(0));
+        assertEquals("test debug message", logger.nonKeyMessage(0));
     }
 
 }
+
