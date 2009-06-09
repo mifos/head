@@ -35,6 +35,145 @@
         -->
 
     </properties>
+    <profiles>
+
+      <profile>
+         <id>build_production_db</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${main.database.properties.file}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                                <file>${mifos.overrides.home}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.6</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>build_db</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<driver>com.mysql.jdbc.Driver</driver>
+							<url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
+							<username>${main.database.user}</username>
+							<password>${main.database.password}</password>
+							<autocommit>true</autocommit>
+							<srcFiles>
+								<srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+            </plugins>
+         </build>
+      </profile>
+      <profile>
+         <id>build_demo_db</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${main.database.properties.file}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                                <file>${mifos.overrides.home}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.6</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>build_db</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<driver>com.mysql.jdbc.Driver</driver>
+							<url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
+							<username>${main.database.user}</username>
+							<password>${main.database.password}</password>
+							<autocommit>true</autocommit>
+							<srcFiles>
+								<srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/custom-data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+            </plugins>
+         </build>
+      </profile>
+
+	</profiles>
 
     <repositories>
         <repository>
@@ -61,7 +200,13 @@
             <layout>default</layout>
         </repository>
     </repositories>
-
+	<pluginRepositories>
+		<pluginRepository>
+		<id>maven-repository.mifos.org</id>
+		<name>Mifos Maven Repository</name>
+		<url>http://neem.mifos.org/maven/</url>
+		</pluginRepository>
+	</pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
@@ -576,13 +721,6 @@
 						<version>5.1.6</version>
 					</dependency>
 				</dependencies>
-				<configuration>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
-					<username>${integration.database.user}</username>
-					<password>${integration.database.password}</password>
-					<autocommit>true</autocommit>
-				</configuration>
 				<executions>
 					<execution>
 						<id>build_test_db</id>
@@ -591,6 +729,11 @@
 							<goal>execute</goal>
 						</goals>
 						<configuration>
+							<driver>com.mysql.jdbc.Driver</driver>
+							<url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+							<username>${integration.database.user}</username>
+							<password>${integration.database.password}</password>
+							<autocommit>true</autocommit>
 							<srcFiles>
 								<srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
 								<srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
@@ -616,7 +759,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- An extra update might pull in more changes... rely on Hudson to do the update instead. -->
                     <doUpdate>false</doUpdate>
                     <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
                 </configuration>
