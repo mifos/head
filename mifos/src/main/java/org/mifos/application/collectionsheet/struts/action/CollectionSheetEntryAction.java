@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -50,6 +51,8 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryCo
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.AttendanceType;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.client.business.service.ClientService;
@@ -139,6 +142,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        logTrackingInfo("load", request);
         try {
             request.getSession().setAttribute(CollectionSheetEntryConstants.BULKENTRYACTIONFORM, null);
             request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
@@ -241,6 +245,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        logTrackingInfo("get", request, form);
         BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         CustomerView parentCustomer = getSelectedCustomer(request, form);
         UserContext userContext = getUserContext(request);
@@ -276,6 +281,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        logTrackingInfo("preview", request, form);
         BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
 
         CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
@@ -369,7 +375,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        logger.debug("create ");
+        logTrackingInfo("create", request, form);
         BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(bulkEntryActionForm.getTransactionDate(),
                 "dd/MM/yyyy"));
@@ -408,6 +414,25 @@ public class CollectionSheetEntryAction extends BaseAction {
         List<CollectionSheetEntryView> collectionSheetEntryViews = (List<CollectionSheetEntryView>) SessionUtils
                 .getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY, request);
         
+        String logMsg = "before saveData().";
+        logMsg += " session id:" + request.getSession().getId();
+        logMsg += ", date:" + bulkEntry.getTransactionDate();
+        logMsg += ", office id:" + bulkEntryActionForm.getOfficeId();
+
+        OfficeView officeView = bulkEntry.getOffice();
+        if (null != officeView) {
+            logMsg += ", office name:" + officeView.getOfficeName();
+        }
+        logMsg += ", center id:" + bulkEntryActionForm.getCustomerId();
+        String attendanceSummary = getAttendanceSummary(clients, bulkEntry.getTransactionDate());
+        if (null != attendanceSummary) {
+            logMsg += ", attendance:" + attendanceSummary; 
+        }
+        logMsg += ".";
+        logger.info(logMsg);
+        
+        long beforeSaveData = System.currentTimeMillis();
+        
         try {
             bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
                     .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
@@ -415,7 +440,12 @@ public class CollectionSheetEntryAction extends BaseAction {
                     collectionSheetEntryViews);            
         } catch (Exception e) {
             throw e;
-        } 
+        }
+        
+        logger.info("after saveData(). session id:" + request.getSession().getId() + ". " +
+                getUpdateTotalsString(clients, savings, loans, customerAccounts) +
+                ". Saving bulk entry data ran for approximately " +
+                ((System.currentTimeMillis()-beforeSaveData)/1000.0) + " seconds.");
 
         request.setAttribute(CollectionSheetEntryConstants.CENTER, bulkEntry.getBulkEntryParent().getCustomerDetail()
                 .getDisplayName());
@@ -435,6 +465,74 @@ public class CollectionSheetEntryAction extends BaseAction {
         // TO clear bulk entry cache in persistence service
         bulkEntryService = null;
         return mapping.findForward(CollectionSheetEntryConstants.CREATESUCCESS);
+    }
+    
+    private String getAttendanceSummary(List<ClientBO> clients, Date meetingDate) {
+        List<String> attendanceCodes = new ArrayList<String>();
+        for (ClientBO client : clients) {
+            if (null != client.getClientAttendanceForMeeting(meetingDate)) {
+                ClientAttendanceBO clientAttendanceBO = client.getClientAttendanceForMeeting(meetingDate);
+                AttendanceType attendanceType = clientAttendanceBO.getAttendanceAsEnum();
+                switch (attendanceType) {
+                case PRESENT:
+                    attendanceCodes.add("P");
+                    break;
+                case ABSENT:
+                    attendanceCodes.add("A");
+                    break;
+                case APPROVED_LEAVE:
+                    attendanceCodes.add("AA");
+                    break;
+                case LATE:
+                    attendanceCodes.add("L");
+                    break;
+                default:
+                    attendanceCodes.add("x");
+                    break;
+                }
+            }
+        }
+        return StringUtils.join(attendanceCodes, "_");
+    }
+    
+    private String getUpdateTotalsString(List<ClientBO> clients,
+            List<SavingsBO> savings, List<LoanAccountsProductView> loans,
+            List<CustomerAccountView> customerAccounts) {
+        String totals = "";
+        totals += " clients:" + clients.size();
+        totals += ", savings:" + savings.size();
+        totals += ", loans:" + loans.size();
+        totals += ", collections:" + customerAccounts.size();
+        return totals;
+    }
+    
+    private void logTrackingInfo(String actionMethodName, HttpServletRequest request, ActionForm form) {
+        BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+        StringBuilder message = getLogMessage(actionMethodName, request);
+        String receiptId = bulkEntryForm.getReceiptId();
+        message.append(", receipt Id:" + receiptId);
+        String centerId = bulkEntryForm.getCustomerId();
+        message.append(", center:" + centerId);
+        message.append(", ");
+        logger.info(message.toString());
+    }
+
+    private void logTrackingInfo(String actionMethodName, HttpServletRequest request) {
+        StringBuilder message = getLogMessage(actionMethodName, request);
+        message.append(", ");
+        logger.info(message.toString());
+    }
+
+    private StringBuilder getLogMessage(String actionMethodName, HttpServletRequest request) {
+        UserContext userContext = getUserContext(request);
+        StringBuilder message = new StringBuilder();
+        message.append(", url:" + request.getRequestURI());
+        message.append(", action:" + actionMethodName);
+        message.append(", session id:" + request.getSession().getId());
+        message.append(", user id:" + userContext.getId());
+        message.append(", username:" + userContext.getName());
+        message.append(", branch id:" + userContext.getBranchGlobalNum());
+        return message;
     }
 
     private HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<? extends CustomerBO> clients,
