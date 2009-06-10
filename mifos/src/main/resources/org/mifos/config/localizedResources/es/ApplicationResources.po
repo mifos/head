@@ -19,89 +19,94 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: button.adminModule
 msgid "Admin Module"
-msgstr ""
+msgstr "Módulo Admin"
 
 #: button.clientModule
 msgid "Client Module"
-msgstr ""
+msgstr "Módulo de Cliente"
 
 #: error.InvalidUser
 msgid "<li>Your Entered wrong User Name OR Password</li>"
 msgstr ""
+"<li>Ha introducido un nombre de usuario o una contraseña incorrectos</li>"
 
 #: errors.byte
 msgid "{0} must be a byte."
-msgstr ""
+msgstr "{0} ha de ser un byte"
 
 #: errors.creditcard
 msgid "{0} is an invalid credit card number."
-msgstr ""
+msgstr "{0} es un número de tarjeta de crédito no válido"
 
 #: errors.date
 msgid "{0} is not a date."
-msgstr ""
+msgstr "{0} no es una fecha"
 
 #: errors.double
 msgid "{0} must be a double."
-msgstr ""
+msgstr "{0} ha de ser un doble"
 
 #: errors.email
 msgid "{0} is an invalid e-mail address."
-msgstr ""
+msgstr "{0} es una dirección de correo electrónico no válida"
 
 #: errors.float
 msgid "{0} must be a float."
-msgstr ""
+msgstr "{0} ha de ser flotante"
 
 #: errors.footer
 msgid "</ul><hr>"
-msgstr ""
+msgstr "</ul><hr>"
 
+# Not sure what h3 or ul are and if this needs to be translated
 #: errors.header
 msgid ""
 "<h3><font color\\=\"red\">Validation Error</font></h3>You must correct the "
 "following error(s) before proceeding\\:<ul>"
 msgstr ""
+"<h3><color de fuente\\=\"rojo\">Error de Validación</fuente></h3>Debe corregir "
+"el(los) siguientes error(es) antes de proseguir\\:<ul>"
 
 #: errors.integer
 msgid "{0} must be an integer."
-msgstr ""
+msgstr "{0} ha de ser un entero."
 
 #: errors.invalid
 msgid "{0} is invalid."
-msgstr ""
+msgstr "{0} no es válido"
 
 #: errors.long
 msgid "{0} must be a long."
-msgstr ""
+msgstr "{0} ha de ser un largo."
 
 #: errors.maxlength
 msgid "{0} can not be greater than {1} characters."
-msgstr ""
+msgstr "{0} no puede tener más de {1} caracteres."
 
 #: errors.minlength
 msgid "{0} can not be less than {1} characters."
-msgstr ""
+msgstr "{0} no puede tener menos de {1} caracteres."
 
+# Not sure what <li> is and whether it needs translation
 #: errors.notequal
 msgid "<li>{0} does not match {1}</li>"
-msgstr ""
+msgstr "<li>{0} no concuerda con {1}</li>"
 
 #: errors.range
 msgid "<li>{0} is not in the range {1} through {2}.</li>"
-msgstr ""
+msgstr "<li>{0} no está en el intervalo de {1} a {2}.</li>"
 
 #: errors.required
 msgid "<li>{0} is required.</li>"
-msgstr ""
+msgstr "<li>{0} es necesario.</li>"
 
 #: errors.short
 msgid "{0} must be a short."
-msgstr ""
+msgstr "{0} ha de ser un corto."
 
 #: label.accounts
 msgid "Accounts"
-msgstr ""
+msgstr "Cuentas"
 
 #: label.admintasks
 msgctxt "label.admintasks"
@@ -110,125 +115,127 @@ msgstr ""
 
 #: label.atrisk
 msgid "at risk"
-msgstr ""
+msgstr "en riesgo"
 
 #: label.branch
 msgid "Branch"
-msgstr ""
+msgstr "Agencia"
 
 #: label.center
 msgid "center"
-msgstr ""
+msgstr "centro"
 
 #: label.client
 msgid "client"
-msgstr ""
+msgstr "cliente"
 
 #: label.clients
 msgid "Clients"
-msgstr ""
+msgstr "Clientes"
 
 #: label.collectionsheet
 msgid "Collection Sheet"
-msgstr ""
+msgstr "Hoja de reembolsos"
 
 #: label.collectionsheets
 msgid "Collection Sheets"
-msgstr ""
+msgstr "Hojas de reembolsos"
 
 #: label.create
 msgid "Create"
-msgstr ""
+msgstr "Crear"
 
 #: label.createnew
 msgid "Create new"
-msgstr ""
+msgstr "Crear nuevo"
 
 #: label.data
 msgid "Data"
-msgstr ""
+msgstr "Datos"
 
 #: label.delinquentloans
 msgid "Delinquent loans"
-msgstr ""
+msgstr "Préstamos morosos"
 
 #: label.enter
 msgid "Enter"
-msgstr ""
+msgstr "Enviar"
 
 #: label.group
 msgid "group"
-msgstr ""
+msgstr "grupo"
 
 #: label.help
 msgid "Help"
-msgstr ""
+msgstr "Ayuda"
 
 #: label.insuranceaccount
 msgid "Insurance Account"
-msgstr ""
+msgstr "Cuenta de Seguro"
 
 #: label.loanaccount
 msgid "Loan Account"
-msgstr ""
+msgstr "Cuenta de Préstamo"
 
 #: label.loanofficer
 msgid "Loan officer"
-msgstr ""
+msgstr "Oficial de Préstamos"
 
 #: label.manage
 msgid "Manage"
-msgstr ""
+msgstr "Gestionar"
 
 #: label.manageexisting
 msgid "Manage Existing"
-msgstr ""
+msgstr "Gestionar Existente"
 
 #: label.opennew
 msgid "Open new"
-msgstr ""
+msgstr "Abrir nuevo"
 
 #: label.portfolio
 msgid "Portfolio"
-msgstr ""
+msgstr "Cartera"
 
 #: label.print
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #: label.quickstart
+#: label.admintasks
 msgctxt "label.quickstart"
 msgid "Quick start"
-msgstr ""
+msgstr "Comienzo rápido"
 
 #: label.report
 msgid "report"
-msgstr ""
+msgstr "informe"
 
 #: label.reports
 msgid "reports"
-msgstr ""
+msgstr "informes"
 
 #: label.savingsaccount
 msgid "Savings Account"
-msgstr ""
+msgstr "Cuenta de Ahorros"
 
 #: label.seealso
 msgid "See also"
-msgstr ""
+msgstr "Ver también"
 
 #: label.tasks
 msgid "Tasks"
-msgstr ""
+msgstr "Tareas"
 
 #: label.view
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
+# Assuming w/o stands for without
 #: label.w/ocenter
 msgid "w/o center"
-msgstr ""
+msgstr "Sin centro"
 
 #: label.yoursettings
 msgid "Your settings"
-msgstr ""
+msgstr "Su configuración"
