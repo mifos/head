@@ -19,28 +19,28 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: branchId.invalid
 msgid "Select a valid Branch"
-msgstr ""
+msgstr "Seleccione una Sucursal válida"
 
 #: centerId.invalid
 msgid "Select a valid Center"
-msgstr ""
+msgstr "Seleccione un Centro válido"
 
 #: loanOfficerId.invalid
 msgid "Select a valid Loan Officer"
-msgstr ""
+msgstr "Seleccione a un Oficial de Préstamo válido"
 
 #: loanProductId.invalid
 msgid "Select a valid Loan Product"
-msgstr ""
+msgstr "Seleccione un Préstamo válido"
 
 #: meetingDate.invalid
 msgid "Select a valid Meeting Date"
-msgstr ""
+msgstr "Seleccione una Fecha para la Reunión válida"
 
 #: runDate.invalid
 msgid "Please enter date as DD/MM/YYYY"
-msgstr ""
+msgstr "Por favor introduzca la fecha con el siguiente formato DD/MM/YYYY"
 
 #: runDate.notFound
 msgid "No data available for the specified date"
-msgstr ""
+msgstr "No existe información para la fecha seleccionada"
