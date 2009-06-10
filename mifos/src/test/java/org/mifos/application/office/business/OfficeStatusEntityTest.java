@@ -18,15 +18,16 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.fees.struts.actionforms;
+package org.mifos.application.office.business;
 
 import junit.framework.TestCase;
 
-public class FeeActionFormIntegrationTest extends TestCase {
-    
-    public void testIsAmountValidWithInvalidString() {
-        FeeActionForm form = new FeeActionForm();
-        form.setAmount("aaa");
-        assertFalse(form.isAmountValid());
+import org.mifos.application.office.util.helpers.OfficeStatus;
+
+public class OfficeStatusEntityTest extends TestCase {
+
+    public void testGetOfficeStatus() throws Exception {
+        OfficeStatusEntity officeStatus = new OfficeStatusEntity(OfficeStatus.ACTIVE);
+        assertEquals(OfficeStatus.ACTIVE, officeStatus.getStatus());
     }
 }

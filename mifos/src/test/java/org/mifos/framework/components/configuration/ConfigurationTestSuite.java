@@ -23,7 +23,7 @@ package org.mifos.framework.components.configuration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.master.business.MifosCurrencyIntegrationTest;
+import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.framework.components.configuration.business.ConfigurationIntegrationTest;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueIntegerIntegrationTest;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceIntegrationTest;
@@ -38,7 +38,7 @@ public class ConfigurationTestSuite extends TestSuite {
     public static Test suite() throws Exception {
         TestSuite testSuite = new ConfigurationTestSuite();
         testSuite.addTestSuite(ConfigurationPersistenceIntegrationTest.class);
-        testSuite.addTestSuite(MifosCurrencyIntegrationTest.class);
+        testSuite.addTestSuite(MifosCurrencyTest.class);
         testSuite.addTestSuite(ConfigurationIntializerIntegrationTest.class);
         testSuite.addTestSuite(ConfigurationIntegrationTest.class);
         testSuite.addTestSuite(ConfigurationKeyValueIntegerIntegrationTest.class);

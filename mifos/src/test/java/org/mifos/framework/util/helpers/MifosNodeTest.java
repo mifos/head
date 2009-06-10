@@ -18,15 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.fees.struts.actionforms;
+package org.mifos.framework.util.helpers;
+
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-public class FeeActionFormIntegrationTest extends TestCase {
-    
-    public void testIsAmountValidWithInvalidString() {
-        FeeActionForm form = new FeeActionForm();
-        form.setAmount("aaa");
-        assertFalse(form.isAmountValid());
+public class MifosNodeTest extends TestCase {
+
+    public void testMifosNode() {
+        HashMap<String, String> nodes = new HashMap<String, String>();
+        nodes.put("key", "value");
+        MifosNode mifosNode = new MifosNode(nodes);
+        assertEquals("value", mifosNode.getElement("key"));
+        assertEquals("org.mifos.framework.util.helpers.Node", mifosNode.toString());
+        mifosNode = new MifosNode();
+        mifosNode.setNodes(nodes);
+        assertEquals(1, mifosNode.getNodes().size());
     }
 }

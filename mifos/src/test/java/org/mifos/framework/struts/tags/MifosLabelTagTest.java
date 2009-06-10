@@ -20,22 +20,14 @@
 
 package org.mifos.framework.struts.tags;
 
-import org.dom4j.DocumentException;
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
-
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.TestCase;
 
-public class MifosLabelTagIntegrationTest extends MifosIntegrationTest {
+import org.dom4j.DocumentException;
 
-    public MifosLabelTagIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class MifosLabelTagTest extends TestCase {
 
-    public void testHideLabelColumn() throws HibernateProcessException, PersistenceException, DocumentException {
+    public void testHideLabelColumn() throws DocumentException {
         MifosLabelTag mifosLabelTag = new MifosLabelTag();
         mifosLabelTag.setKeyhm("Client.GovernmentId");
         XmlBuilder xmlBuilder = new XmlBuilder();

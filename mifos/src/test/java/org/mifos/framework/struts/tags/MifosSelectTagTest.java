@@ -20,21 +20,14 @@
 
 package org.mifos.framework.struts.tags;
 
-import javax.servlet.jsp.JspException;
+import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
-import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+public class MifosSelectTagTest extends TestCase {
 
-public class MifosSelectTagIntegrationTest extends MifosIntegrationTest {
-    public MifosSelectTagIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
-
-    public void testRenderDoStartTag() throws JspException, DocumentException {
+    public void testRenderDoStartTag() throws DocumentException {
         MifosSelectTag mifosSelectTag = new MifosSelectTag();
         StringBuilder resultsDoStartTag = new StringBuilder();
         mifosSelectTag.setKeyhm("test1");
@@ -44,7 +37,7 @@ public class MifosSelectTagIntegrationTest extends MifosIntegrationTest {
         assertWellFormedFragment(mifosSelectTag.renderDoStartTag());
     }
 
-    public void testRenderDoEndTag() throws JspException, DocumentException {
+    public void testRenderDoEndTag() {
         MifosSelectTag mifosSelectTag = new MifosSelectTag();
         StringBuilder resultsDoEndTag = new StringBuilder();
         resultsDoEndTag.append("<option value=\"\">");

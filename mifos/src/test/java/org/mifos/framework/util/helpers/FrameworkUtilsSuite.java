@@ -36,10 +36,10 @@ public class FrameworkUtilsSuite extends TestSuite {
         suite.addTestSuite(FlowTest.class);
         suite.addTestSuite(MifosDoubleConverterIntegrationTest.class);
         suite.addTestSuite(ConvertionUtilTest.class);
-        suite.addTestSuite(MifosNodeIntegrationTest.class);
+        suite.addTestSuite(MifosNodeTest.class);
         suite.addTestSuite(CacheIntegrationTest.class);
         suite.addTestSuite(BundleKeyIntegrationTest.class);
-        suite.addTestSuite(MifosSelectHelperIntegrationTest.class);
+        suite.addTestSuite(MifosSelectHelperTest.class);
         return suite;
     }
 

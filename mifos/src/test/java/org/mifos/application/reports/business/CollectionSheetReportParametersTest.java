@@ -34,9 +34,9 @@ import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class CollectionSheetReportParametersIntegrationTest extends AbstractReportParametersIntegrationTest {
+public class CollectionSheetReportParametersTest extends AbstractReportParametersTest {
 
-    public CollectionSheetReportParametersIntegrationTest() throws SystemException, ApplicationException {
+    public CollectionSheetReportParametersTest() throws SystemException, ApplicationException {
         super();
     }
 
@@ -44,8 +44,8 @@ public class CollectionSheetReportParametersIntegrationTest extends AbstractRepo
 
     public void testValidatorReturnsErrorIfBranchIdIsSelect() throws Exception {
         reportParams = new CollectionSheetReportParameterForm(String.valueOf(SELECT_BRANCH_OFFICE_SELECTION_ITEM
-                .getId()), AbstractReportParametersIntegrationTest.VALID_ID,
-                AbstractReportParametersIntegrationTest.VALID_ID, VALID_REPORT_DATE);
+                .getId()), AbstractReportParametersTest.VALID_ID,
+                AbstractReportParametersTest.VALID_ID, VALID_REPORT_DATE);
         errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM,
                 ReportValidationConstants.BRANCH_ID_INVALID_MSG);
         replay(errorsMock);
@@ -54,8 +54,8 @@ public class CollectionSheetReportParametersIntegrationTest extends AbstractRepo
     }
 
     public void testValidatorReturnsLoanOfficerInvalidIfLoanOfficerIsSelect() throws Exception {
-        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, String
-                .valueOf(SELECT_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersIntegrationTest.VALID_ID,
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID, String
+                .valueOf(SELECT_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersTest.VALID_ID,
                 VALID_REPORT_DATE);
         errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
                 ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
@@ -65,8 +65,8 @@ public class CollectionSheetReportParametersIntegrationTest extends AbstractRepo
     }
 
     public void testValidatorReturnsLoanOfficerInvalidIfLoanOfficerIsNA() throws Exception {
-        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID, String
-                .valueOf(NA_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersIntegrationTest.VALID_ID,
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID, String
+                .valueOf(NA_LOAN_OFFICER_SELECTION_ITEM.getId()), AbstractReportParametersTest.VALID_ID,
                 VALID_REPORT_DATE);
         errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
                 ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
@@ -76,8 +76,8 @@ public class CollectionSheetReportParametersIntegrationTest extends AbstractRepo
     }
 
     public void testValidatorReturnsCenterInvalidIfCenterIsSelect() throws Exception {
-        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID,
-                AbstractReportParametersIntegrationTest.VALID_ID, String.valueOf(SELECT_CENTER_SELECTION_ITEM.getId()),
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID,
+                AbstractReportParametersTest.VALID_ID, String.valueOf(SELECT_CENTER_SELECTION_ITEM.getId()),
                 VALID_REPORT_DATE);
         errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM,
                 ReportValidationConstants.CENTER_ID_INVALID_MSG);
@@ -87,8 +87,8 @@ public class CollectionSheetReportParametersIntegrationTest extends AbstractRepo
     }
 
     public void testValidatorReturnsCenterInvalidIfCenterIsNA() throws Exception {
-        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID,
-                AbstractReportParametersIntegrationTest.VALID_ID, String.valueOf(NA_CENTER_SELECTION_ITEM.getId()),
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID,
+                AbstractReportParametersTest.VALID_ID, String.valueOf(NA_CENTER_SELECTION_ITEM.getId()),
                 VALID_REPORT_DATE);
         errorsMock.rejectValue(ReportValidationConstants.CENTER_ID_PARAM,
                 ReportValidationConstants.CENTER_ID_INVALID_MSG);
@@ -98,8 +98,8 @@ public class CollectionSheetReportParametersIntegrationTest extends AbstractRepo
     }
 
     public void testValidatorReturnsMeetingDateInvalidIfMeetingDateIsSelect() throws Exception {
-        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersIntegrationTest.VALID_ID,
-                AbstractReportParametersIntegrationTest.VALID_ID, AbstractReportParametersIntegrationTest.VALID_ID,
+        reportParams = new CollectionSheetReportParameterForm(AbstractReportParametersTest.VALID_ID,
+                AbstractReportParametersTest.VALID_ID, AbstractReportParametersTest.VALID_ID,
                 VALID_REPORT_DATE);
         replay(errorsMock);
         reportParams.validate(errorsMock);

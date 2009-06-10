@@ -18,24 +18,24 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.office.business;
+package org.mifos.application.reports.business;
 
-import org.mifos.application.office.util.helpers.OfficeStatus;
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import static org.easymock.classextension.EasyMock.createMock;
+import junit.framework.TestCase;
 
-public class OfficeStatusEntityIntegrationTest extends MifosIntegrationTest {
+import org.mifos.application.reports.business.validator.Errors;
 
-    public OfficeStatusEntityIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public abstract class AbstractReportParametersTest extends TestCase {
 
-    public void testGetOfficeStatus() throws Exception {
+    public static final String VALID_ID = "0";
 
-        OfficeStatusEntity officeStatus = new OfficeStatusEntity(OfficeStatus.ACTIVE);
+    Errors errorsMock;
+    protected AbstractReportParameterForm reportParams;
 
-        assertEquals(OfficeStatus.ACTIVE, officeStatus.getStatus());
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        errorsMock = createMock(Errors.class);
     }
 
 }

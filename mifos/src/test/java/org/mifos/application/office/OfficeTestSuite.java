@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.office.business.OfficeLevelEntityIntegrationTest;
 import org.mifos.application.office.business.OfficeBOIntegrationTest;
-import org.mifos.application.office.business.OfficeStatusEntityIntegrationTest;
+import org.mifos.application.office.business.OfficeStatusEntityTest;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessServiceIntegrationTest;
 import org.mifos.application.office.business.service.OfficeBusinessServiceIntegrationTest;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistenceIntegrationTest;
@@ -47,7 +47,7 @@ public class OfficeTestSuite extends TestSuite {
         testSuite.addTestSuite(OfficeHierarchyPersistenceIntegrationTest.class);
         testSuite.addTestSuite(OfficeHierarchyBusinessServiceIntegrationTest.class);
         testSuite.addTestSuite(OffHierarchyActionTest.class);
-        testSuite.addTestSuite(OfficeStatusEntityIntegrationTest.class);
+        testSuite.addTestSuite(OfficeStatusEntityTest.class);
         testSuite.addTestSuite(OfficeLevelEntityIntegrationTest.class);
         return testSuite;
     }

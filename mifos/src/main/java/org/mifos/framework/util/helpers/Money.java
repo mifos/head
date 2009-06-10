@@ -100,7 +100,7 @@ public final class Money implements Serializable {
 	}
 
 	public Money(String amount) {
-		this(Configuration.getInstance().getSystemConfig().getCurrency(), amount);
+		this(getDefaultCurrency(), amount);
 	}
 
 	public Money(MifosCurrency currency, BigDecimal amount) {

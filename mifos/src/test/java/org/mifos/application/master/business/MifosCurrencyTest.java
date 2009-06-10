@@ -48,5 +48,21 @@ public class MifosCurrencyTest extends TestCase {
             assertEquals("bad rounding mode 0", e.getMessage());
         }
     }
+    
+    public void testEqualsOnCurrencyId() {
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", "$", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("1"), "Dollar", "$", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        assertTrue(currency1.equals(currency2));
+    }
+
+    public void testEqualsFailureOnCurrencyId() {
+        MifosCurrency currency1 = new MifosCurrency(Short.valueOf("1"), "Dollar", "$", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        MifosCurrency currency2 = new MifosCurrency(Short.valueOf("2"), "Rupees", "Rs", Short.valueOf("1"), Float
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("3"), "USD");
+        assertFalse(currency1.equals(currency2));
+    }
 
 }

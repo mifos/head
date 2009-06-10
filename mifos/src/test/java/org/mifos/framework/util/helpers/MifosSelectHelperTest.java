@@ -20,25 +20,22 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.util.HashMap;
+import junit.framework.TestCase;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 
-public class MifosNodeIntegrationTest extends MifosIntegrationTest {
-    public MifosNodeIntegrationTest() throws SystemException, ApplicationException {
-        super();
+public class MifosSelectHelperTest extends TestCase {
+
+    public void testGetInstance() {
+        MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
+        assertNotNull(mifosSelectHelper);
     }
 
-    public void testMifosNode() {
-        HashMap nodes = new HashMap();
-        nodes.put("key", "value");
-        MifosNode mifosNode = new MifosNode(nodes);
-        assertEquals("value", mifosNode.getElement("key"));
-        assertEquals("org.mifos.framework.util.helpers.Node", mifosNode.toString());
-        mifosNode = new MifosNode();
-        mifosNode.setNodes(nodes);
-        assertEquals(1, mifosNode.getNodes().size());
+    public void testGetValue() {
+        MifosSelectHelper mifosSelectHelper = MifosSelectHelper.getInstance();
+        String[] prdCarStatusIds = mifosSelectHelper.getValue(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID);
+        assertEquals("org.mifos.application.productdefinition.business.PrdStatusEntity", prdCarStatusIds[0]);
+        assertEquals(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, prdCarStatusIds[1]);
     }
+
 }

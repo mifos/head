@@ -28,9 +28,9 @@ import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class BranchReportParameterFormIntegrationTest extends AbstractReportParametersIntegrationTest {
+public class BranchReportParameterFormTest extends AbstractReportParametersTest {
 
-    public BranchReportParameterFormIntegrationTest() throws SystemException, ApplicationException {
+    public BranchReportParameterFormTest() throws SystemException, ApplicationException {
         super();
     }
 

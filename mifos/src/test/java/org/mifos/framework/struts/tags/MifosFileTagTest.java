@@ -20,17 +20,12 @@
 
 package org.mifos.framework.struts.tags;
 
-import org.dom4j.DocumentException;
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.TestCase;
 
-public class MifosFileTagIntegrationTest extends MifosIntegrationTest {
-    public MifosFileTagIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+import org.dom4j.DocumentException;
+
+public class MifosFileTagTest extends TestCase {
 
     public void testrenderInputsForhidden() throws DocumentException {
         MifosFileTag mifosFileTag = new MifosFileTag();

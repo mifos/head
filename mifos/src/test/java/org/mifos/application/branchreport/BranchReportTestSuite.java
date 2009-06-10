@@ -24,7 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.branchreport.persistence.BranchReportPersistenceIntegrationTest;
-import org.mifos.application.reports.business.BranchReportParameterFormIntegrationTest;
+import org.mifos.application.reports.business.BranchReportParameterFormTest;
 import org.mifos.application.reports.business.service.BranchReportConfigServiceIntegrationTest;
 import org.mifos.application.reports.business.service.BranchReportServiceIntegrationTest;
 import org.mifos.application.reports.business.service.ReportProductOfferingServiceIntegrationTest;
@@ -42,7 +42,7 @@ public class BranchReportTestSuite extends TestSuite {
         suite.addTestSuite(BranchReportHelperIntegrationTest.class);
         suite.addTestSuite(BranchReportServiceIntegrationTest.class);
         suite.addTestSuite(BranchReportPersistenceIntegrationTest.class);
-        suite.addTestSuite(BranchReportParameterFormIntegrationTest.class);
+        suite.addTestSuite(BranchReportParameterFormTest.class);
         suite.addTestSuite(BranchReportParameterValidatorTest.class);
         suite.addTestSuite(BranchReportClientSummaryHelperIntegrationTest.class);
         suite.addTestSuite(BranchReportLoanArrearsAgingHelperIntegrationTest.class);
