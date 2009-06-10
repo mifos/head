@@ -137,6 +137,23 @@
          <groupId>org.seleniumhq.selenium.client-drivers</groupId>
          <artifactId>selenium-java-client-driver</artifactId>
          <version>1.0-beta-2</version>
+         <exclusions>
+             <exclusion>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+             </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.seleniumhq.selenium.server</groupId>
+         <artifactId>selenium-server-coreless</artifactId>
+         <version>1.0-beta-2</version>
+         <exclusions>
+             <exclusion>
+                <groupId>ant</groupId>
+                <artifactId>ant</artifactId>
+             </exclusion>
+         </exclusions>
       </dependency>
    </dependencies>
    <build>

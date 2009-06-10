@@ -20,8 +20,6 @@
 
 package org.mifos.config;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -32,18 +30,25 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.mifos.config.Localization;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
+@Test(groups="integration")
 public class LocalizationIntegrationTest extends MifosIntegrationTest {
 
     public LocalizationIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
+    @BeforeMethod
     @Override
     protected void setUp() throws Exception {
         super.setUp();
     }
 
+    @AfterMethod
     @Override
     protected void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();

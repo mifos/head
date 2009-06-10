@@ -1,0 +1,6 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Application Test Suite" verbose="4" >
+    <suite-files>
+      <suite-file path="ConfigTestSuite.xml" />
+   </suite-files>
+</suite>

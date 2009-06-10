@@ -29,9 +29,9 @@
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <!--
-        Don't search System.getProperty("conf.dir") for local.properties; no
-        need. It is only used to override settings in
-        acceptanceDatabase.properties.
+            Don't search System.getProperty("conf.dir") for
+            local.properties; no need. It is only used to override
+            settings in acceptanceDatabase.properties.
         -->
 
     </properties>
@@ -200,13 +200,15 @@
             <layout>default</layout>
         </repository>
     </repositories>
-	<pluginRepositories>
-		<pluginRepository>
-		<id>maven-repository.mifos.org</id>
-		<name>Mifos Maven Repository</name>
-		<url>http://neem.mifos.org/maven/</url>
-		</pluginRepository>
-	</pluginRepositories>
+
+    <pluginRepositories>
+    	<pluginRepository>
+    	<id>maven-repository.mifos.org</id>
+    	<name>Mifos Maven Repository</name>
+    	<url>http://neem.mifos.org/maven/</url>
+    	</pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
@@ -452,122 +454,122 @@
             <artifactId>log4j</artifactId>
             <version>1.2.14</version>
         </dependency>
-      <dependency>
-        <groupId>c3p0</groupId>
-        <artifactId>c3p0</artifactId>
-        <version>0.9.1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.freemarker</groupId>
-        <artifactId>freemarker</artifactId>
-        <version>2.3.13</version>
-      </dependency>
-      <dependency>
-        <groupId>com.lowagie</groupId>
-        <artifactId>itext</artifactId>
-        <version>1.3.1</version>
-      </dependency>
-      <dependency>
-        <groupId>jasperreports</groupId>
-        <artifactId>jasperreports</artifactId>
-        <version>1.3.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.easymock</groupId>
-        <artifactId>easymock</artifactId>
-        <version>2.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.easymock</groupId>
-        <artifactId>easymockclassextension</artifactId>
-        <version>2.4</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.1</version>
-      </dependency>
-      <dependency>
-        <groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-impl</artifactId>
-        <version>2.1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>com.sun.xml.bind</groupId>
-        <artifactId>jaxb-libs</artifactId>
-        <version>1.0.5</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jstl</artifactId>
-        <version>1.1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.transaction</groupId>
-        <artifactId>jta</artifactId>
-        <version>1.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache</groupId>
-        <artifactId>jakarta-oro</artifactId>
-        <version>20020329</version>
-      </dependency>
-      <dependency>
-        <groupId>taglibs</groupId>
-        <artifactId>standard</artifactId>
-        <version>1.1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>jspsmart</groupId>
-        <artifactId>jspsmart</artifactId>
-        <version>20050208</version>
-      </dependency>
-      <dependency>
-        <groupId>struts</groupId>
-        <artifactId>struts</artifactId>
-        <version>1.2.7</version>
-      </dependency>
-      <dependency>
-        <groupId>struts</groupId>
-        <artifactId>struts-el</artifactId>
-        <version>1.2.7</version>
-      </dependency>
-      <dependency>
-        <groupId>struts</groupId>
-        <artifactId>struts-legacy</artifactId>
-        <version>1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>strutstest</groupId>
-        <artifactId>strutstest</artifactId>
-        <version>2.1.4</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jsp-api</artifactId>
-        <version>2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>jetty</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.5-6.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>junit-addons</groupId>
-        <artifactId>junit-addons</artifactId>
-        <version>1.4</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>xerces</groupId>
-                  <artifactId>xercesImpl</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>xerces</groupId>
-                  <artifactId>xmlParserAPIs</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
-     </dependencies>
+        <dependency>
+            <groupId>c3p0</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-libs</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache</groupId>
+            <artifactId>jakarta-oro</artifactId>
+            <version>20020329</version>
+        </dependency>
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jspsmart</groupId>
+            <artifactId>jspsmart</artifactId>
+            <version>20050208</version>
+        </dependency>
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts-el</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts-legacy</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>strutstest</groupId>
+            <artifactId>strutstest</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jetty</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5-6.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit-addons</groupId>
+            <artifactId>junit-addons</artifactId>
+            <version>1.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
     <build>
         <finalName>mifos-from-maven</finalName>
         <defaultGoal>war:war</defaultGoal>
@@ -583,10 +585,20 @@
                 <targetPath>sql</targetPath>
             </resource>
             <resource>
-                <directory>${modules.root.dir}/mifos/src/main/resources</directory>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/testng</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>
@@ -603,31 +615,6 @@
                     <debug>true</debug>
                     <source>1.6</source>
                     <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>reporting/BirtReportDesign</directory>
-                            <targetPath>report</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>reporting/BirtReportResource</directory>
-                            <targetPath>report/BirtReportResource</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>reporting/BirtWebViewer</directory>
-                            <excludes>
-                                <exclude>*.jsp</exclude>
-                                <exclude>*.rptdesign</exclude>
-                                <exclude>**/web.xml</exclude>
-                            </excludes>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
             <plugin>
@@ -746,6 +733,42 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>target/test-classes/ApplicationTestSuite.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>reporting/BirtReportDesign</directory>
+                            <targetPath>report</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>reporting/BirtReportResource</directory>
+                            <targetPath>report/BirtReportResource</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>reporting/BirtWebViewer</directory>
+                            <excludes>
+                                <exclude>*.jsp</exclude>
+                                <exclude>*.rptdesign</exclude>
+                                <exclude>**/web.xml</exclude>
+                            </excludes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>

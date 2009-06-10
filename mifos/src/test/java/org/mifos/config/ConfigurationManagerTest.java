@@ -22,20 +22,15 @@ package org.mifos.config;
 
 import java.util.NoSuchElementException;
 
-import junit.framework.JUnit4TestAdapter;
-
 import org.apache.commons.configuration.Configuration;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
+@Test(groups="unit")
 public class ConfigurationManagerTest {
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ConfigurationManagerTest.class);
-    }
 
     Configuration configuration;
     private static final String badKey = "Bad Key";
@@ -45,12 +40,12 @@ public class ConfigurationManagerTest {
         MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
     }
 
-    @Before
+    @BeforeMethod
     public void before() {
         configuration = ConfigurationManager.getInstance().getConfiguration();
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test(expectedExceptions = NoSuchElementException.class)
     public void testGetUndefinedProperty() {
         configuration.getShort(badKey);
     }

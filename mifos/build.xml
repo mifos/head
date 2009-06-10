@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:artifact="urn:maven-artifact-ant" name="mifos" default="dist" basedir=".">
 
-    <path id="maven-ant-tasks.classpath" path="build-lib/maven-ant-tasks-2.0.9.jar" />
+    <property name="build-time-libraries" value="build-lib"/>
+    <path id="maven-ant-tasks.classpath" path="${build-time-libraries}/maven-ant-tasks-2.0.9.jar" />
     <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
         uri="urn:maven-artifact-ant"
         classpathref="maven-ant-tasks.classpath" />
@@ -179,7 +180,7 @@
     </target>
 
     <!-- task to minify javascript files (remove comments & whitespace for faster downloads) -->
-    <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin-0.2.2.jar"/>
+    <taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${build-time-libraries}/jsmin-0.2.2.jar"/>
 
     <target name="copy_files" depends="copy-revision">
         <copy todir="${build.web-inf}/lib">
@@ -299,24 +300,41 @@
         <copy todir="${test.classes}">
             <fileset dir="${test.resources.dir}"/>
         </copy>     
+      <copy todir="${test.classes}">
+          <fileset dir="src/test/testng">
+              <include name="*.xml"/>
+          </fileset>
+      </copy>
     </target>
 
-    <target name="run_test" 
-        depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
-        description="Run tests.">
-        <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
-        <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+    <taskdef resource="testngtasks" classpath="${build-time-libraries}/testng-5.8-jdk15.jar"/>
+	
+    <path id="test-classpath">
+       <path refid="class.path"/>
+       <pathelement location="${build.classes}"/>
+       <pathelement location="${test.classes}"/>
+       <pathelement location="${test.classes}/org/mifos/config/resources"/>
+       <path refid="test.maven-dependencies.classpath"/>
+    </path>
+  
+	<fileset id="testng-suite-files" dir="${test.classes}">
+		<include name="**/ApplicationTestSuite.xml" />
+	</fileset>
+	
+	<target name="run_test" 
+       depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
+       description="Run tests.">
+       <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
+     	 <testng xmlfilesetref="testng-suite-files"
+         classpathref="test-classpath"
+		   outputdir="${dist.dir}" />
+    	
+    	 <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
             dir="${basedir}"
             haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
             failureproperty="tests.failure">
             <sysproperty key="mifos.test.mode" value="integration"/>
-            <classpath>
-                <path refid="class.path"/>
-                <pathelement location="${build.classes}"/>
-                <pathelement location="${test.classes}"/>
-                <pathelement location="${test.classes}/org/mifos/config/resources"/>
-                <path refid="test.maven-dependencies.classpath"/>
-            </classpath>
+            <classpath refid="test-classpath" />
 
             <formatter type="xml" />
             <batchtest todir="${dist.dir}" >
@@ -342,14 +360,8 @@
             haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
             failureproperty="tests.failure">
             <sysproperty key="mifos.test.mode" value="integration"/>
-            <classpath>
-                <path refid="class.path"/>
-                <pathelement location="${build.classes}"/>
-                <pathelement location="${test.classes}"/>
-                <pathelement location="${test.classes}/org/mifos/config/resources"/>
-                <path refid="test.maven-dependencies.classpath"/>
-            </classpath>
-
+            <classpath refid="test-classpath" />
+  
             <formatter type="xml" />
             <batchtest todir="${dist.dir}" >
                 <fileset dir="${test.classes}">

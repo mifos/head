@@ -20,8 +20,7 @@
 
 package org.mifos.application;
 
-import junit.framework.TestSuite;
-
+import org.junit.internal.runners.InitializationError;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
@@ -51,8 +50,6 @@ import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
-import org.mifos.config.ConfigTestSuite;
-import org.mifos.config.ConfigurationManagerTest;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.AuditLogTestSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
@@ -69,21 +66,55 @@ import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterIntegrationTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { ConfigTestSuite.class, ConfigurationManagerTest.class, ProductMixTestSuite.class,
-        FastTests.class, SecurityTestSuite.class, CollectionSheetTestSuite.class, CustomerTestSuite.class,
-        ApplicationConfigurationTestSuite.class, MasterTestSuite.class, AccountTestSuite.class,
-        FinancialTestSuite.class, StringToMoneyConverterIntegrationTest.class, ConfigurationTestSuite.class,
-        BatchJobTestSuite.class, LoanTestSuite.class, SavingsTestSuite.class, ProductDefinitionTestSuite.class,
-        ReportsTestSuite.class, FeeTestSuite.class, FieldConfigurationTestSuite.class, OfficeTestSuite.class,
-        ComponentsTestSuite.class, PersonnelTestSuite.class, RolesAndPermissionTestSuite.class, MeetingTestSuite.class,
-        LoginTestSuite.class, FundTestSuite.class, AuditLogTestSuite.class, CheckListTestSuite.class,
-        AdminTestSuite.class, StrutsTestSuite.class, HibernateIntegrationTest.class,
-        LatestTestAfterCheckpointBaseTest.class, MayflyMiscTest.class, MenuParserIntegrationTest.class,
-        HibernateHelperIntegrationTest.class, PersistenceIntegrationTest.class, FrameworkUtilsSuite.class,
-        HolidayTestSuite.class, SurveysTestSuite.class, PPITestSuite.class,
-        ApplicationAcceptedPaymentTypeTestSuite.class, CollectionSheetTestSuite.class,
-        CollectionSheetReportTestSuite.class, BranchReportTestSuite.class, BranchCashConfirmationReportTestSuite.class,
-        IntegrationTests.class })
-public class ApplicationTestSuite extends TestSuite {
+@Suite.SuiteClasses( { //ConfigTestSuite.class, 
+                       ProductMixTestSuite.class,
+                       FastTests.class, 
+                       SecurityTestSuite.class, 
+                       CollectionSheetTestSuite.class, 
+                       CustomerTestSuite.class,
+                       ApplicationConfigurationTestSuite.class, 
+                       MasterTestSuite.class, 
+                       AccountTestSuite.class,
+                       FinancialTestSuite.class, 
+                       StringToMoneyConverterIntegrationTest.class, 
+                       ConfigurationTestSuite.class,
+                       BatchJobTestSuite.class, 
+                       LoanTestSuite.class, 
+                       SavingsTestSuite.class, 
+                       ProductDefinitionTestSuite.class,
+                       ReportsTestSuite.class, 
+                       FeeTestSuite.class, 
+                       FieldConfigurationTestSuite.class, 
+                       OfficeTestSuite.class,
+                       ComponentsTestSuite.class, 
+                       PersonnelTestSuite.class, 
+                       RolesAndPermissionTestSuite.class, 
+                       MeetingTestSuite.class,
+                       LoginTestSuite.class, 
+                       FundTestSuite.class, 
+                       AuditLogTestSuite.class, 
+                       CheckListTestSuite.class,
+                       AdminTestSuite.class, 
+                       StrutsTestSuite.class, 
+                       HibernateIntegrationTest.class,
+                       LatestTestAfterCheckpointBaseTest.class, 
+                       MayflyMiscTest.class, 
+                       MenuParserIntegrationTest.class,
+                       HibernateHelperIntegrationTest.class, 
+                       PersistenceIntegrationTest.class, 
+                       FrameworkUtilsSuite.class,
+                       HolidayTestSuite.class, 
+                       SurveysTestSuite.class, 
+                       PPITestSuite.class,
+                       ApplicationAcceptedPaymentTypeTestSuite.class, 
+                       CollectionSheetTestSuite.class,
+                       CollectionSheetReportTestSuite.class, 
+                       BranchReportTestSuite.class, 
+                       BranchCashConfirmationReportTestSuite.class,
+                       IntegrationTests.class })
+public class ApplicationTestSuite extends Suite {
     // placeholder class for above annotations
+    public ApplicationTestSuite(Class<?> klass) throws InitializationError {
+        super(klass);
+    }
 }

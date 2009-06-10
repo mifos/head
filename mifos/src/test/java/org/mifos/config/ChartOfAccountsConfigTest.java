@@ -31,23 +31,20 @@ import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import junit.framework.JUnit4TestAdapter;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+@Test(groups="unit")
 public class ChartOfAccountsConfigTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ChartOfAccountsConfigTest.class);
-    }
 
     ChartOfAccountsConfig coa;
 
@@ -61,12 +58,12 @@ public class ChartOfAccountsConfigTest {
     public static void tearDownAfterClass() throws Exception {
     }
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         coa = ChartOfAccountsConfig.load(FilePaths.CHART_OF_ACCOUNTS_DEFAULT);
     }
 
-    @After
+    @AfterMethod
     public void tearDown() throws Exception {
         coa = null;
     }
@@ -107,7 +104,7 @@ public class ChartOfAccountsConfigTest {
         assertEquals("assets category has unexpected name", "ASSETS", name);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expectedExceptions = RuntimeException.class)
     public void testConfigWithDupes() throws Exception {
         String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
                 + "<GLAccount code=\"11101\" name=\"Cash 1\" />" + "<GLAccount code=\"11101\" name=\"Cash 1\" />"

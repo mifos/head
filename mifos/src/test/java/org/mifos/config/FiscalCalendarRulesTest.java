@@ -33,23 +33,18 @@ import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
+@Test(groups="unit")
 public class FiscalCalendarRulesTest {
 
     private static ConfigurationManager configMgr = null;
     private static String savedConfigWorkingDays = null;
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(FiscalCalendarRulesTest.class);
-    }
 
     @BeforeClass
     public static void init() throws Exception {

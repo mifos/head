@@ -20,32 +20,31 @@
 
 package org.mifos.config;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
+@Test(groups="integration")
 public class GeneralConfigIntegrationTest extends MifosIntegrationTest {
 
     public GeneralConfigIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(GeneralConfigIntegrationTest.class);
-    }
-
+    @BeforeMethod
     @Override
     protected void setUp() throws Exception {
         super.setUp();
     }
 
+    @AfterMethod
     @Override
     protected void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();

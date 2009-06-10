@@ -22,10 +22,7 @@ package org.mifos.config;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import junit.framework.JUnit4TestAdapter;
 
-import org.junit.AfterClass;
-import org.junit.Test;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -37,6 +34,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
 
 /**
  * Validate configuration override logic for optional process flow states.
@@ -44,10 +43,6 @@ import org.mifos.framework.util.helpers.TestCaseInitializer;
 public class ProcessFlowRulesTest {
     public ProcessFlowRulesTest() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ProcessFlowRulesTest.class);
     }
 
     @Test
@@ -69,7 +64,7 @@ public class ProcessFlowRulesTest {
         assertFalse(ProcessFlowRules.isValidOverride(true, false));
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test(expectedExceptions = ConfigurationException.class)
     public void testInvalidOverride() throws Exception {
         ProcessFlowRules.needsOverride(true, false);
     }
@@ -97,7 +92,7 @@ public class ProcessFlowRulesTest {
         assertTrue(cse.getIsOptional());
     }
 
-    @Test(expected = ConfigurationException.class)
+    @Test(expectedExceptions = ConfigurationException.class, dependsOnMethods = { "testValidOverrideAgainstDb" })
     public void testInvalidOverrideAgainstDb() throws Exception {
         AccountPersistence ap = new AccountPersistence();
         AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,

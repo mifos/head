@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Config Test Suite" verbose="4" >
+  <test name="Config Test" >
+    <classes>
+        <class name="org.mifos.config.AccountingRulesIntegrationTest" />
+        <class name="org.mifos.config.LocalizationIntegrationTest" /> 
+        <class name="org.mifos.config.FiscalCalendarRulesTest" />
+        <class name="org.mifos.config.ClientRulesIntegrationTest" /> 
+        <class name="org.mifos.config.ProcessFlowRulesTest" /> 
+        <class name="org.mifos.config.ChartOfAccountsConfigTest" />
+        <class name="org.mifos.config.GeneralConfigIntegrationTest" />
+        <class name="org.mifos.config.ConfigurationManagerTest" />
+     </classes>
+   </test>
+</suite>

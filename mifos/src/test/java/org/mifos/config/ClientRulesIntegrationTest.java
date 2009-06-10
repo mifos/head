@@ -22,22 +22,18 @@ package org.mifos.config;
 
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.util.helpers.Constants;
-import org.junit.Test;
-import junit.framework.JUnit4TestAdapter;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.testng.annotations.Test;
 
+@Test(groups="integration")
 public class ClientRulesIntegrationTest extends MifosIntegrationTest {
 
     public ClientRulesIntegrationTest() throws SystemException, ApplicationException {
         super();
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ClientRulesIntegrationTest.class);
     }
 
     @Test
