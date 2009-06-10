@@ -60,4 +60,12 @@ public class SearchResultsPage extends MifosPage {
       waitForPageToLoad();
       return new LoanAccountPage(selenium);
     }
+    
+    public int countSearchResults() {
+        // Get first bit of orange text on search results page,
+        // which should look like "11 results for"
+        String heading = selenium.getText( "//span[@class='headingorange'][1]" );
+        heading = heading.substring(0, heading.indexOf(' '));
+        return Integer.parseInt(heading);
+    }
 }
