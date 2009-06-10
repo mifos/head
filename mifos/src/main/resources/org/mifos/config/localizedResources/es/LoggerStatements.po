@@ -19,41 +19,47 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: Customer.DuplicateCustomerName
 msgid "The specified {0} name, {1} exists."
-msgstr ""
+msgstr "El número {0} especificado, {1} existe."
 
 #: Encryption.NoSuchAlgorithmException
 msgid "No such algorithm {0} exists."
-msgstr ""
+msgstr "No existe un algoritmo {0}"
 
 #: Encryption.NoSuchPaddingException
 msgid "No such padding applicable for {0} exists."
-msgstr ""
+msgstr "No existe tal desplazamiento aplicable para {0}."
 
 #: LoanOfficerNotActiveException
 msgid "The chosen loan officer is inactive."
-msgstr ""
+msgstr "El oficial de préstamos elegido no se encuentra activo."
 
 #: entry
 msgid "This is the entry point"
-msgstr ""
+msgstr "Este es el punto de entrada."
 
 #: error.activity.not.allowed
 msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you required permissions and try again."
 msgstr ""
+"No tiene permiso para realizar esta actividad. Contacte con el administrador "
+"del sistema para que le de los permisos necesarios e inténtelo de nuevo."
 
 #: exception.framework.ConnectionNotFoundException
 msgid ""
 "The database is down or the connection is invalid. Please try again later or "
 "contact the system administrator."
 msgstr ""
+"La base de datos no está funcionando o la conexión no es válida. Inténtelo "
+"de nuevo más tarde o contacte con el administrador del sistema."
 
 #: exception.framework.PageExpiredException
 msgid ""
 "Page expired since the action is not permissible. Click on the tabs above to "
 "proceed."
 msgstr ""
+"La página ha vencido ya que la acción no está permitida. Pulse en las "
+"pestañas superiores para proceder."
 
 #: exception.framework.ServiceUnavailableException
 msgctxt "exception.framework.ServiceUnavailableException"
@@ -63,28 +69,35 @@ msgid ""
 msgstr ""
 
 #: exception.framework.SystemException
+#: exception.framework.ServiceUnavailableException
 msgctxt "exception.framework.SystemException"
 msgid ""
 "A System Exception has occurred. Please try again later or contact the "
 "system administrator."
 msgstr ""
+"Ha ocurrido una Excepción del Sistema. Inténtelo de nuevo más tarde o "
+"contacte con el administrador del sistema."
 
 #: exception.framework.SystemException.HibernateConnectionException
 msgid ""
 "A HibernateConnectionException has occurred. Please try again later or "
 "contact the system administrator."
 msgstr ""
+"Ha ocurrido una Excepción de Conexión Hibernate. Inténtelo de nuevo más "
+"tarde o contacte con el administrador del sistema."
 
 #: exception.framework.SystemException.ValueObjectConversionException
 msgid ""
 "A ValueObjectConversionException has occurred. Please try again later or "
 "contact the system administrator."
 msgstr ""
+"Ha ocurrido una Excepción de Conversión de Valor de Objeto. Inténtelo de "
+"nuevo más tarde o contacte con el administrador del sistema."
 
 #: exceptions.application.loan.invalidDisbursementDate
 msgid "This is an invalid disbursement date."
-msgstr ""
+msgstr "Esta es una fecha de desembolso no válida."
 
 #: exit
 msgid "This is the exit point"
-msgstr ""
+msgstr "Este es el punto de salida."
