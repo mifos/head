@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","loanproduct","acceptance"})
+@Test(sequential = true, groups = {"smoke","search","acceptance"})
 public class SearchAccountTest extends SearchTestBase {
     /**
      * Account number to use in search
