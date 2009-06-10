@@ -19,55 +19,55 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: PPI.ACTIVE
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: PPI.Band.AtRisk
 msgid "At Risk"
-msgstr ""
+msgstr "a riesgo"
 
 #: PPI.Band.NonPoor
 msgid "Non Poor"
-msgstr ""
+msgstr "No pobre"
 
 #: PPI.Band.Poor
 msgid "Poor"
-msgstr ""
+msgstr "Pobre"
 
 #: PPI.Band.VeryPoor
 msgid "Very Poor"
-msgstr ""
+msgstr "Muy pobre"
 
 #: PPI.Country
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #: PPI.Country.INDIA
 msgid "India"
-msgstr ""
+msgstr "India"
 
 #: PPI.INACTIVE
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #: PPI.Points
 msgid "Points"
-msgstr ""
+msgstr "Puntos"
 
 #: PPI.PoveryStatus
 msgid "Poverty status"
-msgstr ""
+msgstr "Estado de pobreza"
 
 #: PPI.Status
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: PPI.SurveyScoreLimits
 msgid "Survey score limits"
-msgstr ""
+msgstr "Límites del puntaje de la encuesta"
 
 #: PPI.TOTAL
 msgid "TOTAL"
-msgstr ""
+msgstr "TOTAL"
 
 #: PPI.configureInstructions
 msgid ""
@@ -75,61 +75,69 @@ msgid ""
 "Cancel to return to Select poverty measurement tool without submitting any "
 "information."
 msgstr ""
+"Seleccione el país e introduzca la información de abajo. Entonces haga clic "
+"en Enviar. Haga clic en Cancelar para regresar a Seleccionar las "
+"herramientas de medidas de la pobreza sin enviar ninguna información."
 
 #: PPI.definePovertyMeasurementTool
 msgid "Define Poverty Measurement Tool"
-msgstr ""
+msgstr "Defina Herramientas de Medida de la Pobreza"
 
 #: PPI.definePovertyStatus
 msgid "Define poverty status"
-msgstr ""
+msgstr "Defina estado de la pobreza"
 
 #: PPI.definePovertyStatusIntructions
 msgid ""
 "On completing the fields below, the client's poverty status will be "
 "automatically calculated by the survey score."
 msgstr ""
+"Al completar los campos de abajo, el estado de pobreza del cliente será "
+"calculado automáticamente por el puntaje de la encuesta."
 
 #: PPI.editPPIToolConfiguration
 msgid "Edit PPI Tool Configuration"
-msgstr ""
+msgstr "Edite la herramienta de configuración PPI"
 
+# This is an unregistered trademark. Legal input is required.
 #: PPI.longName
+#, fuzzy
 msgid "Progress out of Poverty Index"
-msgstr ""
+msgstr "Indice de Salida de la Pobreza"
 
 #: PPI.ppiConfiguration
 msgid "PPI Configuration"
-msgstr ""
+msgstr "Configuración PPI"
 
 #: PPI.ppiToolConfiguration
 msgid "PPI Tool Configuration"
-msgstr ""
+msgstr "Herramienta de configuración PPI"
 
 #: PPI.selectCountry
 msgid "Select Country"
-msgstr ""
+msgstr "Seleccione el País"
 
 #: PPI.surveyName
 msgid "PPI Survey"
-msgstr ""
+msgstr "Encuesta PPI"
 
 #: errors.IntValidator.INVALID_INT
 msgid "Limits must be integers"
-msgstr ""
+msgstr "Los límites deben ser números enteros"
 
+# State can also be interpreted as "Provincia" in certains Latin American countries.
 #: errors.formulaic.EnumValidator.INVALID_ENUM
 msgid "Select a valid country and state"
-msgstr ""
+msgstr "Seleccione un país y estado válidos"
 
 #: errors.ppi.invalidlimits
 msgid "Invalid score limits"
-msgstr ""
+msgstr "Los límites del puntaje son inválidos"
 
 #: errors.prefix
 msgid "<li>"
-msgstr ""
+msgstr "<li>"
 
 #: errors.suffix
 msgid "</li>"
-msgstr ""
+msgstr "</li>"
