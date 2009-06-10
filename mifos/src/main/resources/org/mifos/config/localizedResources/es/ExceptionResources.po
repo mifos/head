@@ -19,20 +19,20 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: exception.framework.ConstantsNotLoadedException
 msgid "Constant File is not Loaded."
-msgstr ""
+msgstr "El archivo de constantes no se ha cargado."
 
 #: exception.framework.SystemException.ValueObjectConversionException
 msgid "Value Object could not be created"
-msgstr ""
+msgstr "No se pudo crear Objeto con Valor"
 
 #: exception.validation.ppi.MissingLikelihoodChartRowException
 msgid "Missing likelihood row for one or more scores"
-msgstr ""
+msgstr "Falta la línea de verosimiltud para uno o más archivos"
 
 #: exception.validation.ppi.PpiLikelihoodArgsInvalidException
 msgid "PPI likelihood percent values are invalid"
-msgstr ""
+msgstr "Los porcentajes de verosimilitud de PPI no son válidos."
 
 #: exception.validation.ppi.WrongNumberOfLikelihoodChartRowsException
 msgid "Likelihood chart must include exactly 100 rows"
-msgstr ""
+msgstr "El gráfico de verosimilitud debe incluir exactamente 100 líneas"
