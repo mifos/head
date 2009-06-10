@@ -19,76 +19,80 @@ msgstr ""
 #. #Thu Aug 21 11:40:49 CDT 2008
 #: framework.accounts
 msgid "Accounts"
-msgstr ""
+msgstr "Cuentas"
 
+# If Admin stands for Administrator, then Administrador as above, if Administration, then Administración
+#
+# need to confirm
 #: framework.admin
+#, fuzzy
 msgid "Admin"
-msgstr ""
+msgstr "Administración"
 
 #: framework.clientsAndAccounts
 msgid "Clients & Accounts"
-msgstr ""
+msgstr "Clientes y cuentas"
 
 #: framework.createLoanAccount
 msgid "Create loan account"
-msgstr ""
+msgstr "Crear cuenta de préstamo"
 
 #: framework.createNewAccounts
 msgid "Create new accounts"
-msgstr ""
+msgstr "Crear nuevas cuentas"
 
 #: framework.createNewCenter
 msgid "Create new center"
-msgstr ""
+msgstr "Crear nuevo centro"
 
 #: framework.createNewClient
 msgid "Create new client"
-msgstr ""
+msgstr "Crear nuevo cliente"
 
 #: framework.createNewClients
 msgid "Create new clients"
-msgstr ""
+msgstr "Crear nuevos clientes"
 
 #: framework.createNewGroup
 msgid "Create new group"
-msgstr ""
+msgstr "Crear nuevo grupo"
 
 #: framework.createSavingsAccount
 msgid "Create savings account"
-msgstr ""
+msgstr "Crear cuenta de ahorros"
 
 #: framework.enterCollectionSheetData
 msgid "Enter collection sheet data"
-msgstr ""
+msgstr "Introducir datos de hoja de reembolsos"
 
 #: framework.home
 msgid "Home"
-msgstr ""
+msgstr "Inicio"
 
 #: framework.logout
 msgid "Logout"
-msgstr ""
+msgstr "Desconectar"
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
-msgstr ""
+msgstr "Gestionar hojas de reembolsos"
 
 #: framework.menuTitleClientsAndAccountsTasks
 msgid "Clients & Accounts Tasks"
-msgstr ""
+msgstr "Tareas de Cuentas y Clientes"
 
 #: framework.reports
 msgid "Reports"
-msgstr ""
+msgstr "Informes"
 
 #: framework.search
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #: framework.searchCriteria
 msgid "Search by name, system ID or account number"
-msgstr ""
+msgstr "Buscar por nombre, identificación del sistema, o número de cuenta"
 
 #: framework.yoursettings
 msgid "Your settings"
-msgstr ""
+msgstr "Su configuración"
