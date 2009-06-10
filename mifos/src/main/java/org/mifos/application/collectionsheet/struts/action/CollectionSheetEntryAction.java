@@ -551,6 +551,7 @@ public class CollectionSheetEntryAction extends BaseAction {
             for (ClientAttendanceDto clientAttendanceDto : clientAttendanceDtos) {
                 result.put(clientAttendanceDto.getClientId(), clientAttendanceDto);
             }
+            // FIXME: why is this error not displayed in the browser?
         }
         return result;
     }
