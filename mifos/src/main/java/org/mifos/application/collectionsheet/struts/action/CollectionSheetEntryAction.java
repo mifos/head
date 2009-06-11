@@ -143,7 +143,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         logTrackingInfo("load", request);
-        try {
+
             request.getSession().setAttribute(CollectionSheetEntryConstants.BULKENTRYACTIONFORM, null);
             request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
             UserContext userContext = getUserContext(request);
@@ -175,8 +175,6 @@ public class CollectionSheetEntryAction extends BaseAction {
                     .retrieveMasterEntities(PaymentTypeEntity.class, userContext.getLocaleId()), request);
             SessionUtils.setAttribute(CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, Constants.NO, request);
 
-        } catch (Exception e) {
-        }
         return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
 
