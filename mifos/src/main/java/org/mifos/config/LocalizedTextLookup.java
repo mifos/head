@@ -1,4 +1,3 @@
-
 package org.mifos.config;
 
 /*
@@ -20,11 +19,11 @@ package org.mifos.config;
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 public interface LocalizedTextLookup {
-	/**
-	 * Return the key to use for looking up the
-	 * localized text value associated with an object.
-	 */
-	public String getPropertiesKey();
+    /**
+     * Return the key to use for looking up the localized text value associated
+     * with an object.
+     */
+    public String getPropertiesKey();
 }
