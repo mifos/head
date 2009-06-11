@@ -15,23 +15,6 @@
 -- merge Index.sql
 -- merge all upgrade_to_*.sql files to date
 
--- THE LOGMESSAGES TABLE HAS BEEN MADE MYISAM BECAUSE 
--- WE DO NOT NEED TO HAVE TRANSACTIONS ON THIS TABLE
-CREATE TABLE LOGMESSAGES (
-  LOG_ID INTEGER auto_increment NOT NULL,
-  LEVEL varchar(20) default NULL,
-  MODULE_NAME varchar(50) default NULL,
-  CLASS_NAME varchar(50) default NULL,
-  METHOD_NAME varchar(50) default NULL,
-  LINE_NUMBER varchar(50) default NULL,
-  MESSAGE text,
-  DATE varchar(50) default NULL,
-  TIME timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL,
-  USERID varchar(25) default NULL,
-  OFFICEID varchar(25) default NULL,
-  PRIMARY KEY  (LOG_ID)
-) ENGINE=MyISAM ;
-
 CREATE TABLE CURRENCY (
   CURRENCY_ID SMALLINT AUTO_INCREMENT NOT NULL,
   CURRENCY_NAME VARCHAR(50),

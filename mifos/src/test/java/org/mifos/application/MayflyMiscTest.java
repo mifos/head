@@ -43,7 +43,7 @@ public class MayflyMiscTest extends TestCase {
 
     public void testMayflySanityCheck() throws Exception {
         Database database = new Database(DatabaseSetup.getStandardStore());
-        ResultSet results = database.query("select * from logmessages");
+        ResultSet results = database.query("select * from coahierarchy");
         assertFalse(results.next());
     }
 
