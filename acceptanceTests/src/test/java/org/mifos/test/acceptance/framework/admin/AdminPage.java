@@ -64,7 +64,13 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new ViewHolidaysPage(selenium);     
     }
-    
+ 
+   public ViewReportsPage navigateToViewReportsPage() {
+        selenium.click("admin.link.ViewReportsTemplates");
+        waitForPageToLoad();
+        return new ViewReportsPage(selenium);     
+    }
+
     public CreateOfficeEnterDataPage navigateToCreateOfficeEnterDataPage() {
         selenium.click("admin.link.defineNewOffice");
         waitForPageToLoad();

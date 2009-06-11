@@ -40,6 +40,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="viewReports"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 	        <td class="bluetablehead05">
@@ -89,7 +90,7 @@ explanation of the license and how it is applied.
 						</td>
 					</tr>	
 					</table>
-             		 	<table width="75%" border="0" cellpadding="3" cellspacing="0">
+             		 	<table id="reportCategoryTable" width="75%" border="0" cellpadding="3" cellspacing="0">
 	                 		<c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
 	    		              <tr>
     	        		        <td height="30" colspan="2" class="blueline">
