@@ -25,6 +25,7 @@ public class GeneralConfig {
 	public static final String MaxPointsPerPPISurvey = "GeneralConfig.MaxPointsPerPPISurvey";
 	public static final String BatchSizeForBatchJobs = "GeneralConfig.BatchSizeForBatchJobs";
 	public static final String RecordCommittingSizeForBatchJobs = "GeneralConfig.RecordCommittingSizeForBatchJobs";
+	public static final String OutputIntervalForBatchJobs = "GeneralConfig.OutputIntervalForBatchJobs";
 	
 	public static int getMaxPointsPerPPISurvey()
 	{
@@ -53,6 +54,13 @@ public class GeneralConfig {
 		return committingRecordSizeForBatchJobs;
 	}
 	
-	
+    public static int getOutputIntervalForBatchJobs()
+    {
+        int outputRecordIntervalForBatchJobs = 1000;  // default value is 1000
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        if (configMgr.containsKey(OutputIntervalForBatchJobs))
+            outputRecordIntervalForBatchJobs = configMgr.getInt(OutputIntervalForBatchJobs);
+        return outputRecordIntervalForBatchJobs;
+    }
 
 }

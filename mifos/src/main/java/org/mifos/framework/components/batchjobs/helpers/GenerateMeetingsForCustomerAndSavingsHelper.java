@@ -68,9 +68,18 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 		}
 		
 		List<String> errorList = new ArrayList<String>();
-		int i = 0;
+		int currentRecordNumber = 0;
+		int outputIntervalForBatchJobs = GeneralConfig.getOutputIntervalForBatchJobs();
 		int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
 		int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
+		getLogger().info("Using parameters:" +
+                "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs +
+                "\n  BatchSizeForBatchJobs: " + batchSize +
+                "\n  RecordCommittingSizeForBatchJobs: " + recordCommittingSize);
+        String initial_message = "" + accountCount + " accounts to process, results output every " + 
+            outputIntervalForBatchJobs + " accounts";
+        getLogger().info(initial_message);
+		
 		long startTime = new DateTimeService().getCurrentDateTime().getMillis();
 		Integer currentAccountId = null;
 		int updatedRecordCount = 0;
@@ -80,7 +89,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 			StaticHibernateUtil.startTransaction();
 			for (Integer accountId : customerAccountIds) 
 			{
-				i++;
+				currentRecordNumber++;
 				currentAccountId = accountId;
 				AccountBO accountBO = accountPersistence.getAccount(accountId);
 				if (isScheduleToBeGenerated(accountBO.getLastInstallmentId(),
@@ -96,30 +105,26 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 						updatedRecordCount++;
 					}
 				}
-				if (updatedRecordCount > 0)
-				{
-					if (updatedRecordCount % batchSize == 0)
-					{
-						StaticHibernateUtil.flushAndClearSession();
-					}
-					if (updatedRecordCount % recordCommittingSize == 0)
-					{
-						StaticHibernateUtil.commitTransaction();
-						StaticHibernateUtil.getSessionTL();
-						StaticHibernateUtil.startTransaction();
-					}
-					if (updatedRecordCount % 1000 == 0)
-					{
-						long time = new DateTimeService().getCurrentDateTime().getMillis();
-						getLogger().info("out of " + i + " accounts processed, " + updatedRecordCount +
-								" accounts updated. The last 1000 updated in " + (time - startTime) + 
-								" milliseconds. There are " + (accountCount -i) + " more accounts to be processed.");
-						startTime = time;
-						
-					}
-				}
-				
-				
+                if (currentRecordNumber % batchSize == 0) {
+                    StaticHibernateUtil.flushAndClearSession();
+                    getLogger().info("completed HibernateUtil.flushAndClearSession()");
+                }
+                if (updatedRecordCount > 0) {
+                    if (updatedRecordCount % recordCommittingSize == 0) {
+                        StaticHibernateUtil.commitTransaction();
+                        StaticHibernateUtil.getSessionTL();
+                        StaticHibernateUtil.startTransaction();
+                    }
+                }                           
+                if (currentRecordNumber % outputIntervalForBatchJobs == 0) {
+                    long time = System.currentTimeMillis();
+                    String message = "" + currentRecordNumber + " processed, " + 
+                        (accountCount -currentRecordNumber) + " remaining, " + 
+                        updatedRecordCount + " updated, batch time: " + (time - startTime) + " ms";
+                    System.out.println(message);
+                    getLogger().info(message);
+                    startTime = time;                       
+                }	
 			}
 			StaticHibernateUtil.commitTransaction();
 			
@@ -127,7 +132,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 		} catch (Exception e) 
 			{
 		        getLogger().info("account " + currentAccountId.intValue() + " exception " + e.getMessage());
-				getLogger().debug("GenerateMeetingsForCustomerAndSavingsHelper " + e.getMessage());
 				StaticHibernateUtil.rollbackTransaction();
 				if (currentAccountId != null)
 				{
@@ -136,7 +140,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				errorList.add(currentAccountId.toString());
 				getLogger().error(
 					"Unable to generate schedules for account with ID " + 
-					currentAccountId, false, null, e);
+					currentAccountId, e);
 			} finally {
 				StaticHibernateUtil.closeSession();
 			}

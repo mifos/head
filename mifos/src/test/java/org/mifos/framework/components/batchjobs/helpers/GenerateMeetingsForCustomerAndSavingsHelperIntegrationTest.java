@@ -39,6 +39,8 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.config.ConfigurationManager;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -106,14 +108,26 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     }
 
     public void testExecuteForSavingsAccount() throws Exception {
-        savings = getSavingsAccountForCenter();
-        int noOfInstallments = savings.getAccountActionDates().size();
-        AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(savings);
-        TestObjectFactory.flushandCloseSession();
-        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        assertEquals(noOfInstallments + 20, savings.getAccountActionDates().size());
+        int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        int outputInterval = 1;
+
+        try {
+            // force output for every account
+            configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, outputInterval);
+
+            savings=getSavingsAccountForCenter();
+            int noOfInstallments=savings.getAccountActionDates().size();
+            AccountActionDateEntityIntegrationTest.changeInstallmentDatesToPreviousDate(savings);
+            TestObjectFactory.flushandCloseSession();
+            savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+            new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+            savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+            assertEquals(noOfInstallments+20,savings.getAccountActionDates().size());
+        } finally {
+            // restore original output interval value
+            configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
+        }
     }
 
     public void testExecuteForSavingsAccountForGroup() throws Exception {

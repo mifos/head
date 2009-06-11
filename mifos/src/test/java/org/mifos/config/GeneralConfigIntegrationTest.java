@@ -31,6 +31,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+/**
+ * FIXME: These tests are probably entirely unnecessary--we should be confident
+ * that Apache Commons Configuration works and only test Mifos-specific code.
+ */
 @Test(groups="integration")
 public class GeneralConfigIntegrationTest extends MifosIntegrationTest {
 
@@ -108,6 +112,22 @@ public class GeneralConfigIntegrationTest extends MifosIntegrationTest {
         // save it back
         configMgr.setProperty(GeneralConfig.RecordCommittingSizeForBatchJobs, configuredValue);
 
+    }
+    
+    @Test 
+    public void testGetOutputIntervalForBatchJobs() {
+        int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        int currentValue = 500;
+        configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, currentValue);
+        assertEquals(currentValue, GeneralConfig.getOutputIntervalForBatchJobs());
+        configMgr.clearProperty(GeneralConfig.OutputIntervalForBatchJobs);
+        int defaultValue = GeneralConfig.getOutputIntervalForBatchJobs();
+        int expectedDefaultValue = 1000;
+        assertEquals(defaultValue, expectedDefaultValue);
+        // save it back
+        configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, configuredValue);
+        
     }
 
 }
