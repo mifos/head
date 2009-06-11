@@ -83,6 +83,18 @@ public class AdminPage extends MifosPage {
         return new ChooseOfficePage(selenium);       
     }
     
+    public ViewOfficesPage navigateToViewOfficesPage() {
+        selenium.click("admin.link.viewOffices");
+        waitForPageToLoad();
+        return new ViewOfficesPage(selenium);     
+    }   
+                             
+    public ViewProductCategoriesPage navigateToViewProductCategoriesPage() {
+        selenium.click("admin.link.viewProductCategories");
+        waitForPageToLoad();
+        return new ViewProductCategoriesPage(selenium);     
+    }   
+    
     public DefineNewLoanProductPage navigateToDefineLoanProduct() {
         selenium.click("admin.link.defineNewLoanProduct");
         waitForPageToLoad();
