@@ -78,6 +78,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -381,7 +382,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response) throws PageExpiredException {
         logTrackingInfo("create", request, form);
         BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(bulkEntryActionForm.getTransactionDate(),
@@ -444,14 +445,10 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         long beforeSaveData = System.currentTimeMillis();
 
-        try {
-            bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
-                    .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
-                    savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums,
-                    collectionSheetEntryViews);
-        } catch (Exception e) {
-            throw e;
-        }
+        bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
+                .getPaymentTypeId(), bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
+                savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums,
+                collectionSheetEntryViews);
 
         logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
                 + getUpdateTotalsString(clients, savings, loans, customerAccounts)
