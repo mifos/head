@@ -84,7 +84,7 @@ public class LoginAction extends BaseAction {
 
 	
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		loginLogger.info("Inside load of LoginAction");
+		loginLogger.debug("Inside load of LoginAction");
 		SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null,request.getSession());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,new FlowManager());
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -92,10 +92,10 @@ public class LoginAction extends BaseAction {
 
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		loginLogger.info("Inside login of LoginAction");
-		loginLogger.info("Using Thread: " + Thread.currentThread().getName());
-		loginLogger.info("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
-		loginLogger.info("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
+		loginLogger.debug("Inside login of LoginAction");
+		loginLogger.debug("Using Thread: " + Thread.currentThread().getName());
+		loginLogger.debug("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
+		loginLogger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
 		
 		LoginActionForm loginActionForm = (LoginActionForm) form;
 		String userName = loginActionForm.getUserName();
@@ -114,7 +114,7 @@ public class LoginAction extends BaseAction {
 
 	public ActionForward logout(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		loginLogger.info("Inside logout of LoginAction");
+		loginLogger.debug("Inside logout of LoginAction");
 
 		ResourceBundle resources;
 		UserContext userContext = getUserContext(request);
@@ -144,7 +144,7 @@ public class LoginAction extends BaseAction {
 
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updatePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		loginLogger.info("Inside updatePassword of LoginAction");
+		loginLogger.debug("Inside updatePassword of LoginAction");
 		LoginActionForm loginActionForm = (LoginActionForm) form;
 		UserContext userContext = null;
 		String userName = loginActionForm.getUserName();

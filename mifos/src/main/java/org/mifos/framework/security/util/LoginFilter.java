@@ -62,12 +62,12 @@ public class LoginFilter implements Filter {
 			if (uri == null
 					|| uri.equalsIgnoreCase(LoginConstants.LOGINPAGEURI)
 					|| uri.equalsIgnoreCase( LoginConstants.LOGINACTION)) {
-				MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).info(
+				MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug(
 						"Inside Filter uri is for login page");
 				chain.doFilter(req, res);
 			} else {
 				if (request.getSession(false) == null) {
-					MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).info(
+					MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug(
 							"Inside Filter session is null");
 					ActionErrors error = new ActionErrors();
 					error.add(LoginConstants.SESSIONTIMEOUT,new ActionMessage(LoginConstants.SESSIONTIMEOUT));

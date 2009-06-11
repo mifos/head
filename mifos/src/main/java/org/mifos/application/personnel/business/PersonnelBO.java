@@ -690,7 +690,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	public UserContext login(String password) throws PersonnelException {
-		logger.info("Trying to login");
+		logger.debug("Trying to login");
         UserContext userContext = null;
 		if(!isActive()) {
 			throw new PersonnelException(LoginConstants.KEYUSERINACTIVE);
@@ -703,14 +703,14 @@ public class PersonnelBO extends BusinessObject {
 		}
 		resetNoOfTries();
 		userContext = setUserContext();
-		logger.info("Login successfull");
+		logger.info("Login successful for user=" + userContext.getName() + ", branchID=" + userContext.getBranchId());
 		return userContext;
 	}
 
 	public void updatePassword(String oldPassword, String newPassword, 
 			Short updatedById) 
 	throws PersonnelException {
-		logger.info("Trying to updatePassword");
+		logger.debug("Trying to updatePassword");
 		byte[] encryptedPassword = getEncryptedPassword(oldPassword,newPassword);
 		this.setEncriptedPassword(encryptedPassword);
 		this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
@@ -720,7 +720,7 @@ public class PersonnelBO extends BusinessObject {
 		try {
 			setUpdateDetails(updatedById);
 			new PersonnelPersistence().createOrUpdate(this);
-			logger.info("Password updated successfully");
+			logger.debug("Password updated successfully");
 		} catch (PersistenceException pe) {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 		}
@@ -739,7 +739,7 @@ public class PersonnelBO extends BusinessObject {
     }
 
     public void unlockPersonnel(Short updatedById) throws PersonnelException {
-		logger.info("Trying to unlock Personnel");
+		logger.debug("Trying to unlock Personnel");
 		if(isLocked()){
 			this.unLock();
 			this.noOfTries = 0;
@@ -752,11 +752,11 @@ public class PersonnelBO extends BusinessObject {
 						CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
 			}
 		}
-		logger.info("Personnel with id: "+ getPersonnelId()+" successfully unlocked");
+		logger.debug("Personnel with id: "+ getPersonnelId()+" successfully unlocked");
 	}
 
 	private void updateNoOfTries() throws PersonnelException {
-		logger.info("Trying to update  no of tries");
+		logger.debug("Trying to update  no of tries");
 		if(!isLocked()) {
 			Short newNoOfTries = (short)(getNoOfTries()+1);
 			try {
@@ -764,7 +764,7 @@ public class PersonnelBO extends BusinessObject {
 					lock();
 				this.noOfTries = newNoOfTries;
 				new PersonnelPersistence().updateWithCommit(this);
-				logger.info("No of tries updated successfully");
+				logger.debug("No of tries updated successfully");
 			} catch (PersistenceException pe) {
 				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 			}
@@ -772,7 +772,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	private void resetNoOfTries() throws PersonnelException {
-		logger.info("Reseting  no of tries");
+		logger.debug("Reseting  no of tries");
 		if(noOfTries.intValue()>0) {
 			this.noOfTries = 0;
 			try {
@@ -781,11 +781,11 @@ public class PersonnelBO extends BusinessObject {
 				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 			}
 		}
-		logger.info("No of tries reseted successfully");
+		logger.debug("No of tries reseted successfully");
 	}
 
 	private boolean isPasswordValid(String password) throws PersonnelException {
-		logger.info("Checking password valid or not");
+		logger.debug("Checking password valid or not");
 		try {
 			return EncryptionService.getInstance().verifyPassword(password,getEncriptedPassword());
 		}  catch (SystemException se) {
@@ -794,7 +794,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	private void updateLastPersonnelLoggedin() throws PersonnelException {
-		logger.info("Updating lastLogin");
+		logger.debug("Updating lastLogin");
 		try{
 			this.lastLogin = new DateTimeService().getCurrentJavaDateTime();
 			new PersonnelPersistence().createOrUpdate(this);
@@ -804,7 +804,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	private UserContext setUserContext() throws PersonnelException {
-		logger.info("Setting  usercontext");
+		logger.debug("Setting  usercontext");
 		// the locales will be set when the UserContext is instantiated
 		// and if the user chooses a locale UserContext will be instantiated with his locale
 		UserContext userContext = new UserContext();
@@ -821,7 +821,7 @@ public class PersonnelBO extends BusinessObject {
 		userContext.setBranchId(getOffice().getOfficeId());
 		userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());
 		userContext.setOfficeLevelId(getOffice().getLevel().getId());
-		logger.info("got usercontext");
+		logger.debug("got usercontext");
 		return userContext;
 	}
 	
@@ -838,14 +838,14 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	private byte[] getEncryptedPassword(String oldPassword,	String newPassword) throws PersonnelException{
-		logger.info("Matching oldpassword with entered password.");
+		logger.debug("Matching oldpassword with entered password.");
 		byte[] newEncryptedPassword = null;
 		if(isPasswordValid(oldPassword)) {
 			newEncryptedPassword = getEncryptedPassword(newPassword);
 		} else {
 			throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
 		}
-		logger.info("New encripted password returned.");
+		logger.debug("New encripted password returned.");
 		return newEncryptedPassword;
 	}
 
