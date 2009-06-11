@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.mifos.application.customer.business.CustomerViewIntegrationTest;
+import org.mifos.application.customer.business.CustomerViewTest;
 import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntityIntegrationTest;
 import org.mifos.application.customer.business.service.CustomerBusinessServiceIntegrationTest;
@@ -69,7 +69,7 @@ import org.mifos.application.customer.util.helpers.CustomerHelpersIntegrationTes
         GroupBusinessServiceIntegrationTest.class, GroupPersistenceIntegrationTest.class, GroupActionTest.class,
         GroupBOIntegrationTest.class, CustActionTest.class, GroupTransferActionTest.class,
         CustomerAccountActionTest.class, ClientPersistenceIntegrationTest.class,
-        ClientBusinessServiceIntegrationTest.class, CustSearchActionTest.class, CustomerViewIntegrationTest.class,
+        ClientBusinessServiceIntegrationTest.class, CustSearchActionTest.class, CustomerViewTest.class,
         CustomerHelpersIntegrationTest.class, GroupPerformanceHistoryUpdaterIntegrationTest.class,
         GroupPerformanceHistoryEntityIntegrationTest.class })
 public class CustomerTestSuite extends TestSuite {

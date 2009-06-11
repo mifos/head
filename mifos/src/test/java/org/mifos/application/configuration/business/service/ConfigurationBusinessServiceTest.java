@@ -27,28 +27,20 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import java.util.ArrayList;
 
-import org.junit.Test;
-import org.mifos.framework.MifosIntegrationTest;
+import junit.framework.TestCase;
+
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 
-public class ConfigurationBusinessServiceIntegrationTest extends MifosIntegrationTest {
-
-    public ConfigurationBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class ConfigurationBusinessServiceTest extends TestCase {
 
     private ConfigurationPersistence configPersistenceMock;
 
-    @Override
     protected void setUp() throws Exception {
         super.setUp();
         configPersistenceMock = createMock(ConfigurationPersistence.class);
     }
 
-    @Test
     public void testRetreiveConfigurationFromPersistence() throws Exception {
         expect(configPersistenceMock.getAllConfigurationKeyValueIntegers()).andReturn(
                 new ArrayList<ConfigurationKeyValueInteger>());

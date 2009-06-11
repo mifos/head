@@ -2,5 +2,6 @@
 <suite name="Application Test Suite" verbose="4" >
     <suite-files>
       <suite-file path="ConfigTestSuite.xml" />
+      <suite-file path="ProductMixTestSuite.xml" />
    </suite-files>
 </suite>

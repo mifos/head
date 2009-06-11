@@ -20,15 +20,9 @@
 
 package org.mifos.application.customer.business;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import junit.framework.TestCase;
 
-public class CustomerViewIntegrationTest extends MifosIntegrationTest {
-
-    public CustomerViewIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class CustomerViewTest extends TestCase {
 
     public void testCustomerView() throws Exception {
         CustomerView customerView = new CustomerView(Integer.valueOf("1"), "Customer", "001global", Short.valueOf("2"));
@@ -44,7 +38,5 @@ public class CustomerViewIntegrationTest extends MifosIntegrationTest {
         assertEquals(2, customerView1.getOfficeId().shortValue());
         assertEquals(3, customerView1.getPersonnelId().shortValue());
         assertEquals(1, customerView1.getVersionNo().intValue());
-
     }
-
 }

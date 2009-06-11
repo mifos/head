@@ -46,7 +46,6 @@ import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.ppi.PPITestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
-import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
@@ -67,7 +66,7 @@ import org.mifos.framework.util.helpers.StringToMoneyConverterIntegrationTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { //ConfigTestSuite.class, 
-                       ProductMixTestSuite.class,
+                       //ProductMixTestSuite.class,
                        FastTests.class, 
                        SecurityTestSuite.class, 
                        CollectionSheetTestSuite.class, 

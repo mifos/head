@@ -22,17 +22,12 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
+import junit.framework.TestCase;
+
 import org.mifos.config.Localization;
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.LocalizationConverter;
 
-public class MifosDoubleConverterIntegrationTest extends MifosIntegrationTest {
-
-    public MifosDoubleConverterIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class MifosDoubleConverterTest extends TestCase {
 
     private MifosDoubleConverter mifosDoubleConverter = null;
 

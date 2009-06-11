@@ -20,25 +20,9 @@
 
 package org.mifos.framework.components.logger;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import junit.framework.TestCase;
 
-public class MessageIntegrationTest extends MifosIntegrationTest {
-
-    public MessageIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class MessageTest extends TestCase {
 
     public void testMessage() throws Exception {
         Message m = new Message("test Message");

@@ -22,19 +22,12 @@ package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import junit.framework.TestCase;
 
-public class BundleKeyIntegrationTest extends MifosIntegrationTest {
-
-    public BundleKeyIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class BundleKeyTest extends TestCase {
 
     private BundleKey bundleKey = null;
 
-    @Override
     protected void setUp() throws Exception {
         super.setUp();
         Locale locale = new Locale("EN");
@@ -53,5 +46,4 @@ public class BundleKeyIntegrationTest extends MifosIntegrationTest {
         locale = new Locale("SP");
         assertFalse(bundleKey.equals(new BundleKey(locale, "Key")));
     }
-
 }
