@@ -17,25 +17,26 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
 public class TableTagErrorHandler implements ErrorHandler {
-	
-	//MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
-	public void error(SAXParseException exception) {
-		//logger.debug(exception.getMessage());
-	}
+    // MifosLogger logger =
+    // MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
-	public void fatalError(SAXParseException exception) {
-		//logger.debug(exception.getMessage());
-	}
+    public void error(SAXParseException exception) {
+        // logger.debug(exception.getMessage());
+    }
 
-	public void warning(SAXParseException exception) {
-		//logger.debug(exception.getMessage());
-	}
+    public void fatalError(SAXParseException exception) {
+        // logger.debug(exception.getMessage());
+    }
+
+    public void warning(SAXParseException exception) {
+        // logger.debug(exception.getMessage());
+    }
 }

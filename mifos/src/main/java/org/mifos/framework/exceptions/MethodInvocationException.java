@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.MethodInvoker;
@@ -28,13 +28,13 @@ import org.mifos.framework.util.helpers.MethodInvoker;
  */
 public class MethodInvocationException extends SystemException {
 
-	public MethodInvocationException(Throwable cause) {
-		super(cause);
-	}
+    public MethodInvocationException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.SystemException.MethodInvocationException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.SystemException.MethodInvocationException";
+    }
 
 }

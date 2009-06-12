@@ -17,18 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 /**
- * Observer interface will be implemeneted by all the observer
- * who wants to look for the role or activity change events
+ * Observer interface will be implemeneted by all the observer who wants to look
+ * for the role or activity change events
  */
 public interface Observer {
-	/**
-	 * This function is called when any change in system role happens
-	 * @param e SecurityEvent interface
-	 */
+    /**
+     * This function is called when any change in system role happens
+     * 
+     * @param e
+     *            SecurityEvent interface
+     */
     public void handleEvent(SecurityEvent e);
 
 }

@@ -17,52 +17,60 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.mifosmenu;
 
 /**
  * It stores menugroups for a left menu.
  */
 public class MenuGroup {
-	/** displayName is the display name for MenuGroup.
-	 */	
-	private String[] displayName=null;
-	
-	/** menuItems is an array of MenuItem objects for this menugroup.
-	 */		
-	private MenuItem[] menuItems=null;
+    /**
+     * displayName is the display name for MenuGroup.
+     */
+    private String[] displayName = null;
 
-	/**
-	 * Method to get the value of menuItems member variable.
-	 * @return an array of MenuItem objects
-	 */
-	public MenuItem[] getMenuItems() {
-		return menuItems;
-	}
-	
-	/**
-	 * Method to set the value of menuItems member variable.
-	 * @param menuItems an array of MenuItem objects
-	 */	
-	public void setMenuItems(MenuItem[] menuItems) {
-		this.menuItems = menuItems;
-	}
-	
-	/**
-	 * Method to get the value of displayName member variable.
-	 * If it is crude menu displayName length will be >=1 otherwise it will be 1 only.
-	 * @return an array of String holding displayNames
-	 */
-	public String[] getDisplayName() {
-		return displayName;
-	}
-	
-	/**
-	 * Method to set the value of displayName member variable.
-	 * If it is crude menu displayName length will be >=1 otherwise it will be 1 only.
-	 * @param displayName an array of displaynames.
-	 */
-	public void setDisplayName(String[] displayName) {
-		this.displayName = displayName;
-	}
+    /**
+     * menuItems is an array of MenuItem objects for this menugroup.
+     */
+    private MenuItem[] menuItems = null;
+
+    /**
+     * Method to get the value of menuItems member variable.
+     * 
+     * @return an array of MenuItem objects
+     */
+    public MenuItem[] getMenuItems() {
+        return menuItems;
+    }
+
+    /**
+     * Method to set the value of menuItems member variable.
+     * 
+     * @param menuItems
+     *            an array of MenuItem objects
+     */
+    public void setMenuItems(MenuItem[] menuItems) {
+        this.menuItems = menuItems;
+    }
+
+    /**
+     * Method to get the value of displayName member variable. If it is crude
+     * menu displayName length will be >=1 otherwise it will be 1 only.
+     * 
+     * @return an array of String holding displayNames
+     */
+    public String[] getDisplayName() {
+        return displayName;
+    }
+
+    /**
+     * Method to set the value of displayName member variable. If it is crude
+     * menu displayName length will be >=1 otherwise it will be 1 only.
+     * 
+     * @param displayName
+     *            an array of displaynames.
+     */
+    public void setDisplayName(String[] displayName) {
+        this.displayName = displayName;
+    }
 }

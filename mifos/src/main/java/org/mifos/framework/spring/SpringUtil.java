@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.spring;
 
 import java.util.ArrayList;
@@ -35,55 +35,52 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * 06-FEB-2008)
  */
 public class SpringUtil {
-	private static ApplicationContext appContext = null;
+    private static ApplicationContext appContext = null;
 
-	/**
-	 * Use the root logger for lack of research as to which logger would be more
-	 * appropriate. {@link LoggerConstants#CONFIGURATION_LOGGER} might also be a
-	 * good choice.
-	 */
-	private static MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ROOTLOGGER);
+    /**
+     * Use the root logger for lack of research as to which logger would be more
+     * appropriate. {@link LoggerConstants#CONFIGURATION_LOGGER} might also be a
+     * good choice.
+     */
+    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER);
 
-	/**
-	 * Dynamically fetches config files since an exception is thrown if a
-	 * nonexistant file is passed into
-	 * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])}.
-	 */
-	public static void initializeSpring() {
-		String[] configFiles = getConfigFiles();
-		appContext = new ClassPathXmlApplicationContext(configFiles);
-	}
+    /**
+     * Dynamically fetches config files since an exception is thrown if a
+     * nonexistant file is passed into
+     * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])}
+     * .
+     */
+    public static void initializeSpring() {
+        String[] configFiles = getConfigFiles();
+        appContext = new ClassPathXmlApplicationContext(configFiles);
+    }
 
-	/**
-	 * Provides an array of config files based on what is found by
-	 * {@link ResourceLoader}. Hopefully this coincides with the class loader
-	 * used by {@link ClassPathXmlApplicationContext}...
-	 */
-	private static String[] getConfigFiles() {
-		ArrayList<String> configFiles = new ArrayList<String>();
+    /**
+     * Provides an array of config files based on what is found by
+     * {@link ResourceLoader}. Hopefully this coincides with the class loader
+     * used by {@link ClassPathXmlApplicationContext}...
+     */
+    private static String[] getConfigFiles() {
+        ArrayList<String> configFiles = new ArrayList<String>();
 
-		// required config file. exception thrown if not found.
-		configFiles.add(FilePaths.SPRING_CONFIG_CORE);
+        // required config file. exception thrown if not found.
+        configFiles.add(FilePaths.SPRING_CONFIG_CORE);
 
-		if (null != ClasspathResource.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
-			logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS
-					+ " for custom bean configuration");
-			configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
-		}
-		else {
-			logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS
-					+ " not found in application classpath. Ignoring.");
-		}
+        if (null != ClasspathResource.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
+            logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS + " for custom bean configuration");
+            configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
+        } else {
+            logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS + " not found in application classpath. Ignoring.");
+        }
 
-		return configFiles.toArray(new String[] {});
-	}
+        return configFiles.toArray(new String[] {});
+    }
 
-	public static ApplicationContext getAppContext() {
-		return appContext;
-	}
+    public static ApplicationContext getAppContext() {
+        return appContext;
+    }
 
-	public static void setAppContext(ApplicationContext context) {
-		SpringUtil.appContext = context;
-	}
+    public static void setAppContext(ApplicationContext context) {
+        SpringUtil.appContext = context;
+    }
 }

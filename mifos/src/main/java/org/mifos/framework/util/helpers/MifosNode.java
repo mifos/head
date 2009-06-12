@@ -17,64 +17,65 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * It is returned by the (@link XMLReader} whenever <code>getElement()</code> 
- * method is invoked on it.
- * It wraps the elements read from the xml in hashmap.
+ * It is returned by the (@link XMLReader} whenever <code>getElement()</code>
+ * method is invoked on it. It wraps the elements read from the xml in hashmap.
  */
 public class MifosNode {
-	
-	/**
-	 * It stores the elements obtained by reading the xml files as key value pairs.
-	 */
-	protected Map nodes = new HashMap(); 
-	
-	public MifosNode(){
-	}
-	
-	public MifosNode(Map nodes){
-		this.nodes = nodes;
-	}
-	
-	@Override
-	public String toString(){
-		return "org.mifos.framework.util.helpers.Node";
-	}
 
-	public Map getNodes() {
-		return nodes;
-	}
+    /**
+     * It stores the elements obtained by reading the xml files as key value
+     * pairs.
+     */
+    protected Map nodes = new HashMap();
 
-	public void setNodes(Map nodes) {
-		this.nodes = nodes;
-	}
-	
-	/**
-	 * Puts elements in the existing hashmap of elements as key value pairs.
-	 * It puts the element key in lower case, so that retrieval can be case-insensitive .
-	 * So if two elements have the same key which differ only in case the first key would be lost as it would be overridden by the last entry.
-	 */
-	public void putElement(String key,String value){
-		nodes.put(key.toLowerCase(), value);
-	}
-	
-	/**
-	 * It returns the value for the key specified.
-	 * It compares the key using to lower case which 
-	 * makes the comparison case-insensitive.
-	 */
-	public String getElement(String key){
-		String value =null;
-		if(nodes.containsKey(key.toLowerCase())){
-			value = (String)nodes.get(key.toLowerCase());
-		}
-		return value;
-	}
+    public MifosNode() {
+    }
+
+    public MifosNode(Map nodes) {
+        this.nodes = nodes;
+    }
+
+    @Override
+    public String toString() {
+        return "org.mifos.framework.util.helpers.Node";
+    }
+
+    public Map getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(Map nodes) {
+        this.nodes = nodes;
+    }
+
+    /**
+     * Puts elements in the existing hashmap of elements as key value pairs. It
+     * puts the element key in lower case, so that retrieval can be
+     * case-insensitive . So if two elements have the same key which differ only
+     * in case the first key would be lost as it would be overridden by the last
+     * entry.
+     */
+    public void putElement(String key, String value) {
+        nodes.put(key.toLowerCase(), value);
+    }
+
+    /**
+     * It returns the value for the key specified. It compares the key using to
+     * lower case which makes the comparison case-insensitive.
+     */
+    public String getElement(String key) {
+        String value = null;
+        if (nodes.containsKey(key.toLowerCase())) {
+            value = (String) nodes.get(key.toLowerCase());
+        }
+        return value;
+    }
 
 }

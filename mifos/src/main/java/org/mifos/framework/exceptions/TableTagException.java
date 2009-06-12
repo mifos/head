@@ -17,24 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class TableTagException extends ApplicationException {
 
-	// TODO: Existing callers are passing in a message rather
-	// than a key.
-	public TableTagException(String key) {
-		super(key);
-	}
+    // TODO: Existing callers are passing in a message rather
+    // than a key.
+    public TableTagException(String key) {
+        super(key);
+    }
 
-	public TableTagException(Throwable cause) {
-		super(cause);
-	}
+    public TableTagException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.TableTagException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.TableTagException";
+    }
 
 }

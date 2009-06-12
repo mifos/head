@@ -17,26 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.customTableTag;
 
 public class HeaderDetails {
 
-  private String headerStyle=null;
+    private String headerStyle = null;
 
-    
-  public String getHeaderStyle() {
-	return headerStyle;
-}
+    public String getHeaderStyle() {
+        return headerStyle;
+    }
 
+    public void setHeaderStyle(String headerStyle) {
+        this.headerStyle = headerStyle;
+    }
 
-  public void setHeaderStyle(String headerStyle) {
-	this.headerStyle = headerStyle;
-  }
-
-
-  public void getHeaderInfo(StringBuilder tableInfo){
-	  tableInfo.append(" class=\""+getHeaderStyle()+"\" ");
-  }
+    public void getHeaderInfo(StringBuilder tableInfo) {
+        tableInfo.append(" class=\"" + getHeaderStyle() + "\" ");
+    }
 
 }

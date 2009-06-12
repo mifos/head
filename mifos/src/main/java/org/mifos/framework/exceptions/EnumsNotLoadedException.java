@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class EnumsNotLoadedException extends SystemException {
 
-	public EnumsNotLoadedException(String key, Throwable cause, Object[] values) {
-		super(key, cause, values);
-	}
+    public EnumsNotLoadedException(String key, Throwable cause, Object[] values) {
+        super(key, cause, values);
+    }
 
 }

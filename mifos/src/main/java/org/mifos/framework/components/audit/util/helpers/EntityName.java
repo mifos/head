@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.util.helpers;
 
 public class EntityName {
-	
-	String name;
-	
-	ClassPath classPath;
-	
-	public ClassPath getClassPath() {
-		return classPath;
-	}
 
-	public void setClassPath(ClassPath classPath) {
-		this.classPath = classPath;
-	}
+    String name;
 
-	public String getName() {
-		return name;
-	}
+    ClassPath classPath;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public ClassPath getClassPath() {
+        return classPath;
+    }
 
+    public void setClassPath(ClassPath classPath) {
+        this.classPath = classPath;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

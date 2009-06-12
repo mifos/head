@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 /**
  *
  */
@@ -42,106 +42,100 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
 public class HierarchyManager implements Observer {
-	private static Map<Short, OfficeCacheView> hierarchyMap;
-	private static HierarchyManager hierarchyManager;
-	private HierarchyManager() {
-		hierarchyMap = new HashMap<Short, OfficeCacheView>();
-	}
+    private static Map<Short, OfficeCacheView> hierarchyMap;
+    private static HierarchyManager hierarchyManager;
 
-	public static HierarchyManager getInstance() {
-		if (hierarchyManager == null)
-			hierarchyManager = new HierarchyManager();
-		return hierarchyManager;
-	}
-	public void handleEvent(SecurityEvent e) {
-		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
-				"Map before" + hierarchyMap);
-		List<OfficeCacheView> officeList = convertToOfficeCacheList((List<OfficeSearch>) e
-				.getObject());
-		if (e.getEventType().equals(Constants.CREATE))
-			updateMapForCreateEvent(officeList);
-		else if (e.getEventType().equals(Constants.UPDATE))
-			updateMapForUpdateEvent(officeList);
+    private HierarchyManager() {
+        hierarchyMap = new HashMap<Short, OfficeCacheView>();
+    }
 
-		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
-				"Map after " + hierarchyMap);
-	}
+    public static HierarchyManager getInstance() {
+        if (hierarchyManager == null)
+            hierarchyManager = new HierarchyManager();
+        return hierarchyManager;
+    }
 
-	private void updateMapForCreateEvent(List<OfficeCacheView> officeList) {
-		addToMap(officeList.get(0));
-	}
+    public void handleEvent(SecurityEvent e) {
+        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map before" + hierarchyMap);
+        List<OfficeCacheView> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
+        if (e.getEventType().equals(Constants.CREATE))
+            updateMapForCreateEvent(officeList);
+        else if (e.getEventType().equals(Constants.UPDATE))
+            updateMapForUpdateEvent(officeList);
 
-	private void updateMapForUpdateEvent(List<OfficeCacheView> officeList) {
-		for (int i = 0; i < officeList.size(); i++) {
-			synchronized (hierarchyMap) {
-				hierarchyMap.remove(officeList.get(i));
-				addToMap(officeList.get(i));
-			}
-		}
-	}
+        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map after " + hierarchyMap);
+    }
 
-	private void addToMap(OfficeCacheView cacheView) {
-		hierarchyMap.put(cacheView.getOfficeId(), cacheView);
-	}
+    private void updateMapForCreateEvent(List<OfficeCacheView> officeList) {
+        addToMap(officeList.get(0));
+    }
 
-	private List<OfficeCacheView> convertToOfficeCacheList(
-			List<OfficeSearch> officeList) {
-		List<OfficeCacheView> officeCacheList = new ArrayList<OfficeCacheView>();
-		for (int i = 0; i < officeList.size(); i++) {
-			OfficeCacheView cacheView = new OfficeCacheView(officeList.get(i)
-					.getOfficeId(), officeList.get(i).getParentOfficeId(),
-					officeList.get(i).getSearchId());
-			officeCacheList.add(cacheView);
-		}
-		return officeCacheList;
-	}
+    private void updateMapForUpdateEvent(List<OfficeCacheView> officeList) {
+        for (int i = 0; i < officeList.size(); i++) {
+            synchronized (hierarchyMap) {
+                hierarchyMap.remove(officeList.get(i));
+                addToMap(officeList.get(i));
+            }
+        }
+    }
 
-	public void init() throws SystemException, OfficeException {
-		List<OfficeCacheView> officeList;
-		try {
-			officeList = new OfficePersistence().getAllOffices();
-		} catch (PersistenceException e) {
-			throw new OfficeException(e);
-		}
-		hierarchyMap.clear();
-		for (int i = 0; i < officeList.size(); i++)
-			addToMap(officeList.get(i));
-	}
+    private void addToMap(OfficeCacheView cacheView) {
+        hierarchyMap.put(cacheView.getOfficeId(), cacheView);
+    }
 
-	public BranchLocation compareOfficeInHierarchy(
-		UserContext user, short officeId) {
-		short userBranch = user.getBranchId().shortValue();
-		if (userBranch == officeId) {
-			return BranchLocation.SAME;
-		} 
-		else {
-			/*
-			 * Look into the map now if the passed officeid's searchid on which
-			 * user wants to perform action starts with the user's office
-			 * searchid it means that office falls under that user hiererchy
-			 */
-			String userOfficeSearchId = hierarchyMap.get(user.getBranchId())
-					.getSearchId();
-			String operatedOfficeSearchId = hierarchyMap.get(
-					Short.valueOf(officeId)).getSearchId();
+    private List<OfficeCacheView> convertToOfficeCacheList(List<OfficeSearch> officeList) {
+        List<OfficeCacheView> officeCacheList = new ArrayList<OfficeCacheView>();
+        for (int i = 0; i < officeList.size(); i++) {
+            OfficeCacheView cacheView = new OfficeCacheView(officeList.get(i).getOfficeId(), officeList.get(i)
+                    .getParentOfficeId(), officeList.get(i).getSearchId());
+            officeCacheList.add(cacheView);
+        }
+        return officeCacheList;
+    }
 
-			if (operatedOfficeSearchId.startsWith(userOfficeSearchId)) {
-				return BranchLocation.BELOW;
-			}
-			else {
-				return BranchLocation.ABOVE_OR_DIFFERENT;
-			}
-		}
-	}
+    public void init() throws SystemException, OfficeException {
+        List<OfficeCacheView> officeList;
+        try {
+            officeList = new OfficePersistence().getAllOffices();
+        } catch (PersistenceException e) {
+            throw new OfficeException(e);
+        }
+        hierarchyMap.clear();
+        for (int i = 0; i < officeList.size(); i++)
+            addToMap(officeList.get(i));
+    }
 
-	public String getSearchId(short branchId) {
-		return hierarchyMap.get(Short.valueOf(branchId)).getSearchId();
-	}
+    public BranchLocation compareOfficeInHierarchy(UserContext user, short officeId) {
+        short userBranch = user.getBranchId().shortValue();
+        if (userBranch == officeId) {
+            return BranchLocation.SAME;
+        } else {
+            /*
+             * Look into the map now if the passed officeid's searchid on which
+             * user wants to perform action starts with the user's office
+             * searchid it means that office falls under that user hiererchy
+             */
+            String userOfficeSearchId = hierarchyMap.get(user.getBranchId()).getSearchId();
+            String operatedOfficeSearchId = hierarchyMap.get(Short.valueOf(officeId)).getSearchId();
 
-	public Short getParentOfficeId(Short officeId) {
-		return hierarchyMap.get(officeId).getParentOfficeId();
-	}
-	
-	public enum BranchLocation { SAME, BELOW, ABOVE_OR_DIFFERENT };
+            if (operatedOfficeSearchId.startsWith(userOfficeSearchId)) {
+                return BranchLocation.BELOW;
+            } else {
+                return BranchLocation.ABOVE_OR_DIFFERENT;
+            }
+        }
+    }
+
+    public String getSearchId(short branchId) {
+        return hierarchyMap.get(Short.valueOf(branchId)).getSearchId();
+    }
+
+    public Short getParentOfficeId(Short officeId) {
+        return hierarchyMap.get(officeId).getParentOfficeId();
+    }
+
+    public enum BranchLocation {
+        SAME, BELOW, ABOVE_OR_DIFFERENT
+    };
 
 }

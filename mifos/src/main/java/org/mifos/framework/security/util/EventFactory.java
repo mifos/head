@@ -17,47 +17,43 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import org.mifos.framework.util.helpers.Constants;
 
 public class EventFactory {
-	/**
-	 * This would hold the EventFactory instance
-	 */
-	private static EventFactory ef= new EventFactory();
-	/**
-	 * This function returns the EventFactory object 
-	 * @return ef event factory object
-	 */
-	public static EventFactory getEventFactory()
-	{
-		return ef;
-	}
-	/**
-	 * This function creates the event based on the passed parameter
-	 * @param name name of the event
-	 * @return SecurityEvent interface
-	 */
-	public SecurityEvent createEvent(String name,Object obj,String type) 
-	{
-		if ( name.equalsIgnoreCase(Constants.ROLECHANGEEVENT))
-		{
-			return new RoleChangeEvent(type,obj);
-		}
-		else if( name.equalsIgnoreCase(Constants.ACTIVITYCHANGEEVENT))
-		{
-			return new ActivityChangeEvent(type,obj);
-		}
-		else if (name.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT))
-		{
-			return new OfficeChangeEvent(type,obj);
-		}
-		else 
-		{
-			return null;
-		}
-	}
+    /**
+     * This would hold the EventFactory instance
+     */
+    private static EventFactory ef = new EventFactory();
+
+    /**
+     * This function returns the EventFactory object
+     * 
+     * @return ef event factory object
+     */
+    public static EventFactory getEventFactory() {
+        return ef;
+    }
+
+    /**
+     * This function creates the event based on the passed parameter
+     * 
+     * @param name
+     *            name of the event
+     * @return SecurityEvent interface
+     */
+    public SecurityEvent createEvent(String name, Object obj, String type) {
+        if (name.equalsIgnoreCase(Constants.ROLECHANGEEVENT)) {
+            return new RoleChangeEvent(type, obj);
+        } else if (name.equalsIgnoreCase(Constants.ACTIVITYCHANGEEVENT)) {
+            return new ActivityChangeEvent(type, obj);
+        } else if (name.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT)) {
+            return new OfficeChangeEvent(type, obj);
+        } else {
+            return null;
+        }
+    }
 
 }

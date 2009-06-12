@@ -17,25 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.cache;
 
 import java.util.Map;
 
 /**
- *  This class defines methods which allow elements to be put into or retrieved from the Cache which composite key.
- *  Cache is maintained as a hashmap.  
- *  Here Key is the combination of officeId and a String Constant.  
+ * This class defines methods which allow elements to be put into or retrieved
+ * from the Cache which composite key. Cache is maintained as a hashmap. Here
+ * Key is the combination of officeId and a String Constant.
  */
 public class OfficeCache {
-	  private Map<Key,Object> cache;
-	  
-	  public OfficeCache(){	}
-	  public OfficeCache(Map<Key,Object> cache){
-			this.cache = cache;
-	  }
+    private Map<Key, Object> cache;
 
-	  public Object getElement(Key key) {
-		  return (key!=null)?cache.get(key):null;
-	  }
+    public OfficeCache() {
+    }
+
+    public OfficeCache(Map<Key, Object> cache) {
+        this.cache = cache;
+    }
+
+    public Object getElement(Key key) {
+        return (key != null) ? cache.get(key) : null;
+    }
 }

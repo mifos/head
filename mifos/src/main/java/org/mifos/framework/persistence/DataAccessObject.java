@@ -17,16 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 /**
- * This is a marker interface for Data Access Objects (DAOs).
- * A class which implements this interface should abide by the
- * contract that it will encapsulate persistence related code
- * and implement all Create, Read, Update, Delete (CRUD) operations
- * on objects of a given class (or classes).  Transactions 
- * should not be explicitly created or committed in DAO classes.
+ * This is a marker interface for Data Access Objects (DAOs). A class which
+ * implements this interface should abide by the contract that it will
+ * encapsulate persistence related code and implement all Create, Read, Update,
+ * Delete (CRUD) operations on objects of a given class (or classes).
+ * Transactions should not be explicitly created or committed in DAO classes.
  */
 public interface DataAccessObject {
 

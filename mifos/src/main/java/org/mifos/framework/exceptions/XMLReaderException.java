@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 /**
@@ -25,13 +25,13 @@ package org.mifos.framework.exceptions;
  */
 public class XMLReaderException extends SystemException {
 
-	public XMLReaderException(Throwable cause) {
-		super(cause);
-	}
+    public XMLReaderException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.System.XMLReaderException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.System.XMLReaderException";
+    }
 
 }

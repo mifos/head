@@ -17,49 +17,59 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.logger;
+
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
-/**	
- *  This class is a singleton whose instance will return the resource bundle for a particular locale
- */ 
+
+/**
+ * This class is a singleton whose instance will return the resource bundle for
+ * a particular locale
+ */
 
 public class ResourceBundleFactory {
-	/**instance of the resource bundle factory*/
-	private static ResourceBundleFactory instance = new ResourceBundleFactory();
-    /**The resource bundle for a particular locale*/
-	private static ResourceBundle resourceBundle=null;
-    
-	/**Private constructor. */
-    private ResourceBundleFactory(){
-    	
+    /** instance of the resource bundle factory */
+    private static ResourceBundleFactory instance = new ResourceBundleFactory();
+    /** The resource bundle for a particular locale */
+    private static ResourceBundle resourceBundle = null;
+
+    /** Private constructor. */
+    private ResourceBundleFactory() {
+
     }
+
     /**
-	 * Function to obtain the resource bundle for an MfiLocale
-	 * @param loggerName Name of the resource bundle
-	 * @param mfiLocale MFI Locale
-	 * @param resourceBundle Resource bundle for the MFILocale. 	
-	 */
-     public static ResourceBundleFactory getInstance() {
-	    
-	    return instance;
+     * Function to obtain the resource bundle for an MfiLocale
+     * 
+     * @param loggerName
+     *            Name of the resource bundle
+     * @param mfiLocale
+     *            MFI Locale
+     * @param resourceBundle
+     *            Resource bundle for the MFILocale.
+     */
+    public static ResourceBundleFactory getInstance() {
+
+        return instance;
     }
-	/**Obtains the resource bundle
-	 * @return The resource bundle
-	 * @throws ResourceBundleNotFoundException
-	 */ 
-     public  ResourceBundle getResourceBundle(String loggerName, Locale mfiLocale)throws ResourceBundleNotFoundException {
-    	 try{
-    		 resourceBundle =  ResourceBundle.getBundle(loggerName,mfiLocale);
-    	 }
-    	 catch(MissingResourceException mre){
-    		 throw new ResourceBundleNotFoundException(mre);
-    	 }
-         return resourceBundle;
-	}
-	
+
+    /**
+     * Obtains the resource bundle
+     * 
+     * @return The resource bundle
+     * @throws ResourceBundleNotFoundException
+     */
+    public ResourceBundle getResourceBundle(String loggerName, Locale mfiLocale) throws ResourceBundleNotFoundException {
+        try {
+            resourceBundle = ResourceBundle.getBundle(loggerName, mfiLocale);
+        } catch (MissingResourceException mre) {
+            throw new ResourceBundleNotFoundException(mre);
+        }
+        return resourceBundle;
+    }
+
 }

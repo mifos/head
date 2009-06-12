@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 import java.lang.reflect.InvocationTargetException;
@@ -36,99 +36,86 @@ import org.mifos.framework.util.helpers.FilePaths;
  */
 public class Text {
 
-	/**
-	 * Function to get the display name as text.
-	 * @param displayname		name to be displayed.
-	 * @param image				image to be put.
-	 * @param obj
-	 * @return string			returns the text.
-	 * @throws TableTagException 
-	 */
-	public static String getText(PageContext pageContext ,DisplayName displayname, String image,
-			Object obj,Locale locale) throws TableTagException {
-		if (null != image && image.equals("true")) {
-			String name = displayname.getDisplayName(pageContext ,
-					displayname.getFragment(),obj,image,locale);
-			return getImage(obj ,name, locale);
-		}
+    /**
+     * Function to get the display name as text.
+     * 
+     * @param displayname
+     *            name to be displayed.
+     * @param image
+     *            image to be put.
+     * @param obj
+     * @return string returns the text.
+     * @throws TableTagException
+     */
+    public static String getText(PageContext pageContext, DisplayName displayname, String image, Object obj,
+            Locale locale) throws TableTagException {
+        if (null != image && image.equals("true")) {
+            String name = displayname.getDisplayName(pageContext, displayname.getFragment(), obj, image, locale);
+            return getImage(obj, name, locale);
+        }
 
-		// Used to get the string array of display name 
-		String[] name = displayname.getDisplayName(pageContext ,
-				displayname.getFragment(),obj,true,locale);
-		 
-		// to check whether any image is there or not.
-		 // if image is there then get image
+        // Used to get the string array of display name
+        String[] name = displayname.getDisplayName(pageContext, displayname.getFragment(), obj, true, locale);
 
-		
-		
-		String bold=displayname.getBold();
-		 // otherwise display text.
-		return getDisplayText(name,bold);
-	}
-	
-	//to get Image
-	 static String getImage(Object obj, String name, Locale locale) throws TableTagException{
-		StringBuilder stringbuilder = new StringBuilder();
-		Method method = null;
-		Object customerType = null;
-		String textValue = null;
-		String imagePath = null;
-		try {
-			method = obj.getClass().getDeclaredMethod("getCustomerType",(Class[]) null);
-			customerType = method.invoke(obj, (Object[]) null);
-		} catch (NoSuchMethodException nsme) {
-			throw new TableTagException(nsme.getMessage());
-		} catch (IllegalArgumentException iae) {
-			throw new TableTagException(iae);
-		} catch (IllegalAccessException iae) {
-			throw new TableTagException(iae);
-		} catch (InvocationTargetException ite) {
-			throw new TableTagException(ite);
-		}
-		
-		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);		
-		if(customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5")))
-		{
-			textValue = resource.getString("loanaccount_stateid_" + name);
-			imagePath = resource.getString("loanaccount_imageid_" + name);
-		}
-		else if(customerType != null && (customerType.toString().equals("6") || customerType.toString().equals("7") || customerType.toString().equals("8")))
-		{
-			textValue = resource.getString("savings_stateid_" + name);
-			imagePath = resource.getString("savings_imageid_" + name);
-		}
-		else
-		{
-		textValue = resource.getString("value_" + name);
-		imagePath = resource.getString("image_" + name);
-		}
-		stringbuilder.append("<span class=\"fontnormal\">")
-					 .append("&nbsp;")
-					 .append("<img src=")
-					 .append(imagePath)
-					 .append(" width=\"8\" height=\"9\">")
-					 .append("</span>")
-					 .append("<span class=\"fontnormal\">")
-					 .append("&nbsp;")
-					 .append(textValue)
-					 .append("</span>");
-		return stringbuilder.toString();
-	} 
-	
-	//to get Text
-	 static String getDisplayText(String[] name,String bold) {
-		StringBuilder stringbuilder = new StringBuilder();
-		for(int i=0;i<name.length;i++) {
-			if (name[i] == null || name[i].trim().equals("")
-					|| name[i].trim().equals("null")) {
-				return "";
-			}
-			stringbuilder.append("<span class=");
-			stringbuilder.append(bold.equalsIgnoreCase("true")?"\"fontnormalbold\">"
-					:"\"fontnormal\">");
-			stringbuilder.append(name[i]+"</span>");
-			stringbuilder.append((i==(name.length-1))?"":",");
-		}
-		return stringbuilder.toString();
-	}
+        // to check whether any image is there or not.
+        // if image is there then get image
+
+        String bold = displayname.getBold();
+        // otherwise display text.
+        return getDisplayText(name, bold);
+    }
+
+    // to get Image
+    static String getImage(Object obj, String name, Locale locale) throws TableTagException {
+        StringBuilder stringbuilder = new StringBuilder();
+        Method method = null;
+        Object customerType = null;
+        String textValue = null;
+        String imagePath = null;
+        try {
+            method = obj.getClass().getDeclaredMethod("getCustomerType", (Class[]) null);
+            customerType = method.invoke(obj, (Object[]) null);
+        } catch (NoSuchMethodException nsme) {
+            throw new TableTagException(nsme.getMessage());
+        } catch (IllegalArgumentException iae) {
+            throw new TableTagException(iae);
+        } catch (IllegalAccessException iae) {
+            throw new TableTagException(iae);
+        } catch (InvocationTargetException ite) {
+            throw new TableTagException(ite);
+        }
+
+        ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
+        if (customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5"))) {
+            textValue = resource.getString("loanaccount_stateid_" + name);
+            imagePath = resource.getString("loanaccount_imageid_" + name);
+        } else if (customerType != null
+                && (customerType.toString().equals("6") || customerType.toString().equals("7") || customerType
+                        .toString().equals("8"))) {
+            textValue = resource.getString("savings_stateid_" + name);
+            imagePath = resource.getString("savings_imageid_" + name);
+        } else {
+            textValue = resource.getString("value_" + name);
+            imagePath = resource.getString("image_" + name);
+        }
+        stringbuilder.append("<span class=\"fontnormal\">").append("&nbsp;").append("<img src=").append(imagePath)
+                .append(" width=\"8\" height=\"9\">").append("</span>").append("<span class=\"fontnormal\">").append(
+                        "&nbsp;").append(textValue).append("</span>");
+        return stringbuilder.toString();
+    }
+
+    // to get Text
+    static String getDisplayText(String[] name, String bold) {
+        StringBuilder stringbuilder = new StringBuilder();
+        for (int i = 0; i < name.length; i++) {
+            if (name[i] == null || name[i].trim().equals("") || name[i].trim().equals("null")) {
+                return "";
+            }
+            stringbuilder.append("<span class=");
+            stringbuilder.append(bold.equalsIgnoreCase("true") ? "\"fontnormalbold\">" : "\"fontnormal\">");
+            stringbuilder.append(name[i] + "</span>");
+            stringbuilder.append((i == (name.length - 1)) ? "" : ",");
+        }
+        return stringbuilder.toString();
+    }
 }

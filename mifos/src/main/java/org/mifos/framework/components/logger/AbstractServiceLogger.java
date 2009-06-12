@@ -17,23 +17,22 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.framework.components.logger;
 
+package org.mifos.framework.components.logger;
 
 public abstract class AbstractServiceLogger implements ServiceLogger {
 
-	private final MifosLogger logger;
+    private final MifosLogger logger;
 
-	public AbstractServiceLogger() {
-		this(MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER));
-	}
+    public AbstractServiceLogger() {
+        this(MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER));
+    }
 
-	public AbstractServiceLogger(MifosLogger logger) {
-		this.logger = logger;
-	}
-	
-	public void info(String message) {
-		logger.info(message);
-	}
+    public AbstractServiceLogger(MifosLogger logger) {
+        this.logger = logger;
+    }
+
+    public void info(String message) {
+        logger.info(message);
+    }
 }

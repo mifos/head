@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.HashMap;
@@ -25,22 +25,24 @@ import java.util.Map;
 
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 
-
 public class MifosSelectHelper {
 
-	private static MifosSelectHelper instance = new MifosSelectHelper(); 
-	private MifosSelectHelper() {
-		map.put(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, new String[]{"org.mifos.application.productdefinition.business.PrdStatusEntity", ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID});
-	}
-	public static MifosSelectHelper getInstance(){
-		return instance;
-	}
-	
-	private Map map = new HashMap();
-	
-	public String[] getValue(String key){ 
-		return (String[])map.get(key);
-	}
+    private static MifosSelectHelper instance = new MifosSelectHelper();
 
-	
+    private MifosSelectHelper() {
+        map.put(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, new String[] {
+                "org.mifos.application.productdefinition.business.PrdStatusEntity",
+                ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID });
+    }
+
+    public static MifosSelectHelper getInstance() {
+        return instance;
+    }
+
+    private Map map = new HashMap();
+
+    public String[] getValue(String key) {
+        return (String[]) map.get(key);
+    }
+
 }

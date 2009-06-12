@@ -17,22 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.activity;
 
 public enum DynamicLookUpValueCreationTypes {
-	
-		BirtReport((short) 1), CustomField((short)2), LookUpOption((short)3), DBUpgrade((short)4);
 
-		Short value;
+    BirtReport((short) 1), CustomField((short) 2), LookUpOption((short) 3), DBUpgrade((short) 4);
 
-		DynamicLookUpValueCreationTypes(Short value) {
-			this.value = value;
-		}
+    Short value;
 
-		public Short getValue() {
-			return value;
-		}
-	}
+    DynamicLookUpValueCreationTypes(Short value) {
+        this.value = value;
+    }
 
-
+    public Short getValue() {
+        return value;
+    }
+}

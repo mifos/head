@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.business.service;
 
 import java.util.ArrayList;
@@ -39,45 +39,43 @@ import org.mifos.framework.security.util.UserContext;
 
 public class AuditBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public List<AuditLogView> getAuditLogRecords(Short entityType,
-			Integer entityId) throws ServiceException {
-		try {
-			AuditPersistence auditPersistence = new AuditPersistence();
-			PersonnelBusinessService personnelService = new PersonnelBusinessService();
-			List<AuditLog> auditLogRecords = auditPersistence
-					.getAuditLogRecords(entityType, entityId);
-			List<AuditLogView> auditLogViewList = new ArrayList<AuditLogView>();
-			for (AuditLog auditLog : auditLogRecords) {
-				for (AuditLogRecord auditLogRecord : auditLog
-						.getAuditLogRecords()) {
-					AuditLogView auditLogView = new AuditLogView();
-					auditLogView.setDate(auditLog.getUpdatedDate().toString());
-					Short userId = auditLog.getUpdatedBy();
-					PersonnelBO personnel = personnelService.getPersonnel(userId) ;
-					auditLogView.setUser(personnel.getUserName());
-					auditLogView.setField(auditLogRecord.getFieldName());
-					String encryptedPasswordAuditFieldName = AuditConfigurtion.getColumnNameForPropertyName(AuditConstants.PERSONNEL,AuditConstants.Audit_PASSWORD);
-					if((null != encryptedPasswordAuditFieldName) && (auditLogRecord.getFieldName().equals(encryptedPasswordAuditFieldName.trim()))){
-						auditLogView.setOldValue(AuditConstants.HIDDEN_PASSWORD);
-						auditLogView.setNewValue(AuditConstants.HIDDEN_PASSWORD);
-					}
-					else{
-						auditLogView.setOldValue(auditLogRecord.getOldValue());
-						auditLogView.setNewValue(auditLogRecord.getNewValue());
-					}
-					auditLogViewList.add(auditLogView);
-				}
-			}
-			return auditLogViewList;
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+    public List<AuditLogView> getAuditLogRecords(Short entityType, Integer entityId) throws ServiceException {
+        try {
+            AuditPersistence auditPersistence = new AuditPersistence();
+            PersonnelBusinessService personnelService = new PersonnelBusinessService();
+            List<AuditLog> auditLogRecords = auditPersistence.getAuditLogRecords(entityType, entityId);
+            List<AuditLogView> auditLogViewList = new ArrayList<AuditLogView>();
+            for (AuditLog auditLog : auditLogRecords) {
+                for (AuditLogRecord auditLogRecord : auditLog.getAuditLogRecords()) {
+                    AuditLogView auditLogView = new AuditLogView();
+                    auditLogView.setDate(auditLog.getUpdatedDate().toString());
+                    Short userId = auditLog.getUpdatedBy();
+                    PersonnelBO personnel = personnelService.getPersonnel(userId);
+                    auditLogView.setUser(personnel.getUserName());
+                    auditLogView.setField(auditLogRecord.getFieldName());
+                    String encryptedPasswordAuditFieldName = AuditConfigurtion.getColumnNameForPropertyName(
+                            AuditConstants.PERSONNEL, AuditConstants.Audit_PASSWORD);
+                    if ((null != encryptedPasswordAuditFieldName)
+                            && (auditLogRecord.getFieldName().equals(encryptedPasswordAuditFieldName.trim()))) {
+                        auditLogView.setOldValue(AuditConstants.HIDDEN_PASSWORD);
+                        auditLogView.setNewValue(AuditConstants.HIDDEN_PASSWORD);
+                    } else {
+                        auditLogView.setOldValue(auditLogRecord.getOldValue());
+                        auditLogView.setNewValue(auditLogRecord.getNewValue());
+                    }
+                    auditLogViewList.add(auditLogView);
+                }
+            }
+            return auditLogViewList;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
 
-	}
+    }
 
 }

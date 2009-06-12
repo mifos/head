@@ -17,24 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
-
 public class ReportActionSecurity extends ActionSecurity {
-	
-	private final String method;
 
-	public ReportActionSecurity(String name, String method) {
-		super(name);
-		this.method = method;
-	}
+    private final String method;
 
-	/**
-	 * Allow report to a specified security constant (aka activity id)
-	 */
-	public void allowReport(int reportId, short securityConstant) {
-		allow(this.method + "-" + reportId, securityConstant);
-	}
+    public ReportActionSecurity(String name, String method) {
+        super(name);
+        this.method = method;
+    }
+
+    /**
+     * Allow report to a specified security constant (aka activity id)
+     */
+    public void allowReport(int reportId, short securityConstant) {
+        allow(this.method + "-" + reportId, securityConstant);
+    }
 
 }

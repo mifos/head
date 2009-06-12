@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
@@ -25,24 +25,23 @@ import org.mifos.framework.util.LocalizationConverter;
 
 public class MifosDoubleConverter implements Converter {
 
-	public MifosDoubleConverter() {
-	}
+    public MifosDoubleConverter() {
+    }
 
-	public Object convert(Class type, Object value) {
-		Double returnValue=null;
-		if(value!=null && type!=null && !"".equals(value)){
-			try {
-			if(value instanceof String) {
-				returnValue=LocalizationConverter.getInstance().getDoubleValueForCurrentLocale((String)value);
-			}
-			else {
-				returnValue=LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(value.toString());
-			}
-			}catch(NumberFormatException ne) {
-				ne.printStackTrace();
-			}
-		}
-		return returnValue;
-	}
+    public Object convert(Class type, Object value) {
+        Double returnValue = null;
+        if (value != null && type != null && !"".equals(value)) {
+            try {
+                if (value instanceof String) {
+                    returnValue = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale((String) value);
+                } else {
+                    returnValue = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(value.toString());
+                }
+            } catch (NumberFormatException ne) {
+                ne.printStackTrace();
+            }
+        }
+        return returnValue;
+    }
 
 }

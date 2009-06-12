@@ -17,25 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 /**
- * SecurityEvent interface is implemented by the security related events
- * e.g. RoleChangeEvent and the ActivityChangeEvent which are used to synchronize
- * the cache kept by the AuthorizationManager 
+ * SecurityEvent interface is implemented by the security related events e.g.
+ * RoleChangeEvent and the ActivityChangeEvent which are used to synchronize the
+ * cache kept by the AuthorizationManager
  */
 public interface SecurityEvent {
-    
-	/**
-	 * This fucnction returns the type of event it is i.e. insert,update or delete
-	 * @return String as type of event
-	 */
-    public String getEventType();
+
     /**
-     * Thsi function return the object which is being updated 
+     * This fucnction returns the type of event it is i.e. insert,update or
+     * delete
+     * 
+     * @return String as type of event
+     */
+    public String getEventType();
+
+    /**
+     * Thsi function return the object which is being updated
+     * 
      * @return
      */
     public Object getObject();
-    
+
 }

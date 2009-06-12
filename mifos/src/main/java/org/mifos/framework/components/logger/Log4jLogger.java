@@ -17,64 +17,67 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.logger;
+
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-
-/**	
- *  This class contains a logger object log the messages. 
- *  Also contains functions to log the messages at different levels 
- */ 
+/**
+ * This class contains a logger object log the messages. Also contains functions
+ * to log the messages at different levels
+ */
 public class Log4jLogger extends MifosLogger {
 
-	/**logger to log the statements*/
-	private Logger logger = null;
-		
-	/**
-	 * Constructor: 
-	 * Obtains an instance of the logger with a specified name. 
-	 * Root logger is "org.mifos"
-	 * @param name The name of the Logger
-	 */
-	public Log4jLogger(String name) {
-		logger = Logger.getLogger(name);
-	}
+    /** logger to log the statements */
+    private Logger logger = null;
 
-	/**
-	 * Constructor: 
-	 * Obtains an instance of the logger with a specified name. 
-	 * 				Root logger is "org.mifos"
-	 * @param name The name of the Logger
-	 * @param resourceBundle The resource bundle associated with the logger
-	 */
-	public Log4jLogger(String name, ResourceBundle resourceBundle) {
-		logger = Logger.getLogger(name);
-		//sets the resource bundle for the logger
-		logger.setResourceBundle(resourceBundle);
-	}
-	
-	@Override
-	public String getUserID(){
-		return ApplicationConfig.getUserId();
-	}
+    /**
+     * Constructor: Obtains an instance of the logger with a specified name.
+     * Root logger is "org.mifos"
+     * 
+     * @param name
+     *            The name of the Logger
+     */
+    public Log4jLogger(String name) {
+        logger = Logger.getLogger(name);
+    }
 
-	@Override
-	public String getOfficeID(){
-		return ApplicationConfig.getOfficeId();
-	}
-	
-	@Override
-	protected void logKey(Level level, String key, Object[] args1, Throwable exception) {
-		logger.l7dlog(level, key, args1, exception );
-	}
+    /**
+     * Constructor: Obtains an instance of the logger with a specified name.
+     * Root logger is "org.mifos"
+     * 
+     * @param name
+     *            The name of the Logger
+     * @param resourceBundle
+     *            The resource bundle associated with the logger
+     */
+    public Log4jLogger(String name, ResourceBundle resourceBundle) {
+        logger = Logger.getLogger(name);
+        // sets the resource bundle for the logger
+        logger.setResourceBundle(resourceBundle);
+    }
 
-	@Override
-	protected void logNonKey(Level level, String message, Throwable exception) {
-		logger.log(level, message, exception);
-	}
-	
+    @Override
+    public String getUserID() {
+        return ApplicationConfig.getUserId();
+    }
+
+    @Override
+    public String getOfficeID() {
+        return ApplicationConfig.getOfficeId();
+    }
+
+    @Override
+    protected void logKey(Level level, String key, Object[] args1, Throwable exception) {
+        logger.l7dlog(level, key, args1, exception);
+    }
+
+    @Override
+    protected void logNonKey(Level level, String message, Throwable exception) {
+        logger.log(level, message, exception);
+    }
+
 }

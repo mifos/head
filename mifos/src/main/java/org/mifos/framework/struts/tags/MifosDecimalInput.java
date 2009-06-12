@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
@@ -34,91 +34,98 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
  */
 public class MifosDecimalInput extends ELTextTag {
 
-	private String decimalFmt;
-	private String max;
-	private String min;
+    private String decimalFmt;
+    private String max;
+    private String min;
 
-	public MifosDecimalInput() {
-		super();
-	}
+    public MifosDecimalInput() {
+        super();
+    }
 
-	/**
-	 * Function Get the decinal format of the tag
-	 * 
-	 * @return decimalFmt the decimal format of the tag
-	 */
-	public String getDecimalFmt() {
-		return decimalFmt;
-	}
-
-	/**
-	 * Function Set the decimal format for the tag
-	 * 
-	 * @param decimalFmt the decimal format of the tag
-	 */
-	public void setDecimalFmt(String decimalFmt) {
-		this.decimalFmt = decimalFmt;
-	}
-
-	/**
-	 * Function Get the maximam value tag can take
-	 * 
-	 * @return max maximam value tag can take
-	 */
-	public String getMax() {
-		return max;
-	}
-
-	/**
-	 * Function Set the maximum value tag can take
-	 * 
-	 * @param max maximam value tag can take
-	 */
-	public void setMax(String max) {
-		this.max = max;
-	}
-
-	/**
-	 * Function Get the minimum value tag can take
-	 * 
-	 * @return min minimum value tag can take
-	 */
-	public String getMin() {
-		return min;
-	}
-
-	/**
-	 * Function Set the min value tag can take
-	 * 
-	 * @param min minimum value tag can take
-	 */
-	public void setMin(String min) {
-		this.min = min;
-	}
-       
     /**
-	 * This function renders the tag
-	 * 
-	 * @return int
-	 * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-	 */
+     * Function Get the decinal format of the tag
+     * 
+     * @return decimalFmt the decimal format of the tag
+     */
+    public String getDecimalFmt() {
+        return decimalFmt;
+    }
+
+    /**
+     * Function Set the decimal format for the tag
+     * 
+     * @param decimalFmt
+     *            the decimal format of the tag
+     */
+    public void setDecimalFmt(String decimalFmt) {
+        this.decimalFmt = decimalFmt;
+    }
+
+    /**
+     * Function Get the maximam value tag can take
+     * 
+     * @return max maximam value tag can take
+     */
+    public String getMax() {
+        return max;
+    }
+
+    /**
+     * Function Set the maximum value tag can take
+     * 
+     * @param max
+     *            maximam value tag can take
+     */
+    public void setMax(String max) {
+        this.max = max;
+    }
+
+    /**
+     * Function Get the minimum value tag can take
+     * 
+     * @return min minimum value tag can take
+     */
+    public String getMin() {
+        return min;
+    }
+
+    /**
+     * Function Set the min value tag can take
+     * 
+     * @param min
+     *            minimum value tag can take
+     */
+    public void setMin(String min) {
+        this.min = min;
+    }
+
+    /**
+     * This function renders the tag
+     * 
+     * @return int
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     */
     @Override
-	public int doStartTag() throws JspException {
-//    	String preferredUserLocale = LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
-    	if (decimalFmt == null || decimalFmt == "")
-    		decimalFmt = "7."+Configuration.getInstance().getSystemConfig().getCurrency().getDefaultDigitsAfterDecimal();
-    	this.setOnblur("if( false == doValidation(this,"+getMin()+","+getMax()+","+getDecimalFmt()+")) this.focus();");
-    	this.setOnkeyup("return chekDecimal("+getDecimalFmt()+",this, event); ");
-    	this.setOnkeydown("saveText(this);this.focus();");
-        this.setOnkeypress("return keyPress("+getDecimalFmt()+",this,event);");
-              
-        // TODO: This is bad - adding these script tags to each & every decimalinput tag adds considerable overhead
+    public int doStartTag() throws JspException {
+        // String preferredUserLocale =
+        // LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
+        if (decimalFmt == null || decimalFmt == "")
+            decimalFmt = "7."
+                    + Configuration.getInstance().getSystemConfig().getCurrency().getDefaultDigitsAfterDecimal();
+        this.setOnblur("if( false == doValidation(this," + getMin() + "," + getMax() + "," + getDecimalFmt()
+                + ")) this.focus();");
+        this.setOnkeyup("return chekDecimal(" + getDecimalFmt() + ",this, event); ");
+        this.setOnkeydown("saveText(this);this.focus();");
+        this.setOnkeypress("return keyPress(" + getDecimalFmt() + ",this,event);");
+
+        // TODO: This is bad - adding these script tags to each & every
+        // decimalinput tag adds considerable overhead
         // always include conversion.js file and con_preferredlocale.js file
-//        TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/conversion.js\"></script>");
-//        TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/con_en.js\"></script>");
-//        TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/con_"+preferredUserLocale+".js\"></script>");
-        TagUtils.getInstance().write(this.pageContext,"<SCRIPT >makeRegEx2("+decimalFmt+")</SCRIPT>");
-         
+        // TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/conversion.js\"></script>");
+        // TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/con_en.js\"></script>");
+        // TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/con_"+preferredUserLocale+".js\"></script>");
+        TagUtils.getInstance().write(this.pageContext, "<SCRIPT >makeRegEx2(" + decimalFmt + ")</SCRIPT>");
+
         return super.doStartTag();
     }
 }

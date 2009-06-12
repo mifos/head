@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.util.helpers;
 
 import java.lang.reflect.Field;
@@ -48,90 +48,79 @@ import org.mifos.framework.exceptions.SystemException;
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
 public class ConfigurationInitializer {
-	private OfficeBO headOffice;
+    private OfficeBO headOffice;
 
-	private OfficeBO getHeadOffice() throws ApplicationException {
-		if (headOffice == null)
-			headOffice = new OfficePersistence().getHeadOffice();
-		return headOffice;
-	}
+    private OfficeBO getHeadOffice() throws ApplicationException {
+        if (headOffice == null)
+            headOffice = new OfficePersistence().getHeadOffice();
+        return headOffice;
+    }
 
-	protected SystemConfiguration createSystemConfiguration()
-		throws SystemException {
+    protected SystemConfiguration createSystemConfiguration() throws SystemException {
 
-		MifosCurrency defaultCurrency = null;
-		try {
-			defaultCurrency = AccountingRules.getMifosCurrency();
-		} catch (RuntimeException re) {
-			throw new SystemException("cannot fetch default currency", re);
-		}
+        MifosCurrency defaultCurrency = null;
+        try {
+            defaultCurrency = AccountingRules.getMifosCurrency();
+        } catch (RuntimeException re) {
+            throw new SystemException("cannot fetch default currency", re);
+        }
 
-		// TODO: pick timezone offset from database
-		int timeZone = 19800000;
+        // TODO: pick timezone offset from database
+        int timeZone = 19800000;
 
-		return new SystemConfiguration(defaultCurrency, timeZone);
-	}
+        return new SystemConfiguration(defaultCurrency, timeZone);
+    }
 
-	protected OfficeCache createOfficeCache() throws SystemException,
-			ApplicationException {
-		Map<Key, Object> officeConfigMap = new HashMap<Key, Object>();
+    protected OfficeCache createOfficeCache() throws SystemException, ApplicationException {
+        Map<Key, Object> officeConfigMap = new HashMap<Key, Object>();
 
-		setFiscalStartOfWeek(officeConfigMap);
-		setWeekOffList(officeConfigMap);
-		setLateNessAndDormancyDaysForAccount(officeConfigMap);
+        setFiscalStartOfWeek(officeConfigMap);
+        setWeekOffList(officeConfigMap);
+        setLateNessAndDormancyDaysForAccount(officeConfigMap);
 
-		return new OfficeCache(officeConfigMap);
-	}
+        return new OfficeCache(officeConfigMap);
+    }
 
-	private void setFiscalStartOfWeek(Map<Key,Object> officeConfigMap)throws SystemException,ApplicationException{
-		
-		Short id = FiscalCalendarRules.getStartOfWeek();
-		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.FISCAL_START_OF_WEEK),id);
-	}
+    private void setFiscalStartOfWeek(Map<Key, Object> officeConfigMap) throws SystemException, ApplicationException {
 
-	private void setWeekOffList(Map<Key, Object> officeConfigMap) throws SystemException,
-			ApplicationException {
-		
-		// get weekday off (not working day)
-		List<Short> weekOffList = FiscalCalendarRules.getWeekDayOffList();
-		if (weekOffList != null)
-			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-					ConfigConstants.WEEK_OFF_LIST), weekOffList);
-	}
+        Short id = FiscalCalendarRules.getStartOfWeek();
+        officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.FISCAL_START_OF_WEEK), id);
+    }
 
-	private void setLateNessAndDormancyDaysForAccount(
-			Map<Key, Object> officeConfigMap) throws SystemException,
-			ApplicationException {
-		Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
-		Short dormancyDays = new SavingsPrdPersistence().retrieveDormancyDays();
-		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-				ConfigConstants.LATENESS_DAYS), latenessDays);
-		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-				ConfigConstants.DORMANCY_DAYS), dormancyDays);
-	}
+    private void setWeekOffList(Map<Key, Object> officeConfigMap) throws SystemException, ApplicationException {
 
-	public void initialize() {
-		try {
-			CacheRepository cacheRepository = CacheRepository.getInstance();
-			cacheRepository.setSystemConfiguration(createSystemConfiguration());
-			cacheRepository.setOfficeCache(createOfficeCache());
-		} catch (SystemException se) {
-			throw new StartUpException(se);
-		} catch (ApplicationException e) {
-			throw new StartUpException(e);
-		}
-	}
+        // get weekday off (not working day)
+        List<Short> weekOffList = FiscalCalendarRules.getWeekDayOffList();
+        if (weekOffList != null)
+            officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.WEEK_OFF_LIST), weekOffList);
+    }
 
-	static void checkModifiers(Field field)
-			throws ConstantsNotLoadedException {
-		if (!Modifier.isFinal(field.getModifiers()))
-			throw new ConstantsNotLoadedException("field: " + field.getName()
-					+ " is not declared as final");
-		if (!Modifier.isStatic(field.getModifiers()))
-			throw new ConstantsNotLoadedException("field: " + field.getName()
-					+ " is not declared as static");
-		if (!Modifier.isPublic(field.getModifiers()))
-			throw new ConstantsNotLoadedException("field: " + field.getName()
-					+ " is not declared as public");
-	}
+    private void setLateNessAndDormancyDaysForAccount(Map<Key, Object> officeConfigMap) throws SystemException,
+            ApplicationException {
+        Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
+        Short dormancyDays = new SavingsPrdPersistence().retrieveDormancyDays();
+        officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.LATENESS_DAYS), latenessDays);
+        officeConfigMap.put(new Key(getHeadOffice().getOfficeId(), ConfigConstants.DORMANCY_DAYS), dormancyDays);
+    }
+
+    public void initialize() {
+        try {
+            CacheRepository cacheRepository = CacheRepository.getInstance();
+            cacheRepository.setSystemConfiguration(createSystemConfiguration());
+            cacheRepository.setOfficeCache(createOfficeCache());
+        } catch (SystemException se) {
+            throw new StartUpException(se);
+        } catch (ApplicationException e) {
+            throw new StartUpException(e);
+        }
+    }
+
+    static void checkModifiers(Field field) throws ConstantsNotLoadedException {
+        if (!Modifier.isFinal(field.getModifiers()))
+            throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as final");
+        if (!Modifier.isStatic(field.getModifiers()))
+            throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as static");
+        if (!Modifier.isPublic(field.getModifiers()))
+            throw new ConstantsNotLoadedException("field: " + field.getName() + " is not declared as public");
+    }
 }

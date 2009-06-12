@@ -17,52 +17,60 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ActivityRoles {
-	
-	/**
-	 * This would hold the id of the activity 
-	 */
-    private 	Short  id;
-   
+
+    /**
+     * This would hold the id of the activity
+     */
+    private Short id;
+
     /**
      * This would hold the all the roles associated with this activity
      */
-    private 	Set activityRoles = new HashSet();
-	/**
-	 * This Function returns the activityRoles
-	 * @return Returns the activityRoles.
-	 */
-	public Set getActivityRoles() {
-		return activityRoles;
-	}
-	/**
-	 * This function set the activityRoles
-	 * @param activityRoles The activityRoles to set.
-	 */
-	public void setActivityRoles(Set activityRoles) {
-		this.activityRoles = activityRoles;
-	}
-	
-	/**
-	 * This Function returns the id
-	 * @return Returns the id.
-	 */
-	public Short getId() {
-		return id;
-	}
-	/**
-	 * This function set the id
-	 * @param id The id to set.
-	 */
-	public void setId(Short id) {
-		this.id = id;
-	}
+    private Set activityRoles = new HashSet();
 
+    /**
+     * This Function returns the activityRoles
+     * 
+     * @return Returns the activityRoles.
+     */
+    public Set getActivityRoles() {
+        return activityRoles;
+    }
+
+    /**
+     * This function set the activityRoles
+     * 
+     * @param activityRoles
+     *            The activityRoles to set.
+     */
+    public void setActivityRoles(Set activityRoles) {
+        this.activityRoles = activityRoles;
+    }
+
+    /**
+     * This Function returns the id
+     * 
+     * @return Returns the id.
+     */
+    public Short getId() {
+        return id;
+    }
+
+    /**
+     * This function set the id
+     * 
+     * @param id
+     *            The id to set.
+     */
+    public void setId(Short id) {
+        this.id = id;
+    }
 
 }

@@ -17,15 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.stateMachineFactory;
 
 public interface StateMachineConstants {
-	public final short PARIAL_APPLICATION=1;
-	public final short PENDING_APPROVAL=2;
-	public final short APPROVED=3;
-	public final short INACTIVE=4;
-	public final short CLOSED=5;
-	public final short CANCEL=6;
-	public final String TRANSITION_CONFIG_FILE_PATH="org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml";
+    public final short PARIAL_APPLICATION = 1;
+    public final short PENDING_APPROVAL = 2;
+    public final short APPROVED = 3;
+    public final short INACTIVE = 4;
+    public final short CLOSED = 5;
+    public final short CANCEL = 6;
+    public final String TRANSITION_CONFIG_FILE_PATH = "org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml";
 }

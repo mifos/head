@@ -17,20 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class ConnectionNotFoundException extends SystemException {
 
-	protected String key = null;
+    protected String key = null;
 
-	public ConnectionNotFoundException(Throwable cause) {
-		super(cause);
-	}
+    public ConnectionNotFoundException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.ConnectionNotFoundException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.ConnectionNotFoundException";
+    }
 
 }

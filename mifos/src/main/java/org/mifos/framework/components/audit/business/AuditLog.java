@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.business;
 
 import java.sql.Date;
@@ -30,66 +30,64 @@ import org.mifos.framework.components.audit.persistence.AuditPersistence;
 
 public class AuditLog extends PersistentObject {
 
-	private final Integer id;
+    private final Integer id;
 
-	private final Integer entityId;
-	
-	private final Short entityType;
+    private final Integer entityId;
 
-	private final String modifierName;
+    private final Short entityType;
 
-	private final Set<AuditLogRecord> auditLogRecords;
-	
+    private final String modifierName;
 
-	protected AuditLog() {
-		id = null;
-		entityId = null;
-		entityType=null;
-		modifierName = null;
-		auditLogRecords = null;
-	}
+    private final Set<AuditLogRecord> auditLogRecords;
 
-	public AuditLog(Integer entityId,Short entityType,String modifierName,
-			Date updatedDate, Short updatedBy) {
-		this.id = null;
-		this.entityId = entityId;
-		this.entityType=entityType;
-		this.modifierName = modifierName;
-		this.updatedDate = updatedDate;
-		this.updatedBy = updatedBy;
-		this.auditLogRecords = new HashSet<AuditLogRecord>();
-	}
+    protected AuditLog() {
+        id = null;
+        entityId = null;
+        entityType = null;
+        modifierName = null;
+        auditLogRecords = null;
+    }
 
-	public Set<AuditLogRecord> getAuditLogRecords() {
-		return auditLogRecords;
-	}
+    public AuditLog(Integer entityId, Short entityType, String modifierName, Date updatedDate, Short updatedBy) {
+        this.id = null;
+        this.entityId = entityId;
+        this.entityType = entityType;
+        this.modifierName = modifierName;
+        this.updatedDate = updatedDate;
+        this.updatedBy = updatedBy;
+        this.auditLogRecords = new HashSet<AuditLogRecord>();
+    }
 
-	public Integer getEntityId() {
-		return entityId;
-	}
+    public Set<AuditLogRecord> getAuditLogRecords() {
+        return auditLogRecords;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getEntityId() {
+        return entityId;
+    }
 
-	public String getModifierName() {
-		return modifierName;
-	}
-	
-	public Short getEntityType() {
-		return entityType;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public EntityType getEntityTypeAsEnum() {
-		return EntityType.fromInt(entityType);
-	}
+    public String getModifierName() {
+        return modifierName;
+    }
 
-	public void addAuditLogRecords(Set<AuditLogRecord> auditLogRecords){
-		this.auditLogRecords.addAll(auditLogRecords);	
-	}
-	
-	public void save(){
-		new AuditPersistence().save(this);
-	}
+    public Short getEntityType() {
+        return entityType;
+    }
+
+    public EntityType getEntityTypeAsEnum() {
+        return EntityType.fromInt(entityType);
+    }
+
+    public void addAuditLogRecords(Set<AuditLogRecord> auditLogRecords) {
+        this.auditLogRecords.addAll(auditLogRecords);
+    }
+
+    public void save() {
+        new AuditPersistence().save(this);
+    }
 
 }

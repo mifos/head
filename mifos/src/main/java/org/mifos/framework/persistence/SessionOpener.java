@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import org.mifos.framework.hibernate.helper.SessionHolder;
 
 public interface SessionOpener {
 
-	public SessionHolder open();
+    public SessionHolder open();
 
 }

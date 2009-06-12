@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.authentication;
 
 import java.io.UnsupportedEncodingException;
@@ -32,97 +32,95 @@ import org.mifos.framework.exceptions.SystemException;
  * This class encapsulate all the logic related to password hashing
  */
 public class PasswordHashing {
-	MessageDigest messageDigest = null;
+    MessageDigest messageDigest = null;
 
-	/**
-	 * This function will return the hashed password out of the passed string
-	 * password
-	 * 
-	 * @param password
-	 *            password passed by the user
-	 * @param randomBytes
-	 *            random bytes
-	 */
-	public byte[] getHashedPassword(String password, byte[] randomBytes) {
-		byte[] hashedPassword = null;
-		try {
-			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+    /**
+     * This function will return the hashed password out of the passed string
+     * password
+     * 
+     * @param password
+     *            password passed by the user
+     * @param randomBytes
+     *            random bytes
+     */
+    public byte[] getHashedPassword(String password, byte[] randomBytes) {
+        byte[] hashedPassword = null;
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 
-			messageDigest.update(randomBytes);
-			messageDigest.update(password.getBytes("UTF-8"));
-			hashedPassword = messageDigest.digest();
-		} catch (NoSuchAlgorithmException e) {
-			throw new SystemException(e);
-		} catch (UnsupportedEncodingException e) {
-			throw new SystemException(e);
+            messageDigest.update(randomBytes);
+            messageDigest.update(password.getBytes("UTF-8"));
+            hashedPassword = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            throw new SystemException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new SystemException(e);
 
-		}
-		return hashedPassword;
+        }
+        return hashedPassword;
 
-	}
+    }
 
-	/**
-	 * This function varifies a given password
-	 * 
-	 */
-	public boolean verifyPassword(String password, byte[] encPassword) {
-		byte[] randomBytes = new byte[12];
-		byte[] decPassword = null;
-		System.arraycopy(encPassword, 0, randomBytes, 0, randomBytes.length);
+    /**
+     * This function varifies a given password
+     * 
+     */
+    public boolean verifyPassword(String password, byte[] encPassword) {
+        byte[] randomBytes = new byte[12];
+        byte[] decPassword = null;
+        System.arraycopy(encPassword, 0, randomBytes, 0, randomBytes.length);
 
-		byte[] decTempPassword = getHashedPassword(password, randomBytes);
-		decPassword = new byte[randomBytes.length + decTempPassword.length];
+        byte[] decTempPassword = getHashedPassword(password, randomBytes);
+        decPassword = new byte[randomBytes.length + decTempPassword.length];
 
-		System.arraycopy(randomBytes, 0, decPassword, 0, randomBytes.length);
-		System.arraycopy(decTempPassword, 0, decPassword, randomBytes.length,
-				decTempPassword.length);
+        System.arraycopy(randomBytes, 0, decPassword, 0, randomBytes.length);
+        System.arraycopy(decTempPassword, 0, decPassword, randomBytes.length, decTempPassword.length);
 
-		return compare(encPassword, decPassword);
-	}
+        return compare(encPassword, decPassword);
+    }
 
-	/**
-	 * This function create the hashed password
-	 * 
-	 */
-	public byte[] createEncryptedPassword(String password) {
-		byte[] randomBytes = generateRandomBytes();
-		byte[] encPassword = null;
+    /**
+     * This function create the hashed password
+     * 
+     */
+    public byte[] createEncryptedPassword(String password) {
+        byte[] randomBytes = generateRandomBytes();
+        byte[] encPassword = null;
 
-		byte[] tempEncPassword = getHashedPassword(password, randomBytes);
+        byte[] tempEncPassword = getHashedPassword(password, randomBytes);
 
-		encPassword = new byte[randomBytes.length + tempEncPassword.length];
-		System.arraycopy(randomBytes, 0, encPassword, 0, randomBytes.length);
-		System.arraycopy(tempEncPassword, 0, encPassword, randomBytes.length,
-				tempEncPassword.length);
-		return encPassword;
+        encPassword = new byte[randomBytes.length + tempEncPassword.length];
+        System.arraycopy(randomBytes, 0, encPassword, 0, randomBytes.length);
+        System.arraycopy(tempEncPassword, 0, encPassword, randomBytes.length, tempEncPassword.length);
+        return encPassword;
 
-	}
+    }
 
-	/**
-	 * Hepler function which compare two hashed password
-	 * 
-	 * @param encPassword
-	 * @param decPassword
-	 * @return
-	 */
-	public boolean compare(byte[] encPassword, byte[] decPassword) {
-		if (Arrays.equals(encPassword, decPassword))
-			return true;
-		else
-			return false;
-	}
+    /**
+     * Hepler function which compare two hashed password
+     * 
+     * @param encPassword
+     * @param decPassword
+     * @return
+     */
+    public boolean compare(byte[] encPassword, byte[] decPassword) {
+        if (Arrays.equals(encPassword, decPassword))
+            return true;
+        else
+            return false;
+    }
 
-	/**
-	 * This function generate and returns the random no of bytes
-	 * 
-	 * @return
-	 */
-	public byte[] generateRandomBytes() {
-		byte[] randomBytes = new byte[12];
-		SecureRandom secureRandom = new SecureRandom();
-		secureRandom.nextBytes(randomBytes);
+    /**
+     * This function generate and returns the random no of bytes
+     * 
+     * @return
+     */
+    public byte[] generateRandomBytes() {
+        byte[] randomBytes = new byte[12];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(randomBytes);
 
-		return randomBytes;
-	}
+        return randomBytes;
+    }
 
 }

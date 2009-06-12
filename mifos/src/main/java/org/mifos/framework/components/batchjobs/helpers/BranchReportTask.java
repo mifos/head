@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import org.mifos.framework.components.batchjobs.MifosTask;
@@ -25,9 +25,9 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 
 public class BranchReportTask extends MifosTask {
 
-	@Override
-	public TaskHelper getTaskHelper() {
-		return new BranchReportHelper(this);
-	}
+    @Override
+    public TaskHelper getTaskHelper() {
+        return new BranchReportHelper(this);
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 import java.util.Locale;
@@ -32,91 +32,96 @@ import org.mifos.framework.exceptions.TableTagException;
 
 public class Table {
 
-	public Table() {
-		super();
-	}
+    public Table() {
+        super();
+    }
 
-	private Row[] row;
-	
-	private Path[] path;
-	
-	private PageRequirements pageRequirements;
+    private Row[] row;
 
-	/**
-	 * @return Returns the row.
-	 */
-	public Row[] getRow() {
-		return row;
-	}
+    private Path[] path;
 
-	/**
-	 * @return Returns the pageRequirements.
-	 */
-	public PageRequirements getPageRequirements() {
-		return pageRequirements;
-	}
+    private PageRequirements pageRequirements;
 
-	/**
-	 * @param pageRequirements The pageRequirements to set.
-	 */
-	public void setPageRequirements(PageRequirements pageRequirements) {
-		this.pageRequirements = pageRequirements;
-	}
+    /**
+     * @return Returns the row.
+     */
+    public Row[] getRow() {
+        return row;
+    }
 
-	/**
-	 * @param row
-	 *            The row to set.
-	 */
-	public void setRow(Row[] row) {
-		this.row = row;
-	}
+    /**
+     * @return Returns the pageRequirements.
+     */
+    public PageRequirements getPageRequirements() {
+        return pageRequirements;
+    }
 
-	/**
-	 * @return Returns the path.
-	 */
-	public Path[] getPath() {
-		return path;
-	}
+    /**
+     * @param pageRequirements
+     *            The pageRequirements to set.
+     */
+    public void setPageRequirements(PageRequirements pageRequirements) {
+        this.pageRequirements = pageRequirements;
+    }
 
-	/**
-	 * @param path The path to set.
-	 */
-	public void setPath(Path[] path) {
-		this.path = path;
-	}
+    /**
+     * @param row
+     *            The row to set.
+     */
+    public void setRow(Row[] row) {
+        this.row = row;
+    }
 
-	/**
-	 * Function to get a complete row.
-	 * @param obj
-	 * @return string		a complete row.
-	 * @throws TableTagException 
-	 */
-	public String getTable(PageContext pageContext ,Object obj,Locale locale, boolean isFlowRequired) throws TableTagException {
-		
-		StringBuilder table = new StringBuilder();
-		for (int i = 0; i < row.length; i++) {
-			
-			//Used to store a complete row
-			String foundRow = row[i].getRow(pageContext,obj,locale, isFlowRequired);
-			table.append(foundRow);
-			if (!((foundRow == null) || (foundRow == ""))) {
-				table.append("<br>");
-			}
-		}
-		return table.toString();
-	}
-	
-	/**
-	 * Function to get the path 
-	 * @param key
-	 * @return
-	 */
-	public Path findPath(String key) {
-		for(int i=0;i<path.length;i++) {
-			if(path[i].getKey().equalsIgnoreCase(key)) {
-				return path[i];
-			}
-		}
-		return null;
-	}
+    /**
+     * @return Returns the path.
+     */
+    public Path[] getPath() {
+        return path;
+    }
+
+    /**
+     * @param path
+     *            The path to set.
+     */
+    public void setPath(Path[] path) {
+        this.path = path;
+    }
+
+    /**
+     * Function to get a complete row.
+     * 
+     * @param obj
+     * @return string a complete row.
+     * @throws TableTagException
+     */
+    public String getTable(PageContext pageContext, Object obj, Locale locale, boolean isFlowRequired)
+            throws TableTagException {
+
+        StringBuilder table = new StringBuilder();
+        for (int i = 0; i < row.length; i++) {
+
+            // Used to store a complete row
+            String foundRow = row[i].getRow(pageContext, obj, locale, isFlowRequired);
+            table.append(foundRow);
+            if (!((foundRow == null) || (foundRow == ""))) {
+                table.append("<br>");
+            }
+        }
+        return table.toString();
+    }
+
+    /**
+     * Function to get the path
+     * 
+     * @param key
+     * @return
+     */
+    public Path findPath(String key) {
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].getKey().equalsIgnoreCase(key)) {
+                return path[i];
+            }
+        }
+        return null;
+    }
 }

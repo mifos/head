@@ -17,79 +17,92 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.logger;
 
-/**	
- *  This class represents the log message to be logged in case of a direct statement
- *  and not using a resource bundle.
+/**
+ * This class represents the log message to be logged in case of a direct
+ * statement and not using a resource bundle.
  */
 public class Message {
 
-  /**user id of the person logging the message*/
-  private String loggedUser;
-  
-  /**office id of the person logging the message*/
-  private String userOffice;
+    /** user id of the person logging the message */
+    private String loggedUser;
 
-  /**Message that is being logged*/
-  private String message;
-  
-  /**
-	 * Constructor: 
-	 * Initialises the values of the message 
-	 * @param str  The statement to be logged
-	 */
-  public Message(String str) {
-	  this.message=str;
-  }//end-constructor 
-  /**
-	 * Constructor: 
-	 * Initialises the values of the message , user id and office id
-	 * @param str  The statement to be logged
-	 * @param loggerUser UserId of the user logging the statement
-	 * @param userOffice OfficeId of the user logging the statement
-	 */
-  public Message(String str, String loggedUser, String userOffice) {
-	  this.message=str;
-	  this.loggedUser=loggedUser;
-	  this.userOffice=userOffice;
-  }//end-constructor
+    /** office id of the person logging the message */
+    private String userOffice;
 
-  @Override
-public String toString() {
-	  return this.message;
-  }//end-method toString
-  /** 
-   * Function to obtain the office id of the user logging the statement
-   * @return The office id 
-   */
-  public String getUserOffice() {
-	return userOffice;
-  }//end-method getUserOffice
-  
-  /** 
-   * Function to set the office id of the user logging the statement
-   * @param userOffice The office id to be set
-   */
-  public void setUserOffice(String userOffice) {
-	this.userOffice = userOffice;
-  }//end-method setUserOffice
+    /** Message that is being logged */
+    private String message;
 
-  /** 
-   * Function to obtain the user id of the user logging the statement
-   * @return The  User Id
-   */
+    /**
+     * Constructor: Initialises the values of the message
+     * 
+     * @param str
+     *            The statement to be logged
+     */
+    public Message(String str) {
+        this.message = str;
+    }// end-constructor
 
-  public String getLoggedUser() {
-	return loggedUser;
-  }//end-method getLoggedUser
-  
-  /** 
-   * Function to set the user id of the user logging the statement
-   * @param loggedUser The user id to be set 
-   */
-  public void setLoggedUser(String loggedUser) {
-	this.loggedUser = loggedUser;
-  }//end-method setLoggedUser
- }//~
+    /**
+     * Constructor: Initialises the values of the message , user id and office
+     * id
+     * 
+     * @param str
+     *            The statement to be logged
+     * @param loggerUser
+     *            UserId of the user logging the statement
+     * @param userOffice
+     *            OfficeId of the user logging the statement
+     */
+    public Message(String str, String loggedUser, String userOffice) {
+        this.message = str;
+        this.loggedUser = loggedUser;
+        this.userOffice = userOffice;
+    }// end-constructor
+
+    @Override
+    public String toString() {
+        return this.message;
+    }// end-method toString
+
+    /**
+     * Function to obtain the office id of the user logging the statement
+     * 
+     * @return The office id
+     */
+    public String getUserOffice() {
+        return userOffice;
+    }// end-method getUserOffice
+
+    /**
+     * Function to set the office id of the user logging the statement
+     * 
+     * @param userOffice
+     *            The office id to be set
+     */
+    public void setUserOffice(String userOffice) {
+        this.userOffice = userOffice;
+    }// end-method setUserOffice
+
+    /**
+     * Function to obtain the user id of the user logging the statement
+     * 
+     * @return The User Id
+     */
+
+    public String getLoggedUser() {
+        return loggedUser;
+    }// end-method getLoggedUser
+
+    /**
+     * Function to set the user id of the user logging the statement
+     * 
+     * @param loggedUser
+     *            The user id to be set
+     */
+    public void setLoggedUser(String loggedUser) {
+        this.loggedUser = loggedUser;
+    }// end-method setLoggedUser
+}// ~

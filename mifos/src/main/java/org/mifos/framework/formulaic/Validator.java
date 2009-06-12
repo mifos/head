@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.formulaic;
 
 public interface Validator {
-	
-	public static final String DEFAULT_ERROR = "errors.formulaic.default";
-	
-	public Object validate(Object value) throws ValidationError;
+
+    public static final String DEFAULT_ERROR = "errors.formulaic.default";
+
+    public Object validate(Object value) throws ValidationError;
 
 }

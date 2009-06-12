@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
@@ -35,63 +35,61 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class RegenerateScheduleHelper extends TaskHelper {
 
-	public RegenerateScheduleHelper(MifosTask mifosTask) {
-		super(mifosTask);
-	}
+    public RegenerateScheduleHelper(MifosTask mifosTask) {
+        super(mifosTask);
+    }
 
-	List<Integer> accountList;
+    List<Integer> accountList;
 
-	@Override
-	public void execute(long timeInMills) throws BatchJobException {
-		List<String> errorList = new ArrayList<String>();
-		accountList = new ArrayList<Integer>();
-		List<Integer> customerIds;
-		try {
-			customerIds = new CustomerPersistence()
-					.getCustomersWithUpdatedMeetings();
-		} catch (Exception e) {
-			throw new BatchJobException(e);
-		}
-		if (customerIds != null && !customerIds.isEmpty())
-			for (Integer customerId : customerIds) {
-				try {
-					handleChangeInMeetingSchedule(customerId);
-					StaticHibernateUtil.commitTransaction();
-				} catch (Exception e) {
-					StaticHibernateUtil.rollbackTransaction();
-					errorList.add(customerId.toString());
-				} finally {
-					StaticHibernateUtil.closeSession();
-				}
-			}
-		if (errorList.size() > 0)
-			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-	}
+    @Override
+    public void execute(long timeInMills) throws BatchJobException {
+        List<String> errorList = new ArrayList<String>();
+        accountList = new ArrayList<Integer>();
+        List<Integer> customerIds;
+        try {
+            customerIds = new CustomerPersistence().getCustomersWithUpdatedMeetings();
+        } catch (Exception e) {
+            throw new BatchJobException(e);
+        }
+        if (customerIds != null && !customerIds.isEmpty())
+            for (Integer customerId : customerIds) {
+                try {
+                    handleChangeInMeetingSchedule(customerId);
+                    StaticHibernateUtil.commitTransaction();
+                } catch (Exception e) {
+                    StaticHibernateUtil.rollbackTransaction();
+                    errorList.add(customerId.toString());
+                } finally {
+                    StaticHibernateUtil.closeSession();
+                }
+            }
+        if (errorList.size() > 0)
+            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+    }
 
-	@Override
-	public boolean isTaskAllowedToRun() {
-		return true;
-	}
+    @Override
+    public boolean isTaskAllowedToRun() {
+        return true;
+    }
 
-	private void handleChangeInMeetingSchedule(Integer customerId)
-			throws Exception {
-		CustomerPersistence customerPersistence = new CustomerPersistence();
-		CustomerBO customer = customerPersistence.getCustomer(customerId);
-		Set<AccountBO> accounts = customer.getAccounts();
-		if (accounts != null && !accounts.isEmpty())
-			for (AccountBO account : accounts) {
-				if (!accountList.contains(account.getAccountId())) {
-					account.handleChangeInMeetingSchedule();
-					accountList.add(account.getAccountId());
-				}
-			}
-		List<Integer> customerIds = customerPersistence.getChildrenForParent(
-				customer.getSearchId(), customer.getOffice().getOfficeId());
-		if (customerIds != null && !customerIds.isEmpty()) {
-			for (Integer childCustomerId : customerIds) {
-				handleChangeInMeetingSchedule(childCustomerId);
-			}
-		}
-	}
+    private void handleChangeInMeetingSchedule(Integer customerId) throws Exception {
+        CustomerPersistence customerPersistence = new CustomerPersistence();
+        CustomerBO customer = customerPersistence.getCustomer(customerId);
+        Set<AccountBO> accounts = customer.getAccounts();
+        if (accounts != null && !accounts.isEmpty())
+            for (AccountBO account : accounts) {
+                if (!accountList.contains(account.getAccountId())) {
+                    account.handleChangeInMeetingSchedule();
+                    accountList.add(account.getAccountId());
+                }
+            }
+        List<Integer> customerIds = customerPersistence.getChildrenForParent(customer.getSearchId(), customer
+                .getOffice().getOfficeId());
+        if (customerIds != null && !customerIds.isEmpty()) {
+            for (Integer childCustomerId : customerIds) {
+                handleChangeInMeetingSchedule(childCustomerId);
+            }
+        }
+    }
 
 }

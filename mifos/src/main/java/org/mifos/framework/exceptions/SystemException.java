@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 /**
@@ -27,76 +27,73 @@ package org.mifos.framework.exceptions;
  */
 public class SystemException extends RuntimeException {
 
-	/** Generic message, along the lines of "something has failed".  */
-	public static final String DEFAULT_KEY = 
-		"exception.framework.SystemException";
+    /** Generic message, along the lines of "something has failed". */
+    public static final String DEFAULT_KEY = "exception.framework.SystemException";
 
-	/**
-	 * This is a string which points to the actual message in the resource
-	 * bundle. The exception message to be shown to the user is taken from the
-	 * resource bundle and hence can be localized.
-	 */
-	private final String key;
-	
-	private final Object[] values;
+    /**
+     * This is a string which points to the actual message in the resource
+     * bundle. The exception message to be shown to the user is taken from the
+     * resource bundle and hence can be localized.
+     */
+    private final String key;
 
-	public SystemException(Throwable cause) {
-		this(DEFAULT_KEY, cause.getMessage(), cause);
-	}
+    private final Object[] values;
 
-	public SystemException(String key, Throwable cause) {
-		this(key, cause.getMessage(), cause);
-	}
+    public SystemException(Throwable cause) {
+        this(DEFAULT_KEY, cause.getMessage(), cause);
+    }
 
-	public SystemException(String key) {
-		this(key, (String)null);
-	}
+    public SystemException(String key, Throwable cause) {
+        this(key, cause.getMessage(), cause);
+    }
 
-	public SystemException(String key, String internalMessage) {
-		this(key, internalMessage, null);
-	}
-	
-	/**
-	 * @param key
-	 *            A key for looking up the message in
-	 *            ExceptionResources.properties, or null to specify a generic
-	 *            message.
-	 * @param internalMessage
-	 *            A message which is just intended for developers; the user will
-	 *            not see this message but instead the message corresponding to
-	 *            key. Because the message is only for developers, it is not
-	 *            translated into different languages.
-	 */
-	public SystemException(
-		String key, String internalMessage, Throwable cause) {
-		this(key, internalMessage, cause, null);
-	}
+    public SystemException(String key) {
+        this(key, (String) null);
+    }
 
-	public SystemException(String key, Throwable cause, Object[] values) {
-		this(key, null, cause, values);
-	}
+    public SystemException(String key, String internalMessage) {
+        this(key, internalMessage, null);
+    }
 
-	public SystemException(String key, String internalMessage, 
-		Throwable cause, Object[] values) {
-		super(internalMessage, cause);
-		this.key = key;
-		this.values = values;
-	}
+    /**
+     * @param key
+     *            A key for looking up the message in
+     *            ExceptionResources.properties, or null to specify a generic
+     *            message.
+     * @param internalMessage
+     *            A message which is just intended for developers; the user will
+     *            not see this message but instead the message corresponding to
+     *            key. Because the message is only for developers, it is not
+     *            translated into different languages.
+     */
+    public SystemException(String key, String internalMessage, Throwable cause) {
+        this(key, internalMessage, cause, null);
+    }
 
-	/**
-	 * Returns the key which maps to an entry in ExceptionResources file. The
-	 * message corresponding to this key is used for logging purposes as well as
-	 * for displaying message to the user
-	 */
-	public String getKey() {
-		return key;
-	}
+    public SystemException(String key, Throwable cause, Object[] values) {
+        this(key, null, cause, values);
+    }
 
-	/**
-	 * This is an array of object which might be needed to pass certain
-	 * parameters to the string in the resource bundle.
-	 */
-	public Object[] getValues() {
-		return values;
-	}
+    public SystemException(String key, String internalMessage, Throwable cause, Object[] values) {
+        super(internalMessage, cause);
+        this.key = key;
+        this.values = values;
+    }
+
+    /**
+     * Returns the key which maps to an entry in ExceptionResources file. The
+     * message corresponding to this key is used for logging purposes as well as
+     * for displaying message to the user
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * This is an array of object which might be needed to pass certain
+     * parameters to the string in the resource bundle.
+     */
+    public Object[] getValues() {
+        return values;
+    }
 }

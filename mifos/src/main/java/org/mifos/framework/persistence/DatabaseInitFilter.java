@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import java.io.IOException;
@@ -35,28 +35,27 @@ import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class DatabaseInitFilter implements Filter {
-    
+
     private static boolean databaseVerified = false;
     private static int databaseVersion = -1;
-    
+
     public DatabaseInitFilter() {
     }
-    
-    public void doFilter(ServletRequest request, ServletResponse response,
-        FilterChain chain)
-        throws IOException, ServletException {
 
-        if(!databaseVerified){
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+
+        if (!databaseVerified) {
             showError(request, response);
-        }else{
+        } else {
             chain.doFilter(request, response);
         }
     }
-    
+
     private void showError(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-    	HttpServletResponse httpResponse = (HttpServletResponse)response;
-    	httpResponse.setContentType("text/html");
-    	httpResponse.setStatus(500);
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        httpResponse.setContentType("text/html");
+        httpResponse.setStatus(500);
         PrintWriter out = httpResponse.getWriter();
 
         int version = databaseVersion;
@@ -64,45 +63,51 @@ public class DatabaseInitFilter implements Filter {
         printErrorPage(out, version);
     }
 
-	void printErrorPage(PrintWriter out, int version) {
-		XmlBuilder xml = new XmlBuilder();
+    void printErrorPage(PrintWriter out, int version) {
+        XmlBuilder xml = new XmlBuilder();
         xml.startTag("html");
         xml.startTag("head");
         xml.startTag("title");
-        xml.text("Mifos Database Error");  xml.text("\n");
-        xml.endTag("title");  xml.text("\n");
-        xml.endTag("head");  xml.text("\n");
+        xml.text("Mifos Database Error");
+        xml.text("\n");
+        xml.endTag("title");
+        xml.text("\n");
+        xml.endTag("head");
+        xml.text("\n");
 
         xml.startTag("body");
         xml.startTag("h2");
         xml.text("Mifos Database Error");
-        xml.endTag("h2");  xml.text("\n");
-        
+        xml.endTag("h2");
+        xml.text("\n");
+
         xml.startTag("p");
         xml.text("A database error occurred. ");
         xml.text("Correct the error and restart the application. ");
-        
+
         xml.text("Details:");
-        
-        xml.endTag("p");  xml.text("\n");
-        
+
+        xml.endTag("p");
+        xml.text("\n");
+
         ApplicationInitializer.printDatabaseError(xml, version);
-        
-        xml.endTag("body");  xml.text("\n");
+
+        xml.endTag("body");
+        xml.text("\n");
         xml.endTag("html");
         out.println(xml.getOutput());
-	}
+    }
 
-	public void init(FilterConfig filterConfig) {
-        try{
+    public void init(FilterConfig filterConfig) {
+        try {
             DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
-            if(persistence.isVersioned()){
+            if (persistence.isVersioned()) {
                 databaseVersion = persistence.read();
-                databaseVerified = ( databaseVersion == DatabaseVersionPersistence.APPLICATION_VERSION );
+                databaseVerified = (databaseVersion == DatabaseVersionPersistence.APPLICATION_VERSION);
             } else {
                 databaseVerified = false;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             filterConfig.getServletContext().log("Failed to check database version", e);
         }
     }

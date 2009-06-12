@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
@@ -29,45 +29,48 @@ import org.apache.struts.taglib.html.BaseFieldTag;
  * Custom tag for input fields of type "text"
  */
 public class MifosMasterTextTag extends BaseFieldTag {
-	
-	/**
-	 * 	Serial Version UID for Serialization 
-	 */
-	private static final long serialVersionUID = 1564754365480837467L;
-	
-	//--------------------------------------------------------- Constructors
-	
-	/**
+
+    /**
+     * Serial Version UID for Serialization
+     */
+    private static final long serialVersionUID = 1564754365480837467L;
+
+    // --------------------------------------------------------- Constructors
+
+    /**
      * Construct a new instance of this tag.
      */
-	public MifosMasterTextTag() {
-		super();
-	}
-	
-	/**
+    public MifosMasterTextTag() {
+        super();
+    }
+
+    /**
      * Construct a new instance of this tag.
      * 
-     * @param pageContext 	pageContext of the Tag
-     * @param property 		property of the element
-     * @param value 		type of the element
+     * @param pageContext
+     *            pageContext of the Tag
+     * @param property
+     *            property of the element
+     * @param value
+     *            type of the element
      * 
      */
-	public MifosMasterTextTag(PageContext pageContext,String property,String type) {
-		super();
-		this.pageContext=pageContext;
-		this.property=property;
-		this.type=type;
-		//if("hidden".equals(type))
-			this.value="";
-	}
-	
-	//--------------------------------------------------------- Public Methods
-	
-	/**
+    public MifosMasterTextTag(PageContext pageContext, String property, String type) {
+        super();
+        this.pageContext = pageContext;
+        this.property = property;
+        this.type = type;
+        // if("hidden".equals(type))
+        this.value = "";
+    }
+
+    // --------------------------------------------------------- Public Methods
+
+    /**
      * render text element.
      */
-	public String getTextString() throws JspException {
-		return renderInputElement();
-	}
+    public String getTextString() throws JspException {
+        return renderInputElement();
+    }
 
 }

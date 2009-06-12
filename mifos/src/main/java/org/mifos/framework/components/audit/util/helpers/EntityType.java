@@ -17,54 +17,53 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.util.helpers;
 
 /**
- * What does this do?  It is potentially confused with the more
- * widely used {@link org.mifos.application.util.helpers.EntityType}.
+ * What does this do? It is potentially confused with the more widely used
+ * {@link org.mifos.application.util.helpers.EntityType}.
  */
 public class EntityType {
-	
-	String name;
-	
-	String classPath;
-	
-	EntitiesToLog entitiesToLogs;
-	
-	PropertyName[] propertyNames;
 
-	public String getName() {
-		return name;
-	}
+    String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    String classPath;
 
-	public PropertyName[] getPropertyNames() {
-		return propertyNames;
-	}
+    EntitiesToLog entitiesToLogs;
 
-	public void setPropertyNames(PropertyName[] propertyNames) {
-		this.propertyNames = propertyNames;
-	}
+    PropertyName[] propertyNames;
 
-	public EntitiesToLog getEntitiesToLog() {
-		return entitiesToLogs;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setEntitiesToLog(EntitiesToLog entitiesToLog) {
-		this.entitiesToLogs = entitiesToLog;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getClassPath() {
-		return classPath;
-	}
+    public PropertyName[] getPropertyNames() {
+        return propertyNames;
+    }
 
-	public void setClassPath(String classPath) {
-		this.classPath = classPath;
-	}
+    public void setPropertyNames(PropertyName[] propertyNames) {
+        this.propertyNames = propertyNames;
+    }
 
+    public EntitiesToLog getEntitiesToLog() {
+        return entitiesToLogs;
+    }
+
+    public void setEntitiesToLog(EntitiesToLog entitiesToLog) {
+        this.entitiesToLogs = entitiesToLog;
+    }
+
+    public String getClassPath() {
+        return classPath;
+    }
+
+    public void setClassPath(String classPath) {
+        this.classPath = classPath;
+    }
 
 }

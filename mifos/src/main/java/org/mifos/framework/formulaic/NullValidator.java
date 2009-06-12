@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.formulaic;
 
 /*
@@ -28,23 +28,22 @@ package org.mifos.framework.formulaic;
  */
 public class NullValidator extends BaseValidator {
 
-	private Validator otherValidator;
-	
-	public NullValidator(Validator otherValidator) {
-		this.otherValidator = otherValidator;
-	}
-	
-	public NullValidator() {
-		this(new IdentityValidator());
-	}
-	
-	@Override
-	public Object validate(Object value) throws ValidationError {
-		if (value == null) {
-			return null;
-		}
-		else {
-			return otherValidator.validate(value);
-		}
-	}
+    private Validator otherValidator;
+
+    public NullValidator(Validator otherValidator) {
+        this.otherValidator = otherValidator;
+    }
+
+    public NullValidator() {
+        this(new IdentityValidator());
+    }
+
+    @Override
+    public Object validate(Object value) throws ValidationError {
+        if (value == null) {
+            return null;
+        } else {
+            return otherValidator.validate(value);
+        }
+    }
 }

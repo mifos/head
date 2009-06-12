@@ -17,29 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.formulaic;
 
 public class IsInstanceValidator extends BaseValidator {
-	
-	public static final String WRONG_TYPE_ERROR = "errors.formulaic.IsInstanceValidator.wrongtype";
-	
-	Class rightClass;
-	
-	public IsInstanceValidator(Class rightClass) {
-		assert rightClass != null;
-		this.rightClass = rightClass;
-	}
 
-	@Override
-	public Object validate(Object value) throws ValidationError {
-		checkNull(value);
-		if (rightClass.isInstance(value)) {
-			return value;
-		}
-		else {
-			throw makeError(value, ErrorType.WRONG_TYPE);
-		}
-	}
+    public static final String WRONG_TYPE_ERROR = "errors.formulaic.IsInstanceValidator.wrongtype";
+
+    Class rightClass;
+
+    public IsInstanceValidator(Class rightClass) {
+        assert rightClass != null;
+        this.rightClass = rightClass;
+    }
+
+    @Override
+    public Object validate(Object value) throws ValidationError {
+        checkNull(value);
+        if (rightClass.isInstance(value)) {
+            return value;
+        } else {
+            throw makeError(value, ErrorType.WRONG_TYPE);
+        }
+    }
 
 }

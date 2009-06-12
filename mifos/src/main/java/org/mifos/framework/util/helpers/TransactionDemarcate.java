@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.lang.annotation.ElementType;
@@ -28,22 +28,25 @@ import java.lang.annotation.Target;
 import org.mifos.framework.struts.action.BaseAction;
 
 /**
- * This interface is used to annotate methods in the struts action class for transaction boundries
- * specifying when a new transaction is begining so that based on that a token can be generated and saved
- * in the session or removed from the session.
- * 1.saveToken - It saves a new token in the session.
+ * This interface is used to annotate methods in the struts action class for
+ * transaction boundries specifying when a new transaction is begining so that
+ * based on that a token can be generated and saved in the session or removed
+ * from the session. 1.saveToken - It saves a new token in the session.
  * 2.validateAndResetToken - It validates the token and then resets the token.
- * 3.joinToken - It checks if the token is present it does nothing else it 
- * saves a new token in the session.
+ * 3.joinToken - It checks if the token is present it does nothing else it saves
+ * a new token in the session.
  * 
  * @see BaseAction
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface TransactionDemarcate {
-	public boolean saveToken() default false;
-	public boolean validateAndResetToken() default false;
-	public boolean joinToken() default false;
-	public boolean conditionToken() default false;
-	
+    public boolean saveToken() default false;
+
+    public boolean validateAndResetToken() default false;
+
+    public boolean joinToken() default false;
+
+    public boolean conditionToken() default false;
+
 }

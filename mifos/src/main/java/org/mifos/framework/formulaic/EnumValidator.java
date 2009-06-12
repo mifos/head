@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.framework.formulaic;
 
+package org.mifos.framework.formulaic;
 
 /*
  * This validator transforms a string into its matching enum, given an Enum
@@ -28,42 +27,41 @@ package org.mifos.framework.formulaic;
  * keeping with current mifos style.
  */
 public class EnumValidator extends IsInstanceValidator {
-	
-	public static final String INVALID_ENUM_ERROR = "invalidenum";
-	
-	private Class enumType;
+
+    public static final String INVALID_ENUM_ERROR = "invalidenum";
+
+    private Class enumType;
     private String fieldName;
 
     public EnumValidator(Class enumType) {
-		super(String.class);
-		assert enumType != null;
-		assert enumType.isEnum();
-		this.enumType = enumType;
-	}
+        super(String.class);
+        assert enumType != null;
+        assert enumType.isEnum();
+        this.enumType = enumType;
+    }
 
     public EnumValidator(Class enumType, String fieldName) {
-		super(String.class);
-		assert enumType != null;
-		assert enumType.isEnum();
-		this.enumType = enumType;
+        super(String.class);
+        assert enumType != null;
+        assert enumType.isEnum();
+        this.enumType = enumType;
         this.fieldName = fieldName;
     }
 
     @Override
-	public Enum validate(Object input) throws ValidationError {
-		input = super.validate(input);
-		
-		try {
-			String inputString = ((String) input).toUpperCase();
-			return Enum.valueOf(enumType, inputString);
-		}
-		catch (IllegalArgumentException e) {
+    public Enum validate(Object input) throws ValidationError {
+        input = super.validate(input);
+
+        try {
+            String inputString = ((String) input).toUpperCase();
+            return Enum.valueOf(enumType, inputString);
+        } catch (IllegalArgumentException e) {
             if (fieldName == null)
                 throw makeError(input, ErrorType.INVALID_ENUM);
             else
                 throw makeError(input, ErrorType.INVALID_ENUM, fieldName);
         }
-		
-	}
+
+    }
 
 }

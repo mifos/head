@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.List;
@@ -31,30 +31,26 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public class BranchReportStaffSummaryHelper {
 
-	private final BranchReportBO branchReport;
-	private final IBranchReportService branchReportService;
-	private final BranchReportConfigService branchReportConfigService;
+    private final BranchReportBO branchReport;
+    private final IBranchReportService branchReportService;
+    private final BranchReportConfigService branchReportConfigService;
 
-	public BranchReportStaffSummaryHelper(BranchReportBO branchReport,
-			IBranchReportService branchReportService,
-			BranchReportConfigService branchReportConfigService) {
-		this.branchReport = branchReport;
-		this.branchReportService = branchReportService;
-		this.branchReportConfigService = branchReportConfigService;
-	}
+    public BranchReportStaffSummaryHelper(BranchReportBO branchReport, IBranchReportService branchReportService,
+            BranchReportConfigService branchReportConfigService) {
+        this.branchReport = branchReport;
+        this.branchReportService = branchReportService;
+        this.branchReportConfigService = branchReportConfigService;
+    }
 
-	public void populateStaffSummary() throws BatchJobException {
-		try {
-			List<BranchReportStaffSummaryBO> staffSummaries = branchReportService
-					.extractBranchReportStaffSummary(
-							branchReport.getBranchId(),
-							branchReportConfigService.getGracePeriodDays(),
-							branchReportConfigService.getCurrency());
-			branchReport.addStaffSummaries(staffSummaries);
-		}
-		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-	}
+    public void populateStaffSummary() throws BatchJobException {
+        try {
+            List<BranchReportStaffSummaryBO> staffSummaries = branchReportService.extractBranchReportStaffSummary(
+                    branchReport.getBranchId(), branchReportConfigService.getGracePeriodDays(),
+                    branchReportConfigService.getCurrency());
+            branchReport.addStaffSummaries(staffSummaries);
+        } catch (ServiceException e) {
+            throw new BatchJobException(e);
+        }
+    }
 
 }

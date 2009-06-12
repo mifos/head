@@ -17,55 +17,55 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.business;
 
 import org.mifos.framework.business.PersistentObject;
 
 public class AuditLogRecord extends PersistentObject {
 
-	private final Integer squenceNo;
+    private final Integer squenceNo;
 
-	private final String fieldName;
+    private final String fieldName;
 
-	private final String oldValue;
+    private final String oldValue;
 
-	private final String newValue;
+    private final String newValue;
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private final AuditLog auditLog;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final AuditLog auditLog;
 
-	protected AuditLogRecord() {
-		squenceNo = null;
-		fieldName = null;
-		oldValue = null;
-		newValue = null;
-		auditLog = null;
-	}
+    protected AuditLogRecord() {
+        squenceNo = null;
+        fieldName = null;
+        oldValue = null;
+        newValue = null;
+        auditLog = null;
+    }
 
-	public AuditLogRecord(String fieldName, String oldValue, String newValue,
-			AuditLog auditLog) {
-		this.squenceNo = null;
-		this.fieldName = fieldName;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
-		this.auditLog = auditLog;
-	}
+    public AuditLogRecord(String fieldName, String oldValue, String newValue, AuditLog auditLog) {
+        this.squenceNo = null;
+        this.fieldName = fieldName;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+        this.auditLog = auditLog;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public String getFieldName() {
+        return fieldName;
+    }
 
-	public String getNewValue() {
-		return newValue;
-	}
+    public String getNewValue() {
+        return newValue;
+    }
 
-	public String getOldValue() {
-		return oldValue;
-	}
+    public String getOldValue() {
+        return oldValue;
+    }
 
-	public Integer getSquenceNo() {
-		return squenceNo;
-	}
+    public Integer getSquenceNo() {
+        return squenceNo;
+    }
 
 }

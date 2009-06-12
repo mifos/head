@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
@@ -37,38 +37,36 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.config.GeneralConfig;
 
 public class LoanArrearsHelper extends TaskHelper {
-	
 
-	public LoanArrearsHelper(MifosTask mifosTask) {
-		super(mifosTask);
-	}
+    public LoanArrearsHelper(MifosTask mifosTask) {
+        super(mifosTask);
+    }
 
-	@Override
-	public void execute(long timeInMillis) throws BatchJobException {
-		long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-		AccountPersistence accountPersistence = new AccountPersistence();
-		List<String> errorList = new ArrayList<String>();
-		List<Integer> listAccountIds = null;
-		int accountNumber = 0;
-		try {
-			Short latenessDays = new LoanPrdPersistence()
-					.retrieveLatenessForPrd();
-			long time3 = new DateTimeService().getCurrentDateTime().getMillis();
-			listAccountIds = new LoanPersistence()
-					.getLoanAccountsInArrearsInGoodStanding(latenessDays);
-			long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
-			accountNumber = listAccountIds.size();
-			getLogger().info("LoanArrearsTask: getLoanAccountsInArrearsInGoodStanding ran in " + 
-					duration2 + " milliseconds" + " got " + accountNumber + " accounts to update.");
-		} catch (Exception e) {
-			throw new BatchJobException(e);
-		}
-		LoanBO loanBO = null;
-		int i=1;
-		int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
-		int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
-		
-		try {
+    @Override
+    public void execute(long timeInMillis) throws BatchJobException {
+        long time1 = new DateTimeService().getCurrentDateTime().getMillis();
+        AccountPersistence accountPersistence = new AccountPersistence();
+        List<String> errorList = new ArrayList<String>();
+        List<Integer> listAccountIds = null;
+        int accountNumber = 0;
+        try {
+            Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
+            long time3 = new DateTimeService().getCurrentDateTime().getMillis();
+            listAccountIds = new LoanPersistence().getLoanAccountsInArrearsInGoodStanding(latenessDays);
+            long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
+            accountNumber = listAccountIds.size();
+            getLogger().info(
+                    "LoanArrearsTask: getLoanAccountsInArrearsInGoodStanding ran in " + duration2 + " milliseconds"
+                            + " got " + accountNumber + " accounts to update.");
+        } catch (Exception e) {
+            throw new BatchJobException(e);
+        }
+        LoanBO loanBO = null;
+        int i = 1;
+        int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
+        int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
+
+        try {
             long startTime = new DateTimeService().getCurrentDateTime().getMillis();
             for (Integer accountId : listAccountIds) {
                 loanBO = (LoanBO) accountPersistence.getAccount(accountId);
@@ -84,8 +82,9 @@ public class LoanArrearsHelper extends TaskHelper {
                 }
                 if (i % 1000 == 0) {
                     long time = new DateTimeService().getCurrentDateTime().getMillis();
-                    getLogger().info("1000 accounts updated in " + (time - startTime) + " milliseconds. There are "
-                            + (accountNumber - i) + " more accounts to be updated.");
+                    getLogger().info(
+                            "1000 accounts updated in " + (time - startTime) + " milliseconds. There are "
+                                    + (accountNumber - i) + " more accounts to be updated.");
                     startTime = time;
                 }
                 i++;
@@ -101,18 +100,18 @@ public class LoanArrearsHelper extends TaskHelper {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-        
-		long time2 = new DateTimeService().getCurrentDateTime().getMillis();
-		long duration = time2 - time1;
-		getLogger().info("LoanArrearsTask ran in " + duration + " milliseconds");
-		if (errorList.size() > 0) {
-			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-		}
-	}
 
-	@Override
-	public boolean isTaskAllowedToRun() {
-		return true;
-	}
+        long time2 = new DateTimeService().getCurrentDateTime().getMillis();
+        long duration = time2 - time1;
+        getLogger().info("LoanArrearsTask ran in " + duration + " milliseconds");
+        if (errorList.size() > 0) {
+            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
+    }
+
+    @Override
+    public boolean isTaskAllowedToRun() {
+        return true;
+    }
 
 }

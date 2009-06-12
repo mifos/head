@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.List;
@@ -35,41 +35,31 @@ import org.mifos.framework.util.helpers.NumberUtils;
 
 public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 
-	private static final Integer MIFOS_USER_ID = new Integer(1);
+    private static final Integer MIFOS_USER_ID = new Integer(1);
 
-	public CollectionSheetReportParameterCachingHelper(MifosTask mifosTask) {
-		super(mifosTask);
-	}
+    public CollectionSheetReportParameterCachingHelper(MifosTask mifosTask) {
+        super(mifosTask);
+    }
 
-	@Override
-	public void execute(long timeInMillis) throws BatchJobException {
-		CascadingReportParameterService cascadingReportParameterService = ReportServiceFactory
-				.getCascadingReportParameterService();
-		cascadingReportParameterService.invalidate();
-		try {
-			List<OfficeBO> branchOffices = new OfficeBusinessService()
-					.getBranchOffices();
-			if (branchOffices != null) {
-				for (OfficeBO branchOffice : branchOffices) {
-					Integer officeId = NumberUtils
-							.convertShortToInteger(branchOffice.getOfficeId());
-					cascadingReportParameterService.getActiveLoanOfficers(
-							MIFOS_USER_ID, officeId);
-					Integer allLoanOfficerId = SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
-							.getId();
-					cascadingReportParameterService
-							.getActiveCentersForLoanOfficer(allLoanOfficerId,
-									officeId);
-					cascadingReportParameterService
-							.getMeetingDatesForCollectionSheet(officeId,
-									allLoanOfficerId,
-									SelectionItem.ALL_CENTER_SELECTION_ITEM
-											.getId());
-				}
-			}
-		}
-		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-	}
+    @Override
+    public void execute(long timeInMillis) throws BatchJobException {
+        CascadingReportParameterService cascadingReportParameterService = ReportServiceFactory
+                .getCascadingReportParameterService();
+        cascadingReportParameterService.invalidate();
+        try {
+            List<OfficeBO> branchOffices = new OfficeBusinessService().getBranchOffices();
+            if (branchOffices != null) {
+                for (OfficeBO branchOffice : branchOffices) {
+                    Integer officeId = NumberUtils.convertShortToInteger(branchOffice.getOfficeId());
+                    cascadingReportParameterService.getActiveLoanOfficers(MIFOS_USER_ID, officeId);
+                    Integer allLoanOfficerId = SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM.getId();
+                    cascadingReportParameterService.getActiveCentersForLoanOfficer(allLoanOfficerId, officeId);
+                    cascadingReportParameterService.getMeetingDatesForCollectionSheet(officeId, allLoanOfficerId,
+                            SelectionItem.ALL_CENTER_SELECTION_ITEM.getId());
+                }
+            }
+        } catch (ServiceException e) {
+            throw new BatchJobException(e);
+        }
+    }
 }

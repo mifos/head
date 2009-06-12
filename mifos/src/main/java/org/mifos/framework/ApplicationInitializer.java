@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework;
 
 import java.io.IOException;
@@ -66,38 +66,36 @@ import org.mifos.framework.util.helpers.Money;
  * This class should prepare all the sub-systems that are required by the app.
  * Cleanup should also happen here when the application is shutdown.
  */
-public class ApplicationInitializer implements ServletContextListener,
-		ServletRequestListener {
+public class ApplicationInitializer implements ServletContextListener, ServletRequestListener {
 
-	private static MifosLogger LOG = null;
+    private static MifosLogger LOG = null;
 
-	private static class DatabaseError {
-		boolean isError = false;
-		DatabaseErrorCode errorCode = DatabaseErrorCode.NO_DATABASE_ERROR;
-		String errmsg = "";
-		Throwable error = null;
+    private static class DatabaseError {
+        boolean isError = false;
+        DatabaseErrorCode errorCode = DatabaseErrorCode.NO_DATABASE_ERROR;
+        String errmsg = "";
+        Throwable error = null;
 
-		void logError() {
-			LOG.fatal(errmsg, false, null, error);
-		}
-	}
+        void logError() {
+            LOG.fatal(errmsg, false, null, error);
+        }
+    }
 
-	public static void setDatabaseError(DatabaseErrorCode errcode,
-			String errmsg, Throwable error) {
-		databaseError.isError = true;
-		databaseError.errorCode = errcode;
-		databaseError.error = error;
-		databaseError.errmsg = errmsg;
-	}
+    public static void setDatabaseError(DatabaseErrorCode errcode, String errmsg, Throwable error) {
+        databaseError.isError = true;
+        databaseError.errorCode = errcode;
+        databaseError.error = error;
+        databaseError.errmsg = errmsg;
+    }
 
-	public static void clearDatabaseError() {
-		databaseError.isError = false;
-		databaseError.errorCode = DatabaseErrorCode.NO_DATABASE_ERROR;
-		databaseError.error = null;
-		databaseError.errmsg = null;
-	}
+    public static void clearDatabaseError() {
+        databaseError.isError = false;
+        databaseError.errorCode = DatabaseErrorCode.NO_DATABASE_ERROR;
+        databaseError.error = null;
+        databaseError.errmsg = null;
+    }
 
-	private static String getDatabaseConnectionInfo() {
+    private static String getDatabaseConnectionInfo() {
         StandardTestingService standardTestingService = new StandardTestingService();
         Properties hibernateCfg = new Properties();
         String info = "Using Mifos database connection settings";
@@ -118,110 +116,100 @@ public class ApplicationInitializer implements ServletContextListener,
         return info;
     }
 
-	private static DatabaseError databaseError = new DatabaseError();
+    private static DatabaseError databaseError = new DatabaseError();
 
-	public void contextInitialized(ServletContextEvent ctx) {
-		init();
-	}
+    public void contextInitialized(ServletContextEvent ctx) {
+        init();
+    }
 
-	public void init() {
-		try {
-			synchronized (ApplicationInitializer.class) {
-				initializeLogger();
-				initializeHibernate();
+    public void init() {
+        try {
+            synchronized (ApplicationInitializer.class) {
+                initializeLogger();
+                initializeHibernate();
 
-				/*
-				 * getLogger() cannot be called statically (ie: when
-				 * initializing LOG) because MifosLogManager.initializeLogger()
-				 * hasn't been called yet, so MifosLogManager.loggerRepository
-				 * will be null.
-				 */
-				LOG = MifosLogManager
-						.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-				LOG.info("Logger has been initialised", false, null);
+                /*
+                 * getLogger() cannot be called statically (ie: when
+                 * initializing LOG) because MifosLogManager.initializeLogger()
+                 * hasn't been called yet, so MifosLogManager.loggerRepository
+                 * will be null.
+                 */
+                LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+                LOG.info("Logger has been initialised", false, null);
 
-				LOG.info(getDatabaseConnectionInfo(), false, null);
+                LOG.info(getDatabaseConnectionInfo(), false, null);
 
-				DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
-				try {
-					/*
-					 * This is an easy way to force an actual database query to
-					 * happen via Hibernate. Simply opening a Hibernate session
-					 * may not actually connect to the database.
-					 */
-					persistence.isVersioned();
-				}
-				catch (Throwable t) {
-					setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE,
-							"Unable to connect to database.", t);
-				}
+                DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+                try {
+                    /*
+                     * This is an easy way to force an actual database query to
+                     * happen via Hibernate. Simply opening a Hibernate session
+                     * may not actually connect to the database.
+                     */
+                    persistence.isVersioned();
+                } catch (Throwable t) {
+                    setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
+                }
 
-				if (!databaseError.isError) {
-					try {
-						persistence.upgradeDatabase();
-					}
-					catch (Throwable t) {
-						setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE,
-								"Failed to upgrade database.", t);
-					}
-				}
+                if (!databaseError.isError) {
+                    try {
+                        persistence.upgradeDatabase();
+                    } catch (Throwable t) {
+                        setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
+                    }
+                }
 
+                if (databaseError.isError) {
+                    databaseError.logError();
+                } else {
+                    // this method is called so that supported locales will be
+                    // loaded
+                    // from db and stored in cache for later use
+                    Localization.getInstance().init();
+                    // Check ClientRules configuration in db and config file(s)
+                    // for errors. Also caches ClientRules values.
+                    ClientRules.init();
+                    // Check ProcessFlowRules configuration in db and config
+                    // file(s) for errors.
+                    ProcessFlowRules.init();
+                    initializeSecurity();
 
-				if (databaseError.isError) {
-					databaseError.logError();
-				}
-				else {
-					// this method is called so that supported locales will be
-					// loaded
-					// from db and stored in cache for later use
-					Localization.getInstance().init();
-					// Check ClientRules configuration in db and config file(s)
-					// for errors. Also caches ClientRules values.
-					ClientRules.init();
-					// Check ProcessFlowRules configuration in db and config
-					// file(s) for errors.
-					ProcessFlowRules.init();
-					initializeSecurity();
+                    Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
 
-					Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+                    // 1/4/08 Hopefully a temporary change to force Spring
+                    // to initialize here (rather than in struts-config.xml
+                    // prior to loading label values into a
+                    // cache in MifosConfiguration. When the use of the
+                    // cache is refactored away, we should be able to move
+                    // back to the struts based Spring initialization
+                    SpringUtil.initializeSpring();
 
-					// 1/4/08 Hopefully a temporary change to force Spring
-					// to initialize here (rather than in struts-config.xml
-					// prior to loading label values into a
-					// cache in MifosConfiguration. When the use of the
-					// cache is refactored away, we should be able to move
-					// back to the struts based Spring initialization
-					SpringUtil.initializeSpring();
+                    // Spring must be initialized before FinancialInitializer
+                    FinancialInitializer.initialize();
+                    EntityMasterData.getInstance().init();
+                    initializeEntityMaster();
+                    (new MifosScheduler()).registerTasks();
 
-					// Spring must be initialized before FinancialInitializer
-					FinancialInitializer.initialize();
-					EntityMasterData.getInstance().init();
-					initializeEntityMaster();
-					(new MifosScheduler()).registerTasks();
+                    Configuration.getInstance();
+                    MifosConfiguration.getInstance().init();
+                    configureAuditLogValues(Localization.getInstance().getMainLocale());
 
-					Configuration.getInstance();
-					MifosConfiguration.getInstance().init();
-					configureAuditLogValues(Localization.getInstance()
-							.getMainLocale());
+                }
+            }
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 
-				}
-			}
-		}
-		catch (Exception e) {
-			throw new Error(e);
-		}
-	}
-
-	public static void printDatabaseError(XmlBuilder xml, int dbVersion) {
-		synchronized (ApplicationInitializer.class) {
-			if (databaseError.isError) {
-				addDatabaseErrorMessage(xml, dbVersion);
-			}
-			else {
-				addNoFurtherDetailsMessage(xml);
-			}
-		}
-	}
+    public static void printDatabaseError(XmlBuilder xml, int dbVersion) {
+        synchronized (ApplicationInitializer.class) {
+            if (databaseError.isError) {
+                addDatabaseErrorMessage(xml, dbVersion);
+            } else {
+                addNoFurtherDetailsMessage(xml);
+            }
+        }
+    }
 
     private static void addNoFurtherDetailsMessage(XmlBuilder xml) {
         xml.startTag("p");
@@ -231,18 +219,17 @@ public class ApplicationInitializer implements ServletContextListener,
     }
 
     private static void addDatabaseErrorMessage(XmlBuilder xml, int dbVersion) {
-        xml.startTag("p", "style",
-        		"font-weight: bolder; color: red; font-size: x-large;");
+        xml.startTag("p", "style", "font-weight: bolder; color: red; font-size: x-large;");
 
         xml.text(databaseError.errmsg);
         xml.text("\n");
 
         if (databaseError.errorCode.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
-        	addDatabaseVersionMessage(xml, dbVersion);
+            addDatabaseVersionMessage(xml, dbVersion);
         }
         xml.endTag("p");
         if (databaseError.errorCode.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
-        	addConnectionFailureMessage(xml);
+            addConnectionFailureMessage(xml);
         }
         xml.text("\n");
         xml.startTag("p");
@@ -251,11 +238,10 @@ public class ApplicationInitializer implements ServletContextListener,
         xml.text("\n");
 
         if (null != databaseError.error.getCause()) {
-        	xml.startTag("p", "style",
-        			"font-weight: bolder; color: blue;");
-        	xml.text(databaseError.error.getCause().toString());
-        	xml.endTag("p");
-        	xml.text("\n");
+            xml.startTag("p", "style", "font-weight: bolder; color: blue;");
+            xml.text(databaseError.error.getCause().toString());
+            xml.endTag("p");
+            xml.text("\n");
         }
 
         xml.startTag("p", "style", "font-weight: bolder; color: blue;");
@@ -286,7 +272,8 @@ public class ApplicationInitializer implements ServletContextListener,
         xml.text("\n");
 
         xml.startTag("p");
-        xml.startTag("a", "href", "http://mifos.org/developers/wiki/ConfiguringMifos#customizing-your-database-connection");
+        xml.startTag("a", "href",
+                "http://mifos.org/developers/wiki/ConfiguringMifos#customizing-your-database-connection");
         xml.text("More about configuring your database connection.");
         xml.endTag("a");
         xml.endTag("p");
@@ -295,14 +282,11 @@ public class ApplicationInitializer implements ServletContextListener,
 
     private static void addDatabaseVersionMessage(XmlBuilder xml, int dbVersion) {
         if (dbVersion == -1) {
-        	xml.text("Database is too old to have a version.\n");
+            xml.text("Database is too old to have a version.\n");
+        } else {
+            xml.text("Database Version = " + dbVersion + "\n");
         }
-        else {
-        	xml.text("Database Version = " + dbVersion + "\n");
-        }
-        xml.text("Application Version = "
-        		+ DatabaseVersionPersistence.APPLICATION_VERSION
-        		+ ".\n");
+        xml.text("Application Version = " + DatabaseVersionPersistence.APPLICATION_VERSION + ".\n");
     }
 
     private static void addStackTraceHtml(XmlBuilder xml) {
@@ -319,82 +303,77 @@ public class ApplicationInitializer implements ServletContextListener,
         xml.text("\n");
     }
 
-	/**
-	 * Initializes Hibernate by making it read the hibernate.cfg file and also
-	 * setting the same with hibernate session factory.
-	 */
-	public static void initializeHibernate() throws AppNotConfiguredException {
-		try {
-		    StaticHibernateUtil.initialize();
-		}
-		catch (HibernateStartUpException e) {
-			throw new AppNotConfiguredException(e);
-		}
-	}
+    /**
+     * Initializes Hibernate by making it read the hibernate.cfg file and also
+     * setting the same with hibernate session factory.
+     */
+    public static void initializeHibernate() throws AppNotConfiguredException {
+        try {
+            StaticHibernateUtil.initialize();
+        } catch (HibernateStartUpException e) {
+            throw new AppNotConfiguredException(e);
+        }
+    }
 
-	/**
-	 * Initializes the logger using loggerconfiguration.xml
-	 * 
-	 * @throws AppNotConfiguredException -
-	 *             IF there is any exception while configuring the logger
-	 */
-	private void initializeLogger() throws AppNotConfiguredException {
-		try {
-			MifosLogManager.configureLogging();
-		}
-		catch (LoggerConfigurationException lce) {
-			throw new AppNotConfiguredException(lce);
-		}
+    /**
+     * Initializes the logger using loggerconfiguration.xml
+     * 
+     * @throws AppNotConfiguredException
+     *             - IF there is any exception while configuring the logger
+     */
+    private void initializeLogger() throws AppNotConfiguredException {
+        try {
+            MifosLogManager.configureLogging();
+        } catch (LoggerConfigurationException lce) {
+            throw new AppNotConfiguredException(lce);
+        }
 
-	}
+    }
 
-	/**
-	 * This function initialize and bring up the authorization and
-	 * authentication services
-	 * 
-	 * @throws AppNotConfiguredException -
-	 *             IF there is any failures during init
-	 */
-	private void initializeSecurity() throws AppNotConfiguredException {
-		try {
-			ActivityMapper.getInstance().init();
+    /**
+     * This function initialize and bring up the authorization and
+     * authentication services
+     * 
+     * @throws AppNotConfiguredException
+     *             - IF there is any failures during init
+     */
+    private void initializeSecurity() throws AppNotConfiguredException {
+        try {
+            ActivityMapper.getInstance().init();
 
-			AuthorizationManager.getInstance().init();
+            AuthorizationManager.getInstance().init();
 
-			HierarchyManager.getInstance().init();
+            HierarchyManager.getInstance().init();
 
-		}
-		catch (XMLReaderException e) {
+        } catch (XMLReaderException e) {
 
-			throw new AppNotConfiguredException(e);
-		}
-		catch (ApplicationException ae) {
-			throw new AppNotConfiguredException(ae);
-		}
-		catch (SystemException se) {
-			throw new AppNotConfiguredException(se);
-		}
+            throw new AppNotConfiguredException(e);
+        } catch (ApplicationException ae) {
+            throw new AppNotConfiguredException(ae);
+        } catch (SystemException se) {
+            throw new AppNotConfiguredException(se);
+        }
 
-	}
+    }
 
-	private void initializeEntityMaster() throws HibernateProcessException {
-		EntityMasterData.getInstance().init();
-	}
+    private void initializeEntityMaster() throws HibernateProcessException {
+        EntityMasterData.getInstance().init();
+    }
 
-	private void configureAuditLogValues(Locale locale) throws SystemException {
-		AuditConfigurtion.init(locale);
-	}
+    private void configureAuditLogValues(Locale locale) throws SystemException {
+        AuditConfigurtion.init(locale);
+    }
 
-	public void contextDestroyed(ServletContextEvent ctx) {
+    public void contextDestroyed(ServletContextEvent ctx) {
 
-	}
+    }
 
-	public void requestDestroyed(ServletRequestEvent event) {
-		StaticHibernateUtil.closeSession();
-	}
+    public void requestDestroyed(ServletRequestEvent event) {
+        StaticHibernateUtil.closeSession();
+    }
 
-	public void requestInitialized(ServletRequestEvent event) {
+    public void requestInitialized(ServletRequestEvent event) {
 
-	}
+    }
 
 }

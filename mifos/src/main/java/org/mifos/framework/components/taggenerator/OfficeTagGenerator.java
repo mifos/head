@@ -17,36 +17,36 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 
-public class OfficeTagGenerator extends TagGenerator{
-	
-	public OfficeTagGenerator(){
-	}
-	
-	@Override
-	protected StringBuilder build(BusinessObject obj,Object randomNum){
-		return build(obj,false,randomNum);
-	}
-	
-	@Override
-	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum){
-		OfficeBO office=(OfficeBO)obj;
-		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append("<a href=\"custSearchAction.do?method=getOfficeHomePage&officeId=");
-		strBuilder.append(office.getOfficeId());
-		strBuilder.append("&officeName=");
-		strBuilder.append(MifosTagUtils.xmlEscape( office.getOfficeName()));
-		strBuilder.append("&randomNum=");
-		strBuilder.append(randomNum);
-		strBuilder.append("\">");
-		strBuilder.append(MifosTagUtils.xmlEscape(office.getOfficeName()));
-		strBuilder.append("</a>");
-		return strBuilder;
-	}
+public class OfficeTagGenerator extends TagGenerator {
+
+    public OfficeTagGenerator() {
+    }
+
+    @Override
+    protected StringBuilder build(BusinessObject obj, Object randomNum) {
+        return build(obj, false, randomNum);
+    }
+
+    @Override
+    protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum) {
+        OfficeBO office = (OfficeBO) obj;
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append("<a href=\"custSearchAction.do?method=getOfficeHomePage&officeId=");
+        strBuilder.append(office.getOfficeId());
+        strBuilder.append("&officeName=");
+        strBuilder.append(MifosTagUtils.xmlEscape(office.getOfficeName()));
+        strBuilder.append("&randomNum=");
+        strBuilder.append(randomNum);
+        strBuilder.append("\">");
+        strBuilder.append(MifosTagUtils.xmlEscape(office.getOfficeName()));
+        strBuilder.append("</a>");
+        return strBuilder;
+    }
 }

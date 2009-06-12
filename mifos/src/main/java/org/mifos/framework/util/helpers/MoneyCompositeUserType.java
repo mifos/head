@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.io.Serializable;
@@ -37,121 +37,114 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.business.SystemConfiguration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
 /**
- * This class denotes a composite user type that has been 
- * created for the Money class. This has been done so that the
- * Money object can be persisted by Hibernate
+ * This class denotes a composite user type that has been created for the Money
+ * class. This has been done so that the Money object can be persisted by
+ * Hibernate
  */
 public class MoneyCompositeUserType implements CompositeUserType {
 
-	public MoneyCompositeUserType() {
-		super();
-	
-	}
-	/**
-	 * Properties that the Money class is composed off. These are the properties that will be persisted
-	 */
-	public String[] getPropertyNames() {
-		return new String[] { "currency", "amount" };
-	}
+    public MoneyCompositeUserType() {
+        super();
 
-	public Type[] getPropertyTypes() {
-		return new Type[] { Hibernate.SHORT, Hibernate.BIG_DECIMAL };
-	}
+    }
 
-	public Object getPropertyValue(Object component, int property) 
-	throws HibernateException {
-		Money money = (Money) component;
-		if (property == 0)
-			return money.getCurrency();
-		else
-			return money.getAmount();
-	}
+    /**
+     * Properties that the Money class is composed off. These are the properties
+     * that will be persisted
+     */
+    public String[] getPropertyNames() {
+        return new String[] { "currency", "amount" };
+    }
 
-	public void setPropertyValue(Object component, int property, Object value)
-			throws HibernateException {
-		
-	}
+    public Type[] getPropertyTypes() {
+        return new Type[] { Hibernate.SHORT, Hibernate.BIG_DECIMAL };
+    }
 
-	public Class returnedClass() {
-		return Money.class;
-	}
+    public Object getPropertyValue(Object component, int property) throws HibernateException {
+        Money money = (Money) component;
+        if (property == 0)
+            return money.getCurrency();
+        else
+            return money.getAmount();
+    }
 
-	public boolean equals(Object money1, Object money2) throws HibernateException {
-		if (money1 == money2) return true;
-		if (money1 == null || money2 == null) return false;
-		return money1.equals(money2);
-	}
+    public void setPropertyValue(Object component, int property, Object value) throws HibernateException {
 
-	public int hashCode(Object arg0) throws HibernateException {
-		return 0;
-	}
+    }
 
-	public Object nullSafeGet(ResultSet resultSet, String[] names,
-			SessionImplementor session, Object owner)
-			throws HibernateException, SQLException {
-		MifosCurrency currency = null;
-		if (resultSet == null)
-			return null;
-		Short currencyId = resultSet.getShort(names[0]);
-		MifosCurrency configCurrency = Configuration.getInstance()
-				.getSystemConfig().getCurrency();
-		//If currency id retrieved has a value of 0 or is null then the default currency is retrieved. This
-		//has been done so that there is a compatibility with M1 code
-		if (currencyId == null || currencyId.shortValue() == 0
-				|| currencyId.equals(configCurrency.getCurrencyId())) {
-			currency = configCurrency;
-		}
-		else {
-			Session session1 = StaticHibernateUtil.getSessionTL();
-			currency = (MifosCurrency) session1.get(MifosCurrency.class,
-					currencyId);
-		}
+    public Class returnedClass() {
+        return Money.class;
+    }
 
-		BigDecimal value = resultSet.getBigDecimal(names[1]);
-		return value == null ? new Money(currency, BigDecimal.valueOf(0))
-				: new Money(currency, value);
-	}
+    public boolean equals(Object money1, Object money2) throws HibernateException {
+        if (money1 == money2)
+            return true;
+        if (money1 == null || money2 == null)
+            return false;
+        return money1.equals(money2);
+    }
 
-	public void nullSafeSet(PreparedStatement statement, Object value, int index, SessionImplementor session)
-			throws HibernateException, SQLException {
-			if (value==null) {
-				statement.setNull(index, Types.NUMERIC);
-				statement.setNull(index+1, Types.VARCHAR);
-			} 
-			else {
-				Money amount = (Money) value;
-				Short currencyId =
-				amount.getCurrency().getCurrencyId();
-				statement.setShort( index, currencyId );
-				statement.setBigDecimal( index+1,amount.getAmount() );
-			}
-	}
+    public int hashCode(Object arg0) throws HibernateException {
+        return 0;
+    }
 
-	public Object deepCopy(Object value) throws HibernateException {
-		return value;
-	}
+    public Object nullSafeGet(ResultSet resultSet, String[] names, SessionImplementor session, Object owner)
+            throws HibernateException, SQLException {
+        MifosCurrency currency = null;
+        if (resultSet == null)
+            return null;
+        Short currencyId = resultSet.getShort(names[0]);
+        MifosCurrency configCurrency = Configuration.getInstance().getSystemConfig().getCurrency();
+        // If currency id retrieved has a value of 0 or is null then the default
+        // currency is retrieved. This
+        // has been done so that there is a compatibility with M1 code
+        if (currencyId == null || currencyId.shortValue() == 0 || currencyId.equals(configCurrency.getCurrencyId())) {
+            currency = configCurrency;
+        } else {
+            Session session1 = StaticHibernateUtil.getSessionTL();
+            currency = (MifosCurrency) session1.get(MifosCurrency.class, currencyId);
+        }
 
-	public boolean isMutable() {
-		return false;
-	}
+        BigDecimal value = resultSet.getBigDecimal(names[1]);
+        return value == null ? new Money(currency, BigDecimal.valueOf(0)) : new Money(currency, value);
+    }
 
-	public Serializable disassemble(Object value, SessionImplementor session)
-			throws HibernateException {
-		
-		return (Serializable) value;
-	}
+    public void nullSafeSet(PreparedStatement statement, Object value, int index, SessionImplementor session)
+            throws HibernateException, SQLException {
+        if (value == null) {
+            statement.setNull(index, Types.NUMERIC);
+            statement.setNull(index + 1, Types.VARCHAR);
+        } else {
+            Money amount = (Money) value;
+            Short currencyId = amount.getCurrency().getCurrencyId();
+            statement.setShort(index, currencyId);
+            statement.setBigDecimal(index + 1, amount.getAmount());
+        }
+    }
 
-	public Object assemble(Serializable cached, SessionImplementor session,
-			Object owner) throws HibernateException {
-		
-		return cached;
-	}
+    public Object deepCopy(Object value) throws HibernateException {
+        return value;
+    }
 
-	public Object replace(Object value, Object arg1, SessionImplementor session,
-			Object arg3) throws HibernateException {
-		
-		return null;
-	}
+    public boolean isMutable() {
+        return false;
+    }
+
+    public Serializable disassemble(Object value, SessionImplementor session) throws HibernateException {
+
+        return (Serializable) value;
+    }
+
+    public Object assemble(Serializable cached, SessionImplementor session, Object owner) throws HibernateException {
+
+        return cached;
+    }
+
+    public Object replace(Object value, Object arg1, SessionImplementor session, Object arg3) throws HibernateException {
+
+        return null;
+    }
 
 }

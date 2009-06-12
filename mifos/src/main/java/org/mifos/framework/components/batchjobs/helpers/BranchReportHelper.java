@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.Date;
@@ -42,83 +42,71 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class BranchReportHelper extends TaskHelper {
 
-	private CustomerBusinessService customerBusinessService;
-	private OfficeBusinessService officeBusinessService;
-	private IBranchReportService branchReportService;
-	private BranchReportConfigService branchReportConfigService;
-	
+    private CustomerBusinessService customerBusinessService;
+    private OfficeBusinessService officeBusinessService;
+    private IBranchReportService branchReportService;
+    private BranchReportConfigService branchReportConfigService;
 
-	public BranchReportHelper(MifosTask mifosTask) {
-		super(mifosTask);
-		customerBusinessService = new CustomerBusinessService();
-		officeBusinessService = new OfficeBusinessService();
-		branchReportService = new BranchReportService();
-		branchReportConfigService = ReportServiceFactory
-				.getBranchReportConfigService();
-	}
+    public BranchReportHelper(MifosTask mifosTask) {
+        super(mifosTask);
+        customerBusinessService = new CustomerBusinessService();
+        officeBusinessService = new OfficeBusinessService();
+        branchReportService = new BranchReportService();
+        branchReportConfigService = ReportServiceFactory.getBranchReportConfigService();
+    }
 
-	@Override
-	public void execute(long timeInMillis) throws BatchJobException {
-		Session session = StaticHibernateUtil.getSessionTL();
-		Transaction transaction = session.beginTransaction();
-		Date runDate = new Date(timeInMillis);
-		
-		try {
-			removeExistingBranchReportsForGivenRunDate(runDate);
-			populateBranchReportBatch(session, runDate);
-			transaction.commit();
-		}
-		catch (HibernateException e) {
-			transaction.rollback();
-			throw new BatchJobException(e);
-		}
-		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-	}
+    @Override
+    public void execute(long timeInMillis) throws BatchJobException {
+        Session session = StaticHibernateUtil.getSessionTL();
+        Transaction transaction = session.beginTransaction();
+        Date runDate = new Date(timeInMillis);
 
-	void populateBranchReportBatch(Session session, Date runDate) throws BatchJobException,
-			ServiceException {
-		List<OfficeBO> branchOffices = officeBusinessService.getBranchOffices();
-		if (branchOffices == null)
-			return;
-		for (OfficeBO branchOffice : branchOffices) {
-			createBranchReport(session, branchOffice, runDate);
-		}
-	}
+        try {
+            removeExistingBranchReportsForGivenRunDate(runDate);
+            populateBranchReportBatch(session, runDate);
+            transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+            throw new BatchJobException(e);
+        } catch (ServiceException e) {
+            throw new BatchJobException(e);
+        }
+    }
 
-	BranchReportBO createBranchReport(Session session, OfficeBO branchOffice,
-			Date runDate) throws BatchJobException {
-		BranchReportBO branchReport = new BranchReportBO(branchOffice
-				.getOfficeId(), runDate);
+    void populateBranchReportBatch(Session session, Date runDate) throws BatchJobException, ServiceException {
+        List<OfficeBO> branchOffices = officeBusinessService.getBranchOffices();
+        if (branchOffices == null)
+            return;
+        for (OfficeBO branchOffice : branchOffices) {
+            createBranchReport(session, branchOffice, runDate);
+        }
+    }
 
-		new BranchReportClientSummaryHelper(customerBusinessService, branchReportService,
-				branchReportConfigService).populateClientSummary(branchReport, branchOffice);
-		new BranchReportLoanArrearsAgingHelper(branchReport,
-				branchReportService, branchReportConfigService)
-				.populateLoanArrearsAging();
-		new BranchReportStaffSummaryHelper(branchReport, branchReportService,
-				branchReportConfigService).populateStaffSummary();
-		new BranchReportStaffingLevelSummaryHelper(branchReport,
-				branchReportService).populateStaffingLevelSummary();
-		new BranchReportLoanDetailsHelper(branchReport, branchReportService,
-				branchReportConfigService).populateLoanDetails();
-		new BranchReportLoanArrearsProfileHelper(branchReport,
-				branchReportService, branchReportConfigService)
-				.populateLoanArrearsProfile();
-		session.save(branchReport);
-		session.flush();
-		session.clear();
-		return branchReport;
-	}
+    BranchReportBO createBranchReport(Session session, OfficeBO branchOffice, Date runDate) throws BatchJobException {
+        BranchReportBO branchReport = new BranchReportBO(branchOffice.getOfficeId(), runDate);
 
-	void removeExistingBranchReportsForGivenRunDate(Date runDate)
-			throws ServiceException {
+        new BranchReportClientSummaryHelper(customerBusinessService, branchReportService, branchReportConfigService)
+                .populateClientSummary(branchReport, branchOffice);
+        new BranchReportLoanArrearsAgingHelper(branchReport, branchReportService, branchReportConfigService)
+                .populateLoanArrearsAging();
+        new BranchReportStaffSummaryHelper(branchReport, branchReportService, branchReportConfigService)
+                .populateStaffSummary();
+        new BranchReportStaffingLevelSummaryHelper(branchReport, branchReportService).populateStaffingLevelSummary();
+        new BranchReportLoanDetailsHelper(branchReport, branchReportService, branchReportConfigService)
+                .populateLoanDetails();
+        new BranchReportLoanArrearsProfileHelper(branchReport, branchReportService, branchReportConfigService)
+                .populateLoanArrearsProfile();
+        session.save(branchReport);
+        session.flush();
+        session.clear();
+        return branchReport;
+    }
 
-		if (!branchReportService.isReportDataPresentForRundate(runDate))
-			return;
+    void removeExistingBranchReportsForGivenRunDate(Date runDate) throws ServiceException {
 
-		branchReportService.removeBranchReports(branchReportService
-				.getBranchReports(runDate));
-	}
+        if (!branchReportService.isReportDataPresentForRundate(runDate))
+            return;
+
+        branchReportService.removeBranchReports(branchReportService.getBranchReports(runDate));
+    }
 }

@@ -17,21 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
 /**
- * This is the class which is invoked by the scheduler.The run method of this task 
- * is invoked by the scheduler.
+ * This is the class which is invoked by the scheduler.The run method of this
+ * task is invoked by the scheduler.
  */
 public class CollectionSheetTask extends MifosTask {
-	
-	@Override
-	public TaskHelper getTaskHelper() {
-		return new CollectionSheetHelper(this);
-	}
+
+    @Override
+    public TaskHelper getTaskHelper() {
+        return new CollectionSheetHelper(this);
+    }
 
 }

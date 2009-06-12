@@ -17,25 +17,25 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class StartUpException extends SystemException {
-	protected String key = null;
+    protected String key = null;
 
-	public StartUpException(Throwable cause) {
-		super(cause);
-	}
+    public StartUpException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		if (null == key) {
-			return ExceptionConstants.STARTUP_EXCEPTION;
-		} else {
-			return this.key;
-		}
-	}
+    @Override
+    public String getKey() {
+        if (null == key) {
+            return ExceptionConstants.STARTUP_EXCEPTION;
+        } else {
+            return this.key;
+        }
+    }
 
 }

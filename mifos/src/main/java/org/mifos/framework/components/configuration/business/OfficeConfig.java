@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
@@ -27,25 +27,25 @@ import org.mifos.framework.components.configuration.cache.CacheRepository;
  * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
-public class OfficeConfig{
-	
-	  private AccountConfig accountConfig;
-	  private Short officeId;
+public class OfficeConfig {
 
-	  public OfficeConfig(CacheRepository cacheRepo, Short officeId){
-		  this.officeId = officeId;
-		  accountConfig = new AccountConfig(cacheRepo,this);
-	  }
-	  
-	  public AccountConfig getAccountConfig() {
-		  return accountConfig;
-	  }
+    private AccountConfig accountConfig;
+    private Short officeId;
 
-	  public Short getOfficeId() {
-	  	 return officeId;
-	  }
+    public OfficeConfig(CacheRepository cacheRepo, Short officeId) {
+        this.officeId = officeId;
+        accountConfig = new AccountConfig(cacheRepo, this);
+    }
 
-	  public void setOfficeId(Short officeId) {
-		  this.officeId = officeId;
-	  }
+    public AccountConfig getAccountConfig() {
+        return accountConfig;
+    }
+
+    public Short getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(Short officeId) {
+        this.officeId = officeId;
+    }
 }

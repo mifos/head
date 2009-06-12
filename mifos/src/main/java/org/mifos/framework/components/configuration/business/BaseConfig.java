@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
@@ -26,45 +26,45 @@ import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.Constants;
 
 public class BaseConfig {
-	
-	  private OfficeConfig officeConfig;
-	  private CacheRepository cacheRepo;
-	  private HierarchyManager hierarchyManager = HierarchyManager.getInstance();
-	  
-	  public BaseConfig(CacheRepository cacheRepo,OfficeConfig officeConfig){
-		  this.cacheRepo = cacheRepo;
-		  this.officeConfig = officeConfig;
-	  }
-	  
-	  protected Object getValueFromCache(String key){
-		  return getValueFromCache(new Key(officeConfig.getOfficeId(),key));
-	  }
-	  
-	  private Object getValueFromCache(Key key){
-		  if(key.getOfficeId()==null)
-			  return null;
-		  Object obj = cacheRepo.getValueFromOfficeCache(key);
-		  if(obj!=null)
-			  return obj;
-		  return getValueFromCache(new Key(hierarchyManager.getParentOfficeId(key.getOfficeId()),key.getKey()));
-	  }
-	  
-	  protected Short getShortValueFromCache(String key, Short defaultValue){
-		  Object obj = getValueFromCache(key);
-		  return (obj!=null)?(Short)obj:defaultValue;
-	  }
-	  
-	  protected boolean getBooleanValueFromCache(String key, boolean defaultValue){
-		  Object value = getValueFromCache(key);
-		  return (value!=null)?(getBooleanValue((Short)value)):defaultValue;
-	  }
-	  
-	  protected String getStringValueFromCache(String key, String defaultValue){
-		  Object value = getValueFromCache(key);
-		  return (value!=null && ((String)value)!="")?((String)value):defaultValue;
-	  }
-	  
-	  private boolean getBooleanValue(Short value){
-			return value.equals(Constants.YES)?Boolean.TRUE:Boolean.FALSE;
-	  }
+
+    private OfficeConfig officeConfig;
+    private CacheRepository cacheRepo;
+    private HierarchyManager hierarchyManager = HierarchyManager.getInstance();
+
+    public BaseConfig(CacheRepository cacheRepo, OfficeConfig officeConfig) {
+        this.cacheRepo = cacheRepo;
+        this.officeConfig = officeConfig;
+    }
+
+    protected Object getValueFromCache(String key) {
+        return getValueFromCache(new Key(officeConfig.getOfficeId(), key));
+    }
+
+    private Object getValueFromCache(Key key) {
+        if (key.getOfficeId() == null)
+            return null;
+        Object obj = cacheRepo.getValueFromOfficeCache(key);
+        if (obj != null)
+            return obj;
+        return getValueFromCache(new Key(hierarchyManager.getParentOfficeId(key.getOfficeId()), key.getKey()));
+    }
+
+    protected Short getShortValueFromCache(String key, Short defaultValue) {
+        Object obj = getValueFromCache(key);
+        return (obj != null) ? (Short) obj : defaultValue;
+    }
+
+    protected boolean getBooleanValueFromCache(String key, boolean defaultValue) {
+        Object value = getValueFromCache(key);
+        return (value != null) ? (getBooleanValue((Short) value)) : defaultValue;
+    }
+
+    protected String getStringValueFromCache(String key, String defaultValue) {
+        Object value = getValueFromCache(key);
+        return (value != null && ((String) value) != "") ? ((String) value) : defaultValue;
+    }
+
+    private boolean getBooleanValue(Short value) {
+        return value.equals(Constants.YES) ? Boolean.TRUE : Boolean.FALSE;
+    }
 }

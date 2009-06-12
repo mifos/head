@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 import java.io.File;
@@ -39,67 +39,64 @@ import org.xml.sax.SAXParseException;
 
 public class TypeParser {
 
-	private TypeParser() {
-		super();
-	}
+    private TypeParser() {
+        super();
+    }
 
-	private static TypeParser instance = new TypeParser();
+    private static TypeParser instance = new TypeParser();
 
-	public static TypeParser getInstance() {
-		return instance;
-	}
+    public static TypeParser getInstance() {
+        return instance;
+    }
 
-	public Files parser(String filename) throws TableTagTypeParserException {
-		Files file = null;
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+    public Files parser(String filename) throws TableTagTypeParserException {
+        Files file = null;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-			factory.setNamespaceAware(true);
-			factory.setValidating(true);
-			factory.setAttribute(
-					"http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-					"http://www.w3.org/2001/XMLSchema");
+            factory.setNamespaceAware(true);
+            factory.setValidating(true);
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                    "http://www.w3.org/2001/XMLSchema");
 
-			// Specify our own schema - this overrides the schemaLocation in the
-			// xml file
-			factory.setAttribute(
-					"http://java.sun.com/xml/jaxp/properties/schemaSource",
-					"type.xsd");
+            // Specify our own schema - this overrides the schemaLocation in the
+            // xml file
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", "type.xsd");
 
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			builder.setErrorHandler(null);
-			Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
-			Node fileNode = document.getFirstChild();
-			file=new Files();
-			file.setFileName(createFileName(fileNode));
-		} catch (ParserConfigurationException pce) {
-			throw new TableTagTypeParserException(pce);
-		} catch (IOException ioe) {
-			throw new TableTagTypeParserException(ioe);
-		} catch (SAXParseException saxpe) {
-			throw new TableTagTypeParserException(saxpe);
-		} catch (SAXException saxe) {
-			throw new TableTagTypeParserException(saxe);
-		} catch (URISyntaxException urise) {
-			throw new TableTagTypeParserException(urise);
-		}
-		return file;
-	}
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(null);
+            Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
+            Node fileNode = document.getFirstChild();
+            file = new Files();
+            file.setFileName(createFileName(fileNode));
+        } catch (ParserConfigurationException pce) {
+            throw new TableTagTypeParserException(pce);
+        } catch (IOException ioe) {
+            throw new TableTagTypeParserException(ioe);
+        } catch (SAXParseException saxpe) {
+            throw new TableTagTypeParserException(saxpe);
+        } catch (SAXException saxe) {
+            throw new TableTagTypeParserException(saxe);
+        } catch (URISyntaxException urise) {
+            throw new TableTagTypeParserException(urise);
+        }
+        return file;
+    }
 
-	protected FileName[] createFileName(Node file) throws TableTagTypeParserException {
-		NodeList fileNameNodeList = ((Element) file)
-				.getElementsByTagName(TableTagConstants.FILENAME);
-		if (fileNameNodeList.getLength() == 0) {
-			throw new TableTagTypeParserException(fileNameNodeList.toString());
-		}
-		FileName fileName[] = new FileName[fileNameNodeList.getLength()];
-		for (int i = 0; i < fileNameNodeList.getLength(); i++) {
-			fileName[i] = new FileName();
-			fileName[i].setName((fileNameNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.NAME).getNodeValue()));
-			fileName[i].setPath((fileNameNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.PATH).getNodeValue()));
-		}
-		return fileName;
-	}
+    protected FileName[] createFileName(Node file) throws TableTagTypeParserException {
+        NodeList fileNameNodeList = ((Element) file).getElementsByTagName(TableTagConstants.FILENAME);
+        if (fileNameNodeList.getLength() == 0) {
+            throw new TableTagTypeParserException(fileNameNodeList.toString());
+        }
+        FileName fileName[] = new FileName[fileNameNodeList.getLength()];
+        for (int i = 0; i < fileNameNodeList.getLength(); i++) {
+            fileName[i] = new FileName();
+            fileName[i].setName((fileNameNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.NAME)
+                    .getNodeValue()));
+            fileName[i].setPath((fileNameNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.PATH)
+                    .getNodeValue()));
+        }
+        return fileName;
+    }
 
 }

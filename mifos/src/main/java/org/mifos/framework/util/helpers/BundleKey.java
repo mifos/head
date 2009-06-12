@@ -17,38 +17,37 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.Locale;
 
 public class BundleKey {
-	private Locale locale = null;
+    private Locale locale = null;
 
-	private String key = null;
+    private String key = null;
 
-	public BundleKey(Locale locale, String key) {
-		this.locale = locale;
-		this.key = key;
-	}
+    public BundleKey(Locale locale, String key) {
+        this.locale = locale;
+        this.key = key;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof BundleKey))
-			return false;
-		else {
-			BundleKey newObj = (BundleKey) obj;
-			if (newObj.locale.equals(this.locale)
-					&& newObj.key.equalsIgnoreCase(this.key))
-				return true;
-			else
-				return false;
-		}
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof BundleKey))
+            return false;
+        else {
+            BundleKey newObj = (BundleKey) obj;
+            if (newObj.locale.equals(this.locale) && newObj.key.equalsIgnoreCase(this.key))
+                return true;
+            else
+                return false;
+        }
+    }
 
-	@Override
-	public int hashCode() {
-		return this.locale.hashCode() + this.key.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return this.locale.hashCode() + this.key.hashCode();
+    }
 
 }

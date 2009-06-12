@@ -17,9 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework;
 
 public enum DatabaseErrorCode {
-	NO_DATABASE_ERROR, CONNECTION_FAILURE, UPGRADE_FAILURE;
+    NO_DATABASE_ERROR, CONNECTION_FAILURE, UPGRADE_FAILURE;
 }

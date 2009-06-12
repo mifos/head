@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.fieldConfiguration.persistence;
 
 import java.util.HashMap;
@@ -32,21 +32,19 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class FieldConfigurationPersistence extends Persistence {
-	
-	public List<EntityMaster> getEntityMasterList() throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER, null);
-	}
-	
-	public List<FieldConfigurationEntity> getListOfFields(Short entityId) 
-	throws PersistenceException {
-		Map<String,Object>queryParameter=new HashMap<String,Object>();
-		queryParameter.put(FieldConfigurationConstant.ENTITY_ID,entityId);
-		return executeNamedQuery(NamedQueryConstants.GET_FIELD_LIST, queryParameter);
-	}
-	
-	public List<FieldConfigurationEntity> getAllConfigurationFieldList() 
-	throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.GET_ALL_FIELD_CONFIGURATION_LIST, null);
-	}
+
+    public List<EntityMaster> getEntityMasterList() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER, null);
+    }
+
+    public List<FieldConfigurationEntity> getListOfFields(Short entityId) throws PersistenceException {
+        Map<String, Object> queryParameter = new HashMap<String, Object>();
+        queryParameter.put(FieldConfigurationConstant.ENTITY_ID, entityId);
+        return executeNamedQuery(NamedQueryConstants.GET_FIELD_LIST, queryParameter);
+    }
+
+    public List<FieldConfigurationEntity> getAllConfigurationFieldList() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_FIELD_CONFIGURATION_LIST, null);
+    }
 
 }

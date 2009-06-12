@@ -17,12 +17,11 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 /**
  * 
  */
 package org.mifos.framework.security.authentication;
-
 
 /**
  * EncryptionService will provide the encryption services to the system it
@@ -30,20 +29,20 @@ package org.mifos.framework.security.authentication;
  */
 public class EncryptionService {
 
-	private static final EncryptionService encryptionService = new EncryptionService();
+    private static final EncryptionService encryptionService = new EncryptionService();
 
-	private EncryptionService() {
-	}
+    private EncryptionService() {
+    }
 
-	public static EncryptionService getInstance() {
-		return encryptionService;
-	}
+    public static EncryptionService getInstance() {
+        return encryptionService;
+    }
 
-	public byte[] createEncryptedPassword(String password) {
-		return new PasswordHashing().createEncryptedPassword(password);
-	}
+    public byte[] createEncryptedPassword(String password) {
+        return new PasswordHashing().createEncryptedPassword(password);
+    }
 
-	public boolean verifyPassword(String password, byte[] encPassword) {
-		return new PasswordHashing().verifyPassword(password, encPassword);
-	}
+    public boolean verifyPassword(String password, byte[] encPassword) {
+        return new PasswordHashing().verifyPassword(password, encPassword);
+    }
 }

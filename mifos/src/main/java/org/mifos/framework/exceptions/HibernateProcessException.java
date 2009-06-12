@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 /**
@@ -29,16 +29,16 @@ package org.mifos.framework.exceptions;
 
 public class HibernateProcessException extends SystemException {
 
-	private String key = "exception.framework.SystemException.HibernateConnectionException";
+    private String key = "exception.framework.SystemException.HibernateConnectionException";
 
-	public HibernateProcessException(String key, Throwable cause) {
-		super(key, cause);
+    public HibernateProcessException(String key, Throwable cause) {
+        super(key, cause);
 
-	}
+    }
 
-	@Override
-	public String getKey() {
-		return key;
-	}
+    @Override
+    public String getKey() {
+        return key;
+    }
 
 }

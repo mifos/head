@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.helper;
 
 import java.util.ArrayList;
@@ -41,132 +41,125 @@ import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultDTOImpl implements QueryResult {
 
-	private ScrollableResults scrollResult = null;
+    private ScrollableResults scrollResult = null;
 
-	public QueryInputs queryInputs = null;
+    public QueryInputs queryInputs = null;
 
-	protected DTOBuilder dtoBuilder = null;
+    protected DTOBuilder dtoBuilder = null;
 
-	protected boolean buildDTO = false;
+    protected boolean buildDTO = false;
 
-	private Session hibernateSession = null;
+    private Session hibernateSession = null;
 
-	protected int size = 0;
+    protected int size = 0;
 
-	/**
-	 * Set the query which will be used for query execution
-	 * 
-	 */
-	public void executeQuery(Query query) throws HibernateSearchException {
-		if (query == null)
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_INPUTNULL);
-		try {
-			scrollResult = query.scroll();
-		} catch (HibernateException h) {
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_FAILED, h);
-		}
+    /**
+     * Set the query which will be used for query execution
+     * 
+     */
+    public void executeQuery(Query query) throws HibernateSearchException {
+        if (query == null)
+            throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+        try {
+            scrollResult = query.scroll();
+        } catch (HibernateException h) {
+            throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, h);
+        }
 
-	}
+    }
 
-	/**
-	 * Return the Session used for query
-	 * 
-	 */
-	public Session getSession() throws HibernateProcessException {
-		hibernateSession = QuerySession.openSession();
-		return hibernateSession;
-	}
+    /**
+     * Return the Session used for query
+     * 
+     */
+    public Session getSession() throws HibernateProcessException {
+        hibernateSession = QuerySession.openSession();
+        return hibernateSession;
+    }
 
-	/**
-	 * Set the query inputs which will be used for query execution
-	 * 
-	 */
-	public void setQueryInputs(QueryInputs queryInputs)
-			throws HibernateSearchException {
-		if (queryInputs == null)
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_INPUTNULL);
-		if (queryInputs.getBuildDTO()) {
-			this.queryInputs = queryInputs;
-			dtoBuilder = new DTOBuilder();
-			dtoBuilder.setInputs(queryInputs);
-			this.buildDTO = queryInputs.getBuildDTO();
-		}
+    /**
+     * Set the query inputs which will be used for query execution
+     * 
+     */
+    public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException {
+        if (queryInputs == null)
+            throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+        if (queryInputs.getBuildDTO()) {
+            this.queryInputs = queryInputs;
+            dtoBuilder = new DTOBuilder();
+            dtoBuilder.setInputs(queryInputs);
+            this.buildDTO = queryInputs.getBuildDTO();
+        }
 
-	}
+    }
 
-	/**
-	 * Returns the requested set of search result objects based on the
-	 * pagination at the front end.
-	 * 
-	 */
-	public List get(int position, int noOfObjects)
-			throws HibernateSearchException {
-		List returnList = new ArrayList();
-		try {
-			scrollResult.setRowNumber(position);
-			returnList = new ArrayList();
-			if (position < size) {
-				if (buildDTO)
-					returnList.add(buildDTO(scrollResult.get()));
-				else {
-					Object[] obj = scrollResult.get();
-					returnList.add(obj[0]);
-				}
-			}
-			for (int i = 0; i < noOfObjects - 1; i++) {
-				if (scrollResult.next()) {
-					if (buildDTO)
-						returnList.add(buildDTO(scrollResult.get()));
-					else {
-						Object[] obj = scrollResult.get();
-						returnList.add(obj[0]);
-					}
-				}
-			}
-		} catch (Exception e) {
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_FAILED, e);
-		}
-		return returnList;
-	}
+    /**
+     * Returns the requested set of search result objects based on the
+     * pagination at the front end.
+     * 
+     */
+    public List get(int position, int noOfObjects) throws HibernateSearchException {
+        List returnList = new ArrayList();
+        try {
+            scrollResult.setRowNumber(position);
+            returnList = new ArrayList();
+            if (position < size) {
+                if (buildDTO)
+                    returnList.add(buildDTO(scrollResult.get()));
+                else {
+                    Object[] obj = scrollResult.get();
+                    returnList.add(obj[0]);
+                }
+            }
+            for (int i = 0; i < noOfObjects - 1; i++) {
+                if (scrollResult.next()) {
+                    if (buildDTO)
+                        returnList.add(buildDTO(scrollResult.get()));
+                    else {
+                        Object[] obj = scrollResult.get();
+                        returnList.add(obj[0]);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
+        }
+        return returnList;
+    }
 
-	/**
-	 * Returns the records valid for the query
-	 * 
-	 */
-	public int getSize() throws HibernateSearchException {
-		int lastRowNumber = 0;
-		try {
-			scrollResult.last();
-			lastRowNumber = scrollResult.getRowNumber();
-			scrollResult.first();
-		} catch (Exception e) {
+    /**
+     * Returns the records valid for the query
+     * 
+     */
+    public int getSize() throws HibernateSearchException {
+        int lastRowNumber = 0;
+        try {
+            scrollResult.last();
+            lastRowNumber = scrollResult.getRowNumber();
+            scrollResult.first();
+        } catch (Exception e) {
 
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_FAILED, e);
-		}
-		size = lastRowNumber + 1;
-		return size;
-	}
+            throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
+        }
+        size = lastRowNumber + 1;
+        return size;
+    }
 
-	/**
-	 * This is invoked on the query result to indicate the end of search result
-	 * view at the front end , the associated hibernate session would be closed
-	 */
-	public void close() throws HibernateProcessException {
-		if (scrollResult != null)
-			scrollResult.close();
-		try {
-			QuerySession.closeSession(hibernateSession);
-		} catch (HibernateProcessException e) {
-			throw e;
-		}
-	}
+    /**
+     * This is invoked on the query result to indicate the end of search result
+     * view at the front end , the associated hibernate session would be closed
+     */
+    public void close() throws HibernateProcessException {
+        if (scrollResult != null)
+            scrollResult.close();
+        try {
+            QuerySession.closeSession(hibernateSession);
+        } catch (HibernateProcessException e) {
+            throw e;
+        }
+    }
 
-	protected Object buildDTO(Object[] dtoData) throws HibernateSearchException {
-		return dtoBuilder.buildDTO(dtoData);
-	}
+    protected Object buildDTO(Object[] dtoData) throws HibernateSearchException {
+        return dtoBuilder.buildDTO(dtoData);
+    }
 }

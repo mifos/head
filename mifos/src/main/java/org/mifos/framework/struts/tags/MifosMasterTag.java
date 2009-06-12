@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
@@ -27,249 +27,254 @@ import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.Constants;
 
 /**
- * Composite custom tag containing input types text,button and select. 
- * The values entered in text box are added to the select box
- * using add button. The values in the select box are editable using edit button.
+ * Composite custom tag containing input types text,button and select. The
+ * values entered in text box are added to the select box using add button. The
+ * values in the select box are editable using edit button.
  */
 public class MifosMasterTag extends BodyTagSupport {
 
-	/**
-	 * 	Serial Version UID for Serialization 
-	 */
-	private static final long serialVersionUID = 1701945584847509348L;
-	
-	//----------------------------------------------------- Instance Variables
-	
-	/**
-	 * MifosText to create a text box.
-	 */
-	private MifosMasterTextTag text=null;
-	
-	/**
-	 * MifosButton to create a button
-	 */
-	private MifosMasterButtonTag addButton=null;
-	
-	/**
-	 * MifosButton to create a button
-	 */
-	private MifosMasterButtonTag editButton=null;
-	
-	/**
-	 * MifosSelect to create a button
-	 */
-	private MifosMasterSelectTag select=null;
-	
-	/**
-	 * MifosText to create a hidden variable
-	 */
-	private MifosMasterTextTag hiddenValue=null;
-	
-	/**
-	 * property of the MifosText text
-	 */
-	private String textProperty;
+    /**
+     * Serial Version UID for Serialization
+     */
+    private static final long serialVersionUID = 1701945584847509348L;
 
-	public String getTextProperty() {
-		return textProperty;
-	}
+    // ----------------------------------------------------- Instance Variables
 
-	public void setTextProperty(String textProperty) {
-		this.textProperty = textProperty;
-	}
-	
-	/**
-	 * property of the MifosButton addButton 
-	 */
-	private String addButtonProperty=null;
+    /**
+     * MifosText to create a text box.
+     */
+    private MifosMasterTextTag text = null;
 
-	public String getAddButtonProperty() {
-		return addButtonProperty;
-	}
+    /**
+     * MifosButton to create a button
+     */
+    private MifosMasterButtonTag addButton = null;
 
-	public void setAddButtonProperty(String addButtonProperty) {
-		this.addButtonProperty = addButtonProperty;
-	}
-	
-	/**
-	 * value of the MifosButton addButton 
-	 */
-	private String addButtonValue=null;
+    /**
+     * MifosButton to create a button
+     */
+    private MifosMasterButtonTag editButton = null;
 
-	public String getAddButtonValue() {
-		return addButtonValue;
-	}
+    /**
+     * MifosSelect to create a button
+     */
+    private MifosMasterSelectTag select = null;
 
-	public void setAddButtonValue(String addButtonValue) {
-		this.addButtonValue = addButtonValue;
-	}
+    /**
+     * MifosText to create a hidden variable
+     */
+    private MifosMasterTextTag hiddenValue = null;
 
-	/**
-	 * onClick value of the MifosButton addButton 
-	 */
-	private String addOnClick=null;
-	
-	public String getAddOnClick() {
-		return addOnClick;
-	}
+    /**
+     * property of the MifosText text
+     */
+    private String textProperty;
 
-	public void setAddOnClick(String addOnClick) {
-		this.addOnClick = addOnClick;
-	}
-	
-	/**
-	 * property of the MifosButton editButton 
-	 */
-	private String editButtonProperty=null;
+    public String getTextProperty() {
+        return textProperty;
+    }
 
-	public String getEditButtonProperty() {
-		return editButtonProperty;
-	}
+    public void setTextProperty(String textProperty) {
+        this.textProperty = textProperty;
+    }
 
-	public void setEditButtonProperty(String editButtonProperty) {
-		this.editButtonProperty = editButtonProperty;
-	}
-	/**
-	 * value of the MifosButton editButton 
-	 */
-	private String editButtonValue=null;
+    /**
+     * property of the MifosButton addButton
+     */
+    private String addButtonProperty = null;
 
-	public String getEditButtonValue() {
-		return editButtonValue;
-	}
+    public String getAddButtonProperty() {
+        return addButtonProperty;
+    }
 
-	public void setEditButtonValue(String editButtonValue) {
-		this.editButtonValue = editButtonValue;
-	}
+    public void setAddButtonProperty(String addButtonProperty) {
+        this.addButtonProperty = addButtonProperty;
+    }
 
-	/**
-	 * onClick value of the MifosButton editButton 
-	 */
-	private String editOnClick=null;
+    /**
+     * value of the MifosButton addButton
+     */
+    private String addButtonValue = null;
 
-	public String getEditOnClick() {
-		return editOnClick;
-	}
+    public String getAddButtonValue() {
+        return addButtonValue;
+    }
 
-	public void setEditOnClick(String editOnClick) {
-		this.editOnClick = editOnClick;
-	}
+    public void setAddButtonValue(String addButtonValue) {
+        this.addButtonValue = addButtonValue;
+    }
 
-	/**
-	 * property of the MifosSelect select 
-	 */
-	private String selectProperty=null;
+    /**
+     * onClick value of the MifosButton addButton
+     */
+    private String addOnClick = null;
 
-	public String getSelectProperty() {
-		return selectProperty;
-	}
+    public String getAddOnClick() {
+        return addOnClick;
+    }
 
-	public void setSelectProperty(String selectProperty) {
-		this.selectProperty = selectProperty;
-	}
+    public void setAddOnClick(String addOnClick) {
+        this.addOnClick = addOnClick;
+    }
 
-	/**
-	 * size of the MifosSelect select 
-	 */
-	private String selectSize=null;
+    /**
+     * property of the MifosButton editButton
+     */
+    private String editButtonProperty = null;
 
-	public String getSelectSize() {
-		return selectSize;
-	}
-	
-	public void setSelectSize(String selectSize) {
-		this.selectSize = selectSize;
-	}
+    public String getEditButtonProperty() {
+        return editButtonProperty;
+    }
 
-	/**
-	 * multipleselection for the MifosSelect select 
-	 */
-	private String selectMultiple=null;
+    public void setEditButtonProperty(String editButtonProperty) {
+        this.editButtonProperty = editButtonProperty;
+    }
 
-	public String getSelectMultiple() {
-		return selectMultiple;
-	}
+    /**
+     * value of the MifosButton editButton
+     */
+    private String editButtonValue = null;
 
-	public void setSelectMultiple(String selectMultiple) {
-		this.selectMultiple = selectMultiple;
-	}
+    public String getEditButtonValue() {
+        return editButtonValue;
+    }
 
-	/**
-	 * style for the MifosSelect select 
-	 */	
-	private String selectStyle=null;
+    public void setEditButtonValue(String editButtonValue) {
+        this.editButtonValue = editButtonValue;
+    }
 
-	public String getSelectStyle() {
-		return selectStyle;
-	}
+    /**
+     * onClick value of the MifosButton editButton
+     */
+    private String editOnClick = null;
 
-	public void setSelectStyle(String selectStyle) {
-		this.selectStyle = selectStyle;
-	}
+    public String getEditOnClick() {
+        return editOnClick;
+    }
 
-	/**
-	 * Source path of the script files 
-	 */	
-	private String scriptSrc=null;
+    public void setEditOnClick(String editOnClick) {
+        this.editOnClick = editOnClick;
+    }
 
-	public String getScriptSrc() {
-		return scriptSrc;
-	}
+    /**
+     * property of the MifosSelect select
+     */
+    private String selectProperty = null;
 
-	public void setScriptSrc(String scriptSrc) {
-		this.scriptSrc = scriptSrc;
-	}
-	
-	//--------------------------------------------------------- Constructors
-	
-	/**
+    public String getSelectProperty() {
+        return selectProperty;
+    }
+
+    public void setSelectProperty(String selectProperty) {
+        this.selectProperty = selectProperty;
+    }
+
+    /**
+     * size of the MifosSelect select
+     */
+    private String selectSize = null;
+
+    public String getSelectSize() {
+        return selectSize;
+    }
+
+    public void setSelectSize(String selectSize) {
+        this.selectSize = selectSize;
+    }
+
+    /**
+     * multipleselection for the MifosSelect select
+     */
+    private String selectMultiple = null;
+
+    public String getSelectMultiple() {
+        return selectMultiple;
+    }
+
+    public void setSelectMultiple(String selectMultiple) {
+        this.selectMultiple = selectMultiple;
+    }
+
+    /**
+     * style for the MifosSelect select
+     */
+    private String selectStyle = null;
+
+    public String getSelectStyle() {
+        return selectStyle;
+    }
+
+    public void setSelectStyle(String selectStyle) {
+        this.selectStyle = selectStyle;
+    }
+
+    /**
+     * Source path of the script files
+     */
+    private String scriptSrc = null;
+
+    public String getScriptSrc() {
+        return scriptSrc;
+    }
+
+    public void setScriptSrc(String scriptSrc) {
+        this.scriptSrc = scriptSrc;
+    }
+
+    // --------------------------------------------------------- Constructors
+
+    /**
      * Construct a new instance of this tag.
      */
-	public MifosMasterTag() {
-		super();
-	}
+    public MifosMasterTag() {
+        super();
+    }
 
-	//--------------------------------------------------------- Public Methods
-	
-	/**
+    // --------------------------------------------------------- Public Methods
+
+    /**
      * Render the beginning of the master tag.
-     * @exception JspException if a JSP exception has occurred
-	 * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-	 */
-	@Override
-	public int doStartTag() throws JspException {
-		//get the source files of javascript
-		TagUtils.getInstance().write(this.pageContext, getJavaScriptSource());
-		TagUtils.getInstance().write(this.pageContext, "<table><tr><td>");
-		TagUtils.getInstance().write(this.pageContext, "Enter Value:");
-		TagUtils.getInstance().write(this.pageContext, "</td><td>");
-		//create instance of MifosText
-		text=new MifosMasterTextTag(this.pageContext,textProperty,"text");
-		TagUtils.getInstance().write(this.pageContext, text.getTextString());
-		TagUtils.getInstance().write(this.pageContext, "</td><td>");
-		//create instance of MifosButton
-		addButton=new MifosMasterButtonTag(this.pageContext,addButtonProperty,addButtonValue,addOnClick);
-		TagUtils.getInstance().write(this.pageContext, addButton.getButtonString());
-		TagUtils.getInstance().write(this.pageContext, "</td></tr><tr><td colspan=2>");
-		//create instance of MifosSelect
-		select=new MifosMasterSelectTag(this.pageContext,selectProperty,selectSize,selectMultiple,
-				selectStyle,"fnSelectToolTip(event)");
-		TagUtils.getInstance().write(this.pageContext, select.getSelectString());
-		//Store select tag as a page attribute
+     * 
+     * @exception JspException
+     *                if a JSP exception has occurred
+     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     */
+    @Override
+    public int doStartTag() throws JspException {
+        // get the source files of javascript
+        TagUtils.getInstance().write(this.pageContext, getJavaScriptSource());
+        TagUtils.getInstance().write(this.pageContext, "<table><tr><td>");
+        TagUtils.getInstance().write(this.pageContext, "Enter Value:");
+        TagUtils.getInstance().write(this.pageContext, "</td><td>");
+        // create instance of MifosText
+        text = new MifosMasterTextTag(this.pageContext, textProperty, "text");
+        TagUtils.getInstance().write(this.pageContext, text.getTextString());
+        TagUtils.getInstance().write(this.pageContext, "</td><td>");
+        // create instance of MifosButton
+        addButton = new MifosMasterButtonTag(this.pageContext, addButtonProperty, addButtonValue, addOnClick);
+        TagUtils.getInstance().write(this.pageContext, addButton.getButtonString());
+        TagUtils.getInstance().write(this.pageContext, "</td></tr><tr><td colspan=2>");
+        // create instance of MifosSelect
+        select = new MifosMasterSelectTag(this.pageContext, selectProperty, selectSize, selectMultiple, selectStyle,
+                "fnSelectToolTip(event)");
+        TagUtils.getInstance().write(this.pageContext, select.getSelectString());
+        // Store select tag as a page attribute
         pageContext.setAttribute(Constants.SELECT_KEY, select);
-		
+
         return super.doStartTag();
-	}
-	
-	/**
-     * Save any body content of this tag, which will generally be the
-     * option(s) representing the values displayed to the user.
-     * @exception JspException if a JSP exception has occurred
-	 * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
-	 */
-	@Override
-	public int doAfterBody() throws JspException {
-		 if (bodyContent != null) {
+    }
+
+    /**
+     * Save any body content of this tag, which will generally be the option(s)
+     * representing the values displayed to the user.
+     * 
+     * @exception JspException
+     *                if a JSP exception has occurred
+     * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
+     */
+    @Override
+    public int doAfterBody() throws JspException {
+        if (bodyContent != null) {
             String value = bodyContent.getString();
             if (value == null) {
                 value = "";
@@ -277,16 +282,18 @@ public class MifosMasterTag extends BodyTagSupport {
             select.saveBody = value.trim();
         }
         return (SKIP_BODY);
-	}
-	
-	/**
+    }
+
+    /**
      * Render the end of this tag.
-     * @exception JspException if a JSP exception has occurred
-	 * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-	 */
-	@Override
-	public int doEndTag() throws JspException {
-		 // Remove the page scope attributes we created
+     * 
+     * @exception JspException
+     *                if a JSP exception has occurred
+     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
+     */
+    @Override
+    public int doEndTag() throws JspException {
+        // Remove the page scope attributes we created
         pageContext.removeAttribute(Constants.SELECT_KEY);
 
         // Render a tag representing the end of our current form
@@ -298,26 +305,25 @@ public class MifosMasterTag extends BodyTagSupport {
         results.append("</select>");
 
         TagUtils.getInstance().write(pageContext, results.toString());
-        //get the span to diaplay tooltip
+        // get the span to diaplay tooltip
         TagUtils.getInstance().write(pageContext, getSpan());
         TagUtils.getInstance().write(this.pageContext, "</td><td>");
-        //instance of MifosButton
-        editButton=new MifosMasterButtonTag(this.pageContext,editButtonProperty,
-        		editButtonValue,editOnClick);
-		TagUtils.getInstance().write(this.pageContext, editButton.getButtonString());
-		TagUtils.getInstance().write(this.pageContext, "</td></tr></table>");
-		//Instance of MifosText
-		hiddenValue=new MifosMasterTextTag(this.pageContext,"hiddenValue","hidden");
-		TagUtils.getInstance().write(this.pageContext, hiddenValue.getTextString());
-		
-        return (EVAL_PAGE);
-	}
+        // instance of MifosButton
+        editButton = new MifosMasterButtonTag(this.pageContext, editButtonProperty, editButtonValue, editOnClick);
+        TagUtils.getInstance().write(this.pageContext, editButton.getButtonString());
+        TagUtils.getInstance().write(this.pageContext, "</td></tr></table>");
+        // Instance of MifosText
+        hiddenValue = new MifosMasterTextTag(this.pageContext, "hiddenValue", "hidden");
+        TagUtils.getInstance().write(this.pageContext, hiddenValue.getTextString());
 
-	/**
+        return (EVAL_PAGE);
+    }
+
+    /**
      * Release any acquired resources.
      */
     @Override
-	public void release() {
+    public void release() {
         super.release();
         textProperty = null;
         addButtonProperty = null;
@@ -326,40 +332,40 @@ public class MifosMasterTag extends BodyTagSupport {
         editButtonProperty = null;
         editButtonValue = null;
         editOnClick = null;
-        selectMultiple=null;
-        selectProperty=null;
-        selectSize=null;
-        scriptSrc=null;
+        selectMultiple = null;
+        selectProperty = null;
+        selectSize = null;
+        scriptSrc = null;
     }
 
-	//------------------------------------------------------ Protected Methods
-	
+    // ------------------------------------------------------ Protected Methods
+
     /**
      * render the source of the script file
      * 
      */
-	protected String getJavaScriptSource() {
-		StringBuffer result=new StringBuffer();
-		result.append("<script src=\"");
-		if(getScriptSrc()!=null)
-			result.append(getScriptSrc());
-		result.append("\"></script>");
-		return result.toString();
-	}
-	
-	/**
-	 * Render the span to display tooltip
-	 * 
-	 */
-	protected String getSpan() {
-		StringBuffer result=new StringBuffer();
-		result.append("<span id=\"s1\"");
-		result.append("style=\"BORDER-RIGHT: black 1px solid; PADDING-RIGHT: 3px;");
-		result.append("BORDER-TOP: black 1px solid;PADDING-LEFT: 3px; PADDING-BOTTOM: 3px; ");
-		result.append("BORDER-LEFT: black 1px solid; PADDING-TOP: 3px;");
-		result.append("BORDER-BOTTOM: black 1px solid;POSITION: absolute; DISPLAY: none\" >");
-		result.append("</span>");
-		return result.toString();
-	}
+    protected String getJavaScriptSource() {
+        StringBuffer result = new StringBuffer();
+        result.append("<script src=\"");
+        if (getScriptSrc() != null)
+            result.append(getScriptSrc());
+        result.append("\"></script>");
+        return result.toString();
+    }
+
+    /**
+     * Render the span to display tooltip
+     * 
+     */
+    protected String getSpan() {
+        StringBuffer result = new StringBuffer();
+        result.append("<span id=\"s1\"");
+        result.append("style=\"BORDER-RIGHT: black 1px solid; PADDING-RIGHT: 3px;");
+        result.append("BORDER-TOP: black 1px solid;PADDING-LEFT: 3px; PADDING-BOTTOM: 3px; ");
+        result.append("BORDER-LEFT: black 1px solid; PADDING-TOP: 3px;");
+        result.append("BORDER-BOTTOM: black 1px solid;POSITION: absolute; DISPLAY: none\" >");
+        result.append("</span>");
+        return result.toString();
+    }
 
 }

@@ -17,55 +17,55 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs;
 
 import java.util.TimerTask;
 
 public abstract class MifosTask extends TimerTask {
 
-	public static boolean batchJobRunning = false;
+    public static boolean batchJobRunning = false;
 
-	public TaskHelper helper;
+    public TaskHelper helper;
 
-	/**
-	 * Name of the task same as specified in XML
-	 */
-	public String name;
+    /**
+     * Name of the task same as specified in XML
+     */
+    public String name;
 
-	/**
-	 * Attribute which determines if the job is a regular DB update job to be
-	 * run daily and hence registereed in the database or a user requested job. [
-	 * if true : job should run daily false : user requested job ]
-	 */
-	public boolean normal;
+    /**
+     * Attribute which determines if the job is a regular DB update job to be
+     * run daily and hence registereed in the database or a user requested job.
+     * [ if true : job should run daily false : user requested job ]
+     */
+    public boolean normal;
 
-	/**
-	 * An alternate set of parameters which could be set while the task is
-	 * created.This constitutes input to the MifosTask while executing.
-	 */
-	public Object params;
+    /**
+     * An alternate set of parameters which could be set while the task is
+     * created.This constitutes input to the MifosTask while executing.
+     */
+    public Object params;
 
-	public MifosTask() {
-	}
+    public MifosTask() {
+    }
 
-	@Override
-	public final void run() {
-		helper = getTaskHelper();
-		helper.executeTask();
-	}
+    @Override
+    public final void run() {
+        helper = getTaskHelper();
+        helper.executeTask();
+    }
 
-	public static boolean isBatchJobRunning() {
-		return batchJobRunning;
-	}
+    public static boolean isBatchJobRunning() {
+        return batchJobRunning;
+    }
 
-	public static void batchJobStarted() {
-		batchJobRunning = true;
-	}
-	
-	public static void batchJobFinished() {
-		batchJobRunning = false;
-	}
-	
-	public abstract TaskHelper getTaskHelper() ;
+    public static void batchJobStarted() {
+        batchJobRunning = true;
+    }
+
+    public static void batchJobFinished() {
+        batchJobRunning = false;
+    }
+
+    public abstract TaskHelper getTaskHelper();
 }

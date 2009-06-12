@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.mifos.application.admin.business.service.AdminBusinessService;
@@ -40,40 +40,32 @@ import org.mifos.framework.components.audit.business.service.AuditBusinessServic
 /**
  * This class is deprecated.
  * 
- * Instead of calling {@link ServiceFactory#getBusinessService(BusinessServiceName)},
- * just call the constructor of the business service directly.
- * for example, new ConfigurationBusinessService();
+ * Instead of calling
+ * {@link ServiceFactory#getBusinessService(BusinessServiceName)}, just call the
+ * constructor of the business service directly. for example, new
+ * ConfigurationBusinessService();
  */
 public enum BusinessServiceName {
-	Customer(CustomerBusinessService.class),
-	MasterDataService(MasterDataService.class),
-	ReportsService(ReportsBusinessService.class),
-	FeesService(FeeBusinessService.class),
-	Personnel(PersonnelBusinessService.class),
-	Center(CenterBusinessService.class),
-	Client(ClientBusinessService.class),
-	Group(GroupBusinessService.class),
-	Office(OfficeBusinessService.class),
-	LoanProduct(LoanPrdBusinessService.class),
-	RolesPermissions(RolesPermissionsBusinessService.class),
-	Admin(AdminBusinessService.class),
-	AuditLog(AuditBusinessService.class),
-	Configuration(ConfigurationBusinessService.class),
-	PrdMix(ProductMixBusinessService.class),
-	;
+    Customer(CustomerBusinessService.class), MasterDataService(MasterDataService.class), ReportsService(
+            ReportsBusinessService.class), FeesService(FeeBusinessService.class), Personnel(
+            PersonnelBusinessService.class), Center(CenterBusinessService.class), Client(ClientBusinessService.class), Group(
+            GroupBusinessService.class), Office(OfficeBusinessService.class), LoanProduct(LoanPrdBusinessService.class), RolesPermissions(
+            RolesPermissionsBusinessService.class), Admin(AdminBusinessService.class), AuditLog(
+            AuditBusinessService.class), Configuration(ConfigurationBusinessService.class), PrdMix(
+            ProductMixBusinessService.class), ;
 
-	private String name;
+    private String name;
 
-	private BusinessServiceName(String name) {
-		this.name = name;
-	}
+    private BusinessServiceName(String name) {
+        this.name = name;
+    }
 
-	private BusinessServiceName(Class service) {
-		this(service.getName());
-	}
+    private BusinessServiceName(Class service) {
+        this(service.getName());
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
 }

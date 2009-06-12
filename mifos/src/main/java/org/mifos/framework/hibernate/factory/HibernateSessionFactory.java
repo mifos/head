@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.factory;
 
 import org.hibernate.SessionFactory;
@@ -33,45 +33,44 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
  */
 public class HibernateSessionFactory {
 
-	private static SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
-	/**
-	 * Set the static hibernate session factory from the hibernate configuration
-	 * passed as a parameter.
-	 */
-	public static void setConfiguration(Configuration config)
-			throws HibernateStartUpException {
-		try {
-			setFactory(config.buildSessionFactory());
-		} catch (Exception e) {
-			throw new HibernateStartUpException(e);
-		}
-	}
+    /**
+     * Set the static hibernate session factory from the hibernate configuration
+     * passed as a parameter.
+     */
+    public static void setConfiguration(Configuration config) throws HibernateStartUpException {
+        try {
+            setFactory(config.buildSessionFactory());
+        } catch (Exception e) {
+            throw new HibernateStartUpException(e);
+        }
+    }
 
-	public static void setFactory(SessionFactory newFactory) {
-		/**
-		 * Throwing HibernateStartUpException if sessionFactory is
-		 * already set seems to cause somewhat
-		 * mysterious failures in {@link ConstPluginTest}.
-		 * 
-		 * Why?
-		 * 
-		 * And shouldn't we at least call .close() on the old
-		 * sessionFactory, if nothing else?
-		 */
-		sessionFactory = newFactory;
-	}
+    public static void setFactory(SessionFactory newFactory) {
+        /**
+         * Throwing HibernateStartUpException if sessionFactory is already set
+         * seems to cause somewhat mysterious failures in
+         * {@link ConstPluginTest}.
+         * 
+         * Why?
+         * 
+         * And shouldn't we at least call .close() on the old sessionFactory, if
+         * nothing else?
+         */
+        sessionFactory = newFactory;
+    }
 
-	/**
-	 * The call to getSessionFactory returns the HibernateSessionFactory which
-	 * is configured with the mapping hibernate configuration files
-	 */
-	public static SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-	
-	public static boolean isConfigured() {
-		return sessionFactory != null;
-	}
+    /**
+     * The call to getSessionFactory returns the HibernateSessionFactory which
+     * is configured with the mapping hibernate configuration files
+     */
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public static boolean isConfigured() {
+        return sessionFactory != null;
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs;
 
 import java.io.File;
@@ -44,31 +44,31 @@ import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 
 public class MifosScheduler extends Timer {
-	
-	private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
+
+    private static final String BATCH_JOB_CLASS_PATH_PREFIX = "org.mifos.framework.components.batchjobs.helpers.";
     Timer timer = null;
-	List<String> taskNames = new ArrayList<String>();
+    List<String> taskNames = new ArrayList<String>();
     private static MifosLogger logger = MifosLogManager.getLogger(MifosScheduler.class.getName());
     private ConfigurationLocator configurationLocator;
 
     public MifosScheduler() {
-		timer = new Timer("Mifos Task Scheduler Thread", true);
-	}
-	
-	/**
-	 * This method schedules a specified task to run at a specified time after a
-	 * specified delay
-	 */
-	public void schedule(MifosTask task, Date initial, long delay) {
-		timer.schedule(task, initial, delay);
-		taskNames.add(task.name);
-	}
+        timer = new Timer("Mifos Task Scheduler Thread", true);
+    }
 
-	/**
-	 * This method reads all the task from an xml file and registers them with
-	 * the MifosScheduler"
-	 */
-	public void registerTasks() throws Exception {
+    /**
+     * This method schedules a specified task to run at a specified time after a
+     * specified delay
+     */
+    public void schedule(MifosTask task, Date initial, long delay) {
+        timer.schedule(task, initial, delay);
+        taskNames.add(task.name);
+    }
+
+    /**
+     * This method reads all the task from an xml file and registers them with
+     * the MifosScheduler"
+     */
+    public void registerTasks() throws Exception {
         MifosTask mifosTask;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -106,50 +106,48 @@ public class MifosScheduler extends Timer {
     }
 
     /**
-	 * These are the non-regular jobs which do not recur but have to be run
-	 * infrequently on user request. Hence there is no delay input. An example:
-	 * Change in center meeting schedule which needs to change all inherited
-	 * meetings as well as reschedule loans, these tasks typically require a few
-	 * input params as well.
-	 * 
-	 * @deprecated YAGNI. Not currently used, and not known to be necessary. No replacement has been identified.
-	 */
-	public void schedule(MifosTask task, Date initial) {
-		timer.schedule(task, initial);
-		taskNames.add(task.name);
-	}
-
-	/**
-	 * This is a helper method that parses the initialtime string and returns a
-	 * valid Date time.
-	 */
-	public Date parseInitialTime(String initialTime) {
-		int firstIndex = initialTime.indexOf(":");
-		int lastIndex = initialTime.indexOf(":", firstIndex);
-		Calendar time = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-		int hourOfTheDay = Integer.parseInt(initialTime
-				.substring(0, firstIndex));
-		int minutes = Integer.parseInt(initialTime.substring(firstIndex + 1,
-				lastIndex + firstIndex + 1));
-		int seconds = Integer.parseInt(initialTime.substring(lastIndex
-				+ firstIndex + 2, initialTime.length()));
-		time.set(Calendar.HOUR_OF_DAY, hourOfTheDay);
-		time.set(Calendar.MINUTE, minutes);
-		time.set(Calendar.SECOND, seconds);
-		return time.getTime();
-	}
-	
-	public List<String> getTaskNames() {
-		return taskNames;
-	}
-
-   private InputSource getTaskConfigurationInputSource() throws FileNotFoundException, IOException {
-      File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
-      FileReader fileReader = new FileReader(configurationFile);
-      logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
-      return new InputSource(fileReader);
+     * These are the non-regular jobs which do not recur but have to be run
+     * infrequently on user request. Hence there is no delay input. An example:
+     * Change in center meeting schedule which needs to change all inherited
+     * meetings as well as reschedule loans, these tasks typically require a few
+     * input params as well.
+     * 
+     * @deprecated YAGNI. Not currently used, and not known to be necessary. No
+     *             replacement has been identified.
+     */
+    public void schedule(MifosTask task, Date initial) {
+        timer.schedule(task, initial);
+        taskNames.add(task.name);
     }
-	
+
+    /**
+     * This is a helper method that parses the initialtime string and returns a
+     * valid Date time.
+     */
+    public Date parseInitialTime(String initialTime) {
+        int firstIndex = initialTime.indexOf(":");
+        int lastIndex = initialTime.indexOf(":", firstIndex);
+        Calendar time = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
+        int hourOfTheDay = Integer.parseInt(initialTime.substring(0, firstIndex));
+        int minutes = Integer.parseInt(initialTime.substring(firstIndex + 1, lastIndex + firstIndex + 1));
+        int seconds = Integer.parseInt(initialTime.substring(lastIndex + firstIndex + 2, initialTime.length()));
+        time.set(Calendar.HOUR_OF_DAY, hourOfTheDay);
+        time.set(Calendar.MINUTE, minutes);
+        time.set(Calendar.SECOND, seconds);
+        return time.getTime();
+    }
+
+    public List<String> getTaskNames() {
+        return taskNames;
+    }
+
+    private InputSource getTaskConfigurationInputSource() throws FileNotFoundException, IOException {
+        File configurationFile = getConfigurationLocator().getFile(SchedulerConstants.CONFIGURATION_FILE_NAME);
+        FileReader fileReader = new FileReader(configurationFile);
+        logger.info("Reading task configuration from: " + configurationFile.getAbsolutePath());
+        return new InputSource(fileReader);
+    }
+
     public ConfigurationLocator getConfigurationLocator() {
         if (configurationLocator == null) {
             configurationLocator = new ConfigurationLocator();

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
@@ -30,42 +30,49 @@ import org.apache.struts.taglib.html.ButtonTag;
  */
 public class MifosMasterButtonTag extends ButtonTag {
 
-	/**
-	 * 	Serial Version UID for Serialization 
-	 */
-	private static final long serialVersionUID = 1098546454658944584L;
-	
-	//----------------------------------------------------- Constructors
+    /**
+     * Serial Version UID for Serialization
+     */
+    private static final long serialVersionUID = 1098546454658944584L;
 
-	/**
+    // ----------------------------------------------------- Constructors
+
+    /**
      * Construct a new instance of this tag.
      */
-	public MifosMasterButtonTag() {
-		super();
-	}
-	
-	/**
+    public MifosMasterButtonTag() {
+        super();
+    }
+
+    /**
      * Construct a new instance of this tag.
-     * @param pageContext 	pageContext of the Tag
-     * @param property 		property of the element
-     * @param value 		value of the element
-     * @param onClick 		onClick attribute of the element
+     * 
+     * @param pageContext
+     *            pageContext of the Tag
+     * @param property
+     *            property of the element
+     * @param value
+     *            value of the element
+     * @param onClick
+     *            onClick attribute of the element
      */
-	public MifosMasterButtonTag(PageContext pageContext,String property,String value,String onClick) {
-		this.pageContext=pageContext;
-		this.property=property;
-		this.value=value;
-		this.setOnclick(onClick);
-	}
-	
-	//--------------------------------------------------------- Public Methods
-	
-	/**
+    public MifosMasterButtonTag(PageContext pageContext, String property, String value, String onClick) {
+        this.pageContext = pageContext;
+        this.property = property;
+        this.value = value;
+        this.setOnclick(onClick);
+    }
+
+    // --------------------------------------------------------- Public Methods
+
+    /**
      * Render the Button element.
-     * @exception JspException if a JSP exception has occurred
+     * 
+     * @exception JspException
+     *                if a JSP exception has occurred
      */
-	public String getButtonString() throws JspException {
-		StringBuffer results = new StringBuffer();
+    public String getButtonString() throws JspException {
+        StringBuffer results = new StringBuffer();
         results.append(getElementOpen());
         prepareAttribute(results, "name", prepareName());
         prepareButtonAttributes(results);
@@ -74,33 +81,35 @@ public class MifosMasterButtonTag extends ButtonTag {
         prepareOtherAttributes(results);
         results.append(getElementClose());
         return results.toString();
-	}
-	
-	//--------------------------------------------------------- Protected Methods
-	
-	/**
+    }
+
+    // --------------------------------------------------------- Protected
+    // Methods
+
+    /**
      * Render the opening element.
-     *
+     * 
      * @return The opening part of the element.
      */
     @Override
-	protected String getElementOpen() {
+    protected String getElementOpen() {
         return "<input type=\"button\"";
     }
-    
+
     /**
      * Prepare the name element
+     * 
      * @return The element name.
      */
     @Override
-	protected String prepareName() throws JspException {
+    protected String prepareName() throws JspException {
 
         if (property == null) {
             return null;
         }
 
         // * @since Struts 1.1
-        if(indexed) {
+        if (indexed) {
             StringBuffer results = new StringBuffer();
             results.append(property);
             prepareIndex(results, null);
@@ -110,14 +119,16 @@ public class MifosMasterButtonTag extends ButtonTag {
         return property;
 
     }
-   
+
     /**
-     * Prepares an attribute if the value is not null, appending it to the the given
-     * StringBuffer.
-     * @param handlers The StringBuffer that output will be appended to.
+     * Prepares an attribute if the value is not null, appending it to the the
+     * given StringBuffer.
+     * 
+     * @param handlers
+     *            The StringBuffer that output will be appended to.
      */
     @Override
-	protected void prepareAttribute(StringBuffer handlers, String name, Object value) {
+    protected void prepareAttribute(StringBuffer handlers, String name, Object value) {
         if (value != null) {
             handlers.append(" ");
             handlers.append(name);
@@ -126,34 +137,38 @@ public class MifosMasterButtonTag extends ButtonTag {
             handlers.append("\"");
         }
     }
-    
+
     /**
      * Render the button attributes
-     * @param results The StringBuffer that output will be appended to.
+     * 
+     * @param results
+     *            The StringBuffer that output will be appended to.
      */
     @Override
-	protected void prepareButtonAttributes(StringBuffer results) 
-                      throws JspException {
+    protected void prepareButtonAttributes(StringBuffer results) throws JspException {
         prepareAttribute(results, "accesskey", getAccesskey());
         prepareAttribute(results, "tabindex", getTabindex());
         prepareValue(results);
     }
-    
+
     /**
-     * 'Hook' to enable tags to be extended and 
-     *  additional attributes added.
-     * @param handlers The StringBuffer that output will be appended to.
+     * 'Hook' to enable tags to be extended and additional attributes added.
+     * 
+     * @param handlers
+     *            The StringBuffer that output will be appended to.
      */
     @Override
-	protected void prepareOtherAttributes(StringBuffer handlers) {
+    protected void prepareOtherAttributes(StringBuffer handlers) {
     }
-    
+
     /**
      * Render the value element
-     * @param results The StringBuffer that output will be appended to.
+     * 
+     * @param results
+     *            The StringBuffer that output will be appended to.
      */
     @Override
-	protected void prepareValue(StringBuffer results) {
+    protected void prepareValue(StringBuffer results) {
 
         // Acquire the label value we will be generating
         String label = value;
@@ -165,13 +180,14 @@ public class MifosMasterButtonTag extends ButtonTag {
         prepareAttribute(results, "value", label);
 
     }
-    
+
     /**
      * Return the default value.
+     * 
      * @return The default value if none supplied.
      */
     @Override
-	protected String getDefaultValue() {
+    protected String getDefaultValue() {
         return "Submit";
     }
 }

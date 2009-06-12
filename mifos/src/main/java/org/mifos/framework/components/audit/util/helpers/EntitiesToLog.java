@@ -17,20 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.util.helpers;
 
 public class EntitiesToLog {
-	
-	Entity[] entities;
 
-	public Entity[] getEntities() {
-		return entities;
-	}
+    Entity[] entities;
 
-	public void setEntities(Entity[] entities) {
-		this.entities = entities;
-	}
-	
-	
+    public Entity[] getEntities() {
+        return entities;
+    }
+
+    public void setEntities(Entity[] entities) {
+        this.entities = entities;
+    }
+
 }

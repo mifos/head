@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,39 +35,37 @@ import org.mifos.framework.exceptions.ValueObjectConversionException;
 // TODO: fix spelling of this class
 public class ConvertionUtil {
 
-	public static void populateBusinessObject(ActionForm actionForm,
-			BusinessObject object, Locale locale)
-			throws ValueObjectConversionException {
+    public static void populateBusinessObject(ActionForm actionForm, BusinessObject object, Locale locale)
+            throws ValueObjectConversionException {
 
-		try {
+        try {
 
-			if (null != object) {
-				// converter from String to sql Date
-				ConvertUtilsBean conBean = new ConvertUtilsBean();
-				MifosSqlDateConverter converter = new MifosSqlDateConverter();
-				MifosDoubleConverter mifosDoubleConverter = new MifosDoubleConverter();
-				converter.setLocale(locale);
-				conBean.register(converter, java.sql.Date.class);
-				conBean.register(mifosDoubleConverter, Double.class);
-				// register for FormFile to BLOB conversion
-				// MifosInputFileConverter fileConverter = new
-				// MifosInputFileConverter();
-				// conBean.register(fileConverter, FormFile.class);
-				BeanUtilsBean bean = new BeanUtilsBean(conBean, BeanUtilsBean
-						.getInstance().getPropertyUtils());
-				bean.copyProperties(object, actionForm);
+            if (null != object) {
+                // converter from String to sql Date
+                ConvertUtilsBean conBean = new ConvertUtilsBean();
+                MifosSqlDateConverter converter = new MifosSqlDateConverter();
+                MifosDoubleConverter mifosDoubleConverter = new MifosDoubleConverter();
+                converter.setLocale(locale);
+                conBean.register(converter, java.sql.Date.class);
+                conBean.register(mifosDoubleConverter, Double.class);
+                // register for FormFile to BLOB conversion
+                // MifosInputFileConverter fileConverter = new
+                // MifosInputFileConverter();
+                // conBean.register(fileConverter, FormFile.class);
+                BeanUtilsBean bean = new BeanUtilsBean(conBean, BeanUtilsBean.getInstance().getPropertyUtils());
+                bean.copyProperties(object, actionForm);
 
-				// MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Convertion
-				// valueObject to action form using bean utils", false, null);
-			} else {
-				throw new IllegalArgumentException("business object was null");
-			}
-		} catch (InvocationTargetException e) {
-			throw new ValueObjectConversionException(e);
-		} catch (IllegalAccessException e) {
-			throw new ValueObjectConversionException(e);
-		} catch (Exception e) {
-			throw new ValueObjectConversionException(e);
-		}
-	}
+                // MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Convertion
+                // valueObject to action form using bean utils", false, null);
+            } else {
+                throw new IllegalArgumentException("business object was null");
+            }
+        } catch (InvocationTargetException e) {
+            throw new ValueObjectConversionException(e);
+        } catch (IllegalAccessException e) {
+            throw new ValueObjectConversionException(e);
+        } catch (Exception e) {
+            throw new ValueObjectConversionException(e);
+        }
+    }
 }

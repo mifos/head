@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 import org.mifos.framework.struts.plugin.InitializerPlugin;
@@ -28,14 +28,14 @@ import org.mifos.framework.struts.plugin.InitializerPlugin;
  */
 public class AppNotConfiguredException extends SystemException {
 
-	public AppNotConfiguredException(Throwable cause) {
-		super(cause);
+    public AppNotConfiguredException(Throwable cause) {
+        super(cause);
 
-	}
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.SystemException.AppNotConfiguredException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.SystemException.AppNotConfiguredException";
+    }
 
 }

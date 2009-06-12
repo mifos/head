@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.helper;
 
 import java.util.List;
@@ -32,137 +32,115 @@ import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
 
-	String searchString = null;
+    String searchString = null;
 
-	@Override
-	public List get(int position, int noOfObjects)
-			throws HibernateSearchException {
-		java.util.List returnList = new java.util.ArrayList();
+    @Override
+    public List get(int position, int noOfObjects) throws HibernateSearchException {
+        java.util.List returnList = new java.util.ArrayList();
 
-		try {
-			Session session = QuerySession.openSession();
-			Query query = prepareQuery(session,
-					queryInputs.getQueryStrings()[1]);
-			list = query.list();
-			this.queryInputs.setTypes(query.getReturnTypes());
-			dtoBuilder.setInputs(queryInputs);
-			if (list != null) {
-				for (int i = 0; i < list.size(); i++) {
-					if (buildDTO) {
-						Object record = buildDTO((Object[]) list.get(i));
-						CustomerSearch search = (CustomerSearch) record;
-						Integer customerId = search.getCustomerId();
-						short customerLevel = search.getCustomerType();
-						query = session
-								.getNamedQuery(NamedQueryConstants.ACCOUNT_LIST_ID_SEARCH);
-						query.setInteger("customerId", customerId).setShort(
-								"loanAccountTypeId",
-								CustomerSearchConstants.LOAN_TYPE);
-						query.setShort("savingsAccountTypeId",
-								CustomerSearchConstants.SAVINGS_TYPE);
-						query.setString("searchString", searchString);
-						List accountNumAndTypeId = query.list();
-						Object[] obj2 = (Object[]) accountNumAndTypeId.get(0);
-						search.setLoanGlobalAccountNumber(obj2[0].toString());
-						Short accountTypeId = (Short) obj2[1];
+        try {
+            Session session = QuerySession.openSession();
+            Query query = prepareQuery(session, queryInputs.getQueryStrings()[1]);
+            list = query.list();
+            this.queryInputs.setTypes(query.getReturnTypes());
+            dtoBuilder.setInputs(queryInputs);
+            if (list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (buildDTO) {
+                        Object record = buildDTO((Object[]) list.get(i));
+                        CustomerSearch search = (CustomerSearch) record;
+                        Integer customerId = search.getCustomerId();
+                        short customerLevel = search.getCustomerType();
+                        query = session.getNamedQuery(NamedQueryConstants.ACCOUNT_LIST_ID_SEARCH);
+                        query.setInteger("customerId", customerId).setShort("loanAccountTypeId",
+                                CustomerSearchConstants.LOAN_TYPE);
+                        query.setShort("savingsAccountTypeId", CustomerSearchConstants.SAVINGS_TYPE);
+                        query.setString("searchString", searchString);
+                        List accountNumAndTypeId = query.list();
+                        Object[] obj2 = (Object[]) accountNumAndTypeId.get(0);
+                        search.setLoanGlobalAccountNumber(obj2[0].toString());
+                        Short accountTypeId = (Short) obj2[1];
 
-						search.setCustomerType(
-							deduceCustomerType(customerLevel, accountTypeId));
-						returnList.add(search);
-					}
-					else {
-						if (i < noOfObjects) {
-							returnList.add(list.get(i));
-						}
-					}
-				}
-			}
-			QuerySession.closeSession(session);
-		}
-		catch (Exception e) {
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_FAILED, e);
-		}
-		return returnList;
-	}
+                        search.setCustomerType(deduceCustomerType(customerLevel, accountTypeId));
+                        returnList.add(search);
+                    } else {
+                        if (i < noOfObjects) {
+                            returnList.add(list.get(i));
+                        }
+                    }
+                }
+            }
+            QuerySession.closeSession(session);
+        } catch (Exception e) {
+            throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
+        }
+        return returnList;
+    }
 
-	private Short deduceCustomerType(short customerLevel, Short accountTypeId) {
-		if (accountTypeId != null
-				&& customerLevel == CustomerLevel.CLIENT.getValue()
-				&& accountTypeId == CustomerSearchConstants.LOAN_TYPE) {
-			return (short) 4;
-		}
-		else if (accountTypeId != null
-				&& customerLevel == CustomerLevel.CLIENT.getValue()
-				&& accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
-			return (short) 6;
-		}
-		else if (accountTypeId != null
-				&& customerLevel == CustomerLevel.GROUP.getValue()
-				&& accountTypeId == CustomerSearchConstants.LOAN_TYPE) {
-			return (short) 5;
-		}
-		else if (accountTypeId != null
-				&& customerLevel == CustomerLevel.GROUP.getValue()
-				&& accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
-			return (short) 7;
-		}
-		else if (accountTypeId != null
-				&& customerLevel == CustomerLevel.CENTER.getValue()
-				&& accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
-			return (short) 8;
-		}
-		else {
-			return null; // or exception?
-		}
-	}
+    private Short deduceCustomerType(short customerLevel, Short accountTypeId) {
+        if (accountTypeId != null && customerLevel == CustomerLevel.CLIENT.getValue()
+                && accountTypeId == CustomerSearchConstants.LOAN_TYPE) {
+            return (short) 4;
+        } else if (accountTypeId != null && customerLevel == CustomerLevel.CLIENT.getValue()
+                && accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
+            return (short) 6;
+        } else if (accountTypeId != null && customerLevel == CustomerLevel.GROUP.getValue()
+                && accountTypeId == CustomerSearchConstants.LOAN_TYPE) {
+            return (short) 5;
+        } else if (accountTypeId != null && customerLevel == CustomerLevel.GROUP.getValue()
+                && accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
+            return (short) 7;
+        } else if (accountTypeId != null && customerLevel == CustomerLevel.CENTER.getValue()
+                && accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
+            return (short) 8;
+        } else {
+            return null; // or exception?
+        }
+    }
 
-	/*
-	 * public List accountIdSearch(String searchString,Short officeId) throws
-	 * SystemException { this.searchString = searchString;
-	 * 
-	 * try{ Session session=null; session= QuerySession.getSession(); Query
-	 * query=null; if( officeId.shortValue()==0) {
-	 * query=session.getNamedQuery(NamedQueryConstants.ACCOUNT_ID_SEARCH_NOOFFICEID);
-	 * query.setString("SEARCH_STRING",searchString); } else {
-	 * 
-	 * query=session.getNamedQuery(NamedQueryConstants.ACCOUNT_ID_SEARCH);
-	 * query.setString("SEARCH_STRING",searchString);
-	 * query.setShort("OFFICEID",officeId); }
-	 * 
-	 * 
-	 * list=query.list(); this.queryInputs.setTypes(query.getReturnTypes());
-	 * dtoBuilder.setInputs(queryInputs); QuerySession.closeSession(session); }
-	 * catch(HibernateProcessException hpe) { throw new SystemException(); }
-	 * return list; }
-	 */
+    /*
+     * public List accountIdSearch(String searchString,Short officeId) throws
+     * SystemException { this.searchString = searchString;
+     * 
+     * try{ Session session=null; session= QuerySession.getSession(); Query
+     * query=null; if( officeId.shortValue()==0) {
+     * query=session.getNamedQuery(NamedQueryConstants
+     * .ACCOUNT_ID_SEARCH_NOOFFICEID);
+     * query.setString("SEARCH_STRING",searchString); } else {
+     * 
+     * query=session.getNamedQuery(NamedQueryConstants.ACCOUNT_ID_SEARCH);
+     * query.setString("SEARCH_STRING",searchString);
+     * query.setShort("OFFICEID",officeId); }
+     * 
+     * 
+     * list=query.list(); this.queryInputs.setTypes(query.getReturnTypes());
+     * dtoBuilder.setInputs(queryInputs); QuerySession.closeSession(session); }
+     * catch(HibernateProcessException hpe) { throw new SystemException(); }
+     * return list; }
+     */
 
-	@Override
-	public int getSize() throws HibernateSearchException {
-		try {
-			Session session = QuerySession.openSession();
-			if (this.queryInputs == null) {
-				throw new HibernateSearchException(
-						HibernateConstants.SEARCH_INPUTNULL);
-			}
-			Query query = prepareQuery(session,
-					queryInputs.getQueryStrings()[0]);
-			Integer resultSetCount = ((Number) query.uniqueResult()).intValue();
-			this.queryInputs.setTypes(query.getReturnTypes());
-			dtoBuilder.setInputs(queryInputs);
-			if (resultSetCount != null && resultSetCount > 0)
-				size = resultSetCount;
-			QuerySession.closeSession(session);
-		}
-		catch (Exception e) {
-			throw new HibernateSearchException(
-					HibernateConstants.SEARCH_FAILED, e);
-		}
-		return size;
-	}
+    @Override
+    public int getSize() throws HibernateSearchException {
+        try {
+            Session session = QuerySession.openSession();
+            if (this.queryInputs == null) {
+                throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+            }
+            Query query = prepareQuery(session, queryInputs.getQueryStrings()[0]);
+            Integer resultSetCount = ((Number) query.uniqueResult()).intValue();
+            this.queryInputs.setTypes(query.getReturnTypes());
+            dtoBuilder.setInputs(queryInputs);
+            if (resultSetCount != null && resultSetCount > 0)
+                size = resultSetCount;
+            QuerySession.closeSession(session);
+        } catch (Exception e) {
+            throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
+        }
+        return size;
+    }
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
-	}
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
 }

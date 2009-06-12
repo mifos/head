@@ -17,21 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class ServiceUnavailableException extends SystemException {
 
-	protected String key = null;
+    protected String key = null;
 
-	public ServiceUnavailableException(String key, Throwable cause) {
-		super(key, cause);
-		this.key = key;
-	}
+    public ServiceUnavailableException(String key, Throwable cause) {
+        super(key, cause);
+        this.key = key;
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.ServiceUnavailableException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.ServiceUnavailableException";
+    }
 
 }

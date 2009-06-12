@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
@@ -29,21 +29,21 @@ import org.apache.commons.beanutils.Converter;
  */
 public class StringToMoneyConverter implements Converter {
 
-	public StringToMoneyConverter() {
-	}
+    public StringToMoneyConverter() {
+    }
 
-	/**
-	 * As of now this method returns a new Money object with the currency set to
-	 * default currency and amount set to the BigDecimal obtained from the value
-	 * passed to it.
-	 * 
-	 */
-	public Object convert(Class clazz, Object value) {
-		String amnt = (String) value;
-		if (amnt == "" || amnt.trim().equals("."))
-			return new Money("0");
-		else
-			return new Money(amnt);
-	}
+    /**
+     * As of now this method returns a new Money object with the currency set to
+     * default currency and amount set to the BigDecimal obtained from the value
+     * passed to it.
+     * 
+     */
+    public Object convert(Class clazz, Object value) {
+        String amnt = (String) value;
+        if (amnt == "" || amnt.trim().equals("."))
+            return new Money("0");
+        else
+            return new Money(amnt);
+    }
 
 }

@@ -17,29 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import org.mifos.framework.security.authorization.HierarchyManager;
 
 public class EventManger {
-	
-	/**
-	 * This function will handle the posting of event to autherization manager
-	 * @param type type of event 
-	 * @param obj  actual modified object 
-	 * @param EventName name of event
-	 */
-	public static void postEvent( String type,Object obj ,String EventName)
-	{
-		SecurityEvent se = EventFactory.getEventFactory().createEvent(EventName,obj,type);
-		
-		if (EventName.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT))
-		{
-			HierarchyManager hm = HierarchyManager.getInstance();
-			hm.handleEvent(se);
 
-		}
-		
-	}
+    /**
+     * This function will handle the posting of event to autherization manager
+     * 
+     * @param type
+     *            type of event
+     * @param obj
+     *            actual modified object
+     * @param EventName
+     *            name of event
+     */
+    public static void postEvent(String type, Object obj, String EventName) {
+        SecurityEvent se = EventFactory.getEventFactory().createEvent(EventName, obj, type);
+
+        if (EventName.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT)) {
+            HierarchyManager hm = HierarchyManager.getInstance();
+            hm.handleEvent(se);
+
+        }
+
+    }
 }

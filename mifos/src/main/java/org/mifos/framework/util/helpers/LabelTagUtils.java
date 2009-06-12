@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.Collection;
@@ -44,196 +44,185 @@ import org.mifos.config.Localization;
  */
 public class LabelTagUtils {
 
-	/**
-	 * private constructor to prevent multiple instance creation.
-	 */
-	private LabelTagUtils() {
-	}
+    /**
+     * private constructor to prevent multiple instance creation.
+     */
+    private LabelTagUtils() {
+    }
 
-	/**
-	 * The static instance of the class
-	 */
-	private static LabelTagUtils instance = new LabelTagUtils();
+    /**
+     * The static instance of the class
+     */
+    private static LabelTagUtils instance = new LabelTagUtils();
 
-	/**
-	 * static method to obatin the instance of the class.
-	 */
-	public static LabelTagUtils getInstance() {
-		return instance;
-	}
+    /**
+     * static method to obatin the instance of the class.
+     */
+    public static LabelTagUtils getInstance() {
+        return instance;
+    }
 
-	/**
-	 * The method is used to obtain the label associated with the key based on
-	 * the Locale.
-	 * 
-	 * @param key--
-	 *            The key used to obtain the Label
-	 * @return Label associated with key of the Locale
-	 */
-	public String getLabel(PageContext pageContext, String bundle,
-			String localeKey, String key, String[] args) throws JspException {
-		return TagUtils.getInstance().message(pageContext, bundle, localeKey,
-				key, args);
-	}
+    /**
+     * The method is used to obtain the label associated with the key based on
+     * the Locale.
+     * 
+     * @param key
+     *            -- The key used to obtain the Label
+     * @return Label associated with key of the Locale
+     */
+    public String getLabel(PageContext pageContext, String bundle, String localeKey, String key, String[] args)
+            throws JspException {
+        return TagUtils.getInstance().message(pageContext, bundle, localeKey, key, args);
+    }
 
-	public String getLabel(PageContext pageContext, String bundle,
-			Locale locale, String key, String[] args) throws JspException {
-		String message = null;
-		MessageResources resources = TagUtils.getInstance()
-				.retrieveMessageResources(pageContext, bundle, false);
-		if (args == null) {
-			message = resources.getMessage(locale, key);
-		} else {
-			message = resources.getMessage(locale, key, args);
-		}
-		return message;
-	}
+    public String getLabel(PageContext pageContext, String bundle, Locale locale, String key, String[] args)
+            throws JspException {
+        String message = null;
+        MessageResources resources = TagUtils.getInstance().retrieveMessageResources(pageContext, bundle, false);
+        if (args == null) {
+            message = resources.getMessage(locale, key);
+        } else {
+            message = resources.getMessage(locale, key, args);
+        }
+        return message;
+    }
 
-	/**
-	 * Only use is in MifosSelectNew, which doesn't appear to be used.
-	 */
-	public Collection getCustomValueListElements(PageContext pageContext, String bundle,
-			Locale locale, String key, String mappingKey, String[] args)
-			throws JspException {
-		Collection returnVal = null;
-		MifosPropertyMessageResources resources = (MifosPropertyMessageResources) TagUtils
-				.getInstance().retrieveMessageResources(pageContext, bundle,
-						false);
-		returnVal = resources.getCustomValueListElements(locale, key, mappingKey);
+    /**
+     * Only use is in MifosSelectNew, which doesn't appear to be used.
+     */
+    public Collection getCustomValueListElements(PageContext pageContext, String bundle, Locale locale, String key,
+            String mappingKey, String[] args) throws JspException {
+        Collection returnVal = null;
+        MifosPropertyMessageResources resources = (MifosPropertyMessageResources) TagUtils.getInstance()
+                .retrieveMessageResources(pageContext, bundle, false);
+        returnVal = resources.getCustomValueListElements(locale, key, mappingKey);
 
-		return returnVal;
-	}
+        return returnVal;
+    }
 
-	/**
-	 * The method is used to check, if the element associated with the key is
-	 * configurable mandatory or not.
-	 * 
-	 * @param key--
-	 *            The key used to determine if the element associated with is
-	 *            configurable mandatory or not
-	 * @return true if the element associated with the key is configurable
-	 *         mandatory
-	 */
-	public boolean isConfigurableMandatory(String key, PageContext pageContext) {
-		// TODO get is mandatory or not from the cache.
-		Map mandatoryMap = (Map) pageContext.getSession().getAttribute(
-				"ConfigurableMandatory");
-		if (mandatoryMap == null) {
-			return false;
-		}
+    /**
+     * The method is used to check, if the element associated with the key is
+     * configurable mandatory or not.
+     * 
+     * @param key
+     *            -- The key used to determine if the element associated with is
+     *            configurable mandatory or not
+     * @return true if the element associated with the key is configurable
+     *         mandatory
+     */
+    public boolean isConfigurableMandatory(String key, PageContext pageContext) {
+        // TODO get is mandatory or not from the cache.
+        Map mandatoryMap = (Map) pageContext.getSession().getAttribute("ConfigurableMandatory");
+        if (mandatoryMap == null) {
+            return false;
+        }
 
-		return mandatoryMap.containsKey(key);
-	}
+        return mandatoryMap.containsKey(key);
+    }
 
-	/**
-	 * The method is used to obtain the currency of the Locale
-	 * 
-	 * @param locale--Locale
-	 *            associated with the user
-	 * @return currency of the Locale
-	 */
-	public String getCurrency(String locale) {
-		// TODO get the currency based on locale from a utility class.
-		//return "Rs";
-		return Configuration.getInstance().getSystemConfig().getCurrency().getDisplaySymbol();
-	}
+    /**
+     * The method is used to obtain the currency of the Locale
+     * 
+     * @param locale
+     *            --Locale associated with the user
+     * @return currency of the Locale
+     */
+    public String getCurrency(String locale) {
+        // TODO get the currency based on locale from a utility class.
+        // return "Rs";
+        return Configuration.getInstance().getSystemConfig().getCurrency().getDisplaySymbol();
+    }
 
-	/**
-	 * The method is used to check, if the element associated with the key is
-	 * hidden or not.
-	 * 
-	 * @param key--The
-	 *            key used to determine if the element associated with is hidden
-	 *            or not
-	 * @return true if the element associated with the key is hidden
-	 */
-	public boolean isHidden(String key, PageContext pageContext) {
-		// TODO get is hidden or not from the cache.
-		Map hiddenMap = (Map) pageContext.getSession().getAttribute("Hidden");
-		if (hiddenMap == null) {
-			return false;
-		}
+    /**
+     * The method is used to check, if the element associated with the key is
+     * hidden or not.
+     * 
+     * @param key
+     *            --The key used to determine if the element associated with is
+     *            hidden or not
+     * @return true if the element associated with the key is hidden
+     */
+    public boolean isHidden(String key, PageContext pageContext) {
+        // TODO get is hidden or not from the cache.
+        Map hiddenMap = (Map) pageContext.getSession().getAttribute("Hidden");
+        if (hiddenMap == null) {
+            return false;
+        }
 
-		return hiddenMap.containsKey(key);
-	}
+        return hiddenMap.containsKey(key);
+    }
 
-	/**
-	 * The method is used to check, if the element associated with the key is
-	 * confidential or not.
-	 * 
-	 * @param key--The
-	 *            key used to determine if the element associated with is
-	 *            confidential or not
-	 * @return true if the element associated with the key is confidential
-	 */
-	public boolean isConfidential(String key, PageContext pageContext) {
-		// TODO get is confidential or not from the cache.
-		Map confidentialMap = (Map) pageContext.getSession().getAttribute(
-				"Confidential");
-		if (confidentialMap == null) {
-			return false;
-		}
+    /**
+     * The method is used to check, if the element associated with the key is
+     * confidential or not.
+     * 
+     * @param key
+     *            --The key used to determine if the element associated with is
+     *            confidential or not
+     * @return true if the element associated with the key is confidential
+     */
+    public boolean isConfidential(String key, PageContext pageContext) {
+        // TODO get is confidential or not from the cache.
+        Map confidentialMap = (Map) pageContext.getSession().getAttribute("Confidential");
+        if (confidentialMap == null) {
+            return false;
+        }
 
-		return confidentialMap.containsKey(key);
-	}
+        return confidentialMap.containsKey(key);
+    }
 
-	/**
-	 * This helper method returns the User Preferred Locale, if any. Otherwise
-	 * it returns default Mifos Locale
-	 * 
-	 * @param pageContext
-	 * @return User Preferred Locale
-	 */
-	public String getUserPreferredLocale(PageContext pageContext) {
-		String userPreferredLocale = null;
-		UserContext userContext = getUserContextFromSession(pageContext
-				.getSession());
-		if (null != userContext) {
-			Locale locale = userContext.getCurrentLocale();
-			if (null != locale) {
-				userPreferredLocale = locale.getLanguage() + "_"
-						+ locale.getCountry();
-			}
+    /**
+     * This helper method returns the User Preferred Locale, if any. Otherwise
+     * it returns default Mifos Locale
+     * 
+     * @param pageContext
+     * @return User Preferred Locale
+     */
+    public String getUserPreferredLocale(PageContext pageContext) {
+        String userPreferredLocale = null;
+        UserContext userContext = getUserContextFromSession(pageContext.getSession());
+        if (null != userContext) {
+            Locale locale = userContext.getCurrentLocale();
+            if (null != locale) {
+                userPreferredLocale = locale.getLanguage() + "_" + locale.getCountry();
+            }
 
-		}
-		return userPreferredLocale;
+        }
+        return userPreferredLocale;
 
-	}
+    }
 
-	public static String getUserPreferredLocaleHelper(UserContext userContext) {
-		String userPreferredLocale = null;
-		if (null != userContext) {
-			Locale locale = userContext.getCurrentLocale();
-			if (null != locale) {
-				userPreferredLocale = locale.getLanguage() + "_"
-						+ locale.getCountry();
-			}
+    public static String getUserPreferredLocaleHelper(UserContext userContext) {
+        String userPreferredLocale = null;
+        if (null != userContext) {
+            Locale locale = userContext.getCurrentLocale();
+            if (null != locale) {
+                userPreferredLocale = locale.getLanguage() + "_" + locale.getCountry();
+            }
 
-		}
-		
-		return userPreferredLocale;
+        }
 
-	}
+        return userPreferredLocale;
 
-	public Locale getUserPreferredLocaleObject(PageContext pageContext) {
-		Locale locale = null;
-		UserContext userContext = getUserContextFromSession(pageContext
-				.getSession());
-		if (null != userContext) {
-			locale = userContext.getCurrentLocale();
-		} else {
-			locale = Localization.getInstance().getMainLocale();
-		}
+    }
 
-		return locale;
-	}
+    public Locale getUserPreferredLocaleObject(PageContext pageContext) {
+        Locale locale = null;
+        UserContext userContext = getUserContextFromSession(pageContext.getSession());
+        if (null != userContext) {
+            locale = userContext.getCurrentLocale();
+        } else {
+            locale = Localization.getInstance().getMainLocale();
+        }
 
-	private UserContext getUserContextFromSession(HttpSession session) {
-		UserContext userContext = null;
-		if (null != session) {
-			userContext = (UserContext) session
-					.getAttribute(LoginConstants.USERCONTEXT);
-		}
-		return userContext;
-	}
+        return locale;
+    }
+
+    private UserContext getUserContextFromSession(HttpSession session) {
+        UserContext userContext = null;
+        if (null != session) {
+            userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+        }
+        return userContext;
+    }
 }

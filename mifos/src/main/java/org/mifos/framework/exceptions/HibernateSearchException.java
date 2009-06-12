@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 /**
@@ -29,18 +29,18 @@ package org.mifos.framework.exceptions;
 
 public class HibernateSearchException extends ApplicationException {
 
-	public HibernateSearchException(Throwable cause) {
-		super(cause);
+    public HibernateSearchException(Throwable cause) {
+        super(cause);
 
-	}
+    }
 
-	public HibernateSearchException(String key) {
-		super(key);
-	}
+    public HibernateSearchException(String key) {
+        super(key);
+    }
 
-	public HibernateSearchException(String key, Throwable cause) {
-		super(key, cause);
+    public HibernateSearchException(String key, Throwable cause) {
+        super(key, cause);
 
-	}
+    }
 
 }

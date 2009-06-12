@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.persistence;
 
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED;
@@ -44,142 +44,126 @@ import org.mifos.framework.persistence.Persistence;
  * {@link ConfigurationKeyValueInteger} and friends.
  */
 public class ConfigurationPersistence extends Persistence {
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 
-	private static final String KEY_QUERY_PARAMETER = "KEY";
+    private static final String KEY_QUERY_PARAMETER = "KEY";
 
-	public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
+    public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
 
-	public MifosCurrency getDefaultCurrency() throws PersistenceException {
-		List queryResult = executeNamedQuery(
-				NamedQueryConstants.GET_DEFAULT_CURRENCY, null);
-		return defaultCurrencyFromList(queryResult);
-	}
+    public MifosCurrency getDefaultCurrency() throws PersistenceException {
+        List queryResult = executeNamedQuery(NamedQueryConstants.GET_DEFAULT_CURRENCY, null);
+        return defaultCurrencyFromList(queryResult);
+    }
 
-	MifosCurrency defaultCurrencyFromList(List queryResult) {
-		if (queryResult.size() == 1) {
-			return (MifosCurrency) queryResult.get(0);
-		}
-		else if (queryResult.size() > 1) {
-			MifosCurrency candidate0 = (MifosCurrency) queryResult.get(0);
-			MifosCurrency candidate1 = (MifosCurrency) queryResult.get(1);
+    MifosCurrency defaultCurrencyFromList(List queryResult) {
+        if (queryResult.size() == 1) {
+            return (MifosCurrency) queryResult.get(0);
+        } else if (queryResult.size() > 1) {
+            MifosCurrency candidate0 = (MifosCurrency) queryResult.get(0);
+            MifosCurrency candidate1 = (MifosCurrency) queryResult.get(1);
 
-			throw logAndThrow("Both " + candidate0.getCurrencyName() + " and "
-					+ candidate1.getCurrencyName()
-					+ " are marked as default currencies");
-		}
-		else {
-			throw logAndThrow("No Default Currency Specified");
-		}
-	}
-	
-	public MifosCurrency getCurrency(String currencyCode) throws RuntimeException
-	{
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("currencyCode", currencyCode);
-		List queryResult;
-		try
-		{
-			queryResult=  executeNamedQuery(
-				NamedQueryConstants.GET_CURRENCY,
-				queryParameters);
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e.getMessage());
-		}
-		
-		if (queryResult.size() == 0) {
-			return null;
-		}
-		if (queryResult.size() > 1) {
-			throw new RuntimeException("Multiple currencies found for currency code: " + currencyCode);			
-		}
-		return (MifosCurrency)queryResult.get(0);
-	}
+            throw logAndThrow("Both " + candidate0.getCurrencyName() + " and " + candidate1.getCurrencyName()
+                    + " are marked as default currencies");
+        } else {
+            throw logAndThrow("No Default Currency Specified");
+        }
+    }
 
-	private FrameworkRuntimeException logAndThrow(String message) {
-		logger.error(message);
-		return new FrameworkRuntimeException(null, message);
-	}
+    public MifosCurrency getCurrency(String currencyCode) throws RuntimeException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("currencyCode", currencyCode);
+        List queryResult;
+        try {
+            queryResult = executeNamedQuery(NamedQueryConstants.GET_CURRENCY, queryParameters);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
-	/**
-	 * Lookup an integer valued, persistent configuration key-value pair based on the key.
-	 * This is intended to be more of a helper method than to be used directly.
-	 * @return if the key is found return the corresponding ConfigurationKeyValueInteger,
-	 * if not then return null.
-	 */
-	public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(
-			String key) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(KEY_QUERY_PARAMETER, key);
-		ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY,
-				queryParameters);
-		return keyValue;
-	}
+        if (queryResult.size() == 0) {
+            return null;
+        }
+        if (queryResult.size() > 1) {
+            throw new RuntimeException("Multiple currencies found for currency code: " + currencyCode);
+        }
+        return (MifosCurrency) queryResult.get(0);
+    }
 
-	/**
-	 * Lookup a known persistent integer configuration value.
-	 * @throws RuntimeException thrown if no value is found for the key.
-	 */
-	public int getConfigurationValueInteger(String key)
-			throws PersistenceException {
-		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
-		if (keyValue != null) {
-			return keyValue.getValue();
-		}
-		else {
-			throw new RuntimeException(
-					"Configuration parameter not found for key: " + "'" + key
-							+ "'");
-		}
-	}
+    private FrameworkRuntimeException logAndThrow(String message) {
+        logger.error(message);
+        return new FrameworkRuntimeException(null, message);
+    }
 
-	/**
-	 * Update the value of a persistent integer configuration value;
-	 */
-	public void updateConfigurationKeyValueInteger(String key, int value)
-			throws PersistenceException {
-		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
-		keyValue.setValue(value);
-		createOrUpdate(keyValue);
-	}
+    /**
+     * Lookup an integer valued, persistent configuration key-value pair based
+     * on the key. This is intended to be more of a helper method than to be
+     * used directly.
+     * 
+     * @return if the key is found return the corresponding
+     *         ConfigurationKeyValueInteger, if not then return null.
+     */
+    public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(String key) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(KEY_QUERY_PARAMETER, key);
+        ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger) execUniqueResultNamedQuery(
+                NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);
+        return keyValue;
+    }
 
-	/**
-	 * Create a new persistent integer configuration key value pair.
-	 */
-	public void addConfigurationKeyValueInteger(String key, int value)
-			throws PersistenceException {
-		ConfigurationKeyValueInteger keyValue = new ConfigurationKeyValueInteger(
-				key, value);
-		createOrUpdate(keyValue);
-	}
+    /**
+     * Lookup a known persistent integer configuration value.
+     * 
+     * @throws RuntimeException
+     *             thrown if no value is found for the key.
+     */
+    public int getConfigurationValueInteger(String key) throws PersistenceException {
+        ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+        if (keyValue != null) {
+            return keyValue.getValue();
+        } else {
+            throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
+        }
+    }
 
-	/**
-	 * Delete a persistent integer configuration key value pair.
-	 */
-	public void deleteConfigurationKeyValueInteger(String key)
-			throws PersistenceException {
-		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
-		delete(keyValue);
-	}
-	
-	/**
-	 * Helper method for loan repayments independent of meeting schedule.
-	 * TODO Find a better home for me
-	 */
-	public boolean isRepaymentIndepOfMeetingEnabled() throws PersistenceException {
-		Integer repIndepOfMeetingEnabled = getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
-	    return !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
-	}
+    /**
+     * Update the value of a persistent integer configuration value;
+     */
+    public void updateConfigurationKeyValueInteger(String key, int value) throws PersistenceException {
+        ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+        keyValue.setValue(value);
+        createOrUpdate(keyValue);
+    }
 
-	public List<ConfigurationKeyValueInteger> getAllConfigurationKeyValueIntegers() throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.GET_ALL_CONFIGURATION_VALUES, Collections.EMPTY_MAP);
-	}
+    /**
+     * Create a new persistent integer configuration key value pair.
+     */
+    public void addConfigurationKeyValueInteger(String key, int value) throws PersistenceException {
+        ConfigurationKeyValueInteger keyValue = new ConfigurationKeyValueInteger(key, value);
+        createOrUpdate(keyValue);
+    }
 
-	public boolean isGlimEnabled() throws PersistenceException {
-		return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED)==LoanConstants.GLIM_ENABLED_VALUE);
-	}
+    /**
+     * Delete a persistent integer configuration key value pair.
+     */
+    public void deleteConfigurationKeyValueInteger(String key) throws PersistenceException {
+        ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+        delete(keyValue);
+    }
+
+    /**
+     * Helper method for loan repayments independent of meeting schedule. TODO
+     * Find a better home for me
+     */
+    public boolean isRepaymentIndepOfMeetingEnabled() throws PersistenceException {
+        Integer repIndepOfMeetingEnabled = getConfigurationKeyValueInteger(
+                REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
+        return !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
+    }
+
+    public List<ConfigurationKeyValueInteger> getAllConfigurationKeyValueIntegers() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_CONFIGURATION_VALUES, Collections.EMPTY_MAP);
+    }
+
+    public boolean isGlimEnabled() throws PersistenceException {
+        return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED) == LoanConstants.GLIM_ENABLED_VALUE);
+    }
 }

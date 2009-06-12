@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class PersistenceException extends ApplicationException {
@@ -25,11 +25,11 @@ public class PersistenceException extends ApplicationException {
     private static final long serialVersionUID = -7200481197143663391L;
 
     public PersistenceException(Throwable cause) {
-		super(cause);
-	}
+        super(cause);
+    }
 
-	public PersistenceException(String key) {
-		super(key);
-	}
+    public PersistenceException(String key) {
+        super(key);
+    }
 
 }

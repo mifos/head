@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -25,12 +25,12 @@ import org.mifos.framework.hibernate.helper.SessionHolder;
 
 public class ThreadLocalOpener implements SessionOpener {
 
-	/**
-	 * In the thread local case, we might be opening a new
-	 * session, or returning one which is already open.
-	 */
-	public SessionHolder open() {
-		return StaticHibernateUtil.getOrCreateSessionHolder();
-	}
+    /**
+     * In the thread local case, we might be opening a new session, or returning
+     * one which is already open.
+     */
+    public SessionHolder open() {
+        return StaticHibernateUtil.getOrCreateSessionHolder();
+    }
 
 }

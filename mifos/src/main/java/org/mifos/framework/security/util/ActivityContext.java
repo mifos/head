@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import java.io.Serializable;
@@ -25,71 +25,69 @@ import java.io.Serializable;
 import org.apache.struts.action.ActionForward;
 
 /**
- * This class will hold the attributes for the current activity
- * which user want to perform in the system .User has to set the attributes
- * and the pass the same to the Authorization manager for verification
+ * This class will hold the attributes for the current activity which user want
+ * to perform in the system .User has to set the attributes and the pass the
+ * same to the Authorization manager for verification
  */
 public class ActivityContext implements Serializable {
 
-	/**
-	 * This would hold the id of the activity which user want to perform.
-	 * The activities are set up in latest-data; see
-	 * for example {@link ActivityMapper#SAVING_CANCHANGESTATETO_APPROVED}.
-	 */
-	private short activityId;
+    /**
+     * This would hold the id of the activity which user want to perform. The
+     * activities are set up in latest-data; see for example
+     * {@link ActivityMapper#SAVING_CANCHANGESTATETO_APPROVED}.
+     */
+    private short activityId;
 
-	/**
-	 * This would hold the office id of the record which user want to modify
-	 */
-	private short recordOfficeId;
+    /**
+     * This would hold the office id of the record which user want to modify
+     */
+    private short recordOfficeId;
 
-	private short recordLoanOfficer;
-	
-	private ActionForward lastForward;
-	
+    private short recordLoanOfficer;
 
-	public ActionForward getLastForward() {
-		return lastForward;
-	}
+    private ActionForward lastForward;
 
-	public void setLastForward(ActionForward lastForward) {
-		this.lastForward = lastForward;
-	}
+    public ActionForward getLastForward() {
+        return lastForward;
+    }
 
-	public short getActivityId() {
-		return activityId;
-	}
-	
-	public void setActivityId(short activityId) {
-		this.activityId = activityId;
-	}
+    public void setLastForward(ActionForward lastForward) {
+        this.lastForward = lastForward;
+    }
 
-	public short getRecordLoanOfficer() {
-		return recordLoanOfficer;
-	}
+    public short getActivityId() {
+        return activityId;
+    }
 
-	public void setRecordLoanOfficer(short recordLoanOfficer) {
-		this.recordLoanOfficer = recordLoanOfficer;
-	}
+    public void setActivityId(short activityId) {
+        this.activityId = activityId;
+    }
 
-	public short getRecordOfficeId() {
-		return recordOfficeId;
-	}
+    public short getRecordLoanOfficer() {
+        return recordLoanOfficer;
+    }
 
-	public void setRecordOfficeId(short recordOfficeId) {
-		this.recordOfficeId = recordOfficeId;
-	}
+    public void setRecordLoanOfficer(short recordLoanOfficer) {
+        this.recordLoanOfficer = recordLoanOfficer;
+    }
 
-	public ActivityContext(short activityId, 
-			short recordOfficeId, short recordLoanOfficer) {
-		this.activityId = activityId;
-		this.recordOfficeId = recordOfficeId;
-		this.recordLoanOfficer = recordLoanOfficer;
-	}
+    public short getRecordOfficeId() {
+        return recordOfficeId;
+    }
 
-	public ActivityContext(short activityId, short recordOfficeId) {
-		this.activityId = activityId;
-		this.recordOfficeId = recordOfficeId;
-	}
-	
+    public void setRecordOfficeId(short recordOfficeId) {
+        this.recordOfficeId = recordOfficeId;
+    }
+
+    public ActivityContext(short activityId, short recordOfficeId, short recordLoanOfficer) {
+        this.activityId = activityId;
+        this.recordOfficeId = recordOfficeId;
+        this.recordLoanOfficer = recordLoanOfficer;
+    }
+
+    public ActivityContext(short activityId, short recordOfficeId) {
+        this.activityId = activityId;
+        this.recordOfficeId = recordOfficeId;
+    }
+
 }

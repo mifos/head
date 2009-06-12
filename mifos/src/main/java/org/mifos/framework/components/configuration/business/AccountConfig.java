@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
@@ -33,17 +33,15 @@ import org.mifos.framework.components.configuration.util.helpers.ConfigConstants
  * deprecated and may be removed</a> (-Adam 22-JAN-2008).
  */
 public class AccountConfig extends BaseConfig {
-	public AccountConfig(CacheRepository cacheRepo, OfficeConfig officeConf) {
-		super(cacheRepo, officeConf);
-	}
+    public AccountConfig(CacheRepository cacheRepo, OfficeConfig officeConf) {
+        super(cacheRepo, officeConf);
+    }
 
-	public Short getLatenessDays() {
-		return getShortValueFromCache(ConfigConstants.LATENESS_DAYS,
-				ConfigConstants.LATENESS_DAYS_DEFAULT);
-	}
+    public Short getLatenessDays() {
+        return getShortValueFromCache(ConfigConstants.LATENESS_DAYS, ConfigConstants.LATENESS_DAYS_DEFAULT);
+    }
 
-	public Short getDormancyDays() {
-		return getShortValueFromCache(ConfigConstants.DORMANCY_DAYS,
-				ConfigConstants.DORMANCY_DAYS_DEFAULT);
-	}
+    public Short getDormancyDays() {
+        return getShortValueFromCache(ConfigConstants.DORMANCY_DAYS, ConfigConstants.DORMANCY_DAYS_DEFAULT);
+    }
 }

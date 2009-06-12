@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.customTableTag;
 
 import java.io.File;
@@ -45,53 +45,52 @@ import org.xml.sax.SAXParseException;
 
 public class TableTagParser {
 
-  private static TableTagParser instance=new TableTagParser();
+    private static TableTagParser instance = new TableTagParser();
 
-  public static TableTagParser getInstance(){
-    return instance;
-  }
-
-  public Table parser(String filename) throws  TableTagParseException{
-   Table table=null;
-   try{
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-
-		SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		schfactory.setErrorHandler(null);
-		Schema schema = schfactory.newSchema(new StreamSource(new File(ClasspathResource.getURI(FilePaths.CUSTOMTABLETAGXSD))));
-		factory.setNamespaceAware(false);
-		factory.setValidating(false);
-		factory.setSchema(schema);
-		
-		
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		builder.setErrorHandler(null);
-		Document document = builder.parse(filename);
-
-        table=createTable(document);
-
-      } catch(URISyntaxException e){
-          throw new TableTagParseException(e);
-      }catch (ParserConfigurationException e) {
-        throw new TableTagParseException(e);
-      } catch (IOException e) {
-        throw new TableTagParseException(e);
-      } catch (SAXParseException e) {
-        throw new TableTagParseException(e);
-      } catch (SAXException e) {
-        throw new TableTagParseException(e);
-      }
-      return table;
+    public static TableTagParser getInstance() {
+        return instance;
     }
 
-    protected Table createTable(Document document) throws TableTagParseException{
+    public Table parser(String filename) throws TableTagParseException {
+        Table table = null;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+            SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            schfactory.setErrorHandler(null);
+            Schema schema = schfactory.newSchema(new StreamSource(new File(ClasspathResource
+                    .getURI(FilePaths.CUSTOMTABLETAGXSD))));
+            factory.setNamespaceAware(false);
+            factory.setValidating(false);
+            factory.setSchema(schema);
+
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(null);
+            Document document = builder.parse(filename);
+
+            table = createTable(document);
+
+        } catch (URISyntaxException e) {
+            throw new TableTagParseException(e);
+        } catch (ParserConfigurationException e) {
+            throw new TableTagParseException(e);
+        } catch (IOException e) {
+            throw new TableTagParseException(e);
+        } catch (SAXParseException e) {
+            throw new TableTagParseException(e);
+        } catch (SAXException e) {
+            throw new TableTagParseException(e);
+        }
+        return table;
+    }
+
+    protected Table createTable(Document document) throws TableTagParseException {
         NodeList tableNode = document.getChildNodes();
 
-        if (tableNode.getLength() ==0)
-          throw new TableTagParseException(tableNode.toString());
+        if (tableNode.getLength() == 0)
+            throw new TableTagParseException(tableNode.toString());
 
-        Table  table = new Table();
+        Table table = new Table();
         table.setHeaderDetails(createHeaderDetails(tableNode.item(0)));
         table.setRow(createRow(tableNode.item(0)));
 
@@ -100,135 +99,135 @@ public class TableTagParser {
     }
 
     protected HeaderDetails createHeaderDetails(Node table) throws TableTagParseException {
-     NodeList headerNodeList = ((Element) table)
-                       .getElementsByTagName(TableTagConstants.HEADERDETAILS);
+        NodeList headerNodeList = ((Element) table).getElementsByTagName(TableTagConstants.HEADERDETAILS);
 
-     if (headerNodeList.getLength()==0)
-       throw new TableTagParseException(headerNodeList.toString());
+        if (headerNodeList.getLength() == 0)
+            throw new TableTagParseException(headerNodeList.toString());
 
-     HeaderDetails headerDetails=new HeaderDetails();
+        HeaderDetails headerDetails = new HeaderDetails();
 
+        headerDetails.setHeaderStyle(headerNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.HEADERSTYLE)
+                .getNodeValue());
 
-     headerDetails.setHeaderStyle(headerNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.HEADERSTYLE).getNodeValue());
-
-
-     return headerDetails;
+        return headerDetails;
 
     }
 
     protected Row createRow(Node table) throws TableTagParseException {
-    
-       NodeList rowNodeList = ((Element) table)
-                       .getElementsByTagName(TableTagConstants.ROW);
-       if (rowNodeList.getLength() == 0) {
-                 throw new TableTagParseException(rowNodeList.toString());
-      }
-       Row row = new Row();
 
-       row.setTotWidth((rowNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.TOTWIDTH).getNodeValue()));
-       
-       row.setBottomLineRequired((rowNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.BOTTOMLINEREQUIRED).getNodeValue()));
-       
-       row.setColumn(createColumn(rowNodeList.item(0)));
+        NodeList rowNodeList = ((Element) table).getElementsByTagName(TableTagConstants.ROW);
+        if (rowNodeList.getLength() == 0) {
+            throw new TableTagParseException(rowNodeList.toString());
+        }
+        Row row = new Row();
 
-       return row;
-     }
+        row.setTotWidth((rowNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.TOTWIDTH).getNodeValue()));
 
-     protected Column[] createColumn(Node row) throws TableTagParseException{
-    
-       NodeList columnNodeList =((Element) row).getElementsByTagName(TableTagConstants.COLUMN);
+        row.setBottomLineRequired((rowNodeList.item(0).getAttributes().getNamedItem(
+                TableTagConstants.BOTTOMLINEREQUIRED).getNodeValue()));
 
-       if (columnNodeList.getLength() ==0)
-             throw new TableTagParseException(columnNodeList.toString());
+        row.setColumn(createColumn(rowNodeList.item(0)));
 
-       Column[] column= new Column[columnNodeList.getLength()];
+        return row;
+    }
 
-       for(int i=0; i<columnNodeList.getLength();i++){
-         column[i]= new Column();
-         setColumnAttributes(column[i], columnNodeList.item(i).getAttributes());
-         column[i].setColumnDetials(createColumnDetails(columnNodeList.item(i)));
-         if(TableTagConstants.LINK.equalsIgnoreCase(column[i].getColumnType()))
-              column[i].setLinkDetails(createLinkDetails(columnNodeList.item(i)));
-       }
+    protected Column[] createColumn(Node row) throws TableTagParseException {
 
-       return column;
-     }
+        NodeList columnNodeList = ((Element) row).getElementsByTagName(TableTagConstants.COLUMN);
 
-     protected void setColumnAttributes(Column column,NamedNodeMap map) throws TableTagParseException{
-       column.setLabel(map.getNamedItem(TableTagConstants.LABEL).getNodeValue());
-    
-       column.setValue(map.getNamedItem(TableTagConstants.VALUE).getNodeValue());
-    
-       column.setValueType(map.getNamedItem(TableTagConstants.VALUETYPE).getNodeValue());
-    
-       column.setColumnType(map.getNamedItem(TableTagConstants.COLUMNTYPE).getNodeValue());
-     }
+        if (columnNodeList.getLength() == 0)
+            throw new TableTagParseException(columnNodeList.toString());
 
-     protected ColumnDetails createColumnDetails(Node column) throws TableTagParseException{
-       NodeList columnDetailsNodeList = ((Element) column).getElementsByTagName(TableTagConstants.COLUMNDETAILS);
+        Column[] column = new Column[columnNodeList.getLength()];
 
-       if (columnDetailsNodeList.getLength()==0)
-         throw new TableTagParseException(columnDetailsNodeList.toString());
+        for (int i = 0; i < columnNodeList.getLength(); i++) {
+            column[i] = new Column();
+            setColumnAttributes(column[i], columnNodeList.item(i).getAttributes());
+            column[i].setColumnDetials(createColumnDetails(columnNodeList.item(i)));
+            if (TableTagConstants.LINK.equalsIgnoreCase(column[i].getColumnType()))
+                column[i].setLinkDetails(createLinkDetails(columnNodeList.item(i)));
+        }
 
-       ColumnDetails columnDetails=new ColumnDetails();
+        return column;
+    }
 
-    
-       columnDetails.setRowStyle(columnDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ROWSTYLE).getNodeValue());
-    
-       columnDetails.setColWidth(columnDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.COLWIDTH).getNodeValue());
-       
-       columnDetails.setAlign(columnDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ALIGN).getNodeValue());
+    protected void setColumnAttributes(Column column, NamedNodeMap map) throws TableTagParseException {
+        column.setLabel(map.getNamedItem(TableTagConstants.LABEL).getNodeValue());
 
-       return columnDetails;
+        column.setValue(map.getNamedItem(TableTagConstants.VALUE).getNodeValue());
 
-     }
+        column.setValueType(map.getNamedItem(TableTagConstants.VALUETYPE).getNodeValue());
 
+        column.setColumnType(map.getNamedItem(TableTagConstants.COLUMNTYPE).getNodeValue());
+    }
 
-     protected LinkDetails createLinkDetails(Node column) throws TableTagParseException{
-       NodeList linkDetailsNodeList = ((Element) column).getElementsByTagName(TableTagConstants.LINKDETAILS);
+    protected ColumnDetails createColumnDetails(Node column) throws TableTagParseException {
+        NodeList columnDetailsNodeList = ((Element) column).getElementsByTagName(TableTagConstants.COLUMNDETAILS);
 
-       if (linkDetailsNodeList.getLength()==0)
-         throw new TableTagParseException(linkDetailsNodeList.toString());
+        if (columnDetailsNodeList.getLength() == 0)
+            throw new TableTagParseException(columnDetailsNodeList.toString());
 
-       LinkDetails linkDetails=new LinkDetails();
+        ColumnDetails columnDetails = new ColumnDetails();
 
-       if(linkDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ACTION).getNodeValue()==null)
-         throw new TableTagParseException(linkDetailsNodeList.toString());
+        columnDetails.setRowStyle(columnDetailsNodeList.item(0).getAttributes()
+                .getNamedItem(TableTagConstants.ROWSTYLE).getNodeValue());
 
-    
-       linkDetails.setAction(linkDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ACTION).getNodeValue());
+        columnDetails.setColWidth(columnDetailsNodeList.item(0).getAttributes()
+                .getNamedItem(TableTagConstants.COLWIDTH).getNodeValue());
 
-       linkDetails.setActionParam(createActionParams(linkDetailsNodeList.item(0)));
+        columnDetails.setAlign(columnDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ALIGN)
+                .getNodeValue());
 
-       return linkDetails;
+        return columnDetails;
 
-     }
+    }
 
-     protected ActionParam[] createActionParams(Node linkDetail) throws TableTagParseException{
-       NodeList actionParamNodeList =((Element) linkDetail).getElementsByTagName(TableTagConstants.ACTIONPARAM);
+    protected LinkDetails createLinkDetails(Node column) throws TableTagParseException {
+        NodeList linkDetailsNodeList = ((Element) column).getElementsByTagName(TableTagConstants.LINKDETAILS);
 
-       if (actionParamNodeList.getLength() == 0)
-         throw new TableTagParseException(actionParamNodeList.toString());
+        if (linkDetailsNodeList.getLength() == 0)
+            throw new TableTagParseException(linkDetailsNodeList.toString());
 
-       ActionParam[] actionParam=new ActionParam[actionParamNodeList.getLength()];
+        LinkDetails linkDetails = new LinkDetails();
 
-       for (int i=0; i<actionParamNodeList.getLength();i++){
-         actionParam[i]=new ActionParam();
-    
-         actionParam[i].setName(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.NAME).getNodeValue());
-    
-         actionParam[i].setValue(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.VALUE).getNodeValue());
-    
-         actionParam[i].setValueType(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.VALUETYPE ).getNodeValue());
-       }
-       return actionParam;
-     }
+        if (linkDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ACTION).getNodeValue() == null)
+            throw new TableTagParseException(linkDetailsNodeList.toString());
 
+        linkDetails.setAction(linkDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ACTION)
+                .getNodeValue());
 
+        linkDetails.setActionParam(createActionParams(linkDetailsNodeList.item(0)));
 
-     public static void main(String args[]) throws Exception {
-       TableTagParser ttp=new TableTagParser();
+        return linkDetails;
+
+    }
+
+    protected ActionParam[] createActionParams(Node linkDetail) throws TableTagParseException {
+        NodeList actionParamNodeList = ((Element) linkDetail).getElementsByTagName(TableTagConstants.ACTIONPARAM);
+
+        if (actionParamNodeList.getLength() == 0)
+            throw new TableTagParseException(actionParamNodeList.toString());
+
+        ActionParam[] actionParam = new ActionParam[actionParamNodeList.getLength()];
+
+        for (int i = 0; i < actionParamNodeList.getLength(); i++) {
+            actionParam[i] = new ActionParam();
+
+            actionParam[i].setName(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.NAME)
+                    .getNodeValue());
+
+            actionParam[i].setValue(actionParamNodeList.item(i).getAttributes().getNamedItem(TableTagConstants.VALUE)
+                    .getNodeValue());
+
+            actionParam[i].setValueType(actionParamNodeList.item(i).getAttributes().getNamedItem(
+                    TableTagConstants.VALUETYPE).getNodeValue());
+        }
+        return actionParam;
+    }
+
+    public static void main(String args[]) throws Exception {
+        TableTagParser ttp = new TableTagParser();
         ttp.parser("classes/component/example.xml");
-     }
+    }
 
 }

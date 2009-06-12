@@ -17,29 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.logger;
+
 import java.util.Locale;
 
-/**	
- * Functions to to obtain values common across an application 
+/**
+ * Functions to to obtain values common across an application
  */
 public class ApplicationConfig {
 
-	public static String getUserId(){
-		return "Mifos";
-	}
-	public static String getOfficeId(){
-			return "Mifos";
-		}
-	public static Locale getMFILocale(){
-		return Locale.FRANCE;
-	}
-	public static String getUserIdMarker(){
-		return " Logged in user is ";
-	}
-	public static String getOfficeMarker(){
-		return " from ";
-	} 
-	
+    public static String getUserId() {
+        return "Mifos";
+    }
+
+    public static String getOfficeId() {
+        return "Mifos";
+    }
+
+    public static Locale getMFILocale() {
+        return Locale.FRANCE;
+    }
+
+    public static String getUserIdMarker() {
+        return " Logged in user is ";
+    }
+
+    public static String getOfficeMarker() {
+        return " from ";
+    }
+
 }

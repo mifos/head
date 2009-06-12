@@ -17,16 +17,16 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.business.service;
 
 /**
- * This is a marker interface for new Service classes that implement
- * the idea of a Service layer encapsulating business logic and not 
- * exposing any domain/business objects to its callers.  This is 
- * different from existing legacy {@link BusinessService} classes that
- * do expose business objects via their methods (and will be phased out)
- *
+ * This is a marker interface for new Service classes that implement the idea of
+ * a Service layer encapsulating business logic and not exposing any
+ * domain/business objects to its callers. This is different from existing
+ * legacy {@link BusinessService} classes that do expose business objects via
+ * their methods (and will be phased out)
+ * 
  */
 public interface Service {
 

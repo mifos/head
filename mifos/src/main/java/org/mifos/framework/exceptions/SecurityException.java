@@ -17,23 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 import org.mifos.framework.security.util.SecurityConstants;
 
 public class SecurityException extends ApplicationException {
 
-	public SecurityException(String key) {
-		super(key);
-	}
+    public SecurityException(String key) {
+        super(key);
+    }
 
-	public SecurityException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public SecurityException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
-	public SecurityException(Throwable cause) {
-		super(SecurityConstants.GENERALERROR, cause);
-	}
+    public SecurityException(Throwable cause) {
+        super(SecurityConstants.GENERALERROR, cause);
+    }
 
 }

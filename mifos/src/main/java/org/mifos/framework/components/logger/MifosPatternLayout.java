@@ -17,22 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.logger;
 
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.helpers.PatternParser;
+
 /**
- * This class extends from the pattern layout. This class overrides the 
- * createPatternParser method which returns an instance
- * of the MifosPatternParser.
+ * This class extends from the pattern layout. This class overrides the
+ * createPatternParser method which returns an instance of the
+ * MifosPatternParser.
  */
 public class MifosPatternLayout extends PatternLayout {
-	/**
-	 * Overridden method which returns an instance of the MifosPatternParser
-	 */
-	@Override
-	protected PatternParser createPatternParser(String pattern){
-		return new MifosPatternParser(pattern);
-	}
+    /**
+     * Overridden method which returns an instance of the MifosPatternParser
+     */
+    @Override
+    protected PatternParser createPatternParser(String pattern) {
+        return new MifosPatternParser(pattern);
+    }
 }

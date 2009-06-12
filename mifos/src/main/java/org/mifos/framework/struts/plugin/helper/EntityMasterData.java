@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.plugin.helper;
 
 import java.util.HashMap;
@@ -35,43 +35,47 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public final class EntityMasterData {
 
-	public static Map<Object,Object> entityMap=new HashMap<Object,Object>();
-	
-	private static EntityMasterData entityMasterData=new EntityMasterData();
-	
-	private EntityMasterData(){}
-	
-	public static EntityMasterData getInstance(){
-		return entityMasterData;
-	}
+    public static Map<Object, Object> entityMap = new HashMap<Object, Object>();
 
-	/**This method creates a map of entity master table as sets it into the servletcontext so that
-	 * it is available till the application is up.
-	 * @param servlet
-	 * @param config
-	 * @throws HibernateProcessException
-	 */
-	public void init()throws HibernateProcessException{
-		Session session=null;
-		try{
-			session=StaticHibernateUtil.openSession();
-			session.beginTransaction();
-			Query query = session.getNamedQuery("getEntityMaster");
+    private static EntityMasterData entityMasterData = new EntityMasterData();
 
-		  	List<EntityMaster> entityMasterData = query.list();
+    private EntityMasterData() {
+    }
 
-		  	for(EntityMaster entityMaster:entityMasterData) {
-		  		entityMap.put(entityMaster.getEntityType(),entityMaster.getId());
-		  	}
-		}catch(HibernateException e){
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("table entity_master could not be fetched",false,null,e);
-		}finally{
-			StaticHibernateUtil.closeSession(session);
-		}
-	}
-	
-	public static Map<Object,Object> getEntityMasterMap(){
-		return entityMap;
-	}
+    public static EntityMasterData getInstance() {
+        return entityMasterData;
+    }
+
+    /**
+     * This method creates a map of entity master table as sets it into the
+     * servletcontext so that it is available till the application is up.
+     * 
+     * @param servlet
+     * @param config
+     * @throws HibernateProcessException
+     */
+    public void init() throws HibernateProcessException {
+        Session session = null;
+        try {
+            session = StaticHibernateUtil.openSession();
+            session.beginTransaction();
+            Query query = session.getNamedQuery("getEntityMaster");
+
+            List<EntityMaster> entityMasterData = query.list();
+
+            for (EntityMaster entityMaster : entityMasterData) {
+                entityMap.put(entityMaster.getEntityType(), entityMaster.getId());
+            }
+        } catch (HibernateException e) {
+            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error(
+                    "table entity_master could not be fetched", false, null, e);
+        } finally {
+            StaticHibernateUtil.closeSession(session);
+        }
+    }
+
+    public static Map<Object, Object> getEntityMasterMap() {
+        return entityMap;
+    }
 
 }

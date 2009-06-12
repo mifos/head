@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.business;
 
 import java.sql.Timestamp;
@@ -27,72 +27,72 @@ import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
 
 public class Task extends PersistentObject {
 
-	private Integer id;
+    private Integer id;
 
-	private String task;
+    private String task;
 
-	private Timestamp startTime;
+    private Timestamp startTime;
 
-	private Timestamp endTime;
+    private Timestamp endTime;
 
-	private short status;
+    private short status;
 
-	private String description;
+    private String description;
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getTask() {
-		return task;
-	}
+    public String getTask() {
+        return task;
+    }
 
-	public void setTask(String task) {
-		this.task = task;
-	}
+    public void setTask(String task) {
+        this.task = task;
+    }
 
-	public Timestamp getStartTime() {
-		return startTime;
-	}
+    public Timestamp getStartTime() {
+        return startTime;
+    }
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
-	}
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
 
-	public Timestamp getEndTime() {
-		return endTime;
-	}
+    public Timestamp getEndTime() {
+        return endTime;
+    }
 
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
-	}
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public short getStatus() {
-		return status;
-	}
-	
-	public TaskStatus getStatusEnum() {
-		return TaskStatus.fromInt(status);
-	}
+    public short getStatus() {
+        return status;
+    }
 
-	public void setStatus(short status) {
-		this.status = status;
-	}
+    public TaskStatus getStatusEnum() {
+        return TaskStatus.fromInt(status);
+    }
 
-	public void setStatus(TaskStatus status) {
-		this.status = status.getValue();
-	}
+    public void setStatus(short status) {
+        this.status = status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status.getValue();
+    }
 
 }

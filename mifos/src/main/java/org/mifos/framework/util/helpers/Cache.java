@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.util.HashMap;
@@ -30,207 +30,214 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 
 public class Cache {
 
-	/** Variable to hold the data with key-value pair */
-	private Map cacheMap = new HashMap();
+    /** Variable to hold the data with key-value pair */
+    private Map cacheMap = new HashMap();
 
-	/** Variable to hold the page size which we are taking from resoursce bundle */
-	int pageSize = Integer.parseInt(TableTagConstants.MIFOSTABLE_PAGESIZE);
+    /** Variable to hold the page size which we are taking from resoursce bundle */
+    int pageSize = Integer.parseInt(TableTagConstants.MIFOSTABLE_PAGESIZE);
 
-	/** Variable to hold the size of the data */
-	private int size = 0;
+    /** Variable to hold the size of the data */
+    private int size = 0;
 
+    /** Variable to hold the data */
+    QueryResult data = null;
 
-	/** Variable to hold the data */
-	QueryResult data = null;
+    /** Variable to hold the start page number */
 
-	/** Variable to hold the start page number */
+    /** Variable to hold the last page number */
 
-	/** Variable to hold the last page number */
+    /** Variable to hold the number of pages */
+    int noOfPages = 0;
 
+    /**
+     * @return Returns the cacheMap.
+     */
+    public Map getCacheMap() {
+        return cacheMap;
+    }
 
-	/** Variable to hold the number of pages */
-	int noOfPages = 0;
+    /**
+     * @param cacheMap
+     *            The cacheMap to set.
+     */
+    public void setCacheMap(Map cacheMap) {
+        this.cacheMap = cacheMap;
+    }
 
-	/**
-	 * @return Returns the cacheMap.
-	 */
-	public Map getCacheMap() {
-		return cacheMap;
-	}
+    /**
+     * @return Returns the size.
+     */
+    public int getSize() {
+        return size;
+    }
 
-	/**
-	 * @param cacheMap
-	 *            The cacheMap to set.
-	 */
-	public void setCacheMap(Map cacheMap) {
-		this.cacheMap = cacheMap;
-	}
+    /**
+     * @param size
+     *            The size to set.
+     */
+    public void setSize(int size) {
+        this.size = size;
+    }
 
-	/**
-	 * @return Returns the size.
-	 */
-	public int getSize() {
-		return size;
-	}
+    /**
+     * Default Constructor
+     */
+    public Cache() {
+        super();
+    }
 
-	/**
-	 * @param size
-	 *            The size to set.
-	 */
-	public void setSize(int size) {
-		this.size = size;
-	}
+    /**
+     * Overriding constructor
+     * 
+     * @param listObject
+     *            object we are getting from user.
+     * @param key
+     *            key of the session.
+     * @throws HibernateSearchException
+     */
 
-	/**
-	 * Default Constructor
-	 */
-	public Cache() {
-		super();
-	}
+    public Cache(Object listObject) throws HibernateSearchException {
+        this.data = (QueryResult) listObject;
+        size = data.getSize();
+        // System.out.println("size of the Query object!!!!!!!!!!!!!!!!!!!!!!!!!"+size);
+        /**
+         * fixing the no of pages according to size of the list and pagesize.
+         */
+        noOfPages = (size % pageSize == 0) ? (size / pageSize) : ((size / pageSize) + 1);
 
-	/**
-	 * Overriding constructor
-	 * @param listObject	object we are getting from user.
-	 * @param key			key of the session.
-	 * @throws HibernateSearchException
-	 */
+        /** Calling helper method to get the data */
+        getData();
+    }
 
-	public Cache(Object listObject) throws HibernateSearchException {
-		this.data = (QueryResult)listObject;
-		size = data.getSize();
-		// System.out.println("size of the Query object!!!!!!!!!!!!!!!!!!!!!!!!!"+size);
-		/**
-		 * fixing the no of pages according to size of the list and pagesize.
-		 */
-		noOfPages = (size % pageSize == 0) ? (size / pageSize)
-				: ((size / pageSize) + 1);
+    /**
+     * Function to get the data
+     * 
+     * @throws HibernateSearchException
+     */
 
-		/** Calling helper method to get the data */
-		getData();
-	}
+    private void getData() throws HibernateSearchException {
+        int start = 0;
+        /**
+         * if size of the data is greater than 50 then store first 50 data in
+         * the cache. otherwise store all data.
+         */
 
-	/** Function to get the data
-	 * @throws HibernateSearchException */
+        addFromObject(start, pageSize);
+        /*
+         * int end=(noOfPages>5?5:noOfPages); for (int i = 1; i <= end; i++) {
+         * addFromObject(start,i); start = ((start + pageSize) < size) ? (start
+         * + pageSize) : size; }
+         */
 
-	private void getData() throws HibernateSearchException {
-		int start = 0;
-		/** if size of the data is greater than 50 then store first 50 data
-		 *  in the cache.
-		 *  otherwise store all data.
-		 */
-		
-		addFromObject(start,pageSize);
-		/*
-		int end=(noOfPages>5?5:noOfPages);
-			for (int i = 1; i <= end; i++) {
-				addFromObject(start,i);
-				start = ((start + pageSize) < size) ? (start + pageSize) : size;
-			}
-		*/
-		
-	}
+    }
 
-	/**
-	 * Function to set the cache repository size.
-	 * we are putting 5 pages in cache anytime.
-	 * @param current		current page number.
-	 * @param methodValue	method value whether it is previous or next.
-	 * @throws HibernateSearchException
-	 */
-	public List getList(int current,String methodValue) throws HibernateSearchException {
+    /**
+     * Function to set the cache repository size. we are putting 5 pages in
+     * cache anytime.
+     * 
+     * @param current
+     *            current page number.
+     * @param methodValue
+     *            method value whether it is previous or next.
+     * @throws HibernateSearchException
+     */
+    public List getList(int current, String methodValue) throws HibernateSearchException {
 
-		/** if current page is 1 or 2 then we are not doing anything with
-		 * the repository. but if user is coming to page-3 using previous
-		 * key then remove the value of page-6 from the cache.
-		 * for any other page number call another helper method to add and
-		 * remove the page which is out of bound.
-		 */
-		if((current==0||current==1||current==2)) {
-		}
+        /**
+         * if current page is 1 or 2 then we are not doing anything with the
+         * repository. but if user is coming to page-3 using previous key then
+         * remove the value of page-6 from the cache. for any other page number
+         * call another helper method to add and remove the page which is out of
+         * bound.
+         */
+        if ((current == 0 || current == 1 || current == 2)) {
+        }
 
-		else {
-			if(current==3) {
-				if("previous".equalsIgnoreCase(methodValue)) {
-					removeFromCacheMap(current+3);
-					if(!(cacheMap.containsKey(Integer.valueOf(1)))) {
-						addFromObject(0,1);
-					}
-				}
-			}
-		else {
-			remove(current,methodValue);
-			add(current,methodValue);
+        else {
+            if (current == 3) {
+                if ("previous".equalsIgnoreCase(methodValue)) {
+                    removeFromCacheMap(current + 3);
+                    if (!(cacheMap.containsKey(Integer.valueOf(1)))) {
+                        addFromObject(0, 1);
+                    }
+                }
+            } else {
+                remove(current, methodValue);
+                add(current, methodValue);
 
-			 }
-		}
+            }
+        }
 
-		return getDataFromCache(current);
-	}
+        return getDataFromCache(current);
+    }
 
-	/**
-	 * A helper method to remove the page which is not required.
-	 * @param key		key of the cacheMap.
-	 * @param method	previous or next.
-	 */
-	private void remove(int key,String method) {
-		if("previous".equalsIgnoreCase(method)) {
-			key = (key+3);
-		}
-		else {
-			if("next".equalsIgnoreCase(method)) {
-				key = (key-3);
-			}
-		}
-		removeFromCacheMap(key);
-	}
+    /**
+     * A helper method to remove the page which is not required.
+     * 
+     * @param key
+     *            key of the cacheMap.
+     * @param method
+     *            previous or next.
+     */
+    private void remove(int key, String method) {
+        if ("previous".equalsIgnoreCase(method)) {
+            key = (key + 3);
+        } else {
+            if ("next".equalsIgnoreCase(method)) {
+                key = (key - 3);
+            }
+        }
+        removeFromCacheMap(key);
+    }
 
-	/**
-	 * A helper method to add the page which is required.
-	 * @param key		key of the cacheMap.
-	 * @param method	previous or next.
-	 * @throws HibernateSearchException
-	 */
-	private void add(int key,String method) throws HibernateSearchException {
-		int start = 0;
-		if("previous".equalsIgnoreCase(method)) {
-			start = (key-3)*pageSize;
-			key = key-2;
-		}
-		else {
-			if("next".equalsIgnoreCase(method)) {
-				start = (key+1)*pageSize;
-				key=key+2;
-			}
-		}
-		start = (start<size?start:size);
-		addFromObject(start,key);
-	}
+    /**
+     * A helper method to add the page which is required.
+     * 
+     * @param key
+     *            key of the cacheMap.
+     * @param method
+     *            previous or next.
+     * @throws HibernateSearchException
+     */
+    private void add(int key, String method) throws HibernateSearchException {
+        int start = 0;
+        if ("previous".equalsIgnoreCase(method)) {
+            start = (key - 3) * pageSize;
+            key = key - 2;
+        } else {
+            if ("next".equalsIgnoreCase(method)) {
+                start = (key + 1) * pageSize;
+                key = key + 2;
+            }
+        }
+        start = (start < size ? start : size);
+        addFromObject(start, key);
+    }
 
-	private void addFromObject(int start,int key) throws HibernateSearchException {
-		
-		cacheMap.put(new Integer(start), data.get(start,pageSize));
-		// System.out.println("start="+start);
-	}
+    private void addFromObject(int start, int key) throws HibernateSearchException {
 
-	private void removeFromCacheMap(int key) {
-		Integer keyRemove=Integer.valueOf(key);
-		if(cacheMap.containsKey(keyRemove)) {
-			cacheMap.remove(keyRemove);
-		}
-	}
+        cacheMap.put(new Integer(start), data.get(start, pageSize));
+        // System.out.println("start="+start);
+    }
 
-	private List getDataFromCache(int current) throws HibernateSearchException {
-		Integer key = current;
-		if(cacheMap.containsKey(key)) {
-			return (List)cacheMap.get(key);
-		}
-		else {
-			if(current<=noOfPages) {
-				int start=(current-1)*pageSize<size?(current-1)*pageSize:size;
-				return data.get(start,pageSize);
-			}
-		}
-		return null;
-	}
+    private void removeFromCacheMap(int key) {
+        Integer keyRemove = Integer.valueOf(key);
+        if (cacheMap.containsKey(keyRemove)) {
+            cacheMap.remove(keyRemove);
+        }
+    }
+
+    private List getDataFromCache(int current) throws HibernateSearchException {
+        Integer key = current;
+        if (cacheMap.containsKey(key)) {
+            return (List) cacheMap.get(key);
+        } else {
+            if (current <= noOfPages) {
+                int start = (current - 1) * pageSize < size ? (current - 1) * pageSize : size;
+                return data.get(start, pageSize);
+            }
+        }
+        return null;
+    }
 
 }

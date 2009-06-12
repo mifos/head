@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
@@ -39,58 +39,54 @@ import org.mifos.framework.security.util.UserContext;
 
 public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
-	public ApplyCustomerFeeChangesHelper(MifosTask mifosTask) {
-		super(mifosTask);
-	}
+    public ApplyCustomerFeeChangesHelper(MifosTask mifosTask) {
+        super(mifosTask);
+    }
 
-	@Override
-	public void execute(long timeInMillis) throws BatchJobException {
-		List<String> errorList = new ArrayList<String>();
-		List<FeeBO> fees = new ArrayList<FeeBO>();
-		try {
-			fees = new FeePersistence().getUpdatedFeesForCustomer();
-		} catch (Exception e) {
-			errorList.add(e.getMessage());
-			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-		}
-		if (fees != null && fees.size() > 0) {
-			for (FeeBO fee : fees) {
-				try {
-					if (!fee.getFeeChangeType().equals(
-							FeeChangeType.NOT_UPDATED)) {
-						List<AccountBO> accounts = new CustomerPersistence()
-								.getCustomerAccountsForFee(fee.getFeeId());
-						if (accounts != null && accounts.size() > 0) {
-							for (AccountBO account : accounts) {
-								updateAccountFee(account, fee);
-							}
-						}
-					}
-					fee.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
-					UserContext userContext = new UserContext();
-					userContext.setId(PersonnelConstants.SYSTEM_USER);
-					fee.setUserContext(userContext);
-					fee.save();
-					StaticHibernateUtil.commitTransaction();
-				} catch (Exception e) {
-					StaticHibernateUtil.rollbackTransaction();
-					errorList.add(fee.getFeeName());
-				}
-			}
-		}
-		if (errorList.size() > 0)
-			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-	}
+    @Override
+    public void execute(long timeInMillis) throws BatchJobException {
+        List<String> errorList = new ArrayList<String>();
+        List<FeeBO> fees = new ArrayList<FeeBO>();
+        try {
+            fees = new FeePersistence().getUpdatedFeesForCustomer();
+        } catch (Exception e) {
+            errorList.add(e.getMessage());
+            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+        }
+        if (fees != null && fees.size() > 0) {
+            for (FeeBO fee : fees) {
+                try {
+                    if (!fee.getFeeChangeType().equals(FeeChangeType.NOT_UPDATED)) {
+                        List<AccountBO> accounts = new CustomerPersistence().getCustomerAccountsForFee(fee.getFeeId());
+                        if (accounts != null && accounts.size() > 0) {
+                            for (AccountBO account : accounts) {
+                                updateAccountFee(account, fee);
+                            }
+                        }
+                    }
+                    fee.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
+                    UserContext userContext = new UserContext();
+                    userContext.setId(PersonnelConstants.SYSTEM_USER);
+                    fee.setUserContext(userContext);
+                    fee.save();
+                    StaticHibernateUtil.commitTransaction();
+                } catch (Exception e) {
+                    StaticHibernateUtil.rollbackTransaction();
+                    errorList.add(fee.getFeeName());
+                }
+            }
+        }
+        if (errorList.size() > 0)
+            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+    }
 
-	private void updateAccountFee(AccountBO account, FeeBO feesBO)
-			throws BatchJobException {
-		CustomerAccountBO customerAccount = (CustomerAccountBO) account;
-		customerAccount.updateFee(
-				account.getAccountFees(feesBO.getFeeId()), feesBO);
-	}
-	
-	@Override
-	public boolean isTaskAllowedToRun() {
-		return true;
-	}
+    private void updateAccountFee(AccountBO account, FeeBO feesBO) throws BatchJobException {
+        CustomerAccountBO customerAccount = (CustomerAccountBO) account;
+        customerAccount.updateFee(account.getAccountFees(feesBO.getFeeId()), feesBO);
+    }
+
+    @Override
+    public boolean isTaskAllowedToRun() {
+        return true;
+    }
 }

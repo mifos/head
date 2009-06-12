@@ -17,16 +17,16 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FormUtils {
 
-	public static Double getDoubleValue(String str) {
-		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter
-				.getInstance().getDoubleValueForCurrentLocale(str) : null;
-	}
+    public static Double getDoubleValue(String str) {
+        return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance()
+                .getDoubleValueForCurrentLocale(str) : null;
+    }
 
 }

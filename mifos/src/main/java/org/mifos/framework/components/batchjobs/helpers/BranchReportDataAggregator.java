@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.List;
@@ -27,6 +27,5 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.exceptions.ServiceException;
 
 public interface BranchReportDataAggregator {
-	public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice)
-			throws ServiceException;
+    public List<BranchReportClientSummaryBO> fetchClientSummaries(OfficeBO branchOffice) throws ServiceException;
 }

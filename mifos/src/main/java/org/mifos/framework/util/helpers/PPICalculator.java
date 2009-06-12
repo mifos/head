@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.mifos.application.ppi.business.PPIChoice;
@@ -27,57 +27,47 @@ import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.config.GeneralConfig;
 
 public class PPICalculator {
-	
-	// TODO: am I now redundant? see PPISurveyInstance.computeScore()
-	public static int calculateScore(SurveyInstance instance) {
-		int sum = 0;
-		
-		if (!PPISurvey.class.isInstance(instance.getSurvey()))
-			throw new RuntimeException("Survey is not a PPI survey");
-		
-		for (SurveyResponse response : instance.getSurveyResponses()) {
-			PPIChoice choice = (PPIChoice) response.getChoiceValue();
-			sum += choice.getPoints();
-		}
-		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-		if (sum > maxPoints)
-			throw new RuntimeException("Index is larger that " + maxPoints);
-		
-		
-		return sum;
-	}
-	
-	public static boolean scoreLimitsAreValid(PPISurvey survey) {
-		/*int sum = 0;
-		
-		{
-			int min = survey.getVeryPoorMin();
-			int max = survey.getVeryPoorMax();
-			sum += max * (max + 1) / 2 - min * (min + 1) / 2 ;
-		}
-		
-		{
-			int min = survey.getPoorMin();
-			int max = survey.getPoorMax();
-			sum += max * (max + 1) / 2 - min * (min + 1) / 2 ;
-		}
-		
-		{
-			int min = survey.getAtRiskMin();
-			int max = survey.getAtRiskMax();
-			sum += max * (max + 1) / 2 - min * (min + 1) / 2 ;
-		}
-		
-		{
-			int min = survey.getNonPoorMin();
-			int max = survey.getNonPoorMax();
-			sum += max * (max + 1) / 2 - min * (min + 1) / 2 ;
-		}*/
-		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-		return survey.getNonPoorMax() == maxPoints && survey.getVeryPoorMin() == 0
-				&& survey.getVeryPoorMax() == survey.getPoorMin() - 1
-				&& survey.getPoorMax() == survey.getAtRiskMin() - 1
-				&& survey.getAtRiskMax() == survey.getNonPoorMin() - 1;
-	}
-	
+
+    // TODO: am I now redundant? see PPISurveyInstance.computeScore()
+    public static int calculateScore(SurveyInstance instance) {
+        int sum = 0;
+
+        if (!PPISurvey.class.isInstance(instance.getSurvey()))
+            throw new RuntimeException("Survey is not a PPI survey");
+
+        for (SurveyResponse response : instance.getSurveyResponses()) {
+            PPIChoice choice = (PPIChoice) response.getChoiceValue();
+            sum += choice.getPoints();
+        }
+        int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+        if (sum > maxPoints)
+            throw new RuntimeException("Index is larger that " + maxPoints);
+
+        return sum;
+    }
+
+    public static boolean scoreLimitsAreValid(PPISurvey survey) {
+        /*
+         * int sum = 0;
+         * 
+         * { int min = survey.getVeryPoorMin(); int max =
+         * survey.getVeryPoorMax(); sum += max * (max + 1) / 2 - min * (min + 1)
+         * / 2 ; }
+         * 
+         * { int min = survey.getPoorMin(); int max = survey.getPoorMax(); sum
+         * += max * (max + 1) / 2 - min * (min + 1) / 2 ; }
+         * 
+         * { int min = survey.getAtRiskMin(); int max = survey.getAtRiskMax();
+         * sum += max * (max + 1) / 2 - min * (min + 1) / 2 ; }
+         * 
+         * { int min = survey.getNonPoorMin(); int max = survey.getNonPoorMax();
+         * sum += max * (max + 1) / 2 - min * (min + 1) / 2 ; }
+         */
+        int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+        return survey.getNonPoorMax() == maxPoints && survey.getVeryPoorMin() == 0
+                && survey.getVeryPoorMax() == survey.getPoorMin() - 1
+                && survey.getPoorMax() == survey.getAtRiskMin() - 1
+                && survey.getAtRiskMax() == survey.getNonPoorMin() - 1;
+    }
+
 }

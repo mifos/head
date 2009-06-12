@@ -17,28 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import org.mifos.framework.exceptions.PageExpiredException;
 
 public class FlowManagerHelper {
 
-	public FlowManagerHelper() {
-		super();
-	}
+    public FlowManagerHelper() {
+        super();
+    }
 
-	public static Object getFromSession(FlowManager flowManager, String flowKey,
-			String key) {
-		try {
-			return flowManager.getFromFlow(flowKey, key);
-		} catch (PageExpiredException e) {
-			return null;
-		}
-	}
+    public static Object getFromSession(FlowManager flowManager, String flowKey, String key) {
+        try {
+            return flowManager.getFromFlow(flowKey, key);
+        } catch (PageExpiredException e) {
+            return null;
+        }
+    }
 
-	public static Object getFlow(FlowManager flowManager, String flowKey) {
-		return flowManager.getFlow(flowKey);
-	}
+    public static Object getFlow(FlowManager flowManager, String flowKey) {
+        return flowManager.getFlow(flowKey);
+    }
 
 }

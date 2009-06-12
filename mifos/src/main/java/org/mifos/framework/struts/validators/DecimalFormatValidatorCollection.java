@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.validators;
 
 import java.util.List;
@@ -37,112 +37,111 @@ import org.mifos.framework.util.helpers.DecimalFieldHelper;
 import org.mifos.framework.util.helpers.MethodInvoker;
 
 public class DecimalFormatValidatorCollection {
-	
-	public DecimalFormatValidatorCollection() {
-	}
-	
-	/**
-	 * This class validates a decimal field of the action form.The format against which it would validate 
-	 * will be obtained from the var elements defined in validation.xml. The name of the var element which is supposed 
-	 * to hold the format should be 'format', and it should be specfied as (x,y) where x-y is the total number of digits before decimal  
-	 */
-	public static boolean validateDecimalFormatCollection(
-			Object bean,
-			ValidatorAction va,
-			Field field,
-			ActionMessages errors,
-			Validator validator,
-			HttpServletRequest request){
-		
-		Double validatableField = null;
-		boolean returnable = false;
-		String format = null;
-		Object fieldValue = null;
-		String nestedPropertyName= null;
-		String fieldToBeValidated = null;
-		String[] propertyNamesNesting = null;
-		try {
-			fieldValue = MethodInvoker.invokeWithNoException(bean,"get"+field.getProperty(),new Object[]{},new Class[]{});
-		} catch (SystemException e) {
-			throw new RuntimeException(e);
-		} catch (ApplicationException e) {
-			throw new RuntimeException(e);
-		}
-		// get the field to be validated.
-		
-		nestedPropertyName = field.getVarValue("fieldName");
-		propertyNamesNesting = nestedPropertyName.split("_");
-//		get the format against which it has to be validated
-		format = field.getVarValue("format");
-		try{
-			if(fieldValue instanceof List && fieldValue != null){
-				
-				for(Object obj : (List)fieldValue){
-					Object targetReturned = obj;
-					targetReturned = getFieldToBeValidated(propertyNamesNesting,targetReturned);
-					if(null != targetReturned){
-						fieldToBeValidated = targetReturned.toString();
-						validatableField = new Double(fieldToBeValidated);
-						validatableField = Math.abs(validatableField);
-						// validate using a helper
-						returnable= DecimalFieldHelper.validate(validatableField, format);
-						if(! returnable){
-							errors.add(field.getKey(),Resources.getActionMessage(validator,request,va,field));
-							break;
-							
-						}
-					}
-				}
-			}else if(fieldValue instanceof Set && fieldValue != null){
-				for(Object obj : (Set)fieldValue){
-					Object targetReturned = obj;
-					targetReturned = getFieldToBeValidated(propertyNamesNesting,targetReturned);
-					
-					
-					if(null != targetReturned){
-						fieldToBeValidated = targetReturned.toString();
-						validatableField = new Double(fieldToBeValidated);
-						validatableField = Math.abs(validatableField);
-						// validate using a helper
-						returnable= DecimalFieldHelper.validate(validatableField, format);
-						if(! returnable){
-							errors.add(field.getKey(),Resources.getActionMessage(validator,request,va,field));
-							break;
-							
-						}
-					}
-				}
-			}else if(fieldValue instanceof Map && fieldValue != null){
-				
-			}
-		}catch(NumberFormatException e){
-			throw new RuntimeException(e);
-		}
-		return returnable;
-	}
-	
-	public static Double getFieldToBeValidated(
-			String[] propertyNamesNesting, Object obj){
-		Double returnable = null; 
-		
-		Object targetReturned = obj;
-		for(int index=0 ; index < propertyNamesNesting.length ; index ++){
-			try {
-				StringBuilder methodName = new StringBuilder("get");
-				methodName.append(propertyNamesNesting[index]);
-				//char firstCharOfMethod = methodName.charAt(0);
-				//methodName = methodName.replaceFirst(String.valueOf(firstCharOfMethod), methodName)
-				targetReturned = MethodInvoker.invokeWithNoException(targetReturned,methodName.toString(),new Object[]{},new Class[]{});
-			} catch (SystemException e) {
-				throw new RuntimeException(e);
-			} catch (ApplicationException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
-		returnable = (Double)targetReturned;
-		
-		return returnable;
-	}	
-	
+
+    public DecimalFormatValidatorCollection() {
+    }
+
+    /**
+     * This class validates a decimal field of the action form.The format
+     * against which it would validate will be obtained from the var elements
+     * defined in validation.xml. The name of the var element which is supposed
+     * to hold the format should be 'format', and it should be specfied as (x,y)
+     * where x-y is the total number of digits before decimal
+     */
+    public static boolean validateDecimalFormatCollection(Object bean, ValidatorAction va, Field field,
+            ActionMessages errors, Validator validator, HttpServletRequest request) {
+
+        Double validatableField = null;
+        boolean returnable = false;
+        String format = null;
+        Object fieldValue = null;
+        String nestedPropertyName = null;
+        String fieldToBeValidated = null;
+        String[] propertyNamesNesting = null;
+        try {
+            fieldValue = MethodInvoker.invokeWithNoException(bean, "get" + field.getProperty(), new Object[] {},
+                    new Class[] {});
+        } catch (SystemException e) {
+            throw new RuntimeException(e);
+        } catch (ApplicationException e) {
+            throw new RuntimeException(e);
+        }
+        // get the field to be validated.
+
+        nestedPropertyName = field.getVarValue("fieldName");
+        propertyNamesNesting = nestedPropertyName.split("_");
+        // get the format against which it has to be validated
+        format = field.getVarValue("format");
+        try {
+            if (fieldValue instanceof List && fieldValue != null) {
+
+                for (Object obj : (List) fieldValue) {
+                    Object targetReturned = obj;
+                    targetReturned = getFieldToBeValidated(propertyNamesNesting, targetReturned);
+                    if (null != targetReturned) {
+                        fieldToBeValidated = targetReturned.toString();
+                        validatableField = new Double(fieldToBeValidated);
+                        validatableField = Math.abs(validatableField);
+                        // validate using a helper
+                        returnable = DecimalFieldHelper.validate(validatableField, format);
+                        if (!returnable) {
+                            errors.add(field.getKey(), Resources.getActionMessage(validator, request, va, field));
+                            break;
+
+                        }
+                    }
+                }
+            } else if (fieldValue instanceof Set && fieldValue != null) {
+                for (Object obj : (Set) fieldValue) {
+                    Object targetReturned = obj;
+                    targetReturned = getFieldToBeValidated(propertyNamesNesting, targetReturned);
+
+                    if (null != targetReturned) {
+                        fieldToBeValidated = targetReturned.toString();
+                        validatableField = new Double(fieldToBeValidated);
+                        validatableField = Math.abs(validatableField);
+                        // validate using a helper
+                        returnable = DecimalFieldHelper.validate(validatableField, format);
+                        if (!returnable) {
+                            errors.add(field.getKey(), Resources.getActionMessage(validator, request, va, field));
+                            break;
+
+                        }
+                    }
+                }
+            } else if (fieldValue instanceof Map && fieldValue != null) {
+
+            }
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        }
+        return returnable;
+    }
+
+    public static Double getFieldToBeValidated(String[] propertyNamesNesting, Object obj) {
+        Double returnable = null;
+
+        Object targetReturned = obj;
+        for (int index = 0; index < propertyNamesNesting.length; index++) {
+            try {
+                StringBuilder methodName = new StringBuilder("get");
+                methodName.append(propertyNamesNesting[index]);
+                // char firstCharOfMethod = methodName.charAt(0);
+                // methodName =
+                // methodName.replaceFirst(String.valueOf(firstCharOfMethod),
+                // methodName)
+                targetReturned = MethodInvoker.invokeWithNoException(targetReturned, methodName.toString(),
+                        new Object[] {}, new Class[] {});
+            } catch (SystemException e) {
+                throw new RuntimeException(e);
+            } catch (ApplicationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        returnable = (Double) targetReturned;
+
+        return returnable;
+    }
+
 }

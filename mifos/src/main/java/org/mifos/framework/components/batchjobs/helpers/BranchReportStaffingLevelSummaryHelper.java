@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import org.mifos.application.branchreport.BranchReportBO;
@@ -27,24 +27,21 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public class BranchReportStaffingLevelSummaryHelper {
 
-	private final BranchReportBO branchReport;
-	private final IBranchReportService branchReportService;
+    private final BranchReportBO branchReport;
+    private final IBranchReportService branchReportService;
 
-	public BranchReportStaffingLevelSummaryHelper(BranchReportBO branchReport,
-			IBranchReportService branchReportService) {
-		this.branchReport = branchReport;
-		this.branchReportService = branchReportService;
-	}
+    public BranchReportStaffingLevelSummaryHelper(BranchReportBO branchReport, IBranchReportService branchReportService) {
+        this.branchReport = branchReport;
+        this.branchReportService = branchReportService;
+    }
 
-	public void populateStaffingLevelSummary() throws BatchJobException {
-		try {
-			branchReport.addStaffingLevelSummaries(branchReportService
-					.extractBranchReportStaffingLevelSummaries(branchReport
-							.getBranchId()));
-		}
-		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-	}
+    public void populateStaffingLevelSummary() throws BatchJobException {
+        try {
+            branchReport.addStaffingLevelSummaries(branchReportService
+                    .extractBranchReportStaffingLevelSummaries(branchReport.getBranchId()));
+        } catch (ServiceException e) {
+            throw new BatchJobException(e);
+        }
+    }
 
 }

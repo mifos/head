@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.framework.hibernate.helper;
 
+package org.mifos.framework.hibernate.helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,87 +35,83 @@ import org.hibernate.type.Type;
  */
 public class QueryInputs {
 
-	private String dtoPath;
+    private String dtoPath;
 
-	private Type[] returnTypes;
+    private Type[] returnTypes;
 
-	private String[] aliasNames;
+    private String[] aliasNames;
 
-	private boolean buildDTO = true;
+    private boolean buildDTO = true;
 
-	private String[] queryStrings = new String[2];
+    private String[] queryStrings = new String[2];
 
-	List paramList = new ArrayList();
+    List paramList = new ArrayList();
 
-	
-	public List getParamList() {
-		return paramList;
-	}
+    public List getParamList() {
+        return paramList;
+    }
 
-	
-	public void setParamList(List paramList) {
-		this.paramList = paramList;
-	}
+    public void setParamList(List paramList) {
+        this.paramList = paramList;
+    }
 
-	public String[] getQueryStrings() {
-		return queryStrings;
-	}
+    public String[] getQueryStrings() {
+        return queryStrings;
+    }
 
-	
-	public void setQueryStrings(String[] queryStrings) {
-		this.queryStrings = queryStrings;
-	}
+    public void setQueryStrings(String[] queryStrings) {
+        this.queryStrings = queryStrings;
+    }
 
-	/**
-	 * Set the path which will be used for building the DTO
-	 */
-	public void setPath(String path) {
-		this.dtoPath = path;
-	}
+    /**
+     * Set the path which will be used for building the DTO
+     */
+    public void setPath(String path) {
+        this.dtoPath = path;
+    }
 
-	/**
-	 * Set the return types which will be used for building the DTO
-	 */
-	public void setTypes(Type[] returnTypes) {
-		this.returnTypes = returnTypes;
-	}
+    /**
+     * Set the return types which will be used for building the DTO
+     */
+    public void setTypes(Type[] returnTypes) {
+        this.returnTypes = returnTypes;
+    }
 
-	/**
-	 * Set the alias names of the columns which will be used for building the
-	 * DTO
-	 */
-	public void setAliasNames(String[] aliasNames) {
-		this.aliasNames = aliasNames;
-	}
+    /**
+     * Set the alias names of the columns which will be used for building the
+     * DTO
+     */
+    public void setAliasNames(String[] aliasNames) {
+        this.aliasNames = aliasNames;
+    }
 
-	/**
-	 * Return the path for building the DTO
-	 */
-	public String getPath() {
-		return dtoPath;
-	}
+    /**
+     * Return the path for building the DTO
+     */
+    public String getPath() {
+        return dtoPath;
+    }
 
-	/**
-	 * Return the types for building the DTO
-	 */
+    /**
+     * Return the types for building the DTO
+     */
 
-	public Type[] getTypes() {
-		return returnTypes;
-	}
+    public Type[] getTypes() {
+        return returnTypes;
+    }
 
-	/**
-	 * Return the alias names for building the DTO
-	 */
-	public String[] getAliasNames() {
-		return aliasNames;
-	}
+    /**
+     * Return the alias names for building the DTO
+     */
+    public String[] getAliasNames() {
+        return aliasNames;
+    }
 
-	
-	/**
-	 * Return the boolean to indicate wether DTO has to be built
-	 */
-	public boolean getBuildDTO() {
-		return buildDTO;
-	}
+    /**
+     * Return the boolean to indicate wether DTO has to be built
+     */
+    public boolean getBuildDTO() {
+        return buildDTO;
+    }
 
 }

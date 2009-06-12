@@ -17,25 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 public class Files {
-	private FileName[] fileName;
-	public Files() {
-	}
+    private FileName[] fileName;
 
-	/**
-	 * @return Returns the fileName.
-	 */
-	public FileName[] getFileName() {
-		return fileName;
-	}
+    public Files() {
+    }
 
-	/**
-	 * @param fileName The fileName to set.
-	 */
-	public void setFileName(FileName[] fileName) {
-		this.fileName = fileName;
-	}
+    /**
+     * @return Returns the fileName.
+     */
+    public FileName[] getFileName() {
+        return fileName;
+    }
+
+    /**
+     * @param fileName
+     *            The fileName to set.
+     */
+    public void setFileName(FileName[] fileName) {
+        this.fileName = fileName;
+    }
 }

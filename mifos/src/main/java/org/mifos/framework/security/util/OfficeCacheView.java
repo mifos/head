@@ -17,30 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 public class OfficeCacheView {
-	
-	private short officeId;
-	private	Short parentOfficeId;
-	private	String searchId;
 
-	public OfficeCacheView(Short officeId, Short parentOfficeId, String searchId){
-		this.officeId = officeId;
-		this.parentOfficeId = parentOfficeId;
-		this.searchId = searchId;
-	}
+    private short officeId;
+    private Short parentOfficeId;
+    private String searchId;
 
-	public short getOfficeId() {
-		return officeId;
-	}
-	
-	public Short getParentOfficeId() {
-		return parentOfficeId;
-	}
-	
-	public String getSearchId() {
-		return searchId;
-	}
+    public OfficeCacheView(Short officeId, Short parentOfficeId, String searchId) {
+        this.officeId = officeId;
+        this.parentOfficeId = parentOfficeId;
+        this.searchId = searchId;
+    }
+
+    public short getOfficeId() {
+        return officeId;
+    }
+
+    public Short getParentOfficeId() {
+        return parentOfficeId;
+    }
+
+    public String getSearchId() {
+        return searchId;
+    }
 }

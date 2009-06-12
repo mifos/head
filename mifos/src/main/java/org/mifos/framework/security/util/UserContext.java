@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import java.io.IOException;
@@ -39,202 +39,199 @@ import org.mifos.framework.util.LocalizationConverter;
  * Accessed from jsp's.
  */
 public class UserContext implements Serializable {
-	
-	/**
-	 * This would hold the name of the user who has loged in
-	 */
-	private String name;
 
-	/**
-	 * This would hold the id of the the user
-	 */
-	private Short id;
+    /**
+     * This would hold the name of the user who has loged in
+     */
+    private String name;
 
-	private String userGlobalNo;
+    /**
+     * This would hold the id of the the user
+     */
+    private Short id;
 
-	/**
-	 * Set of roles id's associated with the user
-	 */
-	private Set roles;
+    private String userGlobalNo;
 
-	private Short branchId;
+    /**
+     * Set of roles id's associated with the user
+     */
+    private Set roles;
 
-	private String branchGlobalNum;
+    private Short branchId;
 
-	private Short levelId;
+    private String branchGlobalNum;
 
-	private Short localeId;
+    private Short levelId;
 
-	private Locale preferredLocale;
+    private Short localeId;
 
-	//private Short mfiLocaleId;
-	
-	//private Locale mfiLocale;
+    private Locale preferredLocale;
 
-	/**
-	 * Last login time of the user
-	 */
-	private Date lastLogin;
+    // private Short mfiLocaleId;
 
-	/**
-	 * This would hold whether user password has been changed or not
-	 */
-	private Short passwordChanged;
+    // private Locale mfiLocale;
 
-	/**
-	 * This would hold the levelId of the loggen in user 
-	 */
-	private Short officeLevelId;
-	
-	
-	public UserContext() {
-		preferredLocale = Localization.getInstance().getConfiguredLocale();
-		localeId = Localization.getInstance().getLocaleId();
-	}
-	
-	// this constructor to be used when user can choose a locale at runtime
-	public UserContext(SupportedLocalesEntity localeEntity) {
-		this.preferredLocale = new Locale(localeEntity.getLanguageCode().toLowerCase(), 
-				localeEntity.getCountryCode().toUpperCase());
-		localeId = localeEntity.getLocaleId();
-	}
+    /**
+     * Last login time of the user
+     */
+    private Date lastLogin;
 
-	public Short getOfficeLevelId() {
-		return officeLevelId;
-	}
+    /**
+     * This would hold whether user password has been changed or not
+     */
+    private Short passwordChanged;
 
-	public void setOfficeLevelId(Short officeLevelId) {
-		this.officeLevelId = officeLevelId;
-	}
+    /**
+     * This would hold the levelId of the loggen in user
+     */
+    private Short officeLevelId;
 
-	public Short getPasswordChanged() {
-		return passwordChanged;
-	}
+    public UserContext() {
+        preferredLocale = Localization.getInstance().getConfiguredLocale();
+        localeId = Localization.getInstance().getLocaleId();
+    }
 
-	public void setPasswordChanged(Short passwordChanged) {
-		this.passwordChanged = passwordChanged;
-	}
+    // this constructor to be used when user can choose a locale at runtime
+    public UserContext(SupportedLocalesEntity localeEntity) {
+        this.preferredLocale = new Locale(localeEntity.getLanguageCode().toLowerCase(), localeEntity.getCountryCode()
+                .toUpperCase());
+        localeId = localeEntity.getLocaleId();
+    }
 
-	public Date getLastLogin() {
-		return lastLogin;
-	}
+    public Short getOfficeLevelId() {
+        return officeLevelId;
+    }
 
-	public void setLastLogin(Date lastLogin) {
-		this.lastLogin = lastLogin;
-	}
+    public void setOfficeLevelId(Short officeLevelId) {
+        this.officeLevelId = officeLevelId;
+    }
 
-	public Short getLevelId() {
-		return levelId;
-	}
-	
-	public PersonnelLevel getLevel() {
-		return PersonnelLevel.fromInt(levelId);
-	}
+    public Short getPasswordChanged() {
+        return passwordChanged;
+    }
 
-	public void setLevelId(Short levelId) {
-		this.levelId = levelId;
-	}
-	
-	public void setLevel(PersonnelLevel level) {
-		setLevelId(level.getValue());
-	}
+    public void setPasswordChanged(Short passwordChanged) {
+        this.passwordChanged = passwordChanged;
+    }
 
-	public Short getBranchId() {
-		return branchId;
-	}
+    public Date getLastLogin() {
+        return lastLogin;
+    }
 
-	public void setBranchId(Short branchId) {
-		this.branchId = branchId;
-	}
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
-	public Short getId() {
-		return id;
-	}
+    public Short getLevelId() {
+        return levelId;
+    }
 
-	public void setId(Short id) {
-		this.id = id;
-	}
+    public PersonnelLevel getLevel() {
+        return PersonnelLevel.fromInt(levelId);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setLevelId(Short levelId) {
+        this.levelId = levelId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setLevel(PersonnelLevel level) {
+        setLevelId(level.getValue());
+    }
 
-	public Set getRoles() {
-		return roles;
-	}
+    public Short getBranchId() {
+        return branchId;
+    }
 
-	public void setRoles(Set roles) {
-		this.roles = roles;
-	}
+    public void setBranchId(Short branchId) {
+        this.branchId = branchId;
+    }
 
-	public String getBranchGlobalNum() {
-		return branchGlobalNum;
-	}
+    public Short getId() {
+        return id;
+    }
 
-	public void setBranchGlobalNum(String branchGlobalNum) {
-		this.branchGlobalNum = branchGlobalNum;
-	}
+    public void setId(Short id) {
+        this.id = id;
+    }
 
-	public Short getLocaleId() {
-		return localeId;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setLocaleId(Short localeId) {
-		this.localeId = localeId;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Locale getPreferredLocale() {
-		return preferredLocale;
-	}
+    public Set getRoles() {
+        return roles;
+    }
 
-	public void setPreferredLocale(Locale preferredLocale) {
-		this.preferredLocale = preferredLocale;
-	}
-	
-	// we can have more business rules for this
-	public Locale getCurrentLocale() {
-		return preferredLocale;
-	}
+    public void setRoles(Set roles) {
+        this.roles = roles;
+    }
 
-	public String getUserGlobalNo() {
-		return userGlobalNo;
-	}
+    public String getBranchGlobalNum() {
+        return branchGlobalNum;
+    }
 
-	public void setUserGlobalNo(String userGlobalNo) {
-		this.userGlobalNo = userGlobalNo;
-	}
+    public void setBranchGlobalNum(String branchGlobalNum) {
+        this.branchGlobalNum = branchGlobalNum;
+    }
 
-	public Short getMfiLocaleId() {
-		return localeId;
-	}
+    public Short getLocaleId() {
+        return localeId;
+    }
 
-	public void setMfiLocaleId(Short mfiLocaleId) {
-		//this.mfiLocaleId = mfiLocaleId;
-		this.localeId = mfiLocaleId;
-	}
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
 
-	public Locale getMfiLocale() {
-		//return mfiLocale;
-		return preferredLocale;
-	}
+    public Locale getPreferredLocale() {
+        return preferredLocale;
+    }
 
-	public void setMfiLocale(Locale mfiLocale) {
-		//this.mfiLocale = mfiLocale;
-		this.preferredLocale = mfiLocale;
-		
-	}
-	
-	public void dump(PrintStream out) throws IOException {
-		out.print("User " + name + ", id=" + id + 
-			", global=" + userGlobalNo + "\n");
-		//out.print("MFI locale ID=" + mfiLocaleId + 
-		//	", locale=" + mfiLocale + "\n");
-		out.print("Locale ID=" + localeId +
-			", locale=" + preferredLocale + "\n");
-	}
+    public void setPreferredLocale(Locale preferredLocale) {
+        this.preferredLocale = preferredLocale;
+    }
+
+    // we can have more business rules for this
+    public Locale getCurrentLocale() {
+        return preferredLocale;
+    }
+
+    public String getUserGlobalNo() {
+        return userGlobalNo;
+    }
+
+    public void setUserGlobalNo(String userGlobalNo) {
+        this.userGlobalNo = userGlobalNo;
+    }
+
+    public Short getMfiLocaleId() {
+        return localeId;
+    }
+
+    public void setMfiLocaleId(Short mfiLocaleId) {
+        // this.mfiLocaleId = mfiLocaleId;
+        this.localeId = mfiLocaleId;
+    }
+
+    public Locale getMfiLocale() {
+        // return mfiLocale;
+        return preferredLocale;
+    }
+
+    public void setMfiLocale(Locale mfiLocale) {
+        // this.mfiLocale = mfiLocale;
+        this.preferredLocale = mfiLocale;
+
+    }
+
+    public void dump(PrintStream out) throws IOException {
+        out.print("User " + name + ", id=" + id + ", global=" + userGlobalNo + "\n");
+        // out.print("MFI locale ID=" + mfiLocaleId +
+        // ", locale=" + mfiLocale + "\n");
+        out.print("Locale ID=" + localeId + ", locale=" + preferredLocale + "\n");
+    }
 
 }

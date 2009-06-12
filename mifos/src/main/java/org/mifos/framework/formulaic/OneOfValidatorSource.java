@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.formulaic;
 
 import java.util.Collection;
 
 public interface OneOfValidatorSource {
-	
-	public Collection getItems();
+
+    public Collection getItems();
 
 }

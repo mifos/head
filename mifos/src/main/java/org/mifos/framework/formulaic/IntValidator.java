@@ -17,32 +17,32 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.formulaic;
 
 /*
  * This validator converts strings into integers
  */
 public class IntValidator extends IsInstanceValidator {
-	
-	public static final String PARSE_ERROR = "errors.formulaic.IntValidator.parse";
-	
-	public IntValidator() {
-		super(String.class);
-	}
-	
-	@Override
-	public Integer validate(Object input) throws ValidationError {
-		input = super.validate(input);
-		try {
-			String inputString = (String) input;
-			int result = Integer.parseInt(inputString);
-			return result;
-		}
-		
-		catch (NumberFormatException e) {
-			throw makeError(input, ErrorType.INVALID_INT);
-		}
-	}
+
+    public static final String PARSE_ERROR = "errors.formulaic.IntValidator.parse";
+
+    public IntValidator() {
+        super(String.class);
+    }
+
+    @Override
+    public Integer validate(Object input) throws ValidationError {
+        input = super.validate(input);
+        try {
+            String inputString = (String) input;
+            int result = Integer.parseInt(inputString);
+            return result;
+        }
+
+        catch (NumberFormatException e) {
+            throw makeError(input, ErrorType.INVALID_INT);
+        }
+    }
 
 }

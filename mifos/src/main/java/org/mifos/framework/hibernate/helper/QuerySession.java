@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.Session;
@@ -25,26 +25,21 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
 
-
 /**
  * A thin wrapper around {@link StaticHibernateUtil}'s session methods, which
- * has reason to exist (I guess) because the session handling in searches
- * is a bit complicated.
+ * has reason to exist (I guess) because the session handling in searches is a
+ * bit complicated.
  */
-public class QuerySession
-{
+public class QuerySession {
 
     public static Session openSession() throws HibernateProcessException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-       	    .info("opening session for search");
+        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("opening session for search");
         return StaticHibernateUtil.openSession();
     }
 
-    public static void closeSession(Session hibernateSession)
-    throws HibernateProcessException {
-    	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-    	    .info("closing session after search");
-    	StaticHibernateUtil.closeSession(hibernateSession);
-	}
+    public static void closeSession(Session hibernateSession) throws HibernateProcessException {
+        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("closing session after search");
+        StaticHibernateUtil.closeSession(hibernateSession);
+    }
 
 }

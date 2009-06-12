@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import java.io.IOException;
@@ -36,45 +36,45 @@ import org.mifos.framework.util.helpers.SessionUtils;
  * This tag class is used to display header links on the top of the jsp page.
  */
 public class HeaderTag extends TagSupport {
-	private String selfLink;
+    private String selfLink;
 
-	public HeaderTag() {
-		super();
-	}
-	
-	public String getSelfLink() {
-		return selfLink;
-	}
-	
-	public void setSelfLink(String selfLink) {
-		this.selfLink = selfLink;
-	}
-	
-	@Override
-	public int doStartTag() throws JspException {
-		BusinessObject obj=null;
-		Object randomNum = pageContext.getSession().getAttribute(Constants.RANDOMNUM);
-		try {
-			obj = (BusinessObject)SessionUtils.getAttribute(Constants.BUSINESS_KEY,(HttpServletRequest)pageContext.getRequest());
-		} catch (PageExpiredException pex) {
-			obj=(BusinessObject)pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
-		}
-		try {	
-		String linkStr;
-		if(selfLink!=null && selfLink!="")
-			linkStr = TagGenerator.createHeaderLinks(obj,Boolean.getBoolean(selfLink),randomNum);
-		else
-			linkStr = TagGenerator.createHeaderLinks(obj,true,randomNum);
-		
-			pageContext.getOut().write(linkStr);
-		}
-		
-		catch (PageExpiredException e) {
-			new JspException(e);
-		}
-		catch (IOException e) {
-			new JspException(e);
-		}
-		return SKIP_BODY;
-	}
+    public HeaderTag() {
+        super();
+    }
+
+    public String getSelfLink() {
+        return selfLink;
+    }
+
+    public void setSelfLink(String selfLink) {
+        this.selfLink = selfLink;
+    }
+
+    @Override
+    public int doStartTag() throws JspException {
+        BusinessObject obj = null;
+        Object randomNum = pageContext.getSession().getAttribute(Constants.RANDOMNUM);
+        try {
+            obj = (BusinessObject) SessionUtils.getAttribute(Constants.BUSINESS_KEY, (HttpServletRequest) pageContext
+                    .getRequest());
+        } catch (PageExpiredException pex) {
+            obj = (BusinessObject) pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
+        }
+        try {
+            String linkStr;
+            if (selfLink != null && selfLink != "")
+                linkStr = TagGenerator.createHeaderLinks(obj, Boolean.getBoolean(selfLink), randomNum);
+            else
+                linkStr = TagGenerator.createHeaderLinks(obj, true, randomNum);
+
+            pageContext.getOut().write(linkStr);
+        }
+
+        catch (PageExpiredException e) {
+            new JspException(e);
+        } catch (IOException e) {
+            new JspException(e);
+        }
+        return SKIP_BODY;
+    }
 }

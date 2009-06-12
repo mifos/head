@@ -17,16 +17,16 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util;
 
 import org.apache.commons.collections.Transformer;
 
 public class TransformerUtils {
 
-	public static final Transformer TRANSFORM_STRING_TO_SHORT = new Transformer() {
-		public Object transform(Object input) {
-			return Short.valueOf((String) input);
-		}
-	};
+    public static final Transformer TRANSFORM_STRING_TO_SHORT = new Transformer() {
+        public Object transform(Object input) {
+            return Short.valueOf((String) input);
+        }
+    };
 }

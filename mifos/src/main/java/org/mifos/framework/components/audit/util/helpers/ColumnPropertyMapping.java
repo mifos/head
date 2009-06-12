@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.util.helpers;
 
 public class ColumnPropertyMapping {
-	
-	EntityType[] entityTypes=null;
 
-	public EntityType[] getEntityTypes() {
-		return entityTypes;
-	}
+    EntityType[] entityTypes = null;
 
-	public void setEntityTypes(EntityType[] entityTypes) {
-		this.entityTypes = entityTypes;
-	}
-	
+    public EntityType[] getEntityTypes() {
+        return entityTypes;
+    }
+
+    public void setEntityTypes(EntityType[] entityTypes) {
+        this.entityTypes = entityTypes;
+    }
+
 }

@@ -17,23 +17,22 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.helper;
 
-public interface HibernateConstants
-{
-	public static String CFGFILENOTFOUND = "errors.cfgfilenotfound";
-	public static String HIBERNATEPROPNOTFOUND = "errors.hibernatepropnotfound";
-	public static String CONFIGPATHNOTFOUND = "errors.configpathnotfound";
-	public static String STARTUPEXCEPTION = "errors.startupexception";  
-	public static String BUILDDTO = "errors.builddto";
-	public static String FAILED_OPENINGSESSION = "errors.failedopeningsession";
-	public static String FAILED_CLOSINGSESSION = "errors.failedclosingsession";
-	public static String SEARCH_INPUTNULL= "errors.searchinputnull";
-	public static String SEARCH_FAILED= "errors.searchfailed";
-	
-	public static String UPDATE_FAILED= "errors.updatefailed";
-	public static String CREATE_FAILED= "errors.createfailed";
-	public static String DELETE_FAILED= "errors.deletefailed";
-	public static String VERSION_MISMATCH= "errors.versionmismatch";
+public interface HibernateConstants {
+    public static String CFGFILENOTFOUND = "errors.cfgfilenotfound";
+    public static String HIBERNATEPROPNOTFOUND = "errors.hibernatepropnotfound";
+    public static String CONFIGPATHNOTFOUND = "errors.configpathnotfound";
+    public static String STARTUPEXCEPTION = "errors.startupexception";
+    public static String BUILDDTO = "errors.builddto";
+    public static String FAILED_OPENINGSESSION = "errors.failedopeningsession";
+    public static String FAILED_CLOSINGSESSION = "errors.failedclosingsession";
+    public static String SEARCH_INPUTNULL = "errors.searchinputnull";
+    public static String SEARCH_FAILED = "errors.searchfailed";
+
+    public static String UPDATE_FAILED = "errors.updatefailed";
+    public static String CREATE_FAILED = "errors.createfailed";
+    public static String DELETE_FAILED = "errors.deletefailed";
+    public static String VERSION_MISMATCH = "errors.versionmismatch";
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.validators;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,58 +32,58 @@ import org.mifos.framework.util.helpers.DecimalFieldHelper;
 import org.mifos.framework.util.LocalizationConverter;
 
 /**
- * This is a custom validator class used to validate the format of the decimal field.
+ * This is a custom validator class used to validate the format of the decimal
+ * field.
  */
 public class DecimalFormatValidator {
-	
-	public DecimalFormatValidator() {
-		super();
-	}
 
-	/**
-	 * This class validates a decimal field of the action form.The format against which it would validate 
-	 * will be obtained from the var elements defined in validation.xml. The name of the var element which is supposed 
-	 * to hold the format should be 'format', and it should be specfied as (x,y) where x-y is the total number of digits before decimal  
-	 * @param bean
-	 * @param va
-	 * @param field
-	 * @param errors
-	 * @param request
-	 * @return
-	 */
-	public static boolean validateDecimalFormat(
-	Object bean,
-	ValidatorAction va,
-	Field field,
-	ActionMessages errors,
-	Validator validator,
-	HttpServletRequest request){
-		
-		Double validatableField = null;
-		boolean returnable = true;
-		String format = null;
-		// get the field to be validated.
-		String fieldToBeValidated = ValidatorUtils.getValueAsString(bean, field.getProperty());
-		// it could be null if the property is not being passed from the UI
-		if(null != fieldToBeValidated && fieldToBeValidated != ""){
-			try{
-				
-				validatableField = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(fieldToBeValidated);
-				validatableField = Math.abs(validatableField);
-				// get the format against which it has to be validated
-				format = field.getVarValue("format");
-				// validate using a helper
-				returnable= DecimalFieldHelper.validate(validatableField, format);
-				
-				if(! returnable){
-					errors.add(field.getKey(),Resources.getActionMessage(validator,request,va,field));
-				}
-			}catch(NumberFormatException nfe){
-				
-				nfe.printStackTrace();
-			}
-		}
-		return returnable;
-	}
-	
+    public DecimalFormatValidator() {
+        super();
+    }
+
+    /**
+     * This class validates a decimal field of the action form.The format
+     * against which it would validate will be obtained from the var elements
+     * defined in validation.xml. The name of the var element which is supposed
+     * to hold the format should be 'format', and it should be specfied as (x,y)
+     * where x-y is the total number of digits before decimal
+     * 
+     * @param bean
+     * @param va
+     * @param field
+     * @param errors
+     * @param request
+     * @return
+     */
+    public static boolean validateDecimalFormat(Object bean, ValidatorAction va, Field field, ActionMessages errors,
+            Validator validator, HttpServletRequest request) {
+
+        Double validatableField = null;
+        boolean returnable = true;
+        String format = null;
+        // get the field to be validated.
+        String fieldToBeValidated = ValidatorUtils.getValueAsString(bean, field.getProperty());
+        // it could be null if the property is not being passed from the UI
+        if (null != fieldToBeValidated && fieldToBeValidated != "") {
+            try {
+
+                validatableField = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(
+                        fieldToBeValidated);
+                validatableField = Math.abs(validatableField);
+                // get the format against which it has to be validated
+                format = field.getVarValue("format");
+                // validate using a helper
+                returnable = DecimalFieldHelper.validate(validatableField, format);
+
+                if (!returnable) {
+                    errors.add(field.getKey(), Resources.getActionMessage(validator, request, va, field));
+                }
+            } catch (NumberFormatException nfe) {
+
+                nfe.printStackTrace();
+            }
+        }
+        return returnable;
+    }
+
 }

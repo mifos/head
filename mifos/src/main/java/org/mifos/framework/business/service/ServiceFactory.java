@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.business.service;
 
 import java.util.HashMap;
@@ -29,33 +29,30 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class ServiceFactory {
 
-	private ServiceFactory() {
-	}
+    private ServiceFactory() {
+    }
 
-	private static ServiceFactory instance = new ServiceFactory();
+    private static ServiceFactory instance = new ServiceFactory();
 
-	private Map<BusinessServiceName, BusinessService> businessServicesMap = new HashMap<BusinessServiceName, BusinessService>();
+    private Map<BusinessServiceName, BusinessService> businessServicesMap = new HashMap<BusinessServiceName, BusinessService>();
 
-	public static ServiceFactory getInstance() {
-		return instance;
-	}
+    public static ServiceFactory getInstance() {
+        return instance;
+    }
 
-	/**
-	 * @deprecated Call the constructor of the business service directly. For
-	 *             example, <code>new ConfigurationBusinessService();</code>
-	 */
-	public BusinessService getBusinessService(BusinessServiceName key)
-			throws ServiceUnavailableException {
-		if (!businessServicesMap.containsKey(key)) {
-			try {
-				businessServicesMap.put(key, (BusinessService) Class.forName(
-						key.getName()).newInstance());
-			} catch (Exception cnfe) {
-				throw new ServiceUnavailableException(
-						ExceptionConstants.SERVICEEXCEPTION, cnfe);
-			}
-		}
-		return businessServicesMap.get(key);
-	}
+    /**
+     * @deprecated Call the constructor of the business service directly. For
+     *             example, <code>new ConfigurationBusinessService();</code>
+     */
+    public BusinessService getBusinessService(BusinessServiceName key) throws ServiceUnavailableException {
+        if (!businessServicesMap.containsKey(key)) {
+            try {
+                businessServicesMap.put(key, (BusinessService) Class.forName(key.getName()).newInstance());
+            } catch (Exception cnfe) {
+                throw new ServiceUnavailableException(ExceptionConstants.SERVICEEXCEPTION, cnfe);
+            }
+        }
+        return businessServicesMap.get(key);
+    }
 
 }

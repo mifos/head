@@ -17,43 +17,43 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.cache;
 
 import org.mifos.framework.components.configuration.business.SystemConfiguration;
 
 public class CacheRepository {
-	
-	private SystemConfiguration systemConfiguration;
-	private OfficeCache officeCache;
-	private static CacheRepository cacheRep = new CacheRepository();
-	
-	private CacheRepository() {
-		officeCache = new OfficeCache();
-	}
 
-	public OfficeCache getOfficeCache() {
-		return officeCache;
-	}
+    private SystemConfiguration systemConfiguration;
+    private OfficeCache officeCache;
+    private static CacheRepository cacheRep = new CacheRepository();
 
-	public void setOfficeCache(OfficeCache officeCache) {
-		this.officeCache = officeCache;
-	}
+    private CacheRepository() {
+        officeCache = new OfficeCache();
+    }
 
-	public void setSystemConfiguration(SystemConfiguration configuration) {
-		this.systemConfiguration = configuration;
-	}
+    public OfficeCache getOfficeCache() {
+        return officeCache;
+    }
 
-	public Object getValueFromOfficeCache(Key key) {
-		return (key!=null)?officeCache.getElement(key):null;
-	}
+    public void setOfficeCache(OfficeCache officeCache) {
+        this.officeCache = officeCache;
+    }
 
-	public static CacheRepository getInstance() {
-	    return cacheRep;
-	}
+    public void setSystemConfiguration(SystemConfiguration configuration) {
+        this.systemConfiguration = configuration;
+    }
 
-	public SystemConfiguration getSystemConfiguration() {
-		return systemConfiguration;
-	}	
+    public Object getValueFromOfficeCache(Key key) {
+        return (key != null) ? officeCache.getElement(key) : null;
+    }
+
+    public static CacheRepository getInstance() {
+        return cacheRep;
+    }
+
+    public SystemConfiguration getSystemConfiguration() {
+        return systemConfiguration;
+    }
 
 }

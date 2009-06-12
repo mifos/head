@@ -17,23 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 /**
  * This Exception is thrown when any hibernate execptions are encountered during
  * the initialization process for hibernate during start up
- *
- *
+ * 
+ * 
  */
 public class HibernateStartUpException extends SystemException {
-	public HibernateStartUpException(Throwable cause) {
-		super(cause);
+    public HibernateStartUpException(Throwable cause) {
+        super(cause);
 
-	}
+    }
 
-	public HibernateStartUpException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public HibernateStartUpException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
 }

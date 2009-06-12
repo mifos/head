@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.authorization;
 
 import static org.mifos.framework.security.authorization.HierarchyManager.BranchLocation.BELOW;
@@ -51,143 +51,129 @@ import org.mifos.framework.security.util.UserContext;
 
 public class AuthorizationManager {
 
-	private Map<Short, Set> activityToRolesCacheMap = null;
-	private static AuthorizationManager manager = new AuthorizationManager();
-	private AuthorizationManager() {
-		activityToRolesCacheMap = new HashMap<Short, Set>();
-	}
+    private Map<Short, Set> activityToRolesCacheMap = null;
+    private static AuthorizationManager manager = new AuthorizationManager();
 
-	public static AuthorizationManager getInstance() {
-		return manager;
-	}
+    private AuthorizationManager() {
+        activityToRolesCacheMap = new HashMap<Short, Set>();
+    }
 
-	public void init() throws SystemException, ApplicationException {
-		Session session = null;
-		try {
-			session = StaticHibernateUtil.openSession();
-			init(session);
+    public static AuthorizationManager getInstance() {
+        return manager;
+    }
 
-		} catch (SystemException e) {
-			throw e;
-		} catch (ApplicationException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new SecurityException(
-				SecurityConstants.INITIALIZATIONFAILED, e);
-		}
-		finally {
-			StaticHibernateUtil.closeSession(session);
-		}
-	}
+    public void init() throws SystemException, ApplicationException {
+        Session session = null;
+        try {
+            session = StaticHibernateUtil.openSession();
+            init(session);
 
-	public void init(Session session) throws ApplicationException {
-		SecurityHelper security = new SecurityHelper(
-			new SessionHolder(session));
+        } catch (SystemException e) {
+            throw e;
+        } catch (ApplicationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SecurityException(SecurityConstants.INITIALIZATIONFAILED, e);
+        } finally {
+            StaticHibernateUtil.closeSession(session);
+        }
+    }
 
-		List<ActivityRoles> al = security.getActivities();
-		activityToRolesCacheMap.clear();
-		List leafs = security.getLeafActivities();
-		for (ActivityRoles act : al) {
-			if (leafs.contains(act.getId())) {
-				activityToRolesCacheMap.put(act.getId(), act
-						.getActivityRoles());
-			}
-		}
-	}
+    public void init(Session session) throws ApplicationException {
+        SecurityHelper security = new SecurityHelper(new SessionHolder(session));
 
-	public boolean isActivityAllowed(UserContext userContext,
-			ActivityContext activityContext) {
-		try {
-			Set rolesFromActivity = 
-				activityToRolesCacheMap.get(activityContext.getActivityId());
-			if (rolesFromActivity == null) {
-				return false;
-			}
+        List<ActivityRoles> al = security.getActivities();
+        activityToRolesCacheMap.clear();
+        List leafs = security.getLeafActivities();
+        for (ActivityRoles act : al) {
+            if (leafs.contains(act.getId())) {
+                activityToRolesCacheMap.put(act.getId(), act.getActivityRoles());
+            }
+        }
+    }
 
-			Set roles = new HashSet(rolesFromActivity);
-			roles.retainAll(userContext.getRoles());
-			if (roles.isEmpty()) {
-				return false;
-			} 
-			else {
-				HierarchyManager.BranchLocation where = 
-					HierarchyManager.getInstance()
-					.compareOfficeInHierarchy(userContext, 
-						activityContext.getRecordOfficeId());
-				PersonnelLevel personnelLevel = userContext.getLevel();
-				short userId = userContext.getId().shortValue();
-				if (where == SAME) {
-					// 1 check if record belog to him if so let him do
-					if (userId == activityContext.getRecordLoanOfficer()) {
-						return true;
-					} 
-					else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
-						return false;
-					}
-					else {
-						return true;
-					}
-				}
-				else if (where == BELOW
-						&& PersonnelLevel.LOAN_OFFICER != personnelLevel) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public boolean isActivityAllowed(UserContext userContext, ActivityContext activityContext) {
+        try {
+            Set rolesFromActivity = activityToRolesCacheMap.get(activityContext.getActivityId());
+            if (rolesFromActivity == null) {
+                return false;
+            }
 
-	public void addRole(RoleBO role) {
-		List<Short> activityIds = role.getActivityIds();
-		Set<Short> keys = activityToRolesCacheMap.keySet();
-		for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
-			Short activityId = iter.next();
-			// see if for role has this activityId assingned. If it is, add it
-			// to the cache
-			if (activityIds.contains(activityId)) {
-				Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
-				roleSet.add(role.getId());
-			}
-		}
-	}
+            Set roles = new HashSet(rolesFromActivity);
+            roles.retainAll(userContext.getRoles());
+            if (roles.isEmpty()) {
+                return false;
+            } else {
+                HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(
+                        userContext, activityContext.getRecordOfficeId());
+                PersonnelLevel personnelLevel = userContext.getLevel();
+                short userId = userContext.getId().shortValue();
+                if (where == SAME) {
+                    // 1 check if record belog to him if so let him do
+                    if (userId == activityContext.getRecordLoanOfficer()) {
+                        return true;
+                    } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public void updateRole(RoleBO role) {
-		List<Short> activityIds = role.getActivityIds();
-		Set<Short> keys = activityToRolesCacheMap.keySet();
-		synchronized (activityToRolesCacheMap) {
-			for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
-				Short activityId = iter.next();
-				// see if for this activity role activitySet has anything in
-				// it If there is not any remove it from the cache
-				Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
-				if (activityIds.contains(activityId)) {
-					roleSet.add(role.getId());
-				} else {
-					roleSet.remove(role.getId());
-				}
-			}
-		}
-	}
+    public void addRole(RoleBO role) {
+        List<Short> activityIds = role.getActivityIds();
+        Set<Short> keys = activityToRolesCacheMap.keySet();
+        for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
+            Short activityId = iter.next();
+            // see if for role has this activityId assingned. If it is, add it
+            // to the cache
+            if (activityIds.contains(activityId)) {
+                Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
+                roleSet.add(role.getId());
+            }
+        }
+    }
 
-	public void deleteRole(RoleBO role) {
-		List<Short> activityIds = role.getActivityIds();
-		Set<Short> keys = activityToRolesCacheMap.keySet();
-		synchronized (activityToRolesCacheMap) {
-			for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
-				Short activityId = iter.next();
-				// see if for this activity role activitySet has anything in
-				// it If there is any remove it from the cache
-				if (activityIds.contains(activityId)) {
-					Set<Short> roleSet = activityToRolesCacheMap
-							.get(activityId);
-					roleSet.remove(role.getId());
-				}
-			}
-		}
-	}
+    public void updateRole(RoleBO role) {
+        List<Short> activityIds = role.getActivityIds();
+        Set<Short> keys = activityToRolesCacheMap.keySet();
+        synchronized (activityToRolesCacheMap) {
+            for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
+                Short activityId = iter.next();
+                // see if for this activity role activitySet has anything in
+                // it If there is not any remove it from the cache
+                Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
+                if (activityIds.contains(activityId)) {
+                    roleSet.add(role.getId());
+                } else {
+                    roleSet.remove(role.getId());
+                }
+            }
+        }
+    }
+
+    public void deleteRole(RoleBO role) {
+        List<Short> activityIds = role.getActivityIds();
+        Set<Short> keys = activityToRolesCacheMap.keySet();
+        synchronized (activityToRolesCacheMap) {
+            for (Iterator<Short> iter = keys.iterator(); iter.hasNext();) {
+                Short activityId = iter.next();
+                // see if for this activity role activitySet has anything in
+                // it If there is any remove it from the cache
+                if (activityIds.contains(activityId)) {
+                    Set<Short> roleSet = activityToRolesCacheMap.get(activityId);
+                    roleSet.remove(role.getId());
+                }
+            }
+        }
+    }
 
 }

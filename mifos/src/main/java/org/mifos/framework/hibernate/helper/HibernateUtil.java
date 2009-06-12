@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.helper;
 
 import java.io.IOException;
@@ -51,9 +51,9 @@ public class HibernateUtil {
     public HibernateUtil() {
         initialize();
     }
-    
+
     public void initialize() throws HibernateStartUpException {
-        synchronized(initialized) {
+        synchronized (initialized) {
             if (initialized == Boolean.FALSE) {
                 config = new Configuration();
                 initializeHibernateConfiguration();
@@ -210,7 +210,7 @@ public class HibernateUtil {
             getSessionTL().getTransaction().rollback();
         }
     }
-    
+
     private void initializeHibernateConfiguration() {
         try {
             config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.formulaic;
 
 /*
@@ -28,13 +28,12 @@ package org.mifos.framework.formulaic;
  */
 public class NotNullEmptyValidator extends IsInstanceValidator {
 
-	
-	private Validator other;
+    private Validator other;
     private String fieldName;
 
     public NotNullEmptyValidator() {
-		super(String.class);
-	}
+        super(String.class);
+    }
 
     public NotNullEmptyValidator(String fieldName) {
         super(String.class);
@@ -42,27 +41,27 @@ public class NotNullEmptyValidator extends IsInstanceValidator {
     }
 
     public NotNullEmptyValidator(Validator other) {
-		super(String.class);
-		this.other = other;
-	}
+        super(String.class);
+        this.other = other;
+    }
 
     public NotNullEmptyValidator(String fieldName, Validator other) {
-		super(String.class);
-		this.other = other;
+        super(String.class);
+        this.other = other;
         this.fieldName = fieldName;
     }
 
     @Override
-	public String validate(Object value) throws ValidationError {
-		super.validate(value);
-		if (other != null)
-			other.validate(value);
-		if (((String)value).trim().equals("")) {
+    public String validate(Object value) throws ValidationError {
+        super.validate(value);
+        if (other != null)
+            other.validate(value);
+        if (((String) value).trim().equals("")) {
             if (fieldName == null)
                 throw makeError(value, ErrorType.MISSING);
             else
                 throw makeError(value, ErrorType.MISSING_FIELD, fieldName);
         }
-		return (String) value;
-	}
+        return (String) value;
+    }
 }

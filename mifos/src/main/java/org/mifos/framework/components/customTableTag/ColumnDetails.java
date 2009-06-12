@@ -17,40 +17,39 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.customTableTag;
 
 public class ColumnDetails {
 
-	
-	private String colWidth = null;
+    private String colWidth = null;
 
-	private String rowStyle = null;
+    private String rowStyle = null;
 
-	private String align = null;
+    private String align = null;
 
-	public void setColWidth(String colWidth) {
-		this.colWidth = colWidth;
-	}
+    public void setColWidth(String colWidth) {
+        this.colWidth = colWidth;
+    }
 
-	public String getColWidth() {
-		return colWidth;
-	}
+    public String getColWidth() {
+        return colWidth;
+    }
 
-	public String getRowStyle() {
-		return rowStyle;
-	}
+    public String getRowStyle() {
+        return rowStyle;
+    }
 
-	public void setRowStyle(String rowStyle) {
-		this.rowStyle = rowStyle;
-	}
+    public void setRowStyle(String rowStyle) {
+        this.rowStyle = rowStyle;
+    }
 
-	public String getAlign() {
-		return align;
-	}
+    public String getAlign() {
+        return align;
+    }
 
-	public void setAlign(String align) {
-		this.align = align;
-	}
+    public void setAlign(String align) {
+        this.align = align;
+    }
 
 }

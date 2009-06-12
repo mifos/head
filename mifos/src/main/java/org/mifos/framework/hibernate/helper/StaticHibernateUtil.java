@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.helper;
 
 import java.sql.Connection;
@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 public class StaticHibernateUtil {
 
     private static HibernateUtil hibernateUtil;
-    
+
     /**
      * This method must be called before using Hibernate!
      */
@@ -112,5 +112,5 @@ public class StaticHibernateUtil {
     public static void rollbackTransaction() {
         hibernateUtil.rollbackTransaction();
     }
-    
+
 }

@@ -17,9 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 public interface Predicate<T> {
-	public boolean evaluate(T object) throws Exception;
+    public boolean evaluate(T object) throws Exception;
 }

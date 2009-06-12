@@ -17,82 +17,79 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.util.helpers;
 
 public class PropertyName {
-	
-	String name=null;
-	
-	String displayKey=null;
-	
-	String doNotLog=null;
-	
-	String lookUp=null;
-	
-	String parentName=null;
-	
-	EntityName entityName=null;
-	
-	String methodName;
 
-	public String getDisplayKey() {
-		return displayKey;
-	}
+    String name = null;
 
-	public void setDisplayKey(String displayKey) {
-		this.displayKey = displayKey;
-	}
+    String displayKey = null;
 
-	public String getDoNotLog() {
-		return doNotLog;
-	}
+    String doNotLog = null;
 
-	public void setDoNotLog(String doNotLog) {
-		this.doNotLog = doNotLog;
-	}
+    String lookUp = null;
 
-	public EntityName getEntityName() {
-		return entityName;
-	}
+    String parentName = null;
 
-	public void setEntityName(EntityName entityName) {
-		this.entityName = entityName;
-	}
+    EntityName entityName = null;
 
-	public String getLookUp() {
-		return lookUp;
-	}
+    String methodName;
 
-	public void setLookUp(String lookUp) {
-		this.lookUp = lookUp;
-	}
+    public String getDisplayKey() {
+        return displayKey;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setDisplayKey(String displayKey) {
+        this.displayKey = displayKey;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getDoNotLog() {
+        return doNotLog;
+    }
 
-	public String getParentName() {
-		return parentName;
-	}
+    public void setDoNotLog(String doNotLog) {
+        this.doNotLog = doNotLog;
+    }
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
+    public EntityName getEntityName() {
+        return entityName;
+    }
 
-	public String getMethodName() {
-		return methodName;
-	}
+    public void setEntityName(EntityName entityName) {
+        this.entityName = entityName;
+    }
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
+    public String getLookUp() {
+        return lookUp;
+    }
 
-	
-	
+    public void setLookUp(String lookUp) {
+        this.lookUp = lookUp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.persistence;
 
 import java.io.Serializable;
@@ -41,18 +41,17 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**
- * This class is intended to be replaced by {@link SessionPersistence}
- * which intentionally has a very similar set of methods (many subclasses
- * can be moved over just by changing what they inherit from, with
- * no further changes).
+ * This class is intended to be replaced by {@link SessionPersistence} which
+ * intentionally has a very similar set of methods (many subclasses can be moved
+ * over just by changing what they inherit from, with no further changes).
  */
 public abstract class Persistence {
     private HibernateUtil hibernateUtil;
-    
-	public HibernateUtil getHibernateUtil() {
-	    if (null == hibernateUtil) {
-	        hibernateUtil = new HibernateUtil();
-	    }
+
+    public HibernateUtil getHibernateUtil() {
+        if (null == hibernateUtil) {
+            hibernateUtil = new HibernateUtil();
+        }
         return hibernateUtil;
     }
 
@@ -61,10 +60,10 @@ public abstract class Persistence {
     }
 
     public Connection getConnection() {
-		return getHibernateUtil().getSessionTL().connection();
-	}
+        return getHibernateUtil().getSessionTL().connection();
+    }
 
-	public Object createOrUpdate(Object object) throws PersistenceException {
+    public Object createOrUpdate(Object object) throws PersistenceException {
         try {
             Session session = getHibernateUtil().getSessionTL();
             getHibernateUtil().startTransaction();
@@ -77,52 +76,49 @@ public abstract class Persistence {
         }
 
         return object;
-	}
-	
-	public Session getSession() {
-		return getHibernateUtil().getSessionTL();
-	}
+    }
 
-	public void delete(Object object) throws PersistenceException {
-		Session session = getHibernateUtil().getSessionTL();
-		try {
-			getHibernateUtil().startTransaction();
-			session.delete(object);
-		} catch (Exception he) {
-			throw new PersistenceException(he);
-		}
-	}	
+    public Session getSession() {
+        return getHibernateUtil().getSessionTL();
+    }
 
-	/**
-	 * This method takes the name of a named query to be executed as well as a
-	 * list of parameters that the query uses. It assumes the session is open.
-	 */
-	public List executeNamedQuery(String queryName, Map queryParameters)
-			throws PersistenceException {
-		try {
-			Query query = createdNamedQuery(queryName);
-			setParametersInQuery(query, queryName, queryParameters);
-			return runQuery(query);
-		} catch (Exception e) {
-			throw new PersistenceException(e);
-		}
-	}
+    public void delete(Object object) throws PersistenceException {
+        Session session = getHibernateUtil().getSessionTL();
+        try {
+            getHibernateUtil().startTransaction();
+            session.delete(object);
+        } catch (Exception he) {
+            throw new PersistenceException(he);
+        }
+    }
 
-	public List runQuery(Query query) {
-		return query.list();
-	}
-	
-	public Query createdNamedQuery(String queryName) {
-		Session session = getHibernateUtil().getSessionTL();
-		Query query = session.getNamedQuery(queryName);
-		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-				.debug(
-						"The query object for the query with the name  "
-								+ queryName + " has been obtained");
-		return query;
-	}
+    /**
+     * This method takes the name of a named query to be executed as well as a
+     * list of parameters that the query uses. It assumes the session is open.
+     */
+    public List executeNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
+        try {
+            Query query = createdNamedQuery(queryName);
+            setParametersInQuery(query, queryName, queryParameters);
+            return runQuery(query);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
 
-	public Object execUniqueResultNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
+    public List runQuery(Query query) {
+        return query.list();
+    }
+
+    public Query createdNamedQuery(String queryName) {
+        Session session = getHibernateUtil().getSessionTL();
+        Query query = session.getNamedQuery(queryName);
+        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                "The query object for the query with the name  " + queryName + " has been obtained");
+        return query;
+    }
+
+    public Object execUniqueResultNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
         try {
             Query query = null;
             Session session = getHibernateUtil().getSessionTL();
@@ -144,91 +140,80 @@ public abstract class Persistence {
         }
     }
 
-	public static void setParametersInQuery(Query query, String queryName,
-			Map queryParameters) throws PersistenceException {
+    public static void setParametersInQuery(Query query, String queryName, Map queryParameters)
+            throws PersistenceException {
 
-		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-				"Check if query object and queryParameters are not null for query with name  "
-						+ queryName);
-		try {
-			if (null != queryParameters) {
+        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                "Check if query object and queryParameters are not null for query with name  " + queryName);
+        try {
+            if (null != queryParameters) {
 
-				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-						.debug(
-								"Obtaining keys for the parameter map query with name  "
-										+ queryName);
-				Set queryParamKeys = queryParameters.keySet();
-				Iterator queryParamIterator = queryParamKeys.iterator();
+                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                        "Obtaining keys for the parameter map query with name  " + queryName);
+                Set queryParamKeys = queryParameters.keySet();
+                Iterator queryParamIterator = queryParamKeys.iterator();
 
-				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-						.debug(
-								"Iterating over the keys for query with name  "
-										+ queryName);
-				while (queryParamIterator.hasNext()) {
-					String key = queryParamIterator.next().toString();
-					MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-							.debug(
-									"The parameter key  for query with name  "
-											+ queryName + " is " + key);
-					Object value = queryParameters.get(key);
-					query.setParameter(key, value);
-				}
-			}
-		} catch (Exception e) {
-			throw new PersistenceException(e);
-		}
+                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                        "Iterating over the keys for query with name  " + queryName);
+                while (queryParamIterator.hasNext()) {
+                    String key = queryParamIterator.next().toString();
+                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+                            "The parameter key  for query with name  " + queryName + " is " + key);
+                    Object value = queryParameters.get(key);
+                    query.setParameter(key, value);
+                }
+            }
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * Deleagtes to {@link Session#get(Class, Serializable)}.
-	 */
-	public Object getPersistentObject(Class clazz,
-			Serializable persistentObjectId) throws PersistenceException {
-		// keep current unit tests happy, they get confused with an
-		// IllegalArgumentException (thrown if get() is given a null ID, below)
-		// TODO: get rid of this. The default handling for null IDs of
-		// get() (throwing that IllegalArgumentException) should be fine.
-		if (null == persistentObjectId)
-			throw new PersistenceException("persistentObjectId is required for fetch");
-		
-		// TODO: it is probably cleaner to NOT catch the HibernateException
-		// since it is a RuntimeException. Let's eventually make this method
-		// more like loadPersistentObject(), below.
-		try {
-			return getHibernateUtil().getSessionTL().get(clazz, persistentObjectId);
-		}
-		catch (HibernateException e) {
-			throw new PersistenceException(e);
-		}
-	}
+    /**
+     * Deleagtes to {@link Session#get(Class, Serializable)}.
+     */
+    public Object getPersistentObject(Class clazz, Serializable persistentObjectId) throws PersistenceException {
+        // keep current unit tests happy, they get confused with an
+        // IllegalArgumentException (thrown if get() is given a null ID, below)
+        // TODO: get rid of this. The default handling for null IDs of
+        // get() (throwing that IllegalArgumentException) should be fine.
+        if (null == persistentObjectId)
+            throw new PersistenceException("persistentObjectId is required for fetch");
 
-	/**
-	 * Deleagtes to {@link Session#load(Class, Serializable)}.
-	 */
-	public Object loadPersistentObject(Class clazz,
-			Serializable persistentObjectId) {
-		return getHibernateUtil().getSessionTL().load(clazz, persistentObjectId);
-	}
+        // TODO: it is probably cleaner to NOT catch the HibernateException
+        // since it is a RuntimeException. Let's eventually make this method
+        // more like loadPersistentObject(), below.
+        try {
+            return getHibernateUtil().getSessionTL().get(clazz, persistentObjectId);
+        } catch (HibernateException e) {
+            throw new PersistenceException(e);
+        }
+    }
 
-	protected Param typeNameValue(String type, String name, Object value) {
-		return new Param(type, name, value);
-	}
-	
-	public void initialize(Object object) {
-		Hibernate.initialize(object);
-	}
+    /**
+     * Deleagtes to {@link Session#load(Class, Serializable)}.
+     */
+    public Object loadPersistentObject(Class clazz, Serializable persistentObjectId) {
+        return getHibernateUtil().getSessionTL().load(clazz, persistentObjectId);
+    }
 
-	protected Integer getCountFromQueryResult(List queryResult) {
-		int count = 0;
-		if (queryResult.size() > 0 && queryResult.get(0) != null)
-			count = ((Number) queryResult.get(0)).intValue();
-		return count;
-	}
+    protected Param typeNameValue(String type, String name, Object value) {
+        return new Param(type, name, value);
+    }
 
-	protected BigDecimal getCalculateValueFromQueryResult(List queryResult) {
-		return queryResult.size() > 0 && queryResult.get(0) != null ? BigDecimal
-				.valueOf(((Number) queryResult.get(0)).doubleValue())
-				: null;
-	}
+    public void initialize(Object object) {
+        Hibernate.initialize(object);
+    }
+
+    protected Integer getCountFromQueryResult(List queryResult) {
+        int count = 0;
+        if (queryResult.size() > 0 && queryResult.get(0) != null)
+            count = ((Number) queryResult.get(0)).intValue();
+        return count;
+    }
+
+    protected BigDecimal getCalculateValueFromQueryResult(List queryResult) {
+        return queryResult.size() > 0 && queryResult.get(0) != null ? BigDecimal.valueOf(((Number) queryResult.get(0))
+                .doubleValue()) : null;
+    }
 }

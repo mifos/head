@@ -17,17 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.hibernate.configuration;
 
 /**
  * A Interface that defines the configuration related parameters
  */
 
-public interface CFGConfiguration
-{
+public interface CFGConfiguration {
 
     public String CFGCONFIGPATH = "configs.txt";
-
 
 }

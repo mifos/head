@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 import java.io.IOException;
@@ -42,73 +42,64 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
- * If we aren't logged in, and we are trying to access any URL other
- * than the login page, force a login.
+ * If we aren't logged in, and we are trying to access any URL other than the
+ * login page, force a login.
  */
 public class LoginFilter implements Filter {
 
-	/**
-	 * This function implements the login filter it checks if user is not login
-	 * it forces the user to login by redirecting him to login page
-	 */
-	public void doFilter(ServletRequest req, ServletResponse res,
-			FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) req;
-		request.setCharacterEncoding("UTF-8");
-		String complUri = request.getRequestURI();
-		int index=complUri.lastIndexOf("/");
-		String uri=complUri.substring(index+1);
-		try {
-			if (uri == null
-					|| uri.equalsIgnoreCase(LoginConstants.LOGINPAGEURI)
-					|| uri.equalsIgnoreCase( LoginConstants.LOGINACTION)) {
-				MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug(
-						"Inside Filter uri is for login page");
-				chain.doFilter(req, res);
-			} else {
-				if (request.getSession(false) == null) {
-					MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug(
-							"Inside Filter session is null");
-					ActionErrors error = new ActionErrors();
-					error.add(LoginConstants.SESSIONTIMEOUT,new ActionMessage(LoginConstants.SESSIONTIMEOUT));
-					request.setAttribute(Globals.ERROR_KEY, error);
-					request.getRequestDispatcher(LoginConstants.LOGINPAGEURI).forward(req,res);
-						//((HttpServletResponse)res).sendRedirect(request.getContextPath()+LoginConstants.LOGINPAGEURI);
-					return;
-				}
-				UserContext userContext = (UserContext) request
-					.getSession(false).getAttribute(Constants.USERCONTEXT);
-				if (null == userContext || null == userContext.getId()) {
-					// send back to login page with error message
-					((HttpServletResponse) res)
-							.sendRedirect(request.getContextPath()+LoginConstants.LOGINPAGEURI);
-					return;
+    /**
+     * This function implements the login filter it checks if user is not login
+     * it forces the user to login by redirecting him to login page
+     */
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+            ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        request.setCharacterEncoding("UTF-8");
+        String complUri = request.getRequestURI();
+        int index = complUri.lastIndexOf("/");
+        String uri = complUri.substring(index + 1);
+        try {
+            if (uri == null || uri.equalsIgnoreCase(LoginConstants.LOGINPAGEURI)
+                    || uri.equalsIgnoreCase(LoginConstants.LOGINACTION)) {
+                MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug("Inside Filter uri is for login page");
+                chain.doFilter(req, res);
+            } else {
+                if (request.getSession(false) == null) {
+                    MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).debug("Inside Filter session is null");
+                    ActionErrors error = new ActionErrors();
+                    error.add(LoginConstants.SESSIONTIMEOUT, new ActionMessage(LoginConstants.SESSIONTIMEOUT));
+                    request.setAttribute(Globals.ERROR_KEY, error);
+                    request.getRequestDispatcher(LoginConstants.LOGINPAGEURI).forward(req, res);
+                    // ((HttpServletResponse)res).sendRedirect(request.getContextPath()+LoginConstants.LOGINPAGEURI);
+                    return;
+                }
+                UserContext userContext = (UserContext) request.getSession(false).getAttribute(Constants.USERCONTEXT);
+                if (null == userContext || null == userContext.getId()) {
+                    // send back to login page with error message
+                    ((HttpServletResponse) res).sendRedirect(request.getContextPath() + LoginConstants.LOGINPAGEURI);
+                    return;
 
-				} else {
-					((HttpServletRequest) req).getSession(false)
-						.setAttribute(Constants.RANDOMNUM, 
-							new Random().nextLong());
-					chain.doFilter(req, res);
-				}
+                } else {
+                    ((HttpServletRequest) req).getSession(false).setAttribute(Constants.RANDOMNUM,
+                            new Random().nextLong());
+                    chain.doFilter(req, res);
+                }
 
-			}
-		} catch (IllegalStateException ise) {
-			MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).error(
-					"Inside Filter ISE" + ise.getMessage());
-			ActionMessage error = new ActionMessage(LoginConstants.IllEGALSTATE);
-			request.setAttribute(Globals.ERROR_KEY, error);
-			((HttpServletResponse) res)
-					.sendRedirect(request.getContextPath()+LoginConstants.LOGINPAGEURI);
-		}
-		finally{
-			StaticHibernateUtil.closeSession();
-		}
-	}
+            }
+        } catch (IllegalStateException ise) {
+            MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER).error("Inside Filter ISE" + ise.getMessage());
+            ActionMessage error = new ActionMessage(LoginConstants.IllEGALSTATE);
+            request.setAttribute(Globals.ERROR_KEY, error);
+            ((HttpServletResponse) res).sendRedirect(request.getContextPath() + LoginConstants.LOGINPAGEURI);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
 
-	public void init(FilterConfig config) throws ServletException {
-	}
+    public void init(FilterConfig config) throws ServletException {
+    }
 
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 
 }

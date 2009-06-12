@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 /**
@@ -26,17 +26,17 @@ package org.mifos.framework.exceptions;
  */
 public class ValueObjectConversionException extends SystemException {
 
-	public ValueObjectConversionException(Throwable cause) {
-		super(cause);
-	}
-	
-	public ValueObjectConversionException(String key) {
-		super(key);
-	}
+    public ValueObjectConversionException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.SystemException.ValueObjectConversionException";
-	}
+    public ValueObjectConversionException(String key) {
+        super(key);
+    }
+
+    @Override
+    public String getKey() {
+        return "exception.framework.SystemException.ValueObjectConversionException";
+    }
 
 }

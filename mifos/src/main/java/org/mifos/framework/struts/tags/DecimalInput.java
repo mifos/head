@@ -17,41 +17,40 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
+
 import javax.servlet.jsp.JspException;
 import org.apache.strutsel.taglib.html.ELTextTag;
 
 /**
- * DecimalInput is custom input tag 
+ * DecimalInput is custom input tag
  */
 public class DecimalInput extends ELTextTag {
-    
+
     /********************** fields *************************************/
-    
-    
-    /**************************constructor********************************/
+
+    /************************** constructor ********************************/
     /**
      * Default constructor for the tag
      */
-    
-    
+
     public DecimalInput() {
         super();
-        
+
     }
-    /***************************public methods ****************************/
-    
-       
+
+    /*************************** public methods ****************************/
+
     /**
-     * This function renders the tag 
+     * This function renders the tag
+     * 
      * @return int
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     @Override
-	public int doStartTag() throws JspException {
-    	
+    public int doStartTag() throws JspException {
+
         return super.doStartTag();
     }
 }
-

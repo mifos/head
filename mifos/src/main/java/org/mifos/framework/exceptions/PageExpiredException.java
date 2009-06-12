@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class PageExpiredException extends ApplicationException {
 
-	public PageExpiredException() {
-		this(null);
-	}
+    public PageExpiredException() {
+        this(null);
+    }
 
-	public PageExpiredException(String internalMessage) {
-		super(ExceptionConstants.PAGEEXPIREDEXCEPTION, null, internalMessage);
-	}
+    public PageExpiredException(String internalMessage) {
+        super(ExceptionConstants.PAGEEXPIREDEXCEPTION, null, internalMessage);
+    }
 
 }

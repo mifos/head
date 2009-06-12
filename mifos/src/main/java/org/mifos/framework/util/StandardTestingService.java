@@ -57,7 +57,7 @@ public class StandardTestingService implements TestingService {
             return TestMode.MAIN;
         }
     }
-    
+
     public void setTestMode(TestMode newMode) {
         String modeString = newMode.toString().toLowerCase();
         System.setProperty(TEST_MODE_SYSTEM_PROPERTY, modeString);

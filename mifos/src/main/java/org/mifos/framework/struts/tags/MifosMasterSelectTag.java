@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
@@ -26,60 +26,69 @@ import javax.servlet.jsp.PageContext;
 import org.apache.struts.taglib.html.SelectTag;
 
 /**
- * Custom tag that represents an HTML select element, associated with a
- * bean property specified by our attributes.  
+ * Custom tag that represents an HTML select element, associated with a bean
+ * property specified by our attributes.
  */
 public class MifosMasterSelectTag extends SelectTag {
 
-	/**
-	 * 	Serial Version UID for Serialization 
-	 */
-	private static final long serialVersionUID = 165404539580182746L;
-	
-	//----------------------------------------------------- Instance Variables
-	
-	/**
+    /**
+     * Serial Version UID for Serialization
+     */
+    private static final long serialVersionUID = 165404539580182746L;
+
+    // ----------------------------------------------------- Instance Variables
+
+    /**
      * The saved body content of this tag.
      */
-	protected String saveBody = null;
+    protected String saveBody = null;
 
-	//--------------------------------------------------------- Constructors
-	
-	/**
+    // --------------------------------------------------------- Constructors
+
+    /**
      * Construct a new instance of this tag.
      */
-	public MifosMasterSelectTag() {
-		super();
-	}
-	
-	/**
+    public MifosMasterSelectTag() {
+        super();
+    }
+
+    /**
      * Construct a new instance of this tag.
-     * @param pageContext 	pageContext of the Tag
-     * @param property 		property of the element
-     * @param size 			size of the element
-     * @param multiple 		multiple attribute of the element
-     * @param style			style of the element
-     * @param tooltip		function to be called to enable tooltip
+     * 
+     * @param pageContext
+     *            pageContext of the Tag
+     * @param property
+     *            property of the element
+     * @param size
+     *            size of the element
+     * @param multiple
+     *            multiple attribute of the element
+     * @param style
+     *            style of the element
+     * @param tooltip
+     *            function to be called to enable tooltip
      */
-    public MifosMasterSelectTag(PageContext pageContext,String property,String size,String multiple,
-    		String style,String tooltip) {
-		this.pageContext=pageContext;
-		this.property=property;
-		this.size=size;
-		this.multiple=multiple;
-		this.setStyle(style);
-		this.setOnchange(tooltip);
-		this.setOnmouseout(tooltip);
-		this.setOnmouseover(tooltip);
-	}
-	
-    //--------------------------------------------------------- Public Methods
-    
+    public MifosMasterSelectTag(PageContext pageContext, String property, String size, String multiple, String style,
+            String tooltip) {
+        this.pageContext = pageContext;
+        this.property = property;
+        this.size = size;
+        this.multiple = multiple;
+        this.setStyle(style);
+        this.setOnchange(tooltip);
+        this.setOnmouseout(tooltip);
+        this.setOnmouseover(tooltip);
+    }
+
+    // --------------------------------------------------------- Public Methods
+
     /**
      * Create an appropriate select start element based on our parameters.
-     * @exception JspException if a JSP exception has occurred
+     * 
+     * @exception JspException
+     *                if a JSP exception has occurred
      */
-	public String getSelectString() throws JspException {
-		return renderSelectStartElement();
-	}
+    public String getSelectString() throws JspException {
+        return renderSelectStartElement();
+    }
 }

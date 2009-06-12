@@ -17,53 +17,62 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 public class Path {
 
-	public Path() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	private String key;
-	private String action;
-	private String forwardkey;
-	/**
-	 * @return Returns the action.
-	 */
-	public String getAction() {
-		return action;
-	}
-	/**
-	 * @param action The action to set.
-	 */
-	public void setAction(String action) {
-		this.action = action;
-	}
-	/**
-	 * @return Returns the forwardkey.
-	 */
-	public String getForwardkey() {
-		return forwardkey;
-	}
-	/**
-	 * @param forwardkey The forwardkey to set.
-	 */
-	public void setForwardkey(String forwardkey) {
-		this.forwardkey = forwardkey;
-	}
-	/**
-	 * @return Returns the key.
-	 */
-	public String getKey() {
-		return key;
-	}
-	/**
-	 * @param key The key to set.
-	 */
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public Path() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+    private String key;
+    private String action;
+    private String forwardkey;
+
+    /**
+     * @return Returns the action.
+     */
+    public String getAction() {
+        return action;
+    }
+
+    /**
+     * @param action
+     *            The action to set.
+     */
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    /**
+     * @return Returns the forwardkey.
+     */
+    public String getForwardkey() {
+        return forwardkey;
+    }
+
+    /**
+     * @param forwardkey
+     *            The forwardkey to set.
+     */
+    public void setForwardkey(String forwardkey) {
+        this.forwardkey = forwardkey;
+    }
+
+    /**
+     * @return Returns the key.
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * @param key
+     *            The key to set.
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

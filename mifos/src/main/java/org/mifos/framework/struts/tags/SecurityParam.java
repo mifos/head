@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 import javax.servlet.jsp.JspException;
@@ -26,24 +26,22 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.framework.security.util.SecurityConstants;
 
 public class SecurityParam extends BodyTagSupport {
-	
-	private String property;
 
-	@Override
-	public int doEndTag() throws JspException {
-		
+    private String property;
 
-		pageContext.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,property);
-	        return EVAL_PAGE;
-	}
+    @Override
+    public int doEndTag() throws JspException {
 
-	public String getProperty() {
-		return property;
-	}
+        pageContext.getSession().setAttribute(SecurityConstants.SECURITY_PARAM, property);
+        return EVAL_PAGE;
+    }
 
-	public void setProperty(String property) {
-		this.property = property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
 }

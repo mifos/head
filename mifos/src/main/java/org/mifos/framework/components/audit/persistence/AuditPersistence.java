@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.persistence;
 
 import java.util.HashMap;
@@ -34,33 +34,31 @@ import org.mifos.framework.persistence.Persistence;
 
 public class AuditPersistence extends Persistence {
 
-	public void save(AuditLog auditLog) {
-		Session session = null;
-		Transaction txn = null;
-		try {
-			session = StaticHibernateUtil.openSession();
-			txn = session.beginTransaction();
-			session.save(auditLog);
-			txn.commit();
-		} catch (Exception e) {
-			txn.rollback();
-			throw new RuntimeException(e);
-		} finally {
-			try {
-				StaticHibernateUtil.closeSession(session);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    public void save(AuditLog auditLog) {
+        Session session = null;
+        Transaction txn = null;
+        try {
+            session = StaticHibernateUtil.openSession();
+            txn = session.beginTransaction();
+            session.save(auditLog);
+            txn.commit();
+        } catch (Exception e) {
+            txn.rollback();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                StaticHibernateUtil.closeSession(session);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	public List<AuditLog> getAuditLogRecords(Short entityType, Integer entityId)
-			throws PersistenceException {
-		Map<Object, Object> queryParameter = new HashMap<Object, Object>();
-		queryParameter.put("entityType", entityType);
-		queryParameter.put("entityId", entityId);
-		return executeNamedQuery(
-				NamedQueryConstants.RETRIEVE_AUDIT_LOG_RECORD, queryParameter);
-	}
+    public List<AuditLog> getAuditLogRecords(Short entityType, Integer entityId) throws PersistenceException {
+        Map<Object, Object> queryParameter = new HashMap<Object, Object>();
+        queryParameter.put("entityType", entityType);
+        queryParameter.put("entityId", entityId);
+        return executeNamedQuery(NamedQueryConstants.RETRIEVE_AUDIT_LOG_RECORD, queryParameter);
+    }
 
 }

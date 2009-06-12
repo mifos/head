@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.business;
 
 import java.util.SimpleTimeZone;
@@ -27,20 +27,19 @@ import org.mifos.application.master.business.MifosCurrency;
 
 public class SystemConfiguration {
 
-	private final MifosCurrency currency;
-	private final TimeZone timeZone;
+    private final MifosCurrency currency;
+    private final TimeZone timeZone;
 
-	public SystemConfiguration(MifosCurrency currency, int timeZoneOffSet) {
-		this.currency = currency;
-		this.timeZone = new SimpleTimeZone(timeZoneOffSet, SimpleTimeZone
-				.getAvailableIDs(timeZoneOffSet)[0]);
-	}
+    public SystemConfiguration(MifosCurrency currency, int timeZoneOffSet) {
+        this.currency = currency;
+        this.timeZone = new SimpleTimeZone(timeZoneOffSet, SimpleTimeZone.getAvailableIDs(timeZoneOffSet)[0]);
+    }
 
-	public MifosCurrency getCurrency() {
-		return currency;
-	}
-	
-	public TimeZone getMifosTimeZone() {
-		return timeZone;
-	}
+    public MifosCurrency getCurrency() {
+        return currency;
+    }
+
+    public TimeZone getMifosTimeZone() {
+        return timeZone;
+    }
 }

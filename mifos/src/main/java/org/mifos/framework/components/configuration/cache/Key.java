@@ -17,70 +17,67 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.configuration.cache;
 
-
 /**
- *  This class defines Key for OfficeCache. 
- *  The key is defined as a composite key of officeid and a string constant.
+ * This class defines Key for OfficeCache. The key is defined as a composite key
+ * of officeid and a string constant.
  */
 public class Key {
 
-	private Short officeId;
-	private String key;
-	
-	public Key(Short officeId, String key){
-	  this.key = key;
-	  this.officeId = officeId;
-	}
-	
-	public String getKey() {
-		return key;
-	}
-	
-	public void setKey(String key) {
-		this.key = key;
-	}
-	
-	public Short getOfficeId() {
-		return officeId;
-	}
-	
-	public void setOfficeId(Short officeId) {
-		this.officeId = officeId;
-	}
+    private Short officeId;
+    private String key;
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 17;
-		result = PRIME * result + ((key == null) ? 0 : key.toLowerCase().hashCode());
-		result = PRIME * result + ((officeId == null) ? 0 : officeId.hashCode());
-		return result;
-	}
+    public Key(Short officeId, String key) {
+        this.key = key;
+        this.officeId = officeId;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final Key other = (Key) obj;
-		if (key == null) {
-			if (other.key != null)
-				return false;
-		}
-		else if (!key.equalsIgnoreCase(other.key))
-			return false;
-		if (officeId == null) {
-			if (other.officeId != null)
-				return false;
-		}
-		else if (!officeId.equals(other.officeId))
-			return false;
-		return true;
-	}
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public Short getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(Short officeId) {
+        this.officeId = officeId;
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 17;
+        result = PRIME * result + ((key == null) ? 0 : key.toLowerCase().hashCode());
+        result = PRIME * result + ((officeId == null) ? 0 : officeId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final Key other = (Key) obj;
+        if (key == null) {
+            if (other.key != null)
+                return false;
+        } else if (!key.equalsIgnoreCase(other.key))
+            return false;
+        if (officeId == null) {
+            if (other.officeId != null)
+                return false;
+        } else if (!officeId.equals(other.officeId))
+            return false;
+        return true;
+    }
 }

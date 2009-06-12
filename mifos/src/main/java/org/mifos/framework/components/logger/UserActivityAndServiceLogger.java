@@ -17,34 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.logger;
 
 import java.lang.reflect.Method;
 
 public class UserActivityAndServiceLogger extends ServiceActivityLogger {
-	private final Integer userId;
+    private final Integer userId;
 
-	public UserActivityAndServiceLogger() {
-		this(null, null);
-	}
+    public UserActivityAndServiceLogger() {
+        this(null, null);
+    }
 
-	public UserActivityAndServiceLogger(String serviceName, Integer userId) {
-		super(serviceName);
-		this.userId = userId;
-	}
+    public UserActivityAndServiceLogger(String serviceName, Integer userId) {
+        super(serviceName);
+        this.userId = userId;
+    }
 
-	@Override
-	protected String createEndLogMessage(Method method) {
-		return userInfoLogMessage() + super.createEndLogMessage(method);
-	}
+    @Override
+    protected String createEndLogMessage(Method method) {
+        return userInfoLogMessage() + super.createEndLogMessage(method);
+    }
 
-	@Override
-	protected String createStartLogMessage(Method method) {
-		return userInfoLogMessage() + super.createStartLogMessage(method);
-	}
+    @Override
+    protected String createStartLogMessage(Method method) {
+        return userInfoLogMessage() + super.createStartLogMessage(method);
+    }
 
-	private String userInfoLogMessage() {
-		return "User Id " + userId;
-	}
+    private String userInfoLogMessage() {
+        return "User Id " + userId;
+    }
 }

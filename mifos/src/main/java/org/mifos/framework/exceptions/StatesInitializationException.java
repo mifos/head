@@ -17,14 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class StatesInitializationException extends ApplicationException {
 
-	public StatesInitializationException(String stateinitialization_exception,
-			Exception e) {
-		super(stateinitialization_exception, e);
-	}
+    public StatesInitializationException(String stateinitialization_exception, Exception e) {
+        super(stateinitialization_exception, e);
+    }
 
 }

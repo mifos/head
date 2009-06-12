@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import org.mifos.application.branchreport.BranchReportBO;
@@ -28,27 +28,24 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public class BranchReportLoanDetailsHelper {
 
-	private final BranchReportBO branchReport;
-	private final IBranchReportService branchReportService;
-	private BranchReportConfigService branchReportConfigService;
+    private final BranchReportBO branchReport;
+    private final IBranchReportService branchReportService;
+    private BranchReportConfigService branchReportConfigService;
 
-	public BranchReportLoanDetailsHelper(BranchReportBO branchReport,
-			IBranchReportService branchReportService,
-			BranchReportConfigService branchReportConfigService) {
-		this.branchReport = branchReport;
-		this.branchReportService = branchReportService;
-		this.branchReportConfigService = branchReportConfigService;
-	}
+    public BranchReportLoanDetailsHelper(BranchReportBO branchReport, IBranchReportService branchReportService,
+            BranchReportConfigService branchReportConfigService) {
+        this.branchReport = branchReport;
+        this.branchReportService = branchReportService;
+        this.branchReportConfigService = branchReportConfigService;
+    }
 
-	public void populateLoanDetails() throws BatchJobException {
-		try {
-			branchReport.addLoanDetails(branchReportService.extractLoanDetails(
-					branchReport.getBranchId(), branchReportConfigService
-							.getCurrency()));
-		}
-		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-	}
+    public void populateLoanDetails() throws BatchJobException {
+        try {
+            branchReport.addLoanDetails(branchReportService.extractLoanDetails(branchReport.getBranchId(),
+                    branchReportConfigService.getCurrency()));
+        } catch (ServiceException e) {
+            throw new BatchJobException(e);
+        }
+    }
 
 }

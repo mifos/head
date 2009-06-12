@@ -17,26 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.struts.tags;
 
 public class MifosTagUtils {
 
-	/**
-	 * There's no need for an instance of this class.
-	 */
-	private MifosTagUtils() {
-	}
-	
     /**
-     * Filter the specified string for characters that are sensitive to
-     * HTML/XML interpreters, returning the string with these characters replaced
-     * by the corresponding character entities.
-     *
-     * @param input The string to be filtered and returned
+     * There's no need for an instance of this class.
      */
-	public static String xmlEscape(String input) {
-		if (input == null || input.length() == 0) {
+    private MifosTagUtils() {
+    }
+
+    /**
+     * Filter the specified string for characters that are sensitive to HTML/XML
+     * interpreters, returning the string with these characters replaced by the
+     * corresponding character entities.
+     * 
+     * @param input
+     *            The string to be filtered and returned
+     */
+    public static String xmlEscape(String input) {
+        if (input == null || input.length() == 0) {
             return input;
         }
 
@@ -45,21 +46,21 @@ public class MifosTagUtils {
         for (int i = 0; i < input.length(); i++) {
             filtered = null;
             switch (input.charAt(i)) {
-                case '<':
-                    filtered = "&lt;";
-                    break;
-                case '>':
-                    filtered = "&gt;";
-                    break;
-                case '&':
-                    filtered = "&amp;";
-                    break;
-                case '"':
-                    filtered = "&quot;";
-                    break;
-                case '\'':
-                    filtered = "&#39;";
-                    break;
+            case '<':
+                filtered = "&lt;";
+                break;
+            case '>':
+                filtered = "&gt;";
+                break;
+            case '&':
+                filtered = "&amp;";
+                break;
+            case '"':
+                filtered = "&quot;";
+                break;
+            case '\'':
+                filtered = "&#39;";
+                break;
             }
 
             if (result == null) {
@@ -68,7 +69,7 @@ public class MifosTagUtils {
                     if (i > 0) {
                         result.append(input.substring(0, i));
                     }
-                    result.append(filtered);                       
+                    result.append(filtered);
                 }
             } else {
                 if (filtered == null) {
@@ -80,6 +81,6 @@ public class MifosTagUtils {
         }
 
         return result == null ? input : result.toString();
-	}
+    }
 
 }

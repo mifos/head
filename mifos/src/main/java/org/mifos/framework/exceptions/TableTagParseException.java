@@ -17,23 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class TableTagParseException extends ApplicationException {
 
-	public TableTagParseException(String key) {
-		super(key);
+    public TableTagParseException(String key) {
+        super(key);
 
-	}
+    }
 
-	public TableTagParseException(Throwable cause) {
-		super(cause);
-	}
+    public TableTagParseException(Throwable cause) {
+        super(cause);
+    }
 
-	@Override
-	public String getKey() {
-		return "exception.framework.TableTagParseException";
-	}
+    @Override
+    public String getKey() {
+        return "exception.framework.TableTagParseException";
+    }
 
 }

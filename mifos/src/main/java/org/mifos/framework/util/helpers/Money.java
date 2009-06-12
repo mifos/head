@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.util.helpers;
 
 import java.io.Serializable;
@@ -43,354 +43,325 @@ import java.util.Locale;
  * 
  */
 public final class Money implements Serializable {
-    // adding a comparator, if currency are different throws a RuntimeException saying cannot compare
-	// otherwise delegates to BigDecimal.compareTo for comparision 
-	public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
-		public int compare(Money m1, Money m2) {
-			if (m1.isCurrencyDifferent(m2))
-				throw new RuntimeException(
-				"Cannot compare money in differenct currencies");
-			return m1.amount.compareTo(m2.amount);
-		}
-	};
+    // adding a comparator, if currency are different throws a RuntimeException
+    // saying cannot compare
+    // otherwise delegates to BigDecimal.compareTo for comparision
+    public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
+        public int compare(Money m1, Money m2) {
+            if (m1.isCurrencyDifferent(m2))
+                throw new RuntimeException("Cannot compare money in differenct currencies");
+            return m1.amount.compareTo(m2.amount);
+        }
+    };
 
-	/**
-	 * The precision used for internal calculations.
-	 */
-	private static int internalPrecision = 13;
-	/**
-	 * The rounding mode used for internal calculations.
-	 */
-	private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
-	private static MathContext internalPrecisionAndRounding = 
-		new MathContext(internalPrecision, internalRoundingMode);
+    /**
+     * The precision used for internal calculations.
+     */
+    private static int internalPrecision = 13;
+    /**
+     * The rounding mode used for internal calculations.
+     */
+    private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
+    private static MathContext internalPrecisionAndRounding = new MathContext(internalPrecision, internalRoundingMode);
 
-	private static MifosCurrency defaultCurrency = null;
+    private static MifosCurrency defaultCurrency = null;
 
+    public static MifosCurrency getDefaultCurrency() {
+        return defaultCurrency;
+    }
 
-	public static MifosCurrency getDefaultCurrency() {
-		return defaultCurrency;
-	}
+    public static void setDefaultCurrency(MifosCurrency defaultCurrency) {
+        Money.defaultCurrency = defaultCurrency;
+    }
 
-	public static void setDefaultCurrency(MifosCurrency defaultCurrency) {
-		Money.defaultCurrency = defaultCurrency;
-	}
+    public static int getInternalPrecision() {
+        return internalPrecision;
+    }
 
-	public static int getInternalPrecision() {
-		return internalPrecision;
-	}
+    public static MathContext getInternalPrecisionAndRounding() {
+        return internalPrecisionAndRounding;
+    }
 
-	public static MathContext getInternalPrecisionAndRounding() {
-		return internalPrecisionAndRounding;
-	}
+    private final MifosCurrency currency;
 
-	private final MifosCurrency currency;
+    private final BigDecimal amount;
 
-	private final BigDecimal amount;
+    public Money(MifosCurrency currency, String amount) {
+        this.currency = currency;
+        if (amount == null || "".equals(amount.trim())) {
+            // seems like we shouldn't allow null values for money
+            // should we throw an exception or set a zero value here?
+            this.amount = null;
+        } else {
+            this.amount = new BigDecimal(amount, internalPrecisionAndRounding);
+        }
+    }
 
-	public Money(MifosCurrency currency, String amount) {
-		this.currency = currency;
-		if (amount == null || "".equals(amount.trim())) {
-			// seems like we shouldn't allow null values for money
-			// should we throw an exception or set a zero value here?
-			this.amount = null;
-		} else {
-			this.amount = new BigDecimal(amount,internalPrecisionAndRounding);
-		}
-	}
+    public Money(String amount) {
+        this(getDefaultCurrency(), amount);
+    }
 
-	public Money(String amount) {
-		this(getDefaultCurrency(), amount);
-	}
+    public Money(MifosCurrency currency, BigDecimal amount) {
+        this.currency = currency;
+        this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding
+                .getRoundingMode());
+    }
 
-	public Money(MifosCurrency currency, BigDecimal amount) {
-		this.currency = currency;
-		this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode());
-	}
+    public Money(BigDecimal amount) {
+        this.currency = getDefaultCurrency();
+        this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding
+                .getRoundingMode());
+    }
 
-	public Money(BigDecimal amount) {
-		this.currency = getDefaultCurrency();
-		this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode());
-	}
+    /**
+     * This creates a Money object with currency set to MFICurrency and amount
+     * set to zero.
+     */
+    public Money() {
+        this.currency = getDefaultCurrency();
+        this.amount = new BigDecimal(0, internalPrecisionAndRounding);
+    }
 
-	/**
-	 * This creates a Money object with currency set to MFICurrency and amount
-	 * set to zero.
-	 */
-	public Money() {
-		this.currency = getDefaultCurrency();
-		this.amount = new BigDecimal(0, internalPrecisionAndRounding);
-	}
+    public BigDecimal getAmount() {
+        return this.amount;
+    }
 
-	public BigDecimal getAmount() {
-		return this.amount;
-	}
+    public double getAmountDoubleValue() {
+        return amount.doubleValue();
+    }
 
-	public double getAmountDoubleValue() {
-		return amount.doubleValue();
-	}
+    public MifosCurrency getCurrency() {
+        return currency;
+    }
 
-	public MifosCurrency getCurrency() {
-		return currency;
-	}
+    /**
+     * Returns true if currency is different.
+     */
+    private boolean isCurrencyDifferent(Money money) {
+        return !this.currency.equals(money.getCurrency());
+    }
 
-	/**
-	 * Returns true if currency is different.
-	 */
-	private boolean isCurrencyDifferent(Money money) {
-		return !this.currency.equals(money.getCurrency());
-	}
+    /**
+     * If the object passed as parameter is null or if its currency or amount is
+     * null it returns this else performs the required operation and returns a
+     * new Money object corresponding to the value.
+     */
+    public Money add(Money money) {
+        if (null != money) {
+            if (isCurrencyDifferent(money))
+                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        // why not disallow null amounts and currencies?
+        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+            return this;
+        } else {
+            return new Money(currency, amount.add(money.getAmount()));
+        }
+    }
 
-	/**
-	 * If the object passed as parameter is null or if its currency or amount is
-	 * null it returns this else performs the required operation and returns a
-	 * new Money object corresponding to the value.
-	 */
-	public Money add(Money money) {
-		if (null != money) {
-			if (isCurrencyDifferent(money))
-				throw new IllegalArgumentException(
-						ExceptionConstants.ILLEGALMONEYOPERATION);
-		}
-		// why not disallow null amounts and currencies?
-		if (money == null || money.getAmount() == null || 
-				money.getCurrency() == null) {
-			return this;
-		} else { 
-			return new Money(currency, amount.add(money.getAmount()));
-		}
-	}
+    /**
+     * If the object passed as parameter is null or if its currency or amount is
+     * null it returns this else performs the required operation and returns a
+     * new Money object corresponding to the value.
+     */
+    public Money subtract(Money money) {
+        if (null != money) {
+            if (isCurrencyDifferent(money))
+                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        // why not disallow null amounts and currencies?
+        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+            return this;
+        } else {
+            return new Money(currency, amount.subtract(money.getAmount()));
+        }
+    }
 
+    /**
+     * If the object passed as parameter is null or if its currency or amount is
+     * null it returns this else performs the required operation and returns a
+     * new Money object corresponding to the value.
+     */
+    public Money multiply(Money money) {
+        if (null != money) {
+            if (isCurrencyDifferent(money))
+                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        // why not disallow null amounts and currencies?
+        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+            return this;
+        } else {
+            return new Money(currency, amount.multiply(money.getAmount()).setScale(
+                    internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
+        }
+    }
 
-	/**
-	 * If the object passed as parameter is null or if its currency or amount is
-	 * null it returns this else performs the required operation and returns a
-	 * new Money object corresponding to the value.
-	 */
-	public Money subtract(Money money) {
-		if (null != money) {
-			if (isCurrencyDifferent(money))
-				throw new IllegalArgumentException(
-						ExceptionConstants.ILLEGALMONEYOPERATION);
-		}
-		// why not disallow null amounts and currencies?
-		if (money == null || money.getAmount() == null || 
-				money.getCurrency() == null) {
-			return this;
-		} else { 
-			return new Money(currency, amount.subtract(money.getAmount()));
-		}
-	}
+    public Money multiply(Double factor) {
+        if (factor == null) {
+            throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        return new Money(currency, amount.multiply(new BigDecimal(factor)).setScale(
+                internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
+    }
 
+    public Money multiply(BigDecimal factor) {
+        if (factor == null) {
+            throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        return new Money(currency, amount.multiply(factor).setScale(internalPrecisionAndRounding.getPrecision(),
+                internalPrecisionAndRounding.getRoundingMode()));
+    }
 
-	/**
-	 * If the object passed as parameter is null or if its currency or amount is
-	 * null it returns this else performs the required operation and returns a
-	 * new Money object corresponding to the value.
-	 */
-	public Money multiply(Money money) {
-		if (null != money) {
-			if (isCurrencyDifferent(money))
-				throw new IllegalArgumentException(
-						ExceptionConstants.ILLEGALMONEYOPERATION);
-		}
-		// why not disallow null amounts and currencies?
-		if (money == null || money.getAmount() == null || 
-				money.getCurrency() == null) {
-			return this;
-		} else { 
-			return new Money(currency, amount.multiply(money.getAmount())
-					.setScale(internalPrecisionAndRounding.getPrecision(), 
-							internalPrecisionAndRounding.getRoundingMode()));
-		}
-	}
+    /**
+     * Dividing by Money doesn't seem to make sense. It should be dividing by a
+     * BigDecimal. This method should be eliminated.
+     */
+    public Money divide(Money money) {
+        if (null != money) {
+            if (isCurrencyDifferent(money))
+                throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+        }
+        // why not disallow null amounts and currencies?
+        if (money == null || money.getAmount() == null || money.getCurrency() == null) {
+            return this;
+        } else {
+            return new Money(currency, amount.divide(money.getAmount(), internalPrecisionAndRounding));
+        }
+    }
 
+    public Money divide(BigDecimal factor) {
+        return new Money(currency, amount.divide(factor, internalPrecisionAndRounding));
+    }
 
-	public Money multiply(Double factor) {
-		if (factor == null) {
-			throw new IllegalArgumentException(
-					ExceptionConstants.ILLEGALMONEYOPERATION);			
-		}
-		return new Money(currency, amount.multiply(new BigDecimal(factor))
-				.setScale(internalPrecisionAndRounding.getPrecision(), 
-						internalPrecisionAndRounding.getRoundingMode()));
-	}
+    // no need to set scale since negation preserves scale
+    public Money negate() {
+        return new Money(currency, amount.negate());
+    }
 
-	public Money multiply(BigDecimal factor) {
-		if (factor == null) {
-			throw new IllegalArgumentException(
-					ExceptionConstants.ILLEGALMONEYOPERATION);			
-		}
-		return new Money(currency, amount.multiply(factor)
-				.setScale(internalPrecisionAndRounding.getPrecision(), 
-						internalPrecisionAndRounding.getRoundingMode()));
-	}
+    /**
+     * This method returns a new Money object with currency same as current
+     * currency and amount calculated after rounding based on rounding mode and
+     * roundingAmount where in both are obtained from MifosCurrency object.
+     * 
+     * The rounding calculation is as follows:- Lets say we want to round 142.34
+     * to nearest 50 cents and and rounding mode is ceil (i.e. to greater
+     * number) we will divide 142.34 by .5 which will result in 284.68 now we
+     * will round this to a whole number using ceil mode which will result in
+     * 285 and then multiply 285 by 0.5 resulting in 142.5.
+     * 
+     */
+    public static Money round(Money money) {
+        if (null != money) {
+            BigDecimal roundingAmount = new BigDecimal(money.getCurrency().getRoundingAmount().doubleValue(),
+                    internalPrecisionAndRounding);
+            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount, internalPrecisionAndRounding);
 
+            nearestFactor = nearestFactor.setScale(0, money.getCurrency().getRoundingModeEnum());
 
-	/**
-	 * Dividing by Money doesn't seem to make sense.  It should be
-	 * dividing by a BigDecimal.  This method should be eliminated.
-	 */
-	public Money divide(Money money) {
-		if (null != money) {
-			if (isCurrencyDifferent(money))
-				throw new IllegalArgumentException(
-						ExceptionConstants.ILLEGALMONEYOPERATION);
-		}
-		// why not disallow null amounts and currencies?
-		if (money == null || money.getAmount() == null || 
-				money.getCurrency() == null) {
-			return this;
-		} else { 
-			return new Money(currency, amount.divide(money.getAmount(), 
-					internalPrecisionAndRounding));					
-		}
-	}
+            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+            return new Money(money.getCurrency(), roundedAmount);
+        }
+        return money;
+    }
 
-	public Money divide(BigDecimal factor) {
-		return new Money(currency, amount.divide(factor, 
-				internalPrecisionAndRounding));					
-	}
+    public static Money round(Money money, BigDecimal roundOffMultiple, RoundingMode roundingMode) {
+        // should we allow a null money or throw and exception instead?
+        if (null != money) {
+            // insure that we are using the correct internal precision
+            BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
+            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount, internalPrecisionAndRounding);
 
-	// no need to set scale since negation preserves scale
-	public Money negate() {
-		return new Money(currency, amount.negate());
-	}
+            nearestFactor = nearestFactor.setScale(0, roundingMode);
 
-	/**
-	 * This method returns a new Money object with currency same as current
-	 * currency and amount calculated after rounding based on rounding mode and
-	 * roundingAmount where in both are obtained from MifosCurrency object.
-	 * 
-	 * The rounding calculation is as follows:- Lets say we want to round 142.34
-	 * to nearest 50 cents and and rounding mode is ceil (i.e. to greater
-	 * number) we will divide 142.34 by .5 which will result in 284.68 now we
-	 * will round this to a whole number using ceil mode which will result in
-	 * 285 and then multiply 285 by 0.5 resulting in 142.5.
-	 * 
-	 */
-	public static Money round(Money money) {
-		if (null != money) {
-			BigDecimal roundingAmount = new BigDecimal(money.getCurrency()
-					.getRoundingAmount().doubleValue(),internalPrecisionAndRounding);
-			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
+            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+            return new Money(money.getCurrency(), roundedAmount);
+        }
+        return money;
+    }
 
-			nearestFactor = nearestFactor.setScale(
-					0, money.getCurrency().getRoundingModeEnum());
+    public Money currencyRoundAmount() {
+        return Money.round(this, AccountingRules.getDigitsAfterDecimalMultiple(), AccountingRules
+                .getCurrencyRoundingMode());
+    }
 
-			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
-			return new Money(money.getCurrency(), roundedAmount);
-		}
-		return money;
-	}
+    public Money initialRoundedAmount() {
+        return Money
+                .round(this, AccountingRules.getInitialRoundOffMultiple(), AccountingRules.getInitialRoundingMode());
+    }
 
-	public static Money round(Money money,BigDecimal roundOffMultiple, RoundingMode roundingMode) {
-		// should we allow a null money or throw and exception instead?
-		if (null != money) {
-			// insure that we are using the correct internal precision
-			BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
-			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
+    public Money finalRoundedAmount() {
+        return Money.round(this, AccountingRules.getFinalRoundOffMultiple(), AccountingRules.getFinalRoundingMode());
+    }
 
-			nearestFactor = nearestFactor.setScale(0, roundingMode);
+    public boolean isRoundedAmount() {
+        return this.equals(initialRoundedAmount()) && this.equals(finalRoundedAmount());
+    }
 
-			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
-			return new Money(money.getCurrency(), roundedAmount);
-		}
-		return money;
-	}
+    public static Money roundToCurrencyPrecision(Money money) {
+        if (null != money) {
+            BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
+            // insure that we are using the correct internal precision
+            BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
+            BigDecimal nearestFactor = money.getAmount().divide(roundingAmount, internalPrecisionAndRounding);
+            RoundingMode roundingMode = AccountingRules.getCurrencyRoundingMode();
+            nearestFactor = nearestFactor.setScale(0, roundingMode);
 
-	
-	public Money currencyRoundAmount () {
-		return Money.round(this, AccountingRules.getDigitsAfterDecimalMultiple(),
-				              AccountingRules.getCurrencyRoundingMode());
-	}
-	
-	public Money initialRoundedAmount () {
-		return Money.round(this, AccountingRules.getInitialRoundOffMultiple(),
-				              AccountingRules.getInitialRoundingMode());
-	}
-	
-	public Money finalRoundedAmount () {
-		return Money.round(this, AccountingRules.getFinalRoundOffMultiple(),
-				              AccountingRules.getFinalRoundingMode());
-	}
+            BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+            return new Money(money.getCurrency(), roundedAmount);
+        }
+        return money;
+    }
 
-	public boolean isRoundedAmount() {
-		return this.equals(initialRoundedAmount())
-		       && this.equals(finalRoundedAmount());
-	}
+    /**
+     * This method return true if the currency associated with the two money
+     * objects is equal and also the compareTo method of BigDecimal return 0 for
+     * the amount of the two money objects. It is not advisable to use equals
+     * method of BigDecimal because it would return false for numbers like 10.0
+     * and 10.00 instead we should use compareTo.
+     * 
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Money))
+            return false;
+        if (obj == this)
+            return true;
+        Money money = (Money) obj;
+        return this.currency.equals(money.getCurrency()) && (this.amount.compareTo(money.getAmount()) == 0);
+    }
 
-	public static Money roundToCurrencyPrecision(Money money) {
-		if (null != money) {
-			BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
-			// insure that we are using the correct internal precision
-			BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
-			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
-			RoundingMode roundingMode =  AccountingRules.getCurrencyRoundingMode();
-			nearestFactor = nearestFactor.setScale(0, roundingMode);
+    @Override
+    public int hashCode() {
+        if (amount == null || currency == null)
+            return System.identityHashCode(null);
+        return this.currency.getCurrencyId() * 100 + this.amount.intValue();
+    }
 
-			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
-			return new Money(money.getCurrency(), roundedAmount);
-		}
-		return money;
-	}
+    @Override
+    public String toString() {
+        if (amount != null && currency != null) {
+            double doubleValue = amount.doubleValue();
+            String format = "%." + AccountingRules.getDigitsAfterDecimal().toString() + "f";
+            String formatStr = String.format(Locale.ENGLISH, format, 0.0);
+            NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
+            DecimalFormat decimalFormat = null;
+            if (numberFormat instanceof DecimalFormat) {
+                decimalFormat = ((DecimalFormat) numberFormat);
+                decimalFormat.applyPattern(formatStr);
+                return decimalFormat.format(doubleValue);
+            } else
+                return numberFormat.format(doubleValue);
 
-	/**
-	 * This method return true if the currency associated with the two money
-	 * objects is equal and also the compareTo method of BigDecimal return 0 for
-	 * the amount of the two money objects. It is not advisable to use equals
-	 * method of BigDecimal because it would return false for numbers like 10.0
-	 * and 10.00 instead we should use compareTo.
-	 * 
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Money))
-			return false;
-		if (obj == this)
-			return true;
-		Money money = (Money) obj;
-		return this.currency.equals(money.getCurrency())
-		&& (this.amount.compareTo(money.getAmount()) == 0);
-	}
-
-	@Override
-	public int hashCode() {
-		if (amount == null || currency == null)
-			return System.identityHashCode(null);
-		return this.currency.getCurrencyId() * 100 + this.amount.intValue();
-	}
-
-	@Override
-	public String toString() {
-		if (amount != null && currency != null)
-		{
-			double doubleValue = amount.doubleValue();
-			String format = "%." + AccountingRules.getDigitsAfterDecimal().toString() + "f";
-			String formatStr = String.format(Locale.ENGLISH, format, 0.0);
-			NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
-			DecimalFormat decimalFormat = null;
-			if (numberFormat instanceof DecimalFormat)
-			{
-				decimalFormat = ((DecimalFormat) numberFormat);
-				decimalFormat.applyPattern(formatStr);
-				return decimalFormat.format(doubleValue);
-			}
-			else
-				return numberFormat.format(doubleValue);
-
-
-		}
-		return "0";
-	}
+        }
+        return "0";
+    }
 
     public boolean isGreaterThan(Money money) {
-        return Money.DEFAULT_COMPARATOR.compare(this,money) > 0; 
+        return Money.DEFAULT_COMPARATOR.compare(this, money) > 0;
     }
 
     public boolean isLessThan(Money money) {
-        return Money.DEFAULT_COMPARATOR.compare(this,money) < 0; 
+        return Money.DEFAULT_COMPARATOR.compare(this, money) < 0;
     }
-
 
 }

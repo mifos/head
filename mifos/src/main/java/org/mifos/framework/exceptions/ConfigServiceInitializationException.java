@@ -17,17 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 public class ConfigServiceInitializationException extends RuntimeException {
 
-	public ConfigServiceInitializationException(String message) {
-		super(message);
-	}
+    public ConfigServiceInitializationException(String message) {
+        super(message);
+    }
 
-	public ConfigServiceInitializationException(String message, Throwable e) {
-		super(message,e);
-	}
+    public ConfigServiceInitializationException(String message, Throwable e) {
+        super(message, e);
+    }
 
 }

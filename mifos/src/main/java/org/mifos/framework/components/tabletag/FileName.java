@@ -17,39 +17,46 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.tabletag;
 
 public class FileName {
 
-	public FileName() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	private String name;
-	private String path;
-	/**
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * @param name The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	/**
-	 * @return Returns the path.
-	 */
-	public String getPath() {
-		return path;
-	}
-	/**
-	 * @param path The path to set.
-	 */
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public FileName() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+    private String name;
+    private String path;
+
+    /**
+     * @return Returns the name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name
+     *            The name to set.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return Returns the path.
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * @param path
+     *            The path to set.
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

@@ -17,20 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.audit.util.helpers;
 
 public class ClassPath {
 
-	String path=null;
+    String path = null;
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
-	
+    public void setPath(String path) {
+        this.path = path;
+    }
+
 }

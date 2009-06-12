@@ -17,45 +17,47 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 /**
  * ActivityChangeEvent
  */
 public class ActivityChangeEvent implements SecurityEvent {
-	
-	/**
-	 * This would hold the type of operation we are performing e.g insert 
-	 */
-    private 	String eventType;
+
+    /**
+     * This would hold the type of operation we are performing e.g insert
+     */
+    private String eventType;
     /**
      * Object which we are modifying e.g Role object
      */
-    private 	Object object;
+    private Object object;
 
     /**
-	 * This Function returns the object
-	 * @return Returns the object.
-	 */
-	public Object getObject() {
-		return object;
-	}
+     * This Function returns the object
+     * 
+     * @return Returns the object.
+     */
+    public Object getObject() {
+        return object;
+    }
 
-	
-	/* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.mifos.framework.security.Util.SecurityEvent#getEventType()
      */
     public String getEventType() {
         return eventType;
     }
 
-	/**
-	 * @param eventType
-	 * @param object
-	 */
-	public ActivityChangeEvent(String eventType, Object object) {
-		this.eventType = eventType;
-		this.object = object;
-	}
+    /**
+     * @param eventType
+     * @param object
+     */
+    public ActivityChangeEvent(String eventType, Object object) {
+        this.eventType = eventType;
+        this.object = object;
+    }
 }

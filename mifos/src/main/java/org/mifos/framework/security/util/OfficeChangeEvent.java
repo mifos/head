@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 /**
@@ -25,38 +25,41 @@ package org.mifos.framework.security.util;
  */
 public class OfficeChangeEvent implements SecurityEvent {
 
-	/**
-	 * This would hold kind of operation we are performing
-	 */
-    private	String eventType;
-	/**
-	 * This would hold the actual object with latest values 
-	 */
-    private	Object object; 
+    /**
+     * This would hold kind of operation we are performing
+     */
+    private String eventType;
+    /**
+     * This would hold the actual object with latest values
+     */
+    private Object object;
 
- 
-	/**
-	 * @param eventType
-	 * @param object
-	 */
-	public OfficeChangeEvent(String eventType, Object object) {
-		// TODO Auto-generated constructor stub
-		this.eventType = eventType;
-		this.object = object;
-	}
+    /**
+     * @param eventType
+     * @param object
+     */
+    public OfficeChangeEvent(String eventType, Object object) {
+        // TODO Auto-generated constructor stub
+        this.eventType = eventType;
+        this.object = object;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.security.util.SecurityEvent#getEventType()
-	 */
-	public String getEventType() {
-		return this.eventType;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mifos.framework.security.util.SecurityEvent#getEventType()
+     */
+    public String getEventType() {
+        return this.eventType;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.security.util.SecurityEvent#getObject()
-	 */
-	public Object getObject() {
-		return this.object;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.mifos.framework.security.util.SecurityEvent#getObject()
+     */
+    public Object getObject() {
+        return this.object;
+    }
 
 }

@@ -17,34 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.security.util;
 
 /**
  * RoleChangeEvent
  */
 public class RoleChangeEvent implements SecurityEvent {
-	/**
-	 * This would hold kind of operation we are performing
-	 */
-    private	String eventType;
-	/**
-	 * This would hold the actual object with latest values 
-	 */
-    private	Object object; 
+    /**
+     * This would hold kind of operation we are performing
+     */
+    private String eventType;
+    /**
+     * This would hold the actual object with latest values
+     */
+    private Object object;
 
- 
+    /**
+     * This Function returns the object
+     * 
+     * @return Returns the object.
+     */
+    public Object getObject() {
+        return object;
+    }
 
-	/**
-	 * This Function returns the object
-	 * @return Returns the object.
-	 */
-	public Object getObject() {
-		return object;
-	}
-
-
-	/* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.mifos.framework.security.Util.SecurityEvent#getEventType()
      */
     public String getEventType() {
@@ -52,13 +52,13 @@ public class RoleChangeEvent implements SecurityEvent {
         return eventType;
     }
 
-	/**
-	 * @param eventType
-	 * @param object
-	 */
-	public RoleChangeEvent(String eventType, Object object) {
-		// TODO Auto-generated constructor stub
-		this.eventType = eventType;
-		this.object = object;
-	}
+    /**
+     * @param eventType
+     * @param object
+     */
+    public RoleChangeEvent(String eventType, Object object) {
+        // TODO Auto-generated constructor stub
+        this.eventType = eventType;
+        this.object = object;
+    }
 }

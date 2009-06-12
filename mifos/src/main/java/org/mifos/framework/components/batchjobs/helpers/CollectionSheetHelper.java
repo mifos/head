@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.sql.Date;
@@ -56,103 +56,96 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  */
 public class CollectionSheetHelper extends TaskHelper {
 
-	public CollectionSheetHelper(MifosTask mifosTask) {
-		super(mifosTask);
-		setLogger(MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER));
-	}
+    public CollectionSheetHelper(MifosTask mifosTask) {
+        super(mifosTask);
+        setLogger(MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER));
+    }
 
-	public CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
-		Calendar meeting = new GregorianCalendar();
-		meeting.setTimeInMillis(currentDate.getTime());
-		meeting.roll(Calendar.DATE, getDaysInAdvance());
+    public CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
+        Calendar meeting = new GregorianCalendar();
+        meeting.setTimeInMillis(currentDate.getTime());
+        meeting.roll(Calendar.DATE, getDaysInAdvance());
 
-		CollectionSheetBO collectionSheet = new CollectionSheetBO();
-		collectionSheet.setCollSheetDate(new Date(meeting.getTimeInMillis()));
-		collectionSheet.setRunDate(currentDate);
-		return collectionSheet;
-	}
+        CollectionSheetBO collectionSheet = new CollectionSheetBO();
+        collectionSheet.setCollSheetDate(new Date(meeting.getTimeInMillis()));
+        collectionSheet.setRunDate(currentDate);
+        return collectionSheet;
+    }
 
-	/**
-	 * This method is called by the collectionsheet task to generate collection
-	 * sheet for the time being passed.This generates the collection sheet data,
-	 * it first creates a collection sheet object populates its fields and saves
-	 * it to the data base with status as started.Finally saves it in the
-	 * database with the status successful or if there was some exception it
-	 * tries to update the database with status failed.
-	 */
-	@Override
-	public void execute(long timeInMillis) throws BatchJobException {
-		List<String> errorList = new ArrayList<String>();
-		Date currentDate = new Date(timeInMillis);
-		CollectionSheetBO collectionSheet = null;
-		try {
-			collectionSheet = getNewCollectionSheet(currentDate);
-			collectionSheet.create();
-			generateCollectionSheetForDate(collectionSheet);
-			collectionSheet
-					.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
-			StaticHibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			// if there is an exception roll back the transaction, close the
-			// session and open a new one.
-			StaticHibernateUtil.rollbackTransaction();
-			StaticHibernateUtil.closeSession();
-			errorList.add("Coll Sheet Date"
-					+ collectionSheet.getCollSheetDate() + "Coll Sheet Date"
-					+ collectionSheet.getCollSheetID() + "Coll Sheet Run Date"
-					+ collectionSheet.getRunDate());
-			try {
-				collectionSheet = getNewCollectionSheet(currentDate);
-				collectionSheet
-						.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_FAILED);
-				StaticHibernateUtil.commitTransaction();
-			} catch (Exception ae) {
-				StaticHibernateUtil.rollbackTransaction();
-				getLogger().error("Collection sheet generation failed also the status could not be updated", ae);
-			}
-		} finally {
-			StaticHibernateUtil.closeSession();
-		}
-		if (errorList.size() > 0)
-			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-	}
+    /**
+     * This method is called by the collectionsheet task to generate collection
+     * sheet for the time being passed.This generates the collection sheet data,
+     * it first creates a collection sheet object populates its fields and saves
+     * it to the data base with status as started.Finally saves it in the
+     * database with the status successful or if there was some exception it
+     * tries to update the database with status failed.
+     */
+    @Override
+    public void execute(long timeInMillis) throws BatchJobException {
+        List<String> errorList = new ArrayList<String>();
+        Date currentDate = new Date(timeInMillis);
+        CollectionSheetBO collectionSheet = null;
+        try {
+            collectionSheet = getNewCollectionSheet(currentDate);
+            collectionSheet.create();
+            generateCollectionSheetForDate(collectionSheet);
+            collectionSheet.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            // if there is an exception roll back the transaction, close the
+            // session and open a new one.
+            StaticHibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.closeSession();
+            errorList.add("Coll Sheet Date" + collectionSheet.getCollSheetDate() + "Coll Sheet Date"
+                    + collectionSheet.getCollSheetID() + "Coll Sheet Run Date" + collectionSheet.getRunDate());
+            try {
+                collectionSheet = getNewCollectionSheet(currentDate);
+                collectionSheet.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_FAILED);
+                StaticHibernateUtil.commitTransaction();
+            } catch (Exception ae) {
+                StaticHibernateUtil.rollbackTransaction();
+                getLogger().error("Collection sheet generation failed also the status could not be updated", ae);
+            }
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+        if (errorList.size() > 0)
+            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+    }
 
-	/**
-	 * It queries the database for valid customers which have the meeting date
-	 * tomorrow and populates its corresponding fields with the data.
-	 */
-	private void generateCollectionSheetForDate(
-			CollectionSheetBO collectionSheet) throws SystemException,
-			ApplicationException {
-		List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
-				.getCustFromAccountActionsDate(collectionSheet
-						.getCollSheetDate());
-		getLogger().debug("After retrieving account action date objects for next meeting date. ");
-		if (null != accountActionDates && accountActionDates.size() > 0) {
-			collectionSheet.populateAccountActionDates(accountActionDates);
-		}
-		List<LoanBO> loanBOs = new CollectionSheetPersistence()
-				.getLnAccntsWithDisbursalDate(collectionSheet
-						.getCollSheetDate());
-		getLogger().debug("After retrieving loan accounts due for disbursal");
-		if (null != loanBOs && loanBOs.size() > 0) {
-			collectionSheet.addLoanDetailsForDisbursal(loanBOs);
-			getLogger().debug("After processing loan accounts which had disbursal due.");
-		}
-		if (null != collectionSheet.getCollectionSheetCustomers()
-				&& collectionSheet.getCollectionSheetCustomers().size() > 0) {
-			collectionSheet.updateCollectiveTotals();
-			getLogger().debug("After updating collective totals");
-		}
-	}
+    /**
+     * It queries the database for valid customers which have the meeting date
+     * tomorrow and populates its corresponding fields with the data.
+     */
+    private void generateCollectionSheetForDate(CollectionSheetBO collectionSheet) throws SystemException,
+            ApplicationException {
+        List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
+                .getCustFromAccountActionsDate(collectionSheet.getCollSheetDate());
+        getLogger().debug("After retrieving account action date objects for next meeting date. ");
+        if (null != accountActionDates && accountActionDates.size() > 0) {
+            collectionSheet.populateAccountActionDates(accountActionDates);
+        }
+        List<LoanBO> loanBOs = new CollectionSheetPersistence().getLnAccntsWithDisbursalDate(collectionSheet
+                .getCollSheetDate());
+        getLogger().debug("After retrieving loan accounts due for disbursal");
+        if (null != loanBOs && loanBOs.size() > 0) {
+            collectionSheet.addLoanDetailsForDisbursal(loanBOs);
+            getLogger().debug("After processing loan accounts which had disbursal due.");
+        }
+        if (null != collectionSheet.getCollectionSheetCustomers()
+                && collectionSheet.getCollectionSheetCustomers().size() > 0) {
+            collectionSheet.updateCollectiveTotals();
+            getLogger().debug("After updating collective totals");
+        }
+    }
 
-	/**
-	 * Fetches number of days in advance the collection sheet should be
-	 * generated.
-	 */
-	public static int getDaysInAdvance() throws PersistenceException {
-		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		return configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
-	}
+    /**
+     * Fetches number of days in advance the collection sheet should be
+     * generated.
+     */
+    public static int getDaysInAdvance() throws PersistenceException {
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        return configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
+    }
 
 }

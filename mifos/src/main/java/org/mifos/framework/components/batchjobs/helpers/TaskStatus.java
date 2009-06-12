@@ -17,32 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
-
 public enum TaskStatus {
-    INCOMPLETE(Short.valueOf("0")),
-	COMPLETE(Short.valueOf("1")), 
-    FAILED(Short.valueOf("2")); 
+    INCOMPLETE(Short.valueOf("0")), COMPLETE(Short.valueOf("1")), FAILED(Short.valueOf("2"));
 
     Short value;
 
-	TaskStatus(Short value) {
-		this.value = value;
-	}
+    TaskStatus(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static TaskStatus fromInt(int value) {
-		for (TaskStatus candidate : TaskStatus.values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("task status " + value + " not recognized");
-	}
+    public static TaskStatus fromInt(int value) {
+        for (TaskStatus candidate : TaskStatus.values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("task status " + value + " not recognized");
+    }
 
 }

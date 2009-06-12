@@ -17,15 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class PermissionFailureException extends ApplicationException {
-	
-	public PermissionFailureException() {
-		super(ExceptionConstants.PERMISSIONFAILUREEXCEPTION);
-	}
+
+    public PermissionFailureException() {
+        super(ExceptionConstants.PERMISSIONFAILUREEXCEPTION);
+    }
 
 }

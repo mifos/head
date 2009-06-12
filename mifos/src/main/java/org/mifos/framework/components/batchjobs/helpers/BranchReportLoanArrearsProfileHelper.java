@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.framework.components.batchjobs.helpers;
 
 import org.mifos.application.branchreport.BranchReportBO;
@@ -29,32 +29,27 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public class BranchReportLoanArrearsProfileHelper {
 
-	private final BranchReportBO branchReport;
-	private final IBranchReportService branchReportService;
-	private BranchReportConfigService branchReportConfigService;
+    private final BranchReportBO branchReport;
+    private final IBranchReportService branchReportService;
+    private BranchReportConfigService branchReportConfigService;
 
-	public BranchReportLoanArrearsProfileHelper(BranchReportBO branchReport,
-			IBranchReportService branchReportService,
-			BranchReportConfigService branchReportConfigService) {
-		this.branchReport = branchReport;
-		this.branchReportService = branchReportService;
-		this.branchReportConfigService = branchReportConfigService;
-	}
+    public BranchReportLoanArrearsProfileHelper(BranchReportBO branchReport, IBranchReportService branchReportService,
+            BranchReportConfigService branchReportConfigService) {
+        this.branchReport = branchReport;
+        this.branchReportService = branchReportService;
+        this.branchReportConfigService = branchReportConfigService;
+    }
 
-	public void populateLoanArrearsProfile() throws BatchJobException {
-		try {
-			branchReport
-					.addLoanArrearsProfile(createLoansInArrearsCountProfile());
-		}
-		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-	}
+    public void populateLoanArrearsProfile() throws BatchJobException {
+        try {
+            branchReport.addLoanArrearsProfile(createLoansInArrearsCountProfile());
+        } catch (ServiceException e) {
+            throw new BatchJobException(e);
+        }
+    }
 
-	private BranchReportLoanArrearsProfileBO createLoansInArrearsCountProfile()
-			throws ServiceException {
-		return branchReportService.extractLoansInArrearsCount(branchReport
-				.getBranchId(), branchReportConfigService
-				.getCurrency(), branchReportConfigService.getDaysInArrearsForRisk());
-	}
+    private BranchReportLoanArrearsProfileBO createLoansInArrearsCountProfile() throws ServiceException {
+        return branchReportService.extractLoansInArrearsCount(branchReport.getBranchId(), branchReportConfigService
+                .getCurrency(), branchReportConfigService.getDaysInArrearsForRisk());
+    }
 }
