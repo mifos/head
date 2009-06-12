@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.acceptedpaymenttype.struts.actionform;
 
+package org.mifos.application.acceptedpaymenttype.struts.actionform;
 
 import java.util.List;
 
@@ -35,101 +34,91 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
+public class AcceptedPaymentTypeActionForm extends BaseActionForm {
 
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 
-public class AcceptedPaymentTypeActionForm extends BaseActionForm{
-	
-	private MifosLogger logger = MifosLogManager
-	.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
-	
-	private String[] fees;
-	private String[] disbursements;
-	private String[] repayments;
-	private String[] withdrawals;
-	private String[] deposits;
-	List<PaymentTypeData> allPaymentTypes;
-	
-	
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		logger.debug("Inside validate method");
-		String method = request.getParameter(Methods.method.toString());
-		request.setAttribute(Constants.CURRENTFLOWKEY, request
-				.getParameter(Constants.CURRENTFLOWKEY));
+    private String[] fees;
+    private String[] disbursements;
+    private String[] repayments;
+    private String[] withdrawals;
+    private String[] deposits;
+    List<PaymentTypeData> allPaymentTypes;
 
-		ActionErrors errors = new ActionErrors();
-		if (method.equals(Methods.update.toString())) {
-			errors = super.validate(mapping, request);
-			
-		} 
-		if (!errors.isEmpty()) {
-			request.setAttribute(Methods.method.toString(), method);
-		}
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        logger.debug("Inside validate method");
+        String method = request.getParameter(Methods.method.toString());
+        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 
-		logger.debug("outside validate method");
-		return errors;
-	}
-	
-	public String[] getFees() {
-		return fees;
-	}
+        ActionErrors errors = new ActionErrors();
+        if (method.equals(Methods.update.toString())) {
+            errors = super.validate(mapping, request);
 
-	public void setFees(String[] fees) {
-		this.fees = fees;
-	}
+        }
+        if (!errors.isEmpty()) {
+            request.setAttribute(Methods.method.toString(), method);
+        }
 
-	// reset fields on form
-	public void clear() 
-	{
-		this.fees = null;
-		this.disbursements = null;
-		this.repayments = null;
-		this.withdrawals = null;
-		this.deposits = null;
-	}
+        logger.debug("outside validate method");
+        return errors;
+    }
 
-	public String[] getDeposits() {
-		return deposits;
-	}
+    public String[] getFees() {
+        return fees;
+    }
 
-	public void setDeposits(String[] deposits) {
-		this.deposits = deposits;
-	}
+    public void setFees(String[] fees) {
+        this.fees = fees;
+    }
 
-	public String[] getDisbursements() {
-		return disbursements;
-	}
+    // reset fields on form
+    public void clear() {
+        this.fees = null;
+        this.disbursements = null;
+        this.repayments = null;
+        this.withdrawals = null;
+        this.deposits = null;
+    }
 
-	public void setDisbursements(String[] disbursements) {
-		this.disbursements = disbursements;
-	}
+    public String[] getDeposits() {
+        return deposits;
+    }
 
-	public String[] getRepayments() {
-		return repayments;
-	}
+    public void setDeposits(String[] deposits) {
+        this.deposits = deposits;
+    }
 
-	public void setRepayments(String[] repayments) {
-		this.repayments = repayments;
-	}
+    public String[] getDisbursements() {
+        return disbursements;
+    }
 
-	public String[] getWithdrawals() {
-		return withdrawals;
-	}
+    public void setDisbursements(String[] disbursements) {
+        this.disbursements = disbursements;
+    }
 
-	public void setWithdrawals(String[] withdrawals) {
-		this.withdrawals = withdrawals;
-	}
+    public String[] getRepayments() {
+        return repayments;
+    }
 
-	public List<PaymentTypeData> getAllPaymentTypes() {
-		return allPaymentTypes;
-	}
+    public void setRepayments(String[] repayments) {
+        this.repayments = repayments;
+    }
 
-	public void setAllPaymentTypes(List<PaymentTypeData> allPaymentTypes) {
-		this.allPaymentTypes = allPaymentTypes;
-	}
+    public String[] getWithdrawals() {
+        return withdrawals;
+    }
 
-	
+    public void setWithdrawals(String[] withdrawals) {
+        this.withdrawals = withdrawals;
+    }
+
+    public List<PaymentTypeData> getAllPaymentTypes() {
+        return allPaymentTypes;
+    }
+
+    public void setAllPaymentTypes(List<PaymentTypeData> allPaymentTypes) {
+        this.allPaymentTypes = allPaymentTypes;
+    }
+
 }
-
-

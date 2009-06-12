@@ -17,47 +17,43 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.acceptedpaymenttype.util.helpers;
-
-
 
 import java.io.Serializable;
 
 public class PaymentTypeData implements Serializable {
 
-	private Short id = null;
-	private String name;
-	private Short acceptedPaymentTypeId = null;
+    private Short id = null;
+    private String name;
+    private Short acceptedPaymentTypeId = null;
 
-	
-	protected PaymentTypeData() {
-		
-	}
-	
-	public PaymentTypeData(Short id) {
-		this.id =  id;
-	}
+    protected PaymentTypeData() {
 
-	public Short getId() {
-		return id;
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public PaymentTypeData(Short id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Short getAcceptedPaymentTypeId() {
-		return acceptedPaymentTypeId;
-	}
+    public Short getId() {
+        return id;
+    }
 
-	public void setAcceptedPaymentTypeId(Short acceptedPaymentTypeId) {
-		this.acceptedPaymentTypeId = acceptedPaymentTypeId;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Short getAcceptedPaymentTypeId() {
+        return acceptedPaymentTypeId;
+    }
+
+    public void setAcceptedPaymentTypeId(Short acceptedPaymentTypeId) {
+        this.acceptedPaymentTypeId = acceptedPaymentTypeId;
+    }
 
 }
-
-
