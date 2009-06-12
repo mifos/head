@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.cashconfirmationreport;
 
 import java.util.Date;
@@ -32,104 +32,94 @@ import org.mifos.framework.business.BusinessObject;
 
 public class BranchCashConfirmationReportBO extends BusinessObject {
 
-	@SuppressWarnings("unused")
-	private Integer branchCashConfirmationReportId;
-	private Set<BranchCashConfirmationCenterRecoveryBO> centerRecoveries;
-	private Set<BranchCashConfirmationInfoBO> centerIssues;
-	private Set<BranchCashConfirmationDisbursementBO> disbursements;
-	private Short branchId;
-	private Date runDate;
+    @SuppressWarnings("unused")
+    private Integer branchCashConfirmationReportId;
+    private Set<BranchCashConfirmationCenterRecoveryBO> centerRecoveries;
+    private Set<BranchCashConfirmationInfoBO> centerIssues;
+    private Set<BranchCashConfirmationDisbursementBO> disbursements;
+    private Short branchId;
+    private Date runDate;
 
-	public BranchCashConfirmationReportBO() {
-		this(null, null);
-	}
+    public BranchCashConfirmationReportBO() {
+        this(null, null);
+    }
 
-	public BranchCashConfirmationReportBO(Short branchId, Date runDate) {
-		this.branchId = branchId;
-		this.runDate = runDate;
-		centerRecoveries = new HashSet<BranchCashConfirmationCenterRecoveryBO>();
-		centerIssues = new HashSet<BranchCashConfirmationInfoBO>();
-		disbursements = new HashSet<BranchCashConfirmationDisbursementBO>();
-	}
+    public BranchCashConfirmationReportBO(Short branchId, Date runDate) {
+        this.branchId = branchId;
+        this.runDate = runDate;
+        centerRecoveries = new HashSet<BranchCashConfirmationCenterRecoveryBO>();
+        centerIssues = new HashSet<BranchCashConfirmationInfoBO>();
+        disbursements = new HashSet<BranchCashConfirmationDisbursementBO>();
+    }
 
-	public void addCenterRecoveries(
-			List<BranchCashConfirmationCenterRecoveryBO> centerRecoveries) {
-		for (BranchCashConfirmationCenterRecoveryBO recoveryBO : centerRecoveries) {
-			addCenterRecovery(recoveryBO);
-		}
-	}
+    public void addCenterRecoveries(List<BranchCashConfirmationCenterRecoveryBO> centerRecoveries) {
+        for (BranchCashConfirmationCenterRecoveryBO recoveryBO : centerRecoveries) {
+            addCenterRecovery(recoveryBO);
+        }
+    }
 
-	public void addCenterRecovery(
-			BranchCashConfirmationCenterRecoveryBO recoveryBO) {
-		centerRecoveries.add(recoveryBO);
-		recoveryBO.setBranchCashConfirmationReport(this);
-	}
+    public void addCenterRecovery(BranchCashConfirmationCenterRecoveryBO recoveryBO) {
+        centerRecoveries.add(recoveryBO);
+        recoveryBO.setBranchCashConfirmationReport(this);
+    }
 
-	public void addCenterIssue(BranchCashConfirmationInfoBO issueBO) {
-		centerIssues.add(issueBO);
-		issueBO.setBranchCashConfirmationReport(this);
-	}
+    public void addCenterIssue(BranchCashConfirmationInfoBO issueBO) {
+        centerIssues.add(issueBO);
+        issueBO.setBranchCashConfirmationReport(this);
+    }
 
-	public void addCenterIssues(
-			List<BranchCashConfirmationInfoBO> centerIssues) {
-		CollectionUtils.forAllDo(centerIssues, new Closure() {
-			public void execute(Object input) {
-				addCenterIssue((BranchCashConfirmationInfoBO) input);
-			}
-		});
-	}
-	
-	public void addDisbursement(BranchCashConfirmationDisbursementBO disbursementBO) {
-		disbursements.add(disbursementBO);
-		disbursementBO.setBranchCashConfirmationReport(this);
-	}	
+    public void addCenterIssues(List<BranchCashConfirmationInfoBO> centerIssues) {
+        CollectionUtils.forAllDo(centerIssues, new Closure() {
+            public void execute(Object input) {
+                addCenterIssue((BranchCashConfirmationInfoBO) input);
+            }
+        });
+    }
 
-	public Integer getBranchCashConfirmationReportId() {
-		return branchCashConfirmationReportId;
-	}
+    public void addDisbursement(BranchCashConfirmationDisbursementBO disbursementBO) {
+        disbursements.add(disbursementBO);
+        disbursementBO.setBranchCashConfirmationReport(this);
+    }
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME
-				* result
-				+ ((branchCashConfirmationReportId == null) ? 0
-						: branchCashConfirmationReportId.hashCode());
-		result = PRIME * result
-				+ ((branchId == null) ? 0 : branchId.hashCode());
-		result = PRIME * result + ((runDate == null) ? 0 : runDate.hashCode());
-		return result;
-	}
+    public Integer getBranchCashConfirmationReportId() {
+        return branchCashConfirmationReportId;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final BranchCashConfirmationReportBO other = (BranchCashConfirmationReportBO) obj;
-		if (branchCashConfirmationReportId == null) {
-			if (other.branchCashConfirmationReportId != null)
-				return false;
-		}
-		else if (!branchCashConfirmationReportId
-				.equals(other.branchCashConfirmationReportId))
-			return false;
-		if (branchId == null) {
-			if (other.branchId != null)
-				return false;
-		}
-		else if (!branchId.equals(other.branchId))
-			return false;
-		if (runDate == null) {
-			if (other.runDate != null)
-				return false;
-		}
-		else if (!runDate.equals(other.runDate))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result
+                + ((branchCashConfirmationReportId == null) ? 0 : branchCashConfirmationReportId.hashCode());
+        result = PRIME * result + ((branchId == null) ? 0 : branchId.hashCode());
+        result = PRIME * result + ((runDate == null) ? 0 : runDate.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final BranchCashConfirmationReportBO other = (BranchCashConfirmationReportBO) obj;
+        if (branchCashConfirmationReportId == null) {
+            if (other.branchCashConfirmationReportId != null)
+                return false;
+        } else if (!branchCashConfirmationReportId.equals(other.branchCashConfirmationReportId))
+            return false;
+        if (branchId == null) {
+            if (other.branchId != null)
+                return false;
+        } else if (!branchId.equals(other.branchId))
+            return false;
+        if (runDate == null) {
+            if (other.runDate != null)
+                return false;
+        } else if (!runDate.equals(other.runDate))
+            return false;
+        return true;
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.system;
 
 import java.io.File;
@@ -41,212 +41,213 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 
 /**
- * JDBC URL parsing code in this class is
- * <a href="https://groups.google.com/group/comp.lang.java.programmer/browse_thread/thread/b7090860d6834bae">only
- * known to work with MySQL JDBC URLs</a>. Once Mifos supports other database backends, here are some ideas:
+ * JDBC URL parsing code in this class is <a href="https://groups.google.com/group/comp.lang.java.programmer/browse_thread/thread/b7090860d6834bae"
+ * >only known to work with MySQL JDBC URLs</a>. Once Mifos supports other
+ * database backends, here are some ideas:
  * <ul>
- * <li>fallback to simply printing out the full JDBC URL rather than trying to parse port, host, etc.</li>
+ * <li>fallback to simply printing out the full JDBC URL rather than trying to
+ * parse port, host, etc.</li>
  * <li>implement or reuse parsers for JDBC URLs specific to other databases</li>
- * </ul> 
+ * </ul>
  */
 public class SystemInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private DatabaseMetaData databaseMetaData;
-	private ServletContext context;
-	private Locale locale;
+    private ServletContext context;
+    private Locale locale;
 
-	private String javaVendor;
-	private String javaVersion;
-	private SvnRevision svnRevision;
-	private String osName;
-	private String osArch;
-	private String osVersion;
-	private String customReportsDir;
+    private String javaVendor;
+    private String javaVersion;
+    private SvnRevision svnRevision;
+    private String osName;
+    private String osArch;
+    private String osVersion;
+    private String customReportsDir;
 
-	private String infoSource;
-	private URI infoURL;
-	private String infoUserName;
+    private String infoSource;
+    private URI infoURL;
+    private String infoUserName;
 
-	// Note: make sure to close the connection that got the metadata!
-	public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource) 
-	throws Exception {
-		this(locale, getInfoSource);
-		this.databaseMetaData = databaseMetaData; 
-		URI mysqlOnly = new URI(databaseMetaData.getURL());
-		this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
-		this.infoUserName = databaseMetaData.getUserName();
-		this.context = context;
-	}
+    // Note: make sure to close the connection that got the metadata!
+    public SystemInfo(DatabaseMetaData databaseMetaData, ServletContext context, Locale locale, boolean getInfoSource)
+            throws Exception {
+        this(locale, getInfoSource);
+        this.databaseMetaData = databaseMetaData;
+        URI mysqlOnly = new URI(databaseMetaData.getURL());
+        this.infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
+        this.infoUserName = databaseMetaData.getUserName();
+        this.context = context;
+    }
 
-	public SystemInfo(Locale locale, boolean getInfoSource) {
-		if (getInfoSource) {
-			try {
+    public SystemInfo(Locale locale, boolean getInfoSource) {
+        if (getInfoSource) {
+            try {
                 this.infoSource = Arrays.toString(new StandardTestingService().getAllSettingsFilenames());
             } catch (IOException e) {
                 this.infoSource = MessageLookup.getInstance().lookup("admin.unableToDetermineConfigurationSource");
             }
-		}
-		this.locale = locale;
-		setJavaVendor(System.getProperty("java.vendor"));
-		setJavaVersion(System.getProperty("java.version"));
-		setSvnRevision(new SvnRevision());
-		setOsName(System.getProperty("os.name"));
-		setOsArch(System.getProperty("os.arch"));
-		setOsVersion(System.getProperty("os.version"));
-		setCustomReportsDir(System.getProperty("user.home")+File.separatorChar+".mifos");
-	}
+        }
+        this.locale = locale;
+        setJavaVendor(System.getProperty("java.vendor"));
+        setJavaVersion(System.getProperty("java.version"));
+        setSvnRevision(new SvnRevision());
+        setOsName(System.getProperty("os.name"));
+        setOsArch(System.getProperty("os.arch"));
+        setOsVersion(System.getProperty("os.version"));
+        setCustomReportsDir(System.getProperty("user.home") + File.separatorChar + ".mifos");
+    }
 
-	public int getApplicationVersion() {
-		return DatabaseVersionPersistence.APPLICATION_VERSION;
-	}
+    public int getApplicationVersion() {
+        return DatabaseVersionPersistence.APPLICATION_VERSION;
+    }
 
-	public String getDatabaseVendor() {
-		try {
-			return databaseMetaData.getDatabaseProductName();
-		} catch (SQLException e) {
-			return "unknown";
-		}
-	}
+    public String getDatabaseVendor() {
+        try {
+            return databaseMetaData.getDatabaseProductName();
+        } catch (SQLException e) {
+            return "unknown";
+        }
+    }
 
-	public String getDatabaseVersion() {
-		try {
-			return databaseMetaData.getDatabaseProductVersion();
-		} catch (SQLException e) {
-			return "unknown";
-		}
-	}
-	
-	public String getDriverName() {
-		try {
-			return databaseMetaData.getDriverName();
-		} catch (SQLException e) {
-			return "unknown";
-		}
-	}
+    public String getDatabaseVersion() {
+        try {
+            return databaseMetaData.getDatabaseProductVersion();
+        } catch (SQLException e) {
+            return "unknown";
+        }
+    }
 
-	public String getDriverVersion() {
-		try {
-			return databaseMetaData.getDriverVersion();
-		} catch (SQLException e) {
-			return "unknown";
-		}
-	}
-	
-	public String getJavaVendor() {
-		return javaVendor;
-	}
+    public String getDriverName() {
+        try {
+            return databaseMetaData.getDriverName();
+        } catch (SQLException e) {
+            return "unknown";
+        }
+    }
 
-	public String getJavaVersion() {
-		return javaVersion;
-	}
-	
-	public String getApplicationServerInfo() {
-		return context.getServerInfo();
-	}
-	
-	public String getSvnBranch() {
-		return svnRevision.getBranch();
-	}
-	
-	public String getSvnRevision() {
-		return svnRevision.getVersion();
-	}
-	
-	public void setJavaVendor(String javaVendor) {
-		this.javaVendor = javaVendor;
-	}
-	
-	public void setJavaVersion(String javaVersion) {
-		this.javaVersion = javaVersion;
-	}
-	
-	public void setSvnRevision(SvnRevision svnRevision) {
-		this.svnRevision = svnRevision;
-	}
+    public String getDriverVersion() {
+        try {
+            return databaseMetaData.getDriverVersion();
+        } catch (SQLException e) {
+            return "unknown";
+        }
+    }
 
-	private void setCustomReportsDir(String dir) {
-		customReportsDir=dir;
-	}
+    public String getJavaVendor() {
+        return javaVendor;
+    }
 
-	public String getCustomReportsDir() {
-		return customReportsDir;
-	}
+    public String getJavaVersion() {
+        return javaVersion;
+    }
 
-	public String getOsName() {
-		return osName;
-	}
+    public String getApplicationServerInfo() {
+        return context.getServerInfo();
+    }
 
-	public void setOsName(String osName) {
-		this.osName = osName;
-	}
+    public String getSvnBranch() {
+        return svnRevision.getBranch();
+    }
 
-	public String getOsArch() {
-		return osArch;
-	}
+    public String getSvnRevision() {
+        return svnRevision.getVersion();
+    }
 
-	public void setOsArch(String osArch) {
-		this.osArch = osArch;
-	}
+    public void setJavaVendor(String javaVendor) {
+        this.javaVendor = javaVendor;
+    }
 
-	public String getOsVersion() {
-		return osVersion;
-	}
+    public void setJavaVersion(String javaVersion) {
+        this.javaVersion = javaVersion;
+    }
 
-	public void setOsVersion(String osVersion) {
-		this.osVersion = osVersion;
-	}
+    public void setSvnRevision(SvnRevision svnRevision) {
+        this.svnRevision = svnRevision;
+    }
 
-	public String getInfoSource() {
-		return infoSource;
-	}
+    private void setCustomReportsDir(String dir) {
+        customReportsDir = dir;
+    }
 
-	public void setInfoSource(String infoSource) {
-		this.infoSource = infoSource;
-	}
-	
-	public String getDatabaseServer() {
-		return infoURL.getHost();
-	}
+    public String getCustomReportsDir() {
+        return customReportsDir;
+    }
 
-	public String getDatabasePort() {
-		if (infoURL.getPort() < 0)
-		    return "unknown";
-		else
-		    return "" + infoURL.getPort();
-	}
+    public String getOsName() {
+        return osName;
+    }
 
-	public String getDatabaseName() {
-		String path = infoURL.getPath();
-		if (path != null) // database name is not required
-		    path = path.replaceFirst("/", "");
-		return path;
-	}
+    public void setOsName(String osName) {
+        this.osName = osName;
+    }
 
-	public String getDatabaseUser() {
-		return this.infoUserName;
-	}
+    public String getOsArch() {
+        return osArch;
+    }
 
-	public String getInfoURL() {
-		return infoURL.toString();
-	}
+    public void setOsArch(String osArch) {
+        this.osArch = osArch;
+    }
 
-	public void setInfoURL(URI infoURL) {
-		this.infoURL = infoURL;
-	}
+    public String getOsVersion() {
+        return osVersion;
+    }
 
-	public String getInfoUserName() {
-		return infoUserName;
-	}
+    public void setOsVersion(String osVersion) {
+        this.osVersion = osVersion;
+    }
 
-	public void setInfoUserName(String infoUserName) {
-		this.infoUserName = infoUserName;
-	}
+    public String getInfoSource() {
+        return infoSource;
+    }
+
+    public void setInfoSource(String infoSource) {
+        this.infoSource = infoSource;
+    }
+
+    public String getDatabaseServer() {
+        return infoURL.getHost();
+    }
+
+    public String getDatabasePort() {
+        if (infoURL.getPort() < 0)
+            return "unknown";
+        else
+            return "" + infoURL.getPort();
+    }
+
+    public String getDatabaseName() {
+        String path = infoURL.getPath();
+        if (path != null) // database name is not required
+            path = path.replaceFirst("/", "");
+        return path;
+    }
+
+    public String getDatabaseUser() {
+        return this.infoUserName;
+    }
+
+    public String getInfoURL() {
+        return infoURL.toString();
+    }
+
+    public void setInfoURL(URI infoURL) {
+        this.infoURL = infoURL;
+    }
+
+    public String getInfoUserName() {
+        return infoUserName;
+    }
+
+    public void setInfoUserName(String infoUserName) {
+        this.infoUserName = infoUserName;
+    }
 
     public DateTime getDateTime() {
         return new DateTimeService().getCurrentDateTime();
     }
-    
+
     public String getDateTimeString() {
         DateTimeFormatter formatter = DateTimeFormat.shortDateTime().withOffsetParsed().withLocale(locale);
         return formatter.print(getDateTime().getMillis());

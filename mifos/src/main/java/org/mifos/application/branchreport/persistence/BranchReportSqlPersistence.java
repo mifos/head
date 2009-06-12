@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.branchreport.persistence;
 
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.CUSTOMER_LEVEL_ID;
@@ -40,142 +40,126 @@ import org.mifos.framework.persistence.Persistence;
 
 public class BranchReportSqlPersistence extends Persistence {
 
-	public Integer getCustomerCount(Short officeId, CustomerLevel customerLevel)
-			throws PersistenceException {
-		HashMap<String, Object> params = populateQueryParams(officeId,
-				customerLevel);
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_CUSTOMER_COUNT_FOR_OFFICE, params));
-	}
+    public Integer getCustomerCount(Short officeId, CustomerLevel customerLevel) throws PersistenceException {
+        HashMap<String, Object> params = populateQueryParams(officeId, customerLevel);
+        return getCountFromQueryResult(executeNamedQuery(NamedQueryConstants.GET_SQL_CUSTOMER_COUNT_FOR_OFFICE, params));
+    }
 
-	public Map<String, Integer> getCustomerCountBasedOnStatus(Short officeId,
-			CustomerLevel customerLevel, List<String> customerStatusDescriptions)
-			throws PersistenceException {
-		Query query = createQueryForCustomerCountBasedOnStatus(
-				NamedQueryConstants.GET_SQL_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE,
-				officeId, customerLevel, customerStatusDescriptions);
-		return extractResultFromResultset(query.list());
-	}
+    public Map<String, Integer> getCustomerCountBasedOnStatus(Short officeId, CustomerLevel customerLevel,
+            List<String> customerStatusDescriptions) throws PersistenceException {
+        Query query = createQueryForCustomerCountBasedOnStatus(
+                NamedQueryConstants.GET_SQL_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE, officeId, customerLevel,
+                customerStatusDescriptions);
+        return extractResultFromResultset(query.list());
+    }
 
-	public Integer getActiveBorrowersCount(Short officeId,
-			CustomerLevel customerLevel) throws PersistenceException {
-		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
-		query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
-		
-		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.LOAN_ACCOUNT);
-		setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
-		return getCountFromQueryResult(runQuery(query));
-	}
+    public Integer getActiveBorrowersCount(Short officeId, CustomerLevel customerLevel) throws PersistenceException {
+        Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+        query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
 
-	private Map<String, Object> populateParamsForActiveClientAccountSummary(Short officeId, CustomerLevel customerLevel, AccountTypes accountTypes) {
-		Map<String, Object> params = populateQueryParams(officeId,
-				customerLevel);
-		params.put("accountTypeId", accountTypes.getValue());
-		return params;
-	}
+        Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
+                AccountTypes.LOAN_ACCOUNT);
+        setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        return getCountFromQueryResult(runQuery(query));
+    }
 
-	public Integer getVeryPoorActiveBorrowersCount(Short officeId,
-			CustomerLevel customerLevel) throws PersistenceException {
-		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
-		query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
-		
-		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.LOAN_ACCOUNT);
-		setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
-		return getCountFromQueryResult(runQuery(query));		
-	}
+    private Map<String, Object> populateParamsForActiveClientAccountSummary(Short officeId,
+            CustomerLevel customerLevel, AccountTypes accountTypes) {
+        Map<String, Object> params = populateQueryParams(officeId, customerLevel);
+        params.put("accountTypeId", accountTypes.getValue());
+        return params;
+    }
 
-	public Integer getActiveSaversCount(Short officeId,
-			CustomerLevel customerLevel) throws PersistenceException {
-		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.SAVINGS_ACCOUNT);
-		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
-		query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
-		setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
-		return getCountFromQueryResult(runQuery(query));
-	}
+    public Integer getVeryPoorActiveBorrowersCount(Short officeId, CustomerLevel customerLevel)
+            throws PersistenceException {
+        Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+        query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
 
-	public Integer getVeryPoorActiveSaversCount(Short officeId,
-			CustomerLevel customerLevel) throws PersistenceException {
-		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.SAVINGS_ACCOUNT);
-		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
-		query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
-		setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
-		return getCountFromQueryResult(runQuery(query));		
-	}
+        Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
+                AccountTypes.LOAN_ACCOUNT);
+        setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        return getCountFromQueryResult(runQuery(query));
+    }
 
-	public Integer getReplacementCountForOffice(Short officeId,
-			CustomerLevel customerLevel, Short fieldId, String fieldValue)
-			throws PersistenceException {
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_REPLACEMENT_COUNT_FOR_OFFICE,
-				populateQueryForReplacementCount(officeId, customerLevel,
-						fieldId, fieldValue)));
-	}
+    public Integer getActiveSaversCount(Short officeId, CustomerLevel customerLevel) throws PersistenceException {
+        Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
+                AccountTypes.SAVINGS_ACCOUNT);
+        Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+        query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
+        setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        return getCountFromQueryResult(runQuery(query));
+    }
 
-	private HashMap<String, Object> populateQueryForReplacementCount(
-			Short officeId, CustomerLevel customerLevel, Short fieldId,
-			String fieldValue) {
-		HashMap<String, Object> params = populateQueryParams(officeId,
-				customerLevel);
-		params.put(QueryParamConstants.CUSTOMER_CUSTOM_FIELD_ID, fieldId);
-		params.put(QueryParamConstants.CUSOTMER_CUSTOM_FIELD_VALUE, fieldValue);
-		return params;
-	}
+    public Integer getVeryPoorActiveSaversCount(Short officeId, CustomerLevel customerLevel)
+            throws PersistenceException {
+        Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
+                AccountTypes.SAVINGS_ACCOUNT);
+        Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+        query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
+        setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        return getCountFromQueryResult(runQuery(query));
+    }
 
-	public Integer getVeryPoorReplaceCountForOffice(Short officeId,
-			CustomerLevel customerLevel, Short fieldId, String fieldValue) throws PersistenceException {
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_VERY_POOR_REPLACEMENT_COUNT_FOR_OFFICE,
-				populateQueryForReplacementCount(officeId, customerLevel,
-						fieldId, fieldValue)));
-	}
+    public Integer getReplacementCountForOffice(Short officeId, CustomerLevel customerLevel, Short fieldId,
+            String fieldValue) throws PersistenceException {
+        return getCountFromQueryResult(executeNamedQuery(NamedQueryConstants.GET_SQL_REPLACEMENT_COUNT_FOR_OFFICE,
+                populateQueryForReplacementCount(officeId, customerLevel, fieldId, fieldValue)));
+    }
 
-	private Map<String, Object> populateParamsForActiveClientAccountSummary(
-			Short officeId, CustomerLevel customerLevel,
-			AccountTypes accountTypes, AccountState accountState) {
-		Map<String, Object> params = populateQueryParams(officeId,
-				customerLevel);
-		params.put("accountTypeId", accountTypes.getValue());
-		params.put("accountStateId", accountState.getValue());
-		return params;
-	}
+    private HashMap<String, Object> populateQueryForReplacementCount(Short officeId, CustomerLevel customerLevel,
+            Short fieldId, String fieldValue) {
+        HashMap<String, Object> params = populateQueryParams(officeId, customerLevel);
+        params.put(QueryParamConstants.CUSTOMER_CUSTOM_FIELD_ID, fieldId);
+        params.put(QueryParamConstants.CUSOTMER_CUSTOM_FIELD_VALUE, fieldValue);
+        return params;
+    }
 
-	private HashMap<String, Object> populateQueryParams(Short officeId,
-			CustomerLevel customerLevel) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put(OFFICE_ID, officeId);
-		params.put(CUSTOMER_LEVEL_ID, customerLevel.getValue());
-		return params;
-	}
+    public Integer getVeryPoorReplaceCountForOffice(Short officeId, CustomerLevel customerLevel, Short fieldId,
+            String fieldValue) throws PersistenceException {
+        return getCountFromQueryResult(executeNamedQuery(
+                NamedQueryConstants.GET_SQL_VERY_POOR_REPLACEMENT_COUNT_FOR_OFFICE, populateQueryForReplacementCount(
+                        officeId, customerLevel, fieldId, fieldValue)));
+    }
 
-	private Query createQueryForCustomerCountBasedOnStatus(String queryName,
-			Short officeId, CustomerLevel customerLevel,
-			List<String> customerStatusDescriptions) {
-		Query query = createdNamedQuery(queryName);
-		query.setParameterList(CUSTOMER_STATUS_DESCRIPTION,
-				customerStatusDescriptions);
-		query.setProperties(populateQueryParams(officeId, customerLevel));
-		return query;
-	}
+    private Map<String, Object> populateParamsForActiveClientAccountSummary(Short officeId,
+            CustomerLevel customerLevel, AccountTypes accountTypes, AccountState accountState) {
+        Map<String, Object> params = populateQueryParams(officeId, customerLevel);
+        params.put("accountTypeId", accountTypes.getValue());
+        params.put("accountStateId", accountState.getValue());
+        return params;
+    }
 
-	public Map<String, Integer> getVeryPoorCustomerCountBasedOnStatus(
-			Short officeId, CustomerLevel customerLevel,
-			List<String> customerStatuseDescriptions) {
-		Query query = createQueryForCustomerCountBasedOnStatus(
-				NamedQueryConstants.GET_SQL_VERY_POOR_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE,
-				officeId, customerLevel, customerStatuseDescriptions);
-		return extractResultFromResultset(query.list());
-	}
+    private HashMap<String, Object> populateQueryParams(Short officeId, CustomerLevel customerLevel) {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put(OFFICE_ID, officeId);
+        params.put(CUSTOMER_LEVEL_ID, customerLevel.getValue());
+        return params;
+    }
 
-	public Map<String, Integer> extractResultFromResultset(List resultSet) {
-		Map<String, Integer> returnValues = new HashMap<String, Integer>();
-		List<Object[]> results = resultSet;
-		for (Object[] objects : results) {
-			returnValues.put((String) objects[0], (Integer) objects[1]);
-		}
-		return returnValues;
-	}
+    private Query createQueryForCustomerCountBasedOnStatus(String queryName, Short officeId,
+            CustomerLevel customerLevel, List<String> customerStatusDescriptions) {
+        Query query = createdNamedQuery(queryName);
+        query.setParameterList(CUSTOMER_STATUS_DESCRIPTION, customerStatusDescriptions);
+        query.setProperties(populateQueryParams(officeId, customerLevel));
+        return query;
+    }
+
+    public Map<String, Integer> getVeryPoorCustomerCountBasedOnStatus(Short officeId, CustomerLevel customerLevel,
+            List<String> customerStatuseDescriptions) {
+        Query query = createQueryForCustomerCountBasedOnStatus(
+                NamedQueryConstants.GET_SQL_VERY_POOR_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE, officeId,
+                customerLevel, customerStatuseDescriptions);
+        return extractResultFromResultset(query.list());
+    }
+
+    public Map<String, Integer> extractResultFromResultset(List resultSet) {
+        Map<String, Integer> returnValues = new HashMap<String, Integer>();
+        List<Object[]> results = resultSet;
+        for (Object[] objects : results) {
+            returnValues.put((String) objects[0], (Integer) objects[1]);
+        }
+        return returnValues;
+    }
 }

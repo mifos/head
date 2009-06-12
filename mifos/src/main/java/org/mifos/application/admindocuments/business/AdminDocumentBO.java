@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments.business;
 
 import org.mifos.framework.business.BusinessObject;
@@ -25,49 +25,49 @@ import org.mifos.framework.security.util.UserContext;
 
 public class AdminDocumentBO extends BusinessObject {
 
-	private Short admindocId;
-	private String adminDocumentName;
-	private String adminDocumentIdentifier;
-	private Short isActive;
+    private Short admindocId;
+    private String adminDocumentName;
+    private String adminDocumentIdentifier;
+    private Short isActive;
 
-	public AdminDocumentBO(UserContext userContext) {
-		super(userContext);
-	}
-	
-	public AdminDocumentBO() {
-		super();
-	}
-	public Short getAdmindocId() {
-		return admindocId;
-	}
+    public AdminDocumentBO(UserContext userContext) {
+        super(userContext);
+    }
 
-	public void setAdmindocId(Short admindocId) {
-		this.admindocId = admindocId;
-	}
+    public AdminDocumentBO() {
+        super();
+    }
 
-	public String getAdminDocumentIdentifier() {
-		return adminDocumentIdentifier;
-	}
+    public Short getAdmindocId() {
+        return admindocId;
+    }
 
-	public void setAdminDocumentIdentifier(String adminDocumentIdentifier) {
-		this.adminDocumentIdentifier = adminDocumentIdentifier;
-	}
+    public void setAdmindocId(Short admindocId) {
+        this.admindocId = admindocId;
+    }
 
-	public String getAdminDocumentName() {
-		return adminDocumentName;
-	}
+    public String getAdminDocumentIdentifier() {
+        return adminDocumentIdentifier;
+    }
 
-	public void setAdminDocumentName(String adminDocumentName) {
-		this.adminDocumentName = adminDocumentName;
-	}
+    public void setAdminDocumentIdentifier(String adminDocumentIdentifier) {
+        this.adminDocumentIdentifier = adminDocumentIdentifier;
+    }
 
-	public Short getIsActive() {
-		return isActive;
-	}
+    public String getAdminDocumentName() {
+        return adminDocumentName;
+    }
 
-	public void setIsActive(Short isActive) {
-		this.isActive = isActive;
-	}
+    public void setAdminDocumentName(String adminDocumentName) {
+        this.adminDocumentName = adminDocumentName;
+    }
 
+    public Short getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Short isActive) {
+        this.isActive = isActive;
+    }
 
 }

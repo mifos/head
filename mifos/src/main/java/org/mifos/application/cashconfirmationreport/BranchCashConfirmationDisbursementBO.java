@@ -17,19 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.cashconfirmationreport;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class BranchCashConfirmationDisbursementBO extends
-		BranchCashConfirmationInfoBO {
+public class BranchCashConfirmationDisbursementBO extends BranchCashConfirmationInfoBO {
 
-	public BranchCashConfirmationDisbursementBO() {
-	}
+    public BranchCashConfirmationDisbursementBO() {
+    }
 
-	public BranchCashConfirmationDisbursementBO(String productOffering,
-			Money actual) {
-		super(productOffering, actual);
-	}
+    public BranchCashConfirmationDisbursementBO(String productOffering, Money actual) {
+        super(productOffering, actual);
+    }
 }

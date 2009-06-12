@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments.business;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -26,45 +26,38 @@ import org.mifos.framework.security.util.UserContext;
 
 public class AdminDocAccStateMixBO extends BusinessObject {
 
-	private Short adminDocAccStateMixId;
-	
-	private AdminDocumentBO adminDocumentID;
-	
-	private AccountStateEntity accountStateID;
+    private Short adminDocAccStateMixId;
 
-	
-	public AdminDocAccStateMixBO(UserContext userContext) {
-		super(userContext);
-	}
-	
-	public AdminDocAccStateMixBO() {
-		super();
-	}
+    private AdminDocumentBO adminDocumentID;
 
+    private AccountStateEntity accountStateID;
 
-	public AccountStateEntity getAccountStateID() {
-		return accountStateID;
-	}
+    public AdminDocAccStateMixBO(UserContext userContext) {
+        super(userContext);
+    }
 
+    public AdminDocAccStateMixBO() {
+        super();
+    }
 
-	public void setAccountStateID(AccountStateEntity accountStateID) {
-		this.accountStateID = accountStateID;
-	}
+    public AccountStateEntity getAccountStateID() {
+        return accountStateID;
+    }
 
+    public void setAccountStateID(AccountStateEntity accountStateID) {
+        this.accountStateID = accountStateID;
+    }
 
-	public Short getAdminDocAccStateMixId() {
-		return adminDocAccStateMixId;
-	}
+    public Short getAdminDocAccStateMixId() {
+        return adminDocAccStateMixId;
+    }
 
-	public AdminDocumentBO getAdminDocumentID() {
-		return adminDocumentID;
-	}
+    public AdminDocumentBO getAdminDocumentID() {
+        return adminDocumentID;
+    }
 
+    public void setAdminDocumentID(AdminDocumentBO adminDocumentID) {
+        this.adminDocumentID = adminDocumentID;
+    }
 
-	public void setAdminDocumentID(AdminDocumentBO adminDocumentID) {
-		this.adminDocumentID = adminDocumentID;
-	}
-
-
-	
 }

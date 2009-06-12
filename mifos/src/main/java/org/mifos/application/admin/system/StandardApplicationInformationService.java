@@ -17,31 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.system;
 
 import org.mifos.core.service.ApplicationInformationDto;
 import org.mifos.core.service.ApplicationInformationService;
 
-public class StandardApplicationInformationService implements
-		ApplicationInformationService {
+public class StandardApplicationInformationService implements ApplicationInformationService {
 
-	private ApplicationInformationDto applicationInformationDto;
-	
-	public StandardApplicationInformationService() {
-		applicationInformationDto = new ApplicationInformationDto();
-	}
-	public ApplicationInformationDto getApplicationInformation() {
-		return applicationInformationDto;
-	}
+    private ApplicationInformationDto applicationInformationDto;
 
-	public void setApplicationInformation(ApplicationInformationDto applicationInformationDto) {
-		this.applicationInformationDto.setBuildId(applicationInformationDto.getBuildId());
-		this.applicationInformationDto.setBuildTag(applicationInformationDto.getBuildTag());
-		this.applicationInformationDto.setSvnRevision(applicationInformationDto.getSvnRevision());
-	}
+    public StandardApplicationInformationService() {
+        applicationInformationDto = new ApplicationInformationDto();
+    }
 
-	public void setSystemInfo(SystemInfo info) {
-		applicationInformationDto.setSvnRevision(info.getSvnRevision());
-	}
+    public ApplicationInformationDto getApplicationInformation() {
+        return applicationInformationDto;
+    }
+
+    public void setApplicationInformation(ApplicationInformationDto applicationInformationDto) {
+        this.applicationInformationDto.setBuildId(applicationInformationDto.getBuildId());
+        this.applicationInformationDto.setBuildTag(applicationInformationDto.getBuildTag());
+        this.applicationInformationDto.setSvnRevision(applicationInformationDto.getSvnRevision());
+    }
+
+    public void setSystemInfo(SystemInfo info) {
+        applicationInformationDto.setSvnRevision(info.getSvnRevision());
+    }
 }

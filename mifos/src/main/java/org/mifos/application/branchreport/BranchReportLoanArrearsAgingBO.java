@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.branchreport;
 
 import static org.mifos.framework.util.helpers.MoneyFactory.ZERO;
@@ -31,169 +31,145 @@ import org.mifos.framework.util.helpers.NumberUtils;
 
 public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 
-	private Integer arrearsAgingId;
-	@SuppressWarnings("unused")
-	private BranchReportBO branchReport;
-	private LoanArrearsAgingPeriod agingPeriod;
-	private Integer clientsAging;
-	private Integer loansAging;
-	private Money amountAging;
-	private Money amountOutstandingAging;
-	private Money interestAging;
+    private Integer arrearsAgingId;
+    @SuppressWarnings("unused")
+    private BranchReportBO branchReport;
+    private LoanArrearsAgingPeriod agingPeriod;
+    private Integer clientsAging;
+    private Integer loansAging;
+    private Money amountAging;
+    private Money amountOutstandingAging;
+    private Money interestAging;
 
-	public BranchReportLoanArrearsAgingBO() {
-		super();
-	}
+    public BranchReportLoanArrearsAgingBO() {
+        super();
+    }
 
-	public BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod agingPeriod,
-			Integer clientsAging, Integer loansAging, Money amountAging,
-			Money amountOutstandingAging, Money interestAging) {
-		super();
-		this.agingPeriod = agingPeriod;
-		this.clientsAging = clientsAging;
-		this.loansAging = loansAging;
-		this.amountAging = amountAging;
-		this.amountOutstandingAging = amountOutstandingAging;
-		this.interestAging = interestAging;
-	}
+    public BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod agingPeriod, Integer clientsAging, Integer loansAging,
+            Money amountAging, Money amountOutstandingAging, Money interestAging) {
+        super();
+        this.agingPeriod = agingPeriod;
+        this.clientsAging = clientsAging;
+        this.loansAging = loansAging;
+        this.amountAging = amountAging;
+        this.amountOutstandingAging = amountOutstandingAging;
+        this.interestAging = interestAging;
+    }
 
-	public BranchReportLoanArrearsAgingBO(
-			LoanArrearsAgingPeriod loanArrearsAgingPeriod) {
-		this(loanArrearsAgingPeriod, NumberUtils.ZERO, NumberUtils.ZERO, ZERO,
-				ZERO, ZERO);
-	}
+    public BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod loanArrearsAgingPeriod) {
+        this(loanArrearsAgingPeriod, NumberUtils.ZERO, NumberUtils.ZERO, ZERO, ZERO, ZERO);
+    }
 
-	public String getPeriodDescription() {
-		return agingPeriod.getDescription();
-	}
+    public String getPeriodDescription() {
+        return agingPeriod.getDescription();
+    }
 
-	public LoanArrearsAgingPeriod getAgingPeriod() {
-		return agingPeriod;
-	}
+    public LoanArrearsAgingPeriod getAgingPeriod() {
+        return agingPeriod;
+    }
 
-	public BigDecimal getAmountAging() {
-		return MoneyUtils.getMoneyAmount(amountAging);
-	}
+    public BigDecimal getAmountAging() {
+        return MoneyUtils.getMoneyAmount(amountAging);
+    }
 
-	public BigDecimal getAmountOutstandingAging() {
-		return MoneyUtils.getMoneyAmount(amountOutstandingAging);
-	}
+    public BigDecimal getAmountOutstandingAging() {
+        return MoneyUtils.getMoneyAmount(amountOutstandingAging);
+    }
 
-	public BigDecimal getInterestAging() {
-		return MoneyUtils.getMoneyAmount(interestAging);
-	}
+    public BigDecimal getInterestAging() {
+        return MoneyUtils.getMoneyAmount(interestAging);
+    }
 
-	public Integer getClientsAging() {
-		return clientsAging;
-	}
+    public Integer getClientsAging() {
+        return clientsAging;
+    }
 
-	public Integer getLoansAging() {
-		return loansAging;
-	}
+    public Integer getLoansAging() {
+        return loansAging;
+    }
 
-	public void setBranchReport(BranchReportBO branchReport) {
-		this.branchReport = branchReport;
-	}
+    public void setBranchReport(BranchReportBO branchReport) {
+        this.branchReport = branchReport;
+    }
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = super.hashCode();
-		result = PRIME * result
-				+ ((agingPeriod == null) ? 0 : agingPeriod.hashCode());
-		result = PRIME * result
-				+ ((amountAging == null) ? 0 : amountAging.hashCode());
-		result = PRIME
-				* result
-				+ ((amountOutstandingAging == null) ? 0
-						: amountOutstandingAging.hashCode());
-		result = PRIME * result
-				+ ((arrearsAgingId == null) ? 0 : arrearsAgingId.hashCode());
-		result = PRIME * result
-				+ ((clientsAging == null) ? 0 : clientsAging.hashCode());
-		result = PRIME * result
-				+ ((interestAging == null) ? 0 : interestAging.hashCode());
-		result = PRIME * result
-				+ ((loansAging == null) ? 0 : loansAging.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = super.hashCode();
+        result = PRIME * result + ((agingPeriod == null) ? 0 : agingPeriod.hashCode());
+        result = PRIME * result + ((amountAging == null) ? 0 : amountAging.hashCode());
+        result = PRIME * result + ((amountOutstandingAging == null) ? 0 : amountOutstandingAging.hashCode());
+        result = PRIME * result + ((arrearsAgingId == null) ? 0 : arrearsAgingId.hashCode());
+        result = PRIME * result + ((clientsAging == null) ? 0 : clientsAging.hashCode());
+        result = PRIME * result + ((interestAging == null) ? 0 : interestAging.hashCode());
+        result = PRIME * result + ((loansAging == null) ? 0 : loansAging.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final BranchReportLoanArrearsAgingBO other = (BranchReportLoanArrearsAgingBO) obj;
-		if (agingPeriod == null) {
-			if (other.agingPeriod != null)
-				return false;
-		}
-		else if (!agingPeriod.equals(other.agingPeriod))
-			return false;
-		if (amountAging == null) {
-			if (other.amountAging != null)
-				return false;
-		}
-		else if (!amountAging.equals(other.amountAging))
-			return false;
-		if (amountOutstandingAging == null) {
-			if (other.amountOutstandingAging != null)
-				return false;
-		}
-		else if (!amountOutstandingAging.equals(other.amountOutstandingAging))
-			return false;
-		if (arrearsAgingId == null) {
-			if (other.arrearsAgingId != null)
-				return false;
-		}
-		else if (!arrearsAgingId.equals(other.arrearsAgingId))
-			return false;
-		if (clientsAging == null) {
-			if (other.clientsAging != null)
-				return false;
-		}
-		else if (!clientsAging.equals(other.clientsAging))
-			return false;
-		if (interestAging == null) {
-			if (other.interestAging != null)
-				return false;
-		}
-		else if (!interestAging.equals(other.interestAging))
-			return false;
-		if (loansAging == null) {
-			if (other.loansAging != null)
-				return false;
-		}
-		else if (!loansAging.equals(other.loansAging))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final BranchReportLoanArrearsAgingBO other = (BranchReportLoanArrearsAgingBO) obj;
+        if (agingPeriod == null) {
+            if (other.agingPeriod != null)
+                return false;
+        } else if (!agingPeriod.equals(other.agingPeriod))
+            return false;
+        if (amountAging == null) {
+            if (other.amountAging != null)
+                return false;
+        } else if (!amountAging.equals(other.amountAging))
+            return false;
+        if (amountOutstandingAging == null) {
+            if (other.amountOutstandingAging != null)
+                return false;
+        } else if (!amountOutstandingAging.equals(other.amountOutstandingAging))
+            return false;
+        if (arrearsAgingId == null) {
+            if (other.arrearsAgingId != null)
+                return false;
+        } else if (!arrearsAgingId.equals(other.arrearsAgingId))
+            return false;
+        if (clientsAging == null) {
+            if (other.clientsAging != null)
+                return false;
+        } else if (!clientsAging.equals(other.clientsAging))
+            return false;
+        if (interestAging == null) {
+            if (other.interestAging != null)
+                return false;
+        } else if (!interestAging.equals(other.interestAging))
+            return false;
+        if (loansAging == null) {
+            if (other.loansAging != null)
+                return false;
+        } else if (!loansAging.equals(other.loansAging))
+            return false;
+        return true;
+    }
 
-	public static BranchReportLoanArrearsAgingBO createInstanceForTest(
-			LoanArrearsAgingPeriod agingPeriod) {
-		BranchReportLoanArrearsAgingBO loanArrearsAgingBO = new BranchReportLoanArrearsAgingBO();
-		loanArrearsAgingBO.agingPeriod = agingPeriod;
-		return loanArrearsAgingBO;
-	}
+    public static BranchReportLoanArrearsAgingBO createInstanceForTest(LoanArrearsAgingPeriod agingPeriod) {
+        BranchReportLoanArrearsAgingBO loanArrearsAgingBO = new BranchReportLoanArrearsAgingBO();
+        loanArrearsAgingBO.agingPeriod = agingPeriod;
+        return loanArrearsAgingBO;
+    }
 
-	public Integer getArrearsAgingId() {
-		return arrearsAgingId;
-	}
+    public Integer getArrearsAgingId() {
+        return arrearsAgingId;
+    }
 
-	@Override
-	public String toString() {
-		return "BRLAABO:["
-				+ getClass().getName()
-				+ " branchReportId:"
-				//		+branchReport.getBranchReportId()
-				+ " arrearsAgingId: " + arrearsAgingId + "agingPeriod: "
-				+ agingPeriod.getDescription() + " clientsAging: "
-				+ clientsAging + " loansAging: " + loansAging
-				+ " amountAging: " + amountAging + " amountOutstandignAging: "
-				+ amountOutstandingAging + " interestAging: " + interestAging
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "BRLAABO:[" + getClass().getName()
+                + " branchReportId:"
+                // +branchReport.getBranchReportId()
+                + " arrearsAgingId: " + arrearsAgingId + "agingPeriod: " + agingPeriod.getDescription()
+                + " clientsAging: " + clientsAging + " loansAging: " + loansAging + " amountAging: " + amountAging
+                + " amountOutstandignAging: " + amountOutstandingAging + " interestAging: " + interestAging + "]";
+    }
 }

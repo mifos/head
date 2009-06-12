@@ -17,23 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.cashconfirmationreport;
 
+package org.mifos.application.cashconfirmationreport;
 
 import org.mifos.framework.business.BusinessObject;
 
 public abstract class BranchCashConfirmationSubReport extends BusinessObject {
 
-	@SuppressWarnings("unused")
-	private BranchCashConfirmationReportBO branchCashConfirmationReport;
+    @SuppressWarnings("unused")
+    private BranchCashConfirmationReportBO branchCashConfirmationReport;
 
-	public BranchCashConfirmationSubReport() {
-		super();
-	}
+    public BranchCashConfirmationSubReport() {
+        super();
+    }
 
-	public void setBranchCashConfirmationReport(
-			BranchCashConfirmationReportBO branchCashConfirmationReport) {
-		this.branchCashConfirmationReport = branchCashConfirmationReport;
-	}
+    public void setBranchCashConfirmationReport(BranchCashConfirmationReportBO branchCashConfirmationReport) {
+        this.branchCashConfirmationReport = branchCashConfirmationReport;
+    }
 }

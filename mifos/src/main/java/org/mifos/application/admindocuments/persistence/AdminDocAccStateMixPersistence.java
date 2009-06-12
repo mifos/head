@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments.persistence;
 
 import java.util.HashMap;
@@ -28,35 +28,24 @@ import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
-
-
 public class AdminDocAccStateMixPersistence extends Persistence {
 
-	public AdminDocAccStateMixPersistence() {
-		super();
+    public AdminDocAccStateMixPersistence() {
+        super();
 
-	}
-	
-	public List<AdminDocAccStateMixBO> getMixByAdminDocuments(Short admindocId)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("admindocId", admindocId);
-		return executeNamedQuery(
-				NamedQueryConstants.GET_MIX_BY_ADMINISTRATIVE_DOCUMENT,
-				queryParameters);
+    }
 
-	}
+    public List<AdminDocAccStateMixBO> getMixByAdminDocuments(Short admindocId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("admindocId", admindocId);
+        return executeNamedQuery(NamedQueryConstants.GET_MIX_BY_ADMINISTRATIVE_DOCUMENT, queryParameters);
 
-	
-	public List<AdminDocAccStateMixBO> getAllMixedAdminDocuments()
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		return executeNamedQuery(
-				NamedQueryConstants.GET_ALL_MIXED_ADMINISTRATIVE_DOCUMENT,
-				queryParameters);
+    }
 
-	}
+    public List<AdminDocAccStateMixBO> getAllMixedAdminDocuments() throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_MIXED_ADMINISTRATIVE_DOCUMENT, queryParameters);
 
-	
-	
+    }
+
 }

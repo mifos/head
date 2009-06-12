@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,25 +36,24 @@ import org.mifos.framework.struts.action.BaseAction;
 
 public class AdminAction extends BaseAction {
 
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.load_success.toString());
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("AdminAction");
-		security.allow("load", SecurityConstants.VIEW);
-		return security;
-	}
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.load_success.toString());
+    }
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return new AdminBusinessService();
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("AdminAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return new AdminBusinessService();
+    }
+
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 }

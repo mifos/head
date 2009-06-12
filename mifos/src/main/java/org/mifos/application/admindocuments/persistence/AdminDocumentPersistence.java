@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments.persistence;
 
 import java.util.HashMap;
@@ -28,26 +28,19 @@ import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
-
-
 public class AdminDocumentPersistence extends Persistence {
 
-	public AdminDocumentPersistence() {
-	}
+    public AdminDocumentPersistence() {
+    }
 
-	public AdminDocumentBO getAdminDocumentById(Short adminDocumentId)
-			throws PersistenceException {
-		return (AdminDocumentBO) getPersistentObject(AdminDocumentBO.class,
-				adminDocumentId);
-	}
+    public AdminDocumentBO getAdminDocumentById(Short adminDocumentId) throws PersistenceException {
+        return (AdminDocumentBO) getPersistentObject(AdminDocumentBO.class, adminDocumentId);
+    }
 
-	public List<AdminDocumentBO> getAllAdminDocuments()
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		return executeNamedQuery(
-				NamedQueryConstants.GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT,
-				queryParameters);
+    public List<AdminDocumentBO> getAllAdminDocuments() throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        return executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT, queryParameters);
 
-	}
-	
+    }
+
 }

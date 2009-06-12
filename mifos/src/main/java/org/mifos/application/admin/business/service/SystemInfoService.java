@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.business.service;
 
 import org.mifos.framework.business.BusinessObject;
@@ -26,9 +26,9 @@ import org.mifos.framework.security.util.UserContext;
 
 public class SystemInfoService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
 }

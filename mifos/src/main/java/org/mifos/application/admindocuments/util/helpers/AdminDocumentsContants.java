@@ -17,15 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.admindocuments.util.helpers;
 
+package org.mifos.application.admindocuments.util.helpers;
 
 public interface AdminDocumentsContants {
 
-	public String LISTOFADMINISTRATIVEDOCUMENTS = "listOfAdministrativeDocuments";
-	public String ADMINISTRATIVEDOCUMENTSLIST = "administrativeDocumentsList";
-	public String ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST = "administrativeDocumentsAccStateMixList";
+    public String LISTOFADMINISTRATIVEDOCUMENTS = "listOfAdministrativeDocuments";
+    public String ADMINISTRATIVEDOCUMENTSLIST = "administrativeDocumentsList";
+    public String ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST = "administrativeDocumentsAccStateMixList";
 
-	
 }

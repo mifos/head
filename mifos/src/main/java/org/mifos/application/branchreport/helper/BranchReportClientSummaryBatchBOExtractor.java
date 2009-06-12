@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.branchreport.helper;
 
 import java.util.ArrayList;
@@ -30,183 +30,165 @@ import org.mifos.application.branchreport.BranchReportClientSummaryBO;
 
 public class BranchReportClientSummaryBatchBOExtractor {
 
-	private List<BranchReportClientSummaryBO> clientSummaries;
+    private List<BranchReportClientSummaryBO> clientSummaries;
 
-	public BranchReportClientSummaryBatchBOExtractor(
-			List<BranchReportClientSummaryBO> clientSummaries) {
-		this.clientSummaries = clientSummaries;
-	}
+    public BranchReportClientSummaryBatchBOExtractor(List<BranchReportClientSummaryBO> clientSummaries) {
+        this.clientSummaries = clientSummaries;
+    }
 
-	public BranchReportClientSummaryBatchBOExtractor() {
-		this(new ArrayList<BranchReportClientSummaryBO>());
-	}
+    public BranchReportClientSummaryBatchBOExtractor() {
+        this(new ArrayList<BranchReportClientSummaryBO>());
+    }
 
-	private BranchReportClientSummaryBO getClientSummary(Predicate predicate) {
-		return (BranchReportClientSummaryBO) CollectionUtils.find(
-				clientSummaries, predicate);
-	}
+    private BranchReportClientSummaryBO getClientSummary(Predicate predicate) {
+        return (BranchReportClientSummaryBO) CollectionUtils.find(clientSummaries, predicate);
+    }
 
-	public BranchReportClientSummaryBO getCenterSummary() {
-		return getClientSummary(ClientSummaryPredicates.CENTER_COUNT_MATCHER);
-	}
+    public BranchReportClientSummaryBO getCenterSummary() {
+        return getClientSummary(ClientSummaryPredicates.CENTER_COUNT_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getGroupSummary() {
-		return getClientSummary(ClientSummaryPredicates.GROUP_COUNT_MATCHER);
-	}
+    public BranchReportClientSummaryBO getGroupSummary() {
+        return getClientSummary(ClientSummaryPredicates.GROUP_COUNT_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getActiveMembersSummary() {
-		return getClientSummary(ClientSummaryPredicates.ACTIVE_MEMBER_MATCHER);
-	}
+    public BranchReportClientSummaryBO getActiveMembersSummary() {
+        return getClientSummary(ClientSummaryPredicates.ACTIVE_MEMBER_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getActiveBorrowersSummary() {
-		return getClientSummary(ClientSummaryPredicates.ACTIVE_BORROWERS_MATCHER);
-	}
+    public BranchReportClientSummaryBO getActiveBorrowersSummary() {
+        return getClientSummary(ClientSummaryPredicates.ACTIVE_BORROWERS_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getReplacementsSummary() {
-		return getClientSummary(ClientSummaryPredicates.REPLACEMENTS_MATCHER);
-	}
+    public BranchReportClientSummaryBO getReplacementsSummary() {
+        return getClientSummary(ClientSummaryPredicates.REPLACEMENTS_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getLoanAccountDormantsSummary() {
-		return getClientSummary(ClientSummaryPredicates.LOAN_ACCOUNT_DORMANT_COUNT_MATCHER);
-	}
+    public BranchReportClientSummaryBO getLoanAccountDormantsSummary() {
+        return getClientSummary(ClientSummaryPredicates.LOAN_ACCOUNT_DORMANT_COUNT_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getSavingAccountDormantsSummary() {
-		return getClientSummary(ClientSummaryPredicates.SAVING_ACCOUNT_DORMANT_COUNT_MATCHER);
-	}
+    public BranchReportClientSummaryBO getSavingAccountDormantsSummary() {
+        return getClientSummary(ClientSummaryPredicates.SAVING_ACCOUNT_DORMANT_COUNT_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getDropOutsSummary() {
-		return getClientSummary(ClientSummaryPredicates.DROP_OUT_MATCHER);
-	}
-	
-	public BranchReportClientSummaryBO getDropOutRateSummary() {
-		return getClientSummary(ClientSummaryPredicates.DROP_OUT_RATE_MATCHER);
-	}	
+    public BranchReportClientSummaryBO getDropOutsSummary() {
+        return getClientSummary(ClientSummaryPredicates.DROP_OUT_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getOnHoldSummary() {
-		return getClientSummary(ClientSummaryPredicates.ON_HOLD_MATCHER);
-	}
+    public BranchReportClientSummaryBO getDropOutRateSummary() {
+        return getClientSummary(ClientSummaryPredicates.DROP_OUT_RATE_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getActiveSaversSummary() {
-		return getClientSummary(ClientSummaryPredicates.ACTIVE_SAVER_MATCHER);
-	}
+    public BranchReportClientSummaryBO getOnHoldSummary() {
+        return getClientSummary(ClientSummaryPredicates.ON_HOLD_MATCHER);
+    }
 
-	public BranchReportClientSummaryBO getPortfolioAtRiskSummary() {
-		return getClientSummary(ClientSummaryPredicates.PORTFLIO_AT_RISK_MATCHER);
-	}
+    public BranchReportClientSummaryBO getActiveSaversSummary() {
+        return getClientSummary(ClientSummaryPredicates.ACTIVE_SAVER_MATCHER);
+    }
 
-	public Predicate matchAllPredicates(
-			Set<BranchReportClientSummaryBO> branchReportClientSummaries) {
-		for (Predicate predicate : ClientSummaryPredicates.values()) {
-			if (!CollectionUtils.exists(branchReportClientSummaries, predicate))
-				return predicate;
-		}
-		return null;
-	}
+    public BranchReportClientSummaryBO getPortfolioAtRiskSummary() {
+        return getClientSummary(ClientSummaryPredicates.PORTFLIO_AT_RISK_MATCHER);
+    }
 
-	private static enum ClientSummaryPredicates implements Predicate {
+    public Predicate matchAllPredicates(Set<BranchReportClientSummaryBO> branchReportClientSummaries) {
+        for (Predicate predicate : ClientSummaryPredicates.values()) {
+            if (!CollectionUtils.exists(branchReportClientSummaries, predicate))
+                return predicate;
+        }
+        return null;
+    }
 
-		DROP_OUT_RATE_MATCHER("DROP_OUT_RATE_MATCHER", new Predicate() {
-			public boolean evaluate(Object object) {
-				return ((BranchReportClientSummaryBO) object)
-						.isOfTypeDropoutRate();
-			}
-		}),
+    private static enum ClientSummaryPredicates implements Predicate {
 
-		PORTFLIO_AT_RISK_MATCHER("PORTFLIO_AT_RISK_MATCHER", new Predicate() {
-			public boolean evaluate(Object object) {
-				return ((BranchReportClientSummaryBO) object)
-						.isOfTypePortfolioAtRisk();
-			}
-		}),
+        DROP_OUT_RATE_MATCHER("DROP_OUT_RATE_MATCHER", new Predicate() {
+            public boolean evaluate(Object object) {
+                return ((BranchReportClientSummaryBO) object).isOfTypeDropoutRate();
+            }
+        }),
 
-		CENTER_COUNT_MATCHER("CENTER_COUNT_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0)
-						.isOfTypeCenterCount();
-			}
-		}),
+        PORTFLIO_AT_RISK_MATCHER("PORTFLIO_AT_RISK_MATCHER", new Predicate() {
+            public boolean evaluate(Object object) {
+                return ((BranchReportClientSummaryBO) object).isOfTypePortfolioAtRisk();
+            }
+        }),
 
-		GROUP_COUNT_MATCHER("GROUP_COUNT_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0)
-						.isOfTypeGroupCount();
-			}
-		}),
+        CENTER_COUNT_MATCHER("CENTER_COUNT_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeCenterCount();
+            }
+        }),
 
-		ACTIVE_MEMBER_MATCHER("ACTIVE_MEMBER_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0)
-						.isOfTypeActiveMembers();
-			}
-		}),
+        GROUP_COUNT_MATCHER("GROUP_COUNT_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeGroupCount();
+            }
+        }),
 
-		ACTIVE_BORROWERS_MATCHER("ACTIVE_BORROWERS_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0)
-						.isOfTypeActiveBorrowers();
-			}
-		}),
+        ACTIVE_MEMBER_MATCHER("ACTIVE_MEMBER_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeActiveMembers();
+            }
+        }),
 
-		REPLACEMENTS_MATCHER("REPLACEMENTS_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0)
-						.isOfTypeReplacements();
-			}
-		}),
+        ACTIVE_BORROWERS_MATCHER("ACTIVE_BORROWERS_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeActiveBorrowers();
+            }
+        }),
 
-		SAVING_ACCOUNT_DORMANT_COUNT_MATCHER(
-				"SAVING_ACCOUNT_DORMANT_COUNT_MATCHER",
-				new Predicate() {
-					public boolean evaluate(Object arg0) {
-						return ((BranchReportClientSummaryBO) arg0)
-								.isOfTypeSavingAccountDormantCount();
-					}
-				}),
+        REPLACEMENTS_MATCHER("REPLACEMENTS_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeReplacements();
+            }
+        }),
 
-		LOAN_ACCOUNT_DORMANT_COUNT_MATCHER(
-				"LOAN_ACCOUNT_DORMANT_COUNT_MATCHER",
-				new Predicate() {
-					public boolean evaluate(Object arg0) {
-						return ((BranchReportClientSummaryBO) arg0)
-								.isOfTypeLoanAccountDormantCount();
-					}
-				}),
+        SAVING_ACCOUNT_DORMANT_COUNT_MATCHER("SAVING_ACCOUNT_DORMANT_COUNT_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeSavingAccountDormantCount();
+            }
+        }),
 
-		DROP_OUT_MATCHER("DROP_OUT_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0).isOfTypeDropOuts();
-			}
-		}),
+        LOAN_ACCOUNT_DORMANT_COUNT_MATCHER("LOAN_ACCOUNT_DORMANT_COUNT_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeLoanAccountDormantCount();
+            }
+        }),
 
-		ON_HOLD_MATCHER("ON_HOLD_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0).isOfTypeOnHolds();
-			}
-		}),
+        DROP_OUT_MATCHER("DROP_OUT_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeDropOuts();
+            }
+        }),
 
-		ACTIVE_SAVER_MATCHER("ACTIVE_SAVER_MATCHER", new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return ((BranchReportClientSummaryBO) arg0)
-						.isOfTypeActiveSavers();
-			}
-		});
+        ON_HOLD_MATCHER("ON_HOLD_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeOnHolds();
+            }
+        }),
 
-		private final String predicateName;
-		private final Predicate predicate;
+        ACTIVE_SAVER_MATCHER("ACTIVE_SAVER_MATCHER", new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return ((BranchReportClientSummaryBO) arg0).isOfTypeActiveSavers();
+            }
+        });
 
-		private ClientSummaryPredicates(String predicateName,
-				Predicate predicate) {
-			this.predicateName = predicateName;
-			this.predicate = predicate;
-		}
+        private final String predicateName;
+        private final Predicate predicate;
 
-		@Override
-		public String toString() {
-			return predicateName;
-		}
+        private ClientSummaryPredicates(String predicateName, Predicate predicate) {
+            this.predicateName = predicateName;
+            this.predicate = predicate;
+        }
 
-		public boolean evaluate(Object arg0) {
-			return predicate.evaluate(arg0);
-		}
-	}
+        @Override
+        public String toString() {
+            return predicateName;
+        }
+
+        public boolean evaluate(Object arg0) {
+            return predicate.evaluate(arg0);
+        }
+    }
 }

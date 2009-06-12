@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.struts.action;
 
 import java.sql.DatabaseMetaData;
@@ -43,33 +43,32 @@ import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SystemInfoAction extends BaseAction {
 
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		try {
-			DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
-			ServletContext context = request.getSession().getServletContext();
-			SystemInfo systemInfo = new SystemInfo(metaData, context, Localization.getInstance().getMainLocale(), true);
-			SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
-			return mapping.findForward(ActionForwards.load_success.toString());
-		} finally {
-			StaticHibernateUtil.closeSession();
-		}
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("systemInfoAction");
-		security.allow("load", SecurityConstants.CAN_VIEW_SYSTEM_INFO);
-		return security;
-	}
-	
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return new SystemInfoService();
-	}
-	
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        try {
+            DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
+            ServletContext context = request.getSession().getServletContext();
+            SystemInfo systemInfo = new SystemInfo(metaData, context, Localization.getInstance().getMainLocale(), true);
+            SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
+            return mapping.findForward(ActionForwards.load_success.toString());
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("systemInfoAction");
+        security.allow("load", SecurityConstants.CAN_VIEW_SYSTEM_INFO);
+        return security;
+    }
+
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return new SystemInfoService();
+    }
+
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 }

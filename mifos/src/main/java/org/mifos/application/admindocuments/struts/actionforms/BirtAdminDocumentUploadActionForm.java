@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admindocuments.struts.actionforms;
 
 import java.util.ArrayList;
@@ -44,162 +44,151 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
-	
-	private String accountTypeId;
-	private String accountTypeName;
-	private String adminiDocumentTitle;
-	protected FormFile file;
-	private String reportId;
-	private String isActive;
-	private String id;
-	private String name;
-	private String[] statusList;
-	public BirtAdminDocumentUploadActionForm() {
-		super();
-	}
 
+    private String accountTypeId;
+    private String accountTypeName;
+    private String adminiDocumentTitle;
+    protected FormFile file;
+    private String reportId;
+    private String isActive;
+    private String id;
+    private String name;
+    private String[] statusList;
 
-	public void clear() {
-		
-		this.accountTypeId=null;
-		this.accountTypeName=null;
-		this.adminiDocumentTitle=null;
-		this.file=null;
-		this.reportId=null;
-		this.isActive=null;
-		this.id=null;
-		this.name=null;
-	    statusList=null;	
-		}
+    public BirtAdminDocumentUploadActionForm() {
+        super();
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {	
-		String method = request.getParameter(Methods.method.toString());
+    public void clear() {
 
-		ActionErrors errors = new ActionErrors();
-		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
-			request.setAttribute(Constants.CURRENTFLOWKEY, request
-					.getParameter(Constants.CURRENTFLOWKEY));
-		if (method.equals(Methods.preview.toString()))
-		validateMethod(errors, Methods.preview.toString(), method);
-		else if (method.equals(Methods.editpreview.toString()))
-		validateMethod(errors, Methods.editpreview.toString(), method);
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-		}	
-		
-		return errors;
-	}
+        this.accountTypeId = null;
+        this.accountTypeName = null;
+        this.adminiDocumentTitle = null;
+        this.file = null;
+        this.reportId = null;
+        this.isActive = null;
+        this.id = null;
+        this.name = null;
+        statusList = null;
+    }
 
-	private void validateMethod(ActionErrors errors, String verifyMethod,
-			String methodFromRequest) {
-		if (methodFromRequest.equals(verifyMethod)) {
-			if (StringUtils.isNullOrEmpty(adminiDocumentTitle)) {
-				errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(
-						ReportsConstants.ERROR_TITLE));
-			}
-			if (StringUtils.isNullOrEmpty(accountTypeId)
-					|| this.getAccountTypeId().equals("-1")) {
-				errors.add(ReportsConstants.ERROR_ACCOUNTTYPE,
-						new ActionMessage(ReportsConstants.ERROR_ACCOUNTTYPE));
-			}
-			if (StringUtils.isNullOrEmpty(isActive)
-					|| this.getIsActive().equals("-1")) {
-				errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(
-						ReportsConstants.ERROR_STATUS));
-			}
-			if (this.statusList == null || this.statusList.length == 0) {
-				errors.add(ReportsConstants.ERROR_STATUSLIST, new ActionMessage(
-						ReportsConstants.ERROR_STATUSLIST));
-			}
-			if (methodFromRequest.equals(Methods.preview.toString())) {
-				if (file == null || !file.getFileName().endsWith(".rptdesign")) {
-					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
-							ReportsConstants.ERROR_FILE));
-				}
-				
-			}
-			if (methodFromRequest.equals(Methods.editpreview.toString())) {
-				if (file == null || StringUtils.isEmpty(file.getFileName())
-						|| !file.getFileName().endsWith(".rptdesign")) {
-					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
-							ReportsConstants.ERROR_FILE));
-				}
-			}
-		}
-	}
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        String method = request.getParameter(Methods.method.toString());
 
-	public String getAccountTypeId() {
-		return accountTypeId;
-	}
+        ActionErrors errors = new ActionErrors();
+        if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+            request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        if (method.equals(Methods.preview.toString()))
+            validateMethod(errors, Methods.preview.toString(), method);
+        else if (method.equals(Methods.editpreview.toString()))
+            validateMethod(errors, Methods.editpreview.toString(), method);
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", method);
+        }
 
-	public void setAccountTypeId(String accountTypeId) {
-		this.accountTypeId = accountTypeId;
-	}
+        return errors;
+    }
 
-	public String getAdminiDocumentTitle() {
-		return adminiDocumentTitle;
-	}
+    private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
+        if (methodFromRequest.equals(verifyMethod)) {
+            if (StringUtils.isNullOrEmpty(adminiDocumentTitle)) {
+                errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(ReportsConstants.ERROR_TITLE));
+            }
+            if (StringUtils.isNullOrEmpty(accountTypeId) || this.getAccountTypeId().equals("-1")) {
+                errors.add(ReportsConstants.ERROR_ACCOUNTTYPE, new ActionMessage(ReportsConstants.ERROR_ACCOUNTTYPE));
+            }
+            if (StringUtils.isNullOrEmpty(isActive) || this.getIsActive().equals("-1")) {
+                errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(ReportsConstants.ERROR_STATUS));
+            }
+            if (this.statusList == null || this.statusList.length == 0) {
+                errors.add(ReportsConstants.ERROR_STATUSLIST, new ActionMessage(ReportsConstants.ERROR_STATUSLIST));
+            }
+            if (methodFromRequest.equals(Methods.preview.toString())) {
+                if (file == null || !file.getFileName().endsWith(".rptdesign")) {
+                    errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
+                }
 
-	public void setAdminiDocumentTitle(String adminiDocumentTitle) {
-		this.adminiDocumentTitle = adminiDocumentTitle;
-	}
+            }
+            if (methodFromRequest.equals(Methods.editpreview.toString())) {
+                if (file == null || StringUtils.isEmpty(file.getFileName())
+                        || !file.getFileName().endsWith(".rptdesign")) {
+                    errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
+                }
+            }
+        }
+    }
 
-	public void setFile(FormFile file) {
-		this.file = file;
-	}
+    public String getAccountTypeId() {
+        return accountTypeId;
+    }
 
-	public FormFile getFile() {
-		return file;
-	}
+    public void setAccountTypeId(String accountTypeId) {
+        this.accountTypeId = accountTypeId;
+    }
 
-	public String getReportId() {
-		return reportId;
-	}
+    public String getAdminiDocumentTitle() {
+        return adminiDocumentTitle;
+    }
 
-	public void setReportId(String reportId) {
-		this.reportId = reportId;
-	}
+    public void setAdminiDocumentTitle(String adminiDocumentTitle) {
+        this.adminiDocumentTitle = adminiDocumentTitle;
+    }
 
-	public String getIsActive() {
-		return isActive;
-	}
+    public void setFile(FormFile file) {
+        this.file = file;
+    }
 
-	public void setIsActive(String isActive) {
-		this.isActive = isActive;
-	}
+    public FormFile getFile() {
+        return file;
+    }
 
-	public String[] getStatusList() {
-		return statusList;
-	}
+    public String getReportId() {
+        return reportId;
+    }
 
-	public void setStatusList(String[] statusList) {
-		this.statusList = statusList;
-	}
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getIsActive() {
+        return isActive;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String[] getStatusList() {
+        return statusList;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setStatusList(String[] statusList) {
+        this.statusList = statusList;
+    }
 
-	public String getAccountTypeName() {
-		return accountTypeName;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setAccountTypeName(String accountTypeName) {
-		this.accountTypeName = accountTypeName;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAccountTypeName() {
+        return accountTypeName;
+    }
+
+    public void setAccountTypeName(String accountTypeName) {
+        this.accountTypeName = accountTypeName;
+    }
 }

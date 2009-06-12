@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.admin.system;
 
 import java.io.IOException;
@@ -27,33 +27,33 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
 public class SvnRevision extends Properties {
-	private static final String REVISION = "versioninfo.revision";
-	private static final String BRANCH = "versioninfo.branch";
-	
-	public SvnRevision() {
-		this(FilePaths.SVN_REVISION_PROPERTYFILE);
-	}
-	
-	public SvnRevision(String versionFile) {
-		if (versionFile != null)
-			readVersionFile(versionFile);
-	}
+    private static final String REVISION = "versioninfo.revision";
+    private static final String BRANCH = "versioninfo.branch";
 
-	private void readVersionFile(String versionFile) {
-		try {
-			load(new ClassPathResource(versionFile).getInputStream());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public String getVersion() {
-		String revision = getProperty(REVISION);
-		return revision == null ? "unknown" : revision;
-	}
-	
-	public String getBranch() {
-		String branch = getProperty(BRANCH);
-		return branch == null ? "unknown" : branch;
-	}
+    public SvnRevision() {
+        this(FilePaths.SVN_REVISION_PROPERTYFILE);
+    }
+
+    public SvnRevision(String versionFile) {
+        if (versionFile != null)
+            readVersionFile(versionFile);
+    }
+
+    private void readVersionFile(String versionFile) {
+        try {
+            load(new ClassPathResource(versionFile).getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getVersion() {
+        String revision = getProperty(REVISION);
+        return revision == null ? "unknown" : revision;
+    }
+
+    public String getBranch() {
+        String branch = getProperty(BRANCH);
+        return branch == null ? "unknown" : branch;
+    }
 }

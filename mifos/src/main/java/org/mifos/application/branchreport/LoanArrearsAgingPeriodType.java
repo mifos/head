@@ -17,14 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.branchreport;
 
 import org.mifos.framework.hibernate.IntEnumUserType;
 
-public class LoanArrearsAgingPeriodType extends
-		IntEnumUserType<LoanArrearsAgingPeriod> {
-	public LoanArrearsAgingPeriodType() {
-		super(LoanArrearsAgingPeriod.class, LoanArrearsAgingPeriod.values());
-	}
+public class LoanArrearsAgingPeriodType extends IntEnumUserType<LoanArrearsAgingPeriod> {
+    public LoanArrearsAgingPeriodType() {
+        super(LoanArrearsAgingPeriod.class, LoanArrearsAgingPeriod.values());
+    }
 }
