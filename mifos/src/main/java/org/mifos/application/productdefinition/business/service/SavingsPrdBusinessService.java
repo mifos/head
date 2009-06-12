@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business.service;
 
 import java.util.List;
@@ -38,65 +38,58 @@ import org.mifos.framework.security.util.UserContext;
 
 public class SavingsPrdBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public SavingsOfferingBO getSavingsProduct(Short prdOfferingId)
-			throws ServiceException {
-		try {
-			return new SavingsPrdPersistence().getSavingsProduct(prdOfferingId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) throws ServiceException {
+        try {
+            return new SavingsPrdPersistence().getSavingsProduct(prdOfferingId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<ProductCategoryBO> getActiveSavingsProductCategories()
-			throws ServiceException {
-		try {
-			return new PrdOfferingPersistence().getApplicableProductCategories(
-					ProductType.SAVINGS, PrdCategoryStatus.ACTIVE);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<ProductCategoryBO> getActiveSavingsProductCategories() throws ServiceException {
+        try {
+            return new PrdOfferingPersistence().getApplicableProductCategories(ProductType.SAVINGS,
+                    PrdCategoryStatus.ACTIVE);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes()
-			throws ServiceException {
-		try {
-			return new SavingsPrdPersistence()
-					.getSavingsApplicableRecurrenceTypes();
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes() throws ServiceException {
+        try {
+            return new SavingsPrdPersistence().getSavingsApplicableRecurrenceTypes();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<SavingsOfferingBO> getAllSavingsProducts()
-			throws ServiceException {
-		try {
-			return new SavingsPrdPersistence().getAllSavingsProducts();
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<SavingsOfferingBO> getAllSavingsProducts() throws ServiceException {
+        try {
+            return new SavingsPrdPersistence().getAllSavingsProducts();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId)
-			throws ServiceException {
-		try {
-			return new PrdOfferingPersistence().getApplicablePrdStatus(
-					ProductType.SAVINGS, localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+    public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId) throws ServiceException {
+        try {
+            return new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.SAVINGS, localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
 
-	}
-	
-	public Short retrieveDormancyDays() throws ServiceException{
-		try{
-			return new SavingsPrdPersistence().retrieveDormancyDays();
-		}catch (PersistenceException pe){
-			throw new ServiceException(pe);
-		}
-	}
+    }
+
+    public Short retrieveDormancyDays() throws ServiceException {
+        try {
+            return new SavingsPrdPersistence().retrieveDormancyDays();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 import java.util.Date;
@@ -33,15 +33,15 @@ public class ClientAttendanceBO extends BusinessObject {
 
     private static final long serialVersionUID = -6373550605583206363L;
     private Integer id;
-	private Date meetingDate;
-	private CustomerBO customer;
-	private Short attendance;
+    private Date meetingDate;
+    private CustomerBO customer;
+    private Short attendance;
 
     public ClientAttendanceBO() {
         super();
     }
 
-	public ClientAttendanceBO(Integer id, Date meetingDate, Short attendance) {
+    public ClientAttendanceBO(Integer id, Date meetingDate, Short attendance) {
         super();
         this.id = id;
         this.attendance = attendance;
@@ -49,44 +49,43 @@ public class ClientAttendanceBO extends BusinessObject {
     }
 
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Short getAttendance() {
-		return attendance;
-	}
-	
-	public AttendanceType getAttendanceAsEnum() {
-		return AttendanceType.fromShort(attendance);
-	}
+    public Short getAttendance() {
+        return attendance;
+    }
 
-	public void setAttendance(Short attendance) {
-		this.attendance = attendance;
-	}
-	
-	public void setAttendance(AttendanceType type) {
-		setAttendance(type.getValue());
-	}
+    public AttendanceType getAttendanceAsEnum() {
+        return AttendanceType.fromShort(attendance);
+    }
 
-	public java.util.Date getMeetingDate() {
-		return meetingDate;
-	}
+    public void setAttendance(Short attendance) {
+        this.attendance = attendance;
+    }
 
-	public void setMeetingDate(java.util.Date meetingDate) {
-		this.meetingDate = meetingDate;
-	}
+    public void setAttendance(AttendanceType type) {
+        setAttendance(type.getValue());
+    }
 
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    public java.util.Date getMeetingDate() {
+        return meetingDate;
+    }
 
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-	}
+    public void setMeetingDate(java.util.Date meetingDate) {
+        this.meetingDate = meetingDate;
+    }
 
+    public CustomerBO getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerBO customer) {
+        this.customer = customer;
+    }
 
 }

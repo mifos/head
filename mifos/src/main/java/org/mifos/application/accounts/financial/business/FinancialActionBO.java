@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business;
 
 import java.util.Set;
@@ -30,19 +30,16 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FinancialActionBO extends MasterDataEntity {
 
+    public Set<COABO> getApplicableDebitCharts() throws FinancialException {
+        COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance().getGLAccountForAction(getId(),
+                FinancialConstants.DEBIT));
+        return chart.getAssociatedChartOfAccounts();
+    }
 
-	public Set<COABO> getApplicableDebitCharts() throws FinancialException {
-		COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance()
-				.getGLAccountForAction(getId(),
-						FinancialConstants.DEBIT));
-		return chart.getAssociatedChartOfAccounts();
-	}
-
-	public Set<COABO> getApplicableCreditCharts() throws FinancialException {
-		COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance()
-				.getGLAccountForAction(getId(),
-						FinancialConstants.CREDIT));
-		return chart.getAssociatedChartOfAccounts();
-	}
+    public Set<COABO> getApplicableCreditCharts() throws FinancialException {
+        COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance().getGLAccountForAction(getId(),
+                FinancialConstants.CREDIT));
+        return chart.getAssociatedChartOfAccounts();
+    }
 
 }

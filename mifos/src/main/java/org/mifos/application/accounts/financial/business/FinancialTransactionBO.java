@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business;
 
 import java.util.Date;
@@ -31,139 +31,130 @@ import org.mifos.framework.util.helpers.Money;
 
 public class FinancialTransactionBO extends BusinessObject {
 
-	private final Integer trxnId;
+    private final Integer trxnId;
 
-	private final AccountTrxnEntity accountTrxn;
+    private final AccountTrxnEntity accountTrxn;
 
-	private final FinancialTransactionBO relatedFinancialTrxn;
+    private final FinancialTransactionBO relatedFinancialTrxn;
 
-	private final FinancialActionBO financialAction;
+    private final FinancialActionBO financialAction;
 
-	private final GLCodeEntity glcode;
+    private final GLCodeEntity glcode;
 
-	private final Date actionDate;
+    private final Date actionDate;
 
-	private final Date postedDate;
+    private final Date postedDate;
 
-	private final PersonnelBO postedBy;
+    private final PersonnelBO postedBy;
 
-	private final Short accountingUpdated;
+    private final Short accountingUpdated;
 
-	private final Money postedAmount;
+    private final Money postedAmount;
 
-	private final Money balanceAmount;
+    private final Money balanceAmount;
 
-	private final String notes;
+    private final String notes;
 
-	private final Short debitCreditFlag;
+    private final Short debitCreditFlag;
 
-	protected FinancialTransactionBO() {
-		this.trxnId = null;
-		this.accountTrxn = null;
-		this.relatedFinancialTrxn = null;
-		this.financialAction = null;
-		this.glcode = null;
-		this.actionDate = null;
-		this.postedDate = null;
-		this.postedBy = null;
-		this.accountingUpdated = null;
-		this.postedAmount = null;
-		this.balanceAmount = null;
-		this.notes = null;
-		this.debitCreditFlag = null;
-	}
+    protected FinancialTransactionBO() {
+        this.trxnId = null;
+        this.accountTrxn = null;
+        this.relatedFinancialTrxn = null;
+        this.financialAction = null;
+        this.glcode = null;
+        this.actionDate = null;
+        this.postedDate = null;
+        this.postedBy = null;
+        this.accountingUpdated = null;
+        this.postedAmount = null;
+        this.balanceAmount = null;
+        this.notes = null;
+        this.debitCreditFlag = null;
+    }
 
-	public FinancialTransactionBO(AccountTrxnEntity accountTrxn,
-			FinancialTransactionBO relatedFinancialTrxn,
-			FinancialActionBO financialAction, GLCodeEntity glcode,
-			Date actionDate, PersonnelBO postedBy, Short accountingUpdated,
-			Money postedAmount, String notes, Short debitCreditFlag) {
-		this.trxnId = null;
-		this.accountTrxn = accountTrxn;
-		this.relatedFinancialTrxn = relatedFinancialTrxn;
-		this.financialAction = financialAction;
-		this.glcode = glcode;
-		this.actionDate = actionDate;
-		this.postedDate = new DateTimeService().getCurrentJavaDateTime();
-		this.postedBy = postedBy;
-		this.accountingUpdated = accountingUpdated;
-		this.postedAmount = postedAmount;
-		this.balanceAmount = postedAmount;
-		this.notes = notes;
-		this.debitCreditFlag = debitCreditFlag;
-	}
+    public FinancialTransactionBO(AccountTrxnEntity accountTrxn, FinancialTransactionBO relatedFinancialTrxn,
+            FinancialActionBO financialAction, GLCodeEntity glcode, Date actionDate, PersonnelBO postedBy,
+            Short accountingUpdated, Money postedAmount, String notes, Short debitCreditFlag) {
+        this.trxnId = null;
+        this.accountTrxn = accountTrxn;
+        this.relatedFinancialTrxn = relatedFinancialTrxn;
+        this.financialAction = financialAction;
+        this.glcode = glcode;
+        this.actionDate = actionDate;
+        this.postedDate = new DateTimeService().getCurrentJavaDateTime();
+        this.postedBy = postedBy;
+        this.accountingUpdated = accountingUpdated;
+        this.postedAmount = postedAmount;
+        this.balanceAmount = postedAmount;
+        this.notes = notes;
+        this.debitCreditFlag = debitCreditFlag;
+    }
 
-	public boolean isDebitEntry() {
-		return this.debitCreditFlag.equals(FinancialConstants.DEBIT.getValue());
-	}
+    public boolean isDebitEntry() {
+        return this.debitCreditFlag.equals(FinancialConstants.DEBIT.getValue());
+    }
 
-	public boolean isCreditEntry() {
-		return this.debitCreditFlag.equals(FinancialConstants.CREDIT.getValue());
-	}
+    public boolean isCreditEntry() {
+        return this.debitCreditFlag.equals(FinancialConstants.CREDIT.getValue());
+    }
 
-	public Short getDebitCreditFlag() {
-		return debitCreditFlag;
-	}
+    public Short getDebitCreditFlag() {
+        return debitCreditFlag;
+    }
 
-	public String getNotes() {
-		return notes;
-	}
+    public String getNotes() {
+        return notes;
+    }
 
-	public Short getAccountingUpdated() {
-		return accountingUpdated;
-	}
+    public Short getAccountingUpdated() {
+        return accountingUpdated;
+    }
 
-	public Date getActionDate() {
-		return actionDate;
-	}
+    public Date getActionDate() {
+        return actionDate;
+    }
 
-	public FinancialActionBO getFinancialAction() {
-		return financialAction;
-	}
+    public FinancialActionBO getFinancialAction() {
+        return financialAction;
+    }
 
-	public GLCodeEntity getGlcode() {
-		return glcode;
-	}
+    public GLCodeEntity getGlcode() {
+        return glcode;
+    }
 
-	public Date getPostedDate() {
-		return postedDate;
-	}
+    public Date getPostedDate() {
+        return postedDate;
+    }
 
-	public FinancialTransactionBO getRelatedFinancialTrxn() {
-		return relatedFinancialTrxn;
-	}
+    public FinancialTransactionBO getRelatedFinancialTrxn() {
+        return relatedFinancialTrxn;
+    }
 
-	public Money getBalanceAmount() {
-		return balanceAmount;
-	}
+    public Money getBalanceAmount() {
+        return balanceAmount;
+    }
 
-	public Money getPostedAmount() {
-		return postedAmount;
-	}
+    public Money getPostedAmount() {
+        return postedAmount;
+    }
 
-	public Integer getTrxnId() {
-		return trxnId;
-	}
+    public Integer getTrxnId() {
+        return trxnId;
+    }
 
-	public AccountTrxnEntity getAccountTrxn() {
-		return accountTrxn;
-	}
+    public AccountTrxnEntity getAccountTrxn() {
+        return accountTrxn;
+    }
 
-	public PersonnelBO getPostedBy() {
-		return postedBy;
-	}
+    public PersonnelBO getPostedBy() {
+        return postedBy;
+    }
 
     @Override
-	public String toString() {
-        return "{" +
-                trxnId + ", " +
-                actionDate + ", " +
-                postedDate + ", " +
-                postedAmount + ", " +
-                balanceAmount + ", " +
-                postedBy + ", " +
-                glcode + ", " +
-                debitCreditFlag + "}";
+    public String toString() {
+        return "{" + trxnId + ", " + actionDate + ", " + postedDate + ", " + postedAmount + ", " + balanceAmount + ", "
+                + postedBy + ", " + glcode + ", " + debitCreditFlag + "}";
 
     }
 }

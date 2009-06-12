@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.persistence;
 
 import static org.mifos.application.NamedQueryConstants.COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA;
@@ -38,73 +38,67 @@ import org.mifos.framework.persistence.Persistence;
 
 public class CollectionSheetReportPersistence extends Persistence {
 
-	private static final String ALL_VALUE = "ALL";
+    private static final String ALL_VALUE = "ALL";
 
-	public List<CollectionSheetReportData> extractReportData(Integer branchId,
-			Date meetingDate, Integer personnelId, Integer centerId)
-			throws PersistenceException {
-		Map<String, Object> params = populateCommonParams(branchId, meetingDate);
-		params.put(PERSONNEL_ID, personnelId);
-		params.put(CENTER_ID, centerId);
-		return runQueryAndConvertResult(params);
-	}
+    public List<CollectionSheetReportData> extractReportData(Integer branchId, Date meetingDate, Integer personnelId,
+            Integer centerId) throws PersistenceException {
+        Map<String, Object> params = populateCommonParams(branchId, meetingDate);
+        params.put(PERSONNEL_ID, personnelId);
+        params.put(CENTER_ID, centerId);
+        return runQueryAndConvertResult(params);
+    }
 
-	public List<CollectionSheetReportData> extractReportDataAllLoanOfficersOneCenter(
-			Integer branchId, java.util.Date meetingDate, Integer centerId)
-			throws PersistenceException {
-		Map<String, Object> params = populateCommonParams(branchId, meetingDate);
-		setAllPersonnelParameter(params);
-		params.put(CENTER_ID, centerId);
-		return runQueryAndConvertResult(params);
-	}
+    public List<CollectionSheetReportData> extractReportDataAllLoanOfficersOneCenter(Integer branchId,
+            java.util.Date meetingDate, Integer centerId) throws PersistenceException {
+        Map<String, Object> params = populateCommonParams(branchId, meetingDate);
+        setAllPersonnelParameter(params);
+        params.put(CENTER_ID, centerId);
+        return runQueryAndConvertResult(params);
+    }
 
-	public List<CollectionSheetReportData> extractReportDataAllLoanOfficersAllCenters(
-			Integer branchId, java.util.Date meetingDate)
-			throws PersistenceException {
-		Map<String, Object> params = populateCommonParams(branchId, meetingDate);
-		setAllPersonnelParameter(params);
-		setAllCentersParameter(params);
-		return runQueryAndConvertResult(params);
-	}
+    public List<CollectionSheetReportData> extractReportDataAllLoanOfficersAllCenters(Integer branchId,
+            java.util.Date meetingDate) throws PersistenceException {
+        Map<String, Object> params = populateCommonParams(branchId, meetingDate);
+        setAllPersonnelParameter(params);
+        setAllCentersParameter(params);
+        return runQueryAndConvertResult(params);
+    }
 
-	public List<CollectionSheetReportData> extractReportDataAllCentersUnderLoanOfficer(
-			Integer branchId, java.util.Date meetingDate, Integer loanOfficer)
-			throws PersistenceException {
-		Map<String, Object> params = populateCommonParams(branchId, meetingDate);
-		params.put(PERSONNEL_ID, loanOfficer);
-		setAllCentersParameter(params);
-		return runQueryAndConvertResult(params);
-	}
+    public List<CollectionSheetReportData> extractReportDataAllCentersUnderLoanOfficer(Integer branchId,
+            java.util.Date meetingDate, Integer loanOfficer) throws PersistenceException {
+        Map<String, Object> params = populateCommonParams(branchId, meetingDate);
+        params.put(PERSONNEL_ID, loanOfficer);
+        setAllCentersParameter(params);
+        return runQueryAndConvertResult(params);
+    }
 
-	List<CollectionSheetReportData> convertResultToDTO(List<Object[]> results) {
-		List<CollectionSheetReportData> result = new ArrayList<CollectionSheetReportData>();
-		for (Object[] objects : results) {
-			result.add(new CollectionSheetReportData(objects));
-		}
-		return result;
-	}
+    List<CollectionSheetReportData> convertResultToDTO(List<Object[]> results) {
+        List<CollectionSheetReportData> result = new ArrayList<CollectionSheetReportData>();
+        for (Object[] objects : results) {
+            result.add(new CollectionSheetReportData(objects));
+        }
+        return result;
+    }
 
-	private Object setAllCentersParameter(Map<String, Object> params) {
-		return params.put(CENTER_ID, ALL_VALUE);
-	}
+    private Object setAllCentersParameter(Map<String, Object> params) {
+        return params.put(CENTER_ID, ALL_VALUE);
+    }
 
-	private Object setAllPersonnelParameter(Map<String, Object> params) {
-		return params
-				.put(PERSONNEL_ID, ALL_VALUE);
-	}
+    private Object setAllPersonnelParameter(Map<String, Object> params) {
+        return params.put(PERSONNEL_ID, ALL_VALUE);
+    }
 
-	private List<CollectionSheetReportData> runQueryAndConvertResult(
-			Map<String, Object> params) throws PersistenceException {
-		List<Object[]> results = executeNamedQuery(
-				COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA, params);
-		return convertResultToDTO(results);
-	}
+    private List<CollectionSheetReportData> runQueryAndConvertResult(Map<String, Object> params)
+            throws PersistenceException {
+        List<Object[]> results = executeNamedQuery(COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA, params);
+        return convertResultToDTO(results);
+    }
 
-	private Map<String, Object> populateCommonParams(Integer branchId, Date meetingDate) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put(BRANCH_ID, branchId);
-		params.put(MEETING_DATE, meetingDate);
-		return params;
-	}
+    private Map<String, Object> populateCommonParams(Integer branchId, Date meetingDate) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(BRANCH_ID, branchId);
+        params.put(MEETING_DATE, meetingDate);
+        return params;
+    }
 
 }

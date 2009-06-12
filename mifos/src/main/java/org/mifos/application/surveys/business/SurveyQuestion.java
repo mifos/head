@@ -17,75 +17,75 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys.business;
 
 import java.io.Serializable;
 
 public class SurveyQuestion implements Serializable, Comparable<SurveyQuestion> {
-	private int surveyQuestionId;
-	
-	private int mandatory;
-	
-	private Question question;
-	
-	private Survey survey;
-	
-	private Integer order;
-	
-	public SurveyQuestion() {
-	}
+    private int surveyQuestionId;
 
-	public SurveyQuestion(int id, boolean mandatory) {
-		surveyQuestionId = id;
-		setMandatory(mandatory);
-	}
+    private int mandatory;
 
-	public Question getQuestion() {
-		return question;
-	}
+    private Question question;
 
-	public void setQuestion(Question question) {
-		this.question = question;
-	}
-	
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
-	}
+    private Survey survey;
 
-	public Survey getSurvey() {
-		return survey;
-	}
+    private Integer order;
 
-	public int getMandatory() {
-		return mandatory;
-	}
+    public SurveyQuestion() {
+    }
 
-	public void setMandatory(int mandatory) {
-		this.mandatory = mandatory;
-	}
-	
-	public void setMandatory(boolean mandatory) {
-		this.mandatory = mandatory ? 1 : 0;
-	}
+    public SurveyQuestion(int id, boolean mandatory) {
+        surveyQuestionId = id;
+        setMandatory(mandatory);
+    }
 
-	public int getSurveyQuestionId() {
-		return surveyQuestionId;
-	}
+    public Question getQuestion() {
+        return question;
+    }
 
-	public void setSurveyQuestionId(int surveyQuestionId) {
-		this.surveyQuestionId = surveyQuestionId;
-	}
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
 
-	public void setOrder(int order) {
-		this.order = new Integer(order);
-	}
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+    }
 
-	public Integer getOrder() {
-		return order;
-	}
-	
-	public int compareTo(SurveyQuestion o) {
-		return getOrder() - o.getOrder();
-	}
+    public Survey getSurvey() {
+        return survey;
+    }
+
+    public int getMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(int mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory ? 1 : 0;
+    }
+
+    public int getSurveyQuestionId() {
+        return surveyQuestionId;
+    }
+
+    public void setSurveyQuestionId(int surveyQuestionId) {
+        this.surveyQuestionId = surveyQuestionId;
+    }
+
+    public void setOrder(int order) {
+        this.order = new Integer(order);
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public int compareTo(SurveyQuestion o) {
+        return getOrder() - o.getOrder();
+    }
 }

@@ -17,11 +17,11 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.business.PersistentObject;
 
-public class CustomerPerformanceHistory extends PersistentObject{
+public class CustomerPerformanceHistory extends PersistentObject {
 
 }

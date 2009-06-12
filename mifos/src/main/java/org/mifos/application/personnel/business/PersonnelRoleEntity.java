@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.business;
 
 import org.mifos.application.rolesandpermission.business.RoleBO;
@@ -25,37 +25,37 @@ import org.mifos.framework.business.PersistentObject;
 
 public class PersonnelRoleEntity extends PersistentObject {
 
-	private final Integer personnelRoleId;
+    private final Integer personnelRoleId;
 
-	private final RoleBO role;
+    private final RoleBO role;
 
-	private final PersonnelBO personnel;
+    private final PersonnelBO personnel;
 
-	public PersonnelRoleEntity(RoleBO role, PersonnelBO personnel) {
-		super();
-		this.role = role;
-		this.personnel = personnel;
-		this.personnelRoleId = null;
-	}
+    public PersonnelRoleEntity(RoleBO role, PersonnelBO personnel) {
+        super();
+        this.role = role;
+        this.personnel = personnel;
+        this.personnelRoleId = null;
+    }
 
-	protected PersonnelRoleEntity() {
-		super();
-		this.personnelRoleId = null;
-		this.personnel = null;
-		this.role = null;
+    protected PersonnelRoleEntity() {
+        super();
+        this.personnelRoleId = null;
+        this.personnel = null;
+        this.role = null;
 
-	}
+    }
 
-	public Integer getPersonnelRoleId() {
-		return personnelRoleId;
-	}
+    public Integer getPersonnelRoleId() {
+        return personnelRoleId;
+    }
 
-	public RoleBO getRole() {
-		return role;
-	}
+    public RoleBO getRole() {
+        return role;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
 }

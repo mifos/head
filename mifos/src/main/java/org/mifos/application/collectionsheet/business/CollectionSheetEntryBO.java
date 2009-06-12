@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import java.sql.Date;
@@ -51,118 +51,117 @@ public class CollectionSheetEntryBO extends BusinessObject {
 
     private CustomerPersistence customerPersistenceService;
     private ClientService clientService;
-	private PersonnelView loanOfficer;
-	private OfficeView office;
-	private PaymentTypeView paymentType;
-	private CollectionSheetEntryView bulkEntryParent;
-	private String receiptId;
-	private Date receiptDate;
-	private Date transactionDate;
-	private List<PrdOfferingBO> loanProducts;
-	private List<PrdOfferingBO> savingsProducts;
-	private int totalCustomers;
+    private PersonnelView loanOfficer;
+    private OfficeView office;
+    private PaymentTypeView paymentType;
+    private CollectionSheetEntryView bulkEntryParent;
+    private String receiptId;
+    private Date receiptDate;
+    private Date transactionDate;
+    private List<PrdOfferingBO> loanProducts;
+    private List<PrdOfferingBO> savingsProducts;
+    private int totalCustomers;
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
+    public CollectionSheetEntryBO() {
+        super();
+        customerPersistenceService = new CustomerPersistence();
+        clientService = new StandardClientService();
+    }
 
-	public CollectionSheetEntryBO() {
-		super();
-		customerPersistenceService = new CustomerPersistence();
-		clientService = new StandardClientService();
-	}
+    public CollectionSheetEntryBO(UserContext userContext) {
+        super(userContext);
+        customerPersistenceService = new CustomerPersistence();
+    }
 
-	public CollectionSheetEntryBO(UserContext userContext) {
-		super(userContext);
-		customerPersistenceService = new CustomerPersistence();
-	}
+    public CollectionSheetEntryView getBulkEntryParent() {
+        return bulkEntryParent;
+    }
 
-	public CollectionSheetEntryView getBulkEntryParent() {
-		return bulkEntryParent;
-	}
+    public void setBulkEntryParent(CollectionSheetEntryView bulkEntryParent) {
+        this.bulkEntryParent = bulkEntryParent;
+    }
 
-	public void setBulkEntryParent(CollectionSheetEntryView bulkEntryParent) {
-		this.bulkEntryParent = bulkEntryParent;
-	}
+    public PersonnelView getLoanOfficer() {
+        return loanOfficer;
+    }
 
-	public PersonnelView getLoanOfficer() {
-		return loanOfficer;
-	}
+    public void setLoanOfficer(PersonnelView loanOfficer) {
+        this.loanOfficer = loanOfficer;
+    }
 
-	public void setLoanOfficer(PersonnelView loanOfficer) {
-		this.loanOfficer = loanOfficer;
-	}
+    public OfficeView getOffice() {
+        return office;
+    }
 
-	public OfficeView getOffice() {
-		return office;
-	}
+    public void setOffice(OfficeView office) {
+        this.office = office;
+    }
 
-	public void setOffice(OfficeView office) {
-		this.office = office;
-	}
+    public PaymentTypeView getPaymentType() {
+        return paymentType;
+    }
 
-	public PaymentTypeView getPaymentType() {
-		return paymentType;
-	}
+    public void setPaymentType(PaymentTypeView paymentType) {
+        this.paymentType = paymentType;
+    }
 
-	public void setPaymentType(PaymentTypeView paymentType) {
-		this.paymentType = paymentType;
-	}
+    public Date getReceiptDate() {
+        return receiptDate;
+    }
 
-	public Date getReceiptDate() {
-		return receiptDate;
-	}
+    public void setReceiptDate(Date receiptDate) {
+        this.receiptDate = receiptDate;
+    }
 
-	public void setReceiptDate(Date receiptDate) {
-		this.receiptDate = receiptDate;
-	}
+    public String getReceiptId() {
+        return receiptId;
+    }
 
-	public String getReceiptId() {
-		return receiptId;
-	}
+    public void setReceiptId(String receiptId) {
+        this.receiptId = receiptId;
+    }
 
-	public void setReceiptId(String receiptId) {
-		this.receiptId = receiptId;
-	}
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
 
-	public Date getTransactionDate() {
-		return transactionDate;
-	}
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
 
-	public void setTransactionDate(Date transactionDate) {
-		this.transactionDate = transactionDate;
-	}
+    public List<PrdOfferingBO> getLoanProducts() {
+        return loanProducts;
+    }
 
-	public List<PrdOfferingBO> getLoanProducts() {
-		return loanProducts;
-	}
+    public void setLoanProducts(List<PrdOfferingBO> loanProducts) {
+        this.loanProducts = loanProducts;
+    }
 
-	public void setLoanProducts(List<PrdOfferingBO> loanProducts) {
-		this.loanProducts = loanProducts;
-	}
+    public List<PrdOfferingBO> getSavingsProducts() {
+        return savingsProducts;
+    }
 
-	public List<PrdOfferingBO> getSavingsProducts() {
-		return savingsProducts;
-	}
+    public void setSavingsProducts(List<PrdOfferingBO> savingsProducts) {
+        this.savingsProducts = savingsProducts;
+    }
 
-	public void setSavingsProducts(List<PrdOfferingBO> savingsProducts) {
-		this.savingsProducts = savingsProducts;
-	}
+    public int getTotalCustomers() {
+        return totalCustomers;
+    }
 
-	public int getTotalCustomers() {
-		return totalCustomers;
-	}
+    public void setTotalCustomers(int totalCustomers) {
+        this.totalCustomers = totalCustomers;
+    }
 
-	public void setTotalCustomers(int totalCustomers) {
-		this.totalCustomers = totalCustomers;
-	}
-
-	/**
-	 * This method populates all the data required for the BulkEntry. This
-	 * method retrieves all the customers and there respective accounts. This
-	 * forms a BulkEntry object which can be used to display data in BulkEntry
-	 * page.
-	 * 
-	 */
-	public void buildBulkEntryView(CustomerView parentCustomer) throws SystemException, ApplicationException {
+    /**
+     * This method populates all the data required for the BulkEntry. This
+     * method retrieves all the customers and there respective accounts. This
+     * forms a BulkEntry object which can be used to display data in BulkEntry
+     * page.
+     * 
+     */
+    public void buildBulkEntryView(CustomerView parentCustomer) throws SystemException, ApplicationException {
         BulkEntryPersistenceService bulkEntryPersistenceService = new BulkEntryPersistenceService();
         List<CustomerBO> allChildNodes = retrieveActiveCustomersUnderParent(parentCustomer.getCustomerSearchId(),
                 office.getOfficeId());
@@ -202,134 +201,110 @@ public class CollectionSheetEntryBO extends BusinessObject {
         return customerPersistenceService.getClientsUnderParent(searchId, office.getOfficeId());
     }
 
-    private List<CustomerBO> retrieveActiveCustomersUnderParent(
-            String searchId, Short officeId) throws SystemException,
-            ApplicationException {
+    private List<CustomerBO> retrieveActiveCustomersUnderParent(String searchId, Short officeId)
+            throws SystemException, ApplicationException {
         return customerPersistenceService.getCustomersUnderParent(searchId, officeId);
     }
 
-	public void setBulkEntryDataView(BulkEntryDataView bulkEntryDataView) {
-		if (null == bulkEntryParent || null == bulkEntryDataView) {
-			return;
-		}
-		if (bulkEntryParent.getCustomerDetail().getCustomerLevelId().equals(
-				CustomerLevel.CENTER.getValue())) {
-			populateCenter(bulkEntryDataView);
-		} else {
-			populateGroup(bulkEntryDataView);
-		}
-	}
+    public void setBulkEntryDataView(BulkEntryDataView bulkEntryDataView) {
+        if (null == bulkEntryParent || null == bulkEntryDataView) {
+            return;
+        }
+        if (bulkEntryParent.getCustomerDetail().getCustomerLevelId().equals(CustomerLevel.CENTER.getValue())) {
+            populateCenter(bulkEntryDataView);
+        } else {
+            populateGroup(bulkEntryDataView);
+        }
+    }
 
-	private void populateCenter(BulkEntryDataView bulkEntryDataView) {
-		List<CollectionSheetEntryView> bulkEntryChildrenViews = bulkEntryParent
-				.getCollectionSheetEntryChildren();
-		int rowIndex = 0;
-		for (CollectionSheetEntryView bulkEntryChildernView : bulkEntryChildrenViews) {
-			List<CollectionSheetEntryView> bulkEntrySubChildrenViews = bulkEntryChildernView
-					.getCollectionSheetEntryChildren();
-			for (CollectionSheetEntryView bulkEntrySubChildView : bulkEntrySubChildrenViews) {
-				setLoanAmountEntered(bulkEntrySubChildView, rowIndex,
-						bulkEntryDataView.getLoanAmountEntered(),
-						bulkEntryDataView.getDisbursementAmountEntered());
-				setSavingsAmountEntered(bulkEntrySubChildView, rowIndex,
-						bulkEntryDataView.getDepositAmountEntered(),
-						bulkEntryDataView.getWithDrawalAmountEntered());
-				setCustomerAccountAmountEntered(bulkEntrySubChildView,
-						rowIndex, bulkEntryDataView
-								.getCustomerAccountAmountEntered());
-				setClientAttendance(bulkEntrySubChildView, bulkEntryDataView
-						.getAttendance()[rowIndex]);
-				rowIndex++;
-			}
-			setLoanAmountEntered(bulkEntryChildernView, rowIndex,
-					bulkEntryDataView.getLoanAmountEntered(), bulkEntryDataView
-							.getDisbursementAmountEntered());
-			setSavingsAmountEntered(bulkEntryChildernView, rowIndex,
-					bulkEntryDataView.getDepositAmountEntered(),
-					bulkEntryDataView.getWithDrawalAmountEntered());
-			setCustomerAccountAmountEntered(bulkEntryChildernView, rowIndex,
-					bulkEntryDataView.getCustomerAccountAmountEntered());
-			rowIndex++;
-		}
-		setSavingsAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView
-				.getDepositAmountEntered(), bulkEntryDataView
-				.getWithDrawalAmountEntered());
-		setCustomerAccountAmountEntered(bulkEntryParent, rowIndex,
-				bulkEntryDataView.getCustomerAccountAmountEntered());
-	}
+    private void populateCenter(BulkEntryDataView bulkEntryDataView) {
+        List<CollectionSheetEntryView> bulkEntryChildrenViews = bulkEntryParent.getCollectionSheetEntryChildren();
+        int rowIndex = 0;
+        for (CollectionSheetEntryView bulkEntryChildernView : bulkEntryChildrenViews) {
+            List<CollectionSheetEntryView> bulkEntrySubChildrenViews = bulkEntryChildernView
+                    .getCollectionSheetEntryChildren();
+            for (CollectionSheetEntryView bulkEntrySubChildView : bulkEntrySubChildrenViews) {
+                setLoanAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView.getLoanAmountEntered(),
+                        bulkEntryDataView.getDisbursementAmountEntered());
+                setSavingsAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView.getDepositAmountEntered(),
+                        bulkEntryDataView.getWithDrawalAmountEntered());
+                setCustomerAccountAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView
+                        .getCustomerAccountAmountEntered());
+                setClientAttendance(bulkEntrySubChildView, bulkEntryDataView.getAttendance()[rowIndex]);
+                rowIndex++;
+            }
+            setLoanAmountEntered(bulkEntryChildernView, rowIndex, bulkEntryDataView.getLoanAmountEntered(),
+                    bulkEntryDataView.getDisbursementAmountEntered());
+            setSavingsAmountEntered(bulkEntryChildernView, rowIndex, bulkEntryDataView.getDepositAmountEntered(),
+                    bulkEntryDataView.getWithDrawalAmountEntered());
+            setCustomerAccountAmountEntered(bulkEntryChildernView, rowIndex, bulkEntryDataView
+                    .getCustomerAccountAmountEntered());
+            rowIndex++;
+        }
+        setSavingsAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView.getDepositAmountEntered(),
+                bulkEntryDataView.getWithDrawalAmountEntered());
+        setCustomerAccountAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView.getCustomerAccountAmountEntered());
+    }
 
-	private void populateGroup(BulkEntryDataView bulkEntryDataView) {
-		int rowIndex = 0;
-		List<CollectionSheetEntryView> bulkEntrySubChildrens = bulkEntryParent
-				.getCollectionSheetEntryChildren();
-		for (CollectionSheetEntryView bulkEntrySubChildView : bulkEntrySubChildrens) {
-			setLoanAmountEntered(bulkEntrySubChildView, rowIndex,
-					bulkEntryDataView.getLoanAmountEntered(), bulkEntryDataView
-							.getDisbursementAmountEntered());
-			setSavingsAmountEntered(bulkEntrySubChildView, rowIndex,
-					bulkEntryDataView.getDepositAmountEntered(),
-					bulkEntryDataView.getWithDrawalAmountEntered());
-			setCustomerAccountAmountEntered(bulkEntrySubChildView, rowIndex,
-					bulkEntryDataView.getCustomerAccountAmountEntered());
-			setClientAttendance(bulkEntrySubChildView, bulkEntryDataView
-					.getAttendance()[rowIndex]);
-			rowIndex++;
-		}
+    private void populateGroup(BulkEntryDataView bulkEntryDataView) {
+        int rowIndex = 0;
+        List<CollectionSheetEntryView> bulkEntrySubChildrens = bulkEntryParent.getCollectionSheetEntryChildren();
+        for (CollectionSheetEntryView bulkEntrySubChildView : bulkEntrySubChildrens) {
+            setLoanAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView.getLoanAmountEntered(),
+                    bulkEntryDataView.getDisbursementAmountEntered());
+            setSavingsAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView.getDepositAmountEntered(),
+                    bulkEntryDataView.getWithDrawalAmountEntered());
+            setCustomerAccountAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView
+                    .getCustomerAccountAmountEntered());
+            setClientAttendance(bulkEntrySubChildView, bulkEntryDataView.getAttendance()[rowIndex]);
+            rowIndex++;
+        }
 
-		setLoanAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView
-				.getLoanAmountEntered(), bulkEntryDataView
-				.getDisbursementAmountEntered());
-		setSavingsAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView
-				.getDepositAmountEntered(), bulkEntryDataView
-				.getWithDrawalAmountEntered());
-		setCustomerAccountAmountEntered(bulkEntryParent, rowIndex,
-				bulkEntryDataView.getCustomerAccountAmountEntered());
-	}
+        setLoanAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView.getLoanAmountEntered(), bulkEntryDataView
+                .getDisbursementAmountEntered());
+        setSavingsAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView.getDepositAmountEntered(),
+                bulkEntryDataView.getWithDrawalAmountEntered());
+        setCustomerAccountAmountEntered(bulkEntryParent, rowIndex, bulkEntryDataView.getCustomerAccountAmountEntered());
+    }
 
-	private void setLoanAmountEntered(CollectionSheetEntryView collectionSheetEntryView,
-			int rowIndex, String[][] loanAmountsEntered,
-			String[][] disBursementAmountEntered) {
-		int columnIndex = 0;
-		for (PrdOfferingBO prdOffering : loanProducts) {
-			String enteredAmountValue = loanAmountsEntered[rowIndex][columnIndex];
-			String disbursementAmountEntered = disBursementAmountEntered[rowIndex][columnIndex];
-			collectionSheetEntryView.setLoanAmountsEntered(prdOffering.getPrdOfferingId(),
-					enteredAmountValue, disbursementAmountEntered);
-			columnIndex++;
-		}
-	}
+    private void setLoanAmountEntered(CollectionSheetEntryView collectionSheetEntryView, int rowIndex,
+            String[][] loanAmountsEntered, String[][] disBursementAmountEntered) {
+        int columnIndex = 0;
+        for (PrdOfferingBO prdOffering : loanProducts) {
+            String enteredAmountValue = loanAmountsEntered[rowIndex][columnIndex];
+            String disbursementAmountEntered = disBursementAmountEntered[rowIndex][columnIndex];
+            collectionSheetEntryView.setLoanAmountsEntered(prdOffering.getPrdOfferingId(), enteredAmountValue,
+                    disbursementAmountEntered);
+            columnIndex++;
+        }
+    }
 
-	private void setSavingsAmountEntered(CollectionSheetEntryView collectionSheetEntryView,
-			int rowIndex, String[][] depositAmountsEntered,
-			String[][] withDrawalsAmountEntered) {
-		int columnIndex = 0;
-		for (PrdOfferingBO prdOffering : savingsProducts) {
-			String depositAmountEnteredValue = depositAmountsEntered[rowIndex][columnIndex];
-			String withDrawalAmountEnteredValue = withDrawalsAmountEntered[rowIndex][columnIndex];
-			if (depositAmountEnteredValue != null
-					|| withDrawalAmountEnteredValue != null) {
-				collectionSheetEntryView.setSavinsgAmountsEntered(prdOffering
-						.getPrdOfferingId(), depositAmountEnteredValue,
-						withDrawalAmountEnteredValue);
-			}
-			columnIndex++;
-		}
-	}
+    private void setSavingsAmountEntered(CollectionSheetEntryView collectionSheetEntryView, int rowIndex,
+            String[][] depositAmountsEntered, String[][] withDrawalsAmountEntered) {
+        int columnIndex = 0;
+        for (PrdOfferingBO prdOffering : savingsProducts) {
+            String depositAmountEnteredValue = depositAmountsEntered[rowIndex][columnIndex];
+            String withDrawalAmountEnteredValue = withDrawalsAmountEntered[rowIndex][columnIndex];
+            if (depositAmountEnteredValue != null || withDrawalAmountEnteredValue != null) {
+                collectionSheetEntryView.setSavinsgAmountsEntered(prdOffering.getPrdOfferingId(),
+                        depositAmountEnteredValue, withDrawalAmountEnteredValue);
+            }
+            columnIndex++;
+        }
+    }
 
-	private void setCustomerAccountAmountEntered(CollectionSheetEntryView collectionSheetEntryView,
-			int rowIndex, String[] customerAccountAmountEntered) {
-		String customerAccountAmountEnteredValue = customerAccountAmountEntered[rowIndex];
-		if (customerAccountAmountEnteredValue != null)
-			collectionSheetEntryView
-					.setCustomerAccountAmountEntered(customerAccountAmountEnteredValue);
-	}
+    private void setCustomerAccountAmountEntered(CollectionSheetEntryView collectionSheetEntryView, int rowIndex,
+            String[] customerAccountAmountEntered) {
+        String customerAccountAmountEnteredValue = customerAccountAmountEntered[rowIndex];
+        if (customerAccountAmountEnteredValue != null)
+            collectionSheetEntryView.setCustomerAccountAmountEntered(customerAccountAmountEnteredValue);
+    }
 
-	private void setClientAttendance(CollectionSheetEntryView collectionSheetEntryView,
-			String attendance) {
-		if (null != attendance && attendance.length() > 0) {
-			collectionSheetEntryView.setAttendence(Short.valueOf(attendance));
-		}
-	}
+    private void setClientAttendance(CollectionSheetEntryView collectionSheetEntryView, String attendance) {
+        if (null != attendance && attendance.length() > 0) {
+            collectionSheetEntryView.setAttendence(Short.valueOf(attendance));
+        }
+    }
 
     public CustomerPersistence getCustomerPersistenceService() {
         return this.customerPersistenceService;

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -30,31 +30,32 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class MeetingTypeEntity extends PersistentObject {
 
-	private Short meetingTypeId;
+    private Short meetingTypeId;
 
-	private String meetingPurpose;
+    private String meetingPurpose;
 
-	private String description;
+    private String description;
 
-	public MeetingTypeEntity(MeetingType meetingType) {
-		this.meetingTypeId = meetingType.getValue();
-	}
+    public MeetingTypeEntity(MeetingType meetingType) {
+        this.meetingTypeId = meetingType.getValue();
+    }
 
-	protected MeetingTypeEntity() {}
-	
-	public String getDescription() {
-		return description;
-	}
+    protected MeetingTypeEntity() {
+    }
 
-	public String getMeetingPurpose() {
-		return meetingPurpose;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public Short getMeetingTypeId() {
-		return meetingTypeId;
-	}
+    public String getMeetingPurpose() {
+        return meetingPurpose;
+    }
 
-	public MeetingType asEnum() {
-		return MeetingType.fromInt(meetingTypeId);
-	}	
+    public Short getMeetingTypeId() {
+        return meetingTypeId;
+    }
+
+    public MeetingType asEnum() {
+        return MeetingType.fromInt(meetingTypeId);
+    }
 }

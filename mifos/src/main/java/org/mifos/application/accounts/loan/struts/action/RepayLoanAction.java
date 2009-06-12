@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.sql.Date;
@@ -54,115 +54,100 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class RepayLoanAction extends BaseAction {
 
-	private LoanBusinessService loanBusinessService;
+    private LoanBusinessService loanBusinessService;
 
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	public RepayLoanAction() throws ServiceException {
-		loanBusinessService = new LoanBusinessService();
-	}
+    public RepayLoanAction() throws ServiceException {
+        loanBusinessService = new LoanBusinessService();
+    }
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return loanBusinessService;
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("repayLoanAction");
-		security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-		security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-		security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-		security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-		return security;
-	}
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return loanBusinessService;
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward loadRepayment(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		clearActionForm(form);
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info(
-				"Loading repay loan page");
-		String globalAccountNum = request.getParameter("globalAccountNum");
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		LoanBO loanBO = ((LoanBusinessService) getService())
-				.findBySystemId(globalAccountNum);
-		SessionUtils
-				.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, loanBO.getTotalEarlyRepayAmount(), request
-						);
-		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				persistence.getAcceptedPaymentTypesForATransaction(
-						uc.getLocaleId(),
-						TrxnTypes.loan_repayment.getValue()), request);
-		
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,loanBO,request);
-		return mapping.findForward(Constants.LOAD_SUCCESS);
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("repayLoanAction");
+        security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        return security;
+    }
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	@CloseSession
-	public ActionForward makeRepayment(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		SessionUtils.removeAttribute(
-				LoanConstants.TOTAL_REPAYMENT_AMOUNT,request);
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info(
-				"Performing loan repayment");
-				String globalAccountNum = request.getParameter("globalAccountNum");
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		LoanBO loanBOInSession = (LoanBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-		LoanBO loanBO = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
-		checkVersionMismatch(loanBOInSession.getVersionNo(),loanBO.getVersionNo());
-		RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
-		Date receiptDate = null;
-		if (repayLoanActionForm.getRecieptDate() != null
-				&& repayLoanActionForm.getRecieptDate() != "")
-			receiptDate = new Date(DateUtils.getLocaleDate(uc.getPreferredLocale(), repayLoanActionForm.getRecieptDate()).getTime());
-		loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(),
-				repayLoanActionForm.getReceiptNumber(), receiptDate,
-				repayLoanActionForm.getPaymentTypeId(), uc.getId());
-		return mapping.findForward(Constants.UPDATE_SUCCESS);
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        clearActionForm(form);
+        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info("Loading repay loan page");
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        LoanBO loanBO = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, loanBO.getTotalEarlyRepayAmount(), request);
+        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+        SessionUtils
+                .setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
+                        .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
+                        request);
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward preview(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(Constants.PREVIEW_SUCCESS);
-	}
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
+        return mapping.findForward(Constants.LOAD_SUCCESS);
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward previous(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(Constants.PREVIOUS_SUCCESS);
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    @CloseSession
+    public ActionForward makeRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
+        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info("Performing loan repayment");
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        LoanBO loanBO = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
+        checkVersionMismatch(loanBOInSession.getVersionNo(), loanBO.getVersionNo());
+        RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
+        Date receiptDate = null;
+        if (repayLoanActionForm.getRecieptDate() != null && repayLoanActionForm.getRecieptDate() != "")
+            receiptDate = new Date(DateUtils.getLocaleDate(uc.getPreferredLocale(),
+                    repayLoanActionForm.getRecieptDate()).getTime());
+        loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), repayLoanActionForm.getReceiptNumber(),
+                receiptDate, repayLoanActionForm.getPaymentTypeId(), uc.getId());
+        return mapping.findForward(Constants.UPDATE_SUCCESS);
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(Constants.PREVIEW_SUCCESS);
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		logger.debug("In RepayLoanAction::validate(), method: " + method);
-		String forward = null;
-		if (method != null && method.equals("preview"))
-			forward = ActionForwards.preview_failure.toString();
-		return mapping.findForward(forward);
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(Constants.PREVIOUS_SUCCESS);
+    }
 
-	private void clearActionForm(ActionForm form) {
-		RepayLoanActionForm actionForm = (RepayLoanActionForm) form;
-		actionForm.setReceiptNumber(null);
-		actionForm.setRecieptDate(null);
-		actionForm.setPaymentTypeId(null);
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        String method = (String) request.getAttribute("methodCalled");
+        logger.debug("In RepayLoanAction::validate(), method: " + method);
+        String forward = null;
+        if (method != null && method.equals("preview"))
+            forward = ActionForwards.preview_failure.toString();
+        return mapping.findForward(forward);
+    }
+
+    private void clearActionForm(ActionForm form) {
+        RepayLoanActionForm actionForm = (RepayLoanActionForm) form;
+        actionForm.setReceiptNumber(null);
+        actionForm.setRecieptDate(null);
+        actionForm.setPaymentTypeId(null);
+    }
 }

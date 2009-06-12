@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.util.helpers;
 
 import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
@@ -30,108 +30,101 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class MultipleLoanCreationViewHelper {
 
-	private String loanAmount;
+    private String loanAmount;
 
-	private String businessActivity;
+    private String businessActivity;
 
-	private LoanAmountOption loanAmountOption;
-	
-	private LoanOfferingInstallmentRange installmentOption;
+    private LoanAmountOption loanAmountOption;
 
-	private ClientBO client;
+    private LoanOfferingInstallmentRange installmentOption;
 
-	private String selected;
+    private ClientBO client;
 
-	public MultipleLoanCreationViewHelper(ClientBO client,
-			LoanAmountOption loanAmountOption, LoanOfferingInstallmentRange installmentOption) {
-		super();
-		this.client = client;
-		this.loanAmountOption = loanAmountOption;
-		this.installmentOption = installmentOption;
-		this.loanAmount = getDefaultLoanAmount().toString();
-	}
+    private String selected;
 
-	public MultipleLoanCreationViewHelper() {
-		this(null, null, null);
-	}
+    public MultipleLoanCreationViewHelper(ClientBO client, LoanAmountOption loanAmountOption,
+            LoanOfferingInstallmentRange installmentOption) {
+        super();
+        this.client = client;
+        this.loanAmountOption = loanAmountOption;
+        this.installmentOption = installmentOption;
+        this.loanAmount = getDefaultLoanAmount().toString();
+    }
 
-	public String getBusinessActivity() {
-		return businessActivity;
-	}
+    public MultipleLoanCreationViewHelper() {
+        this(null, null, null);
+    }
 
-	public void setBusinessActivity(String businessActivity) {
-		this.businessActivity = businessActivity;
-	}
+    public String getBusinessActivity() {
+        return businessActivity;
+    }
 
-	public Integer getClientId() {
-		return client.getCustomerId();
-	}
+    public void setBusinessActivity(String businessActivity) {
+        this.businessActivity = businessActivity;
+    }
 
-	public String getLoanAmount() {
-		return loanAmount;
-	}
+    public Integer getClientId() {
+        return client.getCustomerId();
+    }
 
-	public void setLoanAmount(String loanAmount) {
-		this.loanAmount = loanAmount;
-	}
+    public String getLoanAmount() {
+        return loanAmount;
+    }
 
-	public String getClientName() {
-		return client.getDisplayName();
-	}
+    public void setLoanAmount(String loanAmount) {
+        this.loanAmount = loanAmount;
+    }
 
-	public boolean isLoanAmountInRange() {
-		return !StringUtils.isNullOrEmpty(this.loanAmount)
-				&& loanAmountOption.isInRange(
-						getDoubleValue(this.loanAmount));
-	}
+    public String getClientName() {
+        return client.getDisplayName();
+    }
 
-	public Double getMinLoanAmount() {
-		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
-				.getMinLoanAmount();
-	}
+    public boolean isLoanAmountInRange() {
+        return !StringUtils.isNullOrEmpty(this.loanAmount)
+                && loanAmountOption.isInRange(getDoubleValue(this.loanAmount));
+    }
 
-	public Double getMaxLoanAmount() {
-		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
-				.getMaxLoanAmount();
-	}
-	
-	public Double getDefaultLoanAmount() {
-		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
-				.getDefaultLoanAmount();
-	}
+    public Double getMinLoanAmount() {
+        return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption.getMinLoanAmount();
+    }
 
-	public Short getDefaultNoOfInstall() {
-		return installmentOption == null ? SHORT_ZERO : installmentOption
-				.getDefaultNoOfInstall();
-	}
+    public Double getMaxLoanAmount() {
+        return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption.getMaxLoanAmount();
+    }
 
-	public Short getMaxNoOfInstall() {
-		return installmentOption == null ? SHORT_ZERO : installmentOption
-				.getMaxNoOfInstall();
-	}
+    public Double getDefaultLoanAmount() {
+        return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption.getDefaultLoanAmount();
+    }
 
-	public Short getMinNoOfInstall() {
-		return installmentOption == null ? SHORT_ZERO : installmentOption
-				.getMinNoOfInstall();
-	}
+    public Short getDefaultNoOfInstall() {
+        return installmentOption == null ? SHORT_ZERO : installmentOption.getDefaultNoOfInstall();
+    }
 
-	public boolean isApplicable() {
-		return Boolean.valueOf(selected);
-	}
+    public Short getMaxNoOfInstall() {
+        return installmentOption == null ? SHORT_ZERO : installmentOption.getMaxNoOfInstall();
+    }
 
-	public String getSelected() {
-		return selected;
-	}
+    public Short getMinNoOfInstall() {
+        return installmentOption == null ? SHORT_ZERO : installmentOption.getMinNoOfInstall();
+    }
 
-	public void setSelected(String selected) {
-		this.selected = selected;
-	}
+    public boolean isApplicable() {
+        return Boolean.valueOf(selected);
+    }
 
-	public ClientBO getClient() {
-		return client;
-	}
+    public String getSelected() {
+        return selected;
+    }
 
-	public void resetSelected() {
-		this.selected = Boolean.FALSE.toString();
-	}
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
+    public ClientBO getClient() {
+        return client;
+    }
+
+    public void resetSelected() {
+        this.selected = Boolean.FALSE.toString();
+    }
 }

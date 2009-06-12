@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business.service;
 
 import java.util.Date;
@@ -33,28 +33,28 @@ public class ClientAttendanceDto implements DataTransferObject {
     private final LocalDate meetingDate;
     private AttendanceType attendance;
     private int row;
-	
+
     public ClientAttendanceDto(Integer customerId, Date meetingDate) {
         this.attendance = AttendanceType.PRESENT;
         this.meetingDate = new LocalDate(meetingDate);
         this.clientId = customerId;
     }
-    
-	public ClientAttendanceDto(Integer customerId, Date meetingDate, Short attendance) {
+
+    public ClientAttendanceDto(Integer customerId, Date meetingDate, Short attendance) {
         this.attendance = AttendanceType.fromShort(attendance);
         this.meetingDate = new LocalDate(meetingDate);
         this.clientId = customerId;
     }
-	
+
     public ClientAttendanceDto(Integer clientId, LocalDate meetingDate, AttendanceType attendance) {
         this.clientId = clientId;
         this.attendance = attendance;
         this.meetingDate = meetingDate;
     }
-    
-	public Short getAttendanceId() {
-		return attendance.getValue();
-	}
+
+    public Short getAttendanceId() {
+        return attendance.getValue();
+    }
 
     public Date getActionDate() {
         return meetingDate.toDateMidnight().toDate();
@@ -84,5 +84,4 @@ public class ClientAttendanceDto implements DataTransferObject {
         this.row = row;
     }
 
-    
 }

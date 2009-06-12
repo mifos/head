@@ -17,21 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.util.helpers;
 
 public enum Status {
 
-	INACTIVE(Short.valueOf("0")), ACTIVE(Short.valueOf("1"));
+    INACTIVE(Short.valueOf("0")), ACTIVE(Short.valueOf("1"));
 
-	Short value;
+    Short value;
 
-	Status(Short value) {
-		this.value = value;
-	}
+    Status(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
 }

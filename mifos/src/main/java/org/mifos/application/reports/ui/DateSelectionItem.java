@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.ui;
 
 import static org.mifos.application.reports.util.helpers.ReportsConstants.NA_DATE;
@@ -30,56 +30,55 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class DateSelectionItem implements Serializable {
 
-	public static final DateSelectionItem NA_MEETING_DATE = new DateSelectionItem(
-			NA_DATE, NOT_APPLICABLE_DISPLAY_NAME);
+    public static final DateSelectionItem NA_MEETING_DATE = new DateSelectionItem(NA_DATE, NOT_APPLICABLE_DISPLAY_NAME);
 
-	private Date date;
-	private String displayDate;
-	// For Hibernate
-	public DateSelectionItem() {
-		super();
-	}
+    private Date date;
+    private String displayDate;
 
-	public DateSelectionItem(Date date) {
-		this.date = date;
-	}
+    // For Hibernate
+    public DateSelectionItem() {
+        super();
+    }
 
-	public DateSelectionItem(Date date, String display) {
-		this.date = date;
-		this.displayDate = display;
-	}
+    public DateSelectionItem(Date date) {
+        this.date = date;
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    public DateSelectionItem(Date date, String display) {
+        this.date = date;
+        this.displayDate = display;
+    }
 
-	public String getDisplayDate() {
-		return displayDate != null ? displayDate : DateUtils.getLocalizedDateFormat().format(date);
-	}
+    public Date getDate() {
+        return date;
+    }
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + ((date == null) ? 0 : date.hashCode());
-		return result;
-	}
+    public String getDisplayDate() {
+        return displayDate != null ? displayDate : DateUtils.getLocalizedDateFormat().format(date);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final DateSelectionItem other = (DateSelectionItem) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		}
-		else if (!date.equals(other.date))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + ((date == null) ? 0 : date.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final DateSelectionItem other = (DateSelectionItem) obj;
+        if (date == null) {
+            if (other.date != null)
+                return false;
+        } else if (!date.equals(other.date))
+            return false;
+        return true;
+    }
 }

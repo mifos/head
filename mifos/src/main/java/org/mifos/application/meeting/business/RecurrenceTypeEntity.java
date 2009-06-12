@@ -17,52 +17,52 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * This class encapsulate the RecurrenceType for a meeting
- * See also {@link RecurrenceType}.
+ * This class encapsulate the RecurrenceType for a meeting See also
+ * {@link RecurrenceType}.
  */
 public class RecurrenceTypeEntity extends PersistentObject {
-	
-	private Short recurrenceId;
 
-	private String recurrenceName;
+    private Short recurrenceId;
 
-	private String description;
+    private String recurrenceName;
 
-	public RecurrenceTypeEntity(RecurrenceType recurrence){
-		this.recurrenceId = recurrence.getValue();
-	}
-	
-	public RecurrenceTypeEntity() {
-	}
-	
-	public String getDescription() {
-		return description;
-	}
+    private String description;
 
-	public Short getRecurrenceId() {
-		return recurrenceId;
-	}
+    public RecurrenceTypeEntity(RecurrenceType recurrence) {
+        this.recurrenceId = recurrence.getValue();
+    }
 
-	public String getRecurrenceName() {
-		return recurrenceName;
-	}
+    public RecurrenceTypeEntity() {
+    }
 
-	public boolean isWeekly(){
-		return recurrenceId.equals(RecurrenceType.WEEKLY.getValue());
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public boolean isMonthly(){
-		return recurrenceId.equals(RecurrenceType.MONTHLY.getValue());
-	}
+    public Short getRecurrenceId() {
+        return recurrenceId;
+    }
 
-	public RecurrenceType asEnum() {
-		return RecurrenceType.fromInt(recurrenceId);
-	}
+    public String getRecurrenceName() {
+        return recurrenceName;
+    }
+
+    public boolean isWeekly() {
+        return recurrenceId.equals(RecurrenceType.WEEKLY.getValue());
+    }
+
+    public boolean isMonthly() {
+        return recurrenceId.equals(RecurrenceType.MONTHLY.getValue());
+    }
+
+    public RecurrenceType asEnum() {
+        return RecurrenceType.fromInt(recurrenceId);
+    }
 }

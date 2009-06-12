@@ -17,34 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
-
 public enum PrdStatus {
-	LOAN_ACTIVE((short) 1), 
-	SAVINGS_ACTIVE((short) 2), 
+    LOAN_ACTIVE((short) 1), SAVINGS_ACTIVE((short) 2),
 
-	LOAN_INACTIVE((short) 4), 
-	SAVINGS_INACTIVE((short) 5);
+    LOAN_INACTIVE((short) 4), SAVINGS_INACTIVE((short) 5);
 
-	Short value;
+    Short value;
 
-	PrdStatus(Short value) {
-		this.value = value;
-	}
+    PrdStatus(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static PrdStatus fromInt(int value) {
-		for (PrdStatus candidate : PrdStatus.values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no product status " + value);
-	}
+    public static PrdStatus fromInt(int value) {
+        for (PrdStatus candidate : PrdStatus.values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no product status " + value);
+    }
 
 }

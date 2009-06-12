@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import java.util.Iterator;
@@ -33,36 +33,30 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 
 public class CustomerAccountFeesAccountingEntry extends BaseAccountingEntry {
 
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity
-				.getAccountTrxn();
-		Set<FeesTrxnDetailEntity> feesTrxn = customertrxn.getFeesTrxnDetails();
-		Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();
-		FinancialActionBO finActionFee = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.FEEPOSTING);
-		while (iterFees.hasNext()) {
-			FeesTrxnDetailEntity feeTrxn = iterFees.next();
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
+        CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity.getAccountTrxn();
+        Set<FeesTrxnDetailEntity> feesTrxn = customertrxn.getFeesTrxnDetails();
+        Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();
+        FinancialActionBO finActionFee = FinancialActionCache.getFinancialAction(FinancialActionConstants.FEEPOSTING);
+        while (iterFees.hasNext()) {
+            FeesTrxnDetailEntity feeTrxn = iterFees.next();
 
-			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
-					feeTrxn.getAccountFees().getFees().getGlCode(),
-					FinancialConstants.CREDIT);
+            addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
+                    feeTrxn.getAccountFees().getFees().getGlCode(), FinancialConstants.CREDIT);
 
-			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
-					getGLcode(finActionFee.getApplicableDebitCharts()),
-					FinancialConstants.DEBIT);
-		}
-		// For Misc Fee
-		FinancialActionBO finActionMiscFee = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING);
-		addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee,
-				getGLcode(finActionMiscFee.getApplicableDebitCharts()),
-				FinancialConstants.DEBIT);
+            addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee, getGLcode(finActionFee
+                    .getApplicableDebitCharts()), FinancialConstants.DEBIT);
+        }
+        // For Misc Fee
+        FinancialActionBO finActionMiscFee = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING);
+        addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee, getGLcode(finActionMiscFee
+                .getApplicableDebitCharts()), FinancialConstants.DEBIT);
 
-		addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee,
-				getGLcode(finActionMiscFee.getApplicableCreditCharts()),
-				FinancialConstants.CREDIT);
+        addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee, getGLcode(finActionMiscFee
+                .getApplicableCreditCharts()), FinancialConstants.CREDIT);
 
-	}
+    }
 
 }

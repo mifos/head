@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.persistance;
 
 import java.util.Date;
@@ -32,7 +32,10 @@ import org.mifos.framework.persistence.DataAccessObject;
 public interface ClientAttendanceDao extends DataAccessObject {
 
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException;
-    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance) throws PersistenceException;
+
+    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance)
+            throws PersistenceException;
+
     public List<ClientAttendanceBO> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException;
 
 }

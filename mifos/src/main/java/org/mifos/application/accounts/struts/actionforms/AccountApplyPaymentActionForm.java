@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.actionforms;
 
 import java.util.Calendar;
@@ -45,301 +45,275 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
-	private String input;
-	
-	private String transactionDateDD;
-	
-	private String transactionDateMM;
-	
-	private String transactionDateYY;
+    private String input;
 
-	private Money amount;
+    private String transactionDateDD;
 
-	private String receiptId;
-	
-	private String receiptDateDD;
-	
-	private String receiptDateMM;
-	
-	private String receiptDateYY;
+    private String transactionDateMM;
 
-	private String paymentTypeId;
+    private String transactionDateYY;
 
-	private String globalAccountNum;
+    private Money amount;
 
-	private String accountId;
+    private String receiptId;
 
-	private String prdOfferingName;
+    private String receiptDateDD;
 
-	public String getPrdOfferingName() {
-		return prdOfferingName;
-	}
+    private String receiptDateMM;
 
-	public void setPrdOfferingName(String prdOfferingName) {
-		this.prdOfferingName = prdOfferingName;
-	}
+    private String receiptDateYY;
 
-	public Money getAmount() {
-		return amount;
-	}
+    private String paymentTypeId;
 
-	public void setAmount(Money amount) {
-		this.amount = amount;
-	}
+    private String globalAccountNum;
 
-	public String getInput() {
-		return input;
-	}
+    private String accountId;
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		String methodCalled = request.getParameter(MethodNameConstants.METHOD);
-		ActionErrors errors = null;
-		ResourceBundle resources = ResourceBundle
-				.getBundle(
-						FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
-						getUserLocale(request));
+    private String prdOfferingName;
 
-		if (methodCalled != null && methodCalled.equals("preview")) {
-			errors = new ActionErrors();
-			ActionErrors errors2 = validateDate(getTransactionDate(), resources
-					.getString("accounts.date_of_trxn"), request);
-			if (null != errors2 && !errors2.isEmpty())
-				errors.add(errors2);
-			if (this.paymentTypeId == null || this.paymentTypeId.equals("")) {
-				errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
-						AccountConstants.ERROR_MANDATORY, resources
-								.getString("accounts.mode_of_payment")));
-			}
-			if (getReceiptDate() != null && !getReceiptDate().equals("")) {
-				errors2 = validateDate(getReceiptDate(), resources
-						.getString("accounts.receiptdate"), request);
-				if (null != errors2 && !errors2.isEmpty())
-					errors.add(errors2);
-			}
-			String accountType = request.getParameter("accountType");
-			if (accountType != null
-					&& Short.valueOf(accountType).equals(
-							AccountTypes.LOAN_ACCOUNT.getValue())) {
-				if (amount == null || amount.getAmountDoubleValue() <= 0.0) {
-					errors.add(AccountConstants.ERROR_MANDATORY,
-							new ActionMessage(AccountConstants.ERROR_MANDATORY,
-									resources.getString("accounts.amt")));
-				}
-			}
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
-		}
-		return errors;
-	}
+    public String getPrdOfferingName() {
+        return prdOfferingName;
+    }
 
-	protected ActionErrors validateDate(String date, String fieldName,
-			HttpServletRequest request) {
-		ActionErrors errors = null;
-		java.sql.Date sqlDate = null;
-		if (date != null && !date.equals("")) {
-			try {
-				sqlDate = DateUtils.getDateAsSentFromBrowser(date);
-				if (DateUtils.whichDirection(sqlDate) > 0) {
-					errors = new ActionErrors();
-					errors.add(AccountConstants.ERROR_FUTUREDATE,
-							new ActionMessage(
-									AccountConstants.ERROR_FUTUREDATE,
-									fieldName));
-				}
-			}
-			catch (InvalidDateException e) {
-				errors = new ActionErrors();
-				errors.add(AccountConstants.ERROR_INVALIDDATE,
-						new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
-								fieldName));
-			}
-		}
-		else {
-			errors = new ActionErrors();
-			errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
-					AccountConstants.ERROR_MANDATORY, fieldName));
-		}
-		return errors;
-	}
+    public void setPrdOfferingName(String prdOfferingName) {
+        this.prdOfferingName = prdOfferingName;
+    }
 
-	protected Locale getUserLocale(HttpServletRequest request) {
-		Locale locale = null;
-		HttpSession session = request.getSession();
-		if (session != null) {
-			UserContext userContext = (UserContext) session
-					.getAttribute(LoginConstants.USERCONTEXT);
-			if (null != userContext) {
-				locale = userContext.getCurrentLocale();
-				
-			}
-		}
-		return locale;
-	}
+    public Money getAmount() {
+        return amount;
+    }
 
-	public void setInput(String input) {
-		this.input = input;
-	}
+    public void setAmount(Money amount) {
+        this.amount = amount;
+    }
 
-	public String getPaymentTypeId() {
-		return paymentTypeId;
-	}
+    public String getInput() {
+        return input;
+    }
 
-	public void setPaymentTypeId(String paymentTypeId) {
-		this.paymentTypeId = paymentTypeId;
-	}
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        String methodCalled = request.getParameter(MethodNameConstants.METHOD);
+        ActionErrors errors = null;
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
+                getUserLocale(request));
 
-	public String getReceiptDate() {
-		if (StringUtils.isNullAndEmptySafe(receiptDateDD)
-				&& StringUtils.isNullAndEmptySafe(receiptDateMM)
-				&& StringUtils.isNullAndEmptySafe(receiptDateYY)) {
+        if (methodCalled != null && methodCalled.equals("preview")) {
+            errors = new ActionErrors();
+            ActionErrors errors2 = validateDate(getTransactionDate(), resources.getString("accounts.date_of_trxn"),
+                    request);
+            if (null != errors2 && !errors2.isEmpty())
+                errors.add(errors2);
+            if (this.paymentTypeId == null || this.paymentTypeId.equals("")) {
+                errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                        resources.getString("accounts.mode_of_payment")));
+            }
+            if (getReceiptDate() != null && !getReceiptDate().equals("")) {
+                errors2 = validateDate(getReceiptDate(), resources.getString("accounts.receiptdate"), request);
+                if (null != errors2 && !errors2.isEmpty())
+                    errors.add(errors2);
+            }
+            String accountType = request.getParameter("accountType");
+            if (accountType != null && Short.valueOf(accountType).equals(AccountTypes.LOAN_ACCOUNT.getValue())) {
+                if (amount == null || amount.getAmountDoubleValue() <= 0.0) {
+                    errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                            resources.getString("accounts.amt")));
+                }
+            }
+        }
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", methodCalled);
+        }
+        return errors;
+    }
 
-			return receiptDateDD + "/" + receiptDateMM + "/"
-				+ receiptDateYY;
-		}
-		else {
-			return null;
-		}
-	}
+    protected ActionErrors validateDate(String date, String fieldName, HttpServletRequest request) {
+        ActionErrors errors = null;
+        java.sql.Date sqlDate = null;
+        if (date != null && !date.equals("")) {
+            try {
+                sqlDate = DateUtils.getDateAsSentFromBrowser(date);
+                if (DateUtils.whichDirection(sqlDate) > 0) {
+                    errors = new ActionErrors();
+                    errors.add(AccountConstants.ERROR_FUTUREDATE, new ActionMessage(AccountConstants.ERROR_FUTUREDATE,
+                            fieldName));
+                }
+            } catch (InvalidDateException e) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                        fieldName));
+            }
+        } else {
+            errors = new ActionErrors();
+            errors
+                    .add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                            fieldName));
+        }
+        return errors;
+    }
 
-	public void setReceiptDate(String receiptDate) {
-		if (StringUtils.isNullOrEmpty(receiptDate)) {
-			receiptDateDD = null;
-			receiptDateMM = null;
-			receiptDateYY = null;
-		}
-		else {
-			Calendar cal = new GregorianCalendar();
-			java.sql.Date date = DateUtils
-					.getDateAsSentFromBrowser(receiptDate);
-			cal.setTime(date);
-			receiptDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-			receiptDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
-			receiptDateYY = Integer.toString(cal.get(Calendar.YEAR));
-		}
-	}
+    protected Locale getUserLocale(HttpServletRequest request) {
+        Locale locale = null;
+        HttpSession session = request.getSession();
+        if (session != null) {
+            UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+            if (null != userContext) {
+                locale = userContext.getCurrentLocale();
 
-	public String getReceiptId() {
-		return receiptId;
-	}
+            }
+        }
+        return locale;
+    }
 
-	public void setReceiptId(String receiptId) {
-		this.receiptId = receiptId;
-	}
+    public void setInput(String input) {
+        this.input = input;
+    }
 
-	
-	public String getTransactionDate() {
-		if (StringUtils.isNullAndEmptySafe(transactionDateDD)
-				&& StringUtils.isNullAndEmptySafe(transactionDateMM)
-				&& StringUtils.isNullAndEmptySafe(transactionDateYY)) {
-			String transactionDate="";
-			if (transactionDateDD.length()<2)
-				transactionDate=transactionDate+"0"+transactionDateDD;
-			else
-				transactionDate=transactionDate+transactionDateDD;
-			if (transactionDateMM.length()<2)
-				transactionDate=transactionDate+ "/"+"0"+transactionDateMM;
-			else
-				transactionDate=transactionDate+ "/"+transactionDateMM;
-			transactionDate=transactionDate+ "/"
-				+ transactionDateYY;
-			return transactionDate;
-		}
-		else {
-			return null;
-		}
-	}
-	public void setTransactionDate(String receiptDate) {
-		if (StringUtils.isNullOrEmpty(receiptDate)) {
-			transactionDateDD = null;
-			transactionDateMM = null;
-			transactionDateYY = null;
-		}
-		else {
-			Calendar cal = new GregorianCalendar();
-			java.sql.Date date = DateUtils
-					.getDateAsSentFromBrowser(receiptDate);
-			cal.setTime(date);
-			transactionDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-			transactionDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
-			transactionDateYY = Integer.toString(cal.get(Calendar.YEAR));
-		}
-	}
+    public String getPaymentTypeId() {
+        return paymentTypeId;
+    }
 
+    public void setPaymentTypeId(String paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
+    }
 
-	public String getAccountId() {
-		return accountId;
-	}
+    public String getReceiptDate() {
+        if (StringUtils.isNullAndEmptySafe(receiptDateDD) && StringUtils.isNullAndEmptySafe(receiptDateMM)
+                && StringUtils.isNullAndEmptySafe(receiptDateYY)) {
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
+            return receiptDateDD + "/" + receiptDateMM + "/" + receiptDateYY;
+        } else {
+            return null;
+        }
+    }
 
-	public String getGlobalAccountNum() {
-		return globalAccountNum;
-	}
+    public void setReceiptDate(String receiptDate) {
+        if (StringUtils.isNullOrEmpty(receiptDate)) {
+            receiptDateDD = null;
+            receiptDateMM = null;
+            receiptDateYY = null;
+        } else {
+            Calendar cal = new GregorianCalendar();
+            java.sql.Date date = DateUtils.getDateAsSentFromBrowser(receiptDate);
+            cal.setTime(date);
+            receiptDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+            receiptDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+            receiptDateYY = Integer.toString(cal.get(Calendar.YEAR));
+        }
+    }
 
-	public void setGlobalAccountNum(String globalAccountNum) {
-		this.globalAccountNum = globalAccountNum;
-	}
+    public String getReceiptId() {
+        return receiptId;
+    }
 
-	protected void clear() {
-		this.amount = null;
-		this.paymentTypeId = null;
-		setReceiptDate(null);
-		this.receiptId = null;
-	}
+    public void setReceiptId(String receiptId) {
+        this.receiptId = receiptId;
+    }
 
-	public String getReceiptDateDD() {
-		return receiptDateDD;
-	}
+    public String getTransactionDate() {
+        if (StringUtils.isNullAndEmptySafe(transactionDateDD) && StringUtils.isNullAndEmptySafe(transactionDateMM)
+                && StringUtils.isNullAndEmptySafe(transactionDateYY)) {
+            String transactionDate = "";
+            if (transactionDateDD.length() < 2)
+                transactionDate = transactionDate + "0" + transactionDateDD;
+            else
+                transactionDate = transactionDate + transactionDateDD;
+            if (transactionDateMM.length() < 2)
+                transactionDate = transactionDate + "/" + "0" + transactionDateMM;
+            else
+                transactionDate = transactionDate + "/" + transactionDateMM;
+            transactionDate = transactionDate + "/" + transactionDateYY;
+            return transactionDate;
+        } else {
+            return null;
+        }
+    }
 
-	public void setReceiptDateDD(String receiptDateDD) {
-		this.receiptDateDD = receiptDateDD;
-	}
+    public void setTransactionDate(String receiptDate) {
+        if (StringUtils.isNullOrEmpty(receiptDate)) {
+            transactionDateDD = null;
+            transactionDateMM = null;
+            transactionDateYY = null;
+        } else {
+            Calendar cal = new GregorianCalendar();
+            java.sql.Date date = DateUtils.getDateAsSentFromBrowser(receiptDate);
+            cal.setTime(date);
+            transactionDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+            transactionDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+            transactionDateYY = Integer.toString(cal.get(Calendar.YEAR));
+        }
+    }
 
-	public String getReceiptDateMM() {
-		return receiptDateMM;
-	}
+    public String getAccountId() {
+        return accountId;
+    }
 
-	public void setReceiptDateMM(String receiptDateMM) {
-		this.receiptDateMM = receiptDateMM;
-	}
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
-	public String getReceiptDateYY() {
-		return receiptDateYY;
-	}
+    public String getGlobalAccountNum() {
+        return globalAccountNum;
+    }
 
-	public void setReceiptDateYY(String receiptDateYY) {
-		this.receiptDateYY = receiptDateYY;
-	}
+    public void setGlobalAccountNum(String globalAccountNum) {
+        this.globalAccountNum = globalAccountNum;
+    }
 
-	public String getTransactionDateDD() {
-		return transactionDateDD;
-	}
+    protected void clear() {
+        this.amount = null;
+        this.paymentTypeId = null;
+        setReceiptDate(null);
+        this.receiptId = null;
+    }
 
-	public void setTransactionDateDD(String transactionDateDD) {
-		this.transactionDateDD = transactionDateDD;
-	}
+    public String getReceiptDateDD() {
+        return receiptDateDD;
+    }
 
-	public String getTransactionDateMM() {
-		return transactionDateMM;
-	}
+    public void setReceiptDateDD(String receiptDateDD) {
+        this.receiptDateDD = receiptDateDD;
+    }
 
-	public void setTransactionDateMM(String transactionDateMM) {
-		this.transactionDateMM = transactionDateMM;
-	}
+    public String getReceiptDateMM() {
+        return receiptDateMM;
+    }
 
-	public String getTransactionDateYY() {
-		return transactionDateYY;
-	}
+    public void setReceiptDateMM(String receiptDateMM) {
+        this.receiptDateMM = receiptDateMM;
+    }
 
-	public void setTransactionDateYY(String transactionDateYY) {
-		this.transactionDateYY = transactionDateYY;
-	}
+    public String getReceiptDateYY() {
+        return receiptDateYY;
+    }
 
+    public void setReceiptDateYY(String receiptDateYY) {
+        this.receiptDateYY = receiptDateYY;
+    }
+
+    public String getTransactionDateDD() {
+        return transactionDateDD;
+    }
+
+    public void setTransactionDateDD(String transactionDateDD) {
+        this.transactionDateDD = transactionDateDD;
+    }
+
+    public String getTransactionDateMM() {
+        return transactionDateMM;
+    }
+
+    public void setTransactionDateMM(String transactionDateMM) {
+        this.transactionDateMM = transactionDateMM;
+    }
+
+    public String getTransactionDateYY() {
+        return transactionDateYY;
+    }
+
+    public void setTransactionDateYY(String transactionDateYY) {
+        this.transactionDateYY = transactionDateYY;
+    }
 
 }

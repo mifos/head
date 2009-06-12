@@ -17,12 +17,11 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.accounts.loan.util.helpers;
 
+package org.mifos.application.accounts.loan.util.helpers;
 
 public enum LoanPaymentTypes {
 
-	PARTIAL_PAYMENT,FULL_PAYMENT,FUTURE_PAYMENT;
+    PARTIAL_PAYMENT, FULL_PAYMENT, FUTURE_PAYMENT;
 
 }

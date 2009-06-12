@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
-
 public enum RecommendedAmountUnit {
-	PER_INDIVIDUAL((short) 1), COMPLETE_GROUP((short) 2);
+    PER_INDIVIDUAL((short) 1), COMPLETE_GROUP((short) 2);
 
-	private Short value;
+    private Short value;
 
-	private RecommendedAmountUnit(Short value) {
-		this.value = value;
-	}
+    private RecommendedAmountUnit(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static RecommendedAmountUnit fromInt(int value) {
-		for (RecommendedAmountUnit candidate : RecommendedAmountUnit.values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no recommended amount unit " + value);
-	}
+    public static RecommendedAmountUnit fromInt(int value) {
+        for (RecommendedAmountUnit candidate : RecommendedAmountUnit.values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no recommended amount unit " + value);
+    }
 
 }

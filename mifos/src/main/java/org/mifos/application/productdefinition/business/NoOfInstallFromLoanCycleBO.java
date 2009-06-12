@@ -17,47 +17,45 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productdefinition.business;
 
+package org.mifos.application.productdefinition.business;
 
 /**
  * A loan product is a set of rules (interest rate, number of installments,
- * maximum amount, etc) which describes a particular kind of loan that
- * an MFI offers.
+ * maximum amount, etc) which describes a particular kind of loan that an MFI
+ * offers.
  * 
- * Although we may sometimes call these "offerings", it is probably better
- * to call them "loan products" (as that seems to be the terminology in
- * the functional spec and elsewhere).
+ * Although we may sometimes call these "offerings", it is probably better to
+ * call them "loan products" (as that seems to be the terminology in the
+ * functional spec and elsewhere).
  */
 public class NoOfInstallFromLoanCycleBO extends LoanOfferingInstallmentRange {
 
-	@SuppressWarnings("unused")
-	private final Short noOfInstallFromLoanCycleID;
-	// FIXME: what is this member for?
-	private Short rangeIndex;
+    @SuppressWarnings("unused")
+    private final Short noOfInstallFromLoanCycleID;
+    // FIXME: what is this member for?
+    private Short rangeIndex;
 
-	public NoOfInstallFromLoanCycleBO(Short minNoOfInstall,
-			Short maxNoOfInstall, Short defaultNoOfInstall, Short rangeIndex,
-			LoanOfferingBO loanOffering) {
-		super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
-		this.rangeIndex = rangeIndex;
-		this.noOfInstallFromLoanCycleID = null;
-	}
+    public NoOfInstallFromLoanCycleBO(Short minNoOfInstall, Short maxNoOfInstall, Short defaultNoOfInstall,
+            Short rangeIndex, LoanOfferingBO loanOffering) {
+        super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
+        this.rangeIndex = rangeIndex;
+        this.noOfInstallFromLoanCycleID = null;
+    }
 
-	public NoOfInstallFromLoanCycleBO() {
-		this(null, null, null, null, null);
-	}
+    public NoOfInstallFromLoanCycleBO() {
+        this(null, null, null, null, null);
+    }
 
-	public Short getRangeIndex() {
-		return rangeIndex;
-	}
+    public Short getRangeIndex() {
+        return rangeIndex;
+    }
 
-	public void setRangeIndex(Short rangeIndex) {
-		this.rangeIndex = rangeIndex;
-	}
+    public void setRangeIndex(Short rangeIndex) {
+        this.rangeIndex = rangeIndex;
+    }
 
-	boolean isSameRange(Short customerLastLoanCycleCount) {
-		return rangeIndex.equals(customerLastLoanCycleCount);
-	}
+    boolean isSameRange(Short customerLastLoanCycleCount) {
+        return rangeIndex.equals(customerLastLoanCycleCount);
+    }
 }

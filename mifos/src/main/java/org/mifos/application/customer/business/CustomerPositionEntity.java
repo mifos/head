@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -29,36 +29,36 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class CustomerPositionEntity extends PersistentObject {
 
-	private final Integer customerPositionId;
+    private final Integer customerPositionId;
 
-	private final PositionEntity position;
+    private final PositionEntity position;
 
-	private CustomerBO customer;
-	
-	private final CustomerBO parentCustomer;
-	
-	public CustomerPositionEntity(PositionEntity position, CustomerBO customer, CustomerBO parentCustomer) {
-		this.position = position;
-		this.customer = customer;
-		this.parentCustomer = parentCustomer;
-		this.customerPositionId = null;
-	}
+    private CustomerBO customer;
 
-	protected CustomerPositionEntity() {
-		this.customerPositionId = null;
-		this.position = null;
-		this.parentCustomer = null;
-	}
+    private final CustomerBO parentCustomer;
 
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    public CustomerPositionEntity(PositionEntity position, CustomerBO customer, CustomerBO parentCustomer) {
+        this.position = position;
+        this.customer = customer;
+        this.parentCustomer = parentCustomer;
+        this.customerPositionId = null;
+    }
 
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-	}
+    protected CustomerPositionEntity() {
+        this.customerPositionId = null;
+        this.position = null;
+        this.parentCustomer = null;
+    }
 
-	public PositionEntity getPosition() {
-		return position;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerBO customer) {
+        this.customer = customer;
+    }
+
+    public PositionEntity getPosition() {
+        return position;
+    }
 }

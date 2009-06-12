@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.center.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,105 +41,105 @@ import java.text.DateFormat;
 import org.mifos.framework.util.LocalizationConverter;
 import java.util.Locale;
 
-public class CenterCustActionForm extends CustomerActionForm{
-	
-	private String mfiJoiningDateDD;
-	private String mfiJoiningDateMM;
-	private String mfiJoiningDateYY;
-	
-	@Override
-	public String getMfiJoiningDate() {
-		if (StringUtils.isNullOrEmpty(mfiJoiningDateDD) || StringUtils.isNullOrEmpty(mfiJoiningDateMM)
-			|| StringUtils.isNullOrEmpty(mfiJoiningDateYY))
-			return null;
-			
-		String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
-		return mfiJoiningDateDD + dateSeparator + mfiJoiningDateMM + dateSeparator + mfiJoiningDateYY;
-	}
-	
-	public void setMfiJoiningDate(int day, int month, int year) {
-		setMfiJoiningDate(Integer.toString(day), Integer.toString(month),
-				Integer.toString(year));
-	}
-	
-	public void setMfiJoiningDate(String day, String month, String year) {
-		setMfiJoiningDateDD(day);
-		setMfiJoiningDateMM(month);
-		setMfiJoiningDateYY(year);
-	}
-	
-	public void setMfiJoiningDateYY(String mfiJoiningDateYY) {
-		this.mfiJoiningDateYY = mfiJoiningDateYY;
-	}
+public class CenterCustActionForm extends CustomerActionForm {
 
-	public String getMfiJoiningDateYY() {
-		return mfiJoiningDateYY;
-	}	
-	
-	public void setMfiJoiningDateMM(String mfiJoiningDateMM) {
-		this.mfiJoiningDateMM = mfiJoiningDateMM;
-	}
+    private String mfiJoiningDateDD;
+    private String mfiJoiningDateMM;
+    private String mfiJoiningDateYY;
 
-	public String getMfiJoiningDateMM() {
-		return mfiJoiningDateMM;
-	}
+    @Override
+    public String getMfiJoiningDate() {
+        if (StringUtils.isNullOrEmpty(mfiJoiningDateDD) || StringUtils.isNullOrEmpty(mfiJoiningDateMM)
+                || StringUtils.isNullOrEmpty(mfiJoiningDateYY))
+            return null;
 
-	public void setMfiJoiningDateDD(String mfiJoiningDateDD) {
-		this.mfiJoiningDateDD = mfiJoiningDateDD;
-	}
+        String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+        return mfiJoiningDateDD + dateSeparator + mfiJoiningDateMM + dateSeparator + mfiJoiningDateYY;
+    }
 
-	public String getMfiJoiningDateDD() {
-		return mfiJoiningDateDD;
-	}
+    public void setMfiJoiningDate(int day, int month, int year) {
+        setMfiJoiningDate(Integer.toString(day), Integer.toString(month), Integer.toString(year));
+    }
 
-	/*
-	 * Validation is done in the order that the fields appear on the UI.
-	 * @see org.mifos.application.customer.struts.actionforms.CustomerActionForm#validateFields(javax.servlet.http.HttpServletRequest, java.lang.String)
-	 */
-	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
-		ActionErrors errors = new ActionErrors();
-		if(method.equals(Methods.preview.toString())){		
-			validateName(errors);
-			validateLO(errors);
-			validateMeeting(request, errors);
-		}else if (method.equals(Methods.editPreview.toString())){
-			CenterBO center = (CenterBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-			if(center.isActive())
-				validateLO(errors);
-		}
+    public void setMfiJoiningDate(String day, String month, String year) {
+        setMfiJoiningDateDD(day);
+        setMfiJoiningDateMM(month);
+        setMfiJoiningDateYY(year);
+    }
 
-        if(method.equals(Methods.preview.toString()) ||
-                method.equals(Methods.editPreview.toString())) {      
+    public void setMfiJoiningDateYY(String mfiJoiningDateYY) {
+        this.mfiJoiningDateYY = mfiJoiningDateYY;
+    }
+
+    public String getMfiJoiningDateYY() {
+        return mfiJoiningDateYY;
+    }
+
+    public void setMfiJoiningDateMM(String mfiJoiningDateMM) {
+        this.mfiJoiningDateMM = mfiJoiningDateMM;
+    }
+
+    public String getMfiJoiningDateMM() {
+        return mfiJoiningDateMM;
+    }
+
+    public void setMfiJoiningDateDD(String mfiJoiningDateDD) {
+        this.mfiJoiningDateDD = mfiJoiningDateDD;
+    }
+
+    public String getMfiJoiningDateDD() {
+        return mfiJoiningDateDD;
+    }
+
+    /*
+     * Validation is done in the order that the fields appear on the UI.
+     * 
+     * @see
+     * org.mifos.application.customer.struts.actionforms.CustomerActionForm#
+     * validateFields(javax.servlet.http.HttpServletRequest, java.lang.String)
+     */
+    @Override
+    protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
+        ActionErrors errors = new ActionErrors();
+        if (method.equals(Methods.preview.toString())) {
+            validateName(errors);
+            validateLO(errors);
+            validateMeeting(request, errors);
+        } else if (method.equals(Methods.editPreview.toString())) {
+            CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+            if (center.isActive())
+                validateLO(errors);
+        }
+
+        if (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString())) {
             validateMfiJoiningDate(request, errors);
-            validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
-            validateCustomFields(request,errors);
+            validateConfigurableMandatoryFields(request, errors, EntityType.CENTER);
+            validateCustomFields(request, errors);
         }
         // fees are only editable in preview and come last
-        if(method.equals(Methods.preview.toString())){      
+        if (method.equals(Methods.preview.toString())) {
             validateFees(request, errors);
         }
-        
+
         return errors;
-	}
-	
-	protected void validateMfiJoiningDate(HttpServletRequest request,
-			ActionErrors errors) {
-		if(ValidateMethods.isNullOrBlank(getMfiJoiningDate())){
-			errors.add(CustomerConstants.MFI_JOINING_DATE_MANDATORY,
-				new ActionMessage(CustomerConstants.MFI_JOINING_DATE_MANDATORY));
-		}
-		
-		else {
-			if (!DateUtils.isValidDate(getMfiJoiningDate())) {
-				errors.add(CustomerConstants.INVALID_MFI_JOINING_DATE, 
-					new ActionMessage(CustomerConstants.INVALID_MFI_JOINING_DATE));
-			}
-		}
-	}
-	
-	@Override
-	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{
-		return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);		
-	}
+    }
+
+    protected void validateMfiJoiningDate(HttpServletRequest request, ActionErrors errors) {
+        if (ValidateMethods.isNullOrBlank(getMfiJoiningDate())) {
+            errors.add(CustomerConstants.MFI_JOINING_DATE_MANDATORY, new ActionMessage(
+                    CustomerConstants.MFI_JOINING_DATE_MANDATORY));
+        }
+
+        else {
+            if (!DateUtils.isValidDate(getMfiJoiningDate())) {
+                errors.add(CustomerConstants.INVALID_MFI_JOINING_DATE, new ActionMessage(
+                        CustomerConstants.INVALID_MFI_JOINING_DATE));
+            }
+        }
+    }
+
+    @Override
+    protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
+        return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+    }
 }

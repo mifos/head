@@ -17,29 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
-
 public enum SavingsType {
-	MANDATORY((short) 1), VOLUNTARY((short) 2);
+    MANDATORY((short) 1), VOLUNTARY((short) 2);
 
-	private Short value;
+    private Short value;
 
-	private SavingsType(Short value) {
-		this.value = value;
-	}
+    private SavingsType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static SavingsType fromInt(int value) {
-		for (SavingsType savingsType : SavingsType.values()) {
-			if (savingsType.getValue() == value) {
-				return savingsType;
-			}
-		}
-		throw new RuntimeException("no savings type " + value);
-	}
+    public static SavingsType fromInt(int value) {
+        for (SavingsType savingsType : SavingsType.values()) {
+            if (savingsType.getValue() == value) {
+                return savingsType;
+            }
+        }
+        throw new RuntimeException("no savings type " + value);
+    }
 }

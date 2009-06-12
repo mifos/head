@@ -17,33 +17,32 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.util.helpers;
 
 /**
  * Represent the operating mode of the office
  */
 public enum OperationMode {
-	LOCAL_SERVER(0), 
-	REMOTE_SERVER(1);
-	
-	private short value;
+    LOCAL_SERVER(0), REMOTE_SERVER(1);
 
-	private OperationMode(int value) {
-		this.value = (short) value;
-	}
+    private short value;
 
-	public Short getValue() {
-		return value;
-	}
+    private OperationMode(int value) {
+        this.value = (short) value;
+    }
 
-	public static OperationMode fromInt(int id) {
-		for (OperationMode candidate : OperationMode.values()) {
-			if (candidate.value == id) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no operation mode " + id);
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static OperationMode fromInt(int id) {
+        for (OperationMode candidate : OperationMode.values()) {
+            if (candidate.value == id) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no operation mode " + id);
+    }
 
 }

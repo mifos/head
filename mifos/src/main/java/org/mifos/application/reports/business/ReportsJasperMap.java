@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import org.mifos.framework.business.BusinessObject;
@@ -27,38 +27,36 @@ import org.mifos.framework.security.util.UserContext;
  * This class encapsulates mapping between Jasper file and Reports
  */
 public class ReportsJasperMap extends BusinessObject {
-	
-	private Short reportId;
-	private String reportJasper;
-	
 
-	public ReportsJasperMap() {
-	}
-	
-	public ReportsJasperMap(UserContext userContext) {
-		super(userContext);		
-	}
-	
-	public ReportsJasperMap(Short reportId, String reportJasper) {
-		this.reportId = reportId;
-		this.reportJasper = reportJasper;
-	}
+    private Short reportId;
+    private String reportJasper;
 
-	
-	public Short getReportId() {
-		return reportId;
-	}
+    public ReportsJasperMap() {
+    }
 
-	public void setReportId(Short reportId) {
-		this.reportId = reportId;
-	}
+    public ReportsJasperMap(UserContext userContext) {
+        super(userContext);
+    }
 
-	public String getReportJasper() {
-		return reportJasper;
-	}
+    public ReportsJasperMap(Short reportId, String reportJasper) {
+        this.reportId = reportId;
+        this.reportJasper = reportJasper;
+    }
 
-	public void setReportJasper(String reportJasper) {
-		this.reportJasper = reportJasper;
-	}
+    public Short getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(Short reportId) {
+        this.reportId = reportId;
+    }
+
+    public String getReportJasper() {
+        return reportJasper;
+    }
+
+    public void setReportJasper(String reportJasper) {
+        this.reportJasper = reportJasper;
+    }
 
 }

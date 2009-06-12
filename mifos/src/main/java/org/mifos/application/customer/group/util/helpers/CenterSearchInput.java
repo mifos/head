@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.group.util.helpers;
 
 import java.io.Serializable;
@@ -25,48 +25,55 @@ import java.io.Serializable;
 /**
  * This class is helper class and provides input for center search
  */
-public class CenterSearchInput implements Serializable{
-	
-	/** Denotes for which purpose group is using the center search*/
-	private String groupInput;
-	
-	/** Denotes for officeId for which centers are to be searched*/
-	private Short officeId;
+public class CenterSearchInput implements Serializable {
 
-	public CenterSearchInput(){}
-	
-	public CenterSearchInput(Short officeId, String input){
-		this.officeId = officeId;
-		this.groupInput = input;
-	}
-	/**
+    /** Denotes for which purpose group is using the center search */
+    private String groupInput;
+
+    /** Denotes for officeId for which centers are to be searched */
+    private Short officeId;
+
+    public CenterSearchInput() {
+    }
+
+    public CenterSearchInput(Short officeId, String input) {
+        this.officeId = officeId;
+        this.groupInput = input;
+    }
+
+    /**
      * Return the value of the groupInput attribute.
+     * 
      * @return String
      */
-	public String getGroupInput() {
-		return groupInput;
-	}
-	
-	/**
+    public String getGroupInput() {
+        return groupInput;
+    }
+
+    /**
      * Sets the value of groupInput
+     * 
      * @param groupInput
      */
-	public void setGroupInput(String groupInput) {
-		this.groupInput = groupInput;
-	}
-	
-	/**
+    public void setGroupInput(String groupInput) {
+        this.groupInput = groupInput;
+    }
+
+    /**
      * Return the value of the officeId attribute.
+     * 
      * @return Short
-     */	
-	public Short getOfficeId() {
-		return officeId;
-	}
-	/**
+     */
+    public Short getOfficeId() {
+        return officeId;
+    }
+
+    /**
      * Sets the value of officeId
+     * 
      * @param officeId
      */
-	public void setOfficeId(Short officeId) {
-		this.officeId = officeId;
-	}
+    public void setOfficeId(Short officeId) {
+        this.officeId = officeId;
+    }
 }

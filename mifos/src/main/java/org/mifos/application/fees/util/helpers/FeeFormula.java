@@ -17,36 +17,36 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
-public enum FeeFormula implements LocalizedTextLookup{
-	AMOUNT(1, "FeeFormulaMaster-LoanAmount"),  
-	AMOUNT_AND_INTEREST(2, "FeeFormulaMaster-LoanAmountInterest"), INTEREST(3, "FeeFormulaMaster-Interest");
+public enum FeeFormula implements LocalizedTextLookup {
+    AMOUNT(1, "FeeFormulaMaster-LoanAmount"), AMOUNT_AND_INTEREST(2, "FeeFormulaMaster-LoanAmountInterest"), INTEREST(
+            3, "FeeFormulaMaster-Interest");
 
-	Short value;
-	String messageKey;
-	
-	private FeeFormula(int value, String key) {
-		this.value = (short)value;
-		this.messageKey = key;
-	}
+    Short value;
+    String messageKey;
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static FeeFormula getFeeFormula(Short value)throws PropertyNotFoundException{
-		for (FeeFormula feeFormula : FeeFormula.values()) 
-			if (feeFormula.getValue().equals(value))
-				return feeFormula;
-		throw new PropertyNotFoundException("FeeFormula");
-	}
-	
-	public String getPropertiesKey() {
-		return messageKey;
-	}	
+    private FeeFormula(int value, String key) {
+        this.value = (short) value;
+        this.messageKey = key;
+    }
+
+    public Short getValue() {
+        return value;
+    }
+
+    public static FeeFormula getFeeFormula(Short value) throws PropertyNotFoundException {
+        for (FeeFormula feeFormula : FeeFormula.values())
+            if (feeFormula.getValue().equals(value))
+                return feeFormula;
+        throw new PropertyNotFoundException("FeeFormula");
+    }
+
+    public String getPropertiesKey() {
+        return messageKey;
+    }
 }

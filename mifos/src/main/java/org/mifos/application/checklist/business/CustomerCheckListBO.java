@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist.business;
 
 import java.util.List;
@@ -31,59 +31,54 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class CustomerCheckListBO extends CheckListBO {
 
-	private CustomerLevelEntity customerLevel;
+    private CustomerLevelEntity customerLevel;
 
-	private CustomerStatusEntity customerStatus;
+    private CustomerStatusEntity customerStatus;
 
-	protected CustomerCheckListBO() {
-	}
+    protected CustomerCheckListBO() {
+    }
 
-	public CustomerCheckListBO(CustomerLevelEntity customerLevel,
-			CustomerStatusEntity customerStatus, String name,
-			Short checkListStatus, List<String> details, Short prefferedLocale,
-			Short userId) throws CheckListException {
-		super(name, checkListStatus, details, prefferedLocale, userId);
-		this.customerLevel = customerLevel;
-		this.customerStatus = customerStatus;
-	}
+    public CustomerCheckListBO(CustomerLevelEntity customerLevel, CustomerStatusEntity customerStatus, String name,
+            Short checkListStatus, List<String> details, Short prefferedLocale, Short userId) throws CheckListException {
+        super(name, checkListStatus, details, prefferedLocale, userId);
+        this.customerLevel = customerLevel;
+        this.customerStatus = customerStatus;
+    }
 
-	public CustomerLevelEntity getCustomerLevel() {
-		return customerLevel;
-	}
+    public CustomerLevelEntity getCustomerLevel() {
+        return customerLevel;
+    }
 
-	public void setCustomerLevel(CustomerLevelEntity customerLevelEntity) {
-		this.customerLevel = customerLevelEntity;
-	}
+    public void setCustomerLevel(CustomerLevelEntity customerLevelEntity) {
+        this.customerLevel = customerLevelEntity;
+    }
 
-	public CustomerStatusEntity getCustomerStatus() {
-		return customerStatus;
-	}
+    public CustomerStatusEntity getCustomerStatus() {
+        return customerStatus;
+    }
 
-	public void setCustomerStatus(CustomerStatusEntity customerStatus) {
-		this.customerStatus = customerStatus;
-	}
+    public void setCustomerStatus(CustomerStatusEntity customerStatus) {
+        this.customerStatus = customerStatus;
+    }
 
-	@Override
-	public CheckListType getCheckListType() {
-		return CheckListType.CUSTOMER_CHECKLIST;
-	}
+    @Override
+    public CheckListType getCheckListType() {
+        return CheckListType.CUSTOMER_CHECKLIST;
+    }
 
-	public void update(CustomerLevelEntity customerLevel,
-			CustomerStatusEntity customerStatus, String name,
-			Short checkListStatus, List<String> details, Short prefferedLocale,
-			Short userId) throws CheckListException {
-		super.update(name, checkListStatus, details, prefferedLocale, userId);
-		if (!this.customerLevel.getId().equals(customerLevel.getId())
-				|| !this.customerStatus.getId().equals(customerStatus.getId()))
-			validateCheckListState(customerLevel.getId(), customerStatus
-					.getId(), true);
-		this.customerLevel = customerLevel;
-		this.customerStatus = customerStatus;
-		try {
-			new CheckListPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new CheckListException(e);
-		}
-	}
+    public void update(CustomerLevelEntity customerLevel, CustomerStatusEntity customerStatus, String name,
+            Short checkListStatus, List<String> details, Short prefferedLocale, Short userId) throws CheckListException {
+        super.update(name, checkListStatus, details, prefferedLocale, userId);
+        if (!this.customerLevel.getId().equals(customerLevel.getId())
+                || !this.customerStatus.getId().equals(customerStatus.getId()))
+            validateCheckListState(customerLevel.getId(), customerStatus.getId(), true);
+        this.customerLevel = customerLevel;
+        this.customerStatus = customerStatus;
+        try {
+            new CheckListPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new CheckListException(e);
+        }
+    }
 
 }

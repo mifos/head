@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.ArrayList;
@@ -37,51 +37,37 @@ import org.mifos.framework.util.helpers.Money;
 
 public class GlimLoanUpdater {
 
-	public void createIndividualLoan(
-			LoanAccountActionForm loanAccountActionForm, LoanBO loan,
-			boolean isRepaymentIndepOfMeetingEnabled,
-			LoanAccountDetailsViewHelper loanAccountDetail)
-			throws AccountException, ServiceException,
-			PropertyNotFoundException {
-		LoanBO individualLoan = LoanBO.createIndividualLoan(loan
-				.getUserContext(), loan.getLoanOffering(),
-				new CustomerBusinessService().getCustomer(Integer
-						.valueOf(loanAccountDetail.getClientId())),
-				loanAccountActionForm.getState(), new Money(loanAccountDetail
-						.getLoanAmount().toString()), loan
-						.getNoOfInstallments(), loan.getDisbursementDate(),
-				false, isRepaymentIndepOfMeetingEnabled,
-				loan.getInterestRate(), loan.getGracePeriodDuration(), loan
-						.getFund(), new ArrayList<FeeView>(),
-				new ArrayList<CustomFieldView>());
+    public void createIndividualLoan(LoanAccountActionForm loanAccountActionForm, LoanBO loan,
+            boolean isRepaymentIndepOfMeetingEnabled, LoanAccountDetailsViewHelper loanAccountDetail)
+            throws AccountException, ServiceException, PropertyNotFoundException {
+        LoanBO individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
+                new CustomerBusinessService().getCustomer(Integer.valueOf(loanAccountDetail.getClientId())),
+                loanAccountActionForm.getState(), new Money(loanAccountDetail.getLoanAmount().toString()), loan
+                        .getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
+                loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
+                new ArrayList<CustomFieldView>());
 
-		individualLoan.setParentAccount(loan);
+        individualLoan.setParentAccount(loan);
 
-		if (null != loanAccountDetail.getBusinessActivity())
-			individualLoan.setBusinessActivityId(Integer
-					.valueOf(loanAccountDetail.getBusinessActivity()));
+        if (null != loanAccountDetail.getBusinessActivity())
+            individualLoan.setBusinessActivityId(Integer.valueOf(loanAccountDetail.getBusinessActivity()));
 
-		individualLoan.save();
-	}
+        individualLoan.save();
+    }
 
-	void updateIndividualLoan(
-			final LoanAccountDetailsViewHelper loanAccountDetail,
-			LoanBO individualLoan) throws AccountException {
-		Double loanAmount = loanAccountDetail.getLoanAmount();
-		Money loanMoney = new Money(
-				!loanAmount.toString().equals("-") ? loanAmount.longValue()
-						+ "" : "0");
-		individualLoan.updateLoan(loanMoney, !"-".equals(loanAccountDetail
-				.getBusinessActivity()) ? Integer.valueOf(loanAccountDetail
-				.getBusinessActivity()) : 0);
-	}
+    void updateIndividualLoan(final LoanAccountDetailsViewHelper loanAccountDetail, LoanBO individualLoan)
+            throws AccountException {
+        Double loanAmount = loanAccountDetail.getLoanAmount();
+        Money loanMoney = new Money(!loanAmount.toString().equals("-") ? loanAmount.longValue() + "" : "0");
+        individualLoan.updateLoan(loanMoney, !"-".equals(loanAccountDetail.getBusinessActivity()) ? Integer
+                .valueOf(loanAccountDetail.getBusinessActivity()) : 0);
+    }
 
-	public void delete(LoanBO loan) throws AccountException {
-		try {
-			new LoanPersistence().delete(loan);
-		}
-		catch (PersistenceException e) {
-			throw new AccountException(e);
-		}
-	}
+    public void delete(LoanBO loan) throws AccountException {
+        try {
+            new LoanPersistence().delete(loan);
+        } catch (PersistenceException e) {
+            throw new AccountException(e);
+        }
+    }
 }

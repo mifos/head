@@ -17,11 +17,11 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.util.helpers;
 
 public interface ValidationConstants {
 
-	public static final String MIFOS_WARNING_MESSAGES = "org.mifos.application.WARNING_MESSAGES";
+    public static final String MIFOS_WARNING_MESSAGES = "org.mifos.application.WARNING_MESSAGES";
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.sql.Date;
@@ -30,59 +30,58 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class AccountNotesEntity extends PersistentObject {
 
-	private final Integer commentId;
+    private final Integer commentId;
 
-	private final Date commentDate;
+    private final Date commentDate;
 
-	private final String comment;
+    private final String comment;
 
-	private final PersonnelBO personnel;
+    private final PersonnelBO personnel;
 
-	private final AccountBO account;
+    private final AccountBO account;
 
-	protected AccountNotesEntity() {
-		commentId = null;
-		this.commentDate = null;
-		this.comment = null;
-		this.personnel = null;
-		this.account = null;
-	}
+    protected AccountNotesEntity() {
+        commentId = null;
+        this.commentDate = null;
+        this.comment = null;
+        this.personnel = null;
+        this.account = null;
+    }
 
-	public AccountNotesEntity(Date commentDate, String comment,
-			PersonnelBO personnel, AccountBO account) {
-		commentId = null;
-		this.commentDate = commentDate;
-		this.comment = comment;
-		this.personnel = personnel;
-		this.account = account;
-	}
+    public AccountNotesEntity(Date commentDate, String comment, PersonnelBO personnel, AccountBO account) {
+        commentId = null;
+        this.commentDate = commentDate;
+        this.comment = comment;
+        this.personnel = personnel;
+        this.account = account;
+    }
 
-	public Integer getCommentId() {
-		return commentId;
-	}
+    public Integer getCommentId() {
+        return commentId;
+    }
 
-	public String getCommentDateStr() {
-		return (commentDate != null) ? this.commentDate.toString() : "";
-	}
+    public String getCommentDateStr() {
+        return (commentDate != null) ? this.commentDate.toString() : "";
+    }
 
-	public Date getCommentDate() {
-		return this.commentDate;
-	}
+    public Date getCommentDate() {
+        return this.commentDate;
+    }
 
-	public String getComment() {
-		return this.comment;
-	}
+    public String getComment() {
+        return this.comment;
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public AccountBO getAccount() {
+        return account;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
-	public String getPersonnelName() {
-		return personnel.getDisplayName();
-	}
+    public String getPersonnelName() {
+        return personnel.getDisplayName();
+    }
 
 }

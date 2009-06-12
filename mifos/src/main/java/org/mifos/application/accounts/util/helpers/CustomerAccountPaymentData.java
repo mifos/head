@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import java.util.HashMap;
@@ -34,52 +34,50 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerAccountPaymentData extends AccountPaymentData {
 
-	private Money miscFeePaid;
+    private Money miscFeePaid;
 
-	private Money miscPenaltyPaid;
+    private Money miscPenaltyPaid;
 
-	private Map<Short, Money> feesPaid;
+    private Map<Short, Money> feesPaid;
 
-	public Map<Short, Money> getFeesPaid() {
-		return feesPaid;
-	}
+    public Map<Short, Money> getFeesPaid() {
+        return feesPaid;
+    }
 
-	private void setFeesPaid(Map<Short, Money> feesPaid) {
-		this.feesPaid = feesPaid;
-	}
+    private void setFeesPaid(Map<Short, Money> feesPaid) {
+        this.feesPaid = feesPaid;
+    }
 
-	public Money getMiscFeePaid() {
-		return miscFeePaid;
-	}
+    public Money getMiscFeePaid() {
+        return miscFeePaid;
+    }
 
-	private void setMiscFeePaid(Money miscFeePaid) {
-		this.miscFeePaid = miscFeePaid;
-	}
+    private void setMiscFeePaid(Money miscFeePaid) {
+        this.miscFeePaid = miscFeePaid;
+    }
 
-	public Money getMiscPenaltyPaid() {
-		return miscPenaltyPaid;
-	}
+    public Money getMiscPenaltyPaid() {
+        return miscPenaltyPaid;
+    }
 
-	private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
-		this.miscPenaltyPaid = miscPenaltyPaid;
-	}
+    private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+        this.miscPenaltyPaid = miscPenaltyPaid;
+    }
 
-	public CustomerAccountPaymentData(AccountActionDateEntity accountAction) {
-		super(accountAction);
-		CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountAction;
-		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		setMiscFeePaid(customerSchedule.getMiscFee());
-		setMiscPenaltyPaid(customerSchedule.getMiscPenalty());
-		for (AccountFeesActionDetailEntity accountFees : customerSchedule
-				.getAccountFeesActionDetails()) {
-			feesPaid.put(accountFees.getFee().getFeeId(), accountFees
-					.getFeeAmount());
-		}
-		setFeesPaid(feesPaid);
-		setPaymentStatus(PaymentStatus.PAID.getValue());
-	}
+    public CustomerAccountPaymentData(AccountActionDateEntity accountAction) {
+        super(accountAction);
+        CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountAction;
+        Map<Short, Money> feesPaid = new HashMap<Short, Money>();
+        setMiscFeePaid(customerSchedule.getMiscFee());
+        setMiscPenaltyPaid(customerSchedule.getMiscPenalty());
+        for (AccountFeesActionDetailEntity accountFees : customerSchedule.getAccountFeesActionDetails()) {
+            feesPaid.put(accountFees.getFee().getFeeId(), accountFees.getFeeAmount());
+        }
+        setFeesPaid(feesPaid);
+        setPaymentStatus(PaymentStatus.PAID.getValue());
+    }
 
-	public CustomerAccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+    public CustomerAccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
         super(bulkEntryAccountAction);
         CollectionSheetEntryCustomerAccountInstallmentView installmentView = (CollectionSheetEntryCustomerAccountInstallmentView) bulkEntryAccountAction;
         Map<Short, Money> feesPaid = new HashMap<Short, Money>();
@@ -98,8 +96,8 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
         setFeesPaid(feesPaid);
     }
 
-	public Money getTotalPaidAmnt() {
-		Money totalAmount = new Money();
-		return totalAmount.add(getMiscFeePaid()).add(getMiscPenaltyPaid());
-	}
+    public Money getTotalPaidAmnt() {
+        Money totalAmount = new Money();
+        return totalAmount.add(getMiscFeePaid()).add(getMiscPenaltyPaid());
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.util.helpers;
 
 import java.util.ArrayList;
@@ -32,116 +32,108 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanAccountView extends View {
 
-	private Integer accountId;
+    private Integer accountId;
 
-	private Money loanAmount;
+    private Money loanAmount;
 
-	private String prdOfferingShortName;
+    private String prdOfferingShortName;
 
-	private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
+    private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
 
-	private Short accountType;
+    private Short accountType;
 
-	private Short prdOfferingId;
+    private Short prdOfferingId;
 
-	private Short accountSate;
+    private Short accountSate;
 
-	private Short interestDeductedAtDisbursement;
+    private Short interestDeductedAtDisbursement;
 
-	private Double amountPaidAtDisbursement;
+    private Double amountPaidAtDisbursement;
 
-	public LoanAccountView(Integer accountId, String prdOfferingShortName,
-			AccountTypes accountType, Short prdOfferingId, AccountState state,
-			boolean interestDeductedAtDisbursement, Money loanAmount) {
-		this.accountId = accountId;
-		this.prdOfferingShortName = prdOfferingShortName;
-		this.accountType = accountType.getValue();
-		this.prdOfferingId = prdOfferingId;
-		accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
-		this.accountSate = state.getValue();
-		this.interestDeductedAtDisbursement = 
-			interestDeductedAtDisbursement
-			? LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT 
-			: 0;
-		this.loanAmount = loanAmount;
-	}
+    public LoanAccountView(Integer accountId, String prdOfferingShortName, AccountTypes accountType,
+            Short prdOfferingId, AccountState state, boolean interestDeductedAtDisbursement, Money loanAmount) {
+        this.accountId = accountId;
+        this.prdOfferingShortName = prdOfferingShortName;
+        this.accountType = accountType.getValue();
+        this.prdOfferingId = prdOfferingId;
+        accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
+        this.accountSate = state.getValue();
+        this.interestDeductedAtDisbursement = interestDeductedAtDisbursement ? LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT
+                : 0;
+        this.loanAmount = loanAmount;
+    }
 
-	public Integer getAccountId() {
-		return accountId;
-	}
+    public Integer getAccountId() {
+        return accountId;
+    }
 
-	public String getPrdOfferingShortName() {
-		return prdOfferingShortName;
-	}
+    public String getPrdOfferingShortName() {
+        return prdOfferingShortName;
+    }
 
-	public Short getAccountType() {
-		return accountType;
-	}
+    public Short getAccountType() {
+        return accountType;
+    }
 
-	public Short getPrdOfferingId() {
-		return prdOfferingId;
-	}
+    public Short getPrdOfferingId() {
+        return prdOfferingId;
+    }
 
-	public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
-		return accountTrxnDetails;
-	}
+    public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
+        return accountTrxnDetails;
+    }
 
-	public void addTrxnDetails(
-			List<CollectionSheetEntryInstallmentView> accountTrxnDetails) {
-		if (null != accountTrxnDetails && accountTrxnDetails.size() > 0)
-			this.accountTrxnDetails.addAll(accountTrxnDetails);
-	}
+    public void addTrxnDetails(List<CollectionSheetEntryInstallmentView> accountTrxnDetails) {
+        if (null != accountTrxnDetails && accountTrxnDetails.size() > 0)
+            this.accountTrxnDetails.addAll(accountTrxnDetails);
+    }
 
-	public Double getTotalAmountDue() {
-		Money totalAmount = new Money();
-		if (isDisbursalAccount()) {
-			return amountPaidAtDisbursement;
-		} else {
-			if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-				for (CollectionSheetEntryInstallmentView accountAction : accountTrxnDetails) {
-					totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentView)accountAction)
-							.getTotalDueWithFees());
-				}
-			}
-			return totalAmount.getAmountDoubleValue();
-		}
-	}
+    public Double getTotalAmountDue() {
+        Money totalAmount = new Money();
+        if (isDisbursalAccount()) {
+            return amountPaidAtDisbursement;
+        } else {
+            if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
+                for (CollectionSheetEntryInstallmentView accountAction : accountTrxnDetails) {
+                    totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentView) accountAction)
+                            .getTotalDueWithFees());
+                }
+            }
+            return totalAmount.getAmountDoubleValue();
+        }
+    }
 
-	public Short getAccountSate() {
-		return accountSate;
-	}
+    public Short getAccountSate() {
+        return accountSate;
+    }
 
-	private Short getInterestDeductedAtDisbursement() {
-		return interestDeductedAtDisbursement;
-	}
+    private Short getInterestDeductedAtDisbursement() {
+        return interestDeductedAtDisbursement;
+    }
 
-	public boolean isInterestDeductedAtDisbursement() {
-		return getInterestDeductedAtDisbursement() > 0 ? true : false;
-	}
+    public boolean isInterestDeductedAtDisbursement() {
+        return getInterestDeductedAtDisbursement() > 0 ? true : false;
+    }
 
-	public Double getAmountPaidAtDisbursement() {
-		return amountPaidAtDisbursement;
-	}
+    public Double getAmountPaidAtDisbursement() {
+        return amountPaidAtDisbursement;
+    }
 
-	public void setAmountPaidAtDisbursement(Double amountPaidAtDisbursement) {
-		/* Would this check be a good idea?  If not, what does null mean?
-		if (amountPaidAtDisbursement == null) {
-			throw new NullPointerException(
-				"amount paid at disbursement is required");
-		}
-		*/
-		this.amountPaidAtDisbursement = amountPaidAtDisbursement;
-	}
+    public void setAmountPaidAtDisbursement(Double amountPaidAtDisbursement) {
+        /*
+         * Would this check be a good idea? If not, what does null mean? if
+         * (amountPaidAtDisbursement == null) { throw new NullPointerException(
+         * "amount paid at disbursement is required"); }
+         */
+        this.amountPaidAtDisbursement = amountPaidAtDisbursement;
+    }
 
-	public Double getTotalDisburseAmount() {
-		return isDisbursalAccount() ? this.loanAmount.getAmountDoubleValue()
-				: 0.0;
-	}
+    public Double getTotalDisburseAmount() {
+        return isDisbursalAccount() ? this.loanAmount.getAmountDoubleValue() : 0.0;
+    }
 
-	public boolean isDisbursalAccount() {
-		return getAccountSate()
-				.equals(AccountState.LOAN_APPROVED.getValue())
-				|| getAccountSate().equals(
-						AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-	}
+    public boolean isDisbursalAccount() {
+        return getAccountSate().equals(AccountState.LOAN_APPROVED.getValue())
+                || getAccountSate().equals(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
+    }
 }

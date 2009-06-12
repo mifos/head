@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.customer.group.struts.actionforms;
 
+package org.mifos.application.customer.group.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -41,74 +40,72 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class GroupCustActionForm extends CustomerActionForm {
 
-	private CustomerBO parentCustomer;
-	private String centerSystemId;
-	private String parentOfficeId;
-	
-	
-	public String getCenterSystemId() {
-		return centerSystemId;
-	}
+    private CustomerBO parentCustomer;
+    private String centerSystemId;
+    private String parentOfficeId;
 
-	public void setCenterSystemId(String centerSystemId) {
-		this.centerSystemId = centerSystemId;
-	}
+    public String getCenterSystemId() {
+        return centerSystemId;
+    }
 
-	public CustomerBO getParentCustomer() {
-		return parentCustomer;
-	}
+    public void setCenterSystemId(String centerSystemId) {
+        this.centerSystemId = centerSystemId;
+    }
 
-	public void setParentCustomer(CustomerBO parentCustomer) {
-		this.parentCustomer = parentCustomer;
-	}
+    public CustomerBO getParentCustomer() {
+        return parentCustomer;
+    }
 
-	public String getParentOfficeId() {
-		return parentOfficeId;
-	}
+    public void setParentCustomer(CustomerBO parentCustomer) {
+        this.parentCustomer = parentCustomer;
+    }
 
-	public void setParentOfficeId(String parentOfficeId) {
-		this.parentOfficeId = parentOfficeId;
-	}
-	
-	/*@Override
-	public void setTrainedDate(String s) {
-		throw new IllegalStateException();
-	}*/	
+    public String getParentOfficeId() {
+        return parentOfficeId;
+    }
 
-	@Override
-	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {		
-		ActionErrors errors = new ActionErrors();
-		try {
-		if(method.equals(Methods.previewManage.toString())){
-			validateName(errors);
-			validateTrained(request, errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.GROUP);
-			validateCustomFields(request,errors);
-		}else if(method.equals(Methods.preview.toString())){
-			validateName(errors);
-			validateFormedByPersonnel(errors);
-			validateTrained(request, errors);
-			validateConfigurableMandatoryFields(request,errors,EntityType.GROUP);
-			validateCustomFields(request,errors);			
-			validateFees(request,errors);
-		}
+    public void setParentOfficeId(String parentOfficeId) {
+        this.parentOfficeId = parentOfficeId;
+    }
+
+    /*
+     * @Override public void setTrainedDate(String s) { throw new
+     * IllegalStateException(); }
+     */
+
+    @Override
+    protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
+        ActionErrors errors = new ActionErrors();
+        try {
+            if (method.equals(Methods.previewManage.toString())) {
+                validateName(errors);
+                validateTrained(request, errors);
+                validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);
+                validateCustomFields(request, errors);
+            } else if (method.equals(Methods.preview.toString())) {
+                validateName(errors);
+                validateFormedByPersonnel(errors);
+                validateTrained(request, errors);
+                validateConfigurableMandatoryFields(request, errors, EntityType.GROUP);
+                validateCustomFields(request, errors);
+                validateFees(request, errors);
+            }
         } catch (ApplicationException ae) {
-			// Discard other errors (is that right?)
-        	ae.printStackTrace();
-			errors = new ActionErrors();
-			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-					.getValues()));
-		}
-		if (!errors.isEmpty()) {
-			request.setAttribute(GroupConstants.METHODCALLED, method);
-		}
-		return errors;
-	}
-	
-	@Override
-	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{		
-		if(parentCustomer!=null)
-			return parentCustomer.getCustomerMeeting().getMeeting();
-		 return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);		
-	}
+            // Discard other errors (is that right?)
+            ae.printStackTrace();
+            errors = new ActionErrors();
+            errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae.getValues()));
+        }
+        if (!errors.isEmpty()) {
+            request.setAttribute(GroupConstants.METHODCALLED, method);
+        }
+        return errors;
+    }
+
+    @Override
+    protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
+        if (parentCustomer != null)
+            return parentCustomer.getCustomerMeeting().getMeeting();
+        return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+    }
 }

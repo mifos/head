@@ -17,20 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.configuration.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-
 public class ConfigurationException extends ApplicationException {
 
-	public ConfigurationException(String key) {
-		super(key);
-	}
-	
-	public ConfigurationException(Throwable cause) {
-		super(cause);
-	}
+    public ConfigurationException(String key) {
+        super(key);
+    }
+
+    public ConfigurationException(Throwable cause) {
+        super(cause);
+    }
 
 }

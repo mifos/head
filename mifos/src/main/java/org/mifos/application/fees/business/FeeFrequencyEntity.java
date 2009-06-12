@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.exceptions.FeeException;
@@ -27,66 +27,67 @@ import org.mifos.framework.business.PersistentObject;
 
 public class FeeFrequencyEntity extends PersistentObject {
 
-	private final Short feeFrequencyId;
+    private final Short feeFrequencyId;
 
-	private final FeeFrequencyTypeEntity feeFrequencyType;
+    private final FeeFrequencyTypeEntity feeFrequencyType;
 
-	private final FeePaymentEntity feePayment;
+    private final FeePaymentEntity feePayment;
 
-	private final FeeBO fee;
+    private final FeeBO fee;
 
-	private final MeetingBO feeMeetingFrequency;
+    private final MeetingBO feeMeetingFrequency;
 
-	protected FeeFrequencyEntity() {
-		this.feeFrequencyId = null;
-		this.feeFrequencyType = null;
-		this.feePayment = null;
-		this.fee = null;
-		this.feeMeetingFrequency = null;
-	}
+    protected FeeFrequencyEntity() {
+        this.feeFrequencyId = null;
+        this.feeFrequencyType = null;
+        this.feePayment = null;
+        this.fee = null;
+        this.feeMeetingFrequency = null;
+    }
 
-	protected FeeFrequencyEntity(FeeFrequencyTypeEntity feeFrequencyType, FeeBO fee, FeePaymentEntity feePayment, MeetingBO feeFrequency) throws FeeException{
-		validateFields(feeFrequencyType, fee, feePayment, feeFrequency);
-		this.feeFrequencyId = null;
-		this.feeFrequencyType = feeFrequencyType;
-		this.fee = fee;
-		this.feePayment = feePayment;
-		this.feeMeetingFrequency = feeFrequency;
-	}
+    protected FeeFrequencyEntity(FeeFrequencyTypeEntity feeFrequencyType, FeeBO fee, FeePaymentEntity feePayment,
+            MeetingBO feeFrequency) throws FeeException {
+        validateFields(feeFrequencyType, fee, feePayment, feeFrequency);
+        this.feeFrequencyId = null;
+        this.feeFrequencyType = feeFrequencyType;
+        this.fee = fee;
+        this.feePayment = feePayment;
+        this.feeMeetingFrequency = feeFrequency;
+    }
 
-	public FeeFrequencyTypeEntity getFeeFrequencyType() {
-		return feeFrequencyType;
-	}
+    public FeeFrequencyTypeEntity getFeeFrequencyType() {
+        return feeFrequencyType;
+    }
 
-	public MeetingBO getFeeMeetingFrequency() {
-		return feeMeetingFrequency;
-	}
+    public MeetingBO getFeeMeetingFrequency() {
+        return feeMeetingFrequency;
+    }
 
-	public FeePaymentEntity getFeePayment() {
-		return feePayment;
-	}
-	
-	public boolean isPeriodic() {
-		return getFeeFrequencyType().isPeriodic();
-	}
+    public FeePaymentEntity getFeePayment() {
+        return feePayment;
+    }
 
-	public boolean isOneTime() {
-		return getFeeFrequencyType().isOneTime();
-	}
+    public boolean isPeriodic() {
+        return getFeeFrequencyType().isPeriodic();
+    }
 
-	public boolean isTimeOfDisbursement() {
-		return isOneTime() && getFeePayment().isTimeOfDisbursement();
-	}
-	
-	private void validateFields(FeeFrequencyTypeEntity frequencyType, FeeBO fee, FeePaymentEntity feePayment,
-			MeetingBO feeFrequency)throws FeeException{
-		if(fee==null)
-			throw new FeeException(FeeConstants.INVALID_FEE);
-		if(frequencyType==null)
-			throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
-		if(frequencyType.isOneTime() && feePayment==null)
-			throw new FeeException(FeeConstants.INVALID_FEE_PAYEMENT_TYPE);
-		if(frequencyType.isPeriodic() && feeFrequency==null)
-			throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY);
-	}
+    public boolean isOneTime() {
+        return getFeeFrequencyType().isOneTime();
+    }
+
+    public boolean isTimeOfDisbursement() {
+        return isOneTime() && getFeePayment().isTimeOfDisbursement();
+    }
+
+    private void validateFields(FeeFrequencyTypeEntity frequencyType, FeeBO fee, FeePaymentEntity feePayment,
+            MeetingBO feeFrequency) throws FeeException {
+        if (fee == null)
+            throw new FeeException(FeeConstants.INVALID_FEE);
+        if (frequencyType == null)
+            throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY_TYPE);
+        if (frequencyType.isOneTime() && feePayment == null)
+            throw new FeeException(FeeConstants.INVALID_FEE_PAYEMENT_TYPE);
+        if (frequencyType.isPeriodic() && feeFrequency == null)
+            throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY);
+    }
 }

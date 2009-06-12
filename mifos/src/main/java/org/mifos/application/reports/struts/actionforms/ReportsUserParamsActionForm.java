@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,82 +32,73 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
  * This class is the ActionForm associated with the ReportParams Action.
  */
 public class ReportsUserParamsActionForm extends BaseActionForm {
-	
-	public ReportsUserParamsActionForm() {
-		super();
-	}
-	
-	private int reportId;
-	private String applPath;
-	private String expFormat;
-	private String expFileName;
 
-	/**
-	 * The reset method is used to reset all the values to null.
-	 * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,
-	 *      javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER).info(
-				"In Login Reset");
-		
-		
-		super.reset(mapping, request);
-	}
-	
-	public int getReportId()
-    {
+    public ReportsUserParamsActionForm() {
+        super();
+    }
+
+    private int reportId;
+    private String applPath;
+    private String expFormat;
+    private String expFileName;
+
+    /**
+     * The reset method is used to reset all the values to null.
+     * 
+     * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,
+     *      javax.servlet.http.HttpServletRequest)
+     */
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER).info("In Login Reset");
+
+        super.reset(mapping, request);
+    }
+
+    public int getReportId() {
         return reportId;
     }
 
-    public void setReportId(int reportId)
-    {
+    public void setReportId(int reportId) {
         this.reportId = reportId;
     }
 
-    public String getApplPath()
-    {
+    public String getApplPath() {
         return applPath;
     }
 
-    public void setApplPath(String applPath)
-    {
+    public void setApplPath(String applPath) {
         this.applPath = applPath;
     }
-    
-    public String getExpFormat()
-    {
+
+    public String getExpFormat() {
         return expFormat;
     }
 
-    public void setExpFormat(String expFormat)
-    {
+    public void setExpFormat(String expFormat) {
         this.expFormat = expFormat;
     }
-    
-    public String getExpFileName()
-    {
+
+    public String getExpFileName() {
         return expFileName;
     }
 
-    public void setExpFileName(String expFileName)
-    {
+    public void setExpFileName(String expFileName) {
         this.expFileName = expFileName;
     }
-   	
-	/**
-	 * This method is to skip validation for load method
-	 * @param mapping
-	 * @param request
-	 * @return
-	 */
-	public ActionErrors customValidate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors=new ActionErrors();
-		request.getParameter("method");
-		
-		return errors;
-	}
+
+    /**
+     * This method is to skip validation for load method
+     * 
+     * @param mapping
+     * @param request
+     * @return
+     */
+    public ActionErrors customValidate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        request.getParameter("method");
+
+        return errors;
+    }
 
 }

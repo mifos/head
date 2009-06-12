@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.struts.tags;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 public class BulkEntryTag extends BodyTagSupport {
 
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
-    
+
     @Override
     public int doStartTag() throws JspException {
 
@@ -60,7 +60,8 @@ public class BulkEntryTag extends BodyTagSupport {
         StringBuilder builder = new StringBuilder();
         CollectionSheetEntryBO bulkEntry = null;
         try {
-            bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY, request);
+            bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY,
+                    request);
         } catch (PageExpiredException e) {
             logger.error("Page expired getting BulkEntryBO.");
         }
@@ -71,8 +72,10 @@ public class BulkEntryTag extends BodyTagSupport {
                 List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils.getAttribute(
                         CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, request);
                 String method = request.getParameter(CollectionSheetEntryConstants.METHOD);
-                HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils.getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
-                generateTagData(bulkEntry, loanProducts, savingsProducts, clientAttendance, custAttTypes, method, builder);
+                HashMap<Integer, ClientAttendanceDto> clientAttendance = (HashMap<Integer, ClientAttendanceDto>) SessionUtils
+                        .getAttribute(CollectionSheetEntryConstants.CLIENT_ATTENDANCE, request);
+                generateTagData(bulkEntry, loanProducts, savingsProducts, clientAttendance, custAttTypes, method,
+                        builder);
             } catch (ApplicationException ae) {
                 throw new JspException(ae);
             } catch (SystemException se) {
@@ -88,8 +91,9 @@ public class BulkEntryTag extends BodyTagSupport {
     }
 
     private void generateTagData(CollectionSheetEntryBO bulkEntry, List<PrdOfferingBO> loanProducts,
-            List<PrdOfferingBO> savingsProducts, HashMap<Integer, ClientAttendanceDto> clientAttendance, List<CustomValueListElement> custAttTypes, String method,
-            StringBuilder builder) throws ApplicationException, SystemException, JspException {
+            List<PrdOfferingBO> savingsProducts, HashMap<Integer, ClientAttendanceDto> clientAttendance,
+            List<CustomValueListElement> custAttTypes, String method, StringBuilder builder)
+            throws ApplicationException, SystemException, JspException {
         UserContext userContext = ((UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT));
         BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
         builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts, savingsProducts, userContext
@@ -99,11 +103,11 @@ public class BulkEntryTag extends BodyTagSupport {
 
         boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();
         if (centerHierachyExists) {
-            totals = bulkEntryDisplayHelper.buildForCenter(bulkEntryParentView, loanProducts, savingsProducts, clientAttendance,
-                    custAttTypes, builder, method, userContext, bulkEntry.getOffice().getOfficeId());
+            totals = bulkEntryDisplayHelper.buildForCenter(bulkEntryParentView, loanProducts, savingsProducts,
+                    clientAttendance, custAttTypes, builder, method, userContext, bulkEntry.getOffice().getOfficeId());
         } else {
-            totals = bulkEntryDisplayHelper.buildForGroup(bulkEntryParentView, loanProducts, savingsProducts, clientAttendance,
-                    custAttTypes, builder, method, userContext, bulkEntry.getOffice().getOfficeId());
+            totals = bulkEntryDisplayHelper.buildForGroup(bulkEntryParentView, loanProducts, savingsProducts,
+                    clientAttendance, custAttTypes, builder, method, userContext, bulkEntry.getOffice().getOfficeId());
 
         }
         int columnSize = (2 * (loanProducts.size() + savingsProducts.size())) + 7;

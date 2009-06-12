@@ -17,31 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 /**
- * This exception represent the office exception and thrown when some 
- * error condtion occour in the 
- * office module
+ * This exception represent the office exception and thrown when some error
+ * condtion occour in the office module
  */
 public class OfficeException extends ApplicationException {
-	private static final long serialVersionUID=0l;
+    private static final long serialVersionUID = 0l;
 
-	public OfficeException(String key, Object[] values) {
-		super(key, values);
-		
-	}
-	public OfficeException(String key) {
-		super(key);
-		
-	}
-	public OfficeException(Throwable cause) {
-		super(cause);
-		
-	}
+    public OfficeException(String key, Object[] values) {
+        super(key, values);
 
-	
+    }
+
+    public OfficeException(String key) {
+        super(key);
+
+    }
+
+    public OfficeException(Throwable cause) {
+        super(cause);
+
+    }
+
 }

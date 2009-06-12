@@ -17,55 +17,55 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-public class ClientTransferActionForm extends BaseActionForm{
+public class ClientTransferActionForm extends BaseActionForm {
 
-	private String officeId;
-	private String officeName;
-	private String parentGroupId;
-	private String parentGroupName;
-	
-	public String getOfficeId() {
-		return officeId;
-	}
-	
-	public void setOfficeId(String officeId) {
-		this.officeId = officeId;
-	}
-	
-	public String getOfficeName() {
-		return officeName;
-	}
-	
-	public void setOfficeName(String officeName) {
-		this.officeName = officeName;
-	}
-	
-	public String getParentGroupId() {
-		return parentGroupId;
-	}
+    private String officeId;
+    private String officeName;
+    private String parentGroupId;
+    private String parentGroupName;
 
-	public void setParentGroupId(String parentGroupId) {
-		this.parentGroupId = parentGroupId;
-	}
+    public String getOfficeId() {
+        return officeId;
+    }
 
-	public String getParentGroupName() {
-		return parentGroupName;
-	}
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
 
-	public void setParentGroupName(String parentGroupName) {
-		this.parentGroupName = parentGroupName;
-	}
-	
-	public Short getOfficeIdValue() {
-		return getShortValue(officeId);
-	}
+    public String getOfficeName() {
+        return officeName;
+    }
 
-	public Integer getParentGroupIdValue() {
-		return getIntegerValue(parentGroupId);
-	}
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public String getParentGroupId() {
+        return parentGroupId;
+    }
+
+    public void setParentGroupId(String parentGroupId) {
+        this.parentGroupId = parentGroupId;
+    }
+
+    public String getParentGroupName() {
+        return parentGroupName;
+    }
+
+    public void setParentGroupName(String parentGroupName) {
+        this.parentGroupName = parentGroupName;
+    }
+
+    public Short getOfficeIdValue() {
+        return getShortValue(officeId);
+    }
+
+    public Integer getParentGroupIdValue() {
+        return getIntegerValue(parentGroupId);
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
@@ -35,61 +35,53 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public abstract class BaseFinancialActivity {
-	private AccountTrxnEntity accountTrxn;
+    private AccountTrxnEntity accountTrxn;
 
-	private List<FinancialTransactionBO> financialTransactions = new ArrayList<FinancialTransactionBO>();
+    private List<FinancialTransactionBO> financialTransactions = new ArrayList<FinancialTransactionBO>();
 
-	public BaseFinancialActivity(AccountTrxnEntity accountTrxn) {
-		this.accountTrxn = accountTrxn;
-	}
+    public BaseFinancialActivity(AccountTrxnEntity accountTrxn) {
+        this.accountTrxn = accountTrxn;
+    }
 
-	public AccountTrxnEntity getAccountTrxn() {
-		return accountTrxn;
-	}
+    public AccountTrxnEntity getAccountTrxn() {
+        return accountTrxn;
+    }
 
-	public void buildAccountEntries() throws FinancialException {
-		List<BaseAccountingEntry> financialActionEntryList = getFinancialActionEntry();
-		Iterator<BaseAccountingEntry> iterFinancialActionEntry = financialActionEntryList
-				.iterator();
-		while (iterFinancialActionEntry.hasNext()) {
-			BaseAccountingEntry financialActionEntry = iterFinancialActionEntry
-					.next();
-			financialActionEntry.buildAccountEntryForAction(this);
-		}
+    public void buildAccountEntries() throws FinancialException {
+        List<BaseAccountingEntry> financialActionEntryList = getFinancialActionEntry();
+        Iterator<BaseAccountingEntry> iterFinancialActionEntry = financialActionEntryList.iterator();
+        while (iterFinancialActionEntry.hasNext()) {
+            BaseAccountingEntry financialActionEntry = iterFinancialActionEntry.next();
+            financialActionEntry.buildAccountEntryForAction(this);
+        }
 
-		Iterator<FinancialTransactionBO> iterFinancialTransactions = financialTransactions
-				.iterator();
-		while (iterFinancialTransactions.hasNext()) {
-			FinancialTransactionBO financialTransaction = iterFinancialTransactions
-					.next();
-			accountTrxn.addFinancialTransction(financialTransaction);
-		}
+        Iterator<FinancialTransactionBO> iterFinancialTransactions = financialTransactions.iterator();
+        while (iterFinancialTransactions.hasNext()) {
+            FinancialTransactionBO financialTransaction = iterFinancialTransactions.next();
+            accountTrxn.addFinancialTransction(financialTransaction);
+        }
 
-	}
+    }
 
-	public void addFinancialTransaction(
-			FinancialTransactionBO financialTransaction) {
-		financialTransactions.add(financialTransaction);
-	}
+    public void addFinancialTransaction(FinancialTransactionBO financialTransaction) {
+        financialTransactions.add(financialTransaction);
+    }
 
-	public List<FinancialTransactionBO> getFinanacialTransaction() {
-		return financialTransactions;
-	}
+    public List<FinancialTransactionBO> getFinanacialTransaction() {
+        return financialTransactions;
+    }
 
-	protected abstract List<BaseAccountingEntry> getFinancialActionEntry();
+    protected abstract List<BaseAccountingEntry> getFinancialActionEntry();
 
-	public Money getMiscPenaltyAmount() {
-		Money amount = new Money();
-		AccountBO account = getAccountTrxn().getAccount();
-		if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-			amount = ((LoanTrxnDetailEntity) 
-				getAccountTrxn()).getMiscPenaltyAmount();
-		}
-		else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
-			amount = ((CustomerTrxnDetailEntity) 
-				getAccountTrxn()).getMiscPenaltyAmount();
-		}
-		return amount;
-	}
+    public Money getMiscPenaltyAmount() {
+        Money amount = new Money();
+        AccountBO account = getAccountTrxn().getAccount();
+        if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+            amount = ((LoanTrxnDetailEntity) getAccountTrxn()).getMiscPenaltyAmount();
+        } else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
+            amount = ((CustomerTrxnDetailEntity) getAccountTrxn()).getMiscPenaltyAmount();
+        }
+        return amount;
+    }
 
 }

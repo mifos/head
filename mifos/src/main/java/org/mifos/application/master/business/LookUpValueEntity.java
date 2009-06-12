@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import java.util.Set;
@@ -28,78 +28,76 @@ import org.mifos.framework.business.PersistentObject;
 
 public class LookUpValueEntity extends PersistentObject implements LocalizedTextLookup {
 
-	private Integer lookUpId;
+    private Integer lookUpId;
 
-	/*
-	 * The key used for retrieving localized resource bundle message text.
-	 */
-	private String lookUpName;
+    /*
+     * The key used for retrieving localized resource bundle message text.
+     */
+    private String lookUpName;
 
-	private MifosLookUpEntity lookUpEntity;
+    private MifosLookUpEntity lookUpEntity;
 
-	private Set<LookUpValueLocaleEntity> lookUpValueLocales;
+    private Set<LookUpValueLocaleEntity> lookUpValueLocales;
 
-	public String getLookUpName() {
-		return lookUpName;
-	}
+    public String getLookUpName() {
+        return lookUpName;
+    }
 
-	public void setLookUpName(String lookUpName) {
-		this.lookUpName = lookUpName;
-	}
+    public void setLookUpName(String lookUpName) {
+        this.lookUpName = lookUpName;
+    }
 
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
+    public Integer getLookUpId() {
+        return lookUpId;
+    }
 
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
+    public void setLookUpId(Integer lookUpId) {
+        this.lookUpId = lookUpId;
+    }
 
-	public MifosLookUpEntity getLookUpEntity() {
-		return lookUpEntity;
-	}
+    public MifosLookUpEntity getLookUpEntity() {
+        return lookUpEntity;
+    }
 
-	public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
-		this.lookUpEntity = lookUpEntity;
-	}
+    public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
+        this.lookUpEntity = lookUpEntity;
+    }
 
-	public Set<LookUpValueLocaleEntity> getLookUpValueLocales() {
-		return lookUpValueLocales;
-	}
+    public Set<LookUpValueLocaleEntity> getLookUpValueLocales() {
+        return lookUpValueLocales;
+    }
 
-	public void setLookUpValueLocales(
-			Set<LookUpValueLocaleEntity> lookUpValueLocales) {
-		this.lookUpValueLocales = lookUpValueLocales;
-	}
+    public void setLookUpValueLocales(Set<LookUpValueLocaleEntity> lookUpValueLocales) {
+        this.lookUpValueLocales = lookUpValueLocales;
+    }
 
-	/*
-	 * Get the localized text for this object (or the override
-	 * value from the database if present)
-	 */
-	public String getMessageText() {
-		String messageText = null;
-		Set<LookUpValueLocaleEntity> list = getLookUpValueLocales();
-		if (list != null)
-		{
-			for (LookUpValueLocaleEntity lookUpValueLocale : list) {
-				if (lookUpValueLocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
-					messageText = lookUpValueLocale.getLookUpValue();				
-				}
-			}
-		}
-	
-		if (messageText != null && messageText.length() > 0) {
-			return messageText;
-		} else {
-			return MessageLookup.getInstance().lookup(this);
-		}
-	}
+    /*
+     * Get the localized text for this object (or the override value from the
+     * database if present)
+     */
+    public String getMessageText() {
+        String messageText = null;
+        Set<LookUpValueLocaleEntity> list = getLookUpValueLocales();
+        if (list != null) {
+            for (LookUpValueLocaleEntity lookUpValueLocale : list) {
+                if (lookUpValueLocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
+                    messageText = lookUpValueLocale.getLookUpValue();
+                }
+            }
+        }
 
-	/*
-	 * The key used to lookup localized properties text.
-	 */
-	public String getPropertiesKey() {
-		return getLookUpName();
-	}
+        if (messageText != null && messageText.length() > 0) {
+            return messageText;
+        } else {
+            return MessageLookup.getInstance().lookup(this);
+        }
+    }
+
+    /*
+     * The key used to lookup localized properties text.
+     */
+    public String getPropertiesKey() {
+        return getLookUpName();
+    }
 
 }

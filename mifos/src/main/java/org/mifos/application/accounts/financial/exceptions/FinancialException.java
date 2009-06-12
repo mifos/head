@@ -17,23 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class FinancialException extends ApplicationException {
 
-	public FinancialException(String key) {
-		super(key);
-	}
+    public FinancialException(String key) {
+        super(key);
+    }
 
-	public FinancialException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public FinancialException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
-	public FinancialException(Throwable cause) {
-		super(cause);
-	}
+    public FinancialException(Throwable cause) {
+        super(cause);
+    }
 
 }

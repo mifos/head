@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.util.helpers;
 
 import java.text.ParseException;
@@ -46,168 +46,152 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
-	// TODO: pick from configuration
-	/** I assume the hardcoding of 1 Jan 2006 is trying to say 
-	   that the default fiscal year is January 1 to December 31.
-	   Do we use the year?
-	   What does this control, versus 
-	   {@link SavingsConstants#POSTING_DAY}? */
-	public Date getFiscalStartDate() {
-		try {
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			return format.parse("01/01/2006");
-		} catch (ParseException pe) {
-			throw new RuntimeException(pe);
-		}
-	}
+    // TODO: pick from configuration
+    /**
+     * I assume the hardcoding of 1 Jan 2006 is trying to say that the default
+     * fiscal year is January 1 to December 31. Do we use the year? What does
+     * this control, versus {@link SavingsConstants#POSTING_DAY}?
+     */
+    public Date getFiscalStartDate() {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            return format.parse("01/01/2006");
+        } catch (ParseException pe) {
+            throw new RuntimeException(pe);
+        }
+    }
 
-	public SavingsHelper() {
-	}
-	
-	/**
-	 * start from getting a next schedule date after fiscal start date and loop till get a 
-	 * meeting date after account activation date. This won't move if the date is not working date
-	 */
-	private Date getFirstDateForSavingsCalculationAndPosting(MeetingBO meeting,
-			Date accountActivationDate) throws MeetingException {
-		Date date = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(getFiscalStartDate());
-		while (date.compareTo(accountActivationDate) <= 0)
-		{
-			date = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(date);
-		}
-		
-		return date;
-	}
+    public SavingsHelper() {
+    }
 
-	/*
-	 * set the day number as end of month for interest calculation and interest posting date
-	 * and get the meeting date according to the rules set for meeting
-	 */
-	public Date getNextScheduleDate(Date accountActivationDate,
-			Date currentScheduleDate, MeetingBO meeting)
-			throws MeetingException {
-		Date oldMeetingStartDate = meeting.getStartDate();
-		Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
-		setDetailsForMeeting(meeting);
-		Date scheduleDate = (currentScheduleDate == null) ? getFirstDateForSavingsCalculationAndPosting(meeting,
-				accountActivationDate) : meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentScheduleDate);
-		meeting.setStartDate(oldMeetingStartDate);
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
-		return scheduleDate;
-	}	
-	
-	public Date getPrevScheduleDate(Date accountActivationDate,
-			Date currentScheduleDate, MeetingBO meeting)
-			throws MeetingException {
-		Date oldMeetingStartDate = meeting.getStartDate();
-		Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
-		setDetailsForMeeting(meeting);
-		Date prevScheduleDate = meeting
-				.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
-		meeting.setStartDate(oldMeetingStartDate);
-		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
-		return (prevScheduleDate != null && getDate(accountActivationDate)
-				.compareTo(prevScheduleDate) > 0) ? null : prevScheduleDate;
-	}
+    /**
+     * start from getting a next schedule date after fiscal start date and loop
+     * till get a meeting date after account activation date. This won't move if
+     * the date is not working date
+     */
+    private Date getFirstDateForSavingsCalculationAndPosting(MeetingBO meeting, Date accountActivationDate)
+            throws MeetingException {
+        Date date = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(getFiscalStartDate());
+        while (date.compareTo(accountActivationDate) <= 0) {
+            date = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(date);
+        }
 
-	private Date getDate(Date date) {
-		return new Date(date.getTime());
-	}
+        return date;
+    }
 
-	/**
-	 * start from getting a next schedule date after fiscal start date and loop till get a 
-	 * meeting date after account activation date
-	 */
-	private Date getFirstDate(MeetingBO meeting,
-			Date accountActivationDate) throws MeetingException {
-		Date date = null;
-		for (date = meeting
-				.getNextScheduleDateAfterRecurrence(getFiscalStartDate()); date
-				.compareTo(accountActivationDate) <= 0; date = meeting
-				.getNextScheduleDateAfterRecurrence(date))
-			;
-		return date;
-	}
+    /*
+     * set the day number as end of month for interest calculation and interest
+     * posting date and get the meeting date according to the rules set for
+     * meeting
+     */
+    public Date getNextScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)
+            throws MeetingException {
+        Date oldMeetingStartDate = meeting.getStartDate();
+        Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
+        setDetailsForMeeting(meeting);
+        Date scheduleDate = (currentScheduleDate == null) ? getFirstDateForSavingsCalculationAndPosting(meeting,
+                accountActivationDate) : meeting
+                .getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentScheduleDate);
+        meeting.setStartDate(oldMeetingStartDate);
+        meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
+        return scheduleDate;
+    }
 
-	/* from Rhino release the interest calculation date and posting are the same, which is at the end of month */
-	private void setDetailsForMeeting(MeetingBO meeting){
-		meeting.setStartDate(getFiscalStartDate());
-		if (meeting.isMonthly()) {
-			if (meeting.getMeetingTypeEnum() == 
-				MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD) {
-				// interest calculation date is the same date as posting date
-				meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1)); 
-				meeting.getMeetingDetails().getMeetingRecurrence()
-				.setDayNumber(SavingsConstants.POSTING_DAY);
-			}
-			else if(meeting.getMeetingTypeEnum() == 
-				MeetingType.SAVINGS_INTEREST_POSTING) {
-				meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1));
-				meeting.getMeetingDetails().getMeetingRecurrence()
-					.setDayNumber(SavingsConstants.POSTING_DAY);
-			}
-		}
-	}
-	
-	public int calculateDays(Date fromDate, Date toDate) {
-		long oneDay = 1000 * 60 * 60 * 24;
-		long days = 
-			(getMFITime(toDate) / oneDay) - (getMFITime(fromDate) / oneDay);
-		return (int) days;
-	}
+    public Date getPrevScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)
+            throws MeetingException {
+        Date oldMeetingStartDate = meeting.getStartDate();
+        Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
+        setDetailsForMeeting(meeting);
+        Date prevScheduleDate = meeting.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
+        meeting.setStartDate(oldMeetingStartDate);
+        meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
+        return (prevScheduleDate != null && getDate(accountActivationDate).compareTo(prevScheduleDate) > 0) ? null
+                : prevScheduleDate;
+    }
 
-	private long getMFITime(Date date) {
-		Calendar cal1 = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-		cal1.setTimeZone(Configuration.getInstance()
-                .getSystemConfig().getMifosTimeZone());
-		cal1.setTime(date);
-		return date.getTime() + cal1.get(Calendar.ZONE_OFFSET)
-				+ cal1.get(Calendar.DST_OFFSET);
-	}
+    private Date getDate(Date date) {
+        return new Date(date.getTime());
+    }
 
-	public Date getCurrentDate() {
-	    return new DateTimeService().getCurrentDateMidnight().toDate();
-	}
+    /**
+     * start from getting a next schedule date after fiscal start date and loop
+     * till get a meeting date after account activation date
+     */
+    private Date getFirstDate(MeetingBO meeting, Date accountActivationDate) throws MeetingException {
+        Date date = null;
+        for (date = meeting.getNextScheduleDateAfterRecurrence(getFiscalStartDate()); date
+                .compareTo(accountActivationDate) <= 0; date = meeting.getNextScheduleDateAfterRecurrence(date))
+            ;
+        return date;
+    }
 
-	public AccountActionDateEntity createActionDateObject(AccountBO account,
-			CustomerBO customer, Short installmentId, Date date, Short userId,
-			Money amount) {
-		AccountActionDateEntity actionDate = new SavingsScheduleEntity(account,
-				customer, installmentId, new java.sql.Date(date.getTime()),
-				PaymentStatus.UNPAID, amount);
-		actionDate.setCreatedBy(userId);
-		actionDate.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-		return actionDate;
-	}
+    /*
+     * from Rhino release the interest calculation date and posting are the
+     * same, which is at the end of month
+     */
+    private void setDetailsForMeeting(MeetingBO meeting) {
+        meeting.setStartDate(getFiscalStartDate());
+        if (meeting.isMonthly()) {
+            if (meeting.getMeetingTypeEnum() == MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD) {
+                // interest calculation date is the same date as posting date
+                meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1));
+                meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(SavingsConstants.POSTING_DAY);
+            } else if (meeting.getMeetingTypeEnum() == MeetingType.SAVINGS_INTEREST_POSTING) {
+                meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1));
+                meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(SavingsConstants.POSTING_DAY);
+            }
+        }
+    }
 
-	public AccountTrxnEntity createAccountPaymentTrxn(
-			AccountPaymentEntity payment, Money balance,
-			AccountActionEntity accountAction, CustomerBO customer,
-			PersonnelBO createdBy) {
-		SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(
-				payment, customer, accountAction, payment.getAmount(), balance,
-				createdBy, null, new SavingsHelper().getCurrentDate(), null, "");
-		return savingsTrxn;
-	}
+    public int calculateDays(Date fromDate, Date toDate) {
+        long oneDay = 1000 * 60 * 60 * 24;
+        long days = (getMFITime(toDate) / oneDay) - (getMFITime(fromDate) / oneDay);
+        return (int) days;
+    }
 
-	public AccountPaymentEntity createAccountPayment(AccountBO account,
-			Money amount, PaymentTypeEntity paymentTypeEntity,
-			PersonnelBO createdBy) {
-		AccountPaymentEntity payment = new AccountPaymentEntity(account,
-				amount, null, null, paymentTypeEntity, new DateTimeService().getCurrentJavaDateTime());
-		if (createdBy != null)
-			payment.setCreatedBy(createdBy.getPersonnelId());
-		payment.setCreatedDate(getCurrentDate());
-		payment.setAmount(amount);
-		return payment;
-	}
+    private long getMFITime(Date date) {
+        Calendar cal1 = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
+        cal1.setTimeZone(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
+        cal1.setTime(date);
+        return date.getTime() + cal1.get(Calendar.ZONE_OFFSET) + cal1.get(Calendar.DST_OFFSET);
+    }
 
-	public Short getPaymentActionType(AccountPaymentEntity payment) {
-		for (AccountTrxnEntity accntTrxn : payment.getAccountTrxns()) {
-			if (!accntTrxn.getAccountActionEntity().getId().equals(
-					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()))
-				return accntTrxn.getAccountActionEntity().getId();
-		}
-		return null;
-	}
+    public Date getCurrentDate() {
+        return new DateTimeService().getCurrentDateMidnight().toDate();
+    }
+
+    public AccountActionDateEntity createActionDateObject(AccountBO account, CustomerBO customer, Short installmentId,
+            Date date, Short userId, Money amount) {
+        AccountActionDateEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,
+                new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, amount);
+        actionDate.setCreatedBy(userId);
+        actionDate.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+        return actionDate;
+    }
+
+    public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance,
+            AccountActionEntity accountAction, CustomerBO customer, PersonnelBO createdBy) {
+        SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(payment, customer, accountAction, payment
+                .getAmount(), balance, createdBy, null, new SavingsHelper().getCurrentDate(), null, "");
+        return savingsTrxn;
+    }
+
+    public AccountPaymentEntity createAccountPayment(AccountBO account, Money amount,
+            PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy) {
+        AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity,
+                new DateTimeService().getCurrentJavaDateTime());
+        if (createdBy != null)
+            payment.setCreatedBy(createdBy.getPersonnelId());
+        payment.setCreatedDate(getCurrentDate());
+        payment.setAmount(amount);
+        return payment;
+    }
+
+    public Short getPaymentActionType(AccountPaymentEntity payment) {
+        for (AccountTrxnEntity accntTrxn : payment.getAccountTrxns()) {
+            if (!accntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()))
+                return accntTrxn.getAccountActionEntity().getId();
+        }
+        return null;
+    }
 }

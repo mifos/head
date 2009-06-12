@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
 import java.math.BigDecimal;
@@ -39,59 +39,60 @@ import org.mifos.framework.util.helpers.DateUtils;
  */
 public class LoanUIHelperFn {
 
-	private static ConfigurationBusinessService configService = new ConfigurationBusinessService();
+    private static ConfigurationBusinessService configService = new ConfigurationBusinessService();
 
-	public LoanUIHelperFn() {
-		super();
-	}
-	
-	public static String getCurrrentDate(Locale locale) {
-		return DateUtils.getCurrentDate(locale);
-	}
+    public LoanUIHelperFn() {
+        super();
+    }
 
-	public static String getMeetingRecurrence(Object meeting,	Object userContext) {
-		return  meeting!=null ? new MeetingHelper().getMessageWithFrequency((MeetingBO)meeting, (UserContext)userContext):null;
-	}
-	
-	public static String getDoubleValue(Double value) {
-		if (value != null)
-			return BigDecimal.valueOf(value).toString();
-		else
-			return "0.0";
-	}
-	
-	static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState, ConfigurationBusinessService configService){
-		try {
-			if(!configService.isGlimEnabled())
-				return false;
-		}
-		catch (ServiceException e) {
-			throw new RuntimeException(e);
-		}
-		if(accountState == null) 
-			return false;
+    public static String getCurrrentDate(Locale locale) {
+        return DateUtils.getCurrentDate(locale);
+    }
 
-		if(Arrays.asList(AccountState.LOAN_PARTIAL_APPLICATION, AccountState.LOAN_PENDING_APPROVAL).contains(accountState)){
-			return false;
-		}
-		if(Arrays.asList(AccountState.LOAN_APPROVED, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState))
-			//disabling only the GLIM parts of the loan
-			return Arrays.asList("clientDetails.loanAmount",
-					"clientDetails.clientId"					
-					//,"noOfInstallments",					
-					//"disbursementDate",
-					//"gracePeriod",
-					//"collateralType",
-					//"collateralNotes",
-					//"customField","disbursementDate",
-					//"weekDayId", "ordinalOfMonth"
-					).contains(fieldName);
-		return true;
-	}
-	
-	
-	public static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState){
-		return isDisabledWhileEditingGlim(fieldName, accountState, configService);
-	}
-	
+    public static String getMeetingRecurrence(Object meeting, Object userContext) {
+        return meeting != null ? new MeetingHelper().getMessageWithFrequency((MeetingBO) meeting,
+                (UserContext) userContext) : null;
+    }
+
+    public static String getDoubleValue(Double value) {
+        if (value != null)
+            return BigDecimal.valueOf(value).toString();
+        else
+            return "0.0";
+    }
+
+    static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState,
+            ConfigurationBusinessService configService) {
+        try {
+            if (!configService.isGlimEnabled())
+                return false;
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
+        if (accountState == null)
+            return false;
+
+        if (Arrays.asList(AccountState.LOAN_PARTIAL_APPLICATION, AccountState.LOAN_PENDING_APPROVAL).contains(
+                accountState)) {
+            return false;
+        }
+        if (Arrays.asList(AccountState.LOAN_APPROVED, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
+                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState))
+            // disabling only the GLIM parts of the loan
+            return Arrays.asList("clientDetails.loanAmount", "clientDetails.clientId"
+            // ,"noOfInstallments",
+                    // "disbursementDate",
+                    // "gracePeriod",
+                    // "collateralType",
+                    // "collateralNotes",
+                    // "customField","disbursementDate",
+                    // "weekDayId", "ordinalOfMonth"
+                    ).contains(fieldName);
+        return true;
+    }
+
+    public static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState) {
+        return isDisabledWhileEditingGlim(fieldName, accountState, configService);
+    }
+
 }

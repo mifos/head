@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.persistence;
 
 import java.io.IOException;
@@ -29,32 +29,31 @@ import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
 
 /**
- * Upgrade173 is a conditional upgrade that removes default custom lookup
- * values (like Saluation, Marital Status, Loan Purpose...) 
- * from the database if the database is clean (the proxy for "clean" is 
- * that no other offices than the default head offices exist in the database)
+ * Upgrade173 is a conditional upgrade that removes default custom lookup values
+ * (like Saluation, Marital Status, Loan Purpose...) from the database if the
+ * database is clean (the proxy for "clean" is that no other offices than the
+ * default head offices exist in the database)
  */
 public class Upgrade173 extends Upgrade {
 
-	public Upgrade173() {
-		super(173);
-	}
+    public Upgrade173() {
+        super(173);
+    }
 
-		
-	/**
-	 * Don't apply the upgrade if there is any data in the database.  
-	 * This upgrade is used to keep the testing framework consistent in
-	 * being able to upgrade and downgrade a "clean" database.
-	 */
-	@Override
-	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-		if (noOfficesHaveBeenCreatedByEndUsers(connection)) {
-			SqlUpgrade upgrade = databaseVersionPersistence.findUpgradeScript(this.higherVersion(),"upgrade_to_173_conditional.sql");
-			upgrade.runScript(connection);
-		}
-		upgradeVersion(connection);
-	}
-
-	
+    /**
+     * Don't apply the upgrade if there is any data in the database. This
+     * upgrade is used to keep the testing framework consistent in being able to
+     * upgrade and downgrade a "clean" database.
+     */
+    @Override
+    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+            throws IOException, SQLException {
+        if (noOfficesHaveBeenCreatedByEndUsers(connection)) {
+            SqlUpgrade upgrade = databaseVersionPersistence.findUpgradeScript(this.higherVersion(),
+                    "upgrade_to_173_conditional.sql");
+            upgrade.runScript(connection);
+        }
+        upgradeVersion(connection);
+    }
 
 }

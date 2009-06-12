@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -26,34 +26,34 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
  * What's the difference between this and {@link CustomerActionForm} ?
  */
 public class CustActionForm extends BaseActionForm {
-	private String customerId;
+    private String customerId;
 
-	private String globalCustNum;
+    private String globalCustNum;
 
-	private String input;
+    private String input;
 
-	public String getCustomerId() {
-		return customerId;
-	}
+    public String getCustomerId() {
+        return customerId;
+    }
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
-	public String getGlobalCustNum() {
-		return globalCustNum;
-	}
+    public String getGlobalCustNum() {
+        return globalCustNum;
+    }
 
-	public void setGlobalCustNum(String globalCustNum) {
-		this.globalCustNum = globalCustNum;
-	}
+    public void setGlobalCustNum(String globalCustNum) {
+        this.globalCustNum = globalCustNum;
+    }
 
-	public String getInput() {
-		return input;
-	}
+    public String getInput() {
+        return input;
+    }
 
-	public void setInput(String input) {
-		this.input = input;
-	}
+    public void setInput(String input) {
+        this.input = input;
+    }
 
 }

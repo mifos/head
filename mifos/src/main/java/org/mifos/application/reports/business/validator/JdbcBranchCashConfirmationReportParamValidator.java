@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.validator;
 
 import java.util.List;
@@ -27,17 +27,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.mifos.application.reports.business.JdbcBranchCashConfirmationReportParameterForm;
 
 public class JdbcBranchCashConfirmationReportParamValidator extends
-		AbstractReportParameterValidator<JdbcBranchCashConfirmationReportParameterForm> {
-	
-	
-	public JdbcBranchCashConfirmationReportParamValidator(
-			List<String> applicableReportFilePaths) {
-		super(applicableReportFilePaths);
-	}
+        AbstractReportParameterValidator<JdbcBranchCashConfirmationReportParameterForm> {
 
-	public JdbcBranchCashConfirmationReportParameterForm buildReportParameterForm(
-			HttpServletRequest request) {
-		return JdbcBranchCashConfirmationReportParameterForm.build(request);
-	}
+    public JdbcBranchCashConfirmationReportParamValidator(List<String> applicableReportFilePaths) {
+        super(applicableReportFilePaths);
+    }
+
+    public JdbcBranchCashConfirmationReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+        return JdbcBranchCashConfirmationReportParameterForm.build(request);
+    }
 
 }

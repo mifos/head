@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productsmix.business;
 
+package org.mifos.application.productsmix.business;
 
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
@@ -30,93 +29,91 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 
-
 /**
- * This class encapsulate the product mix
- *  (Allowed / Not Allowed products)
+ * This class encapsulate the product mix (Allowed / Not Allowed products)
  */
 
 public class ProductMixBO extends BusinessObject {
 
-	private final Integer prdOfferingMixId;
-	private PrdOfferingBO prdOfferingId;
-	private PrdOfferingBO prdOfferingNotAllowedId;
-	
+    private final Integer prdOfferingMixId;
+    private PrdOfferingBO prdOfferingId;
+    private PrdOfferingBO prdOfferingNotAllowedId;
 
-	private MifosLogger prdMixLogger = MifosLogManager
-			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
-	
-	public ProductMixBO() {
-		this.prdOfferingMixId = null;
-		this.prdOfferingId = null;
-		this.prdOfferingNotAllowedId = null;
-		this.prdMixLogger = null;
-	}
-	public ProductMixBO(PrdOfferingBO prdOfferingId,
-			PrdOfferingBO prdOfferingNotAllowedId) {
-		this.prdOfferingMixId = null;
-		this.prdOfferingId = prdOfferingId;
-		this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
+    private MifosLogger prdMixLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	}
+    public ProductMixBO() {
+        this.prdOfferingMixId = null;
+        this.prdOfferingId = null;
+        this.prdOfferingNotAllowedId = null;
+        this.prdMixLogger = null;
+    }
 
-	public MifosLogger getPrdMixLogger() {
-		return prdMixLogger;
-	}
-	public void setPrdMixLogger(MifosLogger prdMixLogger) {
-		this.prdMixLogger = prdMixLogger;
-	}
-	public PrdOfferingBO getPrdOfferingId() {
-		return prdOfferingId;
-	}
-	public void setPrdOfferingId(PrdOfferingBO prdOfferingId) {
-		this.prdOfferingId = prdOfferingId;
-	}
-	public Integer getPrdOfferingMixId() {
-		return prdOfferingMixId;
-	}
-	public PrdOfferingBO getPrdOfferingNotAllowedId() {
-		return prdOfferingNotAllowedId;
-	}
-	public void setPrdOfferingNotAllowedId(PrdOfferingBO prdOfferingNotAllowedId) {
-		this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
-	}
-	public void update() throws ProductDefinitionException {
-		try {
-			setUpdateDetails();
-			new ProductMixPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
-	public void delete() throws ProductDefinitionException {
-		try {
-			new ProductMixPersistence().delete(this);
-		}
-		catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
-	
-	public void save() throws ProductDefinitionException {
-		try {
-			new ProductMixPersistence().createOrUpdate(this);
-		}
-		catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
-	
-	public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A, Short idPrdOff_B)
-			throws PersistenceException {
-		try {
-			return new ProductMixPersistence().doesPrdOfferingsCanCoexist(
-					idPrdOff_A, idPrdOff_B);
-		}
-		catch (PersistenceException e) {
-			throw new PersistenceException(e);
-		}
-	}
+    public ProductMixBO(PrdOfferingBO prdOfferingId, PrdOfferingBO prdOfferingNotAllowedId) {
+        this.prdOfferingMixId = null;
+        this.prdOfferingId = prdOfferingId;
+        this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
 
+    }
+
+    public MifosLogger getPrdMixLogger() {
+        return prdMixLogger;
+    }
+
+    public void setPrdMixLogger(MifosLogger prdMixLogger) {
+        this.prdMixLogger = prdMixLogger;
+    }
+
+    public PrdOfferingBO getPrdOfferingId() {
+        return prdOfferingId;
+    }
+
+    public void setPrdOfferingId(PrdOfferingBO prdOfferingId) {
+        this.prdOfferingId = prdOfferingId;
+    }
+
+    public Integer getPrdOfferingMixId() {
+        return prdOfferingMixId;
+    }
+
+    public PrdOfferingBO getPrdOfferingNotAllowedId() {
+        return prdOfferingNotAllowedId;
+    }
+
+    public void setPrdOfferingNotAllowedId(PrdOfferingBO prdOfferingNotAllowedId) {
+        this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
+    }
+
+    public void update() throws ProductDefinitionException {
+        try {
+            setUpdateDetails();
+            new ProductMixPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
+
+    public void delete() throws ProductDefinitionException {
+        try {
+            new ProductMixPersistence().delete(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
+
+    public void save() throws ProductDefinitionException {
+        try {
+            new ProductMixPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
+
+    public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A, Short idPrdOff_B) throws PersistenceException {
+        try {
+            return new ProductMixPersistence().doesPrdOfferingsCanCoexist(idPrdOff_A, idPrdOff_B);
+        } catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+    }
 
 }

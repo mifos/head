@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import org.mifos.framework.business.BusinessObject;
@@ -26,65 +26,54 @@ import org.mifos.framework.security.util.UserContext;
 /**
  * This class encapsulates the Reports Parameters Map with Reports Parameter
  */
-public class ReportsParamsMap extends BusinessObject
-{
-	private ReportsParams reportsParams;
-	private int parameterId;
+public class ReportsParamsMap extends BusinessObject {
+    private ReportsParams reportsParams;
+    private int parameterId;
     private int reportId;
     private int mapId;
- 
-	public ReportsParamsMap()
-    {
+
+    public ReportsParamsMap() {
         this.reportsParams = new ReportsParams();
     }
-   
-    public ReportsParamsMap(UserContext userContext)
-    {
+
+    public ReportsParamsMap(UserContext userContext) {
         super(userContext);
     }
 
-    public int getParameterId()
-    {
+    public int getParameterId() {
         return parameterId;
     }
 
-    public void setParameterId(int parameterId)
-    {
+    public void setParameterId(int parameterId) {
         this.parameterId = parameterId;
     }
 
-    
-    public int getReportId()
-    {
+    public int getReportId() {
         return reportId;
     }
 
-    public void setReportId(int reportId)
-    {
+    public void setReportId(int reportId) {
         this.reportId = reportId;
-    }	
-    
-    public int getMapId()
-    {
-    	return mapId;
     }
-    
-    public void setMapId(int mapId)
-    {
-    	this.mapId = mapId;
+
+    public int getMapId() {
+        return mapId;
     }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
+
     public ReportsParams getReportsParams() {
-		return reportsParams;
-	}
+        return reportsParams;
+    }
 
-	public void setReportsParams(ReportsParams reportsParams) {
-		this.reportsParams = reportsParams;
-	}
+    public void setReportsParams(ReportsParams reportsParams) {
+        this.reportsParams = reportsParams;
+    }
 
-	
-	public Short getEntityID() {
-		return null;
-	}	
-	    
+    public Short getEntityID() {
+        return null;
+    }
+
 }
-

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -25,23 +25,23 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeePaymentEntity extends MasterDataEntity {
 
-	public FeePaymentEntity(FeePayment feePayment) {
-		super(feePayment.getValue());
-	}
+    public FeePaymentEntity(FeePayment feePayment) {
+        super(feePayment.getValue());
+    }
 
-	protected FeePaymentEntity() {
-	}
+    protected FeePaymentEntity() {
+    }
 
-	public boolean isTimeOfDisbursement() {
-		return getId().equals(FeePayment.TIME_OF_DISBURSMENT.getValue());
-	}
+    public boolean isTimeOfDisbursement() {
+        return getId().equals(FeePayment.TIME_OF_DISBURSMENT.getValue());
+    }
 
-	public FeePayment getFeePayment() {
-		FeePayment[] feePayments = FeePayment.values();
-		for (FeePayment feePayment : feePayments) {
-			if (getId().equals(feePayment.getValue()))
-				return feePayment;
-		}
-		return null;
-	}
+    public FeePayment getFeePayment() {
+        FeePayment[] feePayments = FeePayment.values();
+        for (FeePayment feePayment : feePayments) {
+            if (getId().equals(feePayment.getValue()))
+                return feePayment;
+        }
+        return null;
+    }
 }

@@ -17,34 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
-
 public enum FeePayment {
-	UPFRONT((short) 1), 
-	TIME_OF_DISBURSMENT((short) 2), 
-	TIME_OF_FIRSTLOANREPAYMENT((short) 3);
+    UPFRONT((short) 1), TIME_OF_DISBURSMENT((short) 2), TIME_OF_FIRSTLOANREPAYMENT((short) 3);
 
-	private Short value;
+    private Short value;
 
-	private FeePayment(Short value) {
-		this.value = value;
-	}
+    private FeePayment(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static FeePayment getFeePayment(Short value)
-	throws PropertyNotFoundException {
-		for (FeePayment feePayment : FeePayment.values()) {
-			if (feePayment.getValue().equals(value)) {
-				return feePayment;
-			}
-		}
-		throw new PropertyNotFoundException("FeePayment");
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static FeePayment getFeePayment(Short value) throws PropertyNotFoundException {
+        for (FeePayment feePayment : FeePayment.values()) {
+            if (feePayment.getValue().equals(value)) {
+                return feePayment;
+            }
+        }
+        throw new PropertyNotFoundException("FeePayment");
+    }
 }

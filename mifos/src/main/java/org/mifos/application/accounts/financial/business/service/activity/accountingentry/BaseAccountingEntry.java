@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import java.util.Iterator;
@@ -35,72 +35,62 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.framework.util.helpers.Money;
 
 public abstract class BaseAccountingEntry {
-	protected BaseFinancialActivity financialActivity;
+    protected BaseFinancialActivity financialActivity;
 
-	public void buildAccountEntryForAction(
-			BaseFinancialActivity financialActivity) throws FinancialException {
-		this.financialActivity = financialActivity;
-		getSpecificAccountActionEntry();
-	}
+    public void buildAccountEntryForAction(BaseFinancialActivity financialActivity) throws FinancialException {
+        this.financialActivity = financialActivity;
+        getSpecificAccountActionEntry();
+    }
 
-	protected void addAccountEntryDetails(Money postedMoney,
-			FinancialActionBO financialAction, GLCodeEntity glcode,
-			FinancialConstants debitCredit) throws FinancialException {
-		if (postedMoney.getAmountDoubleValue() != 0) {
-			postedMoney = getAmountToPost(postedMoney, financialAction, glcode,
-					debitCredit);
-			FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
-					financialActivity.getAccountTrxn(), null, financialAction,
-					glcode, financialActivity.getAccountTrxn().getActionDate(),
-					financialActivity.getAccountTrxn().getPersonnel(),
-					(short) 1, postedMoney, financialActivity.getAccountTrxn()
-							.getComments(), debitCredit.getValue());
-			financialActivity.addFinancialTransaction(financialTransaction);
-		}
-	}
+    protected void addAccountEntryDetails(Money postedMoney, FinancialActionBO financialAction, GLCodeEntity glcode,
+            FinancialConstants debitCredit) throws FinancialException {
+        if (postedMoney.getAmountDoubleValue() != 0) {
+            postedMoney = getAmountToPost(postedMoney, financialAction, glcode, debitCredit);
+            FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
+                    financialActivity.getAccountTrxn(), null, financialAction, glcode, financialActivity
+                            .getAccountTrxn().getActionDate(), financialActivity.getAccountTrxn().getPersonnel(),
+                    (short) 1, postedMoney, financialActivity.getAccountTrxn().getComments(), debitCredit.getValue());
+            financialActivity.addFinancialTransaction(financialTransaction);
+        }
+    }
 
-	protected abstract void getSpecificAccountActionEntry()
-			throws FinancialException;
+    protected abstract void getSpecificAccountActionEntry() throws FinancialException;
 
-	protected GLCodeEntity getGLcode(Set<COABO> chartsOfAccounts) {
-		Iterator<COABO> iter = chartsOfAccounts.iterator();
-		GLCodeEntity glcode = null;
-		while (iter.hasNext()) {
-			glcode = iter.next().getAssociatedGlcode();
-		}
-		return glcode;
+    protected GLCodeEntity getGLcode(Set<COABO> chartsOfAccounts) {
+        Iterator<COABO> iter = chartsOfAccounts.iterator();
+        GLCodeEntity glcode = null;
+        while (iter.hasNext()) {
+            glcode = iter.next().getAssociatedGlcode();
+        }
+        return glcode;
 
-	}
+    }
 
-	private Money getAmountToPost(Money postedMoney,
-			FinancialActionBO financialAction, GLCodeEntity glcode,
-			FinancialConstants debitCredit) throws FinancialException {
-		COABO chartOfAccounts = ChartOfAccountsCache.get(glcode.getGlcode());
-		if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.ASSET
-				|| chartOfAccounts.getCOAHead().getCategoryType() ==
-						GLCategoryType.EXPENDITURE) {
-			if (debitCredit == FinancialConstants.DEBIT)
-				return postedMoney;
-			else
-				return postedMoney.negate();
-		}
-		if (chartOfAccounts.getCOAHead().getCategoryType() ==
-				GLCategoryType.LIABILITY
-				|| chartOfAccounts.getCOAHead().getCategoryType() ==
-						GLCategoryType.INCOME) {
-			if (debitCredit == FinancialConstants.DEBIT)
-				return postedMoney.negate();
-			else
-				return postedMoney;
-		}
-		return null;
-	}
-	
-	protected Money removeSign(Money amount){
-		if(amount!=null && amount.getAmountDoubleValue()<0)
-			return amount.negate();
-		else
-			return amount;
-	}
+    private Money getAmountToPost(Money postedMoney, FinancialActionBO financialAction, GLCodeEntity glcode,
+            FinancialConstants debitCredit) throws FinancialException {
+        COABO chartOfAccounts = ChartOfAccountsCache.get(glcode.getGlcode());
+        if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.ASSET
+                || chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.EXPENDITURE) {
+            if (debitCredit == FinancialConstants.DEBIT)
+                return postedMoney;
+            else
+                return postedMoney.negate();
+        }
+        if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.LIABILITY
+                || chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.INCOME) {
+            if (debitCredit == FinancialConstants.DEBIT)
+                return postedMoney.negate();
+            else
+                return postedMoney;
+        }
+        return null;
+    }
+
+    protected Money removeSign(Money amount) {
+        if (amount != null && amount.getAmountDoubleValue() < 0)
+            return amount.negate();
+        else
+            return amount;
+    }
 
 }

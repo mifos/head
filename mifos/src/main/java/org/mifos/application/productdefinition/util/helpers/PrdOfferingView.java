@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
 import org.mifos.framework.business.View;
@@ -29,47 +29,46 @@ import org.mifos.framework.business.View;
  */
 public class PrdOfferingView extends View {
 
-	private Short prdOfferingId;
+    private Short prdOfferingId;
 
-	private String prdOfferingName;
+    private String prdOfferingName;
 
-	private String globalPrdOfferingNum;
+    private String globalPrdOfferingNum;
 
-	public PrdOfferingView() {
-		super();
+    public PrdOfferingView() {
+        super();
 
-	}
+    }
 
-	public PrdOfferingView(Short prdOfferingId, String prdOfferingName,
-			String globalPrdOfferingNum) {
-		this.globalPrdOfferingNum = globalPrdOfferingNum;
-		this.prdOfferingName = prdOfferingName;
-		this.prdOfferingId = prdOfferingId;
+    public PrdOfferingView(Short prdOfferingId, String prdOfferingName, String globalPrdOfferingNum) {
+        this.globalPrdOfferingNum = globalPrdOfferingNum;
+        this.prdOfferingName = prdOfferingName;
+        this.prdOfferingId = prdOfferingId;
 
-	}
+    }
 
-	public String getGlobalPrdOfferingNum() {
-		return globalPrdOfferingNum;
-	}
+    public String getGlobalPrdOfferingNum() {
+        return globalPrdOfferingNum;
+    }
 
-	public void setGlobalPrdOfferingNum(String globalPrdOfferingNum) {
-		this.globalPrdOfferingNum = globalPrdOfferingNum;
-	}
+    public void setGlobalPrdOfferingNum(String globalPrdOfferingNum) {
+        this.globalPrdOfferingNum = globalPrdOfferingNum;
+    }
 
-	public Short getPrdOfferingId() {
-		return prdOfferingId;
-	}
+    public Short getPrdOfferingId() {
+        return prdOfferingId;
+    }
 
-	public void setPrdOfferingId(Short prdOfferingId) {
-		this.prdOfferingId = prdOfferingId;
-	}
+    public void setPrdOfferingId(Short prdOfferingId) {
+        this.prdOfferingId = prdOfferingId;
+    }
 
-	public String getPrdOfferingName() {
-		return prdOfferingName;
-	}
+    public String getPrdOfferingName() {
+        return prdOfferingName;
+    }
 
-	public void setPrdOfferingName(String prdOfferingName) {
-		this.prdOfferingName = prdOfferingName;
-	}
+    public void setPrdOfferingName(String prdOfferingName) {
+        this.prdOfferingName = prdOfferingName;
+    }
 
 }

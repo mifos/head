@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -31,92 +31,82 @@ import org.mifos.framework.util.helpers.Money;
 
 public class AmountFeeBO extends FeeBO {
 
-	private Money feeAmount;
+    private Money feeAmount;
 
-	/**
-	 * Constructor to create one time Amount Fee. Fee Payment tells the time
-	 * when fee should be charged. (upfront/time of disbursment etc.)
-	 */
-	public AmountFeeBO(UserContext userContext, String feeName,
-			CategoryTypeEntity categoryType,
-			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
-			Money amount, boolean isCustomerDefaultFee,
-			FeePaymentEntity feePayment) throws FeeException {
-		this(userContext, feeName, categoryType, feeFrequencyType,
-				glCodeEntity, amount, isCustomerDefaultFee, feePayment, null);
-	}
+    /**
+     * Constructor to create one time Amount Fee. Fee Payment tells the time
+     * when fee should be charged. (upfront/time of disbursment etc.)
+     */
+    public AmountFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
+            FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Money amount,
+            boolean isCustomerDefaultFee, FeePaymentEntity feePayment) throws FeeException {
+        this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, amount, isCustomerDefaultFee,
+                feePayment, null);
+    }
 
-	/**
-	 * Constructor to create Periodic Amount Fee. Meeting tells the periodicity
-	 * of fee.
-	 */
-	public AmountFeeBO(UserContext userContext, String feeName,
-			CategoryTypeEntity categoryType,
-			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
-			Money amount, boolean isCustomerDefaultFee, MeetingBO meeting)
-			throws FeeException {
-		this(userContext, feeName, categoryType, feeFrequencyType,
-				glCodeEntity, amount, isCustomerDefaultFee, null, meeting);
-	}
+    /**
+     * Constructor to create Periodic Amount Fee. Meeting tells the periodicity
+     * of fee.
+     */
+    public AmountFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
+            FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Money amount,
+            boolean isCustomerDefaultFee, MeetingBO meeting) throws FeeException {
+        this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, amount, isCustomerDefaultFee, null,
+                meeting);
+    }
 
-	/**
-	 * Addding a default constructor is hibernate's requiremnt and should not be
-	 * used to create a valid AmountFee object.
-	 */
-	protected AmountFeeBO() {
-		super();
-	}
+    /**
+     * Addding a default constructor is hibernate's requiremnt and should not be
+     * used to create a valid AmountFee object.
+     */
+    protected AmountFeeBO() {
+        super();
+    }
 
-	private AmountFeeBO(UserContext userContext, String feeName,
-			CategoryTypeEntity categoryType,
-			FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity,
-			Money amount, boolean isCustomerDefaultFee,
-			FeePaymentEntity feePayment, MeetingBO meeting) throws FeeException {
-		super(userContext, feeName, categoryType, feeFrequencyType,
-				glCodeEntity, isCustomerDefaultFee, feePayment, meeting);
-		validateFeeAmount(amount);
-		this.feeAmount = amount;
-	}
+    private AmountFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
+            FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Money amount,
+            boolean isCustomerDefaultFee, FeePaymentEntity feePayment, MeetingBO meeting) throws FeeException {
+        super(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, isCustomerDefaultFee, feePayment,
+                meeting);
+        validateFeeAmount(amount);
+        this.feeAmount = amount;
+    }
 
-	public Money getFeeAmount() {
-		return feeAmount;
-	}
+    public Money getFeeAmount() {
+        return feeAmount;
+    }
 
-	public void setFeeAmount(Money feeAmount) {
-		this.feeAmount = feeAmount;
-	}
+    public void setFeeAmount(Money feeAmount) {
+        this.feeAmount = feeAmount;
+    }
 
-	@Override
-	public RateAmountFlag getFeeType() {
-		return RateAmountFlag.AMOUNT;
-	}
+    @Override
+    public RateAmountFlag getFeeType() {
+        return RateAmountFlag.AMOUNT;
+    }
 
-	@Override
-	public boolean doesFeeInvolveFractionalAmounts() {
-		return ! this.getFeeAmount().isRoundedAmount();
-	}
-	
-	private void validateFeeAmount(Money amount) throws FeeException {
-		if (amount == null || amount.getAmountDoubleValue() <= 0.0)
-			throw new FeeException(FeeConstants.INVALID_FEE_AMOUNT);
-	}
+    @Override
+    public boolean doesFeeInvolveFractionalAmounts() {
+        return !this.getFeeAmount().isRoundedAmount();
+    }
 
-	public FeeChangeType calculateNewFeeChangeType(Money otherAmount,
-			FeeStatusEntity otherStatus) {
-		if (!feeAmount.equals(otherAmount)) {
-			if (!getFeeStatus().getId().equals(otherStatus.getId())) {
-				return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
-			}
-			else {
-				return FeeChangeType.AMOUNT_UPDATED;
-			}
-		}
-		else if (!getFeeStatus().getId().equals(otherStatus.getId())) {
-			return FeeChangeType.STATUS_UPDATED;
-		}
-		else {
-			return FeeChangeType.NOT_UPDATED;
-		}
-	}
+    private void validateFeeAmount(Money amount) throws FeeException {
+        if (amount == null || amount.getAmountDoubleValue() <= 0.0)
+            throw new FeeException(FeeConstants.INVALID_FEE_AMOUNT);
+    }
+
+    public FeeChangeType calculateNewFeeChangeType(Money otherAmount, FeeStatusEntity otherStatus) {
+        if (!feeAmount.equals(otherAmount)) {
+            if (!getFeeStatus().getId().equals(otherStatus.getId())) {
+                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+            } else {
+                return FeeChangeType.AMOUNT_UPDATED;
+            }
+        } else if (!getFeeStatus().getId().equals(otherStatus.getId())) {
+            return FeeChangeType.STATUS_UPDATED;
+        } else {
+            return FeeChangeType.NOT_UPDATED;
+        }
+    }
 
 }

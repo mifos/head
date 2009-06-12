@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.holiday.business;
 
 import org.mifos.application.master.MessageLookup;
@@ -26,43 +26,43 @@ import org.mifos.framework.business.BusinessObject;
 
 public class RepaymentRuleEntity extends BusinessObject {
 
-	private LookUpValueEntity lookUpObject;
-	
-	private String lookUpValueKey;
+    private LookUpValueEntity lookUpObject;
 
-	private Short id;
+    private String lookUpValueKey;
 
-	protected RepaymentRuleEntity() {
-		lookUpValueKey = null;
-	       lookUpObject = null;
-	}
+    private Short id;
 
-	public RepaymentRuleEntity(Short id, String lookUpValueKey) {
-		this.id = id;
-	    this.lookUpValueKey = lookUpValueKey;
-	}
-	
-	public Short getId() {
-		return this.id;
-	}
+    protected RepaymentRuleEntity() {
+        lookUpValueKey = null;
+        lookUpObject = null;
+    }
 
-	public LookUpValueEntity getLookUpObject() {
-		return this.lookUpObject;
-	}
+    public RepaymentRuleEntity(Short id, String lookUpValueKey) {
+        this.id = id;
+        this.lookUpValueKey = lookUpValueKey;
+    }
 
-	public String getLookUpValue() {
-		return MessageLookup.getInstance().lookup(lookUpValueKey);
-	}
-	
-	private void setId(Short Id) {
-		this.id = Id;		
-	}
+    public Short getId() {
+        return this.id;
+    }
 
-	private void setLookUpValueKey(String lookUpValueKey) {
-		this.lookUpValueKey = lookUpValueKey;
-	}
-	
-	private void setLookUpValue(LookUpValueEntity lookUpObject) {
-		this.lookUpObject = lookUpObject;
-	}
+    public LookUpValueEntity getLookUpObject() {
+        return this.lookUpObject;
+    }
+
+    public String getLookUpValue() {
+        return MessageLookup.getInstance().lookup(lookUpValueKey);
+    }
+
+    private void setId(Short Id) {
+        this.id = Id;
+    }
+
+    private void setLookUpValueKey(String lookUpValueKey) {
+        this.lookUpValueKey = lookUpValueKey;
+    }
+
+    private void setLookUpValue(LookUpValueEntity lookUpObject) {
+        this.lookUpObject = lookUpObject;
+    }
 }

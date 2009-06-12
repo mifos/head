@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -27,26 +27,25 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntrySaving
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPaymentData extends AccountPaymentData {
-	private Money depositPaid;
+    private Money depositPaid;
 
-	public Money getDepositPaid() {
-		return depositPaid;
-	}
+    public Money getDepositPaid() {
+        return depositPaid;
+    }
 
-	private void setDepositPaid(Money depositPaid) {
-		this.depositPaid = depositPaid;
-	}
+    private void setDepositPaid(Money depositPaid) {
+        this.depositPaid = depositPaid;
+    }
 
-	public SavingsPaymentData(AccountActionDateEntity accountActionDate) {
-		super(accountActionDate);
-		if (accountActionDate != null)
-			setDepositPaid(((SavingsScheduleEntity) accountActionDate)
-					.getTotalDepositDue());
-	}
+    public SavingsPaymentData(AccountActionDateEntity accountActionDate) {
+        super(accountActionDate);
+        if (accountActionDate != null)
+            setDepositPaid(((SavingsScheduleEntity) accountActionDate).getTotalDepositDue());
+    }
 
-	public SavingsPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
-		super(bulkEntryAccountAction);
-		if (bulkEntryAccountAction != null)
-			setDepositPaid(((CollectionSheetEntrySavingsInstallmentView)bulkEntryAccountAction).getTotalDepositDue());
-	}
+    public SavingsPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+        super(bulkEntryAccountAction);
+        if (bulkEntryAccountAction != null)
+            setDepositPaid(((CollectionSheetEntrySavingsInstallmentView) bulkEntryAccountAction).getTotalDepositDue());
+    }
 }

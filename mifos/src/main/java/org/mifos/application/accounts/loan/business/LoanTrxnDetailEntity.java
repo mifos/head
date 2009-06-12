@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.business;
 
 import java.util.Date;
@@ -51,200 +51,175 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
-	private final Money principalAmount;
+    private final Money principalAmount;
 
-	private final Money interestAmount;
+    private final Money interestAmount;
 
-	private final Money penaltyAmount;
+    private final Money penaltyAmount;
 
-	private final Money miscFeeAmount;
+    private final Money miscFeeAmount;
 
-	private final Money miscPenaltyAmount;
+    private final Money miscPenaltyAmount;
 
-	private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
+    private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
 
-	public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
-		return feesTrxnDetails;
-	}
+    public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
+        return feesTrxnDetails;
+    }
 
-	public Money getInterestAmount() {
-		return interestAmount;
-	}
+    public Money getInterestAmount() {
+        return interestAmount;
+    }
 
-	public Money getPenaltyAmount() {
-		return penaltyAmount;
-	}
+    public Money getPenaltyAmount() {
+        return penaltyAmount;
+    }
 
-	public Money getPrincipalAmount() {
-		return principalAmount;
-	}
+    public Money getPrincipalAmount() {
+        return principalAmount;
+    }
 
-	public Money getMiscFeeAmount() {
-		return miscFeeAmount;
-	}
+    public Money getMiscFeeAmount() {
+        return miscFeeAmount;
+    }
 
-	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
-		feesTrxnDetails.add(feesTrxn);
-	}
+    public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
+        feesTrxnDetails.add(feesTrxn);
+    }
 
-	public Money getMiscPenaltyAmount() {
-		return miscPenaltyAmount;
-	}
+    public Money getMiscPenaltyAmount() {
+        return miscPenaltyAmount;
+    }
 
-	protected LoanTrxnDetailEntity() {
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		principalAmount = null;
-		interestAmount = null;
-		penaltyAmount = null;
-		miscFeeAmount = null;
-		miscPenaltyAmount = null;
-	}
+    protected LoanTrxnDetailEntity() {
+        feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+        principalAmount = null;
+        interestAmount = null;
+        penaltyAmount = null;
+        miscFeeAmount = null;
+        miscPenaltyAmount = null;
+    }
 
-	public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment,
-			AccountActionEntity accountActionEntity, Short installmentId,
-			Date dueDate, PersonnelBO personnel, Date actionDate, Money amount,
-			String comments, AccountTrxnEntity relatedTrxn,
-			Money principalAmount, Money interestAmount, Money penaltyAmount,
-			Money miscFeeAmount, Money miscPenaltyAmount,
-			List<AccountFeesEntity> accountFees) {
-		super(accountPayment, accountActionEntity, installmentId, dueDate,
-				personnel, null, actionDate, amount, comments, relatedTrxn);
-		this.principalAmount = principalAmount;
-		this.interestAmount = interestAmount;
-		this.penaltyAmount = penaltyAmount;
-		this.miscFeeAmount = miscFeeAmount;
-		this.miscPenaltyAmount = miscPenaltyAmount;
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		if (accountFees != null && accountFees.size() > 0) {
-			for (AccountFeesEntity accountFeesEntity : accountFees) {
-				addFeesTrxnDetail(new FeesTrxnDetailEntity(this,
-						accountFeesEntity, accountFeesEntity
-								.getAccountFeeAmount()));
-			}
-		}
-	}
+    public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment, AccountActionEntity accountActionEntity,
+            Short installmentId, Date dueDate, PersonnelBO personnel, Date actionDate, Money amount, String comments,
+            AccountTrxnEntity relatedTrxn, Money principalAmount, Money interestAmount, Money penaltyAmount,
+            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees) {
+        super(accountPayment, accountActionEntity, installmentId, dueDate, personnel, null, actionDate, amount,
+                comments, relatedTrxn);
+        this.principalAmount = principalAmount;
+        this.interestAmount = interestAmount;
+        this.penaltyAmount = penaltyAmount;
+        this.miscFeeAmount = miscFeeAmount;
+        this.miscPenaltyAmount = miscPenaltyAmount;
+        feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+        if (accountFees != null && accountFees.size() > 0) {
+            for (AccountFeesEntity accountFeesEntity : accountFees) {
+                addFeesTrxnDetail(new FeesTrxnDetailEntity(this, accountFeesEntity, accountFeesEntity
+                        .getAccountFeeAmount()));
+            }
+        }
+    }
 
-	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-			LoanPaymentData loanPaymentData, PersonnelBO personnel,
-			java.util.Date transactionDate,
-			AccountActionEntity accountActionEntity, Money amount,
-			String comments) {
+    public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, LoanPaymentData loanPaymentData,
+            PersonnelBO personnel, java.util.Date transactionDate, AccountActionEntity accountActionEntity,
+            Money amount, String comments) {
 
-		super(accountPaymentEntity, accountActionEntity, loanPaymentData
-				.getInstallmentId(), loanPaymentData.getAccountActionDate()
-				.getActionDate(), personnel, null, transactionDate, amount,
-				comments, null);
-		interestAmount = loanPaymentData.getInterestPaid();
-		penaltyAmount = loanPaymentData.getPenaltyPaid();
-		principalAmount = loanPaymentData.getPrincipalPaid();
-		miscFeeAmount = loanPaymentData.getMiscFeePaid();
-		miscPenaltyAmount = loanPaymentData.getMiscPenaltyPaid();
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) loanPaymentData
-				.getAccountActionDate();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail : loanSchedule
-				.getAccountFeesActionDetails()) {
-			if (loanPaymentData.getFeesPaid().containsKey(
-					accountFeesActionDetail.getFee().getFeeId())) {
-				addFeesTrxnDetail(new FeesTrxnDetailEntity(this,
-						accountFeesActionDetail.getAccountFee(),
-						loanPaymentData.getFeesPaid().get(
-								accountFeesActionDetail.getFee().getFeeId())));
-			}
-		}
-	}
+        super(accountPaymentEntity, accountActionEntity, loanPaymentData.getInstallmentId(), loanPaymentData
+                .getAccountActionDate().getActionDate(), personnel, null, transactionDate, amount, comments, null);
+        interestAmount = loanPaymentData.getInterestPaid();
+        penaltyAmount = loanPaymentData.getPenaltyPaid();
+        principalAmount = loanPaymentData.getPrincipalPaid();
+        miscFeeAmount = loanPaymentData.getMiscFeePaid();
+        miscPenaltyAmount = loanPaymentData.getMiscPenaltyPaid();
+        feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+        LoanScheduleEntity loanSchedule = (LoanScheduleEntity) loanPaymentData.getAccountActionDate();
+        for (AccountFeesActionDetailEntity accountFeesActionDetail : loanSchedule.getAccountFeesActionDetails()) {
+            if (loanPaymentData.getFeesPaid().containsKey(accountFeesActionDetail.getFee().getFeeId())) {
+                addFeesTrxnDetail(new FeesTrxnDetailEntity(this, accountFeesActionDetail.getAccountFee(),
+                        loanPaymentData.getFeesPaid().get(accountFeesActionDetail.getFee().getFeeId())));
+            }
+        }
+    }
 
-	@Override
-	protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser,
-			String adjustmentComment) throws AccountException {
-		MifosLogManager
-				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug(
-						"Inside generate reverse transaction method of loan trxn detail");
-		String comment = null;
-		if (null == adjustmentComment)
-			comment = getComments();
-		else
-			comment = adjustmentComment;
+    @Override
+    protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
+            throws AccountException {
+        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+                "Inside generate reverse transaction method of loan trxn detail");
+        String comment = null;
+        if (null == adjustmentComment)
+            comment = getComments();
+        else
+            comment = adjustmentComment;
 
-		LoanTrxnDetailEntity reverseAccntTrxn;
-		Short actionId = getReverseTransctionActionType().getValue();
-		try {
-			reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
-					(AccountActionEntity) new MasterPersistence()
-							.getPersistentObject(AccountActionEntity.class,
-									actionId), getInstallmentId(),
-					getDueDate(), loggedInUser, getActionDate(), getAmount()
-							.negate(), comment, this, getPrincipalAmount()
-							.negate(), getInterestAmount().negate(),
-					getPenaltyAmount().negate(), getMiscFeeAmount().negate(),
-					getMiscPenaltyAmount().negate(), null);
-		} catch (PersistenceException e) {
-			throw new AccountException(e);
-		}
+        LoanTrxnDetailEntity reverseAccntTrxn;
+        Short actionId = getReverseTransctionActionType().getValue();
+        try {
+            reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
+                    (AccountActionEntity) new MasterPersistence().getPersistentObject(AccountActionEntity.class,
+                            actionId), getInstallmentId(), getDueDate(), loggedInUser, getActionDate(), getAmount()
+                            .negate(), comment, this, getPrincipalAmount().negate(), getInterestAmount().negate(),
+                    getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null);
+        } catch (PersistenceException e) {
+            throw new AccountException(e);
+        }
 
-		if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-					"Before generating reverse entries for fees");
-			for (FeesTrxnDetailEntity feeTrxnDetail : getFeesTrxnDetails()) {
-				reverseAccntTrxn.addFeesTrxnDetail(feeTrxnDetail
-						.generateReverseTrxn(reverseAccntTrxn));
-			}
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-					"after generating reverse entries for fees");
-		}
+        if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
+            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+                    "Before generating reverse entries for fees");
+            for (FeesTrxnDetailEntity feeTrxnDetail : getFeesTrxnDetails()) {
+                reverseAccntTrxn.addFeesTrxnDetail(feeTrxnDetail.generateReverseTrxn(reverseAccntTrxn));
+            }
+            MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+                    .debug("after generating reverse entries for fees");
+        }
 
-		return reverseAccntTrxn;
-	}
+        return reverseAccntTrxn;
+    }
 
-	public Money getFeeAmount() {
-		Money feeAmnt = new Money();
-		if (null != feesTrxnDetails && feesTrxnDetails.size() > 0) {
-			for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
-				feeAmnt = feeAmnt.add(feesTrxn.getFeeAmount());
-			}
-		}
-		return feeAmnt;
-	}
+    public Money getFeeAmount() {
+        Money feeAmnt = new Money();
+        if (null != feesTrxnDetails && feesTrxnDetails.size() > 0) {
+            for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
+                feeAmnt = feeAmnt.add(feesTrxn.getFeeAmount());
+            }
+        }
+        return feeAmnt;
+    }
 
-	public FeesTrxnDetailEntity getFeesTrxn(Integer accountFeeId) {
-		if (null != feesTrxnDetails && feesTrxnDetails.size() > 0) {
-			for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
-				if (feesTrxn.getAccountFees().getAccountFeeId().equals(
-						accountFeeId)) {
-					return feesTrxn;
-				}
-			}
-		}
-		return null;
-	}
+    public FeesTrxnDetailEntity getFeesTrxn(Integer accountFeeId) {
+        if (null != feesTrxnDetails && feesTrxnDetails.size() > 0) {
+            for (FeesTrxnDetailEntity feesTrxn : feesTrxnDetails) {
+                if (feesTrxn.getAccountFees().getAccountFeeId().equals(accountFeeId)) {
+                    return feesTrxn;
+                }
+            }
+        }
+        return null;
+    }
 
-	private boolean isAccountCancelled() {
-		if (getAccount().getAccountState().getId().equals(
-				AccountState.LOAN_CANCELLED.getValue())) {
-			Set<AccountFlagMapping> accountFlags = getAccount()
-					.getAccountFlags();
-			if (accountFlags != null && accountFlags.size() > 0) {
-				for (AccountFlagMapping accountFlagMapping : accountFlags) {
-					if (accountFlagMapping.getFlag().getId().equals(
-							AccountStateFlag.LOAN_REVERSAL.getValue())) {
-						return true;
-					}
+    private boolean isAccountCancelled() {
+        if (getAccount().getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
+            Set<AccountFlagMapping> accountFlags = getAccount().getAccountFlags();
+            if (accountFlags != null && accountFlags.size() > 0) {
+                for (AccountFlagMapping accountFlagMapping : accountFlags) {
+                    if (accountFlagMapping.getFlag().getId().equals(AccountStateFlag.LOAN_REVERSAL.getValue())) {
+                        return true;
+                    }
 
-				}
-			}
-		}
-		return false;
-	}
+                }
+            }
+        }
+        return false;
+    }
 
-	private AccountActionTypes getReverseTransctionActionType() {
-		if (getAccountActionEntity().getId().equals(
-				AccountActionTypes.DISBURSAL.getValue())) {
-			return AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL;
-		} else if (isAccountCancelled()) {
-			return AccountActionTypes.LOAN_REVERSAL;
-		} else {
-			return AccountActionTypes.LOAN_ADJUSTMENT;
-		}
-	}
+    private AccountActionTypes getReverseTransctionActionType() {
+        if (getAccountActionEntity().getId().equals(AccountActionTypes.DISBURSAL.getValue())) {
+            return AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL;
+        } else if (isAccountCancelled()) {
+            return AccountActionTypes.LOAN_REVERSAL;
+        } else {
+            return AccountActionTypes.LOAN_ADJUSTMENT;
+        }
+    }
 }

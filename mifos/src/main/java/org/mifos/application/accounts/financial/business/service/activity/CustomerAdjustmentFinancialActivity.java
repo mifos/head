@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
@@ -28,20 +28,19 @@ import org.mifos.application.accounts.financial.business.service.activity.accoun
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.CustomerFeesAdjustmentAccountingEntry;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.CustomerPenaltyAdjustmentAccountingEntry;
 
-public class CustomerAdjustmentFinancialActivity extends
-		BaseFinancialActivity {
+public class CustomerAdjustmentFinancialActivity extends BaseFinancialActivity {
 
-	public CustomerAdjustmentFinancialActivity(AccountTrxnEntity accountTrxn) {
-		super(accountTrxn);
-		// TODO Auto-generated constructor stub
-	}
+    public CustomerAdjustmentFinancialActivity(AccountTrxnEntity accountTrxn) {
+        super(accountTrxn);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	protected List<BaseAccountingEntry> getFinancialActionEntry() {
-		List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
-		financialActionEntryList.add(new CustomerFeesAdjustmentAccountingEntry());
-		financialActionEntryList.add(new CustomerPenaltyAdjustmentAccountingEntry());
-		return financialActionEntryList;
-	}
+    @Override
+    protected List<BaseAccountingEntry> getFinancialActionEntry() {
+        List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
+        financialActionEntryList.add(new CustomerFeesAdjustmentAccountingEntry());
+        financialActionEntryList.add(new CustomerPenaltyAdjustmentAccountingEntry());
+        return financialActionEntryList;
+    }
 
 }

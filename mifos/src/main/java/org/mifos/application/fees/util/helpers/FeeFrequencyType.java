@@ -17,28 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum FeeFrequencyType {
-	PERIODIC((short) 1), ONETIME((short) 2);
+    PERIODIC((short) 1), ONETIME((short) 2);
 
-	Short value;
+    Short value;
 
-	FeeFrequencyType(Short value) {
-		this.value = value;
-	}
+    FeeFrequencyType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static FeeFrequencyType getFeeFrequencyType(Short value)throws PropertyNotFoundException{
-		for (FeeFrequencyType feeFrequencyType : FeeFrequencyType.values()) 
-			if (feeFrequencyType.getValue().equals(value))
-				return feeFrequencyType;
-		throw new PropertyNotFoundException("FeeFrequencyType");
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static FeeFrequencyType getFeeFrequencyType(Short value) throws PropertyNotFoundException {
+        for (FeeFrequencyType feeFrequencyType : FeeFrequencyType.values())
+            if (feeFrequencyType.getValue().equals(value))
+                return feeFrequencyType;
+        throw new PropertyNotFoundException("FeeFrequencyType");
+    }
 }

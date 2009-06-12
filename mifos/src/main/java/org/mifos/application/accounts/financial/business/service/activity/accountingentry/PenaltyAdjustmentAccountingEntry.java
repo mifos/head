@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -29,19 +29,17 @@ import org.mifos.framework.util.helpers.Money;
 
 public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		Money amount = financialActivity.getMiscPenaltyAmount();
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
+        Money amount = financialActivity.getMiscPenaltyAmount();
 
-		FinancialActionBO finActionMiscPenalty = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
-		addAccountEntryDetails(removeSign(amount), finActionMiscPenalty,
-				getGLcode(finActionMiscPenalty.getApplicableDebitCharts()),
-				FinancialConstants.CREDIT);
+        FinancialActionBO finActionMiscPenalty = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
+        addAccountEntryDetails(removeSign(amount), finActionMiscPenalty, getGLcode(finActionMiscPenalty
+                .getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
-		addAccountEntryDetails(removeSign(amount), finActionMiscPenalty,
-				getGLcode(finActionMiscPenalty.getApplicableCreditCharts()),
-				FinancialConstants.DEBIT);
+        addAccountEntryDetails(removeSign(amount), finActionMiscPenalty, getGLcode(finActionMiscPenalty
+                .getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
-	}
+    }
 }

@@ -17,42 +17,42 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 public class Param {
-	private String paramType ;
-	private String name;
-	private Object value;
+    private String paramType;
+    private String name;
+    private Object value;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String paramName) {
-		name = paramName;
-	}
+    public void setName(String paramName) {
+        name = paramName;
+    }
 
-	public Param(String paramType, String paramName, Object value) {
-		this.paramType = paramType;
-		name = paramName;
-		this.value = value;
-	}
+    public Param(String paramType, String paramName, Object value) {
+        this.paramType = paramType;
+        name = paramName;
+        this.value = value;
+    }
 
-	public String getParamType() {
-		return paramType;
-	}
+    public String getParamType() {
+        return paramType;
+    }
 
-	public void setParamType(String paramType) {
-		this.paramType = paramType;
-	}
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
+    }
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	public void setValue(Object value) {
-		this.value = value;
-	}
+    public void setValue(Object value) {
+        this.value = value;
+    }
 
 }

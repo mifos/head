@@ -17,29 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.business;
 
 import org.mifos.framework.business.View;
 
 public class PersonnelView extends View {
 
-	private Short personnelId;
+    private Short personnelId;
 
-	private String displayName;
+    private String displayName;
 
-	public PersonnelView(Short personnelId, String displayName) {
-		this.personnelId = personnelId;
-		this.displayName = displayName;
-	}
+    public PersonnelView(Short personnelId, String displayName) {
+        this.personnelId = personnelId;
+        this.displayName = displayName;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-
-	public Short getPersonnelId() {
-		return personnelId;
-	}
+    public Short getPersonnelId() {
+        return personnelId;
+    }
 
 }

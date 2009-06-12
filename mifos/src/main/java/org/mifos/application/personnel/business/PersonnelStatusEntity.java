@@ -17,17 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 
 public class PersonnelStatusEntity extends MasterDataEntity {
-	public PersonnelStatusEntity(PersonnelStatus personnelStatus) {
-		super(personnelStatus.getValue());
-	}
+    public PersonnelStatusEntity(PersonnelStatus personnelStatus) {
+        super(personnelStatus.getValue());
+    }
 
-	protected PersonnelStatusEntity() {
-	}
+    protected PersonnelStatusEntity() {
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.actionforms;
 
 import java.util.ResourceBundle;
@@ -37,201 +37,195 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 
-
 public class EditStatusActionForm extends BaseActionForm {
-	
-	public EditStatusActionForm() {
-		selectedItems = new String[50];
-	}
-	
-	private String accountId;
 
-	private String globalAccountNum;
+    public EditStatusActionForm() {
+        selectedItems = new String[50];
+    }
 
-	private String accountName;
-	
-	private String accountTypeId;
+    private String accountId;
 
-	private String currentStatusId;
+    private String globalAccountNum;
 
-	private String newStatusId;
+    private String accountName;
 
-	private String flagId;
+    private String accountTypeId;
 
-	private String notes;
+    private String currentStatusId;
 
-	private String[] selectedItems;
-	
-	private String input;
-	
-	private String commentDate;
+    private String newStatusId;
 
-	public String getCommentDate() {
-		return commentDate;
-	}
+    private String flagId;
 
-	public void setCommentDate(String commentDate) {
-		this.commentDate = commentDate;
-	}
+    private String notes;
 
-	public String getInput() {
-		return input;
-	}
+    private String[] selectedItems;
 
-	public void setInput(String input) {
-		this.input = input;
-	}
+    private String input;
 
-	public String getAccountId() {
-		return accountId;
-	}
+    private String commentDate;
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
+    public String getCommentDate() {
+        return commentDate;
+    }
 
-	public String getAccountName() {
-		return accountName;
-	}
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
+    }
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
+    public String getInput() {
+        return input;
+    }
 
-	public String getAccountTypeId() {
-		return accountTypeId;
-	}
+    public void setInput(String input) {
+        this.input = input;
+    }
 
-	public void setAccountTypeId(String accountTypeId) {
-		this.accountTypeId = accountTypeId;
-	}
+    public String getAccountId() {
+        return accountId;
+    }
 
-	public String getCurrentStatusId() {
-		return currentStatusId;
-	}
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
-	public void setCurrentStatusId(String currentStatusId) {
-		this.currentStatusId = currentStatusId;
-	}
+    public String getAccountName() {
+        return accountName;
+    }
 
-	public String getFlagId() {
-		return flagId;
-	}
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
-	public void setFlagId(String flagId) {
-		this.flagId = flagId;
-	}
+    public String getAccountTypeId() {
+        return accountTypeId;
+    }
 
-	public String getGlobalAccountNum() {
-		return globalAccountNum;
-	}
+    public void setAccountTypeId(String accountTypeId) {
+        this.accountTypeId = accountTypeId;
+    }
 
-	public void setGlobalAccountNum(String globalAccountNum) {
-		this.globalAccountNum = globalAccountNum;
-	}
+    public String getCurrentStatusId() {
+        return currentStatusId;
+    }
 
-	public String getNewStatusId() {
-		return newStatusId;
-	}
+    public void setCurrentStatusId(String currentStatusId) {
+        this.currentStatusId = currentStatusId;
+    }
 
-	public void setNewStatusId(String newStatusId) {
-		this.newStatusId = newStatusId;
-	}
+    public String getFlagId() {
+        return flagId;
+    }
 
-	public String getNotes() {
-		return notes;
-	}
+    public void setFlagId(String flagId) {
+        this.flagId = flagId;
+    }
 
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+    public String getGlobalAccountNum() {
+        return globalAccountNum;
+    }
 
-	public String[] getSelectedItems() {
-		return selectedItems;
-	}
+    public void setGlobalAccountNum(String globalAccountNum) {
+        this.globalAccountNum = globalAccountNum;
+    }
 
-	public void setSelectedItems(String[] selectedItems) {
-		this.selectedItems = selectedItems;
-	}
-	
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		String methodCalled = request.getParameter(Methods.method.toString());
-		if (null != methodCalled) {
-			if ((Methods.preview.toString()).equals(methodCalled)) {
-				this.flagId = null;
-				this.selectedItems = null;
-			}
-		}
-	}
+    public String getNewStatusId() {
+        return newStatusId;
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		String methodCalled = request.getParameter(Methods.method.toString());
-		if (null != methodCalled) {
-			if ((Methods.preview.toString()).equals(methodCalled)) {
-				handleStatusPreviewValidations(request, errors);
-			} else if ((Methods.update.toString()).equals(methodCalled)) {
-				handleUpdateStatus(request, errors);
-			}
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
-		}
-		return errors;
-	}
+    public void setNewStatusId(String newStatusId) {
+        this.newStatusId = newStatusId;
+    }
 
-	private ActionErrors handleUpdateStatus(HttpServletRequest request,
-			ActionErrors errors) {
-		String chklistSize = request.getParameter("chklistSize");
-		if(request.getParameter("selectedItems")==null){
-			selectedItems=null;
-		}
-		if(chklistSize != null) {
-			if (isCheckListNotComplete(chklistSize))
-				addError(errors, LoanConstants.INCOMPLETE_CHECKLIST,LoanConstants.INCOMPLETE_CHECKLIST);
-		}
-		return errors;
-	}
+    public String getNotes() {
+        return notes;
+    }
 
-	private ActionErrors handleStatusPreviewValidations(
-			HttpServletRequest request, ActionErrors errors) {
-		Locale locale = getUserContext(request).getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle
-			(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, locale);
-		String notesString = resources.getString("Account.Notes");
-		String status = resources.getString("accounts.status");
-		String flag = resources.getString("accounts.flag");
-		if (newStatusId == null)
-			addError(errors, LoanConstants.MANDATORY,LoanConstants.MANDATORY, status);
-		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
-			addError(errors, LoanConstants.MANDATORY_SELECT,LoanConstants.MANDATORY_SELECT,
-					flag);
-		if (StringUtils.isNullOrEmpty(notes))
-			addError(errors, LoanConstants.MANDATORY_TEXTBOX,LoanConstants.MANDATORY_TEXTBOX, notesString);
-		else if (notes.length() > LoanConstants.COMMENT_LENGTH)
-			addError(errors, LoanConstants.MAX_LENGTH,LoanConstants.MAX_LENGTH,
-					notesString, String
-							.valueOf(LoanConstants.COMMENT_LENGTH));
-		return errors;
-	}
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
-	private boolean isCheckListNotComplete(String chklistSize) {
-		return (isPartialSelected(chklistSize) || isNoneSelected(chklistSize));
-	}
-	
-	private boolean isPartialSelected(String chklistSize) {
-		return (selectedItems != null) && (Integer.valueOf(chklistSize).intValue() != selectedItems.length);
-	}
-	
-	private boolean isNoneSelected(String chklistSize) {
-		return (Integer.valueOf(chklistSize).intValue() > 0) && (selectedItems == null);
-	}
-	
-	private boolean isNewStatusHasFlag() {
-		return (Short.valueOf(newStatusId).equals(AccountState.LOAN_CANCELLED.getValue())) || (Short.valueOf(newStatusId).equals(AccountState.SAVINGS_CANCELLED.getValue()));
-	}
+    public String[] getSelectedItems() {
+        return selectedItems;
+    }
+
+    public void setSelectedItems(String[] selectedItems) {
+        this.selectedItems = selectedItems;
+    }
+
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        String methodCalled = request.getParameter(Methods.method.toString());
+        if (null != methodCalled) {
+            if ((Methods.preview.toString()).equals(methodCalled)) {
+                this.flagId = null;
+                this.selectedItems = null;
+            }
+        }
+    }
+
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        String methodCalled = request.getParameter(Methods.method.toString());
+        if (null != methodCalled) {
+            if ((Methods.preview.toString()).equals(methodCalled)) {
+                handleStatusPreviewValidations(request, errors);
+            } else if ((Methods.update.toString()).equals(methodCalled)) {
+                handleUpdateStatus(request, errors);
+            }
+        }
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", methodCalled);
+        }
+        return errors;
+    }
+
+    private ActionErrors handleUpdateStatus(HttpServletRequest request, ActionErrors errors) {
+        String chklistSize = request.getParameter("chklistSize");
+        if (request.getParameter("selectedItems") == null) {
+            selectedItems = null;
+        }
+        if (chklistSize != null) {
+            if (isCheckListNotComplete(chklistSize))
+                addError(errors, LoanConstants.INCOMPLETE_CHECKLIST, LoanConstants.INCOMPLETE_CHECKLIST);
+        }
+        return errors;
+    }
+
+    private ActionErrors handleStatusPreviewValidations(HttpServletRequest request, ActionErrors errors) {
+        Locale locale = getUserContext(request).getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, locale);
+        String notesString = resources.getString("Account.Notes");
+        String status = resources.getString("accounts.status");
+        String flag = resources.getString("accounts.flag");
+        if (newStatusId == null)
+            addError(errors, LoanConstants.MANDATORY, LoanConstants.MANDATORY, status);
+        else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
+            addError(errors, LoanConstants.MANDATORY_SELECT, LoanConstants.MANDATORY_SELECT, flag);
+        if (StringUtils.isNullOrEmpty(notes))
+            addError(errors, LoanConstants.MANDATORY_TEXTBOX, LoanConstants.MANDATORY_TEXTBOX, notesString);
+        else if (notes.length() > LoanConstants.COMMENT_LENGTH)
+            addError(errors, LoanConstants.MAX_LENGTH, LoanConstants.MAX_LENGTH, notesString, String
+                    .valueOf(LoanConstants.COMMENT_LENGTH));
+        return errors;
+    }
+
+    private boolean isCheckListNotComplete(String chklistSize) {
+        return (isPartialSelected(chklistSize) || isNoneSelected(chklistSize));
+    }
+
+    private boolean isPartialSelected(String chklistSize) {
+        return (selectedItems != null) && (Integer.valueOf(chklistSize).intValue() != selectedItems.length);
+    }
+
+    private boolean isNoneSelected(String chklistSize) {
+        return (Integer.valueOf(chklistSize).intValue() > 0) && (selectedItems == null);
+    }
+
+    private boolean isNewStatusHasFlag() {
+        return (Short.valueOf(newStatusId).equals(AccountState.LOAN_CANCELLED.getValue()))
+                || (Short.valueOf(newStatusId).equals(AccountState.SAVINGS_CANCELLED.getValue()));
+    }
 }

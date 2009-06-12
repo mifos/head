@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.persistance;
 
 import java.util.Date;
@@ -42,12 +42,13 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
     public StandardClientAttendanceDao() {
     }
-    
+
     @Override
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
         ClientAttendanceBO result = getClientAttendance(clientId, meetingDate);
         if (result == null) {
-            throw new PersistenceException("Could not find attendance for clientId " + clientId + " and meeting date " + meetingDate.toDateMidnight().toDate());
+            throw new PersistenceException("Could not find attendance for clientId " + clientId + " and meeting date "
+                    + meetingDate.toDateMidnight().toDate());
         }
         return result.getAttendanceAsEnum();
     }
@@ -72,22 +73,24 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("OFFICE_ID", officeId);
-        return (List<ClientAttendanceBO>) getMasterPersistence().executeNamedQuery("ClientAttendance.getAttendanceForOffice", queryParameters);
+        return (List<ClientAttendanceBO>) getMasterPersistence().executeNamedQuery(
+                "ClientAttendance.getAttendanceForOffice", queryParameters);
     }
-    
+
     private ClientAttendanceBO getClientAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
         ClientAttendanceBO result;
         try {
             Map<String, Object> queryParameters = new HashMap<String, Object>();
             queryParameters.put("CUSTOMER_ID", clientId);
             queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
-            result = (ClientAttendanceBO) getMasterPersistence().execUniqueResultNamedQuery("ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
+            result = (ClientAttendanceBO) getMasterPersistence().execUniqueResultNamedQuery(
+                    "ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
             return result;
         } catch (NumberFormatException e) {
             throw new PersistenceException(e);
         }
     }
-    
+
     private CustomerPersistence getCustomerPersistence() {
         if (null == customerPersistence) {
             customerPersistence = new CustomerPersistence();
@@ -96,12 +99,12 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
     }
 
     public void setCustomerPersistence(CustomerPersistence customerPersistence) {
-            this.customerPersistence = customerPersistence;
-        }
+        this.customerPersistence = customerPersistence;
+    }
 
     public MasterPersistence getMasterPersistence() {
         if (null == masterPersistence) {
-           masterPersistence = new MasterPersistence();
+            masterPersistence = new MasterPersistence();
         }
         return masterPersistence;
     }
@@ -121,5 +124,4 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         this.hibernateUtil = hibernateUtil;
     }
 
-    
 }

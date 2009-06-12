@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import java.util.HashMap;
@@ -31,159 +31,144 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanPaymentData extends AccountPaymentData {
 
-	private Money principalPaid;
+    private Money principalPaid;
 
-	private Money interestPaid;
+    private Money interestPaid;
 
-	private Money penaltyPaid;
+    private Money penaltyPaid;
 
-	private Money miscFeePaid;
+    private Money miscFeePaid;
 
-	private Money miscPenaltyPaid;
+    private Money miscPenaltyPaid;
 
-	private Map<Short, Money> feesPaid;
+    private Map<Short, Money> feesPaid;
 
-	public Map<Short, Money> getFeesPaid() {
-		return feesPaid;
-	}
+    public Map<Short, Money> getFeesPaid() {
+        return feesPaid;
+    }
 
-	private void setFeesPaid(Map<Short, Money> feesPaid) {
-		this.feesPaid = feesPaid;
-	}
+    private void setFeesPaid(Map<Short, Money> feesPaid) {
+        this.feesPaid = feesPaid;
+    }
 
-	public Money getInterestPaid() {
-		return interestPaid;
-	}
+    public Money getInterestPaid() {
+        return interestPaid;
+    }
 
-	private void setInterestPaid(Money interestPaid) {
-		this.interestPaid = interestPaid;
-	}
+    private void setInterestPaid(Money interestPaid) {
+        this.interestPaid = interestPaid;
+    }
 
-	public Money getPenaltyPaid() {
-		return penaltyPaid;
-	}
+    public Money getPenaltyPaid() {
+        return penaltyPaid;
+    }
 
-	private void setPenaltyPaid(Money penaltyPaid) {
-		this.penaltyPaid = penaltyPaid;
-	}
+    private void setPenaltyPaid(Money penaltyPaid) {
+        this.penaltyPaid = penaltyPaid;
+    }
 
-	public Money getPrincipalPaid() {
-		return principalPaid;
-	}
+    public Money getPrincipalPaid() {
+        return principalPaid;
+    }
 
-	private void setPrincipalPaid(Money principalPaid) {
-		this.principalPaid = principalPaid;
-	}
+    private void setPrincipalPaid(Money principalPaid) {
+        this.principalPaid = principalPaid;
+    }
 
-	public Money getMiscFeePaid() {
-		return miscFeePaid;
-	}
+    public Money getMiscFeePaid() {
+        return miscFeePaid;
+    }
 
-	private void setMiscFeePaid(Money miscFeePaid) {
-		this.miscFeePaid = miscFeePaid;
-	}
+    private void setMiscFeePaid(Money miscFeePaid) {
+        this.miscFeePaid = miscFeePaid;
+    }
 
-	public Money getMiscPenaltyPaid() {
-		return miscPenaltyPaid;
-	}
+    public Money getMiscPenaltyPaid() {
+        return miscPenaltyPaid;
+    }
 
-	private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
-		this.miscPenaltyPaid = miscPenaltyPaid;
-	}
+    private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+        this.miscPenaltyPaid = miscPenaltyPaid;
+    }
 
-	public LoanPaymentData(AccountActionDateEntity accountActionDate) {
-		super(accountActionDate);
-		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-		setPrincipalPaid(loanScheduleEntity.getPrincipalDue());
-		setInterestPaid(loanScheduleEntity.getInterestDue());
-		setPenaltyPaid(loanScheduleEntity.getPenalty().subtract(
-				loanScheduleEntity.getPenaltyPaid()));
-		setMiscFeePaid(loanScheduleEntity.getMiscFeeDue());
-		setMiscPenaltyPaid(loanScheduleEntity.getMiscPenaltyDue());
-		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity
-				.getAccountFeesActionDetails();
-		if (accountFeesActionDetails != null
-				&& accountFeesActionDetails.size() > 0) {
-			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-				if (accountFeesActionDetailEntity.getFeeAmount() != null
-						&& accountFeesActionDetailEntity.getFeeAmount()
-								.getAmountDoubleValue() != 0)
-					feesPaid.put(accountFeesActionDetailEntity.getFee()
-							.getFeeId(), accountFeesActionDetailEntity
-							.getFeeDue());
-			}
-		}
-		setFeesPaid(feesPaid);
-		setPaymentStatus(PaymentStatus.PAID.getValue());
-	}
+    public LoanPaymentData(AccountActionDateEntity accountActionDate) {
+        super(accountActionDate);
+        LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+        setPrincipalPaid(loanScheduleEntity.getPrincipalDue());
+        setInterestPaid(loanScheduleEntity.getInterestDue());
+        setPenaltyPaid(loanScheduleEntity.getPenalty().subtract(loanScheduleEntity.getPenaltyPaid()));
+        setMiscFeePaid(loanScheduleEntity.getMiscFeeDue());
+        setMiscPenaltyPaid(loanScheduleEntity.getMiscPenaltyDue());
+        Map<Short, Money> feesPaid = new HashMap<Short, Money>();
+        Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity.getAccountFeesActionDetails();
+        if (accountFeesActionDetails != null && accountFeesActionDetails.size() > 0) {
+            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
+                if (accountFeesActionDetailEntity.getFeeAmount() != null
+                        && accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue() != 0)
+                    feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(), accountFeesActionDetailEntity
+                            .getFeeDue());
+            }
+        }
+        setFeesPaid(feesPaid);
+        setPaymentStatus(PaymentStatus.PAID.getValue());
+    }
 
-	public LoanPaymentData(AccountActionDateEntity accountActionDate,
-			Money total) {
-		super(accountActionDate);
-		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-		if (total.getAmountDoubleValue() >= loanScheduleEntity
-				.getTotalDueWithFees().getAmountDoubleValue())
-			setPaymentStatus(PaymentStatus.PAID.getValue());
-		else
-			setPaymentStatus(PaymentStatus.UNPAID.getValue());
-		setMiscPenaltyPaid(getLowest(total, loanScheduleEntity
-				.getMiscPenaltyDue()));
-		total = total.subtract(getMiscPenaltyPaid());
+    public LoanPaymentData(AccountActionDateEntity accountActionDate, Money total) {
+        super(accountActionDate);
+        LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+        if (total.getAmountDoubleValue() >= loanScheduleEntity.getTotalDueWithFees().getAmountDoubleValue())
+            setPaymentStatus(PaymentStatus.PAID.getValue());
+        else
+            setPaymentStatus(PaymentStatus.UNPAID.getValue());
+        setMiscPenaltyPaid(getLowest(total, loanScheduleEntity.getMiscPenaltyDue()));
+        total = total.subtract(getMiscPenaltyPaid());
 
-		setPenaltyPaid(getLowest(total, (loanScheduleEntity.getPenalty()
-				.subtract(loanScheduleEntity.getPenaltyPaid()))));
-		total = total.subtract(getPenaltyPaid());
+        setPenaltyPaid(getLowest(total, (loanScheduleEntity.getPenalty().subtract(loanScheduleEntity.getPenaltyPaid()))));
+        total = total.subtract(getPenaltyPaid());
 
-		setMiscFeePaid(getLowest(total, loanScheduleEntity.getMiscFeeDue()));
-		total = total.subtract(getMiscFeePaid());
+        setMiscFeePaid(getLowest(total, loanScheduleEntity.getMiscFeeDue()));
+        total = total.subtract(getMiscFeePaid());
 
-		Map<Short, Money> feesPaid = new HashMap<Short, Money>();
-		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity
-				.getAccountFeesActionDetails();
-		if (accountFeesActionDetails != null
-				&& accountFeesActionDetails.size() > 0) {
-			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-				Money feeAmount = getLowest(total,
-						accountFeesActionDetailEntity.getFeeDue());
-				feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(),
-						feeAmount);
-				total = total.subtract(feeAmount);
-			}
-		}
-		setFeesPaid(feesPaid);
+        Map<Short, Money> feesPaid = new HashMap<Short, Money>();
+        Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity.getAccountFeesActionDetails();
+        if (accountFeesActionDetails != null && accountFeesActionDetails.size() > 0) {
+            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
+                Money feeAmount = getLowest(total, accountFeesActionDetailEntity.getFeeDue());
+                feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(), feeAmount);
+                total = total.subtract(feeAmount);
+            }
+        }
+        setFeesPaid(feesPaid);
 
-		setInterestPaid(getLowest(total, loanScheduleEntity.getInterestDue()));
-		total = total.subtract(getInterestPaid());
+        setInterestPaid(getLowest(total, loanScheduleEntity.getInterestDue()));
+        total = total.subtract(getInterestPaid());
 
-		setPrincipalPaid(getLowest(total, loanScheduleEntity.getPrincipalDue()));
-	}
+        setPrincipalPaid(getLowest(total, loanScheduleEntity.getPrincipalDue()));
+    }
 
-	public Money getAmountPaidWithFeeForInstallment() {
-		return getAmountPaidWithoutFeeForInstallment().add(
-				getFeeAmountPaidForInstallment());
-	}
+    public Money getAmountPaidWithFeeForInstallment() {
+        return getAmountPaidWithoutFeeForInstallment().add(getFeeAmountPaidForInstallment());
+    }
 
-	public Money getAmountPaidWithoutFeeForInstallment() {
-		Money totalAmount = new Money();
-		return totalAmount.add(getInterestPaid()).add(getPenaltyPaid()).add(
-				getPrincipalPaid()).add(getMiscFeePaid()).add(
-				getMiscPenaltyPaid());
-	}
+    public Money getAmountPaidWithoutFeeForInstallment() {
+        Money totalAmount = new Money();
+        return totalAmount.add(getInterestPaid()).add(getPenaltyPaid()).add(getPrincipalPaid()).add(getMiscFeePaid())
+                .add(getMiscPenaltyPaid());
+    }
 
-	public Money getFeeAmountPaidForInstallment() {
-		Money totalFeePaid = new Money();
-		if (!getFeesPaid().isEmpty())
-			for (Short feeId : getFeesPaid().keySet()) {
-				totalFeePaid = totalFeePaid.add(getFeesPaid().get(feeId));
-			}
-		return totalFeePaid;
-	}
+    public Money getFeeAmountPaidForInstallment() {
+        Money totalFeePaid = new Money();
+        if (!getFeesPaid().isEmpty())
+            for (Short feeId : getFeesPaid().keySet()) {
+                totalFeePaid = totalFeePaid.add(getFeesPaid().get(feeId));
+            }
+        return totalFeePaid;
+    }
 
-	private Money getLowest(Money money1, Money money2) {
-		if (money1.getAmountDoubleValue() > money2.getAmountDoubleValue())
-			return money2;
-		else
-			return money1;
-	}
+    private Money getLowest(Money money1, Money money2) {
+        if (money1.getAmountDoubleValue() > money2.getAmountDoubleValue())
+            return money2;
+        else
+            return money1;
+    }
 }

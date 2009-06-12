@@ -17,9 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 public interface FinancialQueryConstants {
-	public static final String GET_ALL_FINANCIAL_ACTION = "GETALLFINANCIALACTION";
+    public static final String GET_ALL_FINANCIAL_ACTION = "GETALLFINANCIALACTION";
 }

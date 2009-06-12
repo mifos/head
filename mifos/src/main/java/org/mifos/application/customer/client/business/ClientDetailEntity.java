@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 import java.util.Date;
@@ -27,188 +27,188 @@ import org.mifos.framework.business.PersistentObject;
 
 public class ClientDetailEntity extends PersistentObject {
 
-	private final Integer customerId;
+    private final Integer customerId;
 
-	private final ClientBO client;
+    private final ClientBO client;
 
-	private Integer ethinicity;
+    private Integer ethinicity;
 
-	private Integer citizenship;
+    private Integer citizenship;
 
-	private Integer handicapped;
+    private Integer handicapped;
 
-	private Integer businessActivities;
+    private Integer businessActivities;
 
-	private Integer maritalStatus;
+    private Integer maritalStatus;
 
-	private Integer educationLevel;
+    private Integer educationLevel;
 
-	private Short numChildren;
+    private Short numChildren;
 
-	private Short gender;
+    private Short gender;
 
-	private Date dateStarted;
+    private Date dateStarted;
 
-	private String handicappedDetails;
+    private String handicappedDetails;
 
-	private Short povertyStatus;
-	
-	private Double povertyLikelihoodPercent;
-	
-	/**
-	 * Create a new instance based on a view.
-	 * 
-	 */
-	public ClientDetailEntity(ClientBO client, ClientDetailView view) {
-		super();
-		this.customerId = null;
-		this.client = client;
-		this.ethinicity = view.getEthinicity();
-		this.citizenship = view.getCitizenship();
-		this.handicapped = view.getHandicapped();
-		this.businessActivities = view.getBusinessActivities();
-		this.maritalStatus = view.getMaritalStatus();
-		this.educationLevel = view.getEducationLevel();
-		this.numChildren = view.getNumChildren();
-		this.gender = view.getGender();
-		this.dateStarted = null;
-		this.handicappedDetails = null;
-		this.povertyStatus = view.getPovertyStatus();
-		this.povertyLikelihoodPercent = null;
-	}
+    private Short povertyStatus;
 
-	protected ClientDetailEntity() {
-		super();
-		this.customerId = null;
-		this.client = null;
-		this.ethinicity = null;
-		this.citizenship = null;
-		this.handicapped = null;
-		this.businessActivities = null;
-		this.maritalStatus = null;
-		this.educationLevel = null;
-		this.numChildren = null;
-		this.gender = null;
-		this.dateStarted = null;
-		this.handicappedDetails = null;
-		this.povertyLikelihoodPercent = null;
-	}
-	
-	public Integer getEthinicity() {
-		return this.ethinicity;
-	}
+    private Double povertyLikelihoodPercent;
 
-	public void setEthinicity(Integer ethinicity) {
-		this.ethinicity = ethinicity;
-	}
+    /**
+     * Create a new instance based on a view.
+     * 
+     */
+    public ClientDetailEntity(ClientBO client, ClientDetailView view) {
+        super();
+        this.customerId = null;
+        this.client = client;
+        this.ethinicity = view.getEthinicity();
+        this.citizenship = view.getCitizenship();
+        this.handicapped = view.getHandicapped();
+        this.businessActivities = view.getBusinessActivities();
+        this.maritalStatus = view.getMaritalStatus();
+        this.educationLevel = view.getEducationLevel();
+        this.numChildren = view.getNumChildren();
+        this.gender = view.getGender();
+        this.dateStarted = null;
+        this.handicappedDetails = null;
+        this.povertyStatus = view.getPovertyStatus();
+        this.povertyLikelihoodPercent = null;
+    }
 
-	public Integer getCitizenship() {
-		return this.citizenship;
-	}
+    protected ClientDetailEntity() {
+        super();
+        this.customerId = null;
+        this.client = null;
+        this.ethinicity = null;
+        this.citizenship = null;
+        this.handicapped = null;
+        this.businessActivities = null;
+        this.maritalStatus = null;
+        this.educationLevel = null;
+        this.numChildren = null;
+        this.gender = null;
+        this.dateStarted = null;
+        this.handicappedDetails = null;
+        this.povertyLikelihoodPercent = null;
+    }
 
-	public void setCitizenship(Integer citizenship) {
-		this.citizenship = citizenship;
-	}
+    public Integer getEthinicity() {
+        return this.ethinicity;
+    }
 
-	public Integer getHandicapped() {
-		return this.handicapped;
-	}
+    public void setEthinicity(Integer ethinicity) {
+        this.ethinicity = ethinicity;
+    }
 
-	public void setHandicapped(Integer handicapped) {
-		this.handicapped = handicapped;
-	}
+    public Integer getCitizenship() {
+        return this.citizenship;
+    }
 
-	public Integer getBusinessActivities() {
-		return this.businessActivities;
-	}
+    public void setCitizenship(Integer citizenship) {
+        this.citizenship = citizenship;
+    }
 
-	public void setBusinessActivities(Integer businessActivities) {
-		this.businessActivities = businessActivities;
-	}
+    public Integer getHandicapped() {
+        return this.handicapped;
+    }
 
-	public Integer getMaritalStatus() {
-		return this.maritalStatus;
-	}
+    public void setHandicapped(Integer handicapped) {
+        this.handicapped = handicapped;
+    }
 
-	public void setMaritalStatus(Integer maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
+    public Integer getBusinessActivities() {
+        return this.businessActivities;
+    }
 
-	public Integer getEducationLevel() {
-		return this.educationLevel;
-	}
+    public void setBusinessActivities(Integer businessActivities) {
+        this.businessActivities = businessActivities;
+    }
 
-	public void setEducationLevel(Integer educationLevel) {
-		this.educationLevel = educationLevel;
-	}
+    public Integer getMaritalStatus() {
+        return this.maritalStatus;
+    }
 
-	public Short getNumChildren() {
-		return this.numChildren;
-	}
+    public void setMaritalStatus(Integer maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
 
-	public void setNumChildren(Short numChildren) {
-		this.numChildren = numChildren;
-	}
+    public Integer getEducationLevel() {
+        return this.educationLevel;
+    }
 
-	public Short getGender() {
-		return this.gender;
-	}
+    public void setEducationLevel(Integer educationLevel) {
+        this.educationLevel = educationLevel;
+    }
 
-	public void setGender(Short gender) {
-		this.gender = gender;
-	}
+    public Short getNumChildren() {
+        return this.numChildren;
+    }
 
-	public java.util.Date getDateStarted() {
-		return this.dateStarted;
-	}
+    public void setNumChildren(Short numChildren) {
+        this.numChildren = numChildren;
+    }
 
-	public void setDateStarted(java.util.Date dateStarted) {
-		this.dateStarted = dateStarted;
-	}
+    public Short getGender() {
+        return this.gender;
+    }
 
-	public String getHandicappedDetails() {
-		return this.handicappedDetails;
-	}
+    public void setGender(Short gender) {
+        this.gender = gender;
+    }
 
-	public void setHandicappedDetails(String handicappedDetails) {
-		this.handicappedDetails = handicappedDetails;
-	}
+    public java.util.Date getDateStarted() {
+        return this.dateStarted;
+    }
 
-	public Integer getCustomerId() {
-		return customerId;
-	}
+    public void setDateStarted(java.util.Date dateStarted) {
+        this.dateStarted = dateStarted;
+    }
 
-	public CustomerBO getClient() {
-		return client;
-	}
+    public String getHandicappedDetails() {
+        return this.handicappedDetails;
+    }
 
-	public Short getPovertyStatus() {
-		return povertyStatus;
-	}
+    public void setHandicappedDetails(String handicappedDetails) {
+        this.handicappedDetails = handicappedDetails;
+    }
 
-	public void setPovertyStatus(Short povertyStatus) {
-		this.povertyStatus = povertyStatus;
-	}
-	
-	public Double getPovertyLikelihoodPercent() {
-		return this.povertyLikelihoodPercent;
-	}
-	
-	public void setPovertyLikelihoodPercent(Double povertyLikelihoodPercent) {
-		this.povertyLikelihoodPercent = povertyLikelihoodPercent;
-	}
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-	public void updateClientDetails(ClientDetailView view) {
-		this.ethinicity = view.getEthinicity();
-		this.citizenship = view.getCitizenship();
-		this.handicapped = view.getHandicapped();
-		this.businessActivities = view.getBusinessActivities();
-		this.maritalStatus = view.getMaritalStatus();
-		this.educationLevel = view.getEducationLevel();
-		this.numChildren = view.getNumChildren();
-		this.gender = view.getGender();
-		this.povertyStatus = view.getPovertyStatus();
-		this.dateStarted = null;
-		this.handicappedDetails = null;		
-	}
+    public CustomerBO getClient() {
+        return client;
+    }
+
+    public Short getPovertyStatus() {
+        return povertyStatus;
+    }
+
+    public void setPovertyStatus(Short povertyStatus) {
+        this.povertyStatus = povertyStatus;
+    }
+
+    public Double getPovertyLikelihoodPercent() {
+        return this.povertyLikelihoodPercent;
+    }
+
+    public void setPovertyLikelihoodPercent(Double povertyLikelihoodPercent) {
+        this.povertyLikelihoodPercent = povertyLikelihoodPercent;
+    }
+
+    public void updateClientDetails(ClientDetailView view) {
+        this.ethinicity = view.getEthinicity();
+        this.citizenship = view.getCitizenship();
+        this.handicapped = view.getHandicapped();
+        this.businessActivities = view.getBusinessActivities();
+        this.maritalStatus = view.getMaritalStatus();
+        this.educationLevel = view.getEducationLevel();
+        this.numChildren = view.getNumChildren();
+        this.gender = view.getGender();
+        this.povertyStatus = view.getPovertyStatus();
+        this.dateStarted = null;
+        this.handicappedDetails = null;
+    }
 }

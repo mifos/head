@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.application.meeting.business.MeetingBO;
@@ -31,59 +31,60 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class CustomerMeetingEntity extends PersistentObject {
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private final Integer custMeetingId;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final Integer custMeetingId;
 
-	private MeetingBO meeting;
+    private MeetingBO meeting;
 
-	private final CustomerBO customer;
-	
-	private Short updatedFlag;
+    private final CustomerBO customer;
 
-	private MeetingBO updatedMeeting;
-	
-	public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting){
-		meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMER_MEETING));
-		this.customer = customer;
-		this.meeting = meeting;
-		this.custMeetingId = null;
-		this.updatedFlag  = YesNoFlag.NO.getValue();
-	}
-	
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerMeetingEntity(){
-		this.custMeetingId = null;
-		this.customer = null;
-	}
-	
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    private Short updatedFlag;
 
-	public MeetingBO getMeeting() {
-		return meeting;
-	}
+    private MeetingBO updatedMeeting;
 
-	void setMeeting(MeetingBO meeting) {
-		this.meeting = meeting;
-	}
+    public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting) {
+        meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMER_MEETING));
+        this.customer = customer;
+        this.meeting = meeting;
+        this.custMeetingId = null;
+        this.updatedFlag = YesNoFlag.NO.getValue();
+    }
 
-	public Short getUpdatedFlag() {
-		return updatedFlag;
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerMeetingEntity() {
+        this.custMeetingId = null;
+        this.customer = null;
+    }
 
-	void setUpdatedFlag(Short updatedFlag) {
-		this.updatedFlag = updatedFlag;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
 
-	public MeetingBO getUpdatedMeeting() {
-		return updatedMeeting;
-	}
+    public MeetingBO getMeeting() {
+        return meeting;
+    }
 
-	void setUpdatedMeeting(MeetingBO updatedMeeting) {
-		this.updatedMeeting = updatedMeeting;
-	}	
+    void setMeeting(MeetingBO meeting) {
+        this.meeting = meeting;
+    }
+
+    public Short getUpdatedFlag() {
+        return updatedFlag;
+    }
+
+    void setUpdatedFlag(Short updatedFlag) {
+        this.updatedFlag = updatedFlag;
+    }
+
+    public MeetingBO getUpdatedMeeting() {
+        return updatedMeeting;
+    }
+
+    void setUpdatedMeeting(MeetingBO updatedMeeting) {
+        this.updatedMeeting = updatedMeeting;
+    }
 }

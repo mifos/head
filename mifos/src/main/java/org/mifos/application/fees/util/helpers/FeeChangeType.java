@@ -17,33 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum FeeChangeType {
 
-	NOT_UPDATED ((short)0), 
-	AMOUNT_UPDATED((short) 1), 
-	STATUS_UPDATED((short) 2), 
-	AMOUNT_AND_STATUS_UPDATED((short) 3);
+    NOT_UPDATED((short) 0), AMOUNT_UPDATED((short) 1), STATUS_UPDATED((short) 2), AMOUNT_AND_STATUS_UPDATED((short) 3);
 
-	Short value;
+    Short value;
 
-	FeeChangeType(Short value) {
-		this.value = value;
-	}
+    FeeChangeType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static FeeChangeType getFeeChangeType(Short value)throws PropertyNotFoundException{
-		for (FeeChangeType changeType : FeeChangeType.values()) 
-			if (changeType.getValue().equals(value))
-				return changeType;
-		throw new PropertyNotFoundException("FeeChangeType");
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static FeeChangeType getFeeChangeType(Short value) throws PropertyNotFoundException {
+        for (FeeChangeType changeType : FeeChangeType.values())
+            if (changeType.getValue().equals(value))
+                return changeType;
+        throw new PropertyNotFoundException("FeeChangeType");
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.config.LocalizedTextLookup;
@@ -27,56 +27,52 @@ import org.mifos.config.LocalizedTextLookup;
  */
 public enum AccountState implements LocalizedTextLookup {
 
-	// AccountState Entity Values
-	LOAN_PARTIAL_APPLICATION(1,"AccountState-PartialApplication"), 
-	LOAN_PENDING_APPROVAL(2,"AccountState-ApplicationPendingApproval"), 
-	LOAN_APPROVED(3,"AccountState-ApplicationApproved"), 
-	LOAN_DISBURSED_TO_LOAN_OFFICER(4,"AccountState-DisbursedToLo"), 
-	LOAN_ACTIVE_IN_GOOD_STANDING(5,"AccountState-ActiveInGoodStanding"), 
-	LOAN_CLOSED_OBLIGATIONS_MET(6,"AccountState-ClosedObligationMet"), 
-	LOAN_CLOSED_WRITTEN_OFF(7,"AccountState-ClosedWrittenOff"), 
-	LOAN_CLOSED_RESCHEDULED(8,"AccountState-ClosedRescheduled"), 
-	LOAN_ACTIVE_IN_BAD_STANDING(9,"AccountState-ActiveInBadStanding"), 
-	LOAN_CANCELLED(10,"AccountState-Cancel"), 
-	// CustomerStatus Entity Values
-	CUSTOMER_ACCOUNT_ACTIVE(11,"CustomerStatus-CustomerAccountActive"), 
-	CUSTOMER_ACCOUNT_INACTIVE(12,"CustomerStatus-CustomerAccountInactive"), 
-	// SavingsStatus Entity Values
-	SAVINGS_PARTIAL_APPLICATION(13,"SavingsStatus-PartialApplication"), 
-	SAVINGS_PENDING_APPROVAL(14,"SavingsStatus-ApplicationPendingApproval"), 
-	SAVINGS_CANCELLED(15,"SavingsStatus-Cancelled"), 
-	SAVINGS_ACTIVE(16,"SavingsStatus-Active"), 
-	SAVINGS_CLOSED(17,"SavingsStatus-Closed"), 
-	SAVINGS_INACTIVE(18,"SavingsStatus-Inactive");
+    // AccountState Entity Values
+    LOAN_PARTIAL_APPLICATION(1, "AccountState-PartialApplication"), LOAN_PENDING_APPROVAL(2,
+            "AccountState-ApplicationPendingApproval"), LOAN_APPROVED(3, "AccountState-ApplicationApproved"), LOAN_DISBURSED_TO_LOAN_OFFICER(
+            4, "AccountState-DisbursedToLo"), LOAN_ACTIVE_IN_GOOD_STANDING(5, "AccountState-ActiveInGoodStanding"), LOAN_CLOSED_OBLIGATIONS_MET(
+            6, "AccountState-ClosedObligationMet"), LOAN_CLOSED_WRITTEN_OFF(7, "AccountState-ClosedWrittenOff"), LOAN_CLOSED_RESCHEDULED(
+            8, "AccountState-ClosedRescheduled"), LOAN_ACTIVE_IN_BAD_STANDING(9, "AccountState-ActiveInBadStanding"), LOAN_CANCELLED(
+            10, "AccountState-Cancel"),
+    // CustomerStatus Entity Values
+    CUSTOMER_ACCOUNT_ACTIVE(11, "CustomerStatus-CustomerAccountActive"), CUSTOMER_ACCOUNT_INACTIVE(12,
+            "CustomerStatus-CustomerAccountInactive"),
+    // SavingsStatus Entity Values
+    SAVINGS_PARTIAL_APPLICATION(13, "SavingsStatus-PartialApplication"), SAVINGS_PENDING_APPROVAL(14,
+            "SavingsStatus-ApplicationPendingApproval"), SAVINGS_CANCELLED(15, "SavingsStatus-Cancelled"), SAVINGS_ACTIVE(
+            16, "SavingsStatus-Active"), SAVINGS_CLOSED(17, "SavingsStatus-Closed"), SAVINGS_INACTIVE(18,
+            "SavingsStatus-Inactive");
 
-	Short value;
-	String messageKey;
+    Short value;
+    String messageKey;
 
-	private AccountState(int value, String key) {
-		this.value = (short)value;
-		this.messageKey = key;
-	}
+    private AccountState(int value, String key) {
+        this.value = (short) value;
+        this.messageKey = key;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static AccountState fromShort(Short value){
-		for (AccountState candidate : AccountState.values()) {
-			if (candidate.getValue().equals(value)) {
-				return candidate;
-			}
-		}
-		/* Do we really want null rather than an exception?  I suspect
-		   IllegalArgumentException would make more sense. */
-		return null;
-	}
-	
-	public boolean isActiveLoanAccountState() {
-		return equals(LOAN_ACTIVE_IN_GOOD_STANDING) || equals(LOAN_ACTIVE_IN_BAD_STANDING);
-	}
-	
-	public String getPropertiesKey() {
-		return messageKey;
-	}	
+    public Short getValue() {
+        return value;
+    }
+
+    public static AccountState fromShort(Short value) {
+        for (AccountState candidate : AccountState.values()) {
+            if (candidate.getValue().equals(value)) {
+                return candidate;
+            }
+        }
+        /*
+         * Do we really want null rather than an exception? I suspect
+         * IllegalArgumentException would make more sense.
+         */
+        return null;
+    }
+
+    public boolean isActiveLoanAccountState() {
+        return equals(LOAN_ACTIVE_IN_GOOD_STANDING) || equals(LOAN_ACTIVE_IN_BAD_STANDING);
+    }
+
+    public String getPropertiesKey() {
+        return messageKey;
+    }
 }

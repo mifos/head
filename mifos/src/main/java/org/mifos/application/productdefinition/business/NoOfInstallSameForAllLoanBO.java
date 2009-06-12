@@ -17,21 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 public class NoOfInstallSameForAllLoanBO extends LoanOfferingInstallmentRange {
-	@SuppressWarnings("unused")
-	private final Short noOfInstallSameForAllLoanID;
+    @SuppressWarnings("unused")
+    private final Short noOfInstallSameForAllLoanID;
 
-	public NoOfInstallSameForAllLoanBO(Short minNoOfInstall,
-			Short maxNoOfInstall, Short defaultNoOfInstall,
-			LoanOfferingBO loanOffering) {
-		super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
-		this.noOfInstallSameForAllLoanID = null;
-	}
+    public NoOfInstallSameForAllLoanBO(Short minNoOfInstall, Short maxNoOfInstall, Short defaultNoOfInstall,
+            LoanOfferingBO loanOffering) {
+        super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
+        this.noOfInstallSameForAllLoanID = null;
+    }
 
-	public NoOfInstallSameForAllLoanBO() {
-		this(null, null, null, null);
-	}
+    public NoOfInstallSameForAllLoanBO() {
+        this(null, null, null, null);
+    }
 }

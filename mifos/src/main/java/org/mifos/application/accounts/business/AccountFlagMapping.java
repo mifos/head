@@ -17,31 +17,32 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import org.mifos.framework.business.PersistentObject;
 
-public class AccountFlagMapping extends PersistentObject{
+public class AccountFlagMapping extends PersistentObject {
 
-	private Integer accountFlagId;
-	private AccountStateFlagEntity flag;
+    private Integer accountFlagId;
+    private AccountStateFlagEntity flag;
 
-	public Integer getAccountFlagId() {
-		return accountFlagId;
-	}
-	
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setAccountFlagId(Integer accountFlagId) {
-		this.accountFlagId = accountFlagId;
-	}
+    public Integer getAccountFlagId() {
+        return accountFlagId;
+    }
 
-	public AccountStateFlagEntity getFlag() {
-		return flag;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setAccountFlagId(Integer accountFlagId) {
+        this.accountFlagId = accountFlagId;
+    }
 
-	public void setFlag(AccountStateFlagEntity flag) {
-		this.flag = flag;
-	}
-	
+    public AccountStateFlagEntity getFlag() {
+        return flag;
+    }
+
+    public void setFlag(AccountStateFlagEntity flag) {
+        this.flag = flag;
+    }
+
 }

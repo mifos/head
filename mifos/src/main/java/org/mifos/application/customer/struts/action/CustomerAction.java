@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,43 +39,47 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomerAction extends AccountAppAction {
 
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
-	
-	public CustomerAction() throws Exception {
-		super();
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("customerAction");
-		security.allow("forwardWaiveChargeDue", SecurityConstants.VIEW);
-		security.allow("forwardWaiveChargeOverDue", SecurityConstants.VIEW);
-		security.allow("waiveChargeDue", SecurityConstants.VIEW);
-		security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
-		security.allow("getAllActivity", SecurityConstants.VIEW);
-		security.allow("getAllClosedAccounts", SecurityConstants.VIEW);
-		return security;
-	}
-	
-	@TransactionDemarcate(validateAndResetToken=true)
-	@CloseSession
-	public ActionForward forwardWaiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		String type = request.getParameter("type");
-		return mapping.findForward("waive"+type+"Charges_Success");
-	}
-	
-	@TransactionDemarcate(validateAndResetToken=true)
-	@CloseSession
-	public ActionForward forwardWaiveChargeOverDue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		String type = request.getParameter("type");
-		return mapping.findForward("waive"+type+"Charges_Success");
-	}
-	
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward getAllActivity(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		logger.debug("In CustomerAction::getAllActivity()");
-		String type = request.getParameter("type");
-		String globalCustNum=request.getParameter("globalCustNum");
-		SessionUtils.setCollectionAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST,getCustomerBusinessService().getAllActivityView(globalCustNum),request);
-		return mapping.findForward("view"+type+"Activity");
-	}
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
+
+    public CustomerAction() throws Exception {
+        super();
+    }
+
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("customerAction");
+        security.allow("forwardWaiveChargeDue", SecurityConstants.VIEW);
+        security.allow("forwardWaiveChargeOverDue", SecurityConstants.VIEW);
+        security.allow("waiveChargeDue", SecurityConstants.VIEW);
+        security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
+        security.allow("getAllActivity", SecurityConstants.VIEW);
+        security.allow("getAllClosedAccounts", SecurityConstants.VIEW);
+        return security;
+    }
+
+    @TransactionDemarcate(validateAndResetToken = true)
+    @CloseSession
+    public ActionForward forwardWaiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        String type = request.getParameter("type");
+        return mapping.findForward("waive" + type + "Charges_Success");
+    }
+
+    @TransactionDemarcate(validateAndResetToken = true)
+    @CloseSession
+    public ActionForward forwardWaiveChargeOverDue(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        String type = request.getParameter("type");
+        return mapping.findForward("waive" + type + "Charges_Success");
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward getAllActivity(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In CustomerAction::getAllActivity()");
+        String type = request.getParameter("type");
+        String globalCustNum = request.getParameter("globalCustNum");
+        SessionUtils.setCollectionAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST, getCustomerBusinessService()
+                .getAllActivityView(globalCustNum), request);
+        return mapping.findForward("view" + type + "Activity");
+    }
 }

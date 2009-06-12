@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.actionforms;
 
 import static org.mifos.framework.util.helpers.StringUtils.isNullOrEmpty;
@@ -39,66 +39,63 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
-	private Money loanAmount;
+    private Money loanAmount;
 
-	private String paymentModeOfPayment;
+    private String paymentModeOfPayment;
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		ActionErrors errors1 = super.validate(mapping, request);
-		if (errors1 != null)
-			errors.add(errors1);
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        ActionErrors errors1 = super.validate(mapping, request);
+        if (errors1 != null)
+            errors.add(errors1);
 
-		String method = request.getParameter(MethodNameConstants.METHOD);
-		if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount())
-				&& isNullOrEmpty(paymentModeOfPayment)) {
-			String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
-			errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
-					AccountConstants.ERROR_MANDATORY, errorMessage));
-		}
+        String method = request.getParameter(MethodNameConstants.METHOD);
+        if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount()) && isNullOrEmpty(paymentModeOfPayment)) {
+            String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                    errorMessage));
+        }
 
-		if (!errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-		}
-		return errors;
-	}
+        if (!errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", method);
+        }
+        return errors;
+    }
 
-	private ResourceBundle getResourceBundle(Locale userLocale) {
-		return ResourceBundle.getBundle(
-				FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
-	}
+    private ResourceBundle getResourceBundle(Locale userLocale) {
+        return ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
+    }
 
-	private boolean isAmountGreaterThanZero(Money amount) {
-		return amount != null && amount.getAmountDoubleValue() > 0.0;
-	}
+    private boolean isAmountGreaterThanZero(Money amount) {
+        return amount != null && amount.getAmountDoubleValue() > 0.0;
+    }
 
-	private boolean isPreviewMethod(String methodName) {
-		return methodName != null && methodName.equals(MethodNameConstants.PREVIEW);
-	}
+    private boolean isPreviewMethod(String methodName) {
+        return methodName != null && methodName.equals(MethodNameConstants.PREVIEW);
+    }
 
-	public String getPaymentModeOfPayment() {
-		return paymentModeOfPayment;
-	}
+    public String getPaymentModeOfPayment() {
+        return paymentModeOfPayment;
+    }
 
-	public void setPaymentModeOfPayment(String paymentModeOfPayment) {
-		this.paymentModeOfPayment = paymentModeOfPayment;
-	}
+    public void setPaymentModeOfPayment(String paymentModeOfPayment) {
+        this.paymentModeOfPayment = paymentModeOfPayment;
+    }
 
-	public Money getLoanAmount() {
-		return loanAmount;
-	}
+    public Money getLoanAmount() {
+        return loanAmount;
+    }
 
-	public void setLoanAmount(Money loanAmount) {
-		this.loanAmount = loanAmount;
-	}
+    public void setLoanAmount(Money loanAmount) {
+        this.loanAmount = loanAmount;
+    }
 
-	@Override
-	public void clear() {
-		super.clear();
-		this.loanAmount = null;
-	}
+    @Override
+    public void clear() {
+        super.clear();
+        this.loanAmount = null;
+    }
 
 }

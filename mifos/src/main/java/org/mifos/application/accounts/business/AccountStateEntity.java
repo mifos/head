@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.util.HashSet;
@@ -34,74 +34,74 @@ import org.mifos.config.LocalizedTextLookup;
  */
 public class AccountStateEntity extends StateEntity implements LocalizedTextLookup {
 
-	private ProductTypeEntity prdType;
+    private ProductTypeEntity prdType;
 
-	private Set<AccountStateFlagEntity> flagSet;
+    private Set<AccountStateFlagEntity> flagSet;
 
-	private Short optional;
+    private Short optional;
 
-	private String description;
-	
-	public String getDescription() {
-		return description;
-	}
+    private String description;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	protected AccountStateEntity() {
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public AccountStateEntity(AccountState accountState) {
-		super(accountState.getValue());
-		this.flagSet = new HashSet<AccountStateFlagEntity>();
-	}
+    protected AccountStateEntity() {
+    }
 
-	public ProductTypeEntity getPrdType() {
-		return prdType;
-	}
+    public AccountStateEntity(AccountState accountState) {
+        super(accountState.getValue());
+        this.flagSet = new HashSet<AccountStateFlagEntity>();
+    }
 
-	public Set<AccountStateFlagEntity> getFlagSet() {
-		return flagSet;
-	}
+    public ProductTypeEntity getPrdType() {
+        return prdType;
+    }
 
-	public void setFlagSet(Set<AccountStateFlagEntity> flagSet) {
-		this.flagSet = flagSet;
-	}
+    public Set<AccountStateFlagEntity> getFlagSet() {
+        return flagSet;
+    }
 
-	public Short getOptional() {
-		return optional;
-	}
-	
-	/**
-	 * Safer, preferred method for getting the "optional" property.
-	 * Can't be "isOptional()" because hibernate gets confused.
-	 */
-	public boolean getIsOptional() {
-		return optional.equals(YesNoFlag.YES.getValue());
-	}
-	
-	public void setOptional(Short optional) {
-		this.optional = optional;
-	}
+    public void setFlagSet(Set<AccountStateFlagEntity> flagSet) {
+        this.flagSet = flagSet;
+    }
 
-	/**
-	 * Safer, preferred method for setting the "optional" property.
-	 * Can't be "setOptional(boolean)" because hibernate gets confused.
-	 */
-	public void setIsOptional(boolean optional) {
-		if (optional)
-			setOptional(YesNoFlag.YES.getValue());
-		else
-			setOptional(YesNoFlag.NO.getValue());
-	}
-	
-	public String getPropertiesKey() {
-		return getLookUpValue().getLookUpName();
-	}
+    public Short getOptional() {
+        return optional;
+    }
 
-	public boolean isInState(AccountState state) {
-		return state.getValue().equals(getId());
-	}	
+    /**
+     * Safer, preferred method for getting the "optional" property. Can't be
+     * "isOptional()" because hibernate gets confused.
+     */
+    public boolean getIsOptional() {
+        return optional.equals(YesNoFlag.YES.getValue());
+    }
+
+    public void setOptional(Short optional) {
+        this.optional = optional;
+    }
+
+    /**
+     * Safer, preferred method for setting the "optional" property. Can't be
+     * "setOptional(boolean)" because hibernate gets confused.
+     */
+    public void setIsOptional(boolean optional) {
+        if (optional)
+            setOptional(YesNoFlag.YES.getValue());
+        else
+            setOptional(YesNoFlag.NO.getValue());
+    }
+
+    public String getPropertiesKey() {
+        return getLookUpValue().getLookUpName();
+    }
+
+    public boolean isInState(AccountState state) {
+        return state.getValue().equals(getId());
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeeFormula;
@@ -26,39 +26,33 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeFormulaEntity extends MasterDataEntity {
 
-	
-	private FeeFormula feeFormula;
-	
-	public FeeFormulaEntity(FeeFormula feeFormula) {
-		super(feeFormula.getValue());
-		this.feeFormula = feeFormula;
-	}
+    private FeeFormula feeFormula;
 
-	protected FeeFormulaEntity() {
-	}
-	
-	public FeeFormula getFeeFormula() {
-		return feeFormula;
-	}
+    public FeeFormulaEntity(FeeFormula feeFormula) {
+        super(feeFormula.getValue());
+        this.feeFormula = feeFormula;
+    }
 
-	public String getFormulaString(Short locale) {
-		return "Formula: % " + getName();
-	}
-	
-	public String getFormulaString()
-	{
-		if (feeFormula == null)
-		{
-			try
-			{
-				feeFormula = FeeFormula.getFeeFormula(this.getId());
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException(e);
-			}
-		}
-			
-		return "Formula: % " + MessageLookup.getInstance().lookup(feeFormula);
-	}
+    protected FeeFormulaEntity() {
+    }
+
+    public FeeFormula getFeeFormula() {
+        return feeFormula;
+    }
+
+    public String getFormulaString(Short locale) {
+        return "Formula: % " + getName();
+    }
+
+    public String getFormulaString() {
+        if (feeFormula == null) {
+            try {
+                feeFormula = FeeFormula.getFeeFormula(this.getId());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return "Formula: % " + MessageLookup.getInstance().lookup(feeFormula);
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import java.sql.Date;
@@ -43,263 +43,239 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class CollectionSheetBO extends BusinessObject {
 
-	private static final int CUSTOMER_ID_MAP_INITIAL_CAPACITY = 10000;
+    private static final int CUSTOMER_ID_MAP_INITIAL_CAPACITY = 10000;
 
-	public CollectionSheetBO() {
-		super();
-	}
+    public CollectionSheetBO() {
+        super();
+    }
 
-	private Integer collSheetID;
+    private Integer collSheetID;
 
-	private Date collSheetDate;
+    private Date collSheetDate;
 
-	private Short statusFlag;
+    private Short statusFlag;
 
-	private Date runDate;
+    private Date runDate;
 
-	private Set<CollSheetCustBO> collectionSheetCustomers;
-	
-	private Map<Integer, CollSheetCustBO> collectionSheetCustomerLookup = new HashMap<Integer, CollSheetCustBO>(
-			CUSTOMER_ID_MAP_INITIAL_CAPACITY);
+    private Set<CollSheetCustBO> collectionSheetCustomers;
 
-	public void populateTestInstance(Date collSheetDate, Date runDate, Set<CollSheetCustBO> collectionSheetCustomers, 
-			Short statusFlag) {
-		this.collSheetDate = collSheetDate;
-		this.runDate = runDate;
-		this.collectionSheetCustomers = collectionSheetCustomers;
-		this.statusFlag = statusFlag;
-		for(CollSheetCustBO customer: collectionSheetCustomers) {
-			customer.setCollectionSheet(this);
-		}		
-	}
+    private Map<Integer, CollSheetCustBO> collectionSheetCustomerLookup = new HashMap<Integer, CollSheetCustBO>(
+            CUSTOMER_ID_MAP_INITIAL_CAPACITY);
 
-	public Date getCollSheetDate() {
-		return collSheetDate;
-	}
+    public void populateTestInstance(Date collSheetDate, Date runDate, Set<CollSheetCustBO> collectionSheetCustomers,
+            Short statusFlag) {
+        this.collSheetDate = collSheetDate;
+        this.runDate = runDate;
+        this.collectionSheetCustomers = collectionSheetCustomers;
+        this.statusFlag = statusFlag;
+        for (CollSheetCustBO customer : collectionSheetCustomers) {
+            customer.setCollectionSheet(this);
+        }
+    }
 
-	public void setCollSheetDate(Date collSheetDate) {
-		this.collSheetDate = collSheetDate;
-	}
+    public Date getCollSheetDate() {
+        return collSheetDate;
+    }
 
-	public Integer getCollSheetID() {
-		return collSheetID;
-	}
+    public void setCollSheetDate(Date collSheetDate) {
+        this.collSheetDate = collSheetDate;
+    }
 
-	public void setCollSheetID(Integer collSheetID) {
-		this.collSheetID = collSheetID;
-	}
+    public Integer getCollSheetID() {
+        return collSheetID;
+    }
 
-	public Date getRunDate() {
-		return runDate;
-	}
+    public void setCollSheetID(Integer collSheetID) {
+        this.collSheetID = collSheetID;
+    }
 
-	public void setRunDate(Date runDate) {
-		this.runDate = runDate;
-	}
+    public Date getRunDate() {
+        return runDate;
+    }
 
-	public Short getStatusFlag() {
-		return statusFlag;
-	}
+    public void setRunDate(Date runDate) {
+        this.runDate = runDate;
+    }
 
-	public void setStatusFlag(Short statusFlag) {
-		this.statusFlag = statusFlag;
-	}
+    public Short getStatusFlag() {
+        return statusFlag;
+    }
 
-	public Set<CollSheetCustBO> getCollectionSheetCustomers() {
-		return collectionSheetCustomers;
-	}
+    public void setStatusFlag(Short statusFlag) {
+        this.statusFlag = statusFlag;
+    }
 
-	public void setCollectionSheetCustomers(
-			Set<CollSheetCustBO> collectionSheetCustomerSet) {
-		this.collectionSheetCustomers = collectionSheetCustomerSet;
-	}
+    public Set<CollSheetCustBO> getCollectionSheetCustomers() {
+        return collectionSheetCustomers;
+    }
 
-	/**
-	 * It adds the passed collectionSheetCustomer object to the set of
-	 * collectionsheet customers. If the set is null it creates a new hash set
-	 * and adds the collectionsheetCustomer object to it setting the
-	 * bidirectional relation ship.
-	 */
-	public void addCollectionSheetCustomer(
-			CollSheetCustBO collectionSheetCustomer) {
-		collectionSheetCustomer.setCollectionSheet(this);
-		if (null == collectionSheetCustomers) {
-			collectionSheetCustomers = new HashSet<CollSheetCustBO>();
-		}
-		collectionSheetCustomers.add(collectionSheetCustomer);
-		collectionSheetCustomerLookup.put(collectionSheetCustomer.getCustId(), collectionSheetCustomer);
-	}
+    public void setCollectionSheetCustomers(Set<CollSheetCustBO> collectionSheetCustomerSet) {
+        this.collectionSheetCustomers = collectionSheetCustomerSet;
+    }
 
-	/**
-	 * @return - It returns the collectionSheetCustomer object reference from
-	 *         the set if it finds a collection sheet customer in the
-	 *         collectionSheetCustomers with the same customerId else returns
-	 *         null.
-	 */
-	public CollSheetCustBO getCollectionSheetCustomerForCustomerId(
-			Integer customerId) {
-		return collectionSheetCustomerLookup.get(customerId);
-	}
+    /**
+     * It adds the passed collectionSheetCustomer object to the set of
+     * collectionsheet customers. If the set is null it creates a new hash set
+     * and adds the collectionsheetCustomer object to it setting the
+     * bidirectional relation ship.
+     */
+    public void addCollectionSheetCustomer(CollSheetCustBO collectionSheetCustomer) {
+        collectionSheetCustomer.setCollectionSheet(this);
+        if (null == collectionSheetCustomers) {
+            collectionSheetCustomers = new HashSet<CollSheetCustBO>();
+        }
+        collectionSheetCustomers.add(collectionSheetCustomer);
+        collectionSheetCustomerLookup.put(collectionSheetCustomer.getCustId(), collectionSheetCustomer);
+    }
 
-	/**
-	 * This method takes a list of loan accounts which are due for disbursal and
-	 * adds them to the collection sheet loan details set associated with the
-	 * corresponding customer id.It first checks if the customer record already
-	 * exists in the collectionSheetCustomer set,if it does not exist it adds
-	 * the customer record first and then adds the collectionSheetloandetails
-	 * object to the customer record.
-	 */
-	public void addLoanDetailsForDisbursal(List<LoanBO> loanWithDisbursalDate) {
-		if (null != loanWithDisbursalDate && loanWithDisbursalDate.size() > 0) {
-			for (LoanBO loan : loanWithDisbursalDate) {
-				CollSheetLnDetailsEntity collSheetLnDetail = null;
-				CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(loan
-						.getCustomer().getCustomerId());
-				if (null == collectionSheetCustomer) {
-					collectionSheetCustomer = new CollSheetCustBO();
-					collectionSheetCustomer.populateCustomerDetails(loan
-							.getCustomer());
-					MifosLogManager.getLogger(
-							LoggerConstants.COLLECTIONSHEETLOGGER).debug(
-							"after addng customer detals");
-					addCollectionSheetCustomer(collectionSheetCustomer);
-				}
-				collSheetLnDetail = new CollSheetLnDetailsEntity();
-				collSheetLnDetail.addDisbursalDetails(loan);
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug("after addng disbursal details of loan detals");
-				collectionSheetCustomer
-						.addCollectionSheetLoanDetail(collSheetLnDetail);
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug("after addng loan details to customer record");
-			}
-		}
-	}
+    /**
+     * @return - It returns the collectionSheetCustomer object reference from
+     *         the set if it finds a collection sheet customer in the
+     *         collectionSheetCustomers with the same customerId else returns
+     *         null.
+     */
+    public CollSheetCustBO getCollectionSheetCustomerForCustomerId(Integer customerId) {
+        return collectionSheetCustomerLookup.get(customerId);
+    }
 
-	/**
-	 * This method updates the collective totals for the collectionsheetCustomer
-	 * records in the set. It iterates over the set and updates the totals for
-	 * each record which the sum of self and the group or client under it.Hence
-	 * if the record is that of center it adds the totals of self and groups and
-	 * clients under that center or if it is that of a group it sums the totals
-	 * of self and clients under it.
-	 */
-	public void updateCollectiveTotals() {
-		for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
-			if (collSheetCustomer.getCustLevel() == CustomerLevel.CLIENT.getValue()) {
-				int parentCustomerId = collSheetCustomer.getParentCustomerId();
-				CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
-				// it would be null in case a client belongs directly to a
-				// branch and does not belong to a group.
-				if (null != collSheetParentCust) {
-					collSheetParentCust
-							.addCollectiveTotalsForChild(collSheetCustomer);
-				}
-			}
-		}
-		for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
-			if (collSheetCustomer.getCustLevel() == CustomerLevel.GROUP.getValue()) {
-				int parentCustomerId = collSheetCustomer.getParentCustomerId();
-				CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
-				// it would be null in case center hierarchy does not exist.
-				if (null != collSheetParentCust) {
-					collSheetParentCust
-							.addCollectiveTotalsForChild(collSheetCustomer);
-				}
-			}
-		}
-	}
+    /**
+     * This method takes a list of loan accounts which are due for disbursal and
+     * adds them to the collection sheet loan details set associated with the
+     * corresponding customer id.It first checks if the customer record already
+     * exists in the collectionSheetCustomer set,if it does not exist it adds
+     * the customer record first and then adds the collectionSheetloandetails
+     * object to the customer record.
+     */
+    public void addLoanDetailsForDisbursal(List<LoanBO> loanWithDisbursalDate) {
+        if (null != loanWithDisbursalDate && loanWithDisbursalDate.size() > 0) {
+            for (LoanBO loan : loanWithDisbursalDate) {
+                CollSheetLnDetailsEntity collSheetLnDetail = null;
+                CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(loan.getCustomer()
+                        .getCustomerId());
+                if (null == collectionSheetCustomer) {
+                    collectionSheetCustomer = new CollSheetCustBO();
+                    collectionSheetCustomer.populateCustomerDetails(loan.getCustomer());
+                    MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+                            "after addng customer detals");
+                    addCollectionSheetCustomer(collectionSheetCustomer);
+                }
+                collSheetLnDetail = new CollSheetLnDetailsEntity();
+                collSheetLnDetail.addDisbursalDetails(loan);
+                MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+                        "after addng disbursal details of loan detals");
+                collectionSheetCustomer.addCollectionSheetLoanDetail(collSheetLnDetail);
+                MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+                        "after addng loan details to customer record");
+            }
+        }
+    }
 
-	/**
-	 * This creates a collection sheet object in the database, before persisting
-	 * the object it implicitly sets the state to started.
-	 */
-	public void create() throws PersistenceException {
-		this.statusFlag = CollectionSheetConstants.COLLECTION_SHEET_GENERATION_STARTED;
-		new CollectionSheetPersistence().createOrUpdate(this);
-	}
+    /**
+     * This method updates the collective totals for the collectionsheetCustomer
+     * records in the set. It iterates over the set and updates the totals for
+     * each record which the sum of self and the group or client under it.Hence
+     * if the record is that of center it adds the totals of self and groups and
+     * clients under that center or if it is that of a group it sums the totals
+     * of self and clients under it.
+     */
+    public void updateCollectiveTotals() {
+        for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
+            if (collSheetCustomer.getCustLevel() == CustomerLevel.CLIENT.getValue()) {
+                int parentCustomerId = collSheetCustomer.getParentCustomerId();
+                CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
+                // it would be null in case a client belongs directly to a
+                // branch and does not belong to a group.
+                if (null != collSheetParentCust) {
+                    collSheetParentCust.addCollectiveTotalsForChild(collSheetCustomer);
+                }
+            }
+        }
+        for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
+            if (collSheetCustomer.getCustLevel() == CustomerLevel.GROUP.getValue()) {
+                int parentCustomerId = collSheetCustomer.getParentCustomerId();
+                CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
+                // it would be null in case center hierarchy does not exist.
+                if (null != collSheetParentCust) {
+                    collSheetParentCust.addCollectiveTotalsForChild(collSheetCustomer);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Populates customer, customer account, loan and savings details
-	 * 
-	 * This is achieved by retrieving customer objects from the list
-	 * accountActionDates passed as parameter, also if the account associated
-	 * with that item of accountActionDates is a CustomerAccount it populates
-	 * the relevant details from that object like fees , misc penalty etc.
-	 * @throws ApplicationException 
-	 * @throws SystemException 
-	 */
-	void populateCustomerLoanAndSavingsDetails(
-			List<AccountActionDateEntity> accountActionDates) throws SystemException, ApplicationException {
-		long cumulative = 0, count = 0;
-		for (AccountActionDateEntity accountActionDate : accountActionDates) {
-			// it might be present in the set if that customer was already added
-			// because it has got more than one loan/savings account.
-			MifosLogManager
-					.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-					.debug("checkin if the customer already exists in the list");
-			CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(accountActionDate
-					.getCustomer().getCustomerId());
-			if (null == collectionSheetCustomer) {
-				collectionSheetCustomer = new CollSheetCustBO();
-				CustomerBO customer = accountActionDate.getCustomer();
+    /**
+     * This creates a collection sheet object in the database, before persisting
+     * the object it implicitly sets the state to started.
+     */
+    public void create() throws PersistenceException {
+        this.statusFlag = CollectionSheetConstants.COLLECTION_SHEET_GENERATION_STARTED;
+        new CollectionSheetPersistence().createOrUpdate(this);
+    }
 
-				// add customer details to the fields in collectionSheetCustomer
-				// object.
-				collectionSheetCustomer.populateCustomerDetails(customer);
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug("after adding customer details");
-			}
-			// here we need not check if it was already in the list because
-			// there can be only one customer account with a customer so it
-			// would definitely would not have been added to the list.
-			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-					.debug(
-							"account type id is "
-									+ accountActionDate.getAccount()
-											.getType());
-			addCollectionSheetCustomer(collectionSheetCustomer);
-			if (accountActionDate.getAccount().getType()
-					== AccountTypes.CUSTOMER_ACCOUNT) {
-				collectionSheetCustomer
-						.populateAccountDetails(accountActionDate);
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug("after adding account details");
-			}else if (accountActionDate.getAccount().getType()
-					== AccountTypes.LOAN_ACCOUNT) {
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug("Loan accoutns size: " + accountActionDate);
-				CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
-				collectionSheetLoanDetail.addAccountDetails(accountActionDate);
-				collectionSheetCustomer.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
-			}else if (accountActionDate.getAccount().getType()
-					== AccountTypes.SAVINGS_ACCOUNT) {
-				CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
-				collSheetSavingsDetail.addAccountDetails(accountActionDate);
-				collectionSheetCustomer.addCollectionSheetSavingsDetail(collSheetSavingsDetail);
-			}
-		}
-	}
+    /**
+     * Populates customer, customer account, loan and savings details
+     * 
+     * This is achieved by retrieving customer objects from the list
+     * accountActionDates passed as parameter, also if the account associated
+     * with that item of accountActionDates is a CustomerAccount it populates
+     * the relevant details from that object like fees , misc penalty etc.
+     * 
+     * @throws ApplicationException
+     * @throws SystemException
+     */
+    void populateCustomerLoanAndSavingsDetails(List<AccountActionDateEntity> accountActionDates)
+            throws SystemException, ApplicationException {
+        long cumulative = 0, count = 0;
+        for (AccountActionDateEntity accountActionDate : accountActionDates) {
+            // it might be present in the set if that customer was already added
+            // because it has got more than one loan/savings account.
+            MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+                    "checkin if the customer already exists in the list");
+            CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(accountActionDate
+                    .getCustomer().getCustomerId());
+            if (null == collectionSheetCustomer) {
+                collectionSheetCustomer = new CollSheetCustBO();
+                CustomerBO customer = accountActionDate.getCustomer();
 
-	/**
-	 * This sets the collection sheet record with the status id passed and then
-	 * updates the record in the database.
-	 */
-	public void update(Short statusId) throws PersistenceException {
-		this.statusFlag = statusId;
-		new CollectionSheetPersistence().createOrUpdate(this);
-	}
+                // add customer details to the fields in collectionSheetCustomer
+                // object.
+                collectionSheetCustomer.populateCustomerDetails(customer);
+                MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after adding customer details");
+            }
+            // here we need not check if it was already in the list because
+            // there can be only one customer account with a customer so it
+            // would definitely would not have been added to the list.
+            MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+                    "account type id is " + accountActionDate.getAccount().getType());
+            addCollectionSheetCustomer(collectionSheetCustomer);
+            if (accountActionDate.getAccount().getType() == AccountTypes.CUSTOMER_ACCOUNT) {
+                collectionSheetCustomer.populateAccountDetails(accountActionDate);
+                MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after adding account details");
+            } else if (accountActionDate.getAccount().getType() == AccountTypes.LOAN_ACCOUNT) {
+                MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+                        "Loan accoutns size: " + accountActionDate);
+                CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
+                collectionSheetLoanDetail.addAccountDetails(accountActionDate);
+                collectionSheetCustomer.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
+            } else if (accountActionDate.getAccount().getType() == AccountTypes.SAVINGS_ACCOUNT) {
+                CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
+                collSheetSavingsDetail.addAccountDetails(accountActionDate);
+                collectionSheetCustomer.addCollectionSheetSavingsDetail(collSheetSavingsDetail);
+            }
+        }
+    }
 
-	public void populateAccountActionDates(
-			List<AccountActionDateEntity> accountActionDates)
-			throws SystemException, ApplicationException {
-		populateCustomerLoanAndSavingsDetails(accountActionDates);
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
-				"after populate customers");
-	}
+    /**
+     * This sets the collection sheet record with the status id passed and then
+     * updates the record in the database.
+     */
+    public void update(Short statusId) throws PersistenceException {
+        this.statusFlag = statusId;
+        new CollectionSheetPersistence().createOrUpdate(this);
+    }
+
+    public void populateAccountActionDates(List<AccountActionDateEntity> accountActionDates) throws SystemException,
+            ApplicationException {
+        populateCustomerLoanAndSavingsDetails(accountActionDates);
+        MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after populate customers");
+    }
 }

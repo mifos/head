@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.business.service;
 
 import java.util.List;
@@ -39,83 +39,72 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
 public class SavingsBusinessService implements BusinessService {
-	private SavingsPersistence savingsPersistence = new SavingsPersistence();
+    private SavingsPersistence savingsPersistence = new SavingsPersistence();
 
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public List<PrdOfferingView> getSavingProducts(OfficeBO branch,
-			CustomerLevelEntity customerLevel, short accountType)
-			throws ServiceException {
-		logger.debug("In SavingsBusinessService::getSavingProducts()");
-		try {
-			return savingsPersistence.getSavingsProducts(branch, customerLevel,
-					accountType);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<PrdOfferingView> getSavingProducts(OfficeBO branch, CustomerLevelEntity customerLevel, short accountType)
+            throws ServiceException {
+        logger.debug("In SavingsBusinessService::getSavingProducts()");
+        try {
+            return savingsPersistence.getSavingsProducts(branch, customerLevel, accountType);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition()
-			throws ServiceException {
-		logger
-				.debug("In SavingsBusinessService::retrieveCustomFieldsDefinition()");
-		try {
-			List<CustomFieldDefinitionEntity> customFields = savingsPersistence
-					.retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-			initialize(customFields);
-			return customFields;
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition() throws ServiceException {
+        logger.debug("In SavingsBusinessService::retrieveCustomFieldsDefinition()");
+        try {
+            List<CustomFieldDefinitionEntity> customFields = savingsPersistence
+                    .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
+            initialize(customFields);
+            return customFields;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public SavingsBO findById(Integer accountId) throws ServiceException {
-		logger.debug("In SavingsBusinessService::findById(), accountId: "
-				+ accountId);
-		try {
-			return savingsPersistence.findById(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public SavingsBO findById(Integer accountId) throws ServiceException {
+        logger.debug("In SavingsBusinessService::findById(), accountId: " + accountId);
+        try {
+            return savingsPersistence.findById(accountId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public SavingsBO findBySystemId(String globalAccountNumber)
-			throws ServiceException {
-		logger
-				.debug("In SavingsBusinessService::findBySystemId(), globalAccountNumber: "
-						+ globalAccountNumber);
-		try {
-			return savingsPersistence.findBySystemId(globalAccountNumber);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public SavingsBO findBySystemId(String globalAccountNumber) throws ServiceException {
+        logger.debug("In SavingsBusinessService::findBySystemId(), globalAccountNumber: " + globalAccountNumber);
+        try {
+            return savingsPersistence.findBySystemId(globalAccountNumber);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<SavingsBO> getAllClosedAccounts(Integer customerId)
-			throws ServiceException {
-		try {
-			return savingsPersistence.getAllClosedAccount(customerId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
-	public List<SavingsBO> getAllSavingsAccount()
-			throws ServiceException {		
-		try {
-			return savingsPersistence.getAllSavingsAccount();
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
+    public List<SavingsBO> getAllClosedAccounts(Integer customerId) throws ServiceException {
+        try {
+            return savingsPersistence.getAllClosedAccount(customerId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public void initialize(Object object) {
-		savingsPersistence.initialize(object);
-	}
+    public List<SavingsBO> getAllSavingsAccount() throws ServiceException {
+        try {
+            return savingsPersistence.getAllSavingsAccount();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public void initialize(Object object) {
+        savingsPersistence.initialize(object);
+    }
 }

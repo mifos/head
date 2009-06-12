@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import org.mifos.application.fees.business.FeeBO;
@@ -26,67 +26,66 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntryAccountFeeActionView extends View {
 
-	private final Integer actionDateId;
+    private final Integer actionDateId;
 
-	private final FeeBO fee;
+    private final FeeBO fee;
 
-	private final Money feeAmount;
+    private final Money feeAmount;
 
-	private final Money feeAmountPaid;
+    private final Money feeAmountPaid;
 
-	public CollectionSheetEntryAccountFeeActionView(Integer actionDateId, FeeBO fee,
-			Money feeAmount, Money feeAmountPaid) {
-		this.actionDateId = actionDateId;
-		this.fee = fee;
-		this.feeAmount = feeAmount;
-		this.feeAmountPaid = feeAmountPaid;
-	}
+    public CollectionSheetEntryAccountFeeActionView(Integer actionDateId, FeeBO fee, Money feeAmount,
+            Money feeAmountPaid) {
+        this.actionDateId = actionDateId;
+        this.fee = fee;
+        this.feeAmount = feeAmount;
+        this.feeAmountPaid = feeAmountPaid;
+    }
 
-	public CollectionSheetEntryAccountFeeActionView(Integer actionDateId) {
-		this(actionDateId, null, null, null);
-	}
+    public CollectionSheetEntryAccountFeeActionView(Integer actionDateId) {
+        this(actionDateId, null, null, null);
+    }
 
-	public Integer getActionDateId() {
-		return actionDateId;
-	}
+    public Integer getActionDateId() {
+        return actionDateId;
+    }
 
-	public FeeBO getFee() {
-		return fee;
-	}
+    public FeeBO getFee() {
+        return fee;
+    }
 
-	public Money getFeeAmount() {
-		return feeAmount;
-	}
+    public Money getFeeAmount() {
+        return feeAmount;
+    }
 
-	public Money getFeeAmountPaid() {
-		return feeAmountPaid;
-	}
+    public Money getFeeAmountPaid() {
+        return feeAmountPaid;
+    }
 
-	public Money getFeeDue() {
-		return getFeeAmount().subtract(getFeeAmountPaid());
-	}
+    public Money getFeeDue() {
+        return getFeeAmount().subtract(getFeeAmountPaid());
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof CollectionSheetEntryAccountFeeActionView) {
-			CollectionSheetEntryAccountFeeActionView otherView = 
-				(CollectionSheetEntryAccountFeeActionView) obj;
-			if (otherView.getActionDateId().equals(
-					getActionDateId()))
-				return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof CollectionSheetEntryAccountFeeActionView) {
+            CollectionSheetEntryAccountFeeActionView otherView = (CollectionSheetEntryAccountFeeActionView) obj;
+            if (otherView.getActionDateId().equals(getActionDateId()))
+                return true;
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		//null case, should never happen, but some one could put in a null constructor
-		// (or just pass null to the constructor we have...)
-		if(null == this.getActionDateId()){
-			return (super.hashCode());
-//			throw new NullPointerException("shouldn't happen");
-		}
-		return this.getActionDateId().intValue();
-	}
+    @Override
+    public int hashCode() {
+        // null case, should never happen, but some one could put in a null
+        // constructor
+        // (or just pass null to the constructor we have...)
+        if (null == this.getActionDateId()) {
+            return (super.hashCode());
+            // throw new NullPointerException("shouldn't happen");
+        }
+        return this.getActionDateId().intValue();
+    }
 
 }

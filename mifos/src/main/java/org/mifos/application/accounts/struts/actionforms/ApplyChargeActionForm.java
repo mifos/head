@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,84 +33,82 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class ApplyChargeActionForm extends BaseActionForm {
 
-	private String accountId;
+    private String accountId;
 
-	private String chargeType;
+    private String chargeType;
 
-	private String chargeAmount;
-	
-	private String charge;
-	
-	private String selectedChargeFormula;
-	
-	public String getAccountId() {
-		return accountId;
-	}
+    private String chargeAmount;
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
+    private String charge;
 
-	public String getChargeAmount() {
-		return chargeAmount;
-	}
+    private String selectedChargeFormula;
 
-	public void setChargeAmount(String chargeAmount) {
-		this.chargeAmount = chargeAmount;
-	}
+    public String getAccountId() {
+        return accountId;
+    }
 
-	public String getChargeType() {
-		return chargeType;
-	}
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
-	public void setChargeType(String chargeType) {
-		this.chargeType = chargeType;
-	}
+    public String getChargeAmount() {
+        return chargeAmount;
+    }
 
-	public String getCharge() {
-		return charge;
-	}
+    public void setChargeAmount(String chargeAmount) {
+        this.chargeAmount = chargeAmount;
+    }
 
-	public void setCharge(String charge) {
-		this.charge = charge;
-	}
-		
-	public String getSelectedChargeFormula() {
-		return selectedChargeFormula;
-	}
+    public String getChargeType() {
+        return chargeType;
+    }
 
-	public void setSelectedChargeFormula(String selectedChargeFormula) {
-		this.selectedChargeFormula = selectedChargeFormula;
-	}
+    public void setChargeType(String chargeType) {
+        this.chargeType = chargeType;
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		String methodCalled = request.getParameter(Methods.method.toString());
-		if (null != methodCalled) {
-			if ((Methods.update.toString()).equals(methodCalled)) {
-				if(!StringUtils.isNullOrEmpty(selectedChargeFormula)){
-					validateRate(errors, request);
-					
-				}
-				errors.add(super.validate(mapping, request));
-			}
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
-		}
-		return errors;
-	}
+    public String getCharge() {
+        return charge;
+    }
 
-	private void validateRate(ActionErrors errors,HttpServletRequest request) {
-		if(getDoubleValue(chargeAmount) > Double.valueOf("999")){
-			errors.add(AccountConstants.RATE,
-					new ActionMessage(AccountConstants.RATE_ERROR));
-			request.setAttribute("selectedChargeFormula" ,selectedChargeFormula);
-		}
-		
-	}
+    public void setCharge(String charge) {
+        this.charge = charge;
+    }
+
+    public String getSelectedChargeFormula() {
+        return selectedChargeFormula;
+    }
+
+    public void setSelectedChargeFormula(String selectedChargeFormula) {
+        this.selectedChargeFormula = selectedChargeFormula;
+    }
+
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        String methodCalled = request.getParameter(Methods.method.toString());
+        if (null != methodCalled) {
+            if ((Methods.update.toString()).equals(methodCalled)) {
+                if (!StringUtils.isNullOrEmpty(selectedChargeFormula)) {
+                    validateRate(errors, request);
+
+                }
+                errors.add(super.validate(mapping, request));
+            }
+        }
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", methodCalled);
+        }
+        return errors;
+    }
+
+    private void validateRate(ActionErrors errors, HttpServletRequest request) {
+        if (getDoubleValue(chargeAmount) > Double.valueOf("999")) {
+            errors.add(AccountConstants.RATE, new ActionMessage(AccountConstants.RATE_ERROR));
+            request.setAttribute("selectedChargeFormula", selectedChargeFormula);
+        }
+
+    }
 
 }

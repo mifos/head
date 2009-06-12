@@ -17,32 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 public class LanguageEntity extends MasterDataEntity {
 
-	private final String languageName;
+    private final String languageName;
 
-	private final String languageShortName;
+    private final String languageShortName;
 
-	public LanguageEntity() {
-		super();
-		languageName=null;
-		languageShortName=null;
-	}
+    public LanguageEntity() {
+        super();
+        languageName = null;
+        languageShortName = null;
+    }
 
-	public String getLanguageName() {
-		return languageName;
-	}
-	
-	public String getLookedUpLanguageName()
-	{
-		return this.getName();
-	}
+    public String getLanguageName() {
+        return languageName;
+    }
 
-	public String getLanguageShortName() {
-		return languageShortName;
-	}
+    public String getLookedUpLanguageName() {
+        return this.getName();
+    }
+
+    public String getLanguageShortName() {
+        return languageShortName;
+    }
 
 }

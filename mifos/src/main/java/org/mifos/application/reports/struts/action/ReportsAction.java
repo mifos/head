@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,75 +43,68 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 
 public class ReportsAction extends BaseAction {
-	
-	private ReportsBusinessService reportsBusinessService ;
-	private MifosLogger logger = 
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
-	public ReportsAction() throws ServiceException {
-		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
-	}
-	
-	@Override
-	protected BusinessService getService() {
-		return reportsBusinessService;
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("reportsAction");
-		security.allow("load", SecurityConstants.VIEW);
-		security.allow("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
-		security
-				.allow("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
 
-		security.allow("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
-		security.allow("area_performance", SecurityConstants.AREAPERFORMANCE);
-		security.allow("collection_sheet", SecurityConstants.COLLECTIONSHEET);
-		security.allow("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
-		security.allow("branch_disbursement",
-				SecurityConstants.BRANCHDISBURSEMENT);
-		security.allow("staffwise_report", SecurityConstants.STAFFWISEREPORT);
-		security.allow("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
-		security.allow("analysis", SecurityConstants.ANALYSIS);
-		security.allow("kendra_meeting", SecurityConstants.KENDRA_MEETING);
-		security.allow("administerreports_path",
-				SecurityConstants.ADMINISTER_REPORTS);
-		security.allow("administerreportslist_path",
-				SecurityConstants.ADMINISTER_REPORTS);
-		return security;
-		
-	}
-	
-	/**
-	 * loads report page
-	 */
-	public ActionForward load(ActionMapping mapping, ActionForm form, 
-		HttpServletRequest request, HttpServletResponse response)	
-	throws Exception {
-		logger.debug("In ReportsAction:load Method: ");
-		StaticHibernateUtil.flushAndCloseSession();
-		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,new ReportsPersistence().getAllReportCategories());
-		return mapping.findForward(Constants.LOAD_SUCCESS);
-	}
-	
-	public ActionForward getReportPage(ActionMapping mapping, ActionForm form, 
-		HttpServletRequest request, HttpServletResponse response) 
-	throws Exception {	
-		logger.debug("In ReportsAction:getReportPage Method: ");		
-		return mapping.findForward(request.getParameter("viewPath"));		
-	}
+    private ReportsBusinessService reportsBusinessService;
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	public ActionForward getAdminReportPage(ActionMapping mapping, 
-		ActionForm form, 
-		HttpServletRequest request, HttpServletResponse response)
-    throws Exception {
-    	logger.debug("In ReportsAction:getAdminReportPage Method: ");
-    	return mapping.findForward("administerreports_path");
+    public ReportsAction() throws ServiceException {
+        reportsBusinessService = (ReportsBusinessService) ServiceFactory.getInstance().getBusinessService(
+                BusinessServiceName.ReportsService);
     }
-	
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+
+    @Override
+    protected BusinessService getService() {
+        return reportsBusinessService;
+    }
+
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
+        security.allow("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
+
+        security.allow("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
+        security.allow("area_performance", SecurityConstants.AREAPERFORMANCE);
+        security.allow("collection_sheet", SecurityConstants.COLLECTIONSHEET);
+        security.allow("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
+        security.allow("branch_disbursement", SecurityConstants.BRANCHDISBURSEMENT);
+        security.allow("staffwise_report", SecurityConstants.STAFFWISEREPORT);
+        security.allow("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
+        security.allow("analysis", SecurityConstants.ANALYSIS);
+        security.allow("kendra_meeting", SecurityConstants.KENDRA_MEETING);
+        security.allow("administerreports_path", SecurityConstants.ADMINISTER_REPORTS);
+        security.allow("administerreportslist_path", SecurityConstants.ADMINISTER_REPORTS);
+        return security;
+
+    }
+
+    /**
+     * loads report page
+     */
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsAction:load Method: ");
+        StaticHibernateUtil.flushAndCloseSession();
+        request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
+                new ReportsPersistence().getAllReportCategories());
+        return mapping.findForward(Constants.LOAD_SUCCESS);
+    }
+
+    public ActionForward getReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsAction:getReportPage Method: ");
+        return mapping.findForward(request.getParameter("viewPath"));
+    }
+
+    public ActionForward getAdminReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsAction:getAdminReportPage Method: ");
+        return mapping.findForward("administerreports_path");
+    }
+
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
 }

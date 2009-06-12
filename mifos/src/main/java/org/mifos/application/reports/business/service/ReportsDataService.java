@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import java.math.BigDecimal;
@@ -38,107 +38,92 @@ import org.mifos.framework.util.helpers.NumberUtils;
 
 public class ReportsDataService {
 
-	private LoanPrdBusinessService loanPrdBusinessService;
+    private LoanPrdBusinessService loanPrdBusinessService;
 
-	private PersonnelBusinessService personnelBusinessService;
+    private PersonnelBusinessService personnelBusinessService;
 
-	private OfficeBusinessService officeBusinessService;
+    private OfficeBusinessService officeBusinessService;
 
-	private PersonnelBO personnel;
+    private PersonnelBO personnel;
 
-	private LoanPersistence loanPersistence;
+    private LoanPersistence loanPersistence;
 
-	public ReportsDataService() {
-		this.personnelBusinessService = new PersonnelBusinessService();
-		this.officeBusinessService = new OfficeBusinessService();
-		this.loanPrdBusinessService = new LoanPrdBusinessService();
-		this.loanPersistence = new LoanPersistence();
-	}
+    public ReportsDataService() {
+        this.personnelBusinessService = new PersonnelBusinessService();
+        this.officeBusinessService = new OfficeBusinessService();
+        this.loanPrdBusinessService = new LoanPrdBusinessService();
+        this.loanPersistence = new LoanPersistence();
+    }
 
-	public void initialize(Integer userId) throws ServiceException {
-		this.personnel = personnelBusinessService
-				.getPersonnel(NumberUtils.convertIntegerToShort(userId));
-	}
+    public void initialize(Integer userId) throws ServiceException {
+        this.personnel = personnelBusinessService.getPersonnel(NumberUtils.convertIntegerToShort(userId));
+    }
 
-	public List<OfficeBO> getActiveBranchesUnderUser() throws ServiceException {
-		return officeBusinessService.getActiveBranchesUnderUser(personnel);
-	}
+    public List<OfficeBO> getActiveBranchesUnderUser() throws ServiceException {
+        return officeBusinessService.getActiveBranchesUnderUser(personnel);
+    }
 
-	public List<PersonnelBO> getActiveLoanOfficers(Integer branchId)
-			throws ServiceException {
-		List<PersonnelBO> loanOfficers = new ArrayList<PersonnelBO>();
-		if (personnel.isLoanOfficer()) {
-			loanOfficers.add(personnel);
-		}
-		else {
-			loanOfficers = personnelBusinessService
-					.getActiveLoanOfficersUnderOffice(NumberUtils.convertIntegerToShort(branchId));
-			loanOfficers.add(PersonnelBO.ALL_PERSONNEL);
-		}
-		return loanOfficers;
-	}
+    public List<PersonnelBO> getActiveLoanOfficers(Integer branchId) throws ServiceException {
+        List<PersonnelBO> loanOfficers = new ArrayList<PersonnelBO>();
+        if (personnel.isLoanOfficer()) {
+            loanOfficers.add(personnel);
+        } else {
+            loanOfficers = personnelBusinessService.getActiveLoanOfficersUnderOffice(NumberUtils
+                    .convertIntegerToShort(branchId));
+            loanOfficers.add(PersonnelBO.ALL_PERSONNEL);
+        }
+        return loanOfficers;
+    }
 
-	public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
-		List<LoanOfferingBO> loanOffering = new ArrayList<LoanOfferingBO>();
-		loanOffering = loanPrdBusinessService.getAllLoanOfferings(personnel
-				.getLocaleId());
-		loanOffering.add(LoanOfferingBO.ALL_LOAN_PRD); 
-		return loanOffering;
-	}
+    public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
+        List<LoanOfferingBO> loanOffering = new ArrayList<LoanOfferingBO>();
+        loanOffering = loanPrdBusinessService.getAllLoanOfferings(personnel.getLocaleId());
+        loanOffering.add(LoanOfferingBO.ALL_LOAN_PRD);
+        return loanOffering;
+    }
 
-	public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId,
-			Integer loanOfficerId, Integer loanProductId)
-			throws PersistenceException {
-		return loanPersistence.getLoanAccountsInActiveBadStanding(
-				NumberUtils.convertIntegerToShort(branchId),
-				NumberUtils.convertIntegerToShort(loanOfficerId),
-				NumberUtils.convertIntegerToShort(loanProductId));
-	}
+    public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId, Integer loanOfficerId,
+            Integer loanProductId) throws PersistenceException {
+        return loanPersistence.getLoanAccountsInActiveBadStanding(NumberUtils.convertIntegerToShort(branchId),
+                NumberUtils.convertIntegerToShort(loanOfficerId), NumberUtils.convertIntegerToShort(loanProductId));
+    }
 
-	public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(
-			Integer branchId, Integer loanOfficerId, Integer loanProductId)
-			throws PersistenceException {
-		return loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(
-						NumberUtils.convertIntegerToShort(branchId),
-						NumberUtils.convertIntegerToShort(loanOfficerId),
-						NumberUtils.convertIntegerToShort(loanProductId));
-	}
+    public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(Integer branchId, Integer loanOfficerId,
+            Integer loanProductId) throws PersistenceException {
+        return loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(NumberUtils
+                .convertIntegerToShort(branchId), NumberUtils.convertIntegerToShort(loanOfficerId), NumberUtils
+                .convertIntegerToShort(loanProductId));
+    }
 
-	public BigDecimal getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
-			Integer branchId, Integer loanOfficerId, Integer loanProductId)
-			throws PersistenceException {
-		return loanPersistence
-				.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
-						NumberUtils.convertIntegerToShort(branchId),
-						NumberUtils.convertIntegerToShort(loanOfficerId),
-						NumberUtils.convertIntegerToShort(loanProductId));
-	}
+    public BigDecimal getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(Integer branchId,
+            Integer loanOfficerId, Integer loanProductId) throws PersistenceException {
+        return loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(NumberUtils
+                .convertIntegerToShort(branchId), NumberUtils.convertIntegerToShort(loanOfficerId), NumberUtils
+                .convertIntegerToShort(loanProductId));
+    }
 
+    void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
+        this.loanPrdBusinessService = loanPrdBusinessService;
+    }
 
-	void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
-		this.loanPrdBusinessService = loanPrdBusinessService;
-	}
+    void setPersonnelBusinessService(PersonnelBusinessService personnelBusinessService) {
+        this.personnelBusinessService = personnelBusinessService;
+    }
 
-	void setPersonnelBusinessService(
-			PersonnelBusinessService personnelBusinessService) {
-		this.personnelBusinessService = personnelBusinessService;
-	}
+    void setOfficeBusinessService(OfficeBusinessService officeBusinessService) {
+        this.officeBusinessService = officeBusinessService;
+    }
 
-	void setOfficeBusinessService(OfficeBusinessService officeBusinessService) {
-		this.officeBusinessService = officeBusinessService;
-	}
+    void setPersonnel(PersonnelBO personnel) {
+        this.personnel = personnel;
+    }
 
-	void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
-	}
+    public void setLoanPersistence(LoanPersistence loanPersistence) {
+        this.loanPersistence = loanPersistence;
+    }
 
-	public void setLoanPersistence(LoanPersistence loanPersistence) {
-		this.loanPersistence = loanPersistence;
-	}
-
-	PersonnelBO getPersonnel() {
-		return personnel;
-	}
-
+    PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
 }

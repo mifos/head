@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.struts.actionforms;
 
 import java.util.ArrayList;
@@ -50,108 +50,99 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsActionForm extends AccountAppActionForm {
-	private String recommendedAmount;
+    private String recommendedAmount;
 
-	public SavingsActionForm() {
-		super();
-	}
+    public SavingsActionForm() {
+        super();
+    }
 
-	public String getRecommendedAmount() {
-		return recommendedAmount;
-	}
+    public String getRecommendedAmount() {
+        return recommendedAmount;
+    }
 
-	public void setRecommendedAmount(String recommendedAmount) {
-		this.recommendedAmount = recommendedAmount;
-	}
+    public void setRecommendedAmount(String recommendedAmount) {
+        this.recommendedAmount = recommendedAmount;
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		String method = request.getParameter("method");
-		ActionErrors errors = new ActionErrors();
-		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-		Locale locale = userContext.getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle
-				(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, locale);
-		String mandatoryAmount = resources.getString("Savings.mandatoryAmountForDeposit");
-		request.setAttribute(Constants.CURRENTFLOWKEY, request
-				.getParameter(Constants.CURRENTFLOWKEY));
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        String method = request.getParameter("method");
+        ActionErrors errors = new ActionErrors();
+        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+        Locale locale = userContext.getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, locale);
+        String mandatoryAmount = resources.getString("Savings.mandatoryAmountForDeposit");
+        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 
-		if (method.equals("getPrdOfferings")
-				|| method.equals("create") || method.equals("edit")
-				|| method.equals("update") || method.equals("get")
-				|| method.equals("validate")) {
-		} else {
-			errors.add(super.validate(mapping, request));
-			if (method.equals("preview") || method.equals("editPreview")) {
-				try {
-					SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils
-							.getAttribute(SavingsConstants.PRDOFFCERING,
-									request);
-					if (savingsOffering.getSavingsType().getId().equals(
-							SavingsType.MANDATORY.getValue())
-							&& getRecommendedAmntValue().equals(new Money())) {
-						// check for mandatory amount
-						errors.add(SavingsConstants.MANDATORY,
-								new ActionMessage(SavingsConstants.MANDATORY,
-										mandatoryAmount));
-					}
-					validateCustomFields(request,errors);
-				} catch (PageExpiredException e) {
-					errors.add(SavingsConstants.MANDATORY, new ActionMessage(
-							SavingsConstants.MANDATORY,
-							mandatoryAmount));
-				}
-			}
-		}
+        if (method.equals("getPrdOfferings") || method.equals("create") || method.equals("edit")
+                || method.equals("update") || method.equals("get") || method.equals("validate")) {
+        } else {
+            errors.add(super.validate(mapping, request));
+            if (method.equals("preview") || method.equals("editPreview")) {
+                try {
+                    SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(
+                            SavingsConstants.PRDOFFCERING, request);
+                    if (savingsOffering.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())
+                            && getRecommendedAmntValue().equals(new Money())) {
+                        // check for mandatory amount
+                        errors.add(SavingsConstants.MANDATORY, new ActionMessage(SavingsConstants.MANDATORY,
+                                mandatoryAmount));
+                    }
+                    validateCustomFields(request, errors);
+                } catch (PageExpiredException e) {
+                    errors.add(SavingsConstants.MANDATORY, new ActionMessage(SavingsConstants.MANDATORY,
+                            mandatoryAmount));
+                }
+            }
+        }
 
-		if (!errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-		}
-		return errors;
-	}
+        if (!errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", method);
+        }
+        return errors;
+    }
 
-	public double getRecommendedAmntDoubleValue() {
-		return getRecommendedAmntValue().getAmountDoubleValue();
-	}
+    public double getRecommendedAmntDoubleValue() {
+        return getRecommendedAmntValue().getAmountDoubleValue();
+    }
 
-	public Money getRecommendedAmntValue() {
-		return getMoney(recommendedAmount);
-	}
+    public Money getRecommendedAmntValue() {
+        return getMoney(recommendedAmount);
+    }
 
-	private Money getMoney(String str) {
-		return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(
-				str)
-				: new Money();
-	}
+    private Money getMoney(String str) {
+        return (StringUtils.isNullAndEmptySafe(str) && !str.trim().equals(".")) ? new Money(str) : new Money();
+    }
 
-	public void clear() {
-		this.setAccountId(null);
-		this.setSelectedPrdOfferingId(null);
-		this.setAccountCustomFieldSet(new ArrayList<CustomFieldView>());
-	}
-	
-	private  void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-		try {
-			List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-			for(CustomFieldView customField : getAccountCustomFieldSet()){
-				boolean isErrorFound = false;
-				for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
-					if(customField.getFieldId().equals(customFieldDef.getFieldId())&& customFieldDef.isMandatory()){
-						if(StringUtils.isNullOrEmpty(customField.getFieldValue())){
-							errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-							isErrorFound = true;
-							break;
-						}
-					}
-				}
-				if(isErrorFound)
-					break;
-			}
-		} catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-		}
-	}
+    public void clear() {
+        this.setAccountId(null);
+        this.setSelectedPrdOfferingId(null);
+        this.setAccountCustomFieldSet(new ArrayList<CustomFieldView>());
+    }
+
+    private void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
+        try {
+            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+                    .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+            for (CustomFieldView customField : getAccountCustomFieldSet()) {
+                boolean isErrorFound = false;
+                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
+                        if (StringUtils.isNullOrEmpty(customField.getFieldValue())) {
+                            errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
+                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
+                            isErrorFound = true;
+                            break;
+                        }
+                    }
+                }
+                if (isErrorFound)
+                    break;
+            }
+        } catch (PageExpiredException pee) {
+            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
+                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
+        }
+    }
 }

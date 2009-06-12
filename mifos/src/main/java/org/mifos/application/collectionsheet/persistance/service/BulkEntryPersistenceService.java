@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.persistance.service;
 
 import java.util.Date;
@@ -52,27 +52,22 @@ import org.mifos.framework.util.helpers.DateUtils;
  */
 public class BulkEntryPersistenceService {
 
-	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
+    private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
-	public List<CollectionSheetEntryInstallmentView> getBulkEntryActionView(
-			Date meetingDate, String searchString, Short officeId,
-			AccountTypes accountType) throws PersistenceException {
-		return new BulkEntryPersistence().getBulkEntryActionView(meetingDate,
-				searchString, officeId, accountType);
+    public List<CollectionSheetEntryInstallmentView> getBulkEntryActionView(Date meetingDate, String searchString,
+            Short officeId, AccountTypes accountType) throws PersistenceException {
+        return new BulkEntryPersistence().getBulkEntryActionView(meetingDate, searchString, officeId, accountType);
 
-	}
+    }
 
-	public List<CollectionSheetEntryAccountFeeActionView> getBulkEntryFeeActionView(
-			Date meetingDate, String searchString, Short officeId,
-			AccountTypes accountType) throws PersistenceException {
-		return new BulkEntryPersistence().getBulkEntryFeeActionView(
-				meetingDate, searchString, officeId, accountType);
-	}
+    public List<CollectionSheetEntryAccountFeeActionView> getBulkEntryFeeActionView(Date meetingDate,
+            String searchString, Short officeId, AccountTypes accountType) throws PersistenceException {
+        return new BulkEntryPersistence().getBulkEntryFeeActionView(meetingDate, searchString, officeId, accountType);
+    }
 
-	public List<ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId)
-            throws PersistenceException {
-	    ClientService clientService = new StandardClientService();
-	    clientService.setClientAttendanceDao(new StandardClientAttendanceDao());
+    public List<ClientAttendanceDto> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
+        ClientService clientService = new StandardClientService();
+        clientService.setClientAttendanceDao(new StandardClientAttendanceDao());
         try {
             return clientService.getClientAttendanceList(meetingDate, officeId);
         } catch (ServiceException e) {
@@ -80,62 +75,48 @@ public class BulkEntryPersistenceService {
         }
     }
 
-	public AccountBO getCustomerAccountWithAccountActionsInitialized(
-			Integer accountId) throws PersistenceException {
-		return new CustomerPersistence()
-				.getCustomerAccountWithAccountActionsInitialized(accountId);
-	}
+    public AccountBO getCustomerAccountWithAccountActionsInitialized(Integer accountId) throws PersistenceException {
+        return new CustomerPersistence().getCustomerAccountWithAccountActionsInitialized(accountId);
+    }
 
-	public AccountBO getSavingsAccountWithAccountActionsInitialized(
-			Integer accountId) throws PersistenceException {
-		if (!bulkEntryCache.isAccountPresent(accountId)) {
-			AccountBO account;
-			account = new SavingsPersistence()
-					.getSavingsAccountWithAccountActionsInitialized(accountId);
-			bulkEntryCache.addAccount(accountId, account);
-			Set<AccountActionDateEntity> accountActionDates = account
-					.getAccountActionDates();
-			for (Iterator<AccountActionDateEntity> iter = accountActionDates
-					.iterator(); iter.hasNext();) {
-				AccountActionDateEntity actionDate = iter.next();
-				actionDate.getCustomer().getCustomerId();
-				if (actionDate.isPaid()
-						|| actionDate.compareDate(DateUtils
-								.getCurrentDateWithoutTimeStamp()) > 0) {
-					iter.remove();
-				}
-			}
-		}
-		SavingsBO savings = (SavingsBO) bulkEntryCache.getAccount(accountId);
-		savings.setAccountPayments(null);
-		savings.setSavingsActivityDetails(null);
-		return savings;
-	}
+    public AccountBO getSavingsAccountWithAccountActionsInitialized(Integer accountId) throws PersistenceException {
+        if (!bulkEntryCache.isAccountPresent(accountId)) {
+            AccountBO account;
+            account = new SavingsPersistence().getSavingsAccountWithAccountActionsInitialized(accountId);
+            bulkEntryCache.addAccount(accountId, account);
+            Set<AccountActionDateEntity> accountActionDates = account.getAccountActionDates();
+            for (Iterator<AccountActionDateEntity> iter = accountActionDates.iterator(); iter.hasNext();) {
+                AccountActionDateEntity actionDate = iter.next();
+                actionDate.getCustomer().getCustomerId();
+                if (actionDate.isPaid() || actionDate.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+                    iter.remove();
+                }
+            }
+        }
+        SavingsBO savings = (SavingsBO) bulkEntryCache.getAccount(accountId);
+        savings.setAccountPayments(null);
+        savings.setSavingsActivityDetails(null);
+        return savings;
+    }
 
-	public AccountBO getLoanAccountWithAccountActionsInitialized(
-			Integer accountId) throws PersistenceException {
-		return new LoanPersistence()
-				.getLoanAccountWithAccountActionsInitialized(accountId);
-	}
+    public AccountBO getLoanAccountWithAccountActionsInitialized(Integer accountId) throws PersistenceException {
+        return new LoanPersistence().getLoanAccountWithAccountActionsInitialized(accountId);
+    }
 
-	public CustomerBO getCustomer(Integer customerId)
-			throws PersistenceException {
-		if (!bulkEntryCache.isCustomerPresent(customerId)) {
-			CustomerBO customer = new CustomerPersistence()
-					.getCustomer(customerId);
-			bulkEntryCache.addCustomer(customerId, customer);
-		}
-		return bulkEntryCache.getCustomer(customerId);
-	}
+    public CustomerBO getCustomer(Integer customerId) throws PersistenceException {
+        if (!bulkEntryCache.isCustomerPresent(customerId)) {
+            CustomerBO customer = new CustomerPersistence().getCustomer(customerId);
+            bulkEntryCache.addCustomer(customerId, customer);
+        }
+        return bulkEntryCache.getCustomer(customerId);
+    }
 
-	public PersonnelBO getPersonnel(Short personnelId)
-			throws PersistenceException {
-		if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
-			PersonnelBO personnel = new PersonnelPersistence()
-					.getPersonnel(personnelId);
-			bulkEntryCache.addPersonnel(personnelId, personnel);
-		}
-		return bulkEntryCache.getPersonnel(personnelId);
-	}
+    public PersonnelBO getPersonnel(Short personnelId) throws PersistenceException {
+        if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
+            PersonnelBO personnel = new PersonnelPersistence().getPersonnel(personnelId);
+            bulkEntryCache.addPersonnel(personnelId, personnel);
+        }
+        return bulkEntryCache.getPersonnel(personnelId);
+    }
 
 }

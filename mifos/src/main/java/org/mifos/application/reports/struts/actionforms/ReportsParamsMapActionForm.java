@@ -17,63 +17,49 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-
-
 
 /**
  * This class is the ActionForm associated with the ReportParamsMap Action.
  */
 public class ReportsParamsMapActionForm extends BaseActionForm {
-	
-	
-	
-	/**
-	 * Default constructor
-	 */
-	public ReportsParamsMapActionForm() {
-		super();
-	}
 
-	
-	
-	
-	private int parameterId;
-   private int reportId;
-   private int mapId;
+    /**
+     * Default constructor
+     */
+    public ReportsParamsMapActionForm() {
+        super();
+    }
 
-	
-	public int getParameterId()
-    {
+    private int parameterId;
+    private int reportId;
+    private int mapId;
+
+    public int getParameterId() {
         return parameterId;
     }
 
-    public void setParameterId(int parameterId)
-    {
+    public void setParameterId(int parameterId) {
         this.parameterId = parameterId;
     }
-    
-    public int getReportId()
-    {
+
+    public int getReportId() {
         return reportId;
     }
 
-    public void setReportId(int reportId)
-    {
+    public void setReportId(int reportId) {
         this.reportId = reportId;
     }
-    
-    public int getMapId()
-    {
+
+    public int getMapId() {
         return mapId;
     }
 
-    public void setMapId(int mapId)
-    {
+    public void setMapId(int mapId) {
         this.mapId = mapId;
     }
-   
+
 }

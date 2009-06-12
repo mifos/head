@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -25,60 +25,60 @@ import org.mifos.framework.business.PersistentObject;
 
 public class PrdPmntTypeEntity extends PersistentObject {
 
-	private Short prdPmntTypeId;
+    private Short prdPmntTypeId;
 
-	private ProductTypeEntity prdType;
+    private ProductTypeEntity prdType;
 
-	private PaymentTypeEntity paymentType;
+    private PaymentTypeEntity paymentType;
 
-	private Short withdrawDepositFlag;
+    private Short withdrawDepositFlag;
 
-	private Short status;
+    private Short status;
 
-	public PrdPmntTypeEntity() {
-		super();
+    public PrdPmntTypeEntity() {
+        super();
 
-	}
+    }
 
-	public Short getPrdPmntTypeId() {
-		return prdPmntTypeId;
-	}
+    public Short getPrdPmntTypeId() {
+        return prdPmntTypeId;
+    }
 
-	public void setPrdPmntTypeId(Short prdPmntTypeId) {
+    public void setPrdPmntTypeId(Short prdPmntTypeId) {
 
-		this.prdPmntTypeId = prdPmntTypeId;
-	}
+        this.prdPmntTypeId = prdPmntTypeId;
+    }
 
-	public ProductTypeEntity getPrdType() {
-		return prdType;
-	}
+    public ProductTypeEntity getPrdType() {
+        return prdType;
+    }
 
-	public void setPrdType(ProductTypeEntity prdType) {
-		this.prdType = prdType;
-	}
+    public void setPrdType(ProductTypeEntity prdType) {
+        this.prdType = prdType;
+    }
 
-	public PaymentTypeEntity getPaymentType() {
-		return this.paymentType;
-	}
+    public PaymentTypeEntity getPaymentType() {
+        return this.paymentType;
+    }
 
-	public void setPaymentType(PaymentTypeEntity paymentType) {
-		this.paymentType = paymentType;
-	}
+    public void setPaymentType(PaymentTypeEntity paymentType) {
+        this.paymentType = paymentType;
+    }
 
-	public Short getWithdrawDepositFlag() {
-		return this.withdrawDepositFlag;
-	}
+    public Short getWithdrawDepositFlag() {
+        return this.withdrawDepositFlag;
+    }
 
-	public void setWithdrawDepositFlag(Short withdrawDepositFlag) {
-		this.withdrawDepositFlag = withdrawDepositFlag;
-	}
+    public void setWithdrawDepositFlag(Short withdrawDepositFlag) {
+        this.withdrawDepositFlag = withdrawDepositFlag;
+    }
 
-	public Short getStatus() {
-		return this.status;
-	}
+    public Short getStatus() {
+        return this.status;
+    }
 
-	public void setStatus(Short status) {
-		this.status = status;
-	}
+    public void setStatus(Short status) {
+        this.status = status;
+    }
 
 }

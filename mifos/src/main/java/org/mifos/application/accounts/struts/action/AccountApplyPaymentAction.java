@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.action;
 
 import java.util.Date;
@@ -56,167 +56,142 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountApplyPaymentAction extends BaseAction {
-	AccountBusinessService accountBusinessService = null;
+    AccountBusinessService accountBusinessService = null;
 
-	LoanBusinessService loanBusinessService = null;
+    LoanBusinessService loanBusinessService = null;
 
     private AccountPersistence accountPersistence = new AccountPersistence();
 
     public AccountApplyPaymentAction() {
-	}
+    }
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return getAccountBusinessService();
-	}
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return getAccountBusinessService();
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("applyPaymentAction");
-		security.allow("load", SecurityConstants.VIEW);
-		security.allow("preview", SecurityConstants.VIEW);
-		security.allow("previous", SecurityConstants.VIEW);
-		security.allow("applyPayment", SecurityConstants.VIEW);
-		return security;
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("applyPaymentAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("applyPayment", SecurityConstants.VIEW);
+        return security;
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
-		clearActionForm(actionForm);
-		actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
-		AccountBO account = getAccountBusinessService().getAccount(
-				Integer.valueOf(actionForm.getAccountId()));
-		account.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
-		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-		String input = request.getParameter(Constants.INPUT);
-		if(input != null && input.trim() != Constants.EMPTY_STRING)
-		{
-			if(input.equals(Constants.LOAN))
-			{
-				SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				persistence.getAcceptedPaymentTypesForATransaction(
-						uc.getLocaleId(),
-						TrxnTypes.loan_repayment.getValue()), request);
-			}
-			else
-			{
-				SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-						persistence.getAcceptedPaymentTypesForATransaction(
-								uc.getLocaleId(),
-								TrxnTypes.fee.getValue()), request);
-			}
-		}		
-		actionForm.setAmount(account.getTotalPaymentDue());
-		return mapping.findForward(ActionForwards.load_success.toString());
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
+        clearActionForm(actionForm);
+        actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
+        AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
+        account.setUserContext(uc);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+        String input = request.getParameter(Constants.INPUT);
+        if (input != null && input.trim() != Constants.EMPTY_STRING) {
+            if (input.equals(Constants.LOAN)) {
+                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
+                        .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
+                        request);
+            } else {
+                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
+                        .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.fee.getValue()), request);
+            }
+        }
+        actionForm.setAmount(account.getTotalPaymentDue());
+        return mapping.findForward(ActionForwards.load_success.toString());
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward preview(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.preview_success.toString());
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.preview_success.toString());
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward previous(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.previous_success.toString());
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.previous_success.toString());
+    }
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	@CloseSession
-	public ActionForward applyPayment(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-            throws ApplicationException, CustomerException, ServiceException {
-		AccountBO savedAccount = (AccountBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
-		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
-		AccountBO account = getAccountBusinessService().getAccount(
-				Integer.valueOf(actionForm.getAccountId()));
-		checkVersionMismatch(savedAccount.getVersionNo(),account.getVersionNo());
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+    @TransactionDemarcate(validateAndResetToken = true)
+    @CloseSession
+    public ActionForward applyPayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws ApplicationException, CustomerException, ServiceException {
+        AccountBO savedAccount = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
+        AccountBO account = getAccountBusinessService().getAccount(Integer.valueOf(actionForm.getAccountId()));
+        checkVersionMismatch(savedAccount.getVersionNo(), account.getVersionNo());
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
 
-		if (! account.isPaymentPermitted(uc)) {
-				throw new CustomerException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        if (!account.isPaymentPermitted(uc)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
 
         Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
 
-		if (!account.isTrxnDateValid(trxnDate))
-			throw new AccountException("errors.invalidTxndate");
+        if (!account.isTrxnDateValid(trxnDate))
+            throw new AccountException("errors.invalidTxndate");
 
-		account.setVersionNo(savedAccount.getVersionNo());
+        account.setVersionNo(savedAccount.getVersionNo());
 
-		Money amount;
-		if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-			amount = actionForm.getAmount();
-		}
-		else {
-			amount = account.getTotalPaymentDue();
-		}
+        Money amount;
+        if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+            amount = actionForm.getAmount();
+        } else {
+            amount = account.getTotalPaymentDue();
+        }
 
         Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
-        PaymentData paymentData = account.createPaymentData(uc,
-                amount, trxnDate, actionForm.getReceiptId(), receiptDate,
-                Short.valueOf(actionForm.getPaymentTypeId()));
+        PaymentData paymentData = account.createPaymentData(uc, amount, trxnDate, actionForm.getReceiptId(),
+                receiptDate, Short.valueOf(actionForm.getPaymentTypeId()));
         account.applyPaymentWithPersist(paymentData);
-		return mapping
-				.findForward(getForward(((AccountApplyPaymentActionForm) form)
-						.getInput()));
-	}
+        return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
+    }
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping
-				.findForward(getForward(((AccountApplyPaymentActionForm) form)
-						.getInput()));
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
+    }
 
-	private void clearActionForm(AccountApplyPaymentActionForm actionForm) {
-		actionForm.setReceiptDate(null);
-		actionForm.setReceiptId(null);
-		actionForm.setPaymentTypeId(null);
-	}
+    private void clearActionForm(AccountApplyPaymentActionForm actionForm) {
+        actionForm.setReceiptDate(null);
+        actionForm.setReceiptId(null);
+        actionForm.setPaymentTypeId(null);
+    }
 
-	private String getForward(String input) {
-		if (input.equals(Constants.LOAN))
-			return ActionForwards.loan_detail_page.toString();
-		else
-			return "applyPayment_success";
-	}
+    private String getForward(String input) {
+        if (input.equals(Constants.LOAN))
+            return ActionForwards.loan_detail_page.toString();
+        else
+            return "applyPayment_success";
+    }
 
-	private AccountBusinessService getAccountBusinessService() {
-		if (accountBusinessService == null)
-			accountBusinessService = new AccountBusinessService();
-		return accountBusinessService;
-	}
+    private AccountBusinessService getAccountBusinessService() {
+        if (accountBusinessService == null)
+            accountBusinessService = new AccountBusinessService();
+        return accountBusinessService;
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		String forward = null;
-		if (method != null) {
-			forward = method + "_failure";
-		}
-		return mapping.findForward(forward);
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        String method = (String) request.getAttribute("methodCalled");
+        String forward = null;
+        if (method != null) {
+            forward = method + "_failure";
+        }
+        return mapping.findForward(forward);
+    }
 
     public AccountPersistence getAccountPersistence() {
         return accountPersistence;

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 import java.util.HashMap;
@@ -30,23 +30,20 @@ import org.mifos.application.accounts.financial.exceptions.FinancialExceptionCon
 // TODO: why does this cache exist? Is FinancialActionConstants not enough?
 public class FinancialActionCache {
 
-	private static Map<Short, FinancialActionBO> financialCacheRepository = new HashMap<Short, FinancialActionBO>();
+    private static Map<Short, FinancialActionBO> financialCacheRepository = new HashMap<Short, FinancialActionBO>();
 
-	public static void addToCache(FinancialActionBO financialAction) {
-		if ((financialAction != null)
-				&& (financialCacheRepository.get(financialAction.getId()) == null))
-			financialCacheRepository.put(financialAction.getId(),financialAction);
-	}
+    public static void addToCache(FinancialActionBO financialAction) {
+        if ((financialAction != null) && (financialCacheRepository.get(financialAction.getId()) == null))
+            financialCacheRepository.put(financialAction.getId(), financialAction);
+    }
 
-	public static FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId)
-			throws FinancialException {
-		FinancialActionBO financialAction = financialCacheRepository
-				.get(financialActionId.getValue());
-		if (financialAction == null)
-			throw new FinancialException(
-					FinancialExceptionConstants.ACTIONNOTFOUND);
+    public static FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId)
+            throws FinancialException {
+        FinancialActionBO financialAction = financialCacheRepository.get(financialActionId.getValue());
+        if (financialAction == null)
+            throw new FinancialException(FinancialExceptionConstants.ACTIONNOTFOUND);
 
-		return financialAction;
-	}
+        return financialAction;
+    }
 
 }

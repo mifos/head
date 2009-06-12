@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business.service;
 
 import java.util.Iterator;
@@ -46,105 +46,92 @@ import org.mifos.framework.security.util.UserContext;
 
 public class LoanPrdBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public List<ProductCategoryBO> getActiveLoanProductCategories()
-			throws ServiceException {
-		try {
-			return new PrdOfferingPersistence().getApplicableProductCategories(
-					ProductType.LOAN, PrdCategoryStatus.ACTIVE);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<ProductCategoryBO> getActiveLoanProductCategories() throws ServiceException {
+        try {
+            return new PrdOfferingPersistence().getApplicableProductCategories(ProductType.LOAN,
+                    PrdCategoryStatus.ACTIVE);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<MasterDataEntity> getLoanApplicableCustomerTypes(Short localeId)
-			throws ServiceException {
-		try {
-			List<MasterDataEntity> applList = new MasterPersistence()
-					.retrieveMasterEntities(PrdApplicableMasterEntity.class,
-							localeId);
-			if (applList != null) {
-				for (Iterator<MasterDataEntity> iter = applList.iterator(); iter
-						.hasNext();) {
-					MasterDataEntity masterData = iter.next();
-					if (masterData.getId().equals(
-							ApplicableTo.CENTERS.getValue()))
-						iter.remove();
-				}
-			}
-			return applList;
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<MasterDataEntity> getLoanApplicableCustomerTypes(Short localeId) throws ServiceException {
+        try {
+            List<MasterDataEntity> applList = new MasterPersistence().retrieveMasterEntities(
+                    PrdApplicableMasterEntity.class, localeId);
+            if (applList != null) {
+                for (Iterator<MasterDataEntity> iter = applList.iterator(); iter.hasNext();) {
+                    MasterDataEntity masterData = iter.next();
+                    if (masterData.getId().equals(ApplicableTo.CENTERS.getValue()))
+                        iter.remove();
+                }
+            }
+            return applList;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public LoanOfferingBO getLoanOffering(Short prdofferingId)
-			throws ServiceException {
-		try {
-			return new LoanPrdPersistence().getLoanOffering(prdofferingId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public LoanOfferingBO getLoanOffering(Short prdofferingId) throws ServiceException {
+        try {
+            return new LoanPrdPersistence().getLoanOffering(prdofferingId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId)
-			throws ServiceException {
-		try {
-			return new PrdOfferingPersistence().getApplicablePrdStatus(
-					ProductType.LOAN, localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId) throws ServiceException {
+        try {
+            return new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.LOAN, localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId)
-			throws ServiceException {
-		try {
-			return new LoanPrdPersistence().getLoanOffering(loanOfferingId,
-					localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId) throws ServiceException {
+        try {
+            return new LoanPrdPersistence().getLoanOffering(loanOfferingId, localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<LoanOfferingBO> getAllLoanOfferings(Short localeId)
-			throws ServiceException {
-		try {
-			return new LoanPrdPersistence().getAllLoanOfferings(localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
-	public Short retrieveLatenessForPrd() throws ServiceException{
-		try{
-			return new LoanPrdPersistence().retrieveLatenessForPrd();
-		}catch (PersistenceException pe){
-			throw new ServiceException(pe);
-		}
-	}
+    public List<LoanOfferingBO> getAllLoanOfferings(Short localeId) throws ServiceException {
+        try {
+            return new LoanPrdPersistence().getAllLoanOfferings(localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<LoanOfferingBO> getApplicablePrdOfferings(
-			CustomerLevelEntity customerLevel) throws ServiceException {
-		try {
-			return new LoanPrdPersistence()
-					.getApplicablePrdOfferings(customerLevel);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public Short retrieveLatenessForPrd() throws ServiceException {
+        try {
+            return new LoanPrdPersistence().retrieveLatenessForPrd();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 
-	public FeeBO getfee(Short feeId, RateAmountFlag rateflag) throws ServiceException {
-		
-			try {
-				return new  FeePersistence().getFee(feeId,rateflag);
-			} catch (PersistenceException e) {
-				throw new ServiceException(e);
-			}
-		
-	}
+    public List<LoanOfferingBO> getApplicablePrdOfferings(CustomerLevelEntity customerLevel) throws ServiceException {
+        try {
+            return new LoanPrdPersistence().getApplicablePrdOfferings(customerLevel);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public FeeBO getfee(Short feeId, RateAmountFlag rateflag) throws ServiceException {
+
+        try {
+            return new FeePersistence().getFee(feeId, rateflag);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -31,17 +31,17 @@ import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 
 public class DisbursementAccountingEntry extends BaseAccountingEntry {
 
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
-		FinancialActionBO finloanDibursal = FinancialActionCache.getFinancialAction(FinancialActionConstants.DISBURSAL);
-		//debit take form the prd offering 
-		
-		GLCodeEntity glcodeDebit = ((LoanBO) loanTrxn.getAccount())
-		.getLoanOffering().getPrincipalGLcode();
-		addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal,glcodeDebit,FinancialConstants.DEBIT);
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
+        LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
+        FinancialActionBO finloanDibursal = FinancialActionCache.getFinancialAction(FinancialActionConstants.DISBURSAL);
+        // debit take form the prd offering
 
-		addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, getGLcode(finloanDibursal.getApplicableCreditCharts()),FinancialConstants.CREDIT);
-	}
+        GLCodeEntity glcodeDebit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();
+        addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, glcodeDebit, FinancialConstants.DEBIT);
+
+        addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, getGLcode(finloanDibursal
+                .getApplicableCreditCharts()), FinancialConstants.CREDIT);
+    }
 
 }

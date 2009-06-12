@@ -17,40 +17,38 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.config.LocalizedTextLookup;
 
 public enum CustomFieldType implements LocalizedTextLookup {
 
-	NUMERIC((short)1), 
-	ALPHA_NUMERIC((short)2), 
-	DATE((short)3);
-	
-	public static CustomFieldType NONE = null;
+    NUMERIC((short) 1), ALPHA_NUMERIC((short) 2), DATE((short) 3);
 
-	Short value;
+    public static CustomFieldType NONE = null;
 
-	CustomFieldType(Short value) {
-		this.value = value;
-	}
+    Short value;
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static CustomFieldType fromInt(int value) {
-		for (CustomFieldType candidate : values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no field type " + value);
-	}
+    CustomFieldType(Short value) {
+        this.value = value;
+    }
 
-	public String getPropertiesKey() {
-		return "CustomFieldType." + toString();
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static CustomFieldType fromInt(int value) {
+        for (CustomFieldType candidate : values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no field type " + value);
+    }
+
+    public String getPropertiesKey() {
+        return "CustomFieldType." + toString();
+    }
 
 }

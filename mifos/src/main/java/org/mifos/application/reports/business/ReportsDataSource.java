@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import org.mifos.framework.business.BusinessObject;
@@ -26,89 +26,73 @@ import org.mifos.framework.security.util.UserContext;
 /**
  * This class encapsulates the Reports Datasource
  */
-public class ReportsDataSource extends BusinessObject
-{
-	
-	private int datasourceId;
+public class ReportsDataSource extends BusinessObject {
+
+    private int datasourceId;
     private String name;
     private String driver;
     private String url;
     private String username;
     private String password;
-	public ReportsDataSource()
-    {
+
+    public ReportsDataSource() {
 
     }
-   
-    public ReportsDataSource(UserContext userContext)
-    {
+
+    public ReportsDataSource(UserContext userContext) {
         super(userContext);
     }
 
-    public int getDatasourceId()
-    {
+    public int getDatasourceId() {
         return datasourceId;
     }
 
-    public void setDatasourceId(int datasourceId)
-    {
+    public void setDatasourceId(int datasourceId) {
         this.datasourceId = datasourceId;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
-    
-    public String getDriver()
-    {
+
+    public String getDriver() {
         return driver;
     }
 
-    public void setDriver(String driver)
-    {
-        this.driver =driver;
+    public void setDriver(String driver) {
+        this.driver = driver;
     }
-    
-    public String getUrl()
-    {
+
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url)
-    {
+    public void setUrl(String url) {
         this.url = url;
     }
-    
-    public String getUsername()
-    {
+
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username)
-    {
+    public void setUsername(String username) {
         this.username = username;
     }
-    
-    public String getPassword()
-    {
+
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
     public Short getEntityID() {
-		return null;
-	}
-   
-    
-    
+        return null;
+    }
+
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.util.helpers;
 
 import java.io.Serializable;
@@ -29,108 +29,107 @@ import org.mifos.framework.util.helpers.Money;
 
 public class RepaymentScheduleInstallment implements Serializable {
 
-	private Integer installment = 0;
+    private Integer installment = 0;
 
-	private java.util.Date dueDate = null;
+    private java.util.Date dueDate = null;
 
-	private Money principal = new Money();
+    private Money principal = new Money();
 
-	private Money interest = new Money();
+    private Money interest = new Money();
 
-	private Money fees = new Money();
+    private Money fees = new Money();
 
-	private Money miscFees = new Money();
+    private Money miscFees = new Money();
 
-	private Money miscPenalty = new Money();
+    private Money miscPenalty = new Money();
 
-	private Locale locale = null;
+    private Locale locale = null;
 
-	public RepaymentScheduleInstallment(int installment, Date dueDate,
-			Money principal, Money interest, Money fees, Money miscFees,
-			Money miscPenalty) {
-		this.installment = installment;
-		this.dueDate = dueDate;
-		this.principal = principal;
-		this.interest = interest;
-		this.fees = fees;
-		this.miscFees = miscFees;
-		this.miscPenalty = miscPenalty;
-	}
-	
-	public RepaymentScheduleInstallment(){}
+    public RepaymentScheduleInstallment(int installment, Date dueDate, Money principal, Money interest, Money fees,
+            Money miscFees, Money miscPenalty) {
+        this.installment = installment;
+        this.dueDate = dueDate;
+        this.principal = principal;
+        this.interest = interest;
+        this.fees = fees;
+        this.miscFees = miscFees;
+        this.miscPenalty = miscPenalty;
+    }
 
-	public void setInstallment(Integer installment) {
-		this.installment = installment;
-	}
+    public RepaymentScheduleInstallment() {
+    }
 
-	public void setDueDate(java.util.Date dueDate) {
-		this.dueDate = dueDate;
-	}
+    public void setInstallment(Integer installment) {
+        this.installment = installment;
+    }
 
-	public void setPrincipal(Money principal) {
-		this.principal = principal;
-	}
+    public void setDueDate(java.util.Date dueDate) {
+        this.dueDate = dueDate;
+    }
 
-	public void setInterest(Money interest) {
-		this.interest = interest;
-	}
+    public void setPrincipal(Money principal) {
+        this.principal = principal;
+    }
 
-	public void setFees(Money fees) {
-		this.fees = this.fees.add(fees);
-	}
+    public void setInterest(Money interest) {
+        this.interest = interest;
+    }
 
-	public Integer getInstallment() {
-		return installment;
-	}
+    public void setFees(Money fees) {
+        this.fees = this.fees.add(fees);
+    }
 
-	public java.util.Date getDueDate() {
-		return dueDate;
-	}
+    public Integer getInstallment() {
+        return installment;
+    }
 
-	public Money getPrincipal() {
-		return principal;
-	}
+    public java.util.Date getDueDate() {
+        return dueDate;
+    }
 
-	public Money getInterest() {
-		return interest;
-	}
+    public Money getPrincipal() {
+        return principal;
+    }
 
-	public Money getFees() {
-		return fees;
-	}
+    public Money getInterest() {
+        return interest;
+    }
 
-	public Money getTotal() {
-		return principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
-	}
+    public Money getFees() {
+        return fees;
+    }
 
+    public Money getTotal() {
+        return principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
+    }
 
-	public String getDueDateInUserLocale() {
-		return DateUtils.getDBtoUserFormatString(getDueDate(), getLocale());
+    public String getDueDateInUserLocale() {
+        return DateUtils.getDBtoUserFormatString(getDueDate(), getLocale());
 
-	}
+    }
 
-	public Locale getLocale() {
-		return locale;
-	}
+    public Locale getLocale() {
+        return locale;
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 
-	public Money getMiscFees() {
-		return miscFees;
-	}
+    public Money getMiscFees() {
+        return miscFees;
+    }
 
-	public void setMiscFees(Money miscFees) {
-		this.miscFees = miscFees;
-	}
+    public void setMiscFees(Money miscFees) {
+        this.miscFees = miscFees;
+    }
 
-	public Money getMiscPenalty() {
-		return miscPenalty;
-	}
+    public Money getMiscPenalty() {
+        return miscPenalty;
+    }
 
-	public void setMiscPenalty(Money miscPenalty) {
-		this.miscPenalty = miscPenalty;
-	}
+    public void setMiscPenalty(Money miscPenalty) {
+        this.miscPenalty = miscPenalty;
+    }
 
 }

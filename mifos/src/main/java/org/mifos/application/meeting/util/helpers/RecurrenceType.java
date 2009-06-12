@@ -17,32 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.util.helpers;
 
-
 public enum RecurrenceType {
-	WEEKLY((short) 1), 
-	MONTHLY((short) 2), 
-	DAILY((short) 3);
+    WEEKLY((short) 1), MONTHLY((short) 2), DAILY((short) 3);
 
-	private Short value;
+    private Short value;
 
-	private RecurrenceType(Short value) {
-		this.value = value;
-	}
+    private RecurrenceType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static RecurrenceType fromInt(Short target) {
-		for (RecurrenceType frequency : RecurrenceType.values()) {
-			if (frequency.getValue().equals(target)) {
-				return frequency;
-			}
-		}
-		throw new RuntimeException("no recurrence type " + target);
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static RecurrenceType fromInt(Short target) {
+        for (RecurrenceType frequency : RecurrenceType.values()) {
+            if (frequency.getValue().equals(target)) {
+                return frequency;
+            }
+        }
+        throw new RuntimeException("no recurrence type " + target);
+    }
 
 }

@@ -17,25 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fund.exception;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class FundException extends ApplicationException {
 
-	public FundException(Throwable cause) {
-		super(cause);
-		
-	}
+    public FundException(Throwable cause) {
+        super(cause);
 
-	public FundException(String key) {
-		super(key);
-		
-	}
+    }
 
-	
+    public FundException(String key) {
+        super(key);
 
-	
+    }
 
 }

@@ -17,30 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
-
-
 /**
- * This class contains methods which can be used to validate certain fields. Contains methods to check if a particuar value 
- * is either null or blank
+ * This class contains methods which can be used to validate certain fields.
+ * Contains methods to check if a particuar value is either null or blank
  */
 public class ValidateMethods {
-	
-	/***
-	 * This method checks if a particuar value is either null or blank
-	 * @param value the value that has to be checked as to whether it is null or blank
-	 * @return True or false as to whether the value passed was null or blank
-	 */
-	public static boolean isNullOrBlank(String value){
-		boolean isValueNull = false;
-		
-		if(value == null || value.trim().equals("")){
-			isValueNull = true;
-		}
-		return isValueNull;
-	}
-	
-	
+
+    /***
+     * This method checks if a particuar value is either null or blank
+     * 
+     * @param value
+     *            the value that has to be checked as to whether it is null or
+     *            blank
+     * @return True or false as to whether the value passed was null or blank
+     */
+    public static boolean isNullOrBlank(String value) {
+        boolean isValueNull = false;
+
+        if (value == null || value.trim().equals("")) {
+            isValueNull = true;
+        }
+        return isValueNull;
+    }
+
 }

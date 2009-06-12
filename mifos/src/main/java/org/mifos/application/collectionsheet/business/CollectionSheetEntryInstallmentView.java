@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
@@ -26,56 +26,54 @@ import org.mifos.framework.business.View;
 
 public abstract class CollectionSheetEntryInstallmentView extends View {
 
-	private final Integer actionDateId;
+    private final Integer actionDateId;
 
-	private final Integer accountId;
+    private final Integer accountId;
 
-	private final Integer customerId;
+    private final Integer customerId;
 
-	private final Date actionDate;
+    private final Date actionDate;
 
-	private final Short installmentId;
+    private final Short installmentId;
 
-	public CollectionSheetEntryInstallmentView(Integer accountId, Integer customerId,
-			Short installmentId, Integer actionDateId, Date actionDate) {
-		this.actionDateId = actionDateId;
-		this.accountId = accountId;
-		this.customerId = customerId;
-		this.actionDate = actionDate;
-		this.installmentId = installmentId;
-	}
+    public CollectionSheetEntryInstallmentView(Integer accountId, Integer customerId, Short installmentId,
+            Integer actionDateId, Date actionDate) {
+        this.actionDateId = actionDateId;
+        this.accountId = accountId;
+        this.customerId = customerId;
+        this.actionDate = actionDate;
+        this.installmentId = installmentId;
+    }
 
-	public Integer getAccountId() {
-		return accountId;
-	}
+    public Integer getAccountId() {
+        return accountId;
+    }
 
-	public Date getActionDate() {
-		return actionDate;
-	}
+    public Date getActionDate() {
+        return actionDate;
+    }
 
-	public Integer getActionDateId() {
-		return actionDateId;
-	}
+    public Integer getActionDateId() {
+        return actionDateId;
+    }
 
-	public Integer getCustomerId() {
-		return customerId;
-	}
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-	public Short getInstallmentId() {
-		return installmentId;
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof CollectionSheetEntryInstallmentView) {
-			CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView = (CollectionSheetEntryInstallmentView) obj;
-			if (collectionSheetEntryAccountActionView.getAccountId()
-					.equals(getAccountId())
-					&& collectionSheetEntryAccountActionView.getCustomerId().equals(
-							getCustomerId()))
-				return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof CollectionSheetEntryInstallmentView) {
+            CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView = (CollectionSheetEntryInstallmentView) obj;
+            if (collectionSheetEntryAccountActionView.getAccountId().equals(getAccountId())
+                    && collectionSheetEntryAccountActionView.getCustomerId().equals(getCustomerId()))
+                return true;
+        }
+        return false;
+    }
 
 }

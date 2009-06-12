@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -31,71 +31,61 @@ import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class InterestAccountingEntry extends BaseAccountingEntry {
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity
-				.getAccountTrxn();
-		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
-				.getLoanOffering().getInterestGLcode();
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
+        LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
+        GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getInterestGLcode();
 
-		FinancialActionBO finActionInterest = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
-		addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest,
-				getGLcode(finActionInterest.getApplicableDebitCharts()),
-				FinancialConstants.DEBIT);
+        FinancialActionBO finActionInterest = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
+        addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, getGLcode(finActionInterest
+                .getApplicableDebitCharts()), FinancialConstants.DEBIT);
 
-		addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest,
-				glcodeCredit, FinancialConstants.CREDIT);
-		
-		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
-		// the new version of financial calculation will log 999 account to interest account
-		if (!loan.isLegacyLoan())
-		{
-			boolean isLastPayment = ((LoanBO)loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
-			// if the final payment is made early there will be no interest charged so no 999 account
-			boolean interestIsCharged = loanTrxn.getInterestAmount().getAmountDoubleValue() > 0;
-			if (isLastPayment && interestIsCharged)
-			{
-				log999Account(loanTrxn, isLastPayment, glcodeCredit);
-			}
-		}
+        addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, glcodeCredit, FinancialConstants.CREDIT);
 
-	}
-	
-	private void log999Account(LoanTrxnDetailEntity loanTrxn, boolean isLastPayment, GLCodeEntity glcodeCredit) throws FinancialException
-	{
-	
-		
-		Money account999 = ((LoanBO)loanTrxn.getAccount()).calculate999Account(isLastPayment);
-		Money zeroAmount = new Money("0");
-		// only log if amount > or < 0
-		if (account999.equals(zeroAmount))
-		{
-			return;
-		}
-		
-		FinancialActionBO finActionRounding = FinancialActionCache
-		.getFinancialAction(FinancialActionConstants.ROUNDING);
-		GLCodeEntity codeToDebit = null; 
-		GLCodeEntity codeToCredit = null;
-		if (account999.getAmountDoubleValue() > 0)
-		{
-			// this code is defined as below in chart of account 
-			// <GLAccount code="31401" name="Income from 999 Account" />
-			codeToDebit = glcodeCredit;
-			codeToCredit = getGLcode(finActionRounding.getApplicableCreditCharts()); 
-			
-		}
-		else if (account999.getAmountDoubleValue() < 0)
-		{
-			codeToDebit = getGLcode(finActionRounding.getApplicableDebitCharts());
-			codeToCredit = glcodeCredit;
-			account999 = account999.negate();
-		}
-		addAccountEntryDetails(account999, finActionRounding, codeToDebit, FinancialConstants.DEBIT);
-		addAccountEntryDetails(account999, finActionRounding, codeToCredit, FinancialConstants.CREDIT);	
-			
-		
-	}
+        LoanBO loan = (LoanBO) loanTrxn.getAccount();
+        // the new version of financial calculation will log 999 account to
+        // interest account
+        if (!loan.isLegacyLoan()) {
+            boolean isLastPayment = ((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
+            // if the final payment is made early there will be no interest
+            // charged so no 999 account
+            boolean interestIsCharged = loanTrxn.getInterestAmount().getAmountDoubleValue() > 0;
+            if (isLastPayment && interestIsCharged) {
+                log999Account(loanTrxn, isLastPayment, glcodeCredit);
+            }
+        }
+
+    }
+
+    private void log999Account(LoanTrxnDetailEntity loanTrxn, boolean isLastPayment, GLCodeEntity glcodeCredit)
+            throws FinancialException {
+
+        Money account999 = ((LoanBO) loanTrxn.getAccount()).calculate999Account(isLastPayment);
+        Money zeroAmount = new Money("0");
+        // only log if amount > or < 0
+        if (account999.equals(zeroAmount)) {
+            return;
+        }
+
+        FinancialActionBO finActionRounding = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.ROUNDING);
+        GLCodeEntity codeToDebit = null;
+        GLCodeEntity codeToCredit = null;
+        if (account999.getAmountDoubleValue() > 0) {
+            // this code is defined as below in chart of account
+            // <GLAccount code="31401" name="Income from 999 Account" />
+            codeToDebit = glcodeCredit;
+            codeToCredit = getGLcode(finActionRounding.getApplicableCreditCharts());
+
+        } else if (account999.getAmountDoubleValue() < 0) {
+            codeToDebit = getGLcode(finActionRounding.getApplicableDebitCharts());
+            codeToCredit = glcodeCredit;
+            account999 = account999.negate();
+        }
+        addAccountEntryDetails(account999, finActionRounding, codeToDebit, FinancialConstants.DEBIT);
+        addAccountEntryDetails(account999, finActionRounding, codeToCredit, FinancialConstants.CREDIT);
+
+    }
 
 }

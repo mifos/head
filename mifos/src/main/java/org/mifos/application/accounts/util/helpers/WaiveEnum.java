@@ -17,8 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
-public enum WaiveEnum { FEES, PENALTY, ALL }
-
+public enum WaiveEnum {
+    FEES, PENALTY, ALL
+}

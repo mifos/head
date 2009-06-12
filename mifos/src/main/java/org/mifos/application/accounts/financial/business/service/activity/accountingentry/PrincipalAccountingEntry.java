@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -31,66 +31,54 @@ import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class PrincipalAccountingEntry extends BaseAccountingEntry {
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		
-		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity
-		.getAccountTrxn();
-		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
-		.getLoanOffering().getPrincipalGLcode();
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
 
-		Money principalAmountNotRounded = loanTrxn.getPrincipalAmount();
-		Money amountToPost = null;
-		
-		if(((LoanBO)loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId()))
-			amountToPost = Money.round(loanTrxn.getPrincipalAmount());
-		else
-			amountToPost = principalAmountNotRounded;
-		
-			FinancialActionBO finActionPrincipal = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
-		addAccountEntryDetails(amountToPost,
-				finActionPrincipal, getGLcode(finActionPrincipal
-						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
-		
-		addAccountEntryDetails(amountToPost,
-				finActionPrincipal, glcodeCredit, FinancialConstants.CREDIT);
-		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
-		// the new version of financial calculation will log 999 account to interest account and not to the principal account
-		if (!loan.isLegacyLoan())
-		{
-			return;
-		}
-		
-		// v1 version log the 999 account to the principal account
-		// check if rounding is required
-		FinancialActionBO finActionRounding = FinancialActionCache
-		.getFinancialAction(FinancialActionConstants.ROUNDING);
-		
-		
-		if(amountToPost.getAmount().compareTo(principalAmountNotRounded.getAmount()) > 0 )
-		{
-			addAccountEntryDetails(amountToPost.subtract(principalAmountNotRounded)
-					, finActionRounding,glcodeCredit,
-					FinancialConstants.DEBIT);
-		
-			addAccountEntryDetails(amountToPost.subtract(principalAmountNotRounded), finActionRounding,
-					getGLcode(finActionRounding.getApplicableCreditCharts()),
-					FinancialConstants.CREDIT);
-			
-		}else if(amountToPost.getAmount().compareTo(principalAmountNotRounded.getAmount()) < 0 )
-		{
-			addAccountEntryDetails(principalAmountNotRounded.subtract(amountToPost)
-					, finActionRounding,getGLcode(finActionRounding.getApplicableDebitCharts()),
-					FinancialConstants.DEBIT);
-		
-			addAccountEntryDetails(principalAmountNotRounded.subtract(amountToPost), finActionRounding,
-					glcodeCredit,
-					FinancialConstants.CREDIT);
-			
-		}
-		
-		
-	}
-	
+        LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
+        GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();
+
+        Money principalAmountNotRounded = loanTrxn.getPrincipalAmount();
+        Money amountToPost = null;
+
+        if (((LoanBO) loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId()))
+            amountToPost = Money.round(loanTrxn.getPrincipalAmount());
+        else
+            amountToPost = principalAmountNotRounded;
+
+        FinancialActionBO finActionPrincipal = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
+        addAccountEntryDetails(amountToPost, finActionPrincipal, getGLcode(finActionPrincipal
+                .getApplicableDebitCharts()), FinancialConstants.DEBIT);
+
+        addAccountEntryDetails(amountToPost, finActionPrincipal, glcodeCredit, FinancialConstants.CREDIT);
+        LoanBO loan = (LoanBO) loanTrxn.getAccount();
+        // the new version of financial calculation will log 999 account to
+        // interest account and not to the principal account
+        if (!loan.isLegacyLoan()) {
+            return;
+        }
+
+        // v1 version log the 999 account to the principal account
+        // check if rounding is required
+        FinancialActionBO finActionRounding = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.ROUNDING);
+
+        if (amountToPost.getAmount().compareTo(principalAmountNotRounded.getAmount()) > 0) {
+            addAccountEntryDetails(amountToPost.subtract(principalAmountNotRounded), finActionRounding, glcodeCredit,
+                    FinancialConstants.DEBIT);
+
+            addAccountEntryDetails(amountToPost.subtract(principalAmountNotRounded), finActionRounding,
+                    getGLcode(finActionRounding.getApplicableCreditCharts()), FinancialConstants.CREDIT);
+
+        } else if (amountToPost.getAmount().compareTo(principalAmountNotRounded.getAmount()) < 0) {
+            addAccountEntryDetails(principalAmountNotRounded.subtract(amountToPost), finActionRounding,
+                    getGLcode(finActionRounding.getApplicableDebitCharts()), FinancialConstants.DEBIT);
+
+            addAccountEntryDetails(principalAmountNotRounded.subtract(amountToPost), finActionRounding, glcodeCredit,
+                    FinancialConstants.CREDIT);
+
+        }
+
+    }
+
 }

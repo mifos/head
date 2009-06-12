@@ -17,30 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 public enum FinancialConstants {
-	DEBIT((short) 0), CREDIT((short) 1);
+    DEBIT((short) 0), CREDIT((short) 1);
 
-	private short value;
+    private short value;
 
-	FinancialConstants(short value) {
-		setValue(value);
-	}
+    FinancialConstants(short value) {
+        setValue(value);
+    }
 
-	public short getValue() {
-		return value;
-	}
+    public short getValue() {
+        return value;
+    }
 
-	public void setValue(short value) {
-		this.value = value;
-	}
+    public void setValue(short value) {
+        this.value = value;
+    }
 
-	public static FinancialConstants fromValue(short value) {
-		for (FinancialConstants f : values())
-			if (value == f.getValue())
-				return f;
-		throw new IllegalArgumentException("unknown value given");
-	}
+    public static FinancialConstants fromValue(short value) {
+        for (FinancialConstants f : values())
+            if (value == f.getValue())
+                return f;
+        throw new IllegalArgumentException("unknown value given");
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fund.business;
 
 import org.mifos.application.fund.exception.FundException;
@@ -32,101 +32,95 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class FundBO extends BusinessObject {
-	private final Short fundId;
+    private final Short fundId;
 
-	private final FundCodeEntity fundCode;
+    private final FundCodeEntity fundCode;
 
-	private String fundName;
+    private String fundName;
 
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.FUNDLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
 
-	public FundBO(FundCodeEntity fundCode, String fundName)
-			throws FundException {
-		logger.debug("building fund");
-		this.fundId = null;
-		validate(fundCode, fundName);
-		validateDuplicateFundName(fundName);
-		this.fundCode = fundCode;
-		this.fundName = fundName;
-		logger.debug("Fund build :" + getFundName());
-	}
+    public FundBO(FundCodeEntity fundCode, String fundName) throws FundException {
+        logger.debug("building fund");
+        this.fundId = null;
+        validate(fundCode, fundName);
+        validateDuplicateFundName(fundName);
+        this.fundCode = fundCode;
+        this.fundName = fundName;
+        logger.debug("Fund build :" + getFundName());
+    }
 
-	public FundBO() {
-		this.fundId = null;
-		this.fundCode = null;
-	}
+    public FundBO() {
+        this.fundId = null;
+        this.fundCode = null;
+    }
 
-	public Short getFundId() {
-		return fundId;
-	}
+    public Short getFundId() {
+        return fundId;
+    }
 
-	public String getFundName() {
-		return fundName;
-	}
+    public String getFundName() {
+        return fundName;
+    }
 
-	public void setFundName(String fundName) {
-		this.fundName = fundName;
-	}
+    public void setFundName(String fundName) {
+        this.fundName = fundName;
+    }
 
-	public FundCodeEntity getFundCode() {
-		return fundCode;
-	}
+    public FundCodeEntity getFundCode() {
+        return fundCode;
+    }
 
-	public void save() throws FundException {
-		logger.debug("creating the fund ");
-		try {
-			new FundPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new FundException(e);
-		}
-		logger.debug("creating the fund Done : " + getFundName());
-	}
-	
-	public void update(String fundName) throws FundException {
-		logger.debug("updating the fund ");
-		validateFundName(fundName);
-		if(!this.fundName.equals(fundName))
-			validateDuplicateFundName(fundName);
-		this.fundName = fundName;
-		try {
-			new FundPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new FundException(e);
-		}
-		logger.debug("updation of the sfund Done : " + getFundName());
-	}
+    public void save() throws FundException {
+        logger.debug("creating the fund ");
+        try {
+            new FundPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new FundException(e);
+        }
+        logger.debug("creating the fund Done : " + getFundName());
+    }
 
-	private void validate(FundCodeEntity fundCode, String fundName)
-			throws FundException {
-		logger.debug("Validating the fields in Fund");
-		validateFundName(fundName);
-		validateFundCode(fundCode);
-		logger.debug("Validating the fields in Fund done");
-	}
+    public void update(String fundName) throws FundException {
+        logger.debug("updating the fund ");
+        validateFundName(fundName);
+        if (!this.fundName.equals(fundName))
+            validateDuplicateFundName(fundName);
+        this.fundName = fundName;
+        try {
+            new FundPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new FundException(e);
+        }
+        logger.debug("updation of the sfund Done : " + getFundName());
+    }
 
-	private void validateDuplicateFundName(String fundName)
-			throws FundException {
-		logger.debug("Checking for duplicate Fund name");
-		try {
-			if (!new FundPersistence().getFundNameCount(fundName.trim()).equals(
-					Long.valueOf("0")))
-				throw new FundException(
-						FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
-		} catch (PersistenceException e) {
-			throw new FundException(e);
-		}
-	}
+    private void validate(FundCodeEntity fundCode, String fundName) throws FundException {
+        logger.debug("Validating the fields in Fund");
+        validateFundName(fundName);
+        validateFundCode(fundCode);
+        logger.debug("Validating the fields in Fund done");
+    }
 
-	private void validateFundName(String fundName) throws FundException {
-		logger.debug("Checking for empty Fund name");
-		if (StringUtils.isNullOrEmpty(fundName))
-			throw new FundException(FundConstants.INVALID_FUND_NAME);
-	}
+    private void validateDuplicateFundName(String fundName) throws FundException {
+        logger.debug("Checking for duplicate Fund name");
+        try {
+            if (!new FundPersistence().getFundNameCount(fundName.trim()).equals(Long.valueOf("0")))
+                throw new FundException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
+        } catch (PersistenceException e) {
+            throw new FundException(e);
+        }
+    }
 
-	private void validateFundCode(FundCodeEntity fundCode) throws FundException {
-		logger.debug("Checking for empty Fund Code");
-		if (fundCode == null)
-			throw new FundException(FundConstants.INVALID_FUND_CODE);
-	}
+    private void validateFundName(String fundName) throws FundException {
+        logger.debug("Checking for empty Fund name");
+        if (StringUtils.isNullOrEmpty(fundName))
+            throw new FundException(FundConstants.INVALID_FUND_NAME);
+    }
+
+    private void validateFundCode(FundCodeEntity fundCode) throws FundException {
+        logger.debug("Checking for empty Fund Code");
+        if (fundCode == null)
+            throw new FundException(FundConstants.INVALID_FUND_CODE);
+    }
 }

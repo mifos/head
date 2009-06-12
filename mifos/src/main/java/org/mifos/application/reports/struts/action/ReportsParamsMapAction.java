@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,89 +41,82 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 
 /**
- * Control Class for Report Params 
+ * Control Class for Report Params
  */
 public class ReportsParamsMapAction extends BaseAction {
-	
-	private ReportsBusinessService reportsBusinessService ;
-	private ReportsPersistence reportsPersistence;
-	private MifosLogger logger = 
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
-	public ReportsParamsMapAction() throws ServiceException {
-		reportsBusinessService = new ReportsBusinessService();
-		reportsPersistence = new ReportsPersistence();
-	}
-	
-	@Override
-	protected BusinessService getService() {
-		return reportsBusinessService;
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("reportsParamsMap");
-		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("createParamsMap",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("deleteParamsMap",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
 
-		security.allow("reportparamsmapaddlist_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("reportparamsmap_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
+    private ReportsBusinessService reportsBusinessService;
+    private ReportsPersistence reportsPersistence;
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-		return security;
-	}
+    public ReportsParamsMapAction() throws ServiceException {
+        reportsBusinessService = new ReportsBusinessService();
+        reportsPersistence = new ReportsPersistence();
+    }
 
-	/**
-	 * Loads the Parameter Map AddList page
-	 */
-	public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		logger.debug("In ReportsParamsMapAction:load Method: ");		
-		request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
-		ReportsParamsMapActionForm actionForm=(ReportsParamsMapActionForm)form;
-		String strReportId = request.getParameter("reportId");
-		if(strReportId==null)
-			strReportId = actionForm.getReportId()+"";
-		if(strReportId==null || strReportId.equals(""))
-			strReportId = "0";
-		int reportId = Integer.parseInt(strReportId);
-		 actionForm.setReportId(reportId);
-		 request.getSession().setAttribute("listOfAllParametersForReportId", 
-				 reportsPersistence.findParamsOfReportId(reportId));
-    	return mapping.findForward(ReportsConstants.ADDLISTREPORTSPARAMSMAP);
-	}
-	
-	
+    @Override
+    protected BusinessService getService() {
+        return reportsBusinessService;
+    }
+
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsParamsMap");
+        security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("createParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("deleteParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        security.allow("reportparamsmapaddlist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("reportparamsmap_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        return security;
+    }
+
+    /**
+     * Loads the Parameter Map AddList page
+     */
+    public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsParamsMapAction:load Method: ");
+        request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
+        ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
+        String strReportId = request.getParameter("reportId");
+        if (strReportId == null)
+            strReportId = actionForm.getReportId() + "";
+        if (strReportId == null || strReportId.equals(""))
+            strReportId = "0";
+        int reportId = Integer.parseInt(strReportId);
+        actionForm.setReportId(reportId);
+        request.getSession().setAttribute("listOfAllParametersForReportId",
+                reportsPersistence.findParamsOfReportId(reportId));
+        return mapping.findForward(ReportsConstants.ADDLISTREPORTSPARAMSMAP);
+    }
+
     /**
      * Controls the creation of a link between parameter and a report
      */
-    public ActionForward createParamsMap(ActionMapping mapping, ActionForm form, 
-    	HttpServletRequest request, HttpServletResponse response)
-    throws Exception {
-    	logger.debug("In ReportsParamsAction:createParamsMap Method: ");
-    	ReportsParamsMapActionForm actionForm=(ReportsParamsMapActionForm)form;
-    	ReportsParamsMapValue objParams = new ReportsParamsMapValue();
-    	objParams.setReportId(actionForm.getReportId());
-    	objParams.setParameterId(actionForm.getParameterId());
-    	String error = reportsBusinessService.createReportsParamsMap(objParams);
-    	request.getSession().setAttribute("addError",error);
-		return mapping.findForward("reportparamsmap_path");
-	}
+    public ActionForward createParamsMap(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsParamsAction:createParamsMap Method: ");
+        ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
+        ReportsParamsMapValue objParams = new ReportsParamsMapValue();
+        objParams.setReportId(actionForm.getReportId());
+        objParams.setParameterId(actionForm.getParameterId());
+        String error = reportsBusinessService.createReportsParamsMap(objParams);
+        request.getSession().setAttribute("addError", error);
+        return mapping.findForward("reportparamsmap_path");
+    }
 
     /**
      * Controls the deletion of a link between Parameter and a report
      */
-    public ActionForward deleteParamsMap(ActionMapping mapping, ActionForm form, 
-   		HttpServletRequest request, HttpServletResponse response)
-    throws Exception {
-    	logger.debug("In ReportsParamsAction:deleteParams Method: ");
-    	ReportsParamsMapActionForm actionForm=(ReportsParamsMapActionForm)form;
-    	ReportsParamsMapValue objParams = new ReportsParamsMapValue();
-    	objParams.setMapId(actionForm.getMapId());
-    	reportsPersistence.deleteReportsParamsMap(objParams);
-		return mapping.findForward("reportparamsmap_path");
-	}
-    
+    public ActionForward deleteParamsMap(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsParamsAction:deleteParams Method: ");
+        ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
+        ReportsParamsMapValue objParams = new ReportsParamsMapValue();
+        objParams.setMapId(actionForm.getMapId());
+        reportsPersistence.deleteReportsParamsMap(objParams);
+        return mapping.findForward("reportparamsmap_path");
+    }
+
 }

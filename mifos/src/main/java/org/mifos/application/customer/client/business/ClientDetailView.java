@@ -17,120 +17,118 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 public class ClientDetailView {
 
-	private Integer ethinicity;
+    private Integer ethinicity;
 
-	private Integer citizenship;
+    private Integer citizenship;
 
-	private Integer handicapped;
+    private Integer handicapped;
 
-	private Integer businessActivities;
+    private Integer businessActivities;
 
-	private Integer maritalStatus;
+    private Integer maritalStatus;
 
-	private Integer educationLevel;
+    private Integer educationLevel;
 
-	private Short numChildren;
+    private Short numChildren;
 
-	private Short gender;
+    private Short gender;
 
-	private Short povertyStatus;
+    private Short povertyStatus;
 
-	public static final int MARRIED = 66;
-	
-	public ClientDetailView() {
-		super();
-	}
+    public static final int MARRIED = 66;
 
-	public ClientDetailView(Integer ethinicity, Integer citizenship,
-			Integer handicapped, Integer businessActivities,
-			Integer maritalStatus, Integer educationLevel, Short numChildren,
-			Short gender, Short povertyStatus) {
-		this.ethinicity = ethinicity;
-		this.citizenship = citizenship;
-		this.handicapped = handicapped;
-		this.businessActivities = businessActivities;
-		this.maritalStatus = maritalStatus;
-		this.educationLevel = educationLevel;
-		this.numChildren = numChildren;
-		this.gender = gender;
-		this.povertyStatus = povertyStatus;
-	}
+    public ClientDetailView() {
+        super();
+    }
 
-	public Integer getBusinessActivities() {
-		return businessActivities;
-	}
+    public ClientDetailView(Integer ethinicity, Integer citizenship, Integer handicapped, Integer businessActivities,
+            Integer maritalStatus, Integer educationLevel, Short numChildren, Short gender, Short povertyStatus) {
+        this.ethinicity = ethinicity;
+        this.citizenship = citizenship;
+        this.handicapped = handicapped;
+        this.businessActivities = businessActivities;
+        this.maritalStatus = maritalStatus;
+        this.educationLevel = educationLevel;
+        this.numChildren = numChildren;
+        this.gender = gender;
+        this.povertyStatus = povertyStatus;
+    }
 
-	public void setBusinessActivities(Integer businessActivities) {
-		this.businessActivities = businessActivities;
-	}
+    public Integer getBusinessActivities() {
+        return businessActivities;
+    }
 
-	public Integer getCitizenship() {
-		return citizenship;
-	}
+    public void setBusinessActivities(Integer businessActivities) {
+        this.businessActivities = businessActivities;
+    }
 
-	public void setCitizenship(Integer citizenship) {
-		this.citizenship = citizenship;
-	}
+    public Integer getCitizenship() {
+        return citizenship;
+    }
 
-	public Integer getEducationLevel() {
-		return educationLevel;
-	}
+    public void setCitizenship(Integer citizenship) {
+        this.citizenship = citizenship;
+    }
 
-	public void setEducationLevel(Integer educationLevel) {
-		this.educationLevel = educationLevel;
-	}
+    public Integer getEducationLevel() {
+        return educationLevel;
+    }
 
-	public Integer getEthinicity() {
-		return ethinicity;
-	}
+    public void setEducationLevel(Integer educationLevel) {
+        this.educationLevel = educationLevel;
+    }
 
-	public void setEthinicity(Integer ethinicity) {
-		this.ethinicity = ethinicity;
-	}
+    public Integer getEthinicity() {
+        return ethinicity;
+    }
 
-	public Short getGender() {
-		return gender;
-	}
+    public void setEthinicity(Integer ethinicity) {
+        this.ethinicity = ethinicity;
+    }
 
-	public void setGender(Short gender) {
-		this.gender = gender;
-	}
+    public Short getGender() {
+        return gender;
+    }
 
-	public Integer getHandicapped() {
-		return handicapped;
-	}
+    public void setGender(Short gender) {
+        this.gender = gender;
+    }
 
-	public void setHandicapped(Integer handicapped) {
-		this.handicapped = handicapped;
-	}
+    public Integer getHandicapped() {
+        return handicapped;
+    }
 
-	public Integer getMaritalStatus() {
-		return maritalStatus;
-	}
+    public void setHandicapped(Integer handicapped) {
+        this.handicapped = handicapped;
+    }
 
-	public void setMaritalStatus(Integer maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
+    public Integer getMaritalStatus() {
+        return maritalStatus;
+    }
 
-	public Short getNumChildren() {
-		return numChildren;
-	}
+    public void setMaritalStatus(Integer maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
 
-	public void setNumChildren(Short numChildren) {
-		this.numChildren = numChildren;
-	}
-	
-	public Short getPovertyStatus() {
-		return povertyStatus;
-	}
+    public Short getNumChildren() {
+        return numChildren;
+    }
 
-	public void setPovertyStatus(Short povertyStatus) {
-		this.povertyStatus = povertyStatus;
-	}
+    public void setNumChildren(Short numChildren) {
+        this.numChildren = numChildren;
+    }
+
+    public Short getPovertyStatus() {
+        return povertyStatus;
+    }
+
+    public void setPovertyStatus(Short povertyStatus) {
+        this.povertyStatus = povertyStatus;
+    }
 
 }

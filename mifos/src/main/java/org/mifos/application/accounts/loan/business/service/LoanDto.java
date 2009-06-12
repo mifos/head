@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.business.service;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -25,12 +25,12 @@ import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * Loan Data Transfer Object (DTO)
- *
+ * 
  */
 public class LoanDto implements DataTransferObject {
     private String globalAccountNumber;
     private Integer accountId;
-    
+
     public LoanDto(LoanBO loan) {
         this.globalAccountNumber = loan.getGlobalAccountNum();
         this.accountId = loan.getAccountId();

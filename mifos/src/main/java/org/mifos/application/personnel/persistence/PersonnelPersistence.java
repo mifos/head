@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.persistence;
 
 import java.util.ArrayList;
@@ -61,261 +61,219 @@ import org.mifos.framework.security.util.UserContext;
 
 public class PersonnelPersistence extends Persistence {
 
-	//TODO : Move to PersonnelRoleEntity
-	private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+    // TODO : Move to PersonnelRoleEntity
+    private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
-    public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId,
-			Short officeId, Short userId, Short userLevelId)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("levelId", levelId);
-		queryParameters.put("userId", userId);
-		queryParameters.put("userLevelId", userLevelId);
-		queryParameters.put("officeId", officeId);
-		queryParameters.put("statusId",
-				PersonnelStatus.ACTIVE.getValue());
-		List<PersonnelView> queryResult = executeNamedQuery(
-				NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH,
-				queryParameters);
-		return queryResult;
-	}
+    public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId, Short officeId, Short userId,
+            Short userLevelId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("levelId", levelId);
+        queryParameters.put("userId", userId);
+        queryParameters.put("userLevelId", userLevelId);
+        queryParameters.put("officeId", officeId);
+        queryParameters.put("statusId", PersonnelStatus.ACTIVE.getValue());
+        List<PersonnelView> queryResult = executeNamedQuery(
+                NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH, queryParameters);
+        return queryResult;
+    }
 
-	public PersonnelBO getPersonnel(Short personnelId)
-			throws PersistenceException {
-	    if (personnelId == null) {
-	        return null;
-	    }
-		return (PersonnelBO) getPersistentObject(PersonnelBO.class, personnelId);
-	}
+    public PersonnelBO getPersonnel(Short personnelId) throws PersistenceException {
+        if (personnelId == null) {
+            return null;
+        }
+        return (PersonnelBO) getPersistentObject(PersonnelBO.class, personnelId);
+    }
 
-	public boolean isUserExist(String userName) throws PersistenceException {
+    public boolean isUserExist(String userName) throws PersistenceException {
 
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("USER_NAME", userName);
-		Number count = (Number) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_PERSONNEL_WITH_NAME, queryParameters);
-		if (count != null) {
-			return count.longValue() > 0;
-		}
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("USER_NAME", userName);
+        Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_WITH_NAME, queryParameters);
+        if (count != null) {
+            return count.longValue() > 0;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public boolean isUserExistWithGovernmentId(String governmentId)
-			throws PersistenceException {
+    public boolean isUserExistWithGovernmentId(String governmentId) throws PersistenceException {
 
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("GOVT_ID", governmentId);
-		Number count = (Number) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_PERSONNEL_WITH_GOVERNMENTID,
-				queryParameters);
-		if (count != null) {
-			return count.longValue() > 0;
-		}
-		return false;
-	}
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("GOVT_ID", governmentId);
+        Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_WITH_GOVERNMENTID,
+                queryParameters);
+        if (count != null) {
+            return count.longValue() > 0;
+        }
+        return false;
+    }
 
-	public boolean isUserExist(String displayName, Date dob)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("DISPLAY_NAME", displayName);
-		queryParameters.put("DOB", dob);
-		Number count = (Number) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME,
-				queryParameters);
-		if (count != null) {
-			return count.longValue() > 0;
-		}
-		return false;
-	}
+    public boolean isUserExist(String displayName, Date dob) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("DISPLAY_NAME", displayName);
+        queryParameters.put("DOB", dob);
+        Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME,
+                queryParameters);
+        if (count != null) {
+            return count.longValue() > 0;
+        }
+        return false;
+    }
 
-	public boolean getActiveChildrenForLoanOfficer(Short personnelId,
-			Short officeId) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("userId", personnelId);
-		queryParameters.put("officeId", officeId);
-		Number count = (Number) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_ACTIVE_CUSTOMERS_FOR_LO,
-				queryParameters);
-		if (count != null) {
-			return count.longValue() > 0;
-		}
-		return false;
-	}
+    public boolean getActiveChildrenForLoanOfficer(Short personnelId, Short officeId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("userId", personnelId);
+        queryParameters.put("officeId", officeId);
+        Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVE_CUSTOMERS_FOR_LO,
+                queryParameters);
+        if (count != null) {
+            return count.longValue() > 0;
+        }
+        return false;
+    }
 
-	public boolean getAllChildrenForLoanOfficer(Short personnelId,
-			Short officeId) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("userId", personnelId);
-		queryParameters.put("officeId", officeId);
-		Long count = (Long) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_ALL_CUSTOMERS_FOR_LO, queryParameters);
-		if (count != null) {
-			return count > 0 ? true : false;
-		}
-		return false;
-	}
+    public boolean getAllChildrenForLoanOfficer(Short personnelId, Short officeId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("userId", personnelId);
+        queryParameters.put("officeId", officeId);
+        Long count = (Long) execUniqueResultNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS_FOR_LO, queryParameters);
+        if (count != null) {
+            return count > 0 ? true : false;
+        }
+        return false;
+    }
 
-	public PersonnelBO getPersonnelByGlobalPersonnelNum(
-			String globalPersonnelNum) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("globalPersonnelNum", globalPersonnelNum);
+    public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalPersonnelNum", globalPersonnelNum);
 
-		PersonnelBO personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
-				NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
-		if (personnelBO != null) {
-			return personnelBO;
-		}
-		return null;
-	}
+        PersonnelBO personnelBO = (PersonnelBO) execUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID,
+                queryParameters);
+        if (personnelBO != null) {
+            return personnelBO;
+        }
+        return null;
+    }
 
-	public QueryResult getAllPersonnelNotes(Short personnelId)
-			throws PersistenceException {
-		QueryResult notesResult = null;
-		try {
-			Session session = null;
-			notesResult = QueryFactory.getQueryResult("NotesSearch");
-			session = notesResult.getSession();
-			Query query = session
-					.getNamedQuery(NamedQueryConstants.GETALLPERSONNELNOTES);
-			query.setInteger("PERSONNEL_ID", personnelId);
-			notesResult.executeQuery(query);
-		} catch (HibernateProcessException hpe) {
-			throw new PersistenceException(hpe);
-		} catch (HibernateSearchException hse) {
-			throw new PersistenceException(hse);
-		}
-		return notesResult;
-	}
+    public QueryResult getAllPersonnelNotes(Short personnelId) throws PersistenceException {
+        QueryResult notesResult = null;
+        try {
+            Session session = null;
+            notesResult = QueryFactory.getQueryResult("NotesSearch");
+            session = notesResult.getSession();
+            Query query = session.getNamedQuery(NamedQueryConstants.GETALLPERSONNELNOTES);
+            query.setInteger("PERSONNEL_ID", personnelId);
+            notesResult.executeQuery(query);
+        } catch (HibernateProcessException hpe) {
+            throw new PersistenceException(hpe);
+        } catch (HibernateSearchException hse) {
+            throw new PersistenceException(hse);
+        }
+        return notesResult;
+    }
 
-	public Integer getPersonnelRoleCount(Short roleId)
-			throws PersistenceException {
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("roleId", roleId);
-		Number count = (Number) execUniqueResultNamedQuery(
-			NamedQueryConstants.GET_PERSONNEL_ROLE_COUNT, queryParameters);
-		return count.intValue();
-	}
+    public Integer getPersonnelRoleCount(Short roleId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("roleId", roleId);
+        Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_PERSONNEL_ROLE_COUNT,
+                queryParameters);
+        return count.intValue();
+    }
 
-	public PersonnelBO getPersonnelByUserName(String personnelUserName)
-			throws PersistenceException {
-		PersonnelBO personnelBO = null;
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("USER_NAME", personnelUserName);
-		personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
-				NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
-		return personnelBO;
-	}
-	
-	public PersonnelBO getPersonnelByDisplayName(String personnelDisplayName)
-		throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("DISPLAY_NAME", personnelDisplayName);
-		PersonnelBO personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
-				NamedQueryConstants.GETPERSONNELBYDISPLAYNAME, queryParameters);
-		return personnelBO;
-	}
-	
-	public PersonnelBO getPersonnelById(Short id) throws PersistenceException{
-		return (PersonnelBO) getSession().get(PersonnelBO.class, id);
-	}
+    public PersonnelBO getPersonnelByUserName(String personnelUserName) throws PersistenceException {
+        PersonnelBO personnelBO = null;
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("USER_NAME", personnelUserName);
+        personnelBO = (PersonnelBO) execUniqueResultNamedQuery(NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
+        return personnelBO;
+    }
 
-	public void updateWithCommit(PersonnelBO personnelBO)
-			throws PersistenceException {
-		super.createOrUpdate(personnelBO);
-		try {
-			StaticHibernateUtil.commitTransaction();
-		} catch (HibernateException e) {
-			StaticHibernateUtil.rollbackTransaction();
-			throw new PersistenceException(e);
-		}
+    public PersonnelBO getPersonnelByDisplayName(String personnelDisplayName) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("DISPLAY_NAME", personnelDisplayName);
+        PersonnelBO personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
+                NamedQueryConstants.GETPERSONNELBYDISPLAYNAME, queryParameters);
+        return personnelBO;
+    }
 
-	}
+    public PersonnelBO getPersonnelById(Short id) throws PersistenceException {
+        return (PersonnelBO) getSession().get(PersonnelBO.class, id);
+    }
 
-	public QueryResult search(String searchString, Short userId)
-			throws PersistenceException {
-		String[] namedQuery = new String[2];
-		List<Param> paramList = getParamList(new PersonnelPersistence()
-				.getPersonnel(userId));
+    public void updateWithCommit(PersonnelBO personnelBO) throws PersistenceException {
+        super.createOrUpdate(personnelBO);
+        try {
+            StaticHibernateUtil.commitTransaction();
+        } catch (HibernateException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new PersistenceException(e);
+        }
 
-		if (searchString.contains(" ")) {
-			paramList.add(typeNameValue("String", "USER_NAME1", searchString
-					.substring(0, searchString.indexOf(" "))));
-			paramList.add(typeNameValue("String", "USER_NAME2", searchString
-					.substring(searchString.indexOf(" ") + 1, searchString
-							.length())));
-		} else {
-			paramList.add(typeNameValue("String", "USER_NAME1", searchString));
-			paramList.add(typeNameValue("String", "USER_NAME2", ""));
-		}
-		namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT;
-		namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH;
-		paramList.add(typeNameValue("String", "USER_NAME", searchString + "%"));
-		return getQueryResults(paramList, namedQuery);
-	}
+    }
 
-	private List<Param> getParamList(PersonnelBO personnel) {
-		List<Param> paramList = new ArrayList<Param>();
-		paramList.add(typeNameValue("String", "SEARCH_ID", personnel
-				.getOffice().getSearchId()));
-		paramList.add(typeNameValue("String", "SEARCH_ALL", personnel
-				.getOffice().getSearchId()
-				+ ".%"));
-		paramList.add(typeNameValue("Short", "USERID", personnel
-				.getPersonnelId()));
-		paramList.add(typeNameValue("Short", "LOID",
-				PersonnelLevel.LOAN_OFFICER.getValue()));
-		paramList.add(typeNameValue("Short", "USERLEVEL_ID", personnel
-				.getLevelEnum().getValue()));
+    public QueryResult search(String searchString, Short userId) throws PersistenceException {
+        String[] namedQuery = new String[2];
+        List<Param> paramList = getParamList(new PersonnelPersistence().getPersonnel(userId));
 
-		return paramList;
+        if (searchString.contains(" ")) {
+            paramList.add(typeNameValue("String", "USER_NAME1", searchString.substring(0, searchString.indexOf(" "))));
+            paramList.add(typeNameValue("String", "USER_NAME2", searchString.substring(searchString.indexOf(" ") + 1,
+                    searchString.length())));
+        } else {
+            paramList.add(typeNameValue("String", "USER_NAME1", searchString));
+            paramList.add(typeNameValue("String", "USER_NAME2", ""));
+        }
+        namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT;
+        namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH;
+        paramList.add(typeNameValue("String", "USER_NAME", searchString + "%"));
+        return getQueryResults(paramList, namedQuery);
+    }
 
-	}
+    private List<Param> getParamList(PersonnelBO personnel) {
+        List<Param> paramList = new ArrayList<Param>();
+        paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+        paramList.add(typeNameValue("String", "SEARCH_ALL", personnel.getOffice().getSearchId() + ".%"));
+        paramList.add(typeNameValue("Short", "USERID", personnel.getPersonnelId()));
+        paramList.add(typeNameValue("Short", "LOID", PersonnelLevel.LOAN_OFFICER.getValue()));
+        paramList.add(typeNameValue("Short", "USERLEVEL_ID", personnel.getLevelEnum().getValue()));
 
-	private QueryResult getQueryResults(List<Param> paramList,
-			String[] namedQuery) throws PersistenceException {
+        return paramList;
 
-		QueryResult queryResult = QueryFactory
-				.getQueryResult(PersonnelConstants.USER_LIST);
-		QueryInputs queryInputs = new QueryInputs();
-		queryInputs.setQueryStrings(namedQuery);
-		queryInputs.setParamList(paramList);
-		queryInputs
-				.setPath("org.mifos.application.personnel.util.helpers.UserSearchResultsView");
-		queryInputs.setAliasNames(getAliasNames());
-		try {
-			queryResult.setQueryInputs(queryInputs);
-		} catch (HibernateSearchException e) {
-			throw new PersistenceException(e);
-		}
-		return queryResult;
-	}
+    }
 
-	private String[] getAliasNames() {
-		String[] aliasNames = { "officeId", "officeName", "personnelId",
-				"globalPersonnelNum", "personnelName" };
-		return aliasNames;
+    private QueryResult getQueryResults(List<Param> paramList, String[] namedQuery) throws PersistenceException {
 
-	}
+        QueryResult queryResult = QueryFactory.getQueryResult(PersonnelConstants.USER_LIST);
+        QueryInputs queryInputs = new QueryInputs();
+        queryInputs.setQueryStrings(namedQuery);
+        queryInputs.setParamList(paramList);
+        queryInputs.setPath("org.mifos.application.personnel.util.helpers.UserSearchResultsView");
+        queryInputs.setAliasNames(getAliasNames());
+        try {
+            queryResult.setQueryInputs(queryInputs);
+        } catch (HibernateSearchException e) {
+            throw new PersistenceException(e);
+        }
+        return queryResult;
+    }
 
-	public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);
-		queryParameters.put(CustomerSearchConstants.PERSONNELLEVELID,
-				PersonnelLevel.LOAN_OFFICER.getValue());
-		queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE,
-				PersonnelStatus.ACTIVE.getValue());
-		return executeNamedQuery(
-				NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER,
-				queryParameters);
-	}
+    private String[] getAliasNames() {
+        String[] aliasNames = { "officeId", "officeName", "personnelId", "globalPersonnelNum", "personnelName" };
+        return aliasNames;
 
-	public List<SupportedLocalesEntity> getSupportedLocales()
-			throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST,
-				null);
-	}
+    }
+
+    public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);
+        queryParameters.put(CustomerSearchConstants.PERSONNELLEVELID, PersonnelLevel.LOAN_OFFICER.getValue());
+        queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE, PersonnelStatus.ACTIVE.getValue());
+        return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER, queryParameters);
+    }
+
+    public List<SupportedLocalesEntity> getSupportedLocales() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST, null);
+    }
 
     public PersonnelBO createPersonnel(UserContext userContext, PersonnelTemplate template)
             throws PersistenceException, ValidationException, PersonnelException {
@@ -326,7 +284,7 @@ public class PersonnelPersistence extends Persistence {
         int numberOfRoles = template.getRoleIds().size();
         ArrayList<RoleBO> roles = new ArrayList(numberOfRoles);
         RoleBO role;
-        for (int i=0; i<numberOfRoles; i++) {
+        for (int i = 0; i < numberOfRoles; i++) {
             role = rolesPermissionsPersistence.getRole(template.getRoleIds().get(i));
             if (role == null) {
                 throw new ValidationException(PersonnelConstants.ROLES_LIST);
@@ -334,55 +292,44 @@ public class PersonnelPersistence extends Persistence {
             roles.add(role);
         }
 
-        PersonnelBO personnelBO = new PersonnelBO(template.getPersonnelLevel(), office,
-                template.getTitleId(), template.getPreferredLocale(), template.getPassword(),
-                template.getUserName(), template.getEmailId(), roles,
-                template.getCustomFields(), template.getName(),
-                template.getGovernmentIdNumber(), template.getDateOfBirth(),
-                template.getMaritalStatusId(), template.getGenderId(),
-                template.getDateOfJoiningMFI(), template.getDateOfJoiningBranch(),
-                template.getAddress(), userContext.getId());
+        PersonnelBO personnelBO = new PersonnelBO(template.getPersonnelLevel(), office, template.getTitleId(), template
+                .getPreferredLocale(), template.getPassword(), template.getUserName(), template.getEmailId(), roles,
+                template.getCustomFields(), template.getName(), template.getGovernmentIdNumber(), template
+                        .getDateOfBirth(), template.getMaritalStatusId(), template.getGenderId(), template
+                        .getDateOfJoiningMFI(), template.getDateOfJoiningBranch(), template.getAddress(), userContext
+                        .getId());
         personnelBO.save();
         return personnelBO;
     }
-    
-	public List<PersonnelBO> getAllPersonnel()
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();		
 
-		List<PersonnelBO> queryResult = executeNamedQuery(
-				NamedQueryConstants.GET_ALL_PERSONNEL, queryParameters);
-		return queryResult;
+    public List<PersonnelBO> getAllPersonnel() throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 
-	}
+        List<PersonnelBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_PERSONNEL, queryParameters);
+        return queryResult;
+
+    }
 
     private RolesPermissionsPersistence getRolesPermissionsPersistence() {
         return rolesPermissionsPersistence;
     }
 
-	public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId, final RoleBO role)
-			throws PersistenceException {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put(CustomerSearchConstants.OFFICEID, officeId);
-		params.put(CustomerSearchConstants.PERSONNELSTATUSID,
-				PersonnelStatus.ACTIVE.getValue());
-		List activeBranchManagers = executeNamedQuery(
-				NamedQueryConstants.GET_ACTIVE_BRANCH_MANAGER_UNDER_OFFICE,
-				params);
-		return (List<PersonnelBO>) CollectionUtils.select(activeBranchManagers,
-				new Predicate() {
-					public boolean evaluate(Object object) {
-						Set<PersonnelRoleEntity> applicableRoles = ((PersonnelBO) object)
-								.getPersonnelRoles();
-						return CollectionUtils.exists(applicableRoles,
-								new Predicate() {
-									public boolean evaluate(Object object) {
-										return ((PersonnelRoleEntity) object)
-												.getRole().equals(
-														role);
-									}
-								});
-					}
-				});
-	}
+    public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId, final RoleBO role)
+            throws PersistenceException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CustomerSearchConstants.OFFICEID, officeId);
+        params.put(CustomerSearchConstants.PERSONNELSTATUSID, PersonnelStatus.ACTIVE.getValue());
+        List activeBranchManagers = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_BRANCH_MANAGER_UNDER_OFFICE,
+                params);
+        return (List<PersonnelBO>) CollectionUtils.select(activeBranchManagers, new Predicate() {
+            public boolean evaluate(Object object) {
+                Set<PersonnelRoleEntity> applicableRoles = ((PersonnelBO) object).getPersonnelRoles();
+                return CollectionUtils.exists(applicableRoles, new Predicate() {
+                    public boolean evaluate(Object object) {
+                        return ((PersonnelRoleEntity) object).getRole().equals(role);
+                    }
+                });
+            }
+        });
+    }
 }

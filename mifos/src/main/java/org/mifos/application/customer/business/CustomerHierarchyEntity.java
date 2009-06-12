@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import java.util.Date;
@@ -31,63 +31,62 @@ import org.mifos.framework.util.DateTimeService;
  */
 public class CustomerHierarchyEntity extends PersistentObject {
 
-	private final Integer hierarchyId;
+    private final Integer hierarchyId;
 
-	private final CustomerBO parentCustomer;
+    private final CustomerBO parentCustomer;
 
-	private final CustomerBO customer;
+    private final CustomerBO customer;
 
-	private Short status;
+    private Short status;
 
-	private Date endDate;	
+    private Date endDate;
 
-	public CustomerHierarchyEntity(CustomerBO customer,
-			CustomerBO parentCustomer) {
-		this.customer = customer;
-		this.parentCustomer = parentCustomer;
-		this.status = Status.ACTIVE.getValue();
-		this.hierarchyId = null;
-		this.createdDate = new DateTimeService().getCurrentJavaDateTime();
-	}
+    public CustomerHierarchyEntity(CustomerBO customer, CustomerBO parentCustomer) {
+        this.customer = customer;
+        this.parentCustomer = parentCustomer;
+        this.status = Status.ACTIVE.getValue();
+        this.hierarchyId = null;
+        this.createdDate = new DateTimeService().getCurrentJavaDateTime();
+    }
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerHierarchyEntity() {
-		this.hierarchyId = null;
-		this.parentCustomer = null;
-		this.customer = null;
-	}
-	
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerHierarchyEntity() {
+        this.hierarchyId = null;
+        this.parentCustomer = null;
+        this.customer = null;
+    }
 
-	public CustomerBO getParentCustomer() {
-		return parentCustomer;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
 
-	public Date getEndDate() {
-		return this.endDate;
-	}
+    public CustomerBO getParentCustomer() {
+        return parentCustomer;
+    }
 
-	void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public Date getEndDate() {
+        return this.endDate;
+    }
 
-	void updateStatus(Status status) {
-		this.status = status.getValue();
-	}
+    void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	public boolean isActive() {
-		return status.equals(Status.ACTIVE.getValue());
-	}
-	
-	void makeInactive(Short updatedBy){
-		updateStatus(Status.INACTIVE);
-		setUpdatedBy(updatedBy);
-		setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
-		setEndDate(new DateTimeService().getCurrentJavaDateTime());
-	}
+    void updateStatus(Status status) {
+        this.status = status.getValue();
+    }
+
+    public boolean isActive() {
+        return status.equals(Status.ACTIVE.getValue());
+    }
+
+    void makeInactive(Short updatedBy) {
+        updateStatus(Status.INACTIVE);
+        setUpdatedBy(updatedBy);
+        setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+        setEndDate(new DateTimeService().getCurrentJavaDateTime());
+    }
 }

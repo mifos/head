@@ -17,11 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.exceptions;
 
 /**
- * Class is used to distinguish validation exceptions from other OfficeException's.
+ * Class is used to distinguish validation exceptions from other
+ * OfficeException's.
  */
 public class OfficeValidationException extends OfficeException {
 

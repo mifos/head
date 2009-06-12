@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys.business;
 
 import java.util.Date;
@@ -30,113 +30,114 @@ import org.mifos.application.surveys.helpers.InstanceStatus;
 import org.mifos.framework.business.PersistentObject;
 
 public class SurveyInstance extends PersistentObject {
-	
-	private int instanceId;
-	
-	private Survey survey;
-	
-	private Set<SurveyResponse> surveyResponses;
-	
-	private CustomerBO customer;
-	
-	private AccountBO account;
-	
-	private PersonnelBO officer;
-	
-	private PersonnelBO creator;
-	
-	private Date dateConducted;
-	
-	private InstanceStatus completedStatus;
-	
-	public SurveyInstance() {
-		completedStatus = InstanceStatus.INCOMPLETE;
-	}
 
-	public int getCompletedStatus() {
-		return completedStatus.getValue();
-	}
-	
-	public InstanceStatus getCompletedStatusAsEnum() {
-		return completedStatus;
-	}
+    private int instanceId;
 
-	public void setCompletedStatus(int completedStatus) {
-		this.completedStatus = InstanceStatus.fromInt(completedStatus);
-	}
-	
-	public void setCompletedStatus(InstanceStatus completedStatus) {
-		this.completedStatus = completedStatus;
-	}
+    private Survey survey;
 
-	public Date getDateConducted() {
-		return dateConducted;
-	}
+    private Set<SurveyResponse> surveyResponses;
 
-	public void setDateConducted(Date dateConducted) {
-		this.dateConducted = dateConducted;
-	}
+    private CustomerBO customer;
 
-	public int getInstanceId() {
-		return instanceId;
-	}
+    private AccountBO account;
 
-	public void setInstanceId(int instanceId) {
-		this.instanceId = instanceId;
-	}
+    private PersonnelBO officer;
 
-	public PersonnelBO getOfficer() {
-		return officer;
-	}
+    private PersonnelBO creator;
 
-	public void setOfficer(PersonnelBO officer) {
-		this.officer = officer;
-	}
+    private Date dateConducted;
 
-	public Survey getSurvey() {
-		return survey;
-	}
+    private InstanceStatus completedStatus;
 
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
-	}
+    public SurveyInstance() {
+        completedStatus = InstanceStatus.INCOMPLETE;
+    }
 
-	public CustomerBO getCustomer() {
-		return customer;
-	}
-	
-	/*note that a survey instance must be associated with either a client
-	 * or an account, not both... we could include a check against the survey 
-	 * type here, but that would cause needless errors when you set the client/account
-	 * before the survey
-	*/
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-		this.account = null;
-	}
+    public int getCompletedStatus() {
+        return completedStatus.getValue();
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public InstanceStatus getCompletedStatusAsEnum() {
+        return completedStatus;
+    }
 
-	public void setAccount(AccountBO account) {
-		this.account = account;
-		this.customer = null;
-	}
+    public void setCompletedStatus(int completedStatus) {
+        this.completedStatus = InstanceStatus.fromInt(completedStatus);
+    }
 
-	public PersonnelBO getCreator() {
-		return creator;
-	}
+    public void setCompletedStatus(InstanceStatus completedStatus) {
+        this.completedStatus = completedStatus;
+    }
 
-	public void setCreator(PersonnelBO creator) {
-		this.creator = creator;
-	}
+    public Date getDateConducted() {
+        return dateConducted;
+    }
 
-	public void setSurveyResponses(Set<SurveyResponse> surveyResponses) {
-		this.surveyResponses = surveyResponses;
-	}
+    public void setDateConducted(Date dateConducted) {
+        this.dateConducted = dateConducted;
+    }
 
-	public Set<SurveyResponse> getSurveyResponses() {
-		return surveyResponses;
-	}
+    public int getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(int instanceId) {
+        this.instanceId = instanceId;
+    }
+
+    public PersonnelBO getOfficer() {
+        return officer;
+    }
+
+    public void setOfficer(PersonnelBO officer) {
+        this.officer = officer;
+    }
+
+    public Survey getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+    }
+
+    public CustomerBO getCustomer() {
+        return customer;
+    }
+
+    /*
+     * note that a survey instance must be associated with either a client or an
+     * account, not both... we could include a check against the survey type
+     * here, but that would cause needless errors when you set the
+     * client/account before the survey
+     */
+    public void setCustomer(CustomerBO customer) {
+        this.customer = customer;
+        this.account = null;
+    }
+
+    public AccountBO getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountBO account) {
+        this.account = account;
+        this.customer = null;
+    }
+
+    public PersonnelBO getCreator() {
+        return creator;
+    }
+
+    public void setCreator(PersonnelBO creator) {
+        this.creator = creator;
+    }
+
+    public void setSurveyResponses(Set<SurveyResponse> surveyResponses) {
+        this.surveyResponses = surveyResponses;
+    }
+
+    public Set<SurveyResponse> getSurveyResponses() {
+        return surveyResponses;
+    }
 }

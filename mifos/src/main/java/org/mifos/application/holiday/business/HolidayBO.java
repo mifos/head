@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.holiday.business;
 
 import static org.mifos.framework.util.helpers.DateUtils.getDateWithoutTimeStamp;
@@ -34,206 +34,192 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class HolidayBO extends BusinessObject {
 
-	private HolidayPK holidayPK;
+    private HolidayPK holidayPK;
 
-	private Date holidayThruDate;
+    private Date holidayThruDate;
 
-	private String holidayName;
-	
-	private RepaymentRuleEntity repaymentRuleEntity;
+    private String holidayName;
 
-	private boolean validationEnabled = true;
-	
-	private Short holidayChangesAppliedFlag;   
-	
-	public boolean isValidationEnabled() {
-		return validationEnabled;
-	}
+    private RepaymentRuleEntity repaymentRuleEntity;
 
-	public void setValidationEnabled(boolean validationEnabled) {
-		this.validationEnabled = validationEnabled;
-	}
+    private boolean validationEnabled = true;
 
-	protected HolidayBO() {
-		this.holidayPK = null;
-		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
-	}
+    private Short holidayChangesAppliedFlag;
 
-	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate,
-			String holidayName, RepaymentRuleEntity repaymentRuleEntity) throws ApplicationException {
+    public boolean isValidationEnabled() {
+        return validationEnabled;
+    }
 
-		this.holidayPK = new HolidayPK();
+    public void setValidationEnabled(boolean validationEnabled) {
+        this.validationEnabled = validationEnabled;
+    }
 
-		if (holidayPK != null) {
-			this.holidayPK.setOfficeId(holidayPK.getOfficeId());
-			this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-		}
-		else {
-			throw new ApplicationException(
-					HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
-		}
-		this.holidayThruDate = holidayThruDate;
-		this.holidayName = holidayName;
-		this.repaymentRuleEntity = repaymentRuleEntity;
-		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
-	}
-	
-	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate,
-			String holidayName, short repaymentRuleId, String lookupValueKey) throws ApplicationException {
+    protected HolidayBO() {
+        this.holidayPK = null;
+        this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+    }
 
-		this.holidayPK = new HolidayPK();
+    public HolidayBO(HolidayPK holidayPK, Date holidayThruDate, String holidayName,
+            RepaymentRuleEntity repaymentRuleEntity) throws ApplicationException {
 
-		if (holidayPK != null) {
-			this.holidayPK.setOfficeId(holidayPK.getOfficeId());
-			this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-		}
-		else {
-			throw new ApplicationException(
-					HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
-		}
-		this.holidayThruDate = holidayThruDate;
-		this.holidayName = holidayName;
-		this.repaymentRuleEntity = new RepaymentRuleEntity(repaymentRuleId, lookupValueKey);
-		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
-	}
+        this.holidayPK = new HolidayPK();
 
-	public HolidayPK getHolidayPK() {
-		return this.holidayPK;
-	}
+        if (holidayPK != null) {
+            this.holidayPK.setOfficeId(holidayPK.getOfficeId());
+            this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
+        } else {
+            throw new ApplicationException(HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
+        }
+        this.holidayThruDate = holidayThruDate;
+        this.holidayName = holidayName;
+        this.repaymentRuleEntity = repaymentRuleEntity;
+        this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+    }
 
-	public RepaymentRuleEntity getRepaymentRuleEntity() {
-		return this.repaymentRuleEntity;
-	}
+    public HolidayBO(HolidayPK holidayPK, Date holidayThruDate, String holidayName, short repaymentRuleId,
+            String lookupValueKey) throws ApplicationException {
 
-	public Date getHolidayFromDate() {
-		return this.holidayPK.getHolidayFromDate();
-	}
+        this.holidayPK = new HolidayPK();
 
-	public Date getHolidayThruDate() {
-		return this.holidayThruDate;
-	}
+        if (holidayPK != null) {
+            this.holidayPK.setOfficeId(holidayPK.getOfficeId());
+            this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
+        } else {
+            throw new ApplicationException(HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
+        }
+        this.holidayThruDate = holidayThruDate;
+        this.holidayName = holidayName;
+        this.repaymentRuleEntity = new RepaymentRuleEntity(repaymentRuleId, lookupValueKey);
+        this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+    }
 
-	public String getHolidayName() {
-		return this.holidayName;
-	}
+    public HolidayPK getHolidayPK() {
+        return this.holidayPK;
+    }
 
-	public void setHolidayPK(HolidayPK holidayPK) {
-		this.holidayPK = holidayPK;
-	}
+    public RepaymentRuleEntity getRepaymentRuleEntity() {
+        return this.repaymentRuleEntity;
+    }
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
-	private void setRepaymentRuleEntity(RepaymentRuleEntity repaymentRuleEntity) {
-		this.repaymentRuleEntity = repaymentRuleEntity;
-	}
+    public Date getHolidayFromDate() {
+        return this.holidayPK.getHolidayFromDate();
+    }
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
-	private void setHolidayFromDate(Date holidayFromDate) {
-		this.holidayPK.setHolidayFromDate(holidayFromDate);
-	}
+    public Date getHolidayThruDate() {
+        return this.holidayThruDate;
+    }
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
-	private void setHolidayThruDate(Date holidayThruDate) {
-		this.holidayThruDate = holidayThruDate;
-	}
+    public String getHolidayName() {
+        return this.holidayName;
+    }
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
-	private void setHolidayName(String holidayName) {
-		this.holidayName = holidayName;
-	}
-	
-	public Short getHolidayChangesAppliedFlag() {
-		return holidayChangesAppliedFlag;
-	}
+    public void setHolidayPK(HolidayPK holidayPK) {
+        this.holidayPK = holidayPK;
+    }
 
-	public void setHolidayChangesAppliedFlag(Short flag) {
-		this.holidayChangesAppliedFlag = flag;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setRepaymentRuleEntity(RepaymentRuleEntity repaymentRuleEntity) {
+        this.repaymentRuleEntity = repaymentRuleEntity;
+    }
 
-	public void save() throws ApplicationException {
-		if (this.getHolidayThruDate() == null) {
-			this.setHolidayThruDate(this.getHolidayFromDate());
-		}
-		
-		if(isValidationEnabled()) {
-			this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
-			this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
-		}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setHolidayFromDate(Date holidayFromDate) {
+        this.holidayPK.setHolidayFromDate(holidayFromDate);
+    }
 
-		new HolidayPersistence().createOrUpdate(this);
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setHolidayThruDate(Date holidayThruDate) {
+        this.holidayThruDate = holidayThruDate;
+    }
 
-	public void update(HolidayPK holidayPK, Date holidayThruDate,
-			String holidayName) throws ApplicationException {
-		this.holidayName = holidayName;
-		this.holidayPK.setOfficeId(holidayPK.getOfficeId());
-		this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setHolidayName(String holidayName) {
+        this.holidayName = holidayName;
+    }
 
-		if (this.getHolidayThruDate() == null) {
-			this.setHolidayThruDate(this.getHolidayFromDate());
-		}
+    public Short getHolidayChangesAppliedFlag() {
+        return holidayChangesAppliedFlag;
+    }
 
-		if(isValidationEnabled()) {
-			this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
-			this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
-		}
-		
-		if(this.getRepaymentRuleEntity().getLookUpValue().equals(RepaymentRuleTypes.SAME_DAY.getValue()))
-			this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
-		
-		new HolidayPersistence().createOrUpdate(this);
-		
-		//this block should not be here
-		//HolidayUtils.rescheduleLoanRepaymentDates(this);
-		//HolidayUtils.rescheduleSavingDates(this);
-		// end of block
-	}
+    public void setHolidayChangesAppliedFlag(Short flag) {
+        this.holidayChangesAppliedFlag = flag;
+    }
 
-	protected void validateHolidayState(Short masterTypeId, Short stateId,
-			boolean isCustomer) throws ApplicationException {
-		Integer records;
-		records = new HolidayPersistence().isValidHolidayState(masterTypeId,
-				stateId, isCustomer);
-		if (records.intValue() != 0) {
-			throw new ApplicationException(
-					HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
-		}
-	}
+    public void save() throws ApplicationException {
+        if (this.getHolidayThruDate() == null) {
+            this.setHolidayThruDate(this.getHolidayFromDate());
+        }
 
-	public String getRepaymentRule() {
-		return repaymentRuleEntity.getLookUpValue();
-	}
-	
-	public Short getRepaymentRuleId()
-	{
-		return repaymentRuleEntity.getId();
-	}
+        if (isValidationEnabled()) {
+            this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
+            this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
+        }
 
+        new HolidayPersistence().createOrUpdate(this);
+    }
 
-	private void validateFromDateAgainstCurrentDate(Date fromDate)
-			throws ApplicationException {
-		if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(
-				DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
-			throw new ApplicationException(HolidayConstants.INVALIDFROMDATE);
-		}
-	}
+    public void update(HolidayPK holidayPK, Date holidayThruDate, String holidayName) throws ApplicationException {
+        this.holidayName = holidayName;
+        this.holidayPK.setOfficeId(holidayPK.getOfficeId());
+        this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
 
-	private void validateFromDateAgainstThruDate(Date fromDate, Date thruDate)
-			throws ApplicationException {
-		if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(
-				DateUtils.getDateWithoutTimeStamp(thruDate.getTime())) > 0) {
-			throw new ApplicationException(HolidayConstants.INVALIDTHRUDATE);
-		}
-	}
+        if (this.getHolidayThruDate() == null) {
+            this.setHolidayThruDate(this.getHolidayFromDate());
+        }
 
-	public boolean encloses(Date date) {
-		return date.compareTo(getDateWithoutTimeStamp(
-				getHolidayFromDate().getTime())) >= 0
-				&& date.compareTo(getDateWithoutTimeStamp(
-						getHolidayThruDate().getTime())) <= 0;
-	}
+        if (isValidationEnabled()) {
+            this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
+            this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
+        }
+
+        if (this.getRepaymentRuleEntity().getLookUpValue().equals(RepaymentRuleTypes.SAME_DAY.getValue()))
+            this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
+
+        new HolidayPersistence().createOrUpdate(this);
+
+        // this block should not be here
+        // HolidayUtils.rescheduleLoanRepaymentDates(this);
+        // HolidayUtils.rescheduleSavingDates(this);
+        // end of block
+    }
+
+    protected void validateHolidayState(Short masterTypeId, Short stateId, boolean isCustomer)
+            throws ApplicationException {
+        Integer records;
+        records = new HolidayPersistence().isValidHolidayState(masterTypeId, stateId, isCustomer);
+        if (records.intValue() != 0) {
+            throw new ApplicationException(HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
+        }
+    }
+
+    public String getRepaymentRule() {
+        return repaymentRuleEntity.getLookUpValue();
+    }
+
+    public Short getRepaymentRuleId() {
+        return repaymentRuleEntity.getId();
+    }
+
+    private void validateFromDateAgainstCurrentDate(Date fromDate) throws ApplicationException {
+        if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
+            throw new ApplicationException(HolidayConstants.INVALIDFROMDATE);
+        }
+    }
+
+    private void validateFromDateAgainstThruDate(Date fromDate, Date thruDate) throws ApplicationException {
+        if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(
+                DateUtils.getDateWithoutTimeStamp(thruDate.getTime())) > 0) {
+            throw new ApplicationException(HolidayConstants.INVALIDTHRUDATE);
+        }
+    }
+
+    public boolean encloses(Date date) {
+        return date.compareTo(getDateWithoutTimeStamp(getHolidayFromDate().getTime())) >= 0
+                && date.compareTo(getDateWithoutTimeStamp(getHolidayThruDate().getTime())) <= 0;
+    }
 
 }

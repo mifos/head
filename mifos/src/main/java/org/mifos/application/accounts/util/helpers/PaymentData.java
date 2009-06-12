@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import java.util.ArrayList;
@@ -34,28 +34,27 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class PaymentData {
 
-	private Money totalAmount;
+    private Money totalAmount;
 
-	private CustomerBO customer;
+    private CustomerBO customer;
 
-	private PersonnelBO personnel;
+    private PersonnelBO personnel;
 
-	private Date transactionDate;
+    private Date transactionDate;
 
-	private String receiptNum;
+    private String receiptNum;
 
-	private Date recieptDate;
+    private Date recieptDate;
 
-	private Short paymentTypeId;
+    private Short paymentTypeId;
 
-	/*
-	 * Holds information including the installment this payment is to be 
-	 * applied towards and any installments in arrears.
-	 */
-	private List<AccountPaymentData> accountPayments;
+    /*
+     * Holds information including the installment this payment is to be applied
+     * towards and any installments in arrears.
+     */
+    private List<AccountPaymentData> accountPayments;
 
-    private PaymentData(Money totalAmount, PersonnelBO personnel,
-            Short paymentId, Date transactionDate) {
+    private PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId, Date transactionDate) {
         accountPayments = new ArrayList<AccountPaymentData>();
         setTotalAmount(totalAmount);
         setPersonnel(personnel);
@@ -63,99 +62,95 @@ public class PaymentData {
         setTransactionDate(transactionDate);
     }
 
-	private PaymentData(Money totalAmount, PersonnelBO personnel,
-			Short paymentId, Date transactionDate,
+    private PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId, Date transactionDate,
             String recieptNum, Date recieptDate) {
-		accountPayments = new ArrayList<AccountPaymentData>();
-		setTotalAmount(totalAmount);
-		setPersonnel(personnel);
-		setPaymentTypeId(paymentId);
-		setTransactionDate(transactionDate);
+        accountPayments = new ArrayList<AccountPaymentData>();
+        setTotalAmount(totalAmount);
+        setPersonnel(personnel);
+        setPaymentTypeId(paymentId);
+        setTransactionDate(transactionDate);
         setRecieptNum(recieptNum);
         setRecieptDate(recieptDate);
     }
 
-
-    public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel,
-                                                Short paymentId, Date transactionDate) {
+    public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId,
+            Date transactionDate) {
         return new PaymentData(totalAmount, personnel, paymentId, transactionDate);
     }
 
-    public static PaymentData createRecieptPaymentData(
-            RecieptPaymentDataTemplate template) {
-        return new PaymentData(template.getTotalAmount(), template.getPersonnel(),
-                template.getPaymentTypeId(), template.getTransactionDate(),
-                template.getPaymentRecieptNumber(), template.getPaymentRecieptDate());
+    public static PaymentData createRecieptPaymentData(RecieptPaymentDataTemplate template) {
+        return new PaymentData(template.getTotalAmount(), template.getPersonnel(), template.getPaymentTypeId(),
+                template.getTransactionDate(), template.getPaymentRecieptNumber(), template.getPaymentRecieptDate());
     }
 
     public static PaymentData createPaymentData(PaymentDataTemplate template) {
-        return new PaymentData(template.getTotalAmount(), template.getPersonnel(),
-                template.getPaymentTypeId(), template.getTransactionDate());
+        return new PaymentData(template.getTotalAmount(), template.getPersonnel(), template.getPaymentTypeId(),
+                template.getTransactionDate());
     }
 
     public List<AccountPaymentData> getAccountPayments() {
-		return accountPayments;
-	}
+        return accountPayments;
+    }
 
-	public Short getPaymentTypeId() {
-		return paymentTypeId;
-	}
+    public Short getPaymentTypeId() {
+        return paymentTypeId;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
-	public Date getRecieptDate() {
-		return recieptDate;
-	}
+    public Date getRecieptDate() {
+        return recieptDate;
+    }
 
-	public String getRecieptNum() {
-		return receiptNum;
-	}
+    public String getRecieptNum() {
+        return receiptNum;
+    }
 
-	public Money getTotalAmount() {
-		return totalAmount;
-	}
+    public Money getTotalAmount() {
+        return totalAmount;
+    }
 
-	public Date getTransactionDate() {
-		return transactionDate;
-	}
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
 
-	private void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
-	}
+    private void setPersonnel(PersonnelBO personnel) {
+        this.personnel = personnel;
+    }
 
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
 
-	public void setCustomer(CustomerBO customer) {
-		this.customer = customer;
-	}
+    public void setCustomer(CustomerBO customer) {
+        this.customer = customer;
+    }
 
-	private void setPaymentTypeId(Short paymentTypeId) {
-		this.paymentTypeId = paymentTypeId;
-	}
+    private void setPaymentTypeId(Short paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
+    }
 
-	// FIXME: misspelled
-	public void setRecieptDate(Date recieptDate) {
-		this.recieptDate = recieptDate;
-	}
+    // FIXME: misspelled
+    public void setRecieptDate(Date recieptDate) {
+        this.recieptDate = recieptDate;
+    }
 
-	// FIXME: misspelled
-	public void setRecieptNum(String recieptNum) {
-		this.receiptNum = recieptNum;
-	}
+    // FIXME: misspelled
+    public void setRecieptNum(String recieptNum) {
+        this.receiptNum = recieptNum;
+    }
 
-	private void setTotalAmount(Money totalAmount) {
-		this.totalAmount = totalAmount;
-	}
+    private void setTotalAmount(Money totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
-	private void setTransactionDate(Date transactionDate) {
-		this.transactionDate = transactionDate;
-	}
+    private void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
 
-	public void addAccountPaymentData(AccountPaymentData accountPaymentData) {
-		accountPayments.add(accountPaymentData);
-	}
+    public void addAccountPaymentData(AccountPaymentData accountPaymentData) {
+        accountPayments.add(accountPaymentData);
+    }
 }

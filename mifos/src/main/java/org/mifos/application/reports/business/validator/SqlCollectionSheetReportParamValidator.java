@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.validator;
 
 import java.util.List;
@@ -28,16 +28,14 @@ import org.mifos.application.reports.business.CollectionSheetReportParameterForm
 import org.mifos.application.reports.business.SqlCollectionSheetReportParameterForm;
 
 public class SqlCollectionSheetReportParamValidator extends
-		AbstractReportParameterValidator<SqlCollectionSheetReportParameterForm> {
+        AbstractReportParameterValidator<SqlCollectionSheetReportParameterForm> {
 
-	public SqlCollectionSheetReportParamValidator(
-			List<String> applicableReportFilePaths) {
-		super(applicableReportFilePaths);
-	}
+    public SqlCollectionSheetReportParamValidator(List<String> applicableReportFilePaths) {
+        super(applicableReportFilePaths);
+    }
 
-	public SqlCollectionSheetReportParameterForm buildReportParameterForm(
-			HttpServletRequest request) {
-		return SqlCollectionSheetReportParameterForm.build(request);
-	}
+    public SqlCollectionSheetReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+        return SqlCollectionSheetReportParameterForm.build(request);
+    }
 
 }

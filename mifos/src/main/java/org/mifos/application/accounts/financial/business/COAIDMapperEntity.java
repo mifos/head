@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -26,27 +26,27 @@ import org.mifos.framework.business.PersistentObject;
  * Unused and candidate for removal.
  */
 public class COAIDMapperEntity extends PersistentObject {
-	private final Short constantId;
+    private final Short constantId;
 
-	private final COABO coa;
+    private final COABO coa;
 
-	protected COAIDMapperEntity() {
-		super();
-		constantId = null;
-		coa = null;
-	}
+    protected COAIDMapperEntity() {
+        super();
+        constantId = null;
+        coa = null;
+    }
 
-	public COAIDMapperEntity(Short constantId, COABO coa) {
-		this.constantId = constantId;
-		this.coa = coa;
-	}
+    public COAIDMapperEntity(Short constantId, COABO coa) {
+        this.constantId = constantId;
+        this.coa = coa;
+    }
 
-	public COABO getCoa() {
-		return coa;
-	}
+    public COABO getCoa() {
+        return coa;
+    }
 
-	public Short getConstantId() {
-		return constantId;
-	}
+    public Short getConstantId() {
+        return constantId;
+    }
 
 }

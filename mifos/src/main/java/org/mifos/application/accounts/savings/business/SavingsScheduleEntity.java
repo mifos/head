@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.business;
 
 import java.sql.Date;
@@ -29,53 +29,51 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsScheduleEntity extends AccountActionDateEntity {
-	protected Money deposit;
+    protected Money deposit;
 
-	protected Money depositPaid;
+    protected Money depositPaid;
 
-	protected SavingsScheduleEntity() {
-		super(null, null, null, null, null);
-	}
+    protected SavingsScheduleEntity() {
+        super(null, null, null, null, null);
+    }
 
-	public SavingsScheduleEntity(AccountBO account, CustomerBO customer,
-			Short installmentId, Date actionDate, PaymentStatus paymentStatus,
-			Money deposit) {
-		super(account, customer, installmentId, actionDate, paymentStatus);
-		this.deposit = deposit;
-		this.depositPaid = new Money();
-	}
+    public SavingsScheduleEntity(AccountBO account, CustomerBO customer, Short installmentId, Date actionDate,
+            PaymentStatus paymentStatus, Money deposit) {
+        super(account, customer, installmentId, actionDate, paymentStatus);
+        this.deposit = deposit;
+        this.depositPaid = new Money();
+    }
 
-	public Money getDeposit() {
-		return deposit;
-	}
+    public Money getDeposit() {
+        return deposit;
+    }
 
-	void setDeposit(Money deposit) {
-		this.deposit = deposit;
-	}
+    void setDeposit(Money deposit) {
+        this.deposit = deposit;
+    }
 
-	public Money getDepositPaid() {
-		return depositPaid;
-	}
+    public Money getDepositPaid() {
+        return depositPaid;
+    }
 
-	void setDepositPaid(Money depositPaid) {
-		this.depositPaid = depositPaid;
-	}
+    void setDepositPaid(Money depositPaid) {
+        this.depositPaid = depositPaid;
+    }
 
-	public Money getTotalDepositDue() {
-		return getDeposit().subtract(getDepositPaid());
-	}
+    public Money getTotalDepositDue() {
+        return getDeposit().subtract(getDepositPaid());
+    }
 
-	void setPaymentDetails(Money depositAmount,
-			PaymentStatus paymentStatus, Date paymentDate) {
-		this.depositPaid = this.depositPaid.add(depositAmount);
-		this.paymentStatus = paymentStatus.getValue();
-		this.paymentDate = paymentDate;
-	}
+    void setPaymentDetails(Money depositAmount, PaymentStatus paymentStatus, Date paymentDate) {
+        this.depositPaid = this.depositPaid.add(depositAmount);
+        this.paymentStatus = paymentStatus.getValue();
+        this.paymentDate = paymentDate;
+    }
 
-	void waiveDepositDue() {
-		Money depositDue = getTotalDepositDue();
-		deposit = deposit.subtract(depositDue);
-		setPaymentStatus(PaymentStatus.PAID);
-	}
-	
+    void waiveDepositDue() {
+        Money depositDue = getTotalDepositDue();
+        deposit = deposit.subtract(depositDue);
+        setPaymentStatus(PaymentStatus.PAID);
+    }
+
 }

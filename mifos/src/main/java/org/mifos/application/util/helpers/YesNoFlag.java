@@ -17,42 +17,42 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.util.helpers;
 
 import org.mifos.config.LocalizedTextLookup;
 
 public enum YesNoFlag implements LocalizedTextLookup {
-	NO((short) 0), YES((short) 1);
+    NO((short) 0), YES((short) 1);
 
-	Short value;
+    Short value;
 
-	YesNoFlag(Short value) {
-		this.value = value;
-	}
+    YesNoFlag(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static YesNoFlag fromInt(int value) {
-		for (YesNoFlag candidate : values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no field type " + value);
-	}
-	
-	public String getPropertiesKey() {
-		return "YesNoFlag." + toString();
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public boolean yes() {
-		return equals(YesNoFlag.YES);
-	}
-	
-	public boolean no() {
-		return !yes();
-	}
+    public static YesNoFlag fromInt(int value) {
+        for (YesNoFlag candidate : values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no field type " + value);
+    }
+
+    public String getPropertiesKey() {
+        return "YesNoFlag." + toString();
+    }
+
+    public boolean yes() {
+        return equals(YesNoFlag.YES);
+    }
+
+    public boolean no() {
+        return !yes();
+    }
 }

@@ -17,42 +17,42 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business;
 
 import org.mifos.framework.business.PersistentObject;
 
 public class GLCodeEntity extends PersistentObject {
-	private final Short glcodeId;
+    private final Short glcodeId;
 
-	private final String glcode;
+    private final String glcode;
 
-	private final COABO associatedCOA;
+    private final COABO associatedCOA;
 
-	protected GLCodeEntity() {
-		this(null, null);
-	}
+    protected GLCodeEntity() {
+        this(null, null);
+    }
 
-	public GLCodeEntity(Short glcodeId, String glcode) {
-		this.glcodeId = glcodeId;
-		this.glcode = glcode;
-		this.associatedCOA = null;
-	}
+    public GLCodeEntity(Short glcodeId, String glcode) {
+        this.glcodeId = glcodeId;
+        this.glcode = glcode;
+        this.associatedCOA = null;
+    }
 
-	public String getGlcode() {
-		return glcode;
-	}
+    public String getGlcode() {
+        return glcode;
+    }
 
-	public Short getGlcodeId() {
-		return glcodeId;
-	}
+    public Short getGlcodeId() {
+        return glcodeId;
+    }
 
-	public COABO getAssociatedCOA() {
-		return associatedCOA;
-	}
+    public COABO getAssociatedCOA() {
+        return associatedCOA;
+    }
 
     @Override
-	public String toString() {
+    public String toString() {
         return glcode;
     }
 }

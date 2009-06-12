@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.group.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,132 +53,103 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AddGroupMembershipAction extends BaseAction {
 
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.CLIENTLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
 
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return getGroupBusinessService();
+    }
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return getGroupBusinessService();
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("addGroupMembershipAction");
+        security.allow("loadSearch", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+        security.allow("previewParentAddClient", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+        security.allow("updateParent", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+        // security.allow("cancel",
+        // SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
 
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("addGroupMembershipAction");
-		security.allow("loadSearch",
-				SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
-		security.allow("previewParentAddClient",
-				SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
-		security.allow("updateParent",
-				SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
-	//	security.allow("cancel", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+        return security;
+    }
 
-		return security;
-	}
+    private GroupBusinessService getGroupBusinessService() {
+        return (GroupBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Group);
+    }
 
-	private GroupBusinessService getGroupBusinessService() {
-		return (GroupBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Group);
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
+        actionForm.setSearchString(null);
+        logger.debug("In AddGroupMembershipAction ::loadSearch  method ");
+        return mapping.findForward(ActionForwards.loadSearch_success.toString());
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
-		actionForm.setSearchString(null);
-		logger.debug("In AddGroupMembershipAction ::loadSearch  method ");
-		return mapping
-				.findForward(ActionForwards.loadSearch_success.toString());
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward previewParentAddClient(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.confirmAddClientToGroup_success.toString());
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward previewParentAddClient(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		return mapping
-				.findForward(ActionForwards.confirmAddClientToGroup_success
-						.toString());
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    @CloseSession
+    public ActionForward updateParent(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In AddGroupMembershipAction ::updateParent  method ");
+        AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
+        GroupBO addToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
+        if (!addToGroup.isActive()) {
+            throw new CustomerException(CustomerConstants.CLIENT_CANT_BE_ADDED_TO_INACTIVE_GROUP);
+        }
+        addToGroup.setUserContext(getUserContext(request));
+        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
+        checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	@CloseSession
-	public ActionForward updateParent(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		logger.debug("In AddGroupMembershipAction ::updateParent  method ");
-		AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
-		GroupBO addToGroup = (GroupBO) getCustomerBusinessService()
-				.getCustomer(actionForm.getParentGroupIdValue());
-		if(!addToGroup.isActive()) {
-			throw new CustomerException(CustomerConstants.CLIENT_CANT_BE_ADDED_TO_INACTIVE_GROUP);
-		}
-		addToGroup.setUserContext(getUserContext(request));
-		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
-		ClientBO client = getClientBusinessService().getClient(
-				clientInSession.getCustomerId());
-		checkVersionMismatch(clientInSession.getVersionNo(), client
-				.getVersionNo());
+        client.validateBeforeAddingClientToGroup();
 
-		client.validateBeforeAddingClientToGroup();
+        client.setVersionNo(clientInSession.getVersionNo());
+        client.setUserContext(getUserContext(request));
+        setInitialObjectForAuditLogging(client);
 
-		client.setVersionNo(clientInSession.getVersionNo());
-		client.setUserContext(getUserContext(request));
-		setInitialObjectForAuditLogging(client);
+        client.addClientToGroup(addToGroup);
 
-		client.addClientToGroup(addToGroup);
+        clientInSession = null;
+        addToGroup = null;
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
+        logger.debug("In AddGroupMembershipAction ::updateParent  method ");
 
-		clientInSession = null;
-		addToGroup = null;
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
-		logger.debug("In AddGroupMembershipAction ::updateParent  method ");
+        return mapping.findForward(ActionForwards.view_client_details_page.toString());
+    }
 
-		return mapping.findForward(ActionForwards.view_client_details_page
-				.toString());
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.cancel_success.toString());
+    }
 
+    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        String method = (String) request.getAttribute("methodCalled");
+        if (method.equalsIgnoreCase(Methods.loadSearch.toString())) {
+            return mapping.findForward(ActionForwards.loadSearch_success.toString());
+        }
+        if (method.equalsIgnoreCase(Methods.updateParent.toString())) {
+            return mapping.findForward(ActionForwards.confirmAddClientToGroup_success.toString());
+        }
+        return null;
+    }
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.cancel_success.toString());
-	}
+    private CustomerBusinessService getCustomerBusinessService() throws ServiceException {
+        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
+    }
 
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		if (method.equalsIgnoreCase(Methods.loadSearch.toString())) {
-			return mapping.findForward(ActionForwards.loadSearch_success
-					.toString());
-		}
-		if (method.equalsIgnoreCase(Methods.updateParent.toString())) {
-			return mapping
-					.findForward(ActionForwards.confirmAddClientToGroup_success
-							.toString());
-		}
-		return null;
-	}
+    private ClientBusinessService getClientBusinessService() throws ServiceException {
+        return (ClientBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Client);
+    }
 
-	private CustomerBusinessService getCustomerBusinessService()
-			throws ServiceException {
-		return (CustomerBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Customer);
-	}
-
-	private ClientBusinessService getClientBusinessService()
-			throws ServiceException {
-		return (ClientBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Client);
-	}
-	
-	
-	
-	
 }

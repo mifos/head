@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -25,11 +25,11 @@ import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 
 public class PrdCategoryStatusEntity extends MasterDataEntity {
 
-	PrdCategoryStatusEntity() {
-		super();
-	}
+    PrdCategoryStatusEntity() {
+        super();
+    }
 
-	PrdCategoryStatusEntity(PrdCategoryStatus prdCategoryStatus) {
-		super(prdCategoryStatus.getValue());
-	}
+    PrdCategoryStatusEntity(PrdCategoryStatus prdCategoryStatus) {
+        super(prdCategoryStatus.getValue());
+    }
 }

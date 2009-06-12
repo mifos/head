@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.validator;
 
 import java.util.Collection;
@@ -29,24 +29,22 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ReportParameterValidatorFactory {
-	private static Collection validators;
+    private static Collection validators;
 
-	public  ReportParameterValidator<ReportParameterForm> getValidator(
-			final String reportFilePath) {
-		initValidators();
-		return (ReportParameterValidator<ReportParameterForm>)CollectionUtils.find(validators, new Predicate() {
-			public boolean evaluate(Object validator) {
-				return ((ReportParameterValidator<ReportParameterForm>) validator)
-				.isApplicableToReportFilePath(reportFilePath);
-			}
-		});
-	}
-	
-	private void initValidators() {
-		if (validators == null) {
-			validators = new ClassPathXmlApplicationContext(
-					FilePaths.REPORT_PARAMETER_VALIDATOR_CONFIG)
-								.getBeansOfType(ReportParameterValidator.class).values();
-		}
-	}	
+    public ReportParameterValidator<ReportParameterForm> getValidator(final String reportFilePath) {
+        initValidators();
+        return (ReportParameterValidator<ReportParameterForm>) CollectionUtils.find(validators, new Predicate() {
+            public boolean evaluate(Object validator) {
+                return ((ReportParameterValidator<ReportParameterForm>) validator)
+                        .isApplicableToReportFilePath(reportFilePath);
+            }
+        });
+    }
+
+    private void initValidators() {
+        if (validators == null) {
+            validators = new ClassPathXmlApplicationContext(FilePaths.REPORT_PARAMETER_VALIDATOR_CONFIG)
+                    .getBeansOfType(ReportParameterValidator.class).values();
+        }
+    }
 }

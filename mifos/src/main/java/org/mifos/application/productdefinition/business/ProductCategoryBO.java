@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.office.business.OfficeBO;
@@ -36,162 +36,147 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class ProductCategoryBO extends BusinessObject {
 
-	private final Short productCategoryID;
+    private final Short productCategoryID;
 
-	private final ProductTypeEntity productType;
+    private final ProductTypeEntity productType;
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
-	private OfficeBO office;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private OfficeBO office;
 
-	private final String globalPrdCategoryNum;
+    private final String globalPrdCategoryNum;
 
-	private String productCategoryName;
+    private String productCategoryName;
 
-	private String productCategoryDesc;
+    private String productCategoryDesc;
 
-	private PrdCategoryStatusEntity prdCategoryStatus;
+    private PrdCategoryStatusEntity prdCategoryStatus;
 
-	private MifosLogger prdLoanLogger = MifosLogManager
-			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private MifosLogger prdLoanLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	public ProductCategoryBO(UserContext userContext,
-			ProductTypeEntity productType, String productCategoryName,
-			String productCategoryDesc) throws ProductDefinitionException {
-		super(userContext);
-		try {
-			prdLoanLogger.debug("Creating product category");
-			validateDuplicateProductCategoryName(productCategoryName);
-			this.productCategoryID = null;
-			this.productType = productType;
-			this.office = new OfficePersistence().getOffice(userContext
-					.getBranchId());
-			this.globalPrdCategoryNum = generatePrdCategoryNum();
-			this.productCategoryName = productCategoryName;
-			this.productCategoryDesc = productCategoryDesc;
-			this.prdCategoryStatus = new PrdCategoryStatusEntity(
-					PrdCategoryStatus.ACTIVE);
-			setCreateDetails();
-			prdLoanLogger.debug("Creation of product category done");
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    public ProductCategoryBO(UserContext userContext, ProductTypeEntity productType, String productCategoryName,
+            String productCategoryDesc) throws ProductDefinitionException {
+        super(userContext);
+        try {
+            prdLoanLogger.debug("Creating product category");
+            validateDuplicateProductCategoryName(productCategoryName);
+            this.productCategoryID = null;
+            this.productType = productType;
+            this.office = new OfficePersistence().getOffice(userContext.getBranchId());
+            this.globalPrdCategoryNum = generatePrdCategoryNum();
+            this.productCategoryName = productCategoryName;
+            this.productCategoryDesc = productCategoryDesc;
+            this.prdCategoryStatus = new PrdCategoryStatusEntity(PrdCategoryStatus.ACTIVE);
+            setCreateDetails();
+            prdLoanLogger.debug("Creation of product category done");
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
-	protected ProductCategoryBO() {
-		productCategoryID = null;
-		productType = null;
-		office = null;
-		globalPrdCategoryNum = null;
-	}
+    protected ProductCategoryBO() {
+        productCategoryID = null;
+        productType = null;
+        office = null;
+        globalPrdCategoryNum = null;
+    }
 
-	public ProductTypeEntity getProductType() {
-		return productType;
-	}
+    public ProductTypeEntity getProductType() {
+        return productType;
+    }
 
-	public String getProductCategoryDesc() {
-		return productCategoryDesc;
-	}
+    public String getProductCategoryDesc() {
+        return productCategoryDesc;
+    }
 
-	public void setProductCategoryDesc(String productCategoryDesc) {
-		this.productCategoryDesc = productCategoryDesc;
-	}
+    public void setProductCategoryDesc(String productCategoryDesc) {
+        this.productCategoryDesc = productCategoryDesc;
+    }
 
-	public Short getProductCategoryID() {
-		return productCategoryID;
-	}
+    public Short getProductCategoryID() {
+        return productCategoryID;
+    }
 
-	public String getProductCategoryName() {
-		return productCategoryName;
-	}
+    public String getProductCategoryName() {
+        return productCategoryName;
+    }
 
-	void setProductCategoryName(String productCategoryName) {
-		this.productCategoryName = productCategoryName;
-	}
+    void setProductCategoryName(String productCategoryName) {
+        this.productCategoryName = productCategoryName;
+    }
 
-	public PrdCategoryStatusEntity getPrdCategoryStatus() {
-		return prdCategoryStatus;
-	}
+    public PrdCategoryStatusEntity getPrdCategoryStatus() {
+        return prdCategoryStatus;
+    }
 
-	void setPrdCategoryStatus(PrdCategoryStatusEntity prdCategoryStatus) {
-		this.prdCategoryStatus = prdCategoryStatus;
-	}
+    void setPrdCategoryStatus(PrdCategoryStatusEntity prdCategoryStatus) {
+        this.prdCategoryStatus = prdCategoryStatus;
+    }
 
-	public String getGlobalPrdCategoryNum() {
-		return globalPrdCategoryNum;
-	}
+    public String getGlobalPrdCategoryNum() {
+        return globalPrdCategoryNum;
+    }
 
-	private String generatePrdCategoryNum() throws ProductDefinitionException {
-		prdLoanLogger.debug("Generating new product category global number");
-		StringBuilder globalPrdOfferingNum = new StringBuilder();
-		globalPrdOfferingNum.append(userContext.getBranchId());
-		globalPrdOfferingNum.append("-");
-		Short maxPrdID;
-		try {
-			maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-		globalPrdOfferingNum.append(StringUtils.lpad(String
-				.valueOf(maxPrdID != null ? maxPrdID + 1
-						: ProductDefinitionConstants.DEFAULTMAX), '0', 3));
-		prdLoanLogger
-				.debug("Generation of new product category global number done");
-		return globalPrdOfferingNum.toString();
-	}
+    private String generatePrdCategoryNum() throws ProductDefinitionException {
+        prdLoanLogger.debug("Generating new product category global number");
+        StringBuilder globalPrdOfferingNum = new StringBuilder();
+        globalPrdOfferingNum.append(userContext.getBranchId());
+        globalPrdOfferingNum.append("-");
+        Short maxPrdID;
+        try {
+            maxPrdID = new ProductCategoryPersistence().getMaxPrdCategoryId();
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+        globalPrdOfferingNum.append(StringUtils.lpad(String.valueOf(maxPrdID != null ? maxPrdID + 1
+                : ProductDefinitionConstants.DEFAULTMAX), '0', 3));
+        prdLoanLogger.debug("Generation of new product category global number done");
+        return globalPrdOfferingNum.toString();
+    }
 
-	private void validateDuplicateProductCategoryName(String productCategoryName)
-			throws ProductDefinitionException {
-		prdLoanLogger.debug("Checking for duplicate product category name");
-		try {
-			if (!new ProductCategoryPersistence().getProductCategory(
-					productCategoryName).equals(Integer.valueOf("0")))
-				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    private void validateDuplicateProductCategoryName(String productCategoryName) throws ProductDefinitionException {
+        prdLoanLogger.debug("Checking for duplicate product category name");
+        try {
+            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName).equals(Integer.valueOf("0")))
+                throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
-	private void validateDuplicateProductCategoryName(
-			String productCategoryName, Short productCategoryId)
-			throws ProductDefinitionException {
-		prdLoanLogger.debug("Checking for duplicate product category name");
-		try {
-			if (!new ProductCategoryPersistence().getProductCategory(
-					productCategoryName, productCategoryId).equals(
-					Integer.valueOf("0")))
-				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    private void validateDuplicateProductCategoryName(String productCategoryName, Short productCategoryId)
+            throws ProductDefinitionException {
+        prdLoanLogger.debug("Checking for duplicate product category name");
+        try {
+            if (!new ProductCategoryPersistence().getProductCategory(productCategoryName, productCategoryId).equals(
+                    Integer.valueOf("0")))
+                throw new ProductDefinitionException(ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
-	public void updateProductCategory(String productCategoryName,
-			String productCategoryDesc,
-			PrdCategoryStatusEntity prdCategoryStatus)
-			throws ProductDefinitionException {
-		prdLoanLogger.debug("Updating product category name");
-		validateDuplicateProductCategoryName(productCategoryName,
-				productCategoryID);
-		this.productCategoryName = productCategoryName;
-		this.productCategoryDesc = productCategoryDesc;
-		this.prdCategoryStatus = prdCategoryStatus;
-		try {
-			new ProductCategoryPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-		prdLoanLogger.debug("Updating product category done");
-	}
+    public void updateProductCategory(String productCategoryName, String productCategoryDesc,
+            PrdCategoryStatusEntity prdCategoryStatus) throws ProductDefinitionException {
+        prdLoanLogger.debug("Updating product category name");
+        validateDuplicateProductCategoryName(productCategoryName, productCategoryID);
+        this.productCategoryName = productCategoryName;
+        this.productCategoryDesc = productCategoryDesc;
+        this.prdCategoryStatus = prdCategoryStatus;
+        try {
+            new ProductCategoryPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+        prdLoanLogger.debug("Updating product category done");
+    }
 
-	public void save() throws ProductDefinitionException {
-		try {
-			new ProductCategoryPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    public void save() throws ProductDefinitionException {
+        try {
+            new ProductCategoryPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
 }

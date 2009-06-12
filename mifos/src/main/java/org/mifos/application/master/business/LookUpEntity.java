@@ -17,63 +17,63 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import java.util.Set;
 
 /**
- * {@link LookUpEntity} is now deprecated and should not be used.
- * Use {@link MifosLookUpEntity} instead which provides the same functionality
- * and includes the constants previously defined here.
+ * {@link LookUpEntity} is now deprecated and should not be used. Use
+ * {@link MifosLookUpEntity} instead which provides the same functionality and
+ * includes the constants previously defined here.
  * 
- * This class can probably be deleted now-- will make sure no issues show up first.
+ * This class can probably be deleted now-- will make sure no issues show up
+ * first.
  */
 public class LookUpEntity {
 
-	public LookUpEntity() {
-		super();
-	}
+    public LookUpEntity() {
+        super();
+    }
 
-	private Short entityId;
+    private Short entityId;
 
-	private String entityType;
+    private String entityType;
 
-	private Set lookUpLabelSet;
+    private Set lookUpLabelSet;
 
-	private Set lookUpValueSet;
+    private Set lookUpValueSet;
 
+    public Short getEntityId() {
+        return entityId;
+    }
 
-	public Short getEntityId() {
-		return entityId;
-	}
+    public void setEntityId(Short entityId) {
+        this.entityId = entityId;
+    }
 
-	public void setEntityId(Short entityId) {
-		this.entityId = entityId;
-	}
+    public String getEntityType() {
+        return entityType;
+    }
 
-	public String getEntityType() {
-		return entityType;
-	}
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
 
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
-	}
+    public Set getLookUpLabelSet() {
+        return lookUpLabelSet;
+    }
 
-	public Set getLookUpLabelSet() {
-		return lookUpLabelSet;
-	}
+    public void setLookUpLabelSet(Set lookUpLabelSet) {
+        this.lookUpLabelSet = lookUpLabelSet;
+    }
 
-	public void setLookUpLabelSet(Set lookUpLabelSet) {
-		this.lookUpLabelSet = lookUpLabelSet;
-	}
+    public Set getLookUpValueSet() {
+        return lookUpValueSet;
+    }
 
-	public Set getLookUpValueSet() {
-		return lookUpValueSet;
-	}
-
-	public void setLookUpValueSet(Set lookUpValueSet) {
-		this.lookUpValueSet = lookUpValueSet;
-	}
+    public void setLookUpValueSet(Set lookUpValueSet) {
+        this.lookUpValueSet = lookUpValueSet;
+    }
 
 }

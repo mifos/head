@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.meeting.business.MeetingBO;
@@ -26,59 +26,57 @@ import org.mifos.framework.business.PersistentObject;
 
 public class PrdOfferingMeetingEntity extends PersistentObject {
 
-	private final Short prdOfferingMeetingId;
+    private final Short prdOfferingMeetingId;
 
-	private MeetingBO meeting;
+    private MeetingBO meeting;
 
-	private final PrdOfferingBO prdOffering;
+    private final PrdOfferingBO prdOffering;
 
-	private final Short meetingType;
+    private final Short meetingType;
 
-	public PrdOfferingMeetingEntity(MeetingBO meeting,
-			PrdOfferingBO prdOffering, MeetingType meetingType) {
-		prdOfferingMeetingId = null;
-		this.meeting = meeting;
-		this.prdOffering = prdOffering;
-		this.meetingType = meetingType.getValue();
-	}
+    public PrdOfferingMeetingEntity(MeetingBO meeting, PrdOfferingBO prdOffering, MeetingType meetingType) {
+        prdOfferingMeetingId = null;
+        this.meeting = meeting;
+        this.prdOffering = prdOffering;
+        this.meetingType = meetingType.getValue();
+    }
 
-	protected PrdOfferingMeetingEntity() {
-		prdOfferingMeetingId = null;
-		prdOffering = null;
-		meetingType = null;
-	}
+    protected PrdOfferingMeetingEntity() {
+        prdOfferingMeetingId = null;
+        prdOffering = null;
+        meetingType = null;
+    }
 
-	private Short getPrdOfferingMeetingId() {
-		return prdOfferingMeetingId;
-	}
+    private Short getPrdOfferingMeetingId() {
+        return prdOfferingMeetingId;
+    }
 
-	public MeetingType getprdOfferingMeetingType() {
-		return MeetingType.fromInt(meetingType);
-	}
+    public MeetingType getprdOfferingMeetingType() {
+        return MeetingType.fromInt(meetingType);
+    }
 
-	private PrdOfferingBO getPrdOffering() {
-		return prdOffering;
-	}
+    private PrdOfferingBO getPrdOffering() {
+        return prdOffering;
+    }
 
-	public MeetingBO getMeeting() {
-		return meeting;
-	}
+    public MeetingBO getMeeting() {
+        return meeting;
+    }
 
-	public void setMeeting(MeetingBO meeting) {
-		this.meeting = meeting;
-	}
+    public void setMeeting(MeetingBO meeting) {
+        this.meeting = meeting;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		PrdOfferingMeetingEntity prdOfferingMeeting = null;
-		boolean value = false;
-		if (object != null) {
-			prdOfferingMeeting = (PrdOfferingMeetingEntity) object;
-			if (prdOfferingMeeting.getPrdOfferingMeetingId().equals(
-					this.prdOfferingMeetingId)) {
-				value = true;
-			}
-		}
-		return value;
-	}
+    @Override
+    public boolean equals(Object object) {
+        PrdOfferingMeetingEntity prdOfferingMeeting = null;
+        boolean value = false;
+        if (object != null) {
+            prdOfferingMeeting = (PrdOfferingMeetingEntity) object;
+            if (prdOfferingMeeting.getPrdOfferingMeetingId().equals(this.prdOfferingMeetingId)) {
+                value = true;
+            }
+        }
+        return value;
+    }
 }

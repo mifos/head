@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import java.util.Date;
@@ -42,441 +42,397 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 /**
- * A product is a set of rules (interest rate, number of installments,
- * maximum amount, etc) which describes what an MFI offers.
+ * A product is a set of rules (interest rate, number of installments, maximum
+ * amount, etc) which describes what an MFI offers.
  * 
- * Although we may sometimes call these "offerings", the preferred
- * word is "products" (that is what they are called in the functional
- * specification, and the wider microfinance industry).
+ * Although we may sometimes call these "offerings", the preferred word is
+ * "products" (that is what they are called in the functional specification, and
+ * the wider microfinance industry).
  */
 public abstract class PrdOfferingBO extends BusinessObject {
 
-	private final Short prdOfferingId;
+    private final Short prdOfferingId;
 
-	private String prdOfferingName;
+    private String prdOfferingName;
 
-	private String prdOfferingShortName;
+    private String prdOfferingShortName;
 
-	private final String globalPrdOfferingNum;
+    private final String globalPrdOfferingNum;
 
-	private final ProductTypeEntity prdType;
+    private final ProductTypeEntity prdType;
 
-	private ProductCategoryBO prdCategory;
+    private ProductCategoryBO prdCategory;
 
-	private PrdStatusEntity prdStatus;
+    private PrdStatusEntity prdStatus;
 
-	private PrdApplicableMasterEntity prdApplicableMaster;
+    private PrdApplicableMasterEntity prdApplicableMaster;
 
-	private Date startDate;
+    private Date startDate;
 
-	private Date endDate;
+    private Date endDate;
 
-	private final OfficeBO office;
+    private final OfficeBO office;
 
-	private String description;
+    private String description;
 
-	private Set<PrdOfferingBO> collectionProductMix;
-	
-	private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed products
-	
-	private Short prdMixFlag;  // Tagging products for which mixes were defined
-	
-	private MifosLogger prdLogger = MifosLogManager
-			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private Set<PrdOfferingBO> collectionProductMix;
 
-	protected PrdOfferingBO() {
-		this(null, null, null, null);
-		prdApplicableMaster = null;
-		collectionProductMix=null;
-		prdOfferingNotAllowedId=null;
-	}
-	
-	protected PrdOfferingBO(Short prdOfferingId, String globalPrdOfferingNum, ProductTypeEntity prdType,
-			OfficeBO office){
-		this.prdOfferingId = prdOfferingId;
-		this.globalPrdOfferingNum = globalPrdOfferingNum;
-		this.prdType = prdType;
-		this.office = office;		
-	}
+    private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed
+                                                        // products
 
-	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
-			String prdOfferingShortName, ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
-			throws ProductDefinitionException {
-		this(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
-				prdApplicableMaster, startDate,null,null);
-	}
+    private Short prdMixFlag; // Tagging products for which mixes were defined
 
-	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
-			String prdOfferingShortName, ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
-			Date endDate, String description) throws ProductDefinitionException {
-		super(userContext);
-		prdLogger.debug("creating product offering");
-		validateUserContext(userContext);
-		vaildate(prdOfferingName, prdOfferingShortName, prdCategory,
-				prdApplicableMaster, startDate);
-		validateStartDateAgainstCurrentDate(startDate);
-		validateEndDateAgainstCurrentDate(startDate, endDate);
-		validateDuplicateProductOfferingName(prdOfferingName);
-		validateDuplicateProductOfferingShortName(prdOfferingShortName);
-		prdOfferingId = null;
-		this.prdOfferingName = prdOfferingName;
-		this.prdOfferingShortName = prdOfferingShortName;
-		this.prdCategory = prdCategory;
-		this.prdType = prdCategory.getProductType();
-		this.prdApplicableMaster = prdApplicableMaster;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.description = description;
-		this.globalPrdOfferingNum = generatePrdOfferingGlobalNum();
-		this.prdStatus = getPrdStatus(startDate, prdType);
-		
-		try {
-			this.office = new OfficePersistence().getOffice(userContext
-					.getBranchId());
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-		prdLogger.debug("creating product offering done");
-	}
+    private MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	protected PrdOfferingBO(Short prdOfferingId) {
-		this(prdOfferingId, null, null, null);		
-	}
+    protected PrdOfferingBO() {
+        this(null, null, null, null);
+        prdApplicableMaster = null;
+        collectionProductMix = null;
+        prdOfferingNotAllowedId = null;
+    }
 
-	public Short getPrdOfferingId() {
-		return prdOfferingId;
-	}
+    protected PrdOfferingBO(Short prdOfferingId, String globalPrdOfferingNum, ProductTypeEntity prdType, OfficeBO office) {
+        this.prdOfferingId = prdOfferingId;
+        this.globalPrdOfferingNum = globalPrdOfferingNum;
+        this.prdType = prdType;
+        this.office = office;
+    }
 
-	public String getPrdOfferingName() {
-		return prdOfferingName;
-	}
+    protected PrdOfferingBO(UserContext userContext, String prdOfferingName, String prdOfferingShortName,
+            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
+            throws ProductDefinitionException {
+        this(userContext, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate, null,
+                null);
+    }
 
-	public String getPrdOfferingShortName() {
-		return prdOfferingShortName;
-	}
+    protected PrdOfferingBO(UserContext userContext, String prdOfferingName, String prdOfferingShortName,
+            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate,
+            String description) throws ProductDefinitionException {
+        super(userContext);
+        prdLogger.debug("creating product offering");
+        validateUserContext(userContext);
+        vaildate(prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate);
+        validateStartDateAgainstCurrentDate(startDate);
+        validateEndDateAgainstCurrentDate(startDate, endDate);
+        validateDuplicateProductOfferingName(prdOfferingName);
+        validateDuplicateProductOfferingShortName(prdOfferingShortName);
+        prdOfferingId = null;
+        this.prdOfferingName = prdOfferingName;
+        this.prdOfferingShortName = prdOfferingShortName;
+        this.prdCategory = prdCategory;
+        this.prdType = prdCategory.getProductType();
+        this.prdApplicableMaster = prdApplicableMaster;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        this.globalPrdOfferingNum = generatePrdOfferingGlobalNum();
+        this.prdStatus = getPrdStatus(startDate, prdType);
 
-	public String getGlobalPrdOfferingNum() {
-		return globalPrdOfferingNum;
-	}
+        try {
+            this.office = new OfficePersistence().getOffice(userContext.getBranchId());
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+        prdLogger.debug("creating product offering done");
+    }
 
-	public ProductTypeEntity getPrdType() {
-		return prdType;
-	}
+    protected PrdOfferingBO(Short prdOfferingId) {
+        this(prdOfferingId, null, null, null);
+    }
 
-	public ProductCategoryBO getPrdCategory() {
-		return prdCategory;
-	}
+    public Short getPrdOfferingId() {
+        return prdOfferingId;
+    }
 
-	/**
-	 * Most callers will want {@link #isActive()} instead
-	 * (or perhaps {@link #getStatus()}.
-	 */
-	public PrdStatusEntity getPrdStatus() {
-		return prdStatus;
-	}
-	
-	public PrdStatus getStatus() {
-		return PrdStatus.fromInt(prdStatus.getOfferingStatusId());
-	}
+    public String getPrdOfferingName() {
+        return prdOfferingName;
+    }
 
-	public abstract boolean isActive();
+    public String getPrdOfferingShortName() {
+        return prdOfferingShortName;
+    }
 
-	public PrdApplicableMasterEntity getPrdApplicableMaster() {
-		return prdApplicableMaster;
-	}
-	
-	public ApplicableTo getPrdApplicableMasterEnum() {
-		return prdApplicableMaster.asEnum();
-	}
+    public String getGlobalPrdOfferingNum() {
+        return globalPrdOfferingNum;
+    }
 
-	public Date getStartDate() {
-		return startDate;
-	}
+    public ProductTypeEntity getPrdType() {
+        return prdType;
+    }
 
-	public Date getEndDate() {
-		return endDate;
-	}
+    public ProductCategoryBO getPrdCategory() {
+        return prdCategory;
+    }
 
-	public OfficeBO getOffice() {
-		return office;
-	}
+    /**
+     * Most callers will want {@link #isActive()} instead (or perhaps
+     * {@link #getStatus()}.
+     */
+    public PrdStatusEntity getPrdStatus() {
+        return prdStatus;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public PrdStatus getStatus() {
+        return PrdStatus.fromInt(prdStatus.getOfferingStatusId());
+    }
 
-	void setPrdOfferingName(String prdOfferingName) {
-		this.prdOfferingName = prdOfferingName;
-	}
+    public abstract boolean isActive();
 
-	void setPrdOfferingShortName(String prdOfferingShortName) {
-		this.prdOfferingShortName = prdOfferingShortName;
-	}
+    public PrdApplicableMasterEntity getPrdApplicableMaster() {
+        return prdApplicableMaster;
+    }
 
-	public void setPrdCategory(ProductCategoryBO prdCategory) {
-		this.prdCategory = prdCategory;
-	}
+    public ApplicableTo getPrdApplicableMasterEnum() {
+        return prdApplicableMaster.asEnum();
+    }
 
-	public void setPrdStatus(PrdStatusEntity prdStatus) {
-		this.prdStatus = prdStatus;
-	}
-	
-	public void setPrdApplicableMaster(
-			PrdApplicableMasterEntity prdApplicableMaster) {
-		this.prdApplicableMaster = prdApplicableMaster;
-	}
+    public Date getStartDate() {
+        return startDate;
+    }
 
-	void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+    public Date getEndDate() {
+        return endDate;
+    }
 
-	void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public OfficeBO getOffice() {
+        return office;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public Set<PrdOfferingBO> getCollectionProductMix() {
-		return collectionProductMix;
-	}
+    void setPrdOfferingName(String prdOfferingName) {
+        this.prdOfferingName = prdOfferingName;
+    }
 
-	public void setCollectionProductMix(Set<PrdOfferingBO> collectionProductMix) {
-		this.collectionProductMix = collectionProductMix;
-	}
+    void setPrdOfferingShortName(String prdOfferingShortName) {
+        this.prdOfferingShortName = prdOfferingShortName;
+    }
 
-	public Set<PrdOfferingBO> getPrdOfferingNotAllowedId() {
-		return prdOfferingNotAllowedId;
-	}
+    public void setPrdCategory(ProductCategoryBO prdCategory) {
+        this.prdCategory = prdCategory;
+    }
 
-	public void setPrdOfferingNotAllowedId(
-			Set<PrdOfferingBO> prdOfferingNotAllowedId) {
-		this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
-	}
+    public void setPrdStatus(PrdStatusEntity prdStatus) {
+        this.prdStatus = prdStatus;
+    }
 
+    public void setPrdApplicableMaster(PrdApplicableMasterEntity prdApplicableMaster) {
+        this.prdApplicableMaster = prdApplicableMaster;
+    }
 
-	public Short getPrdMixFlag() {
-		return prdMixFlag;
-	}
+    void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-	public void setPrdMixFlag(Short prdMixFlag) {
-		this.prdMixFlag = prdMixFlag;
-	}
+    void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	private String generatePrdOfferingGlobalNum()
-			throws ProductDefinitionException {
-		prdLogger.debug("Generating new product Offering global number");
-		StringBuilder globalPrdOfferingNum = new StringBuilder();
-		globalPrdOfferingNum.append(userContext.getBranchId());
-		globalPrdOfferingNum.append("-");
-		Short maxPrdID = null;
-		try {
-			maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-		globalPrdOfferingNum.append(StringUtils.lpad(String
-				.valueOf(maxPrdID != null ? maxPrdID + 1
-						: ProductDefinitionConstants.DEFAULTMAX+ 1) , '0', 3));
-		prdLogger.debug("Generation of new product Offering global number done"
-				+ globalPrdOfferingNum);
-		return globalPrdOfferingNum.toString();
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	private void vaildate(String prdOfferingName, String prdOfferingShortName,
-			ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
-			throws ProductDefinitionException {
-		prdLogger.debug("Validating the fields in Prd Offering");
-		if (prdOfferingName == null || prdOfferingShortName == null
-				|| prdCategory == null || prdApplicableMaster == null
-				|| (prdOfferingShortName.length() > 4) || startDate == null) {
-			throw new ProductDefinitionException(
-					ProductDefinitionConstants.ERROR_CREATE);
-		}
-		prdLogger.debug("Validation of the fields in Prd Offering done.");
-	}
+    public Set<PrdOfferingBO> getCollectionProductMix() {
+        return collectionProductMix;
+    }
 
-	private void validateUserContext(UserContext userContext)
-			throws ProductDefinitionException {
-		prdLogger.debug("Validating the usercontext in Prd Offering");
-		if (userContext == null) {
-			throw new ProductDefinitionException(
-					ProductDefinitionConstants.ERROR_CREATE);
-		}
-		prdLogger.debug("Validation of the fields in Prd Offering done.");
-	}
+    public void setCollectionProductMix(Set<PrdOfferingBO> collectionProductMix) {
+        this.collectionProductMix = collectionProductMix;
+    }
 
-	protected void validateStartDateAgainstCurrentDate(Date startDate)
-			throws ProductDefinitionException {
-		if (DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
-				DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
-			throw new ProductDefinitionException(
-					ProductDefinitionConstants.INVALIDSTARTDATE);
-		}
-	}
+    public Set<PrdOfferingBO> getPrdOfferingNotAllowedId() {
+        return prdOfferingNotAllowedId;
+    }
 
-	private void validateEndDateAgainstCurrentDate(Date startDate, Date endDate)
-			throws ProductDefinitionException {
-		if (endDate != null
-				&& DateUtils.getDateWithoutTimeStamp(startDate.getTime())
-						.compareTo(
-								DateUtils.getDateWithoutTimeStamp(endDate
-										.getTime())) >= 0) {
-			throw new ProductDefinitionException(
-					ProductDefinitionConstants.INVALIDENDDATE);
-		}
-	}
+    public void setPrdOfferingNotAllowedId(Set<PrdOfferingBO> prdOfferingNotAllowedId) {
+        this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
+    }
 
-	private PrdStatusEntity getPrdStatus(Date startDate,
-			ProductTypeEntity prdType) throws ProductDefinitionException {
-		prdLogger
-				.debug("getting the Product status for prdouct offering with start date :"
-						+ startDate
-						+ " and product Type :"
-						+ prdType.getProductTypeID());
-		PrdStatus prdStatus = null;
-		if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0)
-			prdStatus = getActivePrdStatus(prdType);
-		else
-			prdStatus = getInActivePrdStatus(prdType);
-		try {
-			prdLogger.debug("getting the Product status for product status :"
-					+ prdStatus);
-			return new PrdOfferingPersistence().getPrdStatus(prdStatus);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    public Short getPrdMixFlag() {
+        return prdMixFlag;
+    }
 
-	private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
-		prdLogger.debug("getting the Active Product status for product Type :"
-				+ prdType.getProductTypeID());
-		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
-			return PrdStatus.LOAN_ACTIVE;
-		else
-			return PrdStatus.SAVINGS_ACTIVE;
-	}
+    public void setPrdMixFlag(Short prdMixFlag) {
+        this.prdMixFlag = prdMixFlag;
+    }
 
-	private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
-		prdLogger
-				.debug("getting the In Active Product status for product Type :"
-						+ prdType.getProductTypeID());
-		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
-			return PrdStatus.LOAN_INACTIVE;
-		else
-			return PrdStatus.SAVINGS_INACTIVE;
-	}
+    private String generatePrdOfferingGlobalNum() throws ProductDefinitionException {
+        prdLogger.debug("Generating new product Offering global number");
+        StringBuilder globalPrdOfferingNum = new StringBuilder();
+        globalPrdOfferingNum.append(userContext.getBranchId());
+        globalPrdOfferingNum.append("-");
+        Short maxPrdID = null;
+        try {
+            maxPrdID = new PrdOfferingPersistence().getMaxPrdOffering();
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+        globalPrdOfferingNum.append(StringUtils.lpad(String.valueOf(maxPrdID != null ? maxPrdID + 1
+                : ProductDefinitionConstants.DEFAULTMAX + 1), '0', 3));
+        prdLogger.debug("Generation of new product Offering global number done" + globalPrdOfferingNum);
+        return globalPrdOfferingNum.toString();
+    }
 
-	private void validateDuplicateProductOfferingName(String productOfferingName)
-			throws ProductDefinitionException {
-		prdLogger.debug("Checking for duplicate product offering name");
-		try {
-			if (!new PrdOfferingPersistence().getProductOfferingNameCount(
-					productOfferingName).equals(Integer.valueOf("0")))
-				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLPRDINSTNAME);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    private void vaildate(String prdOfferingName, String prdOfferingShortName, ProductCategoryBO prdCategory,
+            PrdApplicableMasterEntity prdApplicableMaster, Date startDate) throws ProductDefinitionException {
+        prdLogger.debug("Validating the fields in Prd Offering");
+        if (prdOfferingName == null || prdOfferingShortName == null || prdCategory == null
+                || prdApplicableMaster == null || (prdOfferingShortName.length() > 4) || startDate == null) {
+            throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
+        }
+        prdLogger.debug("Validation of the fields in Prd Offering done.");
+    }
 
-	private void validateDuplicateProductOfferingShortName(
-			String productOfferingShortName) throws ProductDefinitionException {
-		prdLogger.debug("Checking for duplicate product offering short name");
-		try {
-			if (!new PrdOfferingPersistence().getProductOfferingShortNameCount(
-					productOfferingShortName).equals(Integer.valueOf("0")))
-				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLPRDINSTSHORTNAME);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    private void validateUserContext(UserContext userContext) throws ProductDefinitionException {
+        prdLogger.debug("Validating the usercontext in Prd Offering");
+        if (userContext == null) {
+            throw new ProductDefinitionException(ProductDefinitionConstants.ERROR_CREATE);
+        }
+        prdLogger.debug("Validation of the fields in Prd Offering done.");
+    }
 
-	public void update(Short userId, String prdOfferingName,
-			String prdOfferingShortName, ProductCategoryBO prdCategory,
-			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
-			Date endDate, String description, PrdStatus status)
-			throws ProductDefinitionException {
-		vaildate(prdOfferingName, prdOfferingShortName, prdCategory,
-				prdApplicableMaster, startDate);
-		validateStartDateForUpdate(startDate);
-		validateEndDateAgainstCurrentDate(startDate, endDate);
-		if (!prdOfferingName.equals(this.prdOfferingName))
-			validateDuplicateProductOfferingName(prdOfferingName);
-		if (!prdOfferingShortName.equals(this.prdOfferingShortName))
-			validateDuplicateProductOfferingShortName(prdOfferingShortName);
-		this.prdOfferingName = prdOfferingName;
-		this.prdOfferingShortName = prdOfferingShortName;
-		this.prdCategory = prdCategory;
-		this.prdApplicableMaster = prdApplicableMaster;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.description = description;
-		try {
-			this.prdStatus = new PrdOfferingPersistence().getPrdStatus(status);
-		} catch (PersistenceException pe) {
-			throw new ProductDefinitionException(pe);
-		}
-		prdLogger.debug("creating product offering done");
+    protected void validateStartDateAgainstCurrentDate(Date startDate) throws ProductDefinitionException {
+        if (DateUtils.getDateWithoutTimeStamp(startDate.getTime())
+                .compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {
+            throw new ProductDefinitionException(ProductDefinitionConstants.INVALIDSTARTDATE);
+        }
+    }
 
-	}
+    private void validateEndDateAgainstCurrentDate(Date startDate, Date endDate) throws ProductDefinitionException {
+        if (endDate != null
+                && DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
+                        DateUtils.getDateWithoutTimeStamp(endDate.getTime())) >= 0) {
+            throw new ProductDefinitionException(ProductDefinitionConstants.INVALIDENDDATE);
+        }
+    }
 
-	private void validateStartDateForUpdate(Date startDate)
-			throws ProductDefinitionException {
-		if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())
-				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
-				&& DateUtils.getDateWithoutTimeStamp(startDate.getTime())
-						.compareTo(
-								DateUtils
-										.getDateWithoutTimeStamp(this.startDate
-												.getTime())) != 0) {
-			throw new ProductDefinitionException(
-					ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
-		} else if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())
-				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
-			validateStartDateAgainstCurrentDate(startDate);
-		}
+    private PrdStatusEntity getPrdStatus(Date startDate, ProductTypeEntity prdType) throws ProductDefinitionException {
+        prdLogger.debug("getting the Product status for prdouct offering with start date :" + startDate
+                + " and product Type :" + prdType.getProductTypeID());
+        PrdStatus prdStatus = null;
+        if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0)
+            prdStatus = getActivePrdStatus(prdType);
+        else
+            prdStatus = getInActivePrdStatus(prdType);
+        try {
+            prdLogger.debug("getting the Product status for product status :" + prdStatus);
+            return new PrdOfferingPersistence().getPrdStatus(prdStatus);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
-	}
+    private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
+        prdLogger.debug("getting the Active Product status for product Type :" + prdType.getProductTypeID());
+        if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+            return PrdStatus.LOAN_ACTIVE;
+        else
+            return PrdStatus.SAVINGS_ACTIVE;
+    }
 
-	public void updatePrdOfferingFlag()
-			throws PersistenceException {
-		this.setPrdMixFlag(YesNoFlag.YES.getValue());
-		new PrdOfferingPersistence().createOrUpdate(this);
-	}
+    private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
+        prdLogger.debug("getting the In Active Product status for product Type :" + prdType.getProductTypeID());
+        if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+            return PrdStatus.LOAN_INACTIVE;
+        else
+            return PrdStatus.SAVINGS_INACTIVE;
+    }
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + ((prdOfferingId == null) ? 0 : prdOfferingId.hashCode());
-		return result;
-	}
+    private void validateDuplicateProductOfferingName(String productOfferingName) throws ProductDefinitionException {
+        prdLogger.debug("Checking for duplicate product offering name");
+        try {
+            if (!new PrdOfferingPersistence().getProductOfferingNameCount(productOfferingName).equals(
+                    Integer.valueOf("0")))
+                throw new ProductDefinitionException(ProductDefinitionConstants.DUPLPRDINSTNAME);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final PrdOfferingBO other = (PrdOfferingBO) obj;
-		return isOfSameOffering(other);
-	}
+    private void validateDuplicateProductOfferingShortName(String productOfferingShortName)
+            throws ProductDefinitionException {
+        prdLogger.debug("Checking for duplicate product offering short name");
+        try {
+            if (!new PrdOfferingPersistence().getProductOfferingShortNameCount(productOfferingShortName).equals(
+                    Integer.valueOf("0")))
+                throw new ProductDefinitionException(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 
-	public boolean isOfSameOffering(final PrdOfferingBO other) {
-		if (prdOfferingId == null) {
-			if (other.prdOfferingId != null)
-				return false;
-		}
-		else if (!prdOfferingId.equals(other.getPrdOfferingId()))
-			return false;
-		return true;
-	}
+    public void update(Short userId, String prdOfferingName, String prdOfferingShortName,
+            ProductCategoryBO prdCategory, PrdApplicableMasterEntity prdApplicableMaster, Date startDate, Date endDate,
+            String description, PrdStatus status) throws ProductDefinitionException {
+        vaildate(prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate);
+        validateStartDateForUpdate(startDate);
+        validateEndDateAgainstCurrentDate(startDate, endDate);
+        if (!prdOfferingName.equals(this.prdOfferingName))
+            validateDuplicateProductOfferingName(prdOfferingName);
+        if (!prdOfferingShortName.equals(this.prdOfferingShortName))
+            validateDuplicateProductOfferingShortName(prdOfferingShortName);
+        this.prdOfferingName = prdOfferingName;
+        this.prdOfferingShortName = prdOfferingShortName;
+        this.prdCategory = prdCategory;
+        this.prdApplicableMaster = prdApplicableMaster;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        try {
+            this.prdStatus = new PrdOfferingPersistence().getPrdStatus(status);
+        } catch (PersistenceException pe) {
+            throw new ProductDefinitionException(pe);
+        }
+        prdLogger.debug("creating product offering done");
+
+    }
+
+    private void validateStartDateForUpdate(Date startDate) throws ProductDefinitionException {
+        if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime()).compareTo(
+                DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
+                && DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
+                        DateUtils.getDateWithoutTimeStamp(this.startDate.getTime())) != 0) {
+            throw new ProductDefinitionException(ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
+        } else if (DateUtils.getDateWithoutTimeStamp(this.startDate.getTime()).compareTo(
+                DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+            validateStartDateAgainstCurrentDate(startDate);
+        }
+
+    }
+
+    public void updatePrdOfferingFlag() throws PersistenceException {
+        this.setPrdMixFlag(YesNoFlag.YES.getValue());
+        new PrdOfferingPersistence().createOrUpdate(this);
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + ((prdOfferingId == null) ? 0 : prdOfferingId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final PrdOfferingBO other = (PrdOfferingBO) obj;
+        return isOfSameOffering(other);
+    }
+
+    public boolean isOfSameOffering(final PrdOfferingBO other) {
+        if (prdOfferingId == null) {
+            if (other.prdOfferingId != null)
+                return false;
+        } else if (!prdOfferingId.equals(other.getPrdOfferingId()))
+            return false;
+        return true;
+    }
 }

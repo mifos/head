@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
-
 public abstract class LoanAmountOption extends AmountRange {
-	private Double defaultLoanAmount;
-	private final LoanOfferingBO loanOffering;
+    private Double defaultLoanAmount;
+    private final LoanOfferingBO loanOffering;
 
-	public LoanAmountOption(Double minLoanAmount, Double maxLoanAmount,
-			Double defaultLoanAmount, LoanOfferingBO loanOffering) {
-		super(minLoanAmount, maxLoanAmount);
-		this.defaultLoanAmount = defaultLoanAmount;
-		this.loanOffering = loanOffering;
-	}
+    public LoanAmountOption(Double minLoanAmount, Double maxLoanAmount, Double defaultLoanAmount,
+            LoanOfferingBO loanOffering) {
+        super(minLoanAmount, maxLoanAmount);
+        this.defaultLoanAmount = defaultLoanAmount;
+        this.loanOffering = loanOffering;
+    }
 
-	public Double getDefaultLoanAmount() {
-		return defaultLoanAmount;
-	}
+    public Double getDefaultLoanAmount() {
+        return defaultLoanAmount;
+    }
 
-	public void setDefaultLoanAmount(Double defaultLoanAmount) {
-		this.defaultLoanAmount = defaultLoanAmount;
-	}
+    public void setDefaultLoanAmount(Double defaultLoanAmount) {
+        this.defaultLoanAmount = defaultLoanAmount;
+    }
 
-	public LoanOfferingBO getLoanOffering() {
-		return loanOffering;
-	}
+    public LoanOfferingBO getLoanOffering() {
+        return loanOffering;
+    }
 }

@@ -17,29 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.util.helpers;
 
 public enum PersonnelStatus {
-	ACTIVE(Short.valueOf("1")), INACTIVE(Short.valueOf("2"));
+    ACTIVE(Short.valueOf("1")), INACTIVE(Short.valueOf("2"));
 
-	Short value;
+    Short value;
 
-	PersonnelStatus(Short value) {
-		this.value = value;
-	}
+    PersonnelStatus(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static PersonnelStatus getPersonnelStatus(Short id) {
-		for (PersonnelStatus status : PersonnelStatus.values()) {
-			if (status.value.equals(id)) {
-				return status;
-			}
-		}
-		throw new RuntimeException("no personnel status " + id);
-	}
+    public static PersonnelStatus getPersonnelStatus(Short id) {
+        for (PersonnelStatus status : PersonnelStatus.values()) {
+            if (status.value.equals(id)) {
+                return status;
+            }
+        }
+        throw new RuntimeException("no personnel status " + id);
+    }
 
 }

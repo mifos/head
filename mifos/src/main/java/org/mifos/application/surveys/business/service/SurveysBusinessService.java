@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys.business.service;
 
 import org.mifos.framework.business.BusinessObject;
@@ -26,9 +26,9 @@ import org.mifos.framework.security.util.UserContext;
 
 public class SurveysBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		throw new RuntimeException("not implemented");
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        throw new RuntimeException("not implemented");
+    }
 
 }

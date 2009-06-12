@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist.business;
 
 import java.util.Date;
@@ -38,140 +38,135 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class CheckListBO extends BusinessObject {
 
-	private final Short checklistId;
+    private final Short checklistId;
 
-	private String checklistName;
+    private String checklistName;
 
-	private Short checklistStatus;
+    private Short checklistStatus;
 
-	private Set<CheckListDetailEntity> checklistDetails;
+    private Set<CheckListDetailEntity> checklistDetails;
 
-	private SupportedLocalesEntity supportedLocales;
+    private SupportedLocalesEntity supportedLocales;
 
-	protected CheckListBO() {
-		this.checklistId = null;
-		checklistDetails = new LinkedHashSet<CheckListDetailEntity>();
+    protected CheckListBO() {
+        this.checklistId = null;
+        checklistDetails = new LinkedHashSet<CheckListDetailEntity>();
 
-	}
+    }
 
-	protected CheckListBO(String checkListName, Short checkListStatus,
-			List<String> details, Short localeId, Short userId)
-			throws CheckListException {
-		setCreateDetails(userId, new DateTimeService().getCurrentJavaDateTime());
-		this.checklistId = null;
+    protected CheckListBO(String checkListName, Short checkListStatus, List<String> details, Short localeId,
+            Short userId) throws CheckListException {
+        setCreateDetails(userId, new DateTimeService().getCurrentJavaDateTime());
+        this.checklistId = null;
 
-		if (details.size() > 0) {
-			setCheckListDetails(details, localeId);
-		} else {
-			throw new CheckListException(
-					CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
-		}
-		if (checkListName != null) {
-			this.checklistName = checkListName;
-		} else {
-			throw new CheckListException(
-					CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
-		}
-		this.checklistStatus = checkListStatus;
-		this.supportedLocales = new SupportedLocalesEntity(localeId);
-	}
+        if (details.size() > 0) {
+            setCheckListDetails(details, localeId);
+        } else {
+            throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+        }
+        if (checkListName != null) {
+            this.checklistName = checkListName;
+        } else {
+            throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+        }
+        this.checklistStatus = checkListStatus;
+        this.supportedLocales = new SupportedLocalesEntity(localeId);
+    }
 
-	public Short getChecklistId() {
-		return checklistId;
-	}
+    public Short getChecklistId() {
+        return checklistId;
+    }
 
-	public String getChecklistName() {
-		return this.checklistName;
-	}
+    public String getChecklistName() {
+        return this.checklistName;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setChecklistName(String checklistName) {
-		this.checklistName = checklistName;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setChecklistName(String checklistName) {
+        this.checklistName = checklistName;
+    }
 
-	public Short getChecklistStatus() {
-		return this.checklistStatus;
-	}
+    public Short getChecklistStatus() {
+        return this.checklistStatus;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setChecklistStatus(Short checklistStatus) {
-		this.checklistStatus = checklistStatus;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setChecklistStatus(Short checklistStatus) {
+        this.checklistStatus = checklistStatus;
+    }
 
-	public Set<CheckListDetailEntity> getChecklistDetails() {
-		return this.checklistDetails;
+    public Set<CheckListDetailEntity> getChecklistDetails() {
+        return this.checklistDetails;
 
-	}
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setChecklistDetails(
-			Set<CheckListDetailEntity> checklistDetailSet) {
-		this.checklistDetails = checklistDetailSet;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setChecklistDetails(Set<CheckListDetailEntity> checklistDetailSet) {
+        this.checklistDetails = checklistDetailSet;
+    }
 
-	public SupportedLocalesEntity getSupportedLocales() {
-		return this.supportedLocales;
-	}
+    public SupportedLocalesEntity getSupportedLocales() {
+        return this.supportedLocales;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
-		this.supportedLocales = supportedLocales;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
+        this.supportedLocales = supportedLocales;
+    }
 
-	public void addChecklistDetail(CheckListDetailEntity checkListDetailEntity) {
-		checklistDetails.add(checkListDetailEntity);
-	}
+    public void addChecklistDetail(CheckListDetailEntity checkListDetailEntity) {
+        checklistDetails.add(checkListDetailEntity);
+    }
 
-	public void save() throws CheckListException {
-		try {
-			new CheckListPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new CheckListException(e);
-		}
-	}
+    public void save() throws CheckListException {
+        try {
+            new CheckListPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new CheckListException(e);
+        }
+    }
 
-	private void setCheckListDetails(List<String> details, Short locale) {
-		checklistDetails = new HashSet<CheckListDetailEntity>();
-		for (String detail : details) {
-			CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(
-					detail, Short.valueOf("1"), this, locale);
-			checklistDetails.add(checkListDetailEntity);
-		}
-	}
+    private void setCheckListDetails(List<String> details, Short locale) {
+        checklistDetails = new HashSet<CheckListDetailEntity>();
+        for (String detail : details) {
+            CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(detail, Short.valueOf("1"), this,
+                    locale);
+            checklistDetails.add(checkListDetailEntity);
+        }
+    }
 
-	public abstract CheckListType getCheckListType();
+    public abstract CheckListType getCheckListType();
 
-	protected void update(String checkListName, Short checkListStatus,
-			List<String> details, Short localeId, Short userId)
-			throws CheckListException {
-		setUpdateDetails(userId);
-		if (details == null || details.size() <= 0)
-			throw new CheckListException(
-					CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
-		if (StringUtils.isNullOrEmpty(checkListName))
-			throw new CheckListException(
-					CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
-		this.checklistName = checkListName;
-		getChecklistDetails().clear();
-		for (String detail : details) {
-			CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(
-					detail, Short.valueOf("1"), this, localeId);
-			getChecklistDetails().add(checkListDetailEntity);
-		}
-		this.checklistStatus = checkListStatus;
-		this.supportedLocales = new SupportedLocalesEntity(localeId);
-	}
+    protected void update(String checkListName, Short checkListStatus, List<String> details, Short localeId,
+            Short userId) throws CheckListException {
+        setUpdateDetails(userId);
+        if (details == null || details.size() <= 0)
+            throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+        if (StringUtils.isNullOrEmpty(checkListName))
+            throw new CheckListException(CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+        this.checklistName = checkListName;
+        getChecklistDetails().clear();
+        for (String detail : details) {
+            CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(detail, Short.valueOf("1"), this,
+                    localeId);
+            getChecklistDetails().add(checkListDetailEntity);
+        }
+        this.checklistStatus = checkListStatus;
+        this.supportedLocales = new SupportedLocalesEntity(localeId);
+    }
 
-	protected void validateCheckListState(Short masterTypeId, Short stateId,
-			boolean isCustomer) throws CheckListException {
-		try {
-			Long records = new CheckListPersistence().isValidCheckListState(
-					masterTypeId, stateId, isCustomer);
-			if (records.intValue() != 0)
-				throw new CheckListException(
-						CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
-		} catch (PersistenceException pe) {
-			throw new CheckListException(pe);
-		}
-	}
+    protected void validateCheckListState(Short masterTypeId, Short stateId, boolean isCustomer)
+            throws CheckListException {
+        try {
+            Long records = new CheckListPersistence().isValidCheckListState(masterTypeId, stateId, isCustomer);
+            if (records.intValue() != 0)
+                throw new CheckListException(CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
+        } catch (PersistenceException pe) {
+            throw new CheckListException(pe);
+        }
+    }
 }

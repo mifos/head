@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.center.business.service;
 
 import org.mifos.application.customer.center.business.CenterBO;
@@ -31,34 +31,33 @@ import org.mifos.framework.security.util.UserContext;
 
 public class CenterBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public CenterBO getCenter(Integer customerId) throws ServiceException {
-		try {
-			return new CenterPersistence().getCenter(customerId);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
+    public CenterBO getCenter(Integer customerId) throws ServiceException {
+        try {
+            return new CenterPersistence().getCenter(customerId);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 
-	public CenterBO findBySystemId(String globalCustNum)
-			throws ServiceException {
-		try {
-			return new CenterPersistence().findBySystemId(globalCustNum);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-	
-	public QueryResult search(String searchString,Short userId)throws ServiceException {
-		
-		try {
-			return new CenterPersistence().search(searchString,userId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public CenterBO findBySystemId(String globalCustNum) throws ServiceException {
+        try {
+            return new CenterPersistence().findBySystemId(globalCustNum);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public QueryResult search(String searchString, Short userId) throws ServiceException {
+
+        try {
+            return new CenterPersistence().search(searchString, userId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

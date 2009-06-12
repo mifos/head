@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.validator;
 
 import java.util.List;
@@ -29,32 +29,29 @@ import org.mifos.application.reports.business.service.BranchCashConfirmationRepo
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 
 public class BranchCashConfirmationReportParamValidator extends
-		AbstractReportParameterValidator<BranchReportParameterForm> {
+        AbstractReportParameterValidator<BranchReportParameterForm> {
 
-	private final BranchCashConfirmationReportService service;
+    private final BranchCashConfirmationReportService service;
 
-	public BranchCashConfirmationReportParamValidator(
-			List<String> applicableFilePaths,
-			BranchCashConfirmationReportService service) {
-		super(applicableFilePaths);
-		this.service = service;
-	}
+    public BranchCashConfirmationReportParamValidator(List<String> applicableFilePaths,
+            BranchCashConfirmationReportService service) {
+        super(applicableFilePaths);
+        this.service = service;
+    }
 
-	public BranchReportParameterForm buildReportParameterForm(HttpServletRequest request) {
-		return BranchReportParameterForm.build(request);
-	}	
+    public BranchReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+        return BranchReportParameterForm.build(request);
+    }
 
-
-	@Override
-	public void validate(BranchReportParameterForm form, Errors errors) {
-		super.validate(form, errors);
-		if (errors.hasErrors())
-			return;
-		if (!service.isReportDataPresentForRundateAndBranchId(form
-				.getBranchId(), form.getRunDate())) {
-			errors.rejectValue(ReportValidationConstants.RUN_DATE_PARAM,
-					ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);
-		}
-	}
+    @Override
+    public void validate(BranchReportParameterForm form, Errors errors) {
+        super.validate(form, errors);
+        if (errors.hasErrors())
+            return;
+        if (!service.isReportDataPresentForRundateAndBranchId(form.getBranchId(), form.getRunDate())) {
+            errors.rejectValue(ReportValidationConstants.RUN_DATE_PARAM,
+                    ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);
+        }
+    }
 
 }

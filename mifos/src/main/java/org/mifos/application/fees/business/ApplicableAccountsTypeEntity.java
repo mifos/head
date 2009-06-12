@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class ApplicableAccountsTypeEntity extends MasterDataEntity {
 
-	public ApplicableAccountsTypeEntity() {
-		super();
-	}
+    public ApplicableAccountsTypeEntity() {
+        super();
+    }
 
-	public ApplicableAccountsTypeEntity(Short id) {
-		super(id);
-	}
+    public ApplicableAccountsTypeEntity(Short id) {
+        super(id);
+    }
 
 }

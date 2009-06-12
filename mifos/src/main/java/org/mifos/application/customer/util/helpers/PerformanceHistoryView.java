@@ -17,49 +17,49 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 import org.mifos.framework.business.View;
 
 public class PerformanceHistoryView extends View {
-	private int numberOfGroups;
+    private int numberOfGroups;
 
-	private int numberOfClients;
+    private int numberOfClients;
 
-	private double totalOutstandingPortfolio;
+    private double totalOutstandingPortfolio;
 
-	private double totalSavings;
+    private double totalSavings;
 
-	public int getNumberOfClients() {
-		return numberOfClients;
-	}
+    public int getNumberOfClients() {
+        return numberOfClients;
+    }
 
-	public void setNumberOfClients(int numberOfClients) {
-		this.numberOfClients = numberOfClients;
-	}
+    public void setNumberOfClients(int numberOfClients) {
+        this.numberOfClients = numberOfClients;
+    }
 
-	public int getNumberOfGroups() {
-		return numberOfGroups;
-	}
+    public int getNumberOfGroups() {
+        return numberOfGroups;
+    }
 
-	public void setNumberOfGroups(int numberOfGroups) {
-		this.numberOfGroups = numberOfGroups;
-	}
+    public void setNumberOfGroups(int numberOfGroups) {
+        this.numberOfGroups = numberOfGroups;
+    }
 
-	public double getTotalOutstandingPortfolio() {
-		return totalOutstandingPortfolio;
-	}
+    public double getTotalOutstandingPortfolio() {
+        return totalOutstandingPortfolio;
+    }
 
-	public void setTotalOutstandingPortfolio(double totalOutstandingPortfolio) {
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-	}
+    public void setTotalOutstandingPortfolio(double totalOutstandingPortfolio) {
+        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+    }
 
-	public double getTotalSavings() {
-		return totalSavings;
-	}
+    public double getTotalSavings() {
+        return totalSavings;
+    }
 
-	public void setTotalSavings(double totalSavings) {
-		this.totalSavings = totalSavings;
-	}
+    public void setTotalSavings(double totalSavings) {
+        this.totalSavings = totalSavings;
+    }
 }

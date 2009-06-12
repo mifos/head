@@ -17,29 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
+
 /**
  * This is general exception for the customer(group/client/center)
  */
-public class CustomerException extends ApplicationException{
-	
-	public CustomerException(String key) {
-		super(key);
-	}
-	
-	public CustomerException(String key, Object[] values) {
-		super(key, values);
-	}
+public class CustomerException extends ApplicationException {
 
-	public CustomerException(Throwable cause) {
-		super(cause);
-	}
-	
-	public CustomerException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public CustomerException(String key) {
+        super(key);
+    }
+
+    public CustomerException(String key, Object[] values) {
+        super(key, values);
+    }
+
+    public CustomerException(Throwable cause) {
+        super(cause);
+    }
+
+    public CustomerException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
 }

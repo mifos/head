@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -28,38 +28,38 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class PrdStatusEntity extends PersistentObject {
 
-	private final Short offeringStatusId;
+    private final Short offeringStatusId;
 
-	private final ProductTypeEntity prdType;
+    private final ProductTypeEntity prdType;
 
-	private final PrdStateEntity prdState;
+    private final PrdStateEntity prdState;
 
-	private Short status;
+    private Short status;
 
-	protected PrdStatusEntity() {
-		offeringStatusId = null;
-		prdType = null;
-		prdState = null;
-	}
-	
-	public Short getOfferingStatusId() {
-		return offeringStatusId;
-	}
+    protected PrdStatusEntity() {
+        offeringStatusId = null;
+        prdType = null;
+        prdState = null;
+    }
 
-	public PrdStateEntity getPrdState() {
-		return prdState;
-	}
+    public Short getOfferingStatusId() {
+        return offeringStatusId;
+    }
 
-	public Short getStatus() {
-		return this.status;
-	}
+    public PrdStateEntity getPrdState() {
+        return prdState;
+    }
 
-	void setStatus(Short status) {
-		this.status = status;
-	}
+    public Short getStatus() {
+        return this.status;
+    }
 
-	public ProductTypeEntity getPrdType() {
-		return prdType;
-	}
+    void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public ProductTypeEntity getPrdType() {
+        return prdType;
+    }
 
 }

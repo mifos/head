@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.rolesandpermission.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class RolesPermissionException extends ApplicationException {
 
-	public RolesPermissionException(Throwable cause) {
-		super(cause);
-	}
+    public RolesPermissionException(Throwable cause) {
+        super(cause);
+    }
 
-	public RolesPermissionException(String key) {
-		super(key);
-	}
+    public RolesPermissionException(String key) {
+        super(key);
+    }
 
 }

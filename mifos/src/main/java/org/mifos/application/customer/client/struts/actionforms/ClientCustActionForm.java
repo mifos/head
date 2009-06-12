@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.struts.actionforms;
 
 import java.io.IOException;
@@ -64,446 +64,387 @@ import org.mifos.framework.util.helpers.FilePaths;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
-	private CustomerBO parentGroup;
+    private CustomerBO parentGroup;
 
-	private String groupFlag;
+    private String groupFlag;
 
-	private ClientDetailView clientDetailView;
+    private ClientDetailView clientDetailView;
 
-	private ClientNameDetailView clientName;
+    private ClientNameDetailView clientName;
 
-	private ClientNameDetailView spouseName;
+    private ClientNameDetailView spouseName;
 
-	private String parentGroupId;
+    private String parentGroupId;
 
-	private String governmentId;
-	
-	private String dateOfBirthDD;
-	
-	private String dateOfBirthMM;
-	
-	private String dateOfBirthYY;
+    private String governmentId;
 
-	private String nextOrPreview;
+    private String dateOfBirthDD;
 
-	private FormFile picture;
+    private String dateOfBirthMM;
 
-	private InputStream customerPicture;
+    private String dateOfBirthYY;
 
-	private int age;
+    private String nextOrPreview;
 
-	private List<Short> selectedOfferings;
+    private FormFile picture;
 
-	public ClientCustActionForm() {
-		super();
-		selectedOfferings = new ArrayList<Short>(
-				ClientConstants.MAX_OFFERINGS_SIZE);
-		for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++)
-			selectedOfferings.add(null);
-	}
+    private InputStream customerPicture;
 
-	public String getGroupFlag() {
-		return groupFlag;
-	}
+    private int age;
 
-	public Short getGroupFlagValue() {
-		return getShortValue(groupFlag);
-	}
+    private List<Short> selectedOfferings;
 
-	public void setGroupFlag(String groupFlag) {
-		this.groupFlag = groupFlag;
-	}
+    public ClientCustActionForm() {
+        super();
+        selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
+        for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++)
+            selectedOfferings.add(null);
+    }
 
-	public CustomerBO getParentGroup() {
-		return parentGroup;
-	}
+    public String getGroupFlag() {
+        return groupFlag;
+    }
 
-	public void setParentGroup(CustomerBO parentGroup) {
-		this.parentGroup = parentGroup;
-	}
+    public Short getGroupFlagValue() {
+        return getShortValue(groupFlag);
+    }
 
-	public ClientDetailView getClientDetailView() {
-		return clientDetailView;
-	}
+    public void setGroupFlag(String groupFlag) {
+        this.groupFlag = groupFlag;
+    }
 
-	public void setClientDetailView(ClientDetailView clientDetailView) {
-		this.clientDetailView = clientDetailView;
-	}
+    public CustomerBO getParentGroup() {
+        return parentGroup;
+    }
 
-	public ClientNameDetailView getClientName() {
-		return clientName;
-	}
+    public void setParentGroup(CustomerBO parentGroup) {
+        this.parentGroup = parentGroup;
+    }
 
-	public void setClientName(ClientNameDetailView clientName) {
-		this.clientName = clientName;
-	}
+    public ClientDetailView getClientDetailView() {
+        return clientDetailView;
+    }
 
-	public ClientNameDetailView getSpouseName() {
-		return spouseName;
-	}
+    public void setClientDetailView(ClientDetailView clientDetailView) {
+        this.clientDetailView = clientDetailView;
+    }
 
-	public void setSpouseName(ClientNameDetailView spouseName) {
-		this.spouseName = spouseName;
-	}
+    public ClientNameDetailView getClientName() {
+        return clientName;
+    }
 
-	public String getParentGroupId() {
-		return parentGroupId;
-	}
+    public void setClientName(ClientNameDetailView clientName) {
+        this.clientName = clientName;
+    }
 
-	public void setParentGroupId(String parentGroupId) {
-		this.parentGroupId = parentGroupId;
-	}
+    public ClientNameDetailView getSpouseName() {
+        return spouseName;
+    }
 
-	public String getGovernmentId() {
-		return governmentId;
-	}
+    public void setSpouseName(ClientNameDetailView spouseName) {
+        this.spouseName = spouseName;
+    }
 
-	public void setGovernmentId(String governmentId) {
-		this.governmentId = governmentId;
-	}
-	
-	
+    public String getParentGroupId() {
+        return parentGroupId;
+    }
 
-	public FormFile getPicture() {
-		return picture;
-	}
+    public void setParentGroupId(String parentGroupId) {
+        this.parentGroupId = parentGroupId;
+    }
 
-	public String getNextOrPreview() {
-		return nextOrPreview;
-	}
+    public String getGovernmentId() {
+        return governmentId;
+    }
 
-	public void setNextOrPreview(String nextOrPreview) {
-		this.nextOrPreview = nextOrPreview;
-	}
+    public void setGovernmentId(String governmentId) {
+        this.governmentId = governmentId;
+    }
 
-	public void setPicture(FormFile picture) {
-		this.picture = picture;
-		try {
-			customerPicture = picture.getInputStream();
-		} catch (IOException ioe) {
+    public FormFile getPicture() {
+        return picture;
+    }
 
-		}
-	}
+    public String getNextOrPreview() {
+        return nextOrPreview;
+    }
 
-	public InputStream getCustomerPicture() {
-		return customerPicture;
-	}
+    public void setNextOrPreview(String nextOrPreview) {
+        this.nextOrPreview = nextOrPreview;
+    }
 
-	public int getAge() {
-		return age;
+    public void setPicture(FormFile picture) {
+        this.picture = picture;
+        try {
+            customerPicture = picture.getInputStream();
+        } catch (IOException ioe) {
 
-	}
+        }
+    }
 
-	public void setAge(int age) {
-		this.age = age;
+    public InputStream getCustomerPicture() {
+        return customerPicture;
+    }
 
-	}
+    public int getAge() {
+        return age;
 
-	public List<Short> getSelectedOfferings() {
-		return selectedOfferings;
-	}
+    }
 
-	public Short getSavingsOffering(int i) {
-		return (i < ClientConstants.MAX_OFFERINGS_SIZE) ? selectedOfferings
-				.get(i) : null;
-	}
+    public void setAge(int age) {
+        this.age = age;
 
-	public void setSavingsOffering(int i, Short value) {
-		if (i < ClientConstants.MAX_OFFERINGS_SIZE)
-			selectedOfferings.set(i, value);
-	}
+    }
 
-	@Override
-	protected ActionErrors validateFields(HttpServletRequest request,
-			String method) throws ApplicationException {
+    public List<Short> getSelectedOfferings() {
+        return selectedOfferings;
+    }
 
-		ActionErrors errors = new ActionErrors();
-		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-		Locale locale = userContext.getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle
-					(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
-		if ((method.equals(Methods.previewPersonalInfo.toString())
-				|| method.equals(Methods.next.toString()) || method
-				.equals(Methods.previewEditPersonalInfo.toString()))
-				&& (ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO
-						.equals(input))) {
-			validateClientNames(errors, resources);
-			validateDateOfBirth(request, errors, resources);
-			validateGender(errors, resources);
-			validateSpouseNames(errors, resources);
-			checkForMandatoryFields(EntityType.CLIENT.getValue(), errors,request);
-			validateCustomFields(request, errors);
-			validatePicture(request, errors);
-		}
-		if (method.equals(Methods.preview.toString())
-				&& ClientConstants.INPUT_MFI_INFO.equals(input)) {
-			validateFormedByPersonnel(errors);
-			validateConfigurableMandatoryFields(request, errors,
-					EntityType.CLIENT);
-			validateTrained(request, errors);
-			validateFees(request, errors);
-			validateSelectedOfferings(errors, request);
-		}
+    public Short getSavingsOffering(int i) {
+        return (i < ClientConstants.MAX_OFFERINGS_SIZE) ? selectedOfferings.get(i) : null;
+    }
 
-		if (method.equals(Methods.previewEditMfiInfo.toString())) {
-			checkForMandatoryFields(EntityType.CLIENT.getValue(), errors,request);
-			validateTrained(request, errors);
-		}
-		if (method.equals(Methods.updateMfiInfo.toString())) {
-			validateTrained(request, errors);   
-		}
-		return errors;
-	}
+    public void setSavingsOffering(int i, Short value) {
+        if (i < ClientConstants.MAX_OFFERINGS_SIZE)
+            selectedOfferings.set(i, value);
+    }
 
-	private void validatePicture(HttpServletRequest request, ActionErrors errors)
-			throws PageExpiredException {
-		if (picture != null) {
-			String fileName = picture.getFileName();
-			if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
-				errors.add(ClientConstants.PICTURE_SIZE_EXCEPTION,
-						new ActionMessage(
-								ClientConstants.PICTURE_SIZE_EXCEPTION));
-			}
-			if (!ValidateMethods.isNullOrBlank(fileName)) {
-				String fileExtension = fileName.substring(fileName
-						.lastIndexOf(".") + 1, fileName.length());
-				if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension
-						.equalsIgnoreCase("jpg")))
-					errors
-							.add(ClientConstants.PICTURE_EXCEPTION,
-									new ActionMessage(
-											ClientConstants.PICTURE_EXCEPTION));
+    @Override
+    protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
 
-			}
-			if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
-				SessionUtils.setAttribute("noPicture", "Yes", request);
-			} else {
-				SessionUtils.setAttribute("noPicture", "No", request);
-			}
-		}
-	}
+        ActionErrors errors = new ActionErrors();
+        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+        Locale locale = userContext.getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
+        if ((method.equals(Methods.previewPersonalInfo.toString()) || method.equals(Methods.next.toString()) || method
+                .equals(Methods.previewEditPersonalInfo.toString()))
+                && (ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO
+                        .equals(input))) {
+            validateClientNames(errors, resources);
+            validateDateOfBirth(request, errors, resources);
+            validateGender(errors, resources);
+            validateSpouseNames(errors, resources);
+            checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
+            validateCustomFields(request, errors);
+            validatePicture(request, errors);
+        }
+        if (method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input)) {
+            validateFormedByPersonnel(errors);
+            validateConfigurableMandatoryFields(request, errors, EntityType.CLIENT);
+            validateTrained(request, errors);
+            validateFees(request, errors);
+            validateSelectedOfferings(errors, request);
+        }
 
-	private void validateGender(ActionErrors errors, ResourceBundle resources) {
-		if (clientDetailView.getGender() == null)
-			errors.add(CustomerConstants.GENDER, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.Gender")));
-	}
+        if (method.equals(Methods.previewEditMfiInfo.toString())) {
+            checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
+            validateTrained(request, errors);
+        }
+        if (method.equals(Methods.updateMfiInfo.toString())) {
+            validateTrained(request, errors);
+        }
+        return errors;
+    }
 
-	private void validateClientNames(ActionErrors errors, ResourceBundle resources) {
-		if (clientName.getSalutation() == null)
-			errors.add(CustomerConstants.SALUTATION, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.Salutation")));
-		if (StringUtils.isNullOrEmpty(clientName.getFirstName()))
-			errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.FirstName")));
-		if (StringUtils.isNullOrEmpty(clientName.getLastName()))
-			errors.add(CustomerConstants.LAST_NAME, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.LastName")));
+    private void validatePicture(HttpServletRequest request, ActionErrors errors) throws PageExpiredException {
+        if (picture != null) {
+            String fileName = picture.getFileName();
+            if (picture.getFileSize() > ClientConstants.PICTURE_ALLOWED_SIZE) {
+                errors.add(ClientConstants.PICTURE_SIZE_EXCEPTION, new ActionMessage(
+                        ClientConstants.PICTURE_SIZE_EXCEPTION));
+            }
+            if (!ValidateMethods.isNullOrBlank(fileName)) {
+                String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+                if (!(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg")))
+                    errors.add(ClientConstants.PICTURE_EXCEPTION, new ActionMessage(ClientConstants.PICTURE_EXCEPTION));
 
-	}
+            }
+            if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
+                SessionUtils.setAttribute("noPicture", "Yes", request);
+            } else {
+                SessionUtils.setAttribute("noPicture", "No", request);
+            }
+        }
+    }
 
-	private void validateSpouseNames(ActionErrors errors, ResourceBundle resources) {
-		if (spouseName.getNameType() == null)
-			errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.SpouseType")));
-		if (StringUtils.isNullOrEmpty(spouseName.getFirstName()))
-			errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.SpouseFirstName")));
-		if (StringUtils.isNullOrEmpty(spouseName.getLastName()))
-			errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY,
-					resources.getString("Customer.SpouseLastName")));
+    private void validateGender(ActionErrors errors, ResourceBundle resources) {
+        if (clientDetailView.getGender() == null)
+            errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
+                    .getString("Customer.Gender")));
+    }
 
-	}
-	
-	void validateDateOfBirth(HttpServletRequest request,
-			ActionErrors errors) {
-		validateDateOfBirth(request, errors, null);
-	}
-	
-	void validateDateOfBirth(HttpServletRequest request,
-			ActionErrors errors, ResourceBundle resources) {
-		if (StringUtils.isNullOrEmpty(getDateOfBirth())) {
-			if(resources == null)
-			{
-				errors.add(CustomerConstants.DOB, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY, CustomerConstants.DOB));				
-			}
-			else
-			{
-				errors.add(CustomerConstants.DOB, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY, resources.getString("Customer.DateOfBirth")));
-			}
-		}
-		
-		else {
-			try {
-				Date date = DateUtils.getDateAsSentFromBrowser(getDateOfBirth());
-				if (DateUtils.whichDirection(date) > 0) {
-					errors.add(ClientConstants.FUTURE_DOB_EXCEPTION, 
-						new ActionMessage(ClientConstants.FUTURE_DOB_EXCEPTION));
-				}
-			}
-			
-			catch (InvalidDateException e) {
-				errors.add(ClientConstants.INVALID_DOB_EXCEPTION,
-						new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
-			}
-			
-		}
-	}
+    private void validateClientNames(ActionErrors errors, ResourceBundle resources) {
+        if (clientName.getSalutation() == null)
+            errors.add(CustomerConstants.SALUTATION, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
+                    .getString("Customer.Salutation")));
+        if (StringUtils.isNullOrEmpty(clientName.getFirstName()))
+            errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
+                    .getString("Customer.FirstName")));
+        if (StringUtils.isNullOrEmpty(clientName.getLastName()))
+            errors.add(CustomerConstants.LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
+                    .getString("Customer.LastName")));
 
-	@Override
-	public void checkForMandatoryFields(Short entityId, ActionErrors errors,
-			HttpServletRequest request) {
-		Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
-				.getSession().getServletContext().getAttribute(
-						Constants.FIELD_CONFIGURATION);
-		List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap
-				.get(entityId);
-		for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
-			String propertyName = request.getParameter(fieldConfigurationEntity
-					.getLabel());
-			UserContext userContext = ((UserContext) request.getSession().getAttribute(
-					LoginConstants.USERCONTEXT));
-			Locale locale = userContext.getPreferredLocale();
-			if (propertyName != null && !propertyName.equals("")
-					&& !propertyName.equalsIgnoreCase("picture")) {
-				String propertyValue = request.getParameter(propertyName);
-				if (propertyValue == null || propertyValue.equals(""))
-					errors
-							.add(
-									fieldConfigurationEntity.getLabel(),
-									new ActionMessage(
-											FieldConfigurationConstant.EXCEPTION_MANDATORY,
-											FieldConfigurationHelper
-													.getLocalSpecificFieldNames(
-															fieldConfigurationEntity
-																	.getLabel(),
-															userContext)));
-			} else if (propertyName != null && !propertyName.equals("")
-					&& propertyName.equalsIgnoreCase("picture")) {
-				try {
-					if (getCustomerPicture() == null
-							|| getCustomerPicture().read() == -1) {
-						errors
-								.add(
-										fieldConfigurationEntity.getLabel(),
-										new ActionMessage(
-												FieldConfigurationConstant.EXCEPTION_MANDATORY,
-												FieldConfigurationHelper
-														.getLocalSpecificFieldNames(
-																fieldConfigurationEntity
-																		.getLabel(),
-																userContext)));
+    }
 
-					}
-					getCustomerPicture().reset();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-	}
+    private void validateSpouseNames(ActionErrors errors, ResourceBundle resources) {
+        if (spouseName.getNameType() == null)
+            errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
+                    .getString("Customer.SpouseType")));
+        if (StringUtils.isNullOrEmpty(spouseName.getFirstName()))
+            errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    resources.getString("Customer.SpouseFirstName")));
+        if (StringUtils.isNullOrEmpty(spouseName.getLastName()))
+            errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                    resources.getString("Customer.SpouseLastName")));
 
-	private void validateSelectedOfferings(ActionErrors errors, HttpServletRequest request) {
-		boolean duplicateFound = false;
-		for (int i = 0; i < selectedOfferings.size() - 1; i++) {
-			for (int j = i + 1; j < selectedOfferings.size(); j++)
-				if (selectedOfferings.get(i) != null
-						&& selectedOfferings.get(j) != null
-						&& selectedOfferings.get(i).equals(
-								selectedOfferings.get(j))) {
-					String selectedOffering = "";
-					try {
-						List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils
-							.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
-						for (SavingsOfferingBO savingsOffering : offeringsList) {
-							if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId()))
-								selectedOffering = savingsOffering.getPrdOfferingName();
-							break;
-						}
-					} catch (PageExpiredException pee) { }
-					errors.add(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED,
-						new ActionMessage(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, selectedOffering));
-					duplicateFound = true;
-					break;
-				}
-			if (duplicateFound)
-				break;
-		}
-	}
+    }
 
-	@Override
-	protected MeetingBO getCustomerMeeting(HttpServletRequest request)
-			throws ApplicationException {
-		if (groupFlag.equals(ClientConstants.YES) && parentGroup.getCustomerMeeting()!=null)
-			return parentGroup.getCustomerMeeting().getMeeting();
-		else
-			return (MeetingBO) SessionUtils.getAttribute(
-					CustomerConstants.CUSTOMER_MEETING, request);
-	}
+    void validateDateOfBirth(HttpServletRequest request, ActionErrors errors) {
+        validateDateOfBirth(request, errors, null);
+    }
 
-	public String getDateOfBirth() {
-		if (StringUtils.isNullAndEmptySafe(dateOfBirthDD)
-				&& StringUtils.isNullAndEmptySafe(dateOfBirthMM)
-				&& StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
-			String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
-			return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator
-				+ dateOfBirthYY;
-			
-		}
-		else {
-			return null;
-		}
-	}
+    void validateDateOfBirth(HttpServletRequest request, ActionErrors errors, ResourceBundle resources) {
+        if (StringUtils.isNullOrEmpty(getDateOfBirth())) {
+            if (resources == null) {
+                errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
+                        CustomerConstants.DOB));
+            } else {
+                errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
+                        .getString("Customer.DateOfBirth")));
+            }
+        }
 
-	public void setDateOfBirth(String receiptDate) {
-		if (StringUtils.isNullOrEmpty(receiptDate)) {
-			dateOfBirthDD = null;
-			dateOfBirthMM = null;
-			dateOfBirthYY = null;
-		}
-		else {
-			Calendar cal = new GregorianCalendar();
-			java.sql.Date date = DateUtils
-					.getDateAsSentFromBrowser(receiptDate);
-			cal.setTime(date);
-			dateOfBirthDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-			dateOfBirthMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
-			dateOfBirthYY = Integer.toString(cal.get(Calendar.YEAR));
-		}
-	}
+        else {
+            try {
+                Date date = DateUtils.getDateAsSentFromBrowser(getDateOfBirth());
+                if (DateUtils.whichDirection(date) > 0) {
+                    errors.add(ClientConstants.FUTURE_DOB_EXCEPTION, new ActionMessage(
+                            ClientConstants.FUTURE_DOB_EXCEPTION));
+                }
+            }
 
+            catch (InvalidDateException e) {
+                errors.add(ClientConstants.INVALID_DOB_EXCEPTION, new ActionMessage(
+                        ClientConstants.INVALID_DOB_EXCEPTION));
+            }
 
-	public String getDateOfBirthDD() {
-		return dateOfBirthDD;
-	}
+        }
+    }
 
-	public void setDateOfBirthDD(String dateOfBirthDD) {
-		this.dateOfBirthDD = dateOfBirthDD;
-	}
+    @Override
+    public void checkForMandatoryFields(Short entityId, ActionErrors errors, HttpServletRequest request) {
+        Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
+                .getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+        List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(entityId);
+        for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
+            String propertyName = request.getParameter(fieldConfigurationEntity.getLabel());
+            UserContext userContext = ((UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT));
+            Locale locale = userContext.getPreferredLocale();
+            if (propertyName != null && !propertyName.equals("") && !propertyName.equalsIgnoreCase("picture")) {
+                String propertyValue = request.getParameter(propertyName);
+                if (propertyValue == null || propertyValue.equals(""))
+                    errors.add(fieldConfigurationEntity.getLabel(), new ActionMessage(
+                            FieldConfigurationConstant.EXCEPTION_MANDATORY, FieldConfigurationHelper
+                                    .getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), userContext)));
+            } else if (propertyName != null && !propertyName.equals("") && propertyName.equalsIgnoreCase("picture")) {
+                try {
+                    if (getCustomerPicture() == null || getCustomerPicture().read() == -1) {
+                        errors.add(fieldConfigurationEntity.getLabel(), new ActionMessage(
+                                FieldConfigurationConstant.EXCEPTION_MANDATORY, FieldConfigurationHelper
+                                        .getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), userContext)));
 
-	public String getDateOfBirthMM() {
-		return dateOfBirthMM;
-	}
+                    }
+                    getCustomerPicture().reset();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 
-	public void setDateOfBirthMM(String dateOfBirthMM) {
-		this.dateOfBirthMM = dateOfBirthMM;
-	}
+    private void validateSelectedOfferings(ActionErrors errors, HttpServletRequest request) {
+        boolean duplicateFound = false;
+        for (int i = 0; i < selectedOfferings.size() - 1; i++) {
+            for (int j = i + 1; j < selectedOfferings.size(); j++)
+                if (selectedOfferings.get(i) != null && selectedOfferings.get(j) != null
+                        && selectedOfferings.get(i).equals(selectedOfferings.get(j))) {
+                    String selectedOffering = "";
+                    try {
+                        List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
+                                ClientConstants.SAVINGS_OFFERING_LIST, request);
+                        for (SavingsOfferingBO savingsOffering : offeringsList) {
+                            if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId()))
+                                selectedOffering = savingsOffering.getPrdOfferingName();
+                            break;
+                        }
+                    } catch (PageExpiredException pee) {
+                    }
+                    errors.add(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, new ActionMessage(
+                            ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, selectedOffering));
+                    duplicateFound = true;
+                    break;
+                }
+            if (duplicateFound)
+                break;
+        }
+    }
 
-	public String getDateOfBirthYY() {
-		return dateOfBirthYY;
-	}
+    @Override
+    protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
+        if (groupFlag.equals(ClientConstants.YES) && parentGroup.getCustomerMeeting() != null)
+            return parentGroup.getCustomerMeeting().getMeeting();
+        else
+            return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+    }
 
-	public void setDateOfBirthYY(String dateOfBirthYY) {
-		this.dateOfBirthYY = dateOfBirthYY;
-	}
+    public String getDateOfBirth() {
+        if (StringUtils.isNullAndEmptySafe(dateOfBirthDD) && StringUtils.isNullAndEmptySafe(dateOfBirthMM)
+                && StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
+            String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+            return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
+
+        } else {
+            return null;
+        }
+    }
+
+    public void setDateOfBirth(String receiptDate) {
+        if (StringUtils.isNullOrEmpty(receiptDate)) {
+            dateOfBirthDD = null;
+            dateOfBirthMM = null;
+            dateOfBirthYY = null;
+        } else {
+            Calendar cal = new GregorianCalendar();
+            java.sql.Date date = DateUtils.getDateAsSentFromBrowser(receiptDate);
+            cal.setTime(date);
+            dateOfBirthDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+            dateOfBirthMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+            dateOfBirthYY = Integer.toString(cal.get(Calendar.YEAR));
+        }
+    }
+
+    public String getDateOfBirthDD() {
+        return dateOfBirthDD;
+    }
+
+    public void setDateOfBirthDD(String dateOfBirthDD) {
+        this.dateOfBirthDD = dateOfBirthDD;
+    }
+
+    public String getDateOfBirthMM() {
+        return dateOfBirthMM;
+    }
+
+    public void setDateOfBirthMM(String dateOfBirthMM) {
+        this.dateOfBirthMM = dateOfBirthMM;
+    }
+
+    public String getDateOfBirthYY() {
+        return dateOfBirthYY;
+    }
+
+    public void setDateOfBirthYY(String dateOfBirthYY) {
+        this.dateOfBirthYY = dateOfBirthYY;
+    }
 
 }

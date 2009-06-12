@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import java.util.Set;
@@ -27,65 +27,63 @@ import org.mifos.framework.business.PersistentObject;
 
 public class FeeTypeEntity extends PersistentObject {
 
-	private Short feeTypeId;
+    private Short feeTypeId;
 
-	private MifosLookUpEntity lookUpEntity;
+    private MifosLookUpEntity lookUpEntity;
 
-	private Set<FeePaymentsCategoriesTypeEntity> feePaymentsCategoriesTypes;
+    private Set<FeePaymentsCategoriesTypeEntity> feePaymentsCategoriesTypes;
 
-	private Short flatOrRate;
+    private Short flatOrRate;
 
-	private String formula;
+    private String formula;
 
-	public FeeTypeEntity() {
-	}
+    public FeeTypeEntity() {
+    }
 
-	public Short getFeeTypeId() {
-		return feeTypeId;
-	}
+    public Short getFeeTypeId() {
+        return feeTypeId;
+    }
 
-	public void setFeeTypeId(Short feeTypeId) {
+    public void setFeeTypeId(Short feeTypeId) {
 
-		this.feeTypeId = feeTypeId;
-	}
+        this.feeTypeId = feeTypeId;
+    }
 
-	public MifosLookUpEntity getLookUpEntity() {
-		return this.lookUpEntity;
-	}
+    public MifosLookUpEntity getLookUpEntity() {
+        return this.lookUpEntity;
+    }
 
-	public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
-		this.lookUpEntity = lookUpEntity;
-	}
+    public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
+        this.lookUpEntity = lookUpEntity;
+    }
 
-	public Short getFlatOrRate() {
-		return this.flatOrRate;
-	}
+    public Short getFlatOrRate() {
+        return this.flatOrRate;
+    }
 
-	public void setFlatOrRate(Short flatOrRate) {
-		this.flatOrRate = flatOrRate;
-	}
+    public void setFlatOrRate(Short flatOrRate) {
+        this.flatOrRate = flatOrRate;
+    }
 
-	public String getFormula() {
-		return this.formula;
-	}
+    public String getFormula() {
+        return this.formula;
+    }
 
-	public void setFormula(String formula) {
-		this.formula = formula;
-	}
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
 
-	public Set<FeePaymentsCategoriesTypeEntity> getFeePaymentsCategoriesTypes() {
-		return feePaymentsCategoriesTypes;
-	}
+    public Set<FeePaymentsCategoriesTypeEntity> getFeePaymentsCategoriesTypes() {
+        return feePaymentsCategoriesTypes;
+    }
 
-	private void setFeePaymentsCategoriesTypes(
-			Set<FeePaymentsCategoriesTypeEntity> feePaymentsCategoriesTypes) {
-		this.feePaymentsCategoriesTypes = feePaymentsCategoriesTypes;
-	}
+    private void setFeePaymentsCategoriesTypes(Set<FeePaymentsCategoriesTypeEntity> feePaymentsCategoriesTypes) {
+        this.feePaymentsCategoriesTypes = feePaymentsCategoriesTypes;
+    }
 
-	public void addFeePaymentsCategoriesType(
-			FeePaymentsCategoriesTypeEntity feePaymentsCategoriesType) {
-		feePaymentsCategoriesType.setFeeType(this);
-		feePaymentsCategoriesTypes.add(feePaymentsCategoriesType);
-	}
+    public void addFeePaymentsCategoriesType(FeePaymentsCategoriesTypeEntity feePaymentsCategoriesType) {
+        feePaymentsCategoriesType.setFeeType(this);
+        feePaymentsCategoriesTypes.add(feePaymentsCategoriesType);
+    }
 
 }

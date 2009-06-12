@@ -17,20 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
-public enum PrdCategoryStatus{
+public enum PrdCategoryStatus {
 
-	ACTIVE ((short)1), INACTIVE ((short)0);
- 
- 	Short value;
+    ACTIVE((short) 1), INACTIVE((short) 0);
 
- 	PrdCategoryStatus(Short value) {
-		this.value = value;
-	}
+    Short value;
 
-	public Short getValue() {
-		return value;
-	}
+    PrdCategoryStatus(Short value) {
+        this.value = value;
+    }
+
+    public Short getValue() {
+        return value;
+    }
 }

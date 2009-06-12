@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business.service;
 
 import java.util.List;
@@ -33,47 +33,42 @@ import org.mifos.framework.security.util.UserContext;
 
 public class ClientBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public List<SavingsOfferingBO> retrieveOfferingsApplicableToClient()
-			throws ServiceException {
-		try {
-			return new ClientPersistence()
-					.retrieveOfferingsApplicableToClient();
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-	
-	public ClientBO getClient(Integer customerId) throws ServiceException{
-		try{
-			return new ClientPersistence().getClient(customerId);
-		}catch(PersistenceException pe){
-			throw new ServiceException(pe);
-		}
-	}
-	
-	public List<ClientBO> getActiveClientsUnderParent(String searchId,
-			Short officeId) throws ServiceException {
-		try {
-			return new ClientPersistence().getActiveClientsUnderParent(
-					searchId, officeId);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-	public List<ClientBO> getActiveClientsUnderGroup(Integer groupId) throws ServiceException {
-			try {
-				return new ClientPersistence().getActiveClientsUnderGroup(groupId);
-			}
-		catch (PersistenceException pe) {
-			throw new ServiceException(pe);
+    public List<SavingsOfferingBO> retrieveOfferingsApplicableToClient() throws ServiceException {
+        try {
+            return new ClientPersistence().retrieveOfferingsApplicableToClient();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 
-		}
-	}
- 
+    public ClientBO getClient(Integer customerId) throws ServiceException {
+        try {
+            return new ClientPersistence().getClient(customerId);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public List<ClientBO> getActiveClientsUnderParent(String searchId, Short officeId) throws ServiceException {
+        try {
+            return new ClientPersistence().getActiveClientsUnderParent(searchId, officeId);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public List<ClientBO> getActiveClientsUnderGroup(Integer groupId) throws ServiceException {
+        try {
+            return new ClientPersistence().getActiveClientsUnderGroup(groupId);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+
+        }
+    }
 
 }

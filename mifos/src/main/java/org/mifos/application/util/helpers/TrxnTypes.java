@@ -17,21 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.util.helpers;
 
 public enum TrxnTypes {
-	
-	loan_disbursement (Short.valueOf("1")), loan_repayment(Short.valueOf("2")), 
-	savings_deposit(Short.valueOf("3")), savings_withdrawal(Short.valueOf("4")), fee(Short.valueOf("5"));
-	
-	Short value;
 
-	TrxnTypes(Short value) {
-		this.value = value;
-	}
+    loan_disbursement(Short.valueOf("1")), loan_repayment(Short.valueOf("2")), savings_deposit(Short.valueOf("3")), savings_withdrawal(
+            Short.valueOf("4")), fee(Short.valueOf("5"));
 
-	public Short getValue() {
-		return value;
-	}
+    Short value;
+
+    TrxnTypes(Short value) {
+        this.value = value;
+    }
+
+    public Short getValue() {
+        return value;
+    }
 }

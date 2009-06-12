@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.business;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -28,38 +28,38 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanFeeScheduleEntity extends AccountFeesActionDetailEntity {
 
-	protected LoanFeeScheduleEntity() {
-		super(null, null, null, null);
-	}
+    protected LoanFeeScheduleEntity() {
+        super(null, null, null, null);
+    }
 
-	public LoanFeeScheduleEntity(AccountActionDateEntity accountActionDate,
-			FeeBO fee, AccountFeesEntity accountFee, Money feeAmount) {
-		super(accountActionDate, fee, accountFee, feeAmount);
-	}
+    public LoanFeeScheduleEntity(AccountActionDateEntity accountActionDate, FeeBO fee, AccountFeesEntity accountFee,
+            Money feeAmount) {
+        super(accountActionDate, fee, accountFee, feeAmount);
+    }
 
-	@Override
-	protected void setFeeAmount(Money feeAmount) {
-		super.setFeeAmount(feeAmount);
-	}
+    @Override
+    protected void setFeeAmount(Money feeAmount) {
+        super.setFeeAmount(feeAmount);
+    }
 
-	@Override
-	protected void setFeeAmountPaid(Money feeAmountPaid) {
-		super.setFeeAmountPaid(feeAmountPaid);
-	}
+    @Override
+    protected void setFeeAmountPaid(Money feeAmountPaid) {
+        super.setFeeAmountPaid(feeAmountPaid);
+    }
 
-	@Override
-	protected void makePayment(Money feePaid) {
-		super.makePayment(feePaid);
-	}
+    @Override
+    protected void makePayment(Money feePaid) {
+        super.makePayment(feePaid);
+    }
 
-	@Override
-	protected void makeRepaymentEnteries(String payFullOrPartial) {
-		super.makeRepaymentEnteries(payFullOrPartial);
-	}
+    @Override
+    protected void makeRepaymentEnteries(String payFullOrPartial) {
+        super.makeRepaymentEnteries(payFullOrPartial);
+    }
 
-	@Override
-	protected Money waiveCharges() {
-		return super.waiveCharges();
-	}
+    @Override
+    protected Money waiveCharges() {
+        return super.waiveCharges();
+    }
 
 }

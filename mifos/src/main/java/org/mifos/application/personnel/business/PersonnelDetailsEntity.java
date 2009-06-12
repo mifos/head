@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.business;
 
 import java.util.Date;
@@ -31,141 +31,139 @@ import org.mifos.framework.business.util.Name;
  */
 public class PersonnelDetailsEntity extends PersistentObject {
 
-	private Name name;
+    private Name name;
 
-	private String governmentIdNumber;
+    private String governmentIdNumber;
 
-	private final Date dob;
+    private final Date dob;
 
-	private Integer maritalStatus;
+    private Integer maritalStatus;
 
-	private Integer gender;
+    private Integer gender;
 
-	private Date dateOfJoiningMFI;
+    private Date dateOfJoiningMFI;
 
-	private Date dateOfJoiningBranch;
+    private Date dateOfJoiningBranch;
 
-	private Date dateOfLeavingBranch;
+    private Date dateOfLeavingBranch;
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
-	private final Short personnelId;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final Short personnelId;
 
-	private final PersonnelBO personnel;
+    private final PersonnelBO personnel;
 
-	private Address address;
+    private Address address;
 
-	public PersonnelDetailsEntity(Name name, String governmentIdNumber,
-			Date dob, Integer maritalStatus, Integer gender,
-			Date dateOfJoiningMFI, Date dateOfJoiningBranch,
-			PersonnelBO personnel, Address address) {
-		super();
-		this.name = name;
-		this.governmentIdNumber = governmentIdNumber;
-		this.dob = dob;
-		this.maritalStatus = maritalStatus;
-		this.gender = gender;
-		this.dateOfJoiningMFI = dateOfJoiningMFI;
-		this.dateOfJoiningBranch = dateOfJoiningBranch;
-		this.personnelId = personnel.getPersonnelId();
-		this.personnel = personnel;
-		this.address = address;
-	}
+    public PersonnelDetailsEntity(Name name, String governmentIdNumber, Date dob, Integer maritalStatus,
+            Integer gender, Date dateOfJoiningMFI, Date dateOfJoiningBranch, PersonnelBO personnel, Address address) {
+        super();
+        this.name = name;
+        this.governmentIdNumber = governmentIdNumber;
+        this.dob = dob;
+        this.maritalStatus = maritalStatus;
+        this.gender = gender;
+        this.dateOfJoiningMFI = dateOfJoiningMFI;
+        this.dateOfJoiningBranch = dateOfJoiningBranch;
+        this.personnelId = personnel.getPersonnelId();
+        this.personnel = personnel;
+        this.address = address;
+    }
 
-	protected PersonnelDetailsEntity() {
-		super();
-		this.dob = null;
-		this.personnelId = null;
-		this.personnel = null;
-	}
+    protected PersonnelDetailsEntity() {
+        super();
+        this.dob = null;
+        this.personnelId = null;
+        this.personnel = null;
+    }
 
-	public Address getAddress() {
-		if(address==null)
-			address=new Address();
-		return address;
-	}
+    public Address getAddress() {
+        if (address == null)
+            address = new Address();
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
-	public Date getDateOfJoiningBranch() {
-		return dateOfJoiningBranch;
-	}
+    public Date getDateOfJoiningBranch() {
+        return dateOfJoiningBranch;
+    }
 
-	public void setDateOfJoiningBranch(Date dateOfJoiningBranch) {
-		this.dateOfJoiningBranch = dateOfJoiningBranch;
-	}
+    public void setDateOfJoiningBranch(Date dateOfJoiningBranch) {
+        this.dateOfJoiningBranch = dateOfJoiningBranch;
+    }
 
-	public Date getDateOfLeavingBranch() {
-		return dateOfLeavingBranch;
-	}
+    public Date getDateOfLeavingBranch() {
+        return dateOfLeavingBranch;
+    }
 
-	public void setDateOfLeavingBranch(Date dateOfLeavingBranch) {
-		this.dateOfLeavingBranch = dateOfLeavingBranch;
-	}
+    public void setDateOfLeavingBranch(Date dateOfLeavingBranch) {
+        this.dateOfLeavingBranch = dateOfLeavingBranch;
+    }
 
-	public Date getDob() {
-		return dob;
-	}
+    public Date getDob() {
+        return dob;
+    }
 
-	public Date getDateOfJoiningMFI() {
-		return dateOfJoiningMFI;
-	}
+    public Date getDateOfJoiningMFI() {
+        return dateOfJoiningMFI;
+    }
 
-	public void setDateOfJoiningMFI(Date dateOfJoiningMFI) {
-		this.dateOfJoiningMFI = dateOfJoiningMFI;
-	}
+    public void setDateOfJoiningMFI(Date dateOfJoiningMFI) {
+        this.dateOfJoiningMFI = dateOfJoiningMFI;
+    }
 
-	public Integer getGender() {
-		return gender;
-	}
+    public Integer getGender() {
+        return gender;
+    }
 
-	public void setGender(Integer gender) {
-		this.gender = gender;
-	}
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 
-	public String getGovernmentIdNumber() {
-		return governmentIdNumber;
-	}
+    public String getGovernmentIdNumber() {
+        return governmentIdNumber;
+    }
 
-	public void setGovernmentIdNumber(String governmentIdNumber) {
-		this.governmentIdNumber = governmentIdNumber;
-	}
+    public void setGovernmentIdNumber(String governmentIdNumber) {
+        this.governmentIdNumber = governmentIdNumber;
+    }
 
-	public Integer getMaritalStatus() {
-		return maritalStatus;
-	}
+    public Integer getMaritalStatus() {
+        return maritalStatus;
+    }
 
-	public void setMaritalStatus(Integer maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
+    public void setMaritalStatus(Integer maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
 
-	public Name getName() {
-		return name;
-	}
+    public Name getName() {
+        return name;
+    }
 
-	public void setName(Name name) {
-		this.name = name;
-	}
+    public void setName(Name name) {
+        this.name = name;
+    }
 
-	public String getDisplayName() {
-		return name.getDisplayName();
-	}
+    public String getDisplayName() {
+        return name.getDisplayName();
+    }
 
-	public void updateDetails(Name name, Integer maritalStatus, Integer gender,
-			Address address, Date dateOfJoiningBranch) {
-		setName(name);
-		setMaritalStatus(maritalStatus);
-		setGender(gender);
-		setAddress(address);
-		if (dateOfJoiningBranch != null) {
-			setDateOfJoiningBranch(dateOfJoiningBranch);
-		}
-	}
+    public void updateDetails(Name name, Integer maritalStatus, Integer gender, Address address,
+            Date dateOfJoiningBranch) {
+        setName(name);
+        setMaritalStatus(maritalStatus);
+        setGender(gender);
+        setAddress(address);
+        if (dateOfJoiningBranch != null) {
+            setDateOfJoiningBranch(dateOfJoiningBranch);
+        }
+    }
 
 }

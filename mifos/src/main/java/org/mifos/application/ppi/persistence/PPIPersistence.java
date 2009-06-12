@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ppi.persistence;
 
 import java.util.List;
@@ -37,68 +37,66 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class PPIPersistence extends SurveysPersistence {
-	
-	public PPISurvey retrieveActivePPISurvey() {
-		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ACTIVE_PPI);
-		List list = query.list();
-		return list.size() > 0 ? (PPISurvey) list.get(0) : null;
-	}
-	
-	public List<PPISurvey> retrieveAllPPISurveys() {
-		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ALL_PPI);
-		return query.list();
-	}
-	
-	public PPISurvey retrievePPISurveyByCountry(int country) {
-		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_PPI_BY_COUNTRY);
-		query.setParameter("COUNTRY", country);
-		List list = query.list();
-		return list.size() > 0 ? (PPISurvey) list.get(0) : null;
-	}
-	
-	public PPISurvey retrievePPISurveyByCountry(Country country) {
-		return retrievePPISurveyByCountry(country.getValue());
-	}
-	
-	
-	/**
-	 * Returns the {@link PPISurvey} from persistence with the given id.
-	 * 
-	 * If a survey with that id does not exists, or if the survey is not a
-	 * {@link PPISurvey}, <code>null</code> is returned.
-	 */
-	public PPISurvey getPPISurvey(int id) {
-		Survey retrieved = (Survey) getSession().get(PPISurvey.class, id);
-		return retrieved instanceof PPISurvey ? (PPISurvey) retrieved : null;
-	}
-	
-	/**
-	 * Returns the {@link PPIChoice} from persistence with the given id.
-	 * 
-	 * If a QuestionChoice with that id does not exists, or if the QuestionChoice
-	 * is not a {@link PPIChoice}, <code>null</code> is returned.
-	 */
-	public PPIChoice getPPIChoice(int id) {
-		QuestionChoice retrieved = (QuestionChoice) getSession().get(PPIChoice.class, id);
-		return retrieved instanceof PPIChoice ? (PPIChoice) retrieved : null;
-	}
-	
-	@Override
-	public List<SurveyResponse> retrieveResponsesByInstance(SurveyInstance instance) throws PersistenceException {
-		List<SurveyResponse> list = super.retrieveResponsesByInstance(instance);
-		for (SurveyResponse response : list) {
-			if (response.getQuestion().getAnswerType() == AnswerType.CHOICE.getValue()) {
-				PPIChoice ppiChoice = getPPIChoice(response.getChoiceValue().getChoiceId());
-				if (ppiChoice != null)
-					try {
-						response.setChoiceValue(ppiChoice);
-					}
-				catch (ApplicationException e) {
-					throw new PersistenceException(e);
-				}
-			}
-		}
-		return list;
-	}
+
+    public PPISurvey retrieveActivePPISurvey() {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ACTIVE_PPI);
+        List list = query.list();
+        return list.size() > 0 ? (PPISurvey) list.get(0) : null;
+    }
+
+    public List<PPISurvey> retrieveAllPPISurveys() {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ALL_PPI);
+        return query.list();
+    }
+
+    public PPISurvey retrievePPISurveyByCountry(int country) {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_PPI_BY_COUNTRY);
+        query.setParameter("COUNTRY", country);
+        List list = query.list();
+        return list.size() > 0 ? (PPISurvey) list.get(0) : null;
+    }
+
+    public PPISurvey retrievePPISurveyByCountry(Country country) {
+        return retrievePPISurveyByCountry(country.getValue());
+    }
+
+    /**
+     * Returns the {@link PPISurvey} from persistence with the given id.
+     * 
+     * If a survey with that id does not exists, or if the survey is not a
+     * {@link PPISurvey}, <code>null</code> is returned.
+     */
+    public PPISurvey getPPISurvey(int id) {
+        Survey retrieved = (Survey) getSession().get(PPISurvey.class, id);
+        return retrieved instanceof PPISurvey ? (PPISurvey) retrieved : null;
+    }
+
+    /**
+     * Returns the {@link PPIChoice} from persistence with the given id.
+     * 
+     * If a QuestionChoice with that id does not exists, or if the
+     * QuestionChoice is not a {@link PPIChoice}, <code>null</code> is returned.
+     */
+    public PPIChoice getPPIChoice(int id) {
+        QuestionChoice retrieved = (QuestionChoice) getSession().get(PPIChoice.class, id);
+        return retrieved instanceof PPIChoice ? (PPIChoice) retrieved : null;
+    }
+
+    @Override
+    public List<SurveyResponse> retrieveResponsesByInstance(SurveyInstance instance) throws PersistenceException {
+        List<SurveyResponse> list = super.retrieveResponsesByInstance(instance);
+        for (SurveyResponse response : list) {
+            if (response.getQuestion().getAnswerType() == AnswerType.CHOICE.getValue()) {
+                PPIChoice ppiChoice = getPPIChoice(response.getChoiceValue().getChoiceId());
+                if (ppiChoice != null)
+                    try {
+                        response.setChoiceValue(ppiChoice);
+                    } catch (ApplicationException e) {
+                        throw new PersistenceException(e);
+                    }
+            }
+        }
+        return list;
+    }
 
 }

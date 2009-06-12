@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.action;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountAppAction extends BaseAction {
     private AccountBusinessService accountBusinessService;
-    
+
     public AccountAppAction() {
         this.accountBusinessService = new AccountBusinessService();
     }
@@ -69,187 +69,165 @@ public class AccountAppAction extends BaseAction {
     public AccountAppAction(AccountBusinessService accountBusinessService) {
         this.accountBusinessService = accountBusinessService;
     }
-    
+
     @Override
-	protected BusinessService getService() {
-		return getAccountBusinessService();
-	}
+    protected BusinessService getService() {
+        return getAccountBusinessService();
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("accountAppAction");
-		security.allow("removeFees",	SecurityConstants.VIEW);
-		security.allow("getTrxnHistory",	SecurityConstants.VIEW);
-		return security;
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	@CloseSession
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward removeFees(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		Integer accountId = getIntegerValue(request.getParameter("accountId"));
-		Short feeId = getShortValue(request.getParameter("feeId"));
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USERCONTEXT, request.getSession());
-		AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request);
-		if (accountBO.getPersonnel() != null)
-			getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),accountBO.getCustomer().getLevel(), uc,
-					accountBO.getOffice().getOfficeId(), accountBO.getPersonnel()
-							.getPersonnelId());
-		else
-			getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),accountBO.getCustomer().getLevel(), uc,
-					accountBO.getOffice().getOfficeId(), uc.getId());
-		accountBO.removeFees(feeId, uc.getId());
-		String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
-		StringBuilder forward = new StringBuilder();
-		forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_"
-				+ AccountConstants.CHARGES);
-		if (fromPage != null) {
-			return mapping.findForward(forward.toString());
-		} else {
-			return mapping.findForward(AccountConstants.REMOVE_SUCCESS);
-		}
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("accountAppAction");
+        security.allow("removeFees", SecurityConstants.VIEW);
+        security.allow("getTrxnHistory", SecurityConstants.VIEW);
+        return security;
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward getTrxnHistory(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String globalAccountNum = request.getParameter("globalAccountNum");
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USERCONTEXT, request.getSession());
-		AccountBO accountBO = getAccountBusinessService()
-				.findBySystemId(globalAccountNum);
-		SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST,
-				getAccountBusinessService().getTrxnHistory(accountBO, uc), request);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request);
-		return mapping.findForward("getTransactionHistory_success");
-	}
+    @CloseSession
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward removeFees(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        Integer accountId = getIntegerValue(request.getParameter("accountId"));
+        Short feeId = getShortValue(request.getParameter("feeId"));
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+        AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+        if (accountBO.getPersonnel() != null)
+            getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
+                    accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(),
+                    accountBO.getPersonnel().getPersonnelId());
+        else
+            getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
+                    accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(), uc.getId());
+        accountBO.removeFees(feeId, uc.getId());
+        String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
+        StringBuilder forward = new StringBuilder();
+        forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_" + AccountConstants.CHARGES);
+        if (fromPage != null) {
+            return mapping.findForward(forward.toString());
+        } else {
+            return mapping.findForward(AccountConstants.REMOVE_SUCCESS);
+        }
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USERCONTEXT, request.getSession());
-		Integer accountId = getIntegerValue(request.getParameter("accountId"));
-		AccountBO account = getAccountBusinessService().getAccount(accountId);
-		account.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account,request);
-		WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
-		if (account.getPersonnel() != null)
-			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
-					account.getOffice().getOfficeId(), account.getPersonnel()
-							.getPersonnelId());
-		else
-			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
-					account.getOffice().getOfficeId(), uc.getId());
-		account.waiveAmountDue(waiveEnum);
-		return mapping.findForward("waiveChargesDue_Success");
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward getTrxnHistory(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+        AccountBO accountBO = getAccountBusinessService().findBySystemId(globalAccountNum);
+        SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, getAccountBusinessService()
+                .getTrxnHistory(accountBO, uc), request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
+        return mapping.findForward("getTransactionHistory_success");
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward waiveChargeOverDue(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USERCONTEXT, request.getSession());
-		Integer accountId = getIntegerValue(request.getParameter("accountId"));
-		AccountBO account = getAccountBusinessService().getAccount(accountId);
-		account.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account,request);
-		WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
-		if (account.getPersonnel() != null)
-			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
-					account.getOffice().getOfficeId(), account.getPersonnel()
-							.getPersonnelId());
-		else
-			getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account.getCustomer().getLevel(), uc,
-					account.getOffice().getOfficeId(), uc.getId());
-		account.waiveAmountOverDue(waiveEnum);
-		return mapping.findForward("waiveChargesOverDue_Success");
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+        Integer accountId = getIntegerValue(request.getParameter("accountId"));
+        AccountBO account = getAccountBusinessService().getAccount(accountId);
+        account.setUserContext(uc);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+        WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
+        if (account.getPersonnel() != null)
+            getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
+                    account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(),
+                    account.getPersonnel().getPersonnelId());
+        else
+            getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
+                    account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(), uc.getId());
+        account.waiveAmountDue(waiveEnum);
+        return mapping.findForward("waiveChargesDue_Success");
+    }
 
-	private WaiveEnum getWaiveType(String waiveType) {
-		if (waiveType != null) {
-			if (waiveType.equalsIgnoreCase(WaiveEnum.PENALTY.toString())) {
-				return WaiveEnum.PENALTY;
-			}
-			if (waiveType.equalsIgnoreCase(WaiveEnum.FEES.toString())) {
-				return WaiveEnum.FEES;
-			}
-		}
-		return WaiveEnum.ALL;
-	}
-	
-	protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
-		return getCustomerBusinessService().getCustomer(customerId);
-	}
-	
-	protected CustomerBO getCustomerBySystemId(String systemId) throws ServiceException {
-		return getCustomerBusinessService().findBySystemId(systemId);
-	}
-	
-	
-	protected CustomerBusinessService getCustomerBusinessService() {
-		return (CustomerBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Customer);
-	}
-	
-	protected AccountBusinessService getAccountBusinessService() {
-		return accountBusinessService;
-	}
-	
-	protected void convertCustomFieldDateToUniformPattern(
-			List<CustomFieldView> customFields, Locale locale) {
-		for (CustomFieldView customField : customFields) {
-			if (customField.getFieldType().equals(
-					CustomFieldType.DATE.getValue())
-					&& StringUtils.isNullAndEmptySafe(customField
-							.getFieldValue()))
-				customField.convertDateToUniformPattern(locale);
-		}
-	}
-	
-	protected List<CustomFieldView> createCustomFieldViewsForEdit(
-			Set<AccountCustomFieldEntity> customFieldEntities,
-			HttpServletRequest request) throws ApplicationException {
-		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward waiveChargeOverDue(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+        Integer accountId = getIntegerValue(request.getParameter("accountId"));
+        AccountBO account = getAccountBusinessService().getAccount(accountId);
+        account.setUserContext(uc);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+        WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
+        if (account.getPersonnel() != null)
+            getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
+                    account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(),
+                    account.getPersonnel().getPersonnelId());
+        else
+            getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
+                    account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(), uc.getId());
+        account.waiveAmountOverDue(waiveEnum);
+        return mapping.findForward("waiveChargesOverDue_Success");
+    }
 
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
-		Locale locale = getUserContext(request).getPreferredLocale();
-		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-			boolean customFieldPresent = false;
-			for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
-				customFieldPresent=true;
-				if (customFieldDef.getFieldId().equals(
-						customFieldEntity.getFieldId())) {
-					if (customFieldDef.getFieldType().equals(
-							CustomFieldType.DATE.getValue())) {
-						customFields.add(new CustomFieldView(customFieldEntity
-								.getFieldId(), DateUtils.getUserLocaleDate(locale, customFieldEntity.getFieldValue()),
-								customFieldDef.getFieldType()));
-					} else {
-						customFields
-								.add(new CustomFieldView(customFieldEntity
-										.getFieldId(), customFieldEntity
-										.getFieldValue(), customFieldDef
-										.getFieldType()));
-					}
-				}
-			}
-			if(!customFieldPresent)
-				customFields
-				.add(new CustomFieldView(customFieldDef.getFieldId(),
-						customFieldDef.getDefaultValue(), customFieldDef.getFieldType()));
-		}
-		return customFields;
-	}
+    private WaiveEnum getWaiveType(String waiveType) {
+        if (waiveType != null) {
+            if (waiveType.equalsIgnoreCase(WaiveEnum.PENALTY.toString())) {
+                return WaiveEnum.PENALTY;
+            }
+            if (waiveType.equalsIgnoreCase(WaiveEnum.FEES.toString())) {
+                return WaiveEnum.FEES;
+            }
+        }
+        return WaiveEnum.ALL;
+    }
+
+    protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
+        return getCustomerBusinessService().getCustomer(customerId);
+    }
+
+    protected CustomerBO getCustomerBySystemId(String systemId) throws ServiceException {
+        return getCustomerBusinessService().findBySystemId(systemId);
+    }
+
+    protected CustomerBusinessService getCustomerBusinessService() {
+        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
+    }
+
+    protected AccountBusinessService getAccountBusinessService() {
+        return accountBusinessService;
+    }
+
+    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) {
+        for (CustomFieldView customField : customFields) {
+            if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
+                    && StringUtils.isNullAndEmptySafe(customField.getFieldValue()))
+                customField.convertDateToUniformPattern(locale);
+        }
+    }
+
+    protected List<CustomFieldView> createCustomFieldViewsForEdit(Set<AccountCustomFieldEntity> customFieldEntities,
+            HttpServletRequest request) throws ApplicationException {
+        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+                .getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
+        Locale locale = getUserContext(request).getPreferredLocale();
+        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+            boolean customFieldPresent = false;
+            for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
+                customFieldPresent = true;
+                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
+                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
+                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
+                                .getFieldType()));
+                    } else {
+                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), customFieldEntity
+                                .getFieldValue(), customFieldDef.getFieldType()));
+                    }
+                }
+            }
+            if (!customFieldPresent)
+                customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
+                        customFieldDef.getFieldType()));
+        }
+        return customFields;
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import java.text.DateFormat;
@@ -29,86 +29,84 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class CustomFieldView extends View {
 
-	private Short fieldId;
+    private Short fieldId;
 
-	private String fieldValue;
-	
-	private Short fieldType;
+    private String fieldValue;
 
-	public CustomFieldView() {
-		super();
-	}
+    private Short fieldType;
 
-	public CustomFieldView(Short fieldId, String fieldValue, Short fieldType) {
-		this.fieldId = fieldId;
-		this.fieldValue = fieldValue;
-		this.fieldType = fieldType;
-	}
-	
-	public CustomFieldView(Short fieldId, String value, CustomFieldType type) {
-		this(fieldId, value, type == null ? null : type.getValue());
-	}
+    public CustomFieldView() {
+        super();
+    }
 
-	public Short getFieldId() {
-		return fieldId;
-	}
+    public CustomFieldView(Short fieldId, String fieldValue, Short fieldType) {
+        this.fieldId = fieldId;
+        this.fieldValue = fieldValue;
+        this.fieldType = fieldType;
+    }
 
-	public void setFieldId(Short fieldId) {
-		this.fieldId = fieldId;
-	}
+    public CustomFieldView(Short fieldId, String value, CustomFieldType type) {
+        this(fieldId, value, type == null ? null : type.getValue());
+    }
 
-	public String getFieldValue() {
-		return fieldValue;
-	}
+    public Short getFieldId() {
+        return fieldId;
+    }
 
-	public void setFieldValue(String fieldValue) {
-		this.fieldValue = fieldValue;
-	}
+    public void setFieldId(Short fieldId) {
+        this.fieldId = fieldId;
+    }
 
-	public Short getFieldType() {
-		return fieldType;
-	}
-	
-	public CustomFieldType getFieldTypeAsEnum() {
-		return CustomFieldType.fromInt(fieldType);
-	}
+    public String getFieldValue() {
+        return fieldValue;
+    }
 
-	public void setFieldType(Short fieldType) {
-		this.fieldType = fieldType;
-	}
-	
-	public void setFieldType(CustomFieldType type) {
-		this.fieldType = type.getValue();
-	}
+    public void setFieldValue(String fieldValue) {
+        this.fieldValue = fieldValue;
+    }
 
-	@Override
-	public int hashCode() {
-		return fieldId == null ? 0 : fieldId.hashCode();
-	}
+    public Short getFieldType() {
+        return fieldType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final CustomFieldView other = (CustomFieldView) obj;
-		if (fieldId == null) {
-			if (other.fieldId != null)
-				return false;
-		} else if (!fieldId.equals(other.fieldId))
-			return false;
-		return true;
-	}
+    public CustomFieldType getFieldTypeAsEnum() {
+        return CustomFieldType.fromInt(fieldType);
+    }
 
-	public void convertDateToUniformPattern(Locale currentLocale) {
-		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(
-				DateFormat.SHORT, currentLocale);
-		String userfmt = DateUtils.convertToCurrentDateFormat(
-			format.toPattern());
-		setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));
-	}
+    public void setFieldType(Short fieldType) {
+        this.fieldType = fieldType;
+    }
+
+    public void setFieldType(CustomFieldType type) {
+        this.fieldType = type.getValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return fieldId == null ? 0 : fieldId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final CustomFieldView other = (CustomFieldView) obj;
+        if (fieldId == null) {
+            if (other.fieldId != null)
+                return false;
+        } else if (!fieldId.equals(other.fieldId))
+            return false;
+        return true;
+    }
+
+    public void convertDateToUniformPattern(Locale currentLocale) {
+        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
+        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+        setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));
+    }
 
 }

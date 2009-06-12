@@ -17,40 +17,40 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.business.View;
 
 public class CustomerPositionView extends View {
-	Integer customerId;
+    Integer customerId;
 
-	Short positionId;
+    Short positionId;
 
-	public CustomerPositionView() {
-	}
+    public CustomerPositionView() {
+    }
 
-	public CustomerPositionView(Integer customerId, Short positionId) {
+    public CustomerPositionView(Integer customerId, Short positionId) {
 
-		this.customerId = customerId;
+        this.customerId = customerId;
 
-		this.positionId = positionId;
-	}
+        this.positionId = positionId;
+    }
 
-	public Integer getCustomerId() {
-		return customerId;
-	}
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
-	}
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
-	public Short getPositionId() {
-		return positionId;
-	}
+    public Short getPositionId() {
+        return positionId;
+    }
 
-	public void setPositionId(Short positionId) {
-		this.positionId = positionId;
-	}
+    public void setPositionId(Short positionId) {
+        this.positionId = positionId;
+    }
 
 }

@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class CheckListException extends ApplicationException {
 
-	public CheckListException(Throwable cause) {
-		super(cause);
-	}
+    public CheckListException(Throwable cause) {
+        super(cause);
+    }
 
-	public CheckListException(String key) {
-		super(key);
-	}
+    public CheckListException(String key) {
+        super(key);
+    }
 
 }

@@ -17,8 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.actionforms;
+
 import static org.mifos.framework.util.CollectionUtils.select;
 
 import java.util.ArrayList;
@@ -57,259 +58,228 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	private String branchOfficeId;
+    private String branchOfficeId;
 
-	private String loanOfficerId;
+    private String loanOfficerId;
 
-	private String centerId;
+    private String centerId;
 
-	private String centerSearchId;
+    private String centerSearchId;
 
-	private String prdOfferingId;
+    private String prdOfferingId;
 
-	private List<MultipleLoanCreationViewHelper> clientDetails;
+    private List<MultipleLoanCreationViewHelper> clientDetails;
 
-	private String stateSelected;
+    private String stateSelected;
 
-	public MultipleLoanAccountsCreationActionForm() {
-		clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
-	}
+    public MultipleLoanAccountsCreationActionForm() {
+        clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
+    }
 
-	public List<MultipleLoanCreationViewHelper> getClientDetails() {
-		return clientDetails;
-	}
+    public List<MultipleLoanCreationViewHelper> getClientDetails() {
+        return clientDetails;
+    }
 
-	public void setClientDetails(
-			List<MultipleLoanCreationViewHelper> clientDetails) {
-		this.clientDetails = clientDetails;
-	}
+    public void setClientDetails(List<MultipleLoanCreationViewHelper> clientDetails) {
+        this.clientDetails = clientDetails;
+    }
 
-	public List<MultipleLoanCreationViewHelper> getApplicableClientDetails() {
-		try {
-			return (List<MultipleLoanCreationViewHelper>) select(clientDetails,
-							new Predicate<MultipleLoanCreationViewHelper>() {
-								public boolean evaluate(
-										MultipleLoanCreationViewHelper clientDetail)
-										throws Exception {
-									return clientDetail.isApplicable();
-								}
-							});
-		}
-		catch (Exception e) {
-			return new ArrayList<MultipleLoanCreationViewHelper>();
-		}
-	}
+    public List<MultipleLoanCreationViewHelper> getApplicableClientDetails() {
+        try {
+            return (List<MultipleLoanCreationViewHelper>) select(clientDetails,
+                    new Predicate<MultipleLoanCreationViewHelper>() {
+                        public boolean evaluate(MultipleLoanCreationViewHelper clientDetail) throws Exception {
+                            return clientDetail.isApplicable();
+                        }
+                    });
+        } catch (Exception e) {
+            return new ArrayList<MultipleLoanCreationViewHelper>();
+        }
+    }
 
-	public String getBranchOfficeId() {
-		return branchOfficeId;
-	}
+    public String getBranchOfficeId() {
+        return branchOfficeId;
+    }
 
-	public void setBranchOfficeId(String branchOfficeId) {
-		this.branchOfficeId = branchOfficeId;
-	}
+    public void setBranchOfficeId(String branchOfficeId) {
+        this.branchOfficeId = branchOfficeId;
+    }
 
-	public String getLoanOfficerId() {
-		return loanOfficerId;
-	}
+    public String getLoanOfficerId() {
+        return loanOfficerId;
+    }
 
-	public void setLoanOfficerId(String loanOfficerId) {
-		this.loanOfficerId = loanOfficerId;
-	}
+    public void setLoanOfficerId(String loanOfficerId) {
+        this.loanOfficerId = loanOfficerId;
+    }
 
-	public String getCenterId() {
-		return centerId;
-	}
+    public String getCenterId() {
+        return centerId;
+    }
 
-	public void setCenterId(String centerId) {
-		this.centerId = centerId;
-	}
+    public void setCenterId(String centerId) {
+        this.centerId = centerId;
+    }
 
-	public String getPrdOfferingId() {
-		return prdOfferingId;
-	}
+    public String getPrdOfferingId() {
+        return prdOfferingId;
+    }
 
-	public void setPrdOfferingId(String prdOfferingId) {
-		this.prdOfferingId = prdOfferingId;
-	}
+    public void setPrdOfferingId(String prdOfferingId) {
+        this.prdOfferingId = prdOfferingId;
+    }
 
-	public String getCenterSearchId() {
-		return centerSearchId;
-	}
+    public String getCenterSearchId() {
+        return centerSearchId;
+    }
 
-	public void setCenterSearchId(String centerSearchId) {
-		this.centerSearchId = centerSearchId;
-	}
+    public void setCenterSearchId(String centerSearchId) {
+        this.centerSearchId = centerSearchId;
+    }
 
-	public String getStateSelected() {
-		return stateSelected;
-	}
+    public String getStateSelected() {
+        return stateSelected;
+    }
 
-	public void setStateSelected(String stateSelected) {
-		this.stateSelected = stateSelected;
-	}
+    public void setStateSelected(String stateSelected) {
+        this.stateSelected = stateSelected;
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		logger.debug("Inside validate method");
-		String method = request.getParameter(Methods.method.toString());
-		ActionErrors errors = new ActionErrors();
-		try {
-			if (method.equals(Methods.get.toString())) {
-				request.setAttribute(Constants.CURRENTFLOWKEY, request
-						.getParameter(Constants.CURRENTFLOWKEY));
-				checkValidationForLoad(errors, getUserContext(request), 
-						(Short) SessionUtils.getAttribute(
-								CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
-								request));
-			} else if (method.equals(Methods.create.toString())) {
-				request.setAttribute(Constants.CURRENTFLOWKEY, request
-						.getParameter(Constants.CURRENTFLOWKEY));
-				checkValidationForCreate(errors, request);
-			} else if (method.equals(Methods.getLoanOfficers.toString())) {
-				checkValidationForBranchOffice(errors, getUserContext(request));
-			} else if (method.equals(Methods.getCenters.toString())) {
-				checkValidationForBranchOffice(errors, getUserContext(request));
-				checkValidationForLoanOfficer(errors);
-			} else if (method.equals(Methods.getPrdOfferings.toString())) {
-				request.setAttribute(Constants.CURRENTFLOWKEY, request
-						.getParameter(Constants.CURRENTFLOWKEY));
-				checkValidationForBranchOffice(errors, getUserContext(request));
-				checkValidationForLoanOfficer(errors);
-				checkValidationForCenter(errors, getUserContext(request),
-						(Short) SessionUtils
-						.getAttribute(
-								CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
-								request));
-			}
-		} catch (PageExpiredException e) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-		}
-		catch (ServiceException e) {
-			errors.add(ExceptionConstants.SERVICEEXCEPTION,
-					new ActionMessage(ExceptionConstants.SERVICEEXCEPTION));
-		}
-		if (!errors.isEmpty()) {
-			request.setAttribute("methodCalled", method);
-		}
-		logger.debug("outside validate method");
-		return errors;
-	}
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        logger.debug("Inside validate method");
+        String method = request.getParameter(Methods.method.toString());
+        ActionErrors errors = new ActionErrors();
+        try {
+            if (method.equals(Methods.get.toString())) {
+                request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+                checkValidationForLoad(errors, getUserContext(request), (Short) SessionUtils.getAttribute(
+                        CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request));
+            } else if (method.equals(Methods.create.toString())) {
+                request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+                checkValidationForCreate(errors, request);
+            } else if (method.equals(Methods.getLoanOfficers.toString())) {
+                checkValidationForBranchOffice(errors, getUserContext(request));
+            } else if (method.equals(Methods.getCenters.toString())) {
+                checkValidationForBranchOffice(errors, getUserContext(request));
+                checkValidationForLoanOfficer(errors);
+            } else if (method.equals(Methods.getPrdOfferings.toString())) {
+                request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+                checkValidationForBranchOffice(errors, getUserContext(request));
+                checkValidationForLoanOfficer(errors);
+                checkValidationForCenter(errors, getUserContext(request), (Short) SessionUtils.getAttribute(
+                        CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request));
+            }
+        } catch (PageExpiredException e) {
+            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
+                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
+        } catch (ServiceException e) {
+            errors.add(ExceptionConstants.SERVICEEXCEPTION, new ActionMessage(ExceptionConstants.SERVICEEXCEPTION));
+        }
+        if (!errors.isEmpty()) {
+            request.setAttribute("methodCalled", method);
+        }
+        logger.debug("outside validate method");
+        return errors;
+    }
 
-	private void checkValidationForCreate(ActionErrors errors,
-			HttpServletRequest request) throws PageExpiredException,
-			ServiceException {
-		logger.debug("inside checkValidationForCreate method");
-		List<MultipleLoanCreationViewHelper> applicableClientDetails = getApplicableClientDetails();
-		if (CollectionUtils.isEmpty(applicableClientDetails)) {
-			addError(errors, LoanConstants.APPL_RECORDS,
-					LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
-							ConfigurationConstants.CLIENT,
-							getUserContext(request)));
-			return;
-		}
-		Locale locale = getUserContext(request).getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle(
-				FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
-		for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
-			if (!clientDetail.isLoanAmountInRange()) {
-				addError(errors, LoanConstants.LOANAMOUNT,
-					LoanExceptionConstants.INVALIDMINMAX, resources
-							.getString("loan.loanAmountFor")
-							+ clientDetail.getClientName(), clientDetail
-							.getMinLoanAmount().toString(), clientDetail
-							.getMaxLoanAmount().toString());
-			}
-			if (StringUtils.isEmpty(clientDetail.getBusinessActivity()) && isPurposeOfLoanMandatory(request)) {
-				addError(errors, LoanConstants.PURPOSE_OF_LOAN,
-						LoanExceptionConstants.CUSTOMER_PURPOSE_OF_LOAN_FIELD);
-			}
-		}
-		logger.debug("outside checkValidationForCreate method");
-	}
+    private void checkValidationForCreate(ActionErrors errors, HttpServletRequest request) throws PageExpiredException,
+            ServiceException {
+        logger.debug("inside checkValidationForCreate method");
+        List<MultipleLoanCreationViewHelper> applicableClientDetails = getApplicableClientDetails();
+        if (CollectionUtils.isEmpty(applicableClientDetails)) {
+            addError(errors, LoanConstants.APPL_RECORDS, LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
+                    ConfigurationConstants.CLIENT, getUserContext(request)));
+            return;
+        }
+        Locale locale = getUserContext(request).getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
+        for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
+            if (!clientDetail.isLoanAmountInRange()) {
+                addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX, resources
+                        .getString("loan.loanAmountFor")
+                        + clientDetail.getClientName(), clientDetail.getMinLoanAmount().toString(), clientDetail
+                        .getMaxLoanAmount().toString());
+            }
+            if (StringUtils.isEmpty(clientDetail.getBusinessActivity()) && isPurposeOfLoanMandatory(request)) {
+                addError(errors, LoanConstants.PURPOSE_OF_LOAN, LoanExceptionConstants.CUSTOMER_PURPOSE_OF_LOAN_FIELD);
+            }
+        }
+        logger.debug("outside checkValidationForCreate method");
+    }
 
-	private void checkValidationForLoad(ActionErrors errors, UserContext userContext,
-			short isCenterHeirarchyExists) {
-		logger.debug("Inside checkValidationForLoad method");
-		checkValidationForBranchOffice(errors, userContext);
-		checkValidationForLoanOfficer(errors);
-		checkValidationForCenter(errors, userContext, isCenterHeirarchyExists);
-		checkValidationForPrdOfferingId(errors, userContext);
-		logger.debug("outside checkValidationForLoad method");
-	}
+    private void checkValidationForLoad(ActionErrors errors, UserContext userContext, short isCenterHeirarchyExists) {
+        logger.debug("Inside checkValidationForLoad method");
+        checkValidationForBranchOffice(errors, userContext);
+        checkValidationForLoanOfficer(errors);
+        checkValidationForCenter(errors, userContext, isCenterHeirarchyExists);
+        checkValidationForPrdOfferingId(errors, userContext);
+        logger.debug("outside checkValidationForLoad method");
+    }
 
-	private void checkValidationForBranchOffice(ActionErrors errors,
-			UserContext userContext) {
-		if (StringUtils.isNullOrEmpty(branchOfficeId)) {
-			addError(errors, ConfigurationConstants.BRANCHOFFICE,
-					LoanConstants.MANDATORY_SELECT, getMessageText(
-							ConfigurationConstants.BRANCHOFFICE, userContext));
-		}
-	}
+    private void checkValidationForBranchOffice(ActionErrors errors, UserContext userContext) {
+        if (StringUtils.isNullOrEmpty(branchOfficeId)) {
+            addError(errors, ConfigurationConstants.BRANCHOFFICE, LoanConstants.MANDATORY_SELECT, getMessageText(
+                    ConfigurationConstants.BRANCHOFFICE, userContext));
+        }
+    }
 
-	private void checkValidationForLoanOfficer(ActionErrors errors) {
-		if (StringUtils.isNullOrEmpty(loanOfficerId)) {
-			addError(errors, LoanConstants.LOANOFFICERS,
-					LoanConstants.MANDATORY_SELECT, LoanConstants.LOANOFFICERS);
-		}
-	}
+    private void checkValidationForLoanOfficer(ActionErrors errors) {
+        if (StringUtils.isNullOrEmpty(loanOfficerId)) {
+            addError(errors, LoanConstants.LOANOFFICERS, LoanConstants.MANDATORY_SELECT, LoanConstants.LOANOFFICERS);
+        }
+    }
 
-	private void checkValidationForCenter(ActionErrors errors,
-			UserContext userContext, short isCenterHeirarchyExists) {
-		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
-				: ConfigurationConstants.GROUP;
-		if (StringUtils.isNullOrEmpty(centerId)) {
-			addError(errors, ConfigurationConstants.CENTER,
-					LoanConstants.MANDATORY_SELECT, getLabel(customerLabel,
-							userContext));
-		}
-	}
+    private void checkValidationForCenter(ActionErrors errors, UserContext userContext, short isCenterHeirarchyExists) {
+        String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
+                : ConfigurationConstants.GROUP;
+        if (StringUtils.isNullOrEmpty(centerId)) {
+            addError(errors, ConfigurationConstants.CENTER, LoanConstants.MANDATORY_SELECT, getLabel(customerLabel,
+                    userContext));
+        }
+    }
 
-	private void checkValidationForPrdOfferingId(ActionErrors errors,
-			UserContext userContext) {
-		if (StringUtils.isNullOrEmpty(prdOfferingId)) {
-			addError(errors, LoanConstants.PRDOFFERINGID,
-					LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
-							ConfigurationConstants.LOAN, userContext),
-					LoanConstants.INSTANCENAME);
-		}
-	}
+    private void checkValidationForPrdOfferingId(ActionErrors errors, UserContext userContext) {
+        if (StringUtils.isNullOrEmpty(prdOfferingId)) {
+            addError(errors, LoanConstants.PRDOFFERINGID, LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
+                    ConfigurationConstants.LOAN, userContext), LoanConstants.INSTANCENAME);
+        }
+    }
 
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		super.reset(mapping, request);
-		CollectionUtils.forAllDo(clientDetails, new Closure() {
-			public void execute(Object arg0) {
-				((MultipleLoanCreationViewHelper)arg0).resetSelected();
-			}
-		});
-	}
-	
-	/**
-	 * Returns true or false depending on whether the purpose of the loan is mandatory or not
-	 */
-	private boolean isPurposeOfLoanMandatory(HttpServletRequest request) {
-		logger.debug("Checking if purpose of loan is Mandatory");
-		
-		Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
-			.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
-		List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.LOAN.getValue());
-		
-		boolean isMandatory = false;
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        super.reset(mapping, request);
+        CollectionUtils.forAllDo(clientDetails, new Closure() {
+            public void execute(Object arg0) {
+                ((MultipleLoanCreationViewHelper) arg0).resetSelected();
+            }
+        });
+    }
 
-		for(FieldConfigurationEntity entity : mandatoryfieldList) {
-			if(entity.getFieldName().equalsIgnoreCase(LoanConstants.PURPOSE_OF_LOAN)) {
-				isMandatory = true;
-				logger.debug("Returning true");
-				break;
-			}
-		}
-		
-		logger.debug("Returning "+isMandatory);
-		return isMandatory;
-	}
+    /**
+     * Returns true or false depending on whether the purpose of the loan is
+     * mandatory or not
+     */
+    private boolean isPurposeOfLoanMandatory(HttpServletRequest request) {
+        logger.debug("Checking if purpose of loan is Mandatory");
+
+        Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
+                .getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+        List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.LOAN.getValue());
+
+        boolean isMandatory = false;
+
+        for (FieldConfigurationEntity entity : mandatoryfieldList) {
+            if (entity.getFieldName().equalsIgnoreCase(LoanConstants.PURPOSE_OF_LOAN)) {
+                isMandatory = true;
+                logger.debug("Returning true");
+                break;
+            }
+        }
+
+        logger.debug("Returning " + isMandatory);
+        return isMandatory;
+    }
 }

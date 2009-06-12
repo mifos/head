@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -27,110 +27,109 @@ import org.mifos.framework.util.helpers.Money;
 
 public class AccountFeesActionDetailEntity extends PersistentObject {
 
-	private final Integer accountFeesActionDetailId;
+    private final Integer accountFeesActionDetailId;
 
-	private final AccountActionDateEntity accountActionDate;
+    private final AccountActionDateEntity accountActionDate;
 
-	private final Short installmentId;
+    private final Short installmentId;
 
-	private final FeeBO fee;
+    private final FeeBO fee;
 
-	private final AccountFeesEntity accountFee;
+    private final AccountFeesEntity accountFee;
 
-	private Money feeAmount;
+    private Money feeAmount;
 
-	private Money feeAmountPaid;
-	
-	protected AccountFeesActionDetailEntity(
-			AccountActionDateEntity accountActionDate,
-			FeeBO fee, AccountFeesEntity accountFee, Money feeAmount) {
-		this.accountFeesActionDetailId = null;
-		this.accountActionDate = accountActionDate;
-		if(accountActionDate!=null)
-			this.installmentId = accountActionDate.getInstallmentId();
-		else
-			this.installmentId =null;
-		this.fee = fee;
-		this.accountFee = accountFee;
-		this.feeAmount = feeAmount;
-	}
+    private Money feeAmountPaid;
 
-	public AccountActionDateEntity getAccountActionDate() {
-		return accountActionDate;
-	}
+    protected AccountFeesActionDetailEntity(AccountActionDateEntity accountActionDate, FeeBO fee,
+            AccountFeesEntity accountFee, Money feeAmount) {
+        this.accountFeesActionDetailId = null;
+        this.accountActionDate = accountActionDate;
+        if (accountActionDate != null)
+            this.installmentId = accountActionDate.getInstallmentId();
+        else
+            this.installmentId = null;
+        this.fee = fee;
+        this.accountFee = accountFee;
+        this.feeAmount = feeAmount;
+    }
 
-	public AccountFeesEntity getAccountFee() {
-		return accountFee;
-	}
+    public AccountActionDateEntity getAccountActionDate() {
+        return accountActionDate;
+    }
 
-	public Integer getAccountFeesActionDetailId() {
-		return accountFeesActionDetailId;
-	}
+    public AccountFeesEntity getAccountFee() {
+        return accountFee;
+    }
 
-	public FeeBO getFee() {
-		return fee;
-	}
+    public Integer getAccountFeesActionDetailId() {
+        return accountFeesActionDetailId;
+    }
 
-	public Money getFeeAmount() {
-		return feeAmount;
-	}
+    public FeeBO getFee() {
+        return fee;
+    }
 
-	protected void setFeeAmount(Money feeAmount) {
-		this.feeAmount = feeAmount;
-	}
+    public Money getFeeAmount() {
+        return feeAmount;
+    }
 
-	public Money getFeeAmountPaid() {
-		return feeAmountPaid;
-	}
+    protected void setFeeAmount(Money feeAmount) {
+        this.feeAmount = feeAmount;
+    }
 
-	protected void setFeeAmountPaid(Money feeAmountPaid) {
-		this.feeAmountPaid = feeAmountPaid;
-	}
+    public Money getFeeAmountPaid() {
+        return feeAmountPaid;
+    }
 
-	public Short getInstallmentId() {
-		return installmentId;
-	}
+    protected void setFeeAmountPaid(Money feeAmountPaid) {
+        this.feeAmountPaid = feeAmountPaid;
+    }
 
-	protected void makePayment(Money feePaid) {
-		if(getFeeAmountPaid()==null)
-			setFeeAmountPaid(new Money());
-		this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
 
-	public Money getFeeDue() {
+    protected void makePayment(Money feePaid) {
+        if (getFeeAmountPaid() == null)
+            setFeeAmountPaid(new Money());
+        this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
+    }
 
-		return getFeeAmount().subtract(getFeeAmountPaid());
-	}
+    public Money getFeeDue() {
 
-	protected void makeRepaymentEnteries(String payFullOrPartial) {
-		if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
-			setFeeAmountPaid(getFeeAmountPaid().add(getFeeDue()));
-		} else {
-			setFeeAmount(getFeeAmountPaid());
-		}
-	}
+        return getFeeAmount().subtract(getFeeAmountPaid());
+    }
 
-	protected Money waiveCharges() {
-		Money chargeWaived = new Money();
-		chargeWaived = chargeWaived.add(getFeeDue());
-		setFeeAmount(getFeeAmountPaid());
-		return chargeWaived;
-	}
+    protected void makeRepaymentEnteries(String payFullOrPartial) {
+        if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
+            setFeeAmountPaid(getFeeAmountPaid().add(getFeeDue()));
+        } else {
+            setFeeAmount(getFeeAmountPaid());
+        }
+    }
 
-	/**
-	 * Since the amount of a rate-based fee carries more
-	 * precision than the prevailing currency can handle, round the
-	 * exact amount when determining the actual fee that must be paid.
-	 */
-	public void roundFeeAmount(Money roundedAmount) {
-		setFeeAmount(roundedAmount);
-	}
-	
-	/**
-	 * Adjust for rounding fees paid in prior installments, so that
-	 * the total fees paid adds up properly
-	 */
-	public void adjustFeeAmount (Money difference) {
-		setFeeAmount (getFeeAmount().add(difference));
-	}
+    protected Money waiveCharges() {
+        Money chargeWaived = new Money();
+        chargeWaived = chargeWaived.add(getFeeDue());
+        setFeeAmount(getFeeAmountPaid());
+        return chargeWaived;
+    }
+
+    /**
+     * Since the amount of a rate-based fee carries more precision than the
+     * prevailing currency can handle, round the exact amount when determining
+     * the actual fee that must be paid.
+     */
+    public void roundFeeAmount(Money roundedAmount) {
+        setFeeAmount(roundedAmount);
+    }
+
+    /**
+     * Adjust for rounding fees paid in prior installments, so that the total
+     * fees paid adds up properly
+     */
+    public void adjustFeeAmount(Money difference) {
+        setFeeAmount(getFeeAmount().add(difference));
+    }
 }

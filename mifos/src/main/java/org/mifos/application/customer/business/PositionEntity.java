@@ -17,21 +17,22 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
 
-public class PositionEntity extends MasterDataEntity{
-	
-	public PositionEntity(Short id) {
-		super(id);
-	}	
+public class PositionEntity extends MasterDataEntity {
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected PositionEntity(){}
+    public PositionEntity(Short id) {
+        super(id);
+    }
+
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected PositionEntity() {
+    }
 
 }

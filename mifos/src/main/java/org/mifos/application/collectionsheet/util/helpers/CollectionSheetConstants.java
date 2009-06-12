@@ -17,18 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.util.helpers;
 
 public interface CollectionSheetConstants {
-	
-	// states in which collection sheet generation can be at any given point in time.
-	public static final Short COLLECTION_SHEET_GENERATION_STARTED = 1;
-	public static final Short COLLECTION_SHEET_GENERATION_SUCCESSFUL = 2;
-	public static final Short COLLECTION_SHEET_GENERATION_FAILED = 3;
-	
-	// parameters for query
-	public static final String MEETING_DATE = "meeting_date";
-	public static final Short FIRST_INSTALLMENT = 1;
-	
+
+    // states in which collection sheet generation can be at any given point in
+    // time.
+    public static final Short COLLECTION_SHEET_GENERATION_STARTED = 1;
+    public static final Short COLLECTION_SHEET_GENERATION_SUCCESSFUL = 2;
+    public static final Short COLLECTION_SHEET_GENERATION_FAILED = 3;
+
+    // parameters for query
+    public static final String MEETING_DATE = "meeting_date";
+    public static final Short FIRST_INSTALLMENT = 1;
+
 }

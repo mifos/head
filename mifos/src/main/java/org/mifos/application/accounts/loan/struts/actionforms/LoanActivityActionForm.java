@@ -17,13 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.actionforms;
 
 import org.mifos.application.accounts.struts.actionforms.AccountAppActionForm;
 
 public class LoanActivityActionForm extends AccountAppActionForm {
-	public LoanActivityActionForm() {
-		super();
-	}
+    public LoanActivityActionForm() {
+        super();
+    }
 }

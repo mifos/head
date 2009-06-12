@@ -17,35 +17,36 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys.business;
 
 public class QuestionChoice {
-	private int choiceId;
-	
-	private String choiceText;
-	
-	// defining the null constructor avoids some harmless hibernate error 
-	// messages during testing
-	public QuestionChoice() {}
-	
-	public QuestionChoice(String text) {
-		choiceText = text;
-	}
+    private int choiceId;
 
-	public int getChoiceId() {
-		return choiceId;
-	}
+    private String choiceText;
 
-	public void setChoiceId(int choiceId) {
-		this.choiceId = choiceId;
-	}
+    // defining the null constructor avoids some harmless hibernate error
+    // messages during testing
+    public QuestionChoice() {
+    }
 
-	public String getChoiceText() {
-		return choiceText;
-	}
+    public QuestionChoice(String text) {
+        choiceText = text;
+    }
 
-	public void setChoiceText(String choiceText) {
-		this.choiceText = choiceText;
-	}
+    public int getChoiceId() {
+        return choiceId;
+    }
+
+    public void setChoiceId(int choiceId) {
+        this.choiceId = choiceId;
+    }
+
+    public String getChoiceText() {
+        return choiceText;
+    }
+
+    public void setChoiceText(String choiceText) {
+        this.choiceText = choiceText;
+    }
 }

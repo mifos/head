@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
@@ -28,132 +28,125 @@ import org.mifos.framework.components.configuration.util.helpers.ConfigConstants
 
 public class ClientNameDetailView {
 
-	private Short nameType;
+    private Short nameType;
 
-	/* 47=Mr, 48=Mrs, 228=Ms (is this right?)*/
-	private Integer salutation;
+    /* 47=Mr, 48=Mrs, 228=Ms (is this right?) */
+    private Integer salutation;
 
-	private StringBuilder displayName;
+    private StringBuilder displayName;
 
-	private String firstName;
+    private String firstName;
 
-	private String middleName;
+    private String middleName;
 
-	private String lastName;
+    private String lastName;
 
-	private String secondLastName;
+    private String secondLastName;
 
-	public ClientNameDetailView() {
-		super();
-	}
+    public ClientNameDetailView() {
+        super();
+    }
 
-	public ClientNameDetailView(NameType nameType, Integer salutation,
-			String firstName, String middleName, String lastName,
-			String secondLastName) {
-		this(nameType.getValue(), salutation, 
-			new StringBuilder(), firstName, middleName,
-			lastName, secondLastName);
-	}
+    public ClientNameDetailView(NameType nameType, Integer salutation, String firstName, String middleName,
+            String lastName, String secondLastName) {
+        this(nameType.getValue(), salutation, new StringBuilder(), firstName, middleName, lastName, secondLastName);
+    }
 
-	public ClientNameDetailView(Short nameType, Integer salutation,
-			StringBuilder displayName, String firstName, String middleName,
-			String lastName, String secondLastName) {
-		this.nameType = nameType;
-		this.salutation = salutation;
-		this.displayName = displayName;
-		this.firstName = firstName;
-		this.middleName = middleName;
-		this.lastName = lastName;
-		this.secondLastName = secondLastName;
-	}
+    public ClientNameDetailView(Short nameType, Integer salutation, StringBuilder displayName, String firstName,
+            String middleName, String lastName, String secondLastName) {
+        this.nameType = nameType;
+        this.salutation = salutation;
+        this.displayName = displayName;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.secondLastName = secondLastName;
+    }
 
-	public void setDisplayName(StringBuilder displayName) {
-		this.displayName = displayName;
-	}
+    public void setDisplayName(StringBuilder displayName) {
+        this.displayName = displayName;
+    }
 
-	public Short getNameType() {
-		return nameType;
-	}
+    public Short getNameType() {
+        return nameType;
+    }
 
-	public void setNameType(Short nameType) {
-		this.nameType = nameType;
-	}
+    public void setNameType(Short nameType) {
+        this.nameType = nameType;
+    }
 
-	public Integer getSalutation() {
-		return salutation;
-	}
+    public Integer getSalutation() {
+        return salutation;
+    }
 
-	public void setSalutation(Integer salutation) {
-		this.salutation = salutation;
-	}
+    public void setSalutation(Integer salutation) {
+        this.salutation = salutation;
+    }
 
-	public String getDisplayName() {
-		displayName = new StringBuilder();
-		String[] names = ClientRules.getNameSequence();
-		addToName(displayName, names[0], false);
-		for (int i = 1; i < names.length; i++) {
-			addToName(displayName, names[i], true);
-		}
-		return displayName.toString().trim();
-	}
+    public String getDisplayName() {
+        displayName = new StringBuilder();
+        String[] names = ClientRules.getNameSequence();
+        addToName(displayName, names[0], false);
+        for (int i = 1; i < names.length; i++) {
+            addToName(displayName, names[i], true);
+        }
+        return displayName.toString().trim();
+    }
 
-	private void addToName(StringBuilder displayName, String nameToBeAppend,
-			boolean isBlankRequired) {
-		if (nameToBeAppend.equals(ConfigConstants.FIRST_NAME)) {
-			appendToName(displayName, firstName, isBlankRequired);
-		} else if (nameToBeAppend.equals(ConfigConstants.MIDDLE_NAME)) {
-			appendToName(displayName, middleName, isBlankRequired);
-		} else if (nameToBeAppend.equals(ConfigConstants.LAST_NAME)) {
-			appendToName(displayName, lastName, isBlankRequired);
-		} else if (nameToBeAppend.equals(ConfigConstants.SECOND_LAST_NAME)) {
-			appendToName(displayName, secondLastName, isBlankRequired);
-		}
-	}
+    private void addToName(StringBuilder displayName, String nameToBeAppend, boolean isBlankRequired) {
+        if (nameToBeAppend.equals(ConfigConstants.FIRST_NAME)) {
+            appendToName(displayName, firstName, isBlankRequired);
+        } else if (nameToBeAppend.equals(ConfigConstants.MIDDLE_NAME)) {
+            appendToName(displayName, middleName, isBlankRequired);
+        } else if (nameToBeAppend.equals(ConfigConstants.LAST_NAME)) {
+            appendToName(displayName, lastName, isBlankRequired);
+        } else if (nameToBeAppend.equals(ConfigConstants.SECOND_LAST_NAME)) {
+            appendToName(displayName, secondLastName, isBlankRequired);
+        }
+    }
 
-	private void appendToName(StringBuilder displayName,
-			String valueToBeAppend, boolean isBlankRequired) {
-		if (!ValidateMethods.isNullOrBlank(valueToBeAppend)) {
-			if (isBlankRequired)
-				displayName.append(CustomerConstants.BLANK);
-			displayName.append(valueToBeAppend);
-		}
-	}
+    private void appendToName(StringBuilder displayName, String valueToBeAppend, boolean isBlankRequired) {
+        if (!ValidateMethods.isNullOrBlank(valueToBeAppend)) {
+            if (isBlankRequired)
+                displayName.append(CustomerConstants.BLANK);
+            displayName.append(valueToBeAppend);
+        }
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getMiddleName() {
-		return middleName;
-	}
+    public String getMiddleName() {
+        return middleName;
+    }
 
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
 
-	public String getSecondLastName() {
-		return secondLastName;
-	}
+    public String getSecondLastName() {
+        return secondLastName;
+    }
 
-	public void setSecondLastName(String secondLastName) {
-		this.secondLastName = secondLastName;
-	}
+    public void setSecondLastName(String secondLastName) {
+        this.secondLastName = secondLastName;
+    }
 
-	public Name asName() {
-		return new Name(getFirstName(), getMiddleName(), getSecondLastName(),
-				getLastName());
-	}
+    public Name asName() {
+        return new Name(getFirstName(), getMiddleName(), getSecondLastName(), getLastName());
+    }
 
 }

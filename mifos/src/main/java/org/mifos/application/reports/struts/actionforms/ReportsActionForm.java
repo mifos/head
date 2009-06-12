@@ -17,14 +17,14 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import org.apache.struts.validator.ValidatorActionForm;
 
 public class ReportsActionForm extends ValidatorActionForm {
-	
-	public ReportsActionForm() {
-		super();	
-	}
+
+    public ReportsActionForm() {
+        super();
+    }
 }

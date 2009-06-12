@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business.service;
 
 import java.util.List;
@@ -35,87 +35,83 @@ import org.mifos.framework.security.util.UserContext;
 
 public class OfficeBusinessService implements BusinessService {
 
-	private OfficePersistence officePersistence = new OfficePersistence();
+    private OfficePersistence officePersistence = new OfficePersistence();
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public List<OfficeView> getActiveParents(OfficeLevel level, Short localeId)
-			throws ServiceException {
-		try {
-			return officePersistence.getActiveParents(level, localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<OfficeView> getActiveParents(OfficeLevel level, Short localeId) throws ServiceException {
+        try {
+            return officePersistence.getActiveParents(level, localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<OfficeView> getConfiguredLevels(Short localeId)
-			throws ServiceException {
-		try {
-			return officePersistence.getActiveLevels(localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+    public List<OfficeView> getConfiguredLevels(Short localeId) throws ServiceException {
+        try {
+            return officePersistence.getActiveLevels(localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
 
-	}
+    }
 
-	public OfficeBO getOffice(Short officeId) throws ServiceException {
-		try {
-			return officePersistence.getOffice(officeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public OfficeBO getOffice(Short officeId) throws ServiceException {
+        try {
+            return officePersistence.getOffice(officeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<OfficeView> getStatusList(Short localeId)
-			throws ServiceException {
-		try {
-			return officePersistence.getStatusList(localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<OfficeView> getStatusList(Short localeId) throws ServiceException {
+        try {
+            return officePersistence.getStatusList(localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<OfficeBO> getOfficesTillBranchOffice() throws ServiceException {
-		try {
-			return officePersistence.getOfficesTillBranchOffice();
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<OfficeBO> getOfficesTillBranchOffice() throws ServiceException {
+        try {
+            return officePersistence.getOfficesTillBranchOffice();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<OfficeBO> getBranchOffices() throws ServiceException {
-		try {
-			return officePersistence.getBranchOffices();
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<OfficeBO> getBranchOffices() throws ServiceException {
+        try {
+            return officePersistence.getBranchOffices();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<OfficeView> getChildOffices(String searchId)
-			throws ServiceException {
-		try {
-			return officePersistence.getChildOffices(searchId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	public List<OfficeBO> getActiveBranchesUnderUser(PersonnelBO personnel) throws ServiceException {
-		try {
-			return officePersistence.getActiveBranchesUnderUser(personnel.getOfficeSearchId());
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<OfficeView> getChildOffices(String searchId) throws ServiceException {
+        try {
+            return officePersistence.getChildOffices(searchId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<OfficeBO> getAllofficesForCustomFIeld()
-			throws ServiceException {		
-		try {
-			return officePersistence.getAllofficesForCustomFIeld();
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
+    public List<OfficeBO> getActiveBranchesUnderUser(PersonnelBO personnel) throws ServiceException {
+        try {
+            return officePersistence.getActiveBranchesUnderUser(personnel.getOfficeSearchId());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<OfficeBO> getAllofficesForCustomFIeld() throws ServiceException {
+        try {
+            return officePersistence.getAllofficesForCustomFIeld();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 }

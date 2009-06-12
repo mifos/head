@@ -17,19 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.exceptions;
 
 public interface FinancialExceptionConstants {
-	public static final String ACTIONNOTFOUND = 
-		"exception.financial.ApplicationException.ActionNotFound";
+    public static final String ACTIONNOTFOUND = "exception.financial.ApplicationException.ActionNotFound";
 
-	public static final String ACCOUNT_NOT_FOUND = 
-		"exception.financial.ApplicationException.AccountNotFound";
+    public static final String ACCOUNT_NOT_FOUND = "exception.financial.ApplicationException.AccountNotFound";
 
-	public static final String FINANCIALACTION_INITFAILED = 
-		"exception.financial.ApplicationException.FinInitFailed";
+    public static final String FINANCIALACTION_INITFAILED = "exception.financial.ApplicationException.FinInitFailed";
 
-	public static final String COA_INITFAILED = 
-		"exception.financial.ApplicationException.COAInitFailed";
+    public static final String COA_INITFAILED = "exception.financial.ApplicationException.COAInitFailed";
 }

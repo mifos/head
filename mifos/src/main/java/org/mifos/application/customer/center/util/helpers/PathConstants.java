@@ -17,10 +17,10 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.center.util.helpers;
 
 public interface PathConstants {
-	String CENTER = "CenterAction";
-	String MASTER = "MasterPath";
+    String CENTER = "CenterAction";
+    String MASTER = "MasterPath";
 }

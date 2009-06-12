@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.sql.Date;
@@ -28,93 +28,93 @@ import org.mifos.framework.business.PersistentObject;
 
 public abstract class AccountActionDateEntity extends PersistentObject implements Comparable {
 
-	protected final Integer actionDateId;
+    protected final Integer actionDateId;
 
-	protected final AccountBO account;
+    protected final AccountBO account;
 
-	protected final CustomerBO customer;
+    protected final CustomerBO customer;
 
-	protected final Short installmentId;
+    protected final Short installmentId;
 
-	protected Date actionDate;
+    protected Date actionDate;
 
-	protected Short paymentStatus;
+    protected Short paymentStatus;
 
-	protected Date paymentDate;
+    protected Date paymentDate;
 
-	protected AccountActionDateEntity(AccountBO account, CustomerBO customer,
-			Short installmentId, Date actionDate, PaymentStatus paymentStatus) {
-		this.actionDateId = null;
-		this.account = account;
-		this.customer = customer;
-		this.installmentId = installmentId;
-		this.actionDate = actionDate;
-		if (paymentStatus != null) {
-			this.paymentStatus = paymentStatus.getValue();
-		}
-	}
+    protected AccountActionDateEntity(AccountBO account, CustomerBO customer, Short installmentId, Date actionDate,
+            PaymentStatus paymentStatus) {
+        this.actionDateId = null;
+        this.account = account;
+        this.customer = customer;
+        this.installmentId = installmentId;
+        this.actionDate = actionDate;
+        if (paymentStatus != null) {
+            this.paymentStatus = paymentStatus.getValue();
+        }
+    }
 
-	public Integer getActionDateId() {
-		return actionDateId;
-	}
+    public Integer getActionDateId() {
+        return actionDateId;
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public AccountBO getAccount() {
+        return account;
+    }
 
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
 
-	public Short getInstallmentId() {
-		return installmentId;
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
 
-	public Date getActionDate() {
-		return actionDate;
-	}
+    public Date getActionDate() {
+        return actionDate;
+    }
 
-	public void setActionDate(Date actionDate) {
-		this.actionDate = actionDate;
-	}
+    public void setActionDate(Date actionDate) {
+        this.actionDate = actionDate;
+    }
 
-	public Date getPaymentDate() {
-		return paymentDate;
-	}
+    public Date getPaymentDate() {
+        return paymentDate;
+    }
 
-	public void setPaymentDate(Date paymentDate) {
-		this.paymentDate = paymentDate;
-	}
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
+    }
 
-	/**
-	 * Most callers will want to call {@link #isPaid()} instead.
-	 */
-	Short getPaymentStatus() {
-		return paymentStatus;
-	}
-	
-	private PaymentStatus getPaymentStatusAsEnum() {
-		return PaymentStatus.fromInt(paymentStatus);
-	}
+    /**
+     * Most callers will want to call {@link #isPaid()} instead.
+     */
+    Short getPaymentStatus() {
+        return paymentStatus;
+    }
 
-	void setPaymentStatus(Short paymentStatus) {
-		this.paymentStatus = paymentStatus;
-	}
-	
-	public void setPaymentStatus(PaymentStatus status) {
-		this.paymentStatus = status.getValue();
-	}
+    private PaymentStatus getPaymentStatusAsEnum() {
+        return PaymentStatus.fromInt(paymentStatus);
+    }
 
-	public int compareDate(java.util.Date date) {
-		return getActionDate().compareTo(date);
-	}
+    void setPaymentStatus(Short paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 
-	public boolean isPaid() {
-		return getPaymentStatusAsEnum() == PaymentStatus.PAID;
-	}
-	
-	public int compareTo (Object obj) {
-		return this.getInstallmentId().compareTo(((AccountActionDateEntity)obj).getInstallmentId());
-	}
+    public void setPaymentStatus(PaymentStatus status) {
+        this.paymentStatus = status.getValue();
+    }
+
+    public int compareDate(java.util.Date date) {
+        return getActionDate().compareTo(date);
+    }
+
+    public boolean isPaid() {
+        return getPaymentStatusAsEnum() == PaymentStatus.PAID;
+    }
+
+    public int compareTo(Object obj) {
+        return this.getInstallmentId().compareTo(((AccountActionDateEntity) obj).getInstallmentId());
+    }
 
 }

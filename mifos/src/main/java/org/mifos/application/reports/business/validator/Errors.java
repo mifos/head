@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.validator;
 
 import java.util.ArrayList;
@@ -27,41 +27,40 @@ import java.util.Locale;
 import org.mifos.application.master.MessageLookup;
 
 public class Errors {
-	List<ErrorEntry> errors;
-	private final Locale locale;
+    List<ErrorEntry> errors;
+    private final Locale locale;
 
-	public Errors(Locale locale) {
-		this.locale = locale;
-		errors = new ArrayList<ErrorEntry>();
-	}
+    public Errors(Locale locale) {
+        this.locale = locale;
+        errors = new ArrayList<ErrorEntry>();
+    }
 
-	public void rejectValue(String fieldName, String errorCode) {
-		errors.add(new ErrorEntry(fieldName, errorCode));
-	}
+    public void rejectValue(String fieldName, String errorCode) {
+        errors.add(new ErrorEntry(fieldName, errorCode));
+    }
 
-	public List<String> getAllErrorMessages() {
-		List<String> errorMessages = new ArrayList<String>();
-		for (ErrorEntry entry : errors) {
-			errorMessages.add(MessageLookup.getInstance().lookup(
-					entry.errorCode, locale));
+    public List<String> getAllErrorMessages() {
+        List<String> errorMessages = new ArrayList<String>();
+        for (ErrorEntry entry : errors) {
+            errorMessages.add(MessageLookup.getInstance().lookup(entry.errorCode, locale));
 
-		}
-		return errorMessages;
-	}
+        }
+        return errorMessages;
+    }
 
-	public boolean hasErrors() {
-		return !errors.isEmpty();
-	}
+    public boolean hasErrors() {
+        return !errors.isEmpty();
+    }
 
-	public List<ErrorEntry> getErrors() {
-		return errors;
-	}
+    public List<ErrorEntry> getErrors() {
+        return errors;
+    }
 
-	public ErrorEntry getFieldError(String fieldName) {
-		for (ErrorEntry errorEntry : errors) {
-			if(errorEntry.fieldName.equals(fieldName))
-				return errorEntry;
-		}
-		return null;
-	}
+    public ErrorEntry getFieldError(String fieldName) {
+        for (ErrorEntry errorEntry : errors) {
+            if (errorEntry.fieldName.equals(fieldName))
+                return errorEntry;
+        }
+        return null;
+    }
 }

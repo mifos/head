@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import java.util.Date;
@@ -27,54 +27,53 @@ import org.mifos.framework.business.PersistentObject;
 
 public class CustomerNoteEntity extends PersistentObject {
 
-	private final Integer commentId;
+    private final Integer commentId;
 
-	private final Date commentDate;
+    private final Date commentDate;
 
-	private final String comment;
+    private final String comment;
 
-	private final CustomerBO customer;
+    private final CustomerBO customer;
 
-	private final PersonnelBO personnel;
+    private final PersonnelBO personnel;
 
-	public CustomerNoteEntity(String comment, Date commentDate,
-			PersonnelBO personnel, CustomerBO customer) {
-		this.comment = comment;
-		this.commentDate = commentDate;
-		this.personnel = personnel;
-		this.customer = customer;
-		this.commentId = null;
-	}
+    public CustomerNoteEntity(String comment, Date commentDate, PersonnelBO personnel, CustomerBO customer) {
+        this.comment = comment;
+        this.commentDate = commentDate;
+        this.personnel = personnel;
+        this.customer = customer;
+        this.commentId = null;
+    }
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerNoteEntity() {
-		this.commentId = null;
-		this.commentDate = null;
-		this.comment = null;
-		this.personnel = null;
-		this.customer = null;
-	}
-	
-	public String getCommentDateStr() {
-		return (commentDate != null) ? this.commentDate.toString() : "";
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerNoteEntity() {
+        this.commentId = null;
+        this.commentDate = null;
+        this.comment = null;
+        this.personnel = null;
+        this.customer = null;
+    }
 
-	public Date getCommentDate() {
-		return this.commentDate;
-	}
+    public String getCommentDateStr() {
+        return (commentDate != null) ? this.commentDate.toString() : "";
+    }
 
-	public String getComment() {
-		return this.comment;
-	}
+    public Date getCommentDate() {
+        return this.commentDate;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public String getComment() {
+        return this.comment;
+    }
 
-	public String getPersonnelName() {
-		return personnel.getDisplayName();
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
+
+    public String getPersonnelName() {
+        return personnel.getDisplayName();
+    }
 }

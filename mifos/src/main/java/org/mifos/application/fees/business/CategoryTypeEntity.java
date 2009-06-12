@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -26,14 +26,14 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public class CategoryTypeEntity extends MasterDataEntity {
 
-	public CategoryTypeEntity(FeeCategory feeCategory) {
-		super(feeCategory.getValue());
-	}
+    public CategoryTypeEntity(FeeCategory feeCategory) {
+        super(feeCategory.getValue());
+    }
 
-	protected CategoryTypeEntity() {
-	}
+    protected CategoryTypeEntity() {
+    }
 
-	public FeeCategory getFeeCategory() throws PropertyNotFoundException {
-		return FeeCategory.getFeeCategory(getId());
-	}
+    public FeeCategory getFeeCategory() throws PropertyNotFoundException {
+        return FeeCategory.getFeeCategory(getId());
+    }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import static org.mifos.application.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
@@ -38,96 +38,79 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 
 public class CollectionSheetService {
-	
-	private final CollectionSheetReportPersistence collectionSheetReportPersistence;
 
-	CollectionSheetService(CollectionSheetReportPersistence collectionSheetReportPersistence) {
-		this.collectionSheetReportPersistence = collectionSheetReportPersistence;
-	}
-	
-	public CollectionSheetService(){
-		this(new CollectionSheetReportPersistence());
-	}
+    private final CollectionSheetReportPersistence collectionSheetReportPersistence;
 
-	public List<CollSheetCustBO> getCollectionSheetForCustomerOnMeetingDate(
-			Date meetingDate, Integer centerId, Short loanOfficerId,
-			CustomerLevel customerLevel) throws PersistenceException {
-		Map parameters = populateQueryParams(meetingDate, centerId,
-				customerLevel);
-		parameters.put("LOAN_OFFICER_ID", loanOfficerId);
-		return retrieveCollectionSheetCustomers(
-				NamedQueryConstants.COLLECTION_SHEET_CUSTOMERS_ON_MEETING_DATE_FOR_LOAN_OFFICER,
-				parameters);
-	}
+    CollectionSheetService(CollectionSheetReportPersistence collectionSheetReportPersistence) {
+        this.collectionSheetReportPersistence = collectionSheetReportPersistence;
+    }
 
-	public List<CollSheetCustBO> getCollectionSheetForCustomers(
-			Date meetingDate, CollSheetCustBO parent, Short loanOfficerId)
-			throws PersistenceException {
-		return retrieveCollectionSheetOfChildrensOnMeetingDate(meetingDate,
-				parent, CustomerLevel.CLIENT, loanOfficerId);
-	}
+    public CollectionSheetService() {
+        this(new CollectionSheetReportPersistence());
+    }
 
-	public List<CollSheetCustBO> getCollectionSheetForGroups(Date meetingDate,
-			CollSheetCustBO parent, Short loanOfficerId)
-			throws PersistenceException {
-		return retrieveCollectionSheetOfChildrensOnMeetingDate(meetingDate,
-				parent, CustomerLevel.GROUP, loanOfficerId);
-	}
+    public List<CollSheetCustBO> getCollectionSheetForCustomerOnMeetingDate(Date meetingDate, Integer centerId,
+            Short loanOfficerId, CustomerLevel customerLevel) throws PersistenceException {
+        Map parameters = populateQueryParams(meetingDate, centerId, customerLevel);
+        parameters.put("LOAN_OFFICER_ID", loanOfficerId);
+        return retrieveCollectionSheetCustomers(
+                NamedQueryConstants.COLLECTION_SHEET_CUSTOMERS_ON_MEETING_DATE_FOR_LOAN_OFFICER, parameters);
+    }
 
-	private List<CollSheetCustBO> retrieveCollectionSheetOfChildrensOnMeetingDate(
-			Date meetingDate, CollSheetCustBO parent,
-			CustomerLevel childrenLevel, Short loanOfficerId)
-			throws PersistenceException {
-		Map parameters = new HashMap();
-		parameters.put("CUSTOMER_LEVEL", childrenLevel.getValue());
-		parameters.put("MEETING_DATE", meetingDate);
-		parameters.put("PARENT_CUSTOMER_ID", parent.getCustId());
-		parameters.put("LOAN_OFFICER_ID", loanOfficerId);
-		List<CollSheetCustBO> collectionSheetOfChildrens = retrieveCollectionSheetCustomers(
-				NamedQueryConstants.COLLECTION_SHEETS_OF_CHILDREN_ON_MEETING_DATE,
-				parameters);
-		return collectionSheetOfChildrens;
-	}
+    public List<CollSheetCustBO> getCollectionSheetForCustomers(Date meetingDate, CollSheetCustBO parent,
+            Short loanOfficerId) throws PersistenceException {
+        return retrieveCollectionSheetOfChildrensOnMeetingDate(meetingDate, parent, CustomerLevel.CLIENT, loanOfficerId);
+    }
 
-	private Map populateQueryParams(Date meetingDate, Integer centerId,
-			CustomerLevel customerLevel) {
-		Map parameters = new HashMap();
-		parameters.put("CUSTOMER_LEVEL", customerLevel.getValue());
-		parameters.put("MEETING_DATE", meetingDate);
-		parameters.put("CUSTOMER_ID", centerId);
-		return parameters;
-	}
+    public List<CollSheetCustBO> getCollectionSheetForGroups(Date meetingDate, CollSheetCustBO parent,
+            Short loanOfficerId) throws PersistenceException {
+        return retrieveCollectionSheetOfChildrensOnMeetingDate(meetingDate, parent, CustomerLevel.GROUP, loanOfficerId);
+    }
 
-	private List<CollSheetCustBO> retrieveCollectionSheetCustomers(
-			String queryName, Map parameters) throws PersistenceException {
-		List<CollSheetCustBO> centersCollectionSheet = new CollectionSheetPersistence()
-				.executeNamedQuery(queryName, parameters);
-		return centersCollectionSheet;
-	}
+    private List<CollSheetCustBO> retrieveCollectionSheetOfChildrensOnMeetingDate(Date meetingDate,
+            CollSheetCustBO parent, CustomerLevel childrenLevel, Short loanOfficerId) throws PersistenceException {
+        Map parameters = new HashMap();
+        parameters.put("CUSTOMER_LEVEL", childrenLevel.getValue());
+        parameters.put("MEETING_DATE", meetingDate);
+        parameters.put("PARENT_CUSTOMER_ID", parent.getCustId());
+        parameters.put("LOAN_OFFICER_ID", loanOfficerId);
+        List<CollSheetCustBO> collectionSheetOfChildrens = retrieveCollectionSheetCustomers(
+                NamedQueryConstants.COLLECTION_SHEETS_OF_CHILDREN_ON_MEETING_DATE, parameters);
+        return collectionSheetOfChildrens;
+    }
 
-	public List<CollectionSheetReportData> extractReportData(Integer branchId,
-			java.util.Date meetingDate, Integer personnelId, Integer centerId)
-			throws ServiceException {
-		try {
-			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(personnelId)) {
-				if (ALL_CENTER_SELECTION_ITEM.sameAs(centerId))
-					return collectionSheetReportPersistence
-							.extractReportDataAllLoanOfficersAllCenters(
-									branchId, meetingDate);
-				else return collectionSheetReportPersistence
-						.extractReportDataAllLoanOfficersOneCenter(branchId,
-								meetingDate, centerId);
-			}
-			else if (ALL_CENTER_SELECTION_ITEM.sameAs(centerId)) {
-				return collectionSheetReportPersistence
-						.extractReportDataAllCentersUnderLoanOfficer(branchId,
-								meetingDate, personnelId);
-			}
-			return collectionSheetReportPersistence.extractReportData(branchId,
-					meetingDate, personnelId, centerId);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    private Map populateQueryParams(Date meetingDate, Integer centerId, CustomerLevel customerLevel) {
+        Map parameters = new HashMap();
+        parameters.put("CUSTOMER_LEVEL", customerLevel.getValue());
+        parameters.put("MEETING_DATE", meetingDate);
+        parameters.put("CUSTOMER_ID", centerId);
+        return parameters;
+    }
+
+    private List<CollSheetCustBO> retrieveCollectionSheetCustomers(String queryName, Map parameters)
+            throws PersistenceException {
+        List<CollSheetCustBO> centersCollectionSheet = new CollectionSheetPersistence().executeNamedQuery(queryName,
+                parameters);
+        return centersCollectionSheet;
+    }
+
+    public List<CollectionSheetReportData> extractReportData(Integer branchId, java.util.Date meetingDate,
+            Integer personnelId, Integer centerId) throws ServiceException {
+        try {
+            if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(personnelId)) {
+                if (ALL_CENTER_SELECTION_ITEM.sameAs(centerId))
+                    return collectionSheetReportPersistence.extractReportDataAllLoanOfficersAllCenters(branchId,
+                            meetingDate);
+                else
+                    return collectionSheetReportPersistence.extractReportDataAllLoanOfficersOneCenter(branchId,
+                            meetingDate, centerId);
+            } else if (ALL_CENTER_SELECTION_ITEM.sameAs(centerId)) {
+                return collectionSheetReportPersistence.extractReportDataAllCentersUnderLoanOfficer(branchId,
+                        meetingDate, personnelId);
+            }
+            return collectionSheetReportPersistence.extractReportData(branchId, meetingDate, personnelId, centerId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

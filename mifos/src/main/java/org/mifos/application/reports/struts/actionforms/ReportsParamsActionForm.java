@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,20 +32,19 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
  * This class is the ActionForm associated with the ReportParams Action.
  */
 public class ReportsParamsActionForm extends BaseActionForm {
-	
-	// ----------------------constructors-----------------------
-	
-	/**
-	 * Default constructor
-	 */
-	public ReportsParamsActionForm() {
-		super();
-	}
 
-	
-	// ----------------------instance variables-----------------------
-	
-	private int parameterId;
+    // ----------------------constructors-----------------------
+
+    /**
+     * Default constructor
+     */
+    public ReportsParamsActionForm() {
+        super();
+    }
+
+    // ----------------------instance variables-----------------------
+
+    private int parameterId;
     private String name;
     private String type;
     private String classname;
@@ -53,111 +52,94 @@ public class ReportsParamsActionForm extends BaseActionForm {
     private String description;
     private int datasourceId;
 
-	
-		
-	//----------------------public methods-----------------------
-	
-	/**
-	 * The reset method is used to reset all the values to null.
-	 * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,
-	 *      javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER).info(
-				"In Login Reset");
-		name = null;
-		type=null;
-		classname=null;
-		data=null;
-		description=null;
-		
-		super.reset(mapping, request);
-	}
-	
-	public int getParameterId()
-    {
+    // ----------------------public methods-----------------------
+
+    /**
+     * The reset method is used to reset all the values to null.
+     * 
+     * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,
+     *      javax.servlet.http.HttpServletRequest)
+     */
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER).info("In Login Reset");
+        name = null;
+        type = null;
+        classname = null;
+        data = null;
+        description = null;
+
+        super.reset(mapping, request);
+    }
+
+    public int getParameterId() {
         return parameterId;
     }
 
-    public void setParameterId(int parameterId)
-    {
+    public void setParameterId(int parameterId) {
         this.parameterId = parameterId;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
-    
-    public String getType()
-    {
+
+    public String getType() {
         return type;
     }
 
-    public void setType(String type)
-    {
+    public void setType(String type) {
         this.type = type;
     }
-    
-    public String getClassname()
-    {
+
+    public String getClassname() {
         return classname;
     }
 
-    public void setClassname(String classname)
-    {
+    public void setClassname(String classname) {
         this.classname = classname;
     }
-    
-    public String getData()
-    {
+
+    public String getData() {
         return data;
     }
 
-    public void setData(String data)
-    {
+    public void setData(String data) {
         this.data = data;
     }
-    public String getDescription()
-    {
+
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
-    
-    
-    public int getDatasourceId()
-    {
+
+    public int getDatasourceId() {
         return datasourceId;
     }
 
-    public void setDatasourceId(int datasourceId)
-    {
+    public void setDatasourceId(int datasourceId) {
         this.datasourceId = datasourceId;
     }
-    
-	
-	/**
-	 * This method is to skip validation for load method
-	 * @param mapping
-	 * @param request
-	 * @return
-	 */
-	public ActionErrors customValidate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors=new ActionErrors();
-		request.getParameter("method");
-		
-		return errors;
-	}
+
+    /**
+     * This method is to skip validation for load method
+     * 
+     * @param mapping
+     * @param request
+     * @return
+     */
+    public ActionErrors customValidate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        request.getParameter("method");
+
+        return errors;
+    }
 
 }

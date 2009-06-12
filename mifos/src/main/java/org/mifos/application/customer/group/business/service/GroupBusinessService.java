@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.group.business.service;
 
 import org.mifos.application.customer.group.business.GroupBO;
@@ -32,46 +32,46 @@ import org.mifos.framework.security.util.UserContext;
 
 public class GroupBusinessService implements BusinessService {
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
-	
-	public GroupBO findBySystemId(String globalCustNum) throws ServiceException{
-		try {
-		    GroupBO groupBO = new GroupPersistence().findBySystemId(globalCustNum);
-		    return groupBO;
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
-	public GroupBO getGroup(Integer customerId) throws ServiceException{
-		try{
-		    GroupBO groupBO = new GroupPersistence().getGroupByCustomerId(customerId);
-			return groupBO;
-		}catch(PersistenceException pe){
-			throw new ServiceException(pe);
-		}
-	}
-	public QueryResult search(String searchString,
-			Short userId) throws ServiceException {
-		
-		try {
-			return new GroupPersistence().search(searchString,userId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		
-	}
-	public QueryResult searchForAddingClientToGroup(String searchString,
-			Short userId) throws ServiceException {
-		
-		try {
-			return new GroupPersistence().searchForAddingClientToGroup(searchString,userId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
+
+    public GroupBO findBySystemId(String globalCustNum) throws ServiceException {
+        try {
+            GroupBO groupBO = new GroupPersistence().findBySystemId(globalCustNum);
+            return groupBO;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public GroupBO getGroup(Integer customerId) throws ServiceException {
+        try {
+            GroupBO groupBO = new GroupPersistence().getGroupByCustomerId(customerId);
+            return groupBO;
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public QueryResult search(String searchString, Short userId) throws ServiceException {
+
+        try {
+            return new GroupPersistence().search(searchString, userId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+
+    }
+
+    public QueryResult searchForAddingClientToGroup(String searchString, Short userId) throws ServiceException {
+
+        try {
+            return new GroupPersistence().searchForAddingClientToGroup(searchString, userId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+
+    }
 }

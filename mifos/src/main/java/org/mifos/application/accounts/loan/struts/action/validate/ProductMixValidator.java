@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action.validate;
 
 import java.util.ArrayList;
@@ -39,119 +39,100 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public class ProductMixValidator {
 
-	public ProductMixValidator() {
-		this(new LoanBusinessService(), new AccountBusinessService(),
-				new ConfigurationBusinessService(),
-				new ProductMixBusinessService());
-	}
+    public ProductMixValidator() {
+        this(new LoanBusinessService(), new AccountBusinessService(), new ConfigurationBusinessService(),
+                new ProductMixBusinessService());
+    }
 
-	ProductMixValidator(ConfigurationBusinessService configService, ProductMixBusinessService productMixBusinessService) {
-		this(new LoanBusinessService(), new AccountBusinessService(),
-				configService, productMixBusinessService);
-	}
+    ProductMixValidator(ConfigurationBusinessService configService, ProductMixBusinessService productMixBusinessService) {
+        this(new LoanBusinessService(), new AccountBusinessService(), configService, productMixBusinessService);
+    }
 
-	private ProductMixValidator(LoanBusinessService loanBusinessService,
-			AccountBusinessService accountBusinessService,
-			ConfigurationBusinessService configService,
-			ProductMixBusinessService productMixBusinessService) {
-		this.loanBusinessService = loanBusinessService;
-		this.accountBusinessService = accountBusinessService;
-		this.configService = configService;
-		this.productMixBusinessService = productMixBusinessService;
-	}
+    private ProductMixValidator(LoanBusinessService loanBusinessService, AccountBusinessService accountBusinessService,
+            ConfigurationBusinessService configService, ProductMixBusinessService productMixBusinessService) {
+        this.loanBusinessService = loanBusinessService;
+        this.accountBusinessService = accountBusinessService;
+        this.configService = configService;
+        this.productMixBusinessService = productMixBusinessService;
+    }
 
-	public void checkIfProductsOfferingCanCoexist(LoanBO loan)
-			throws PersistenceException, AccountException, ServiceException {
-		CustomerBO customer = loan.getCustomer();
-		List<LoanBO> loanList = (loanBusinessService
-				.getLoanAccountsActiveInGoodBadStanding(customer
-						.getCustomerId()));
-		loanList.addAll(populateLoanListForCustomer(loan, customer));
-		validateProductMix(loan, loanList);
-	}
+    public void checkIfProductsOfferingCanCoexist(LoanBO loan) throws PersistenceException, AccountException,
+            ServiceException {
+        CustomerBO customer = loan.getCustomer();
+        List<LoanBO> loanList = (loanBusinessService.getLoanAccountsActiveInGoodBadStanding(customer.getCustomerId()));
+        loanList.addAll(populateLoanListForCustomer(loan, customer));
+        validateProductMix(loan, loanList);
+    }
 
-	private List<LoanBO> populateLoanListForCustomer(LoanBO loan,
-			CustomerBO customer) throws ServiceException {
-		List<LoanBO> loanList = new ArrayList<LoanBO>();
-		if (customer.isGroup()) {
-			loanList = loanBusinessService
-					.getActiveLoansForAllClientsAssociatedWithGroupLoan(loan);
-		}else if (customer.isClient() && customer
-				.getParentCustomer() != null) {
-			List<LoanBO> groupLoans = loanBusinessService
-					.getLoanAccountsActiveInGoodBadStanding(customer
-							.getParentCustomer().getCustomerId());
-			loanList = getLoansToCheckAgainstProductMix(customer, groupLoans);
-		}
-		return loanList;
-	}
+    private List<LoanBO> populateLoanListForCustomer(LoanBO loan, CustomerBO customer) throws ServiceException {
+        List<LoanBO> loanList = new ArrayList<LoanBO>();
+        if (customer.isGroup()) {
+            loanList = loanBusinessService.getActiveLoansForAllClientsAssociatedWithGroupLoan(loan);
+        } else if (customer.isClient() && customer.getParentCustomer() != null) {
+            List<LoanBO> groupLoans = loanBusinessService.getLoanAccountsActiveInGoodBadStanding(customer
+                    .getParentCustomer().getCustomerId());
+            loanList = getLoansToCheckAgainstProductMix(customer, groupLoans);
+        }
+        return loanList;
+    }
 
-	List<LoanBO> getLoansToCheckAgainstProductMix(final CustomerBO customer,
-			List<LoanBO> groupLoans) throws ServiceException {
-		List<LoanBO> activeLoansWhereClientIsAMember = new ArrayList<LoanBO>();
-		
-		for (LoanBO loanBO : groupLoans) {
-			if (configService.isGlimEnabled()) {
-				if (isCustomerACoSigningClient(customer, loanBO)) {
-					activeLoansWhereClientIsAMember.add(loanBO);
-				}
-			}else {
-				activeLoansWhereClientIsAMember.addAll(groupLoans);
-			}
-		}
-		return activeLoansWhereClientIsAMember;
-	}
+    List<LoanBO> getLoansToCheckAgainstProductMix(final CustomerBO customer, List<LoanBO> groupLoans)
+            throws ServiceException {
+        List<LoanBO> activeLoansWhereClientIsAMember = new ArrayList<LoanBO>();
 
-	private List<CustomerBO> getCosigningClientsForLoan(LoanBO loanBO) throws ServiceException {
-		return accountBusinessService
-				.getCoSigningClientsForGlim(loanBO.getAccountId());
-	}
+        for (LoanBO loanBO : groupLoans) {
+            if (configService.isGlimEnabled()) {
+                if (isCustomerACoSigningClient(customer, loanBO)) {
+                    activeLoansWhereClientIsAMember.add(loanBO);
+                }
+            } else {
+                activeLoansWhereClientIsAMember.addAll(groupLoans);
+            }
+        }
+        return activeLoansWhereClientIsAMember;
+    }
 
-	boolean isCustomerACoSigningClient(final CustomerBO customer,
-			LoanBO loan) throws ServiceException {
-		return CollectionUtils.find(getCosigningClientsForLoan(loan), new Predicate() {
-			public boolean evaluate(Object arg0) {
-				return customer.getCustomerId().equals(
-						((CustomerBO) arg0).getCustomerId());
-			}
-		}) != null;
-	}
+    private List<CustomerBO> getCosigningClientsForLoan(LoanBO loanBO) throws ServiceException {
+        return accountBusinessService.getCoSigningClientsForGlim(loanBO.getAccountId());
+    }
 
-	void validateProductMix(LoanBO newloan, List<LoanBO> loanList)
-			throws PersistenceException, AccountException, ServiceException {
-		if (null != loanList) {
-			for (LoanBO loan : loanList) {
-				if (!productMixBusinessService.canProductsCoExist(newloan
-						.getLoanOffering(), loan
-						.getLoanOffering())) {
-					handleConflict(newloan, loan);
-				}
-			}
-		}
-	}
+    boolean isCustomerACoSigningClient(final CustomerBO customer, LoanBO loan) throws ServiceException {
+        return CollectionUtils.find(getCosigningClientsForLoan(loan), new Predicate() {
+            public boolean evaluate(Object arg0) {
+                return customer.getCustomerId().equals(((CustomerBO) arg0).getCustomerId());
+            }
+        }) != null;
+    }
 
-	void handleConflict(LoanBO newloan, LoanBO loan) throws AccountException {
-		List<String> params = new ArrayList(Arrays.asList(loan.getLoanOffering()
-				.getPrdOfferingName(), newloan.getLoanOffering()
-				.getPrdOfferingName()));
-		if (areCustomerLevelsDifferent(newloan, loan)){
-			params.add(loan.getCustomer().getDisplayName());
-			throw new AccountException(
-					LoanExceptionConstants.LOANS_CANNOT_COEXIST_ACROSS_CUSTOMER_LEVELS,
-					params.toArray());
-		}else{
-			throw new AccountException(
-					LoanExceptionConstants.LOANS_CANNOT_COEXIST,
-					params.toArray());
-		}
-	}
+    void validateProductMix(LoanBO newloan, List<LoanBO> loanList) throws PersistenceException, AccountException,
+            ServiceException {
+        if (null != loanList) {
+            for (LoanBO loan : loanList) {
+                if (!productMixBusinessService.canProductsCoExist(newloan.getLoanOffering(), loan.getLoanOffering())) {
+                    handleConflict(newloan, loan);
+                }
+            }
+        }
+    }
 
-	private boolean areCustomerLevelsDifferent(LoanBO newloan, LoanBO loan) {
-		return newloan.getCustomer().getLevel() != loan.getCustomer().getLevel();
-	}
-	
-	private LoanBusinessService loanBusinessService;
-	private ConfigurationBusinessService configService;
-	private AccountBusinessService accountBusinessService;
-	private ProductMixBusinessService productMixBusinessService;
+    void handleConflict(LoanBO newloan, LoanBO loan) throws AccountException {
+        List<String> params = new ArrayList(Arrays.asList(loan.getLoanOffering().getPrdOfferingName(), newloan
+                .getLoanOffering().getPrdOfferingName()));
+        if (areCustomerLevelsDifferent(newloan, loan)) {
+            params.add(loan.getCustomer().getDisplayName());
+            throw new AccountException(LoanExceptionConstants.LOANS_CANNOT_COEXIST_ACROSS_CUSTOMER_LEVELS, params
+                    .toArray());
+        } else {
+            throw new AccountException(LoanExceptionConstants.LOANS_CANNOT_COEXIST, params.toArray());
+        }
+    }
+
+    private boolean areCustomerLevelsDifferent(LoanBO newloan, LoanBO loan) {
+        return newloan.getCustomer().getLevel() != loan.getCustomer().getLevel();
+    }
+
+    private LoanBusinessService loanBusinessService;
+    private ConfigurationBusinessService configService;
+    private AccountBusinessService accountBusinessService;
+    private ProductMixBusinessService productMixBusinessService;
 }

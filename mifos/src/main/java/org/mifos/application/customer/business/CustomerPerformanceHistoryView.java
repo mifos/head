@@ -17,51 +17,51 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import java.io.Serializable;
 
 public class CustomerPerformanceHistoryView implements Serializable {
 
-	private Integer meetingsAttended;
+    private Integer meetingsAttended;
 
-	private Integer meetingsMissed;
+    private Integer meetingsMissed;
 
-	private String lastLoanAmount;
+    private String lastLoanAmount;
 
-	//TODO: remove this constructor and change references
-	public CustomerPerformanceHistoryView(){};
-	
-	public CustomerPerformanceHistoryView(Integer meetingAttended,
-			Integer meetingsMissed, String lastLoanAmount) {
-		this.meetingsAttended = meetingAttended;
-		this.meetingsMissed = meetingsMissed;
-		this.lastLoanAmount = lastLoanAmount;
-	}
+    // TODO: remove this constructor and change references
+    public CustomerPerformanceHistoryView() {
+    };
 
-	public Integer getMeetingsAttended() {
-		return meetingsAttended;
-	}
+    public CustomerPerformanceHistoryView(Integer meetingAttended, Integer meetingsMissed, String lastLoanAmount) {
+        this.meetingsAttended = meetingAttended;
+        this.meetingsMissed = meetingsMissed;
+        this.lastLoanAmount = lastLoanAmount;
+    }
 
-	public void setMeetingsAttended(Integer meetingsAttended) {
-		this.meetingsAttended = meetingsAttended;
-	}
+    public Integer getMeetingsAttended() {
+        return meetingsAttended;
+    }
 
-	public Integer getMeetingsMissed() {
-		return meetingsMissed;
-	}
+    public void setMeetingsAttended(Integer meetingsAttended) {
+        this.meetingsAttended = meetingsAttended;
+    }
 
-	public void setMeetingsMissed(Integer meetingsMissed) {
-		this.meetingsMissed = meetingsMissed;
-	}
+    public Integer getMeetingsMissed() {
+        return meetingsMissed;
+    }
 
-	public String getLastLoanAmount() {
-		return lastLoanAmount;
-	}
+    public void setMeetingsMissed(Integer meetingsMissed) {
+        this.meetingsMissed = meetingsMissed;
+    }
 
-	public void setLastLoanAmount(String lastLoanAmount) {
-		this.lastLoanAmount = lastLoanAmount;
-	}
+    public String getLastLoanAmount() {
+        return lastLoanAmount;
+    }
+
+    public void setLastLoanAmount(String lastLoanAmount) {
+        this.lastLoanAmount = lastLoanAmount;
+    }
 
 }

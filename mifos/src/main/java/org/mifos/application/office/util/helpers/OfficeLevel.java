@@ -17,35 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.office.util.helpers;
 
+package org.mifos.application.office.util.helpers;
 
 public enum OfficeLevel {
 
-	HEADOFFICE(Short.valueOf("1")), 
-	REGIONALOFFICE(Short.valueOf("2")), 
-	SUBREGIONALOFFICE(Short.valueOf("3")), 
-	AREAOFFICE(Short.valueOf("4")), 
-	BRANCHOFFICE(Short.valueOf("5"));
+    HEADOFFICE(Short.valueOf("1")), REGIONALOFFICE(Short.valueOf("2")), SUBREGIONALOFFICE(Short.valueOf("3")), AREAOFFICE(
+            Short.valueOf("4")), BRANCHOFFICE(Short.valueOf("5"));
 
-	Short value;
+    Short value;
 
-	OfficeLevel(Short value) {
-		this.value = value;
-	}
+    OfficeLevel(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static OfficeLevel getOfficeLevel(Short id) {
-		for (OfficeLevel level : OfficeLevel.values()) {
-			if (level.value.equals(id)) {
-				return level;
-			}
-		}
-		throw new RuntimeException("no office level " + id);
-	}
+    public static OfficeLevel getOfficeLevel(Short id) {
+        for (OfficeLevel level : OfficeLevel.values()) {
+            if (level.value.equals(id)) {
+                return level;
+            }
+        }
+        throw new RuntimeException("no office level " + id);
+    }
 
 }

@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist.util.helpers;
 
 public enum CheckListType {
-	CUSTOMER_CHECKLIST((short) 1), ACCOUNT_CHECKLIST((short) 2);
+    CUSTOMER_CHECKLIST((short) 1), ACCOUNT_CHECKLIST((short) 2);
 
-	Short value;
+    Short value;
 
-	CheckListType(Short value) {
-		this.value = value;
-	}
+    CheckListType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 }

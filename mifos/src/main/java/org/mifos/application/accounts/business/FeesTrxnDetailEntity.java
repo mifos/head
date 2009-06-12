@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -25,49 +25,46 @@ import org.mifos.framework.util.helpers.Money;
 
 public class FeesTrxnDetailEntity extends PersistentObject {
 
-	private final Integer feesTrxnId;
+    private final Integer feesTrxnId;
 
-	private final AccountTrxnEntity accountTrxn;
+    private final AccountTrxnEntity accountTrxn;
 
-	private final AccountFeesEntity accountFees;
+    private final AccountFeesEntity accountFees;
 
-	private final Money feeAmount;
+    private final Money feeAmount;
 
-	protected FeesTrxnDetailEntity() {
-		feesTrxnId = null;
-		accountTrxn = null;
-		accountFees = null;
-		feeAmount = null;
-	}
+    protected FeesTrxnDetailEntity() {
+        feesTrxnId = null;
+        accountTrxn = null;
+        accountFees = null;
+        feeAmount = null;
+    }
 
-	public FeesTrxnDetailEntity(AccountTrxnEntity accountTrxnEntity,
-			AccountFeesEntity accountFeesEntity, Money amount) {
-		feesTrxnId = null;
-		accountTrxn = accountTrxnEntity;
-		accountFees = accountFeesEntity;
-		feeAmount = amount;
-	}
+    public FeesTrxnDetailEntity(AccountTrxnEntity accountTrxnEntity, AccountFeesEntity accountFeesEntity, Money amount) {
+        feesTrxnId = null;
+        accountTrxn = accountTrxnEntity;
+        accountFees = accountFeesEntity;
+        feeAmount = amount;
+    }
 
-	public AccountFeesEntity getAccountFees() {
-		return accountFees;
-	}
+    public AccountFeesEntity getAccountFees() {
+        return accountFees;
+    }
 
-	public AccountTrxnEntity getAccountTrxn() {
-		return accountTrxn;
-	}
+    public AccountTrxnEntity getAccountTrxn() {
+        return accountTrxn;
+    }
 
-	public Money getFeeAmount() {
-		return feeAmount;
-	}
+    public Money getFeeAmount() {
+        return feeAmount;
+    }
 
-	public Integer getFeesTrxnId() {
-		return feesTrxnId;
-	}
+    public Integer getFeesTrxnId() {
+        return feesTrxnId;
+    }
 
-	public FeesTrxnDetailEntity generateReverseTrxn(
-			AccountTrxnEntity accountTrxn) {
-		return new FeesTrxnDetailEntity(accountTrxn, getAccountFees(),
-				getFeeAmount().negate());
-	}
+    public FeesTrxnDetailEntity generateReverseTrxn(AccountTrxnEntity accountTrxn) {
+        return new FeesTrxnDetailEntity(accountTrxn, getAccountFees(), getFeeAmount().negate());
+    }
 
 }

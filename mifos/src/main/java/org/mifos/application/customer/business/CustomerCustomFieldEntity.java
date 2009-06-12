@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -30,50 +30,48 @@ import org.mifos.framework.persistence.Persistence;
  */
 public class CustomerCustomFieldEntity extends PersistentObject {
 
-	private final Integer customFieldId;
+    private final Integer customFieldId;
 
-	/*
-	 * Reference to a {@link CustomFieldDefinitionEntity}
-	 */
-	private final Short fieldId;
+    /*
+     * Reference to a {@link CustomFieldDefinitionEntity}
+     */
+    private final Short fieldId;
 
-	private String fieldValue;
+    private String fieldValue;
 
-	private final CustomerBO customer;
+    private final CustomerBO customer;
 
-	public CustomerCustomFieldEntity(Short fieldId, String fieldValue,
-			CustomerBO customer) {
-		this.fieldId = fieldId;
-		this.fieldValue = fieldValue;
-		this.customer = customer;
-		this.customFieldId = null;
-	}
+    public CustomerCustomFieldEntity(Short fieldId, String fieldValue, CustomerBO customer) {
+        this.fieldId = fieldId;
+        this.fieldValue = fieldValue;
+        this.customer = customer;
+        this.customFieldId = null;
+    }
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerCustomFieldEntity() {
-		super();
-		this.customFieldId = null;
-		this.fieldId = null;
-		this.customer = null;
-	}
-	
-	public Short getFieldId() {
-		return fieldId;
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerCustomFieldEntity() {
+        super();
+        this.customFieldId = null;
+        this.fieldId = null;
+        this.customer = null;
+    }
 
-	public String getFieldValue() {
-		return fieldValue;
-	}
+    public Short getFieldId() {
+        return fieldId;
+    }
 
-	public void setFieldValue(String fieldValue) {
-		this.fieldValue = fieldValue;
-	}
+    public String getFieldValue() {
+        return fieldValue;
+    }
 
-	public void save(CustomerCustomFieldEntity customerCustomFieldEntity) throws ApplicationException
-	{
-		new CustomerPersistence().createOrUpdate(customerCustomFieldEntity);
-	}
+    public void setFieldValue(String fieldValue) {
+        this.fieldValue = fieldValue;
+    }
+
+    public void save(CustomerCustomFieldEntity customerCustomFieldEntity) throws ApplicationException {
+        new CustomerPersistence().createOrUpdate(customerCustomFieldEntity);
+    }
 }

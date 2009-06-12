@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 import java.util.ArrayList;
@@ -30,63 +30,60 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerAccountView extends View {
 
-	private Integer accountId;
+    private Integer accountId;
 
-	private String customerAccountAmountEntered;
+    private String customerAccountAmountEntered;
 
-	private List<CollectionSheetEntryInstallmentView> accountActionDates;
+    private List<CollectionSheetEntryInstallmentView> accountActionDates;
 
-	private boolean isValidCustomerAccountAmountEntered;
+    private boolean isValidCustomerAccountAmountEntered;
 
-	public CustomerAccountView(Integer accountId) {
-		this.accountId = accountId;
-		customerAccountAmountEntered = "0.0";
-		accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
-		isValidCustomerAccountAmountEntered = true;
-	}
+    public CustomerAccountView(Integer accountId) {
+        this.accountId = accountId;
+        customerAccountAmountEntered = "0.0";
+        accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
+        isValidCustomerAccountAmountEntered = true;
+    }
 
-	public List<CollectionSheetEntryInstallmentView> getAccountActionDates() {
-		return accountActionDates;
-	}
+    public List<CollectionSheetEntryInstallmentView> getAccountActionDates() {
+        return accountActionDates;
+    }
 
-	public void setAccountActionDates(
-			List<CollectionSheetEntryInstallmentView> accountActionDates) {
-		this.accountActionDates = accountActionDates;
-	}
+    public void setAccountActionDates(List<CollectionSheetEntryInstallmentView> accountActionDates) {
+        this.accountActionDates = accountActionDates;
+    }
 
-	public Integer getAccountId() {
-		return accountId;
-	}
+    public Integer getAccountId() {
+        return accountId;
+    }
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
 
-	public String getCustomerAccountAmountEntered() {
-		return customerAccountAmountEntered;
-	}
+    public String getCustomerAccountAmountEntered() {
+        return customerAccountAmountEntered;
+    }
 
-	public void setCustomerAccountAmountEntered(
-			String customerAccountAmountEntered) {
-		this.customerAccountAmountEntered = customerAccountAmountEntered;
-	}
+    public void setCustomerAccountAmountEntered(String customerAccountAmountEntered) {
+        this.customerAccountAmountEntered = customerAccountAmountEntered;
+    }
 
-	public boolean isValidCustomerAccountAmountEntered() {
-		return isValidCustomerAccountAmountEntered;
-	}
+    public boolean isValidCustomerAccountAmountEntered() {
+        return isValidCustomerAccountAmountEntered;
+    }
 
-	public void setValidCustomerAccountAmountEntered(
-			boolean isValidCustomerAccountAmountEntered) {
-		this.isValidCustomerAccountAmountEntered = isValidCustomerAccountAmountEntered;
-	}
+    public void setValidCustomerAccountAmountEntered(boolean isValidCustomerAccountAmountEntered) {
+        this.isValidCustomerAccountAmountEntered = isValidCustomerAccountAmountEntered;
+    }
 
-	public Money getTotalAmountDue() {
-		Money totalAmount = new Money();
-		if (accountActionDates != null && accountActionDates.size() > 0)
-			for (CollectionSheetEntryInstallmentView accountAction : accountActionDates)
-				totalAmount = totalAmount.add(((CollectionSheetEntryCustomerAccountInstallmentView)accountAction)
-						.getTotalDueWithFees());
-		return totalAmount;
-	}
+    public Money getTotalAmountDue() {
+        Money totalAmount = new Money();
+        if (accountActionDates != null && accountActionDates.size() > 0)
+            for (CollectionSheetEntryInstallmentView accountAction : accountActionDates)
+                totalAmount = totalAmount.add(((CollectionSheetEntryCustomerAccountInstallmentView) accountAction)
+                        .getTotalDueWithFees());
+        return totalAmount;
+    }
 
 }

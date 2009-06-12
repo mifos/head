@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.action;
 
 import java.io.File;
@@ -44,90 +44,84 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+
 /**
  * Control Class for Uploading Report
  */
 
-public class ReportsUploadAction extends BaseAction{
-	 
-	private final ReportsBusinessService reportsBusinessService ;
-	private final ReportsPersistence reportsPersistence;
-	private MifosLogger logger = 
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
-	public ReportsUploadAction() throws ServiceException {
-		reportsBusinessService = new ReportsBusinessService();		
-		reportsPersistence = new ReportsPersistence();
-	}
-	
-	@Override
-	protected BusinessService getService() {
-		return reportsBusinessService;
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("reportsUploadAction");
-		security.allow("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("administerreports_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		return security;
+public class ReportsUploadAction extends BaseAction {
 
-	}
-	
-	/**
-	 * Uploads the Report
-	 */
-	
-	public ActionForward uploadReport(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response)	
-	throws Exception {
-		logger.debug("In ReportsUploadAction:uploadReport Method: ");
+    private final ReportsBusinessService reportsBusinessService;
+    private final ReportsPersistence reportsPersistence;
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-		String filename = request.getParameter("filename")==null?"":request.getParameter("filename");
-		String strreportId = request.getParameter("reportId")==null || request.getParameter("reportId").equals("")?"0":request.getParameter("reportId");
-		int reportId = Integer.parseInt(strreportId);
-		File reportUploadFile = new File(filename);
-		if (reportUploadFile != null)
-		{
-			String reportUploadFileName = reportUploadFile.getAbsolutePath();
-			if ((reportUploadFileName.endsWith(".xml")) || (reportUploadFileName.endsWith(".jrxml")))
-			{
-				try
-				{
-					System.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
-					JRProperties.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
-					
-					JasperCompileManager.compileReportToFile(reportUploadFileName);
-				}
-				catch (Exception e)
-				{
-					// TODO: What kind of exception?  This is awfully broad.
-					if (e.toString().indexOf("groovy") > -1)
-					{
-						System.setProperty(JRProperties.COMPILER_CLASS,"net.sf.jasperreports.compilers.JRGroovyCompiler" );
-	                    JRProperties.setProperty(JRProperties.COMPILER_CLASS,"net.sf.jasperreports.compilers.JRGroovyCompiler");
-	                    
-						JasperCompileManager.compileReportToFile(reportUploadFileName);
-					}
-					else
-					{
-						throw e;
-					}
-				}
-			}
-			String fname = reportUploadFile.getName();
-			if(fname!=null)
-				fname = fname.replaceAll(".jrxml",".jasper");
-			
-			ReportsJasperMap objmap = new ReportsJasperMap();
-			objmap.setReportId((short)reportId);
-			objmap.setReportJasper(fname);
-			reportsPersistence.updateReportsJasperMap(objmap);
-			request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,new ReportsPersistence().getAllReportCategories());
-		}
+    public ReportsUploadAction() throws ServiceException {
+        reportsBusinessService = new ReportsBusinessService();
+        reportsPersistence = new ReportsPersistence();
+    }
 
-		return mapping.findForward("administerreports_path");
-	
-	}
+    @Override
+    protected BusinessService getService() {
+        return reportsBusinessService;
+    }
+
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsUploadAction");
+        security.allow("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("administerreports_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        return security;
+
+    }
+
+    /**
+     * Uploads the Report
+     */
+
+    public ActionForward uploadReport(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        logger.debug("In ReportsUploadAction:uploadReport Method: ");
+
+        String filename = request.getParameter("filename") == null ? "" : request.getParameter("filename");
+        String strreportId = request.getParameter("reportId") == null || request.getParameter("reportId").equals("") ? "0"
+                : request.getParameter("reportId");
+        int reportId = Integer.parseInt(strreportId);
+        File reportUploadFile = new File(filename);
+        if (reportUploadFile != null) {
+            String reportUploadFileName = reportUploadFile.getAbsolutePath();
+            if ((reportUploadFileName.endsWith(".xml")) || (reportUploadFileName.endsWith(".jrxml"))) {
+                try {
+                    System.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
+                    JRProperties.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
+
+                    JasperCompileManager.compileReportToFile(reportUploadFileName);
+                } catch (Exception e) {
+                    // TODO: What kind of exception? This is awfully broad.
+                    if (e.toString().indexOf("groovy") > -1) {
+                        System.setProperty(JRProperties.COMPILER_CLASS,
+                                "net.sf.jasperreports.compilers.JRGroovyCompiler");
+                        JRProperties.setProperty(JRProperties.COMPILER_CLASS,
+                                "net.sf.jasperreports.compilers.JRGroovyCompiler");
+
+                        JasperCompileManager.compileReportToFile(reportUploadFileName);
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+            String fname = reportUploadFile.getName();
+            if (fname != null)
+                fname = fname.replaceAll(".jrxml", ".jasper");
+
+            ReportsJasperMap objmap = new ReportsJasperMap();
+            objmap.setReportId((short) reportId);
+            objmap.setReportJasper(fname);
+            reportsPersistence.updateReportsJasperMap(objmap);
+            request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
+                    new ReportsPersistence().getAllReportCategories());
+        }
+
+        return mapping.findForward("administerreports_path");
+
+    }
 
 }

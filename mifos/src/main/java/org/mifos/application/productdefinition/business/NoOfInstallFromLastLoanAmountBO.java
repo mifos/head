@@ -17,48 +17,47 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.isBetween;
 
 public class NoOfInstallFromLastLoanAmountBO extends LoanOfferingInstallmentRange {
 
-	@SuppressWarnings("unused")
-	private final Short noOfInstallFromLastLoanID;
-	private Double startRange;
-	private Double endRange;
+    @SuppressWarnings("unused")
+    private final Short noOfInstallFromLastLoanID;
+    private Double startRange;
+    private Double endRange;
 
-	public NoOfInstallFromLastLoanAmountBO(Short minNoOfInstall,
-			Short maxNoOfInstall, Short defaultNoOfInstall, Double startRange,
-			Double endRange, LoanOfferingBO loanOffering) {
-		super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
-		this.startRange = startRange;
-		this.endRange = endRange;
-		this.noOfInstallFromLastLoanID = null;
-	}
+    public NoOfInstallFromLastLoanAmountBO(Short minNoOfInstall, Short maxNoOfInstall, Short defaultNoOfInstall,
+            Double startRange, Double endRange, LoanOfferingBO loanOffering) {
+        super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
+        this.startRange = startRange;
+        this.endRange = endRange;
+        this.noOfInstallFromLastLoanID = null;
+    }
 
-	public NoOfInstallFromLastLoanAmountBO() {
-		this(null, null, null, null, null, null);
-	}
+    public NoOfInstallFromLastLoanAmountBO() {
+        this(null, null, null, null, null, null);
+    }
 
-	public Double getEndRange() {
-		return endRange;
-	}
+    public Double getEndRange() {
+        return endRange;
+    }
 
-	public void setEndRange(Double endRange) {
-		this.endRange = endRange;
-	}
+    public void setEndRange(Double endRange) {
+        this.endRange = endRange;
+    }
 
-	public Double getStartRange() {
-		return startRange;
-	}
+    public Double getStartRange() {
+        return startRange;
+    }
 
-	public void setStartRange(Double startRange) {
-		this.startRange = startRange;
-	}
+    public void setStartRange(Double startRange) {
+        this.startRange = startRange;
+    }
 
-	boolean loanAmountInRange(Double value) {
-		return isBetween(startRange, endRange, value);
-	}
+    boolean loanAmountInRange(Double value) {
+        return isBetween(startRange, endRange, value);
+    }
 }

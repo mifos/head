@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
@@ -25,73 +25,74 @@ import org.mifos.framework.business.PersistentObject;
 
 public class LookUpLabelEntity extends PersistentObject {
 
-	private String labelName;
+    private String labelName;
 
-	private Short LookUpLabelId;
+    private Short LookUpLabelId;
 
-	private Short localeId;
+    private Short localeId;
 
-	private SupportedLocalesEntity locale;
+    private SupportedLocalesEntity locale;
 
-	private MifosLookUpEntity lookUpEntity;
+    private MifosLookUpEntity lookUpEntity;
 
-	public String getLabelKey() {
-		return lookUpEntity.getEntityType();
-	}
-	
-	public String getLabelText() {
-		if (labelName != null && labelName.length() > 0) {
-			return labelName;
-		} else {
+    public String getLabelKey() {
+        return lookUpEntity.getEntityType();
+    }
 
-		// if we don't find a label here, then it means that it has not been customized and
-		// we should return the default label from the properties file
-			return MessageLookup.getInstance().lookupLabel(getLabelKey());
-		}
-	}
+    public String getLabelText() {
+        if (labelName != null && labelName.length() > 0) {
+            return labelName;
+        } else {
 
-	/*
-	 * This method is only for use by Hibernate to persist this class.
-	 * To get the label text back use {@link getLabelText()}
-	 */
-	protected String getLabelName() {
-		return labelName;
-	}
-	
-	public void setLabelName(String labelName) {
-		this.labelName = labelName;
-	}
+            // if we don't find a label here, then it means that it has not been
+            // customized and
+            // we should return the default label from the properties file
+            return MessageLookup.getInstance().lookupLabel(getLabelKey());
+        }
+    }
 
-	public SupportedLocalesEntity getLocale() {
-		return locale;
-	}
+    /*
+     * This method is only for use by Hibernate to persist this class. To get
+     * the label text back use {@link getLabelText()}
+     */
+    protected String getLabelName() {
+        return labelName;
+    }
 
-	public void setLocale(SupportedLocalesEntity locale) {
-		this.locale = locale;
-	}
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
 
-	public void setLocaleId(Short localeId) {
-		this.localeId = localeId;
-	}
+    public SupportedLocalesEntity getLocale() {
+        return locale;
+    }
 
-	public Short getLocaleId() {
-		return localeId;
-	}
+    public void setLocale(SupportedLocalesEntity locale) {
+        this.locale = locale;
+    }
 
-	public Short getLookUpLabelId() {
-		return LookUpLabelId;
-	}
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
 
-	public void setLookUpLabelId(Short lookUpLabelId) {
-		LookUpLabelId = lookUpLabelId;
-	}
+    public Short getLocaleId() {
+        return localeId;
+    }
 
-	public MifosLookUpEntity getLookUpEntity() {
-		return lookUpEntity;
-	}
+    public Short getLookUpLabelId() {
+        return LookUpLabelId;
+    }
 
-	public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
-		this.lookUpEntity = lookUpEntity;
-	}
+    public void setLookUpLabelId(Short lookUpLabelId) {
+        LookUpLabelId = lookUpLabelId;
+    }
+
+    public MifosLookUpEntity getLookUpEntity() {
+        return lookUpEntity;
+    }
+
+    public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
+        this.lookUpEntity = lookUpEntity;
+    }
 
 }

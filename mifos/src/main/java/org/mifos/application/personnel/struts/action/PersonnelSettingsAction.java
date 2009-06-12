@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.struts.action;
 
 import java.sql.Date;
@@ -54,217 +54,176 @@ import org.mifos.config.Localization;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 
 public class PersonnelSettingsAction extends BaseAction {
-	@Override
-	protected BusinessService getService() {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Personnel);
-	}
+    @Override
+    protected BusinessService getService() {
+        return ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Personnel);
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("yourSettings");
-		security.allow("get", SecurityConstants.VIEW);
-		security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		security.allow("preview", SecurityConstants.VIEW);
-		security.allow("previous", SecurityConstants.VIEW);
-		security.allow("update", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		security.allow("loadChangePassword",
-				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		return security;
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	@TransactionDemarcate(saveToken = true)
-	public ActionForward get(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		PersonnelBO personnel = getPersonnel(getStringValue(getUserContext(
-				request).getId()));
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
-		setDetailsData(request, getUserContext(request).getLocaleId(),
-				personnel.getPersonnelDetails().getGender(), personnel
-						.getPersonnelDetails().getMaritalStatus(),Integer.valueOf(personnel.getPreferredLocale().getLocaleId().intValue()));
-		loadMasterData(request, getUserContext(request).getLocaleId());
-		setPersonnelAge(request, (Date) personnel.getPersonnelDetails()
-				.getDob());
-		return mapping.findForward(ActionForwards.get_success.toString());
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("yourSettings");
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        security.allow("loadChangePassword", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        return security;
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward manage(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-		setFormAttributes((PersonnelSettingsActionForm) form, personnel);
-		return mapping.findForward(ActionForwards.manage_success
-				.toString());
-	}
+    @TransactionDemarcate(saveToken = true)
+    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        PersonnelBO personnel = getPersonnel(getStringValue(getUserContext(request).getId()));
+        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
+        setDetailsData(request, getUserContext(request).getLocaleId(), personnel.getPersonnelDetails().getGender(),
+                personnel.getPersonnelDetails().getMaritalStatus(), Integer.valueOf(personnel.getPreferredLocale()
+                        .getLocaleId().intValue()));
+        loadMasterData(request, getUserContext(request).getLocaleId());
+        setPersonnelAge(request, (Date) personnel.getPersonnelDetails().getDob());
+        return mapping.findForward(ActionForwards.get_success.toString());
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward preview(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		PersonnelSettingsActionForm personnelactionForm = (PersonnelSettingsActionForm) form;
-		Integer prefeeredLocaleId = null;
-		if(personnelactionForm.getPreferredLocaleValue() != null)
-			prefeeredLocaleId = Integer.valueOf(personnelactionForm.getPreferredLocaleValue().intValue());
-		setDetailsData(request,getUserContext(request).getLocaleId(),personnelactionForm.getGenderValue(),personnelactionForm.getMaritalStatusValue(),prefeeredLocaleId);
-		return mapping.findForward(ActionForwards.preview_success
-				.toString());
-	}
-	
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward previous(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.previous_success
-				.toString());
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        setFormAttributes((PersonnelSettingsActionForm) form, personnel);
+        return mapping.findForward(ActionForwards.manage_success.toString());
+    }
 
-	@CloseSession
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		PersonnelSettingsActionForm personnelSettingsActionForm = (PersonnelSettingsActionForm) form;
-		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-		PersonnelBO personnelInit = ((PersonnelBusinessService) getService())
-		.getPersonnel(personnel.getPersonnelId());
-		checkVersionMismatch(personnel.getVersionNo(),personnelInit.getVersionNo());
-		personnelInit.setVersionNo(personnel.getVersionNo());
-		personnelInit.setUserContext(getUserContext(request));
-		setInitialObjectForAuditLogging(personnelInit);
-		personnelInit.update(personnelSettingsActionForm.getEmailId(),
-				personnelSettingsActionForm.getName(),
-				personnelSettingsActionForm.getMaritalStatusValue(),
-				personnelSettingsActionForm.getGenderValue(),
-				personnelSettingsActionForm.getAddress(),
-				getLocaleId(personnelSettingsActionForm
-						.getPreferredLocaleValue()),getUserContext(request).getId());
-		return mapping.findForward(ActionForwards.updateSettings_success.toString());
-	}
-	
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return mapping.findForward(ActionForwards.cancel_success.toString());
-	}
-	
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward loadChangePassword(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		return mapping.findForward(ActionForwards.loadChangePassword_success
-				.toString());
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        PersonnelSettingsActionForm personnelactionForm = (PersonnelSettingsActionForm) form;
+        Integer prefeeredLocaleId = null;
+        if (personnelactionForm.getPreferredLocaleValue() != null)
+            prefeeredLocaleId = Integer.valueOf(personnelactionForm.getPreferredLocaleValue().intValue());
+        setDetailsData(request, getUserContext(request).getLocaleId(), personnelactionForm.getGenderValue(),
+                personnelactionForm.getMaritalStatusValue(), prefeeredLocaleId);
+        return mapping.findForward(ActionForwards.preview_success.toString());
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-		if (method.equalsIgnoreCase(Methods.preview.toString())) {
-			return mapping.findForward(ActionForwards.editPersonalInfo_failure
-					.toString());
-		}
-		if (method.equalsIgnoreCase(Methods.update.toString())) {
-			return mapping
-					.findForward(ActionForwards.previewPersonalInfo_success
-							.toString());
-		}
-		return null;
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.previous_success.toString());
+    }
 
-	private PersonnelBO getPersonnel(String personnelId) throws Exception {
-		return (((PersonnelBusinessService) getService())
-				.getPersonnel(getShortValue(personnelId)));
-	}
+    @CloseSession
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        PersonnelSettingsActionForm personnelSettingsActionForm = (PersonnelSettingsActionForm) form;
+        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        PersonnelBO personnelInit = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
+        checkVersionMismatch(personnel.getVersionNo(), personnelInit.getVersionNo());
+        personnelInit.setVersionNo(personnel.getVersionNo());
+        personnelInit.setUserContext(getUserContext(request));
+        setInitialObjectForAuditLogging(personnelInit);
+        personnelInit.update(personnelSettingsActionForm.getEmailId(), personnelSettingsActionForm.getName(),
+                personnelSettingsActionForm.getMaritalStatusValue(), personnelSettingsActionForm.getGenderValue(),
+                personnelSettingsActionForm.getAddress(), getLocaleId(personnelSettingsActionForm
+                        .getPreferredLocaleValue()), getUserContext(request).getId());
+        return mapping.findForward(ActionForwards.updateSettings_success.toString());
+    }
 
-	private void setPersonnelAge(HttpServletRequest request, Date date)
-			throws PageExpiredException {
-		SessionUtils.removeAttribute(PersonnelConstants.PERSONNEL_AGE, request);
-		int age = DateUtils.DateDiffInYears(date);
-		if (age < 0) {
-			age = 0;
-		}
-		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_AGE, age,
-				request);
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.cancel_success.toString());
+    }
 
-	private String getNameForBusinessActivityEntity(Integer entityId,
-			Short localeId) throws Exception {
-		if (entityId != null) {
-			return ((MasterDataService) ServiceFactory.getInstance()
-					.getBusinessService(BusinessServiceName.MasterDataService))
-					.retrieveMasterEntities(entityId, localeId);
-		}
-		return "";
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadChangePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.loadChangePassword_success.toString());
+    }
 
-	private void setFormAttributes(PersonnelSettingsActionForm form,
-			PersonnelBO personnelBO) throws Exception {
-		form.setFirstName(personnelBO.getPersonnelDetails().getName()
-				.getFirstName());
-		form.setMiddleName(personnelBO.getPersonnelDetails().getName()
-				.getMiddleName());
-		form.setSecondLastName(personnelBO.getPersonnelDetails().getName()
-				.getSecondLastName());
-		form.setLastName(personnelBO.getPersonnelDetails().getName()
-				.getLastName());
-		form.setGender(getStringValue(personnelBO.getPersonnelDetails()
-				.getGender()));
-		form.setUserName(personnelBO.getUserName());
-		form.setEmailId(personnelBO.getEmailId());
-		form.setGovernmentIdNumber(personnelBO.getPersonnelDetails()
-				.getGovernmentIdNumber());
-		form.setAddress(personnelBO.getPersonnelDetails().getAddress());
-		form.setDob(personnelBO.getPersonnelDetails().getDob().toString());
-		form.setPreferredLocale(getStringValue(personnelBO.getPreferredLocale().getLocaleId()));
-		form.setMaritalStatus(getStringValue(personnelBO.getPersonnelDetails()
-				.getMaritalStatus()));
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        String method = (String) request.getAttribute("methodCalled");
+        if (method.equalsIgnoreCase(Methods.preview.toString())) {
+            return mapping.findForward(ActionForwards.editPersonalInfo_failure.toString());
+        }
+        if (method.equalsIgnoreCase(Methods.update.toString())) {
+            return mapping.findForward(ActionForwards.previewPersonalInfo_success.toString());
+        }
+        return null;
+    }
 
-	private void loadMasterData(HttpServletRequest request, Short localeId)
-			throws Exception {
-		MasterPersistence masterPersistence = new MasterPersistence();
-		SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST,
-				masterPersistence.retrieveMasterEntities(
-						MasterConstants.GENDER, localeId), request);
+    private PersonnelBO getPersonnel(String personnelId) throws Exception {
+        return (((PersonnelBusinessService) getService()).getPersonnel(getShortValue(personnelId)));
+    }
 
-		SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST,
-				masterPersistence.retrieveMasterEntities(
-						MasterConstants.MARITAL_STATUS, localeId), request);
+    private void setPersonnelAge(HttpServletRequest request, Date date) throws PageExpiredException {
+        SessionUtils.removeAttribute(PersonnelConstants.PERSONNEL_AGE, request);
+        int age = DateUtils.DateDiffInYears(date);
+        if (age < 0) {
+            age = 0;
+        }
+        SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_AGE, age, request);
+    }
 
-		SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST,
-				masterPersistence.retrieveMasterEntities(
-						MasterConstants.LANGUAGE, localeId), request);
-	}
+    private String getNameForBusinessActivityEntity(Integer entityId, Short localeId) throws Exception {
+        if (entityId != null) {
+            return ((MasterDataService) ServiceFactory.getInstance().getBusinessService(
+                    BusinessServiceName.MasterDataService)).retrieveMasterEntities(entityId, localeId);
+        }
+        return "";
+    }
 
-	private void setDetailsData(HttpServletRequest request, Short localeId,
-			Integer gender, Integer maritalStatus, Integer preferredLocale) throws Exception {
-		SessionUtils.setAttribute(PersonnelConstants.GENDER,
-				getNameForBusinessActivityEntity(gender, localeId), request);
-		SessionUtils.setAttribute(PersonnelConstants.MARITALSTATUS,
-				getNameForBusinessActivityEntity(maritalStatus, localeId),
-				request);
-		SessionUtils.setAttribute(MasterConstants.LANGUAGE,
-				getNameForBusinessActivityEntity(preferredLocale, localeId), request);
-	}
+    private void setFormAttributes(PersonnelSettingsActionForm form, PersonnelBO personnelBO) throws Exception {
+        form.setFirstName(personnelBO.getPersonnelDetails().getName().getFirstName());
+        form.setMiddleName(personnelBO.getPersonnelDetails().getName().getMiddleName());
+        form.setSecondLastName(personnelBO.getPersonnelDetails().getName().getSecondLastName());
+        form.setLastName(personnelBO.getPersonnelDetails().getName().getLastName());
+        form.setGender(getStringValue(personnelBO.getPersonnelDetails().getGender()));
+        form.setUserName(personnelBO.getUserName());
+        form.setEmailId(personnelBO.getEmailId());
+        form.setGovernmentIdNumber(personnelBO.getPersonnelDetails().getGovernmentIdNumber());
+        form.setAddress(personnelBO.getPersonnelDetails().getAddress());
+        form.setDob(personnelBO.getPersonnelDetails().getDob().toString());
+        form.setPreferredLocale(getStringValue(personnelBO.getPreferredLocale().getLocaleId()));
+        form.setMaritalStatus(getStringValue(personnelBO.getPersonnelDetails().getMaritalStatus()));
+    }
 
-	private Short getLocaleId(Short lookUpId) throws ServiceException {
-		if (lookUpId != null)
-			for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService())
-					.getAllLocales()) {
-				if (locale.getLanguage().getLookUpValue().getLookUpId().intValue() == lookUpId
-						.intValue())
-					return locale.getLocaleId();
-				break;
-			}
-		
-		return Localization.getInstance().getLocaleId();
-	}
+    private void loadMasterData(HttpServletRequest request, Short localeId) throws Exception {
+        MasterPersistence masterPersistence = new MasterPersistence();
+        SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST, masterPersistence.retrieveMasterEntities(
+                MasterConstants.GENDER, localeId), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, masterPersistence
+                .retrieveMasterEntities(MasterConstants.MARITAL_STATUS, localeId), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, masterPersistence.retrieveMasterEntities(
+                MasterConstants.LANGUAGE, localeId), request);
+    }
+
+    private void setDetailsData(HttpServletRequest request, Short localeId, Integer gender, Integer maritalStatus,
+            Integer preferredLocale) throws Exception {
+        SessionUtils.setAttribute(PersonnelConstants.GENDER, getNameForBusinessActivityEntity(gender, localeId),
+                request);
+        SessionUtils.setAttribute(PersonnelConstants.MARITALSTATUS, getNameForBusinessActivityEntity(maritalStatus,
+                localeId), request);
+        SessionUtils.setAttribute(MasterConstants.LANGUAGE,
+                getNameForBusinessActivityEntity(preferredLocale, localeId), request);
+    }
+
+    private Short getLocaleId(Short lookUpId) throws ServiceException {
+        if (lookUpId != null)
+            for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService()).getAllLocales()) {
+                if (locale.getLanguage().getLookUpValue().getLookUpId().intValue() == lookUpId.intValue())
+                    return locale.getLocaleId();
+                break;
+            }
+
+        return Localization.getInstance().getLocaleId();
+    }
 }

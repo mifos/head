@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ppi.business;
 
 /**
@@ -52,119 +52,123 @@ import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.config.GeneralConfig;
 
 public class PPILikelihood implements Serializable {
-	private int likelihoodId;
-	private Survey survey;
-	private int scoreFrom;
-	private int scoreTo;
-	private double bottomHalfBelowPovertyLinePercent;
-	private double topHalfBelowPovertyLinePercent;
-	private int order;
-	
-	public PPILikelihood() {
-	}
-	
-	/**
-	 * Constructs an instance from the first two likelihood percentages for a score range.
-	 * @throws org.mifos.framework.exceptions.ValidationException if one of the class's
-	 *                       invariants are violated, so that the object cannot
-	 *                       be constructed in a valid state.
-	 */
-	public PPILikelihood(int scoreFrom, int scoreTo, double bottomHalfPct, double topHalfPct) throws ValidationException {
-		checkInvariants(scoreFrom, scoreTo, bottomHalfPct, topHalfPct);
-		this.scoreFrom = scoreFrom;
-		this.scoreTo = scoreTo;
-		this.bottomHalfBelowPovertyLinePercent = bottomHalfPct;
-		this.topHalfBelowPovertyLinePercent = topHalfPct;
-	}
-	
-	public Range getScore() {
-		return new IntRange(this.scoreFrom, this.scoreTo);
-	}
-	
-	public int getScoreFrom() {
-		return scoreFrom;
-	}
+    private int likelihoodId;
+    private Survey survey;
+    private int scoreFrom;
+    private int scoreTo;
+    private double bottomHalfBelowPovertyLinePercent;
+    private double topHalfBelowPovertyLinePercent;
+    private int order;
 
-	public void setScoreFrom(int scoreFrom) {
-		this.scoreFrom = scoreFrom;
-	}
+    public PPILikelihood() {
+    }
 
-	public int getScoreTo() {
-		return scoreTo;
-	}
+    /**
+     * Constructs an instance from the first two likelihood percentages for a
+     * score range.
+     * 
+     * @throws org.mifos.framework.exceptions.ValidationException
+     *             if one of the class's invariants are violated, so that the
+     *             object cannot be constructed in a valid state.
+     */
+    public PPILikelihood(int scoreFrom, int scoreTo, double bottomHalfPct, double topHalfPct)
+            throws ValidationException {
+        checkInvariants(scoreFrom, scoreTo, bottomHalfPct, topHalfPct);
+        this.scoreFrom = scoreFrom;
+        this.scoreTo = scoreTo;
+        this.bottomHalfBelowPovertyLinePercent = bottomHalfPct;
+        this.topHalfBelowPovertyLinePercent = topHalfPct;
+    }
 
-	public void setScoreTo(int scoreTo) {
-		this.scoreTo = scoreTo;
-	}
+    public Range getScore() {
+        return new IntRange(this.scoreFrom, this.scoreTo);
+    }
 
-	public double getBottomHalfBelowPovertyLinePercent() {
-		return this.bottomHalfBelowPovertyLinePercent;
-	}
+    public int getScoreFrom() {
+        return scoreFrom;
+    }
 
-	public double getTopHalfBelowPovertyLinePercent() {
-		return this.topHalfBelowPovertyLinePercent;
-	}
-	
-	public void setBottomHalfBelowPovertyLinePercent(double bottomHalfBelowPovertyLinePercent) {
-		this.bottomHalfBelowPovertyLinePercent = bottomHalfBelowPovertyLinePercent;
-	}
+    public void setScoreFrom(int scoreFrom) {
+        this.scoreFrom = scoreFrom;
+    }
 
-	public void setTopHalfBelowPovertyLinePercent(double topHalfBelowPovertyLinePercent) {
-		this.topHalfBelowPovertyLinePercent = topHalfBelowPovertyLinePercent;
-	}
-	
-	public double getBelowPovertyLinePercent() {
-		return this.getBottomHalfBelowPovertyLinePercent() + this.getTopHalfBelowPovertyLinePercent();
-	}
-	
-	public double getAbovePovertyLinePercent() {
-		return 100.0 - this.getBelowPovertyLinePercent();
-	}
-	
-	private void checkInvariants(int scoreFrom, int scoreTo, double bottomHalf, double topHalf) throws ValidationException {
-		checkRange(new IntRange(scoreFrom, scoreTo));
-		checkLimits (bottomHalf);
-		checkLimits (topHalf);
-		checkSum (bottomHalf, topHalf);
-	}
-	
-	private void checkRange(Range score) throws ValidationException {
-		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
-		if (score.getMinimumInteger() < 0 || score.getMaximumInteger() > maxPoints)
-			throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
-	}
+    public int getScoreTo() {
+        return scoreTo;
+    }
 
-	private void checkLimits(double aPercent) throws ValidationException {
-		if (aPercent < 0.0 || aPercent > 100.0) 
-			throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");			
-	}
-	
-	private void checkSum(double pct1, double pct2)  throws ValidationException {
-		if (pct1 + pct2 > 100.0)
-			throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
-	}
+    public void setScoreTo(int scoreTo) {
+        this.scoreTo = scoreTo;
+    }
 
-	public Survey getSurvey() {
-		return survey;
-	}
+    public double getBottomHalfBelowPovertyLinePercent() {
+        return this.bottomHalfBelowPovertyLinePercent;
+    }
 
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
-	}
+    public double getTopHalfBelowPovertyLinePercent() {
+        return this.topHalfBelowPovertyLinePercent;
+    }
 
-	public int getLikelihoodId() {
-		return likelihoodId;
-	}
+    public void setBottomHalfBelowPovertyLinePercent(double bottomHalfBelowPovertyLinePercent) {
+        this.bottomHalfBelowPovertyLinePercent = bottomHalfBelowPovertyLinePercent;
+    }
 
-	public void setLikelihoodId(int likelihoodId) {
-		this.likelihoodId = likelihoodId;
-	}
-	
-	public int getOrder() {
-		return order;
-	}
+    public void setTopHalfBelowPovertyLinePercent(double topHalfBelowPovertyLinePercent) {
+        this.topHalfBelowPovertyLinePercent = topHalfBelowPovertyLinePercent;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public double getBelowPovertyLinePercent() {
+        return this.getBottomHalfBelowPovertyLinePercent() + this.getTopHalfBelowPovertyLinePercent();
+    }
+
+    public double getAbovePovertyLinePercent() {
+        return 100.0 - this.getBelowPovertyLinePercent();
+    }
+
+    private void checkInvariants(int scoreFrom, int scoreTo, double bottomHalf, double topHalf)
+            throws ValidationException {
+        checkRange(new IntRange(scoreFrom, scoreTo));
+        checkLimits(bottomHalf);
+        checkLimits(topHalf);
+        checkSum(bottomHalf, topHalf);
+    }
+
+    private void checkRange(Range score) throws ValidationException {
+        int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+        if (score.getMinimumInteger() < 0 || score.getMaximumInteger() > maxPoints)
+            throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
+    }
+
+    private void checkLimits(double aPercent) throws ValidationException {
+        if (aPercent < 0.0 || aPercent > 100.0)
+            throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
+    }
+
+    private void checkSum(double pct1, double pct2) throws ValidationException {
+        if (pct1 + pct2 > 100.0)
+            throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
+    }
+
+    public Survey getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+    }
+
+    public int getLikelihoodId() {
+        return likelihoodId;
+    }
+
+    public void setLikelihoodId(int likelihoodId) {
+        this.likelihoodId = likelihoodId;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 }

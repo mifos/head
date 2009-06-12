@@ -17,11 +17,11 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 public interface PathConstants {
-	String CLIENT_CREATION = "ClientCreationAction";
-	String CLIENT_STATUS_CHANGE = "ClientStatusAction";
-	String CLIENT_TRANSFER_CHANGE = "ClientTransferAction";
+    String CLIENT_CREATION = "ClientCreationAction";
+    String CLIENT_STATUS_CHANGE = "ClientStatusAction";
+    String CLIENT_TRANSFER_CHANGE = "ClientTransferAction";
 }

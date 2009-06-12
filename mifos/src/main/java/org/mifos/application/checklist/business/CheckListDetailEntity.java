@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist.business;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -25,64 +25,65 @@ import org.mifos.framework.business.PersistentObject;
 
 public class CheckListDetailEntity extends PersistentObject {
 
-	private final Integer detailId;
+    private final Integer detailId;
 
-	private String detailText;
+    private String detailText;
 
-	private Short answerType;
+    private Short answerType;
 
-	private final CheckListBO checkListBO;
+    private final CheckListBO checkListBO;
 
-	private SupportedLocalesEntity supportedLocales;
+    private SupportedLocalesEntity supportedLocales;
 
-	public CheckListDetailEntity() {
-		this.detailId = null;
-		this.checkListBO = null;
-	}
+    public CheckListDetailEntity() {
+        this.detailId = null;
+        this.checkListBO = null;
+    }
 
-	public CheckListDetailEntity(String detailText, Short answerType,
-			CheckListBO checkListBO,
-			Short localeId) {
-		this.detailId = null;
-		this.detailText = detailText;
-		this.answerType = answerType;
-		this.checkListBO = checkListBO;
-		this.supportedLocales = new SupportedLocalesEntity(localeId);
-	}
+    public CheckListDetailEntity(String detailText, Short answerType, CheckListBO checkListBO, Short localeId) {
+        this.detailId = null;
+        this.detailText = detailText;
+        this.answerType = answerType;
+        this.checkListBO = checkListBO;
+        this.supportedLocales = new SupportedLocalesEntity(localeId);
+    }
 
-	public Integer getDetailId() {
-		return detailId;
-	}
+    public Integer getDetailId() {
+        return detailId;
+    }
 
-	public String getDetailText() {
-		return this.detailText;
-	}
+    public String getDetailText() {
+        return this.detailText;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setDetailText(String detailText) {
-		this.detailText = detailText;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setDetailText(String detailText) {
+        this.detailText = detailText;
+    }
 
-	public Short getAnswerType() {
-		return this.answerType;
-	}
+    public Short getAnswerType() {
+        return this.answerType;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setAnswerType(Short answerType) {
-		this.answerType = answerType;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setAnswerType(Short answerType) {
+        this.answerType = answerType;
+    }
 
-	public SupportedLocalesEntity getSupportedLocales() {
-		return this.supportedLocales;
-	}
+    public SupportedLocalesEntity getSupportedLocales() {
+        return this.supportedLocales;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
-		this.supportedLocales = supportedLocales;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
+        this.supportedLocales = supportedLocales;
+    }
 
-	public CheckListBO getCheckListBO() {
-		return checkListBO;
-	}
+    public CheckListBO getCheckListBO() {
+        return checkListBO;
+    }
 
 }

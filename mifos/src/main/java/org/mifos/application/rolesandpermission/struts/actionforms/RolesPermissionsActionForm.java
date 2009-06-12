@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.rolesandpermission.struts.actionforms;
 
 import java.util.HashMap;
@@ -26,39 +26,39 @@ import java.util.Map;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class RolesPermissionsActionForm extends BaseActionForm {
-	
-	private String id;
-	
-	private String name;
-	
-	private Map<String, String> activities = new HashMap<String, String>();
 
-	public Map<String, String> getActivities() {
-		return activities;
-	}
+    private String id;
 
-	public void setActivities(Map<String, String> activities) {
-		this.activities = activities;
-	}
+    private String name;
 
-	public String getName() {
-		return name;
-	}
+    private Map<String, String> activities = new HashMap<String, String>();
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setActivity(String key, String value) {
-		this.activities.put(key, value);
-	}
+    public Map<String, String> getActivities() {
+        return activities;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public void setActivities(Map<String, String> activities) {
+        this.activities = activities;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setActivity(String key, String value) {
+        this.activities.put(key, value);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
 }

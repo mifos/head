@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.util.helpers;
 
 import java.util.ArrayList;
@@ -32,99 +32,96 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsAccountView extends View {
 
-	private Integer accountId;
+    private Integer accountId;
 
-	private String depositAmountEntered;
+    private String depositAmountEntered;
 
-	private String withDrawalAmountEntered;
+    private String withDrawalAmountEntered;
 
-	private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
+    private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
 
-	private Short accountType;
+    private Short accountType;
 
-	private SavingsOfferingBO savingsOffering;
+    private SavingsOfferingBO savingsOffering;
 
-	private boolean isValidDepositAmountEntered;
+    private boolean isValidDepositAmountEntered;
 
-	private boolean isValidWithDrawalAmountEntered;
+    private boolean isValidWithDrawalAmountEntered;
 
-	public SavingsAccountView(Integer accountId, AccountTypes accountType,
-			SavingsOfferingBO savingsOffering) {
-		this.accountId = accountId;
-		this.accountType = accountType.getValue();
-		this.savingsOffering = savingsOffering;
-		accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
-		isValidDepositAmountEntered = true;
-		isValidWithDrawalAmountEntered = true;
-	}
+    public SavingsAccountView(Integer accountId, AccountTypes accountType, SavingsOfferingBO savingsOffering) {
+        this.accountId = accountId;
+        this.accountType = accountType.getValue();
+        this.savingsOffering = savingsOffering;
+        accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
+        isValidDepositAmountEntered = true;
+        isValidWithDrawalAmountEntered = true;
+    }
 
-	public Integer getAccountId() {
-		return accountId;
-	}
+    public Integer getAccountId() {
+        return accountId;
+    }
 
-	public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
-		return accountTrxnDetails;
-	}
+    public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
+        return accountTrxnDetails;
+    }
 
-	public void addAccountTrxnDetail(
-			CollectionSheetEntryInstallmentView accountTrxnDetail) {
-		this.accountTrxnDetails.add(accountTrxnDetail);
-	}
+    public void addAccountTrxnDetail(CollectionSheetEntryInstallmentView accountTrxnDetail) {
+        this.accountTrxnDetails.add(accountTrxnDetail);
+    }
 
-	public Short getAccountType() {
-		return accountType;
-	}
+    public Short getAccountType() {
+        return accountType;
+    }
 
-	public AccountTypes getType() {
-		return AccountTypes.getAccountType(accountType);
-	}
+    public AccountTypes getType() {
+        return AccountTypes.getAccountType(accountType);
+    }
 
-	public String getDepositAmountEntered() {
-		return depositAmountEntered;
-	}
+    public String getDepositAmountEntered() {
+        return depositAmountEntered;
+    }
 
-	public void setDepositAmountEntered(String depositAmountEntered) {
-		this.depositAmountEntered = depositAmountEntered;
-	}
+    public void setDepositAmountEntered(String depositAmountEntered) {
+        this.depositAmountEntered = depositAmountEntered;
+    }
 
-	public SavingsOfferingBO getSavingsOffering() {
-		return savingsOffering;
-	}
+    public SavingsOfferingBO getSavingsOffering() {
+        return savingsOffering;
+    }
 
-	public String getWithDrawalAmountEntered() {
-		return withDrawalAmountEntered;
-	}
+    public String getWithDrawalAmountEntered() {
+        return withDrawalAmountEntered;
+    }
 
-	public void setWithDrawalAmountEntered(String withDrawalAmountEntered) {
-		this.withDrawalAmountEntered = withDrawalAmountEntered;
-	}
+    public void setWithDrawalAmountEntered(String withDrawalAmountEntered) {
+        this.withDrawalAmountEntered = withDrawalAmountEntered;
+    }
 
-	public boolean isValidDepositAmountEntered() {
-		return isValidDepositAmountEntered;
-	}
+    public boolean isValidDepositAmountEntered() {
+        return isValidDepositAmountEntered;
+    }
 
-	public void setValidDepositAmountEntered(boolean isValidDepositAmountEntered) {
-		this.isValidDepositAmountEntered = isValidDepositAmountEntered;
-	}
+    public void setValidDepositAmountEntered(boolean isValidDepositAmountEntered) {
+        this.isValidDepositAmountEntered = isValidDepositAmountEntered;
+    }
 
-	public boolean isValidWithDrawalAmountEntered() {
-		return isValidWithDrawalAmountEntered;
-	}
+    public boolean isValidWithDrawalAmountEntered() {
+        return isValidWithDrawalAmountEntered;
+    }
 
-	public void setValidWithDrawalAmountEntered(
-			boolean isValidWithDrawalAmountEntered) {
-		this.isValidWithDrawalAmountEntered = isValidWithDrawalAmountEntered;
-	}
+    public void setValidWithDrawalAmountEntered(boolean isValidWithDrawalAmountEntered) {
+        this.isValidWithDrawalAmountEntered = isValidWithDrawalAmountEntered;
+    }
 
-	public Double getTotalDepositDue() {
-		Money totalDepositDue = new Money();
-		if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-			for (CollectionSheetEntryInstallmentView actionDates : accountTrxnDetails) {
-				totalDepositDue = totalDepositDue.add(((CollectionSheetEntrySavingsInstallmentView)actionDates)
-						.getTotalDepositDue());
-			}
-		}
-		return totalDepositDue.getAmountDoubleValue();
-	}
+    public Double getTotalDepositDue() {
+        Money totalDepositDue = new Money();
+        if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
+            for (CollectionSheetEntryInstallmentView actionDates : accountTrxnDetails) {
+                totalDepositDue = totalDepositDue.add(((CollectionSheetEntrySavingsInstallmentView) actionDates)
+                        .getTotalDepositDue());
+            }
+        }
+        return totalDepositDue.getAmountDoubleValue();
+    }
 
 }

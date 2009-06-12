@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,220 +38,221 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class EditCustomerStatusActionForm extends BaseActionForm {
-	
-	public EditCustomerStatusActionForm() {
-		selectedItems = new String[50];
-	}
 
-	private String customerId;
+    public EditCustomerStatusActionForm() {
+        selectedItems = new String[50];
+    }
 
-	private String globalAccountNum;
+    private String customerId;
 
-	private String customerName;
-	
-	private String levelId;
+    private String globalAccountNum;
 
-	private String currentStatusId;
+    private String customerName;
 
-	private String newStatusId;
+    private String levelId;
 
-	private String flagId;
+    private String currentStatusId;
 
-	private String notes;
+    private String newStatusId;
 
-	private String[] selectedItems;
-	
-	private String input;
-	
-	private String commentDate;
-	
-	public String getCommentDate() {
-		return commentDate;
-	}
+    private String flagId;
 
-	public void setCommentDate(String commentDate) {
-		this.commentDate = commentDate;
-	}
+    private String notes;
 
-	public String getInput() {
-		return input;
-	}
+    private String[] selectedItems;
 
-	public void setInput(String input) {
-		this.input = input;
-	}
+    private String input;
 
-	
+    private String commentDate;
 
-	public String getCustomerId() {
-		return customerId;
-	}
-	
-	public Integer getCustomerIdValue() {
-		return getIntegerValue(customerId);
-	}
+    public String getCommentDate() {
+        return commentDate;
+    }
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
+    }
 
-	
-	public String getCustomerName() {
-		return customerName;
-	}
+    public String getInput() {
+        return input;
+    }
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
+    public void setInput(String input) {
+        this.input = input;
+    }
 
-	public String getCurrentStatusId() {
-		return currentStatusId;
-	}
+    public String getCustomerId() {
+        return customerId;
+    }
 
-	public void setCurrentStatusId(String currentStatusId) {
-		this.currentStatusId = currentStatusId;
-	}
+    public Integer getCustomerIdValue() {
+        return getIntegerValue(customerId);
+    }
 
-	public String getFlagId() {
-		return flagId;
-	}
-	
-	public Short getFlagIdValue() {
-		return getShortValue(flagId);
-	}
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
-	public void setFlagId(String flagId) {
-		this.flagId = flagId;
-	}
+    public String getCustomerName() {
+        return customerName;
+    }
 
-	public String getGlobalAccountNum() {
-		return globalAccountNum;
-	}
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
-	public void setGlobalAccountNum(String globalAccountNum) {
-		this.globalAccountNum = globalAccountNum;
-	}
-	
-	public String getLevelId() {
-		return levelId;
-	}
-	
-	public Short getLevelIdValue() {
-		return getShortValue(levelId);
-	}
+    public String getCurrentStatusId() {
+        return currentStatusId;
+    }
 
-	public void setLevelId(String levelId) {
-		this.levelId = levelId;
-	}
+    public void setCurrentStatusId(String currentStatusId) {
+        this.currentStatusId = currentStatusId;
+    }
 
+    public String getFlagId() {
+        return flagId;
+    }
 
-	public String getNewStatusId() {
-		return newStatusId;
-	}
-	
-	public Short getNewStatusIdValue() {
-		return getShortValue(newStatusId);
-	}
+    public Short getFlagIdValue() {
+        return getShortValue(flagId);
+    }
 
-	public void setNewStatusId(String newStatusId) {
-		this.newStatusId = newStatusId;
-	}
+    public void setFlagId(String flagId) {
+        this.flagId = flagId;
+    }
 
-	public String getNotes() {
-		return notes;
-	}
+    public String getGlobalAccountNum() {
+        return globalAccountNum;
+    }
 
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+    public void setGlobalAccountNum(String globalAccountNum) {
+        this.globalAccountNum = globalAccountNum;
+    }
 
-	public String[] getSelectedItems() {
-		return selectedItems;
-	}
+    public String getLevelId() {
+        return levelId;
+    }
 
-	public void setSelectedItems(String[] selectedItems) {
-		this.selectedItems = selectedItems;
-	}
-	
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		String methodCalled = request.getParameter(Methods.method.toString());
-		if (null != methodCalled) {
-			if ((Methods.previewStatus.toString()).equals(methodCalled)) {
-				this.flagId = null;
-				this.selectedItems = null; 
-			}
-		}
-	}
+    public Short getLevelIdValue() {
+        return getShortValue(levelId);
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		String methodCalled = request.getParameter(Methods.method.toString());
-		if (null != methodCalled) {
-			if ((Methods.previewStatus.toString()).equals(methodCalled)) {
-				handleStatusPreviewValidations(request, errors);
-			} else if ((Methods.updateStatus.toString()).equals(methodCalled)) {
-				handleUpdateStatus(request, errors);
-			}
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
-		}
-		return errors;
-	}
+    public void setLevelId(String levelId) {
+        this.levelId = levelId;
+    }
 
-	private ActionErrors handleUpdateStatus(HttpServletRequest request,
-			ActionErrors errors) {
-		Object obj=request.getParameter("chklistSize");
-		if(request.getParameter("selectedItems")==null){
-			selectedItems=null;
-		}if(obj!=null){
-			
-			int totalItems = new Integer(obj.toString()).intValue();
-			if((totalItems>0 && selectedItems==null) ||(selectedItems!=null && totalItems!=selectedItems.length)){
-				errors.add(CustomerConstants.INCOMPLETE_CHECKLIST_EXCEPTION,new ActionMessage(CustomerConstants.INCOMPLETE_CHECKLIST_EXCEPTION));
-			}
-		
-		}
-		return errors;
-		
-	}
+    public String getNewStatusId() {
+        return newStatusId;
+    }
 
-	private ActionErrors handleStatusPreviewValidations(
-			HttpServletRequest request, ActionErrors errors) {
-		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-		Locale locale = userContext.getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle
-				(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
-		if (newStatusId == null)
-			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, resources.getString("Customer.status")));
-		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
-			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, resources.getString("Customer.flag")));
-		if (StringUtils.isNullOrEmpty(notes))
-			errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX, resources.getString("Customer.notes")));
-		else if (notes.length() > CustomerConstants.COMMENT_LENGTH)
-			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, resources.getString("Customer.notes") ,CustomerConstants.COMMENT_LENGTH));
-		return errors;
-	}
+    public Short getNewStatusIdValue() {
+        return getShortValue(newStatusId);
+    }
 
-	private boolean isCheckListNotComplete(String chklistSize) {
-		return (isPartialSelected(chklistSize) || isNoneSelected(chklistSize));
-	}
-	
-	private boolean isPartialSelected(String chklistSize) {
-		return (selectedItems != null) && (Integer.valueOf(chklistSize).intValue() != selectedItems.length);
-	}
-	
-	private boolean isNoneSelected(String chklistSize) {
-		return (Integer.valueOf(chklistSize).intValue() > 0) && (selectedItems == null);
-	}
-	
-	private boolean isNewStatusHasFlag() {
-		return (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CANCELLED.getValue())) || (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CLOSED.getValue()))
-				|| (Short.valueOf(newStatusId).equals(CustomerStatus.GROUP_CLOSED.getValue()))|| (Short.valueOf(newStatusId).equals(CustomerStatus.GROUP_CANCELLED.getValue()));
-	}
+    public void setNewStatusId(String newStatusId) {
+        this.newStatusId = newStatusId;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String[] getSelectedItems() {
+        return selectedItems;
+    }
+
+    public void setSelectedItems(String[] selectedItems) {
+        this.selectedItems = selectedItems;
+    }
+
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        String methodCalled = request.getParameter(Methods.method.toString());
+        if (null != methodCalled) {
+            if ((Methods.previewStatus.toString()).equals(methodCalled)) {
+                this.flagId = null;
+                this.selectedItems = null;
+            }
+        }
+    }
+
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        String methodCalled = request.getParameter(Methods.method.toString());
+        if (null != methodCalled) {
+            if ((Methods.previewStatus.toString()).equals(methodCalled)) {
+                handleStatusPreviewValidations(request, errors);
+            } else if ((Methods.updateStatus.toString()).equals(methodCalled)) {
+                handleUpdateStatus(request, errors);
+            }
+        }
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", methodCalled);
+        }
+        return errors;
+    }
+
+    private ActionErrors handleUpdateStatus(HttpServletRequest request, ActionErrors errors) {
+        Object obj = request.getParameter("chklistSize");
+        if (request.getParameter("selectedItems") == null) {
+            selectedItems = null;
+        }
+        if (obj != null) {
+
+            int totalItems = new Integer(obj.toString()).intValue();
+            if ((totalItems > 0 && selectedItems == null)
+                    || (selectedItems != null && totalItems != selectedItems.length)) {
+                errors.add(CustomerConstants.INCOMPLETE_CHECKLIST_EXCEPTION, new ActionMessage(
+                        CustomerConstants.INCOMPLETE_CHECKLIST_EXCEPTION));
+            }
+
+        }
+        return errors;
+
+    }
+
+    private ActionErrors handleStatusPreviewValidations(HttpServletRequest request, ActionErrors errors) {
+        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+        Locale locale = userContext.getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
+        if (newStatusId == null)
+            errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
+                    resources.getString("Customer.status")));
+        else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
+            errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT,
+                    resources.getString("Customer.flag")));
+        if (StringUtils.isNullOrEmpty(notes))
+            errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX,
+                    resources.getString("Customer.notes")));
+        else if (notes.length() > CustomerConstants.COMMENT_LENGTH)
+            errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, resources
+                    .getString("Customer.notes"), CustomerConstants.COMMENT_LENGTH));
+        return errors;
+    }
+
+    private boolean isCheckListNotComplete(String chklistSize) {
+        return (isPartialSelected(chklistSize) || isNoneSelected(chklistSize));
+    }
+
+    private boolean isPartialSelected(String chklistSize) {
+        return (selectedItems != null) && (Integer.valueOf(chklistSize).intValue() != selectedItems.length);
+    }
+
+    private boolean isNoneSelected(String chklistSize) {
+        return (Integer.valueOf(chklistSize).intValue() > 0) && (selectedItems == null);
+    }
+
+    private boolean isNewStatusHasFlag() {
+        return (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CANCELLED.getValue()))
+                || (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CLOSED.getValue()))
+                || (Short.valueOf(newStatusId).equals(CustomerStatus.GROUP_CLOSED.getValue()))
+                || (Short.valueOf(newStatusId).equals(CustomerStatus.GROUP_CANCELLED.getValue()));
+    }
 
 }

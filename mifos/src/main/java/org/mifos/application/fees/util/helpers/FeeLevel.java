@@ -17,26 +17,26 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
 public enum FeeLevel {
-	CLIENTLEVEL((short) 1), GROUPLEVEL((short) 2), CENTERLEVEL((short) 3);
+    CLIENTLEVEL((short) 1), GROUPLEVEL((short) 2), CENTERLEVEL((short) 3);
 
-	Short value;
+    Short value;
 
-	FeeLevel(Short value) {
-		this.value = value;
-	}
+    FeeLevel(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static FeeLevel getFeeLevel(Short value){
-		for (FeeLevel feeLevel : FeeLevel.values()) 
-			if (feeLevel.getValue().equals(value))
-				return feeLevel;
-		return null;
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static FeeLevel getFeeLevel(Short value) {
+        for (FeeLevel feeLevel : FeeLevel.values())
+            if (feeLevel.getValue().equals(value))
+                return feeLevel;
+        return null;
+    }
 }

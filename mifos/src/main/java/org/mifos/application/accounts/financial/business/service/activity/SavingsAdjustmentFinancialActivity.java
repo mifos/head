@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
@@ -27,16 +27,16 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.BaseAccountingEntry;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.SavingsAdjustmentAccountingEntry;
 
-public class SavingsAdjustmentFinancialActivity extends BaseFinancialActivity{
-	
-	public SavingsAdjustmentFinancialActivity(AccountTrxnEntity accountTrxn) {
-		super(accountTrxn);
-	}
+public class SavingsAdjustmentFinancialActivity extends BaseFinancialActivity {
 
-	@Override
-	protected List<BaseAccountingEntry> getFinancialActionEntry() {
-		List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
-		financialActionEntryList.add(new SavingsAdjustmentAccountingEntry());
-		return financialActionEntryList;
-	}
+    public SavingsAdjustmentFinancialActivity(AccountTrxnEntity accountTrxn) {
+        super(accountTrxn);
+    }
+
+    @Override
+    protected List<BaseAccountingEntry> getFinancialActionEntry() {
+        List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
+        financialActionEntryList.add(new SavingsAdjustmentAccountingEntry());
+        return financialActionEntryList;
+    }
 }

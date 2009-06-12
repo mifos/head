@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
@@ -32,124 +32,121 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FeeView extends View {
-	private String feeId;
+    private String feeId;
 
-	private String feeName;
+    private String feeName;
 
-	private String amount;
+    private String amount;
 
-	private boolean periodic;
+    private boolean periodic;
 
-	private String feeSchedule;
+    private String feeSchedule;
 
-	private Short feeRemoved;
+    private Short feeRemoved;
 
-	private String feeFormula;
+    private String feeFormula;
 
-	private Short localeId;
+    private Short localeId;
 
-	private RecurrenceType frequencyType;
+    private RecurrenceType frequencyType;
 
-	public FeeView() {
-	}
+    public FeeView() {
+    }
 
-	public FeeView(UserContext userContext, FeeBO fee) {
-		if (userContext != null)
-			localeId = userContext.getLocaleId();
-		this.feeId = fee.getFeeId().toString();
-		this.feeName = fee.getFeeName();
-		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
-			this.amount = ((AmountFeeBO) fee).getFeeAmount().toString();
-			this.feeFormula = "";
-		} else {
-			this.amount = ((RateFeeBO) fee).getRate().toString();
-			FeeFormulaEntity feeEntity = ((RateFeeBO) fee).getFeeFormula();
-			this.feeFormula = feeEntity.getFormulaString();	
-		}
-		this.periodic = fee.isPeriodic();
-		if (fee.isPeriodic()) {
-			MeetingBO feeMeeting = fee.getFeeFrequency()
-					.getFeeMeetingFrequency();
-			this.feeSchedule = new MeetingHelper().getMessageWithFrequency(
-					feeMeeting, userContext);
-			if (feeMeeting.isMonthly())
-				this.frequencyType = RecurrenceType.MONTHLY;
-			else if (feeMeeting.isWeekly())
-				this.frequencyType = RecurrenceType.WEEKLY;
-			else
-				this.frequencyType = RecurrenceType.DAILY;
-		}
-		this.feeRemoved = YesNoFlag.NO.getValue();
-	}
+    public FeeView(UserContext userContext, FeeBO fee) {
+        if (userContext != null)
+            localeId = userContext.getLocaleId();
+        this.feeId = fee.getFeeId().toString();
+        this.feeName = fee.getFeeName();
+        if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+            this.amount = ((AmountFeeBO) fee).getFeeAmount().toString();
+            this.feeFormula = "";
+        } else {
+            this.amount = ((RateFeeBO) fee).getRate().toString();
+            FeeFormulaEntity feeEntity = ((RateFeeBO) fee).getFeeFormula();
+            this.feeFormula = feeEntity.getFormulaString();
+        }
+        this.periodic = fee.isPeriodic();
+        if (fee.isPeriodic()) {
+            MeetingBO feeMeeting = fee.getFeeFrequency().getFeeMeetingFrequency();
+            this.feeSchedule = new MeetingHelper().getMessageWithFrequency(feeMeeting, userContext);
+            if (feeMeeting.isMonthly())
+                this.frequencyType = RecurrenceType.MONTHLY;
+            else if (feeMeeting.isWeekly())
+                this.frequencyType = RecurrenceType.WEEKLY;
+            else
+                this.frequencyType = RecurrenceType.DAILY;
+        }
+        this.feeRemoved = YesNoFlag.NO.getValue();
+    }
 
-	public String getFeeSchedule() {
-		return feeSchedule;
-	}
+    public String getFeeSchedule() {
+        return feeSchedule;
+    }
 
-	public String getAmount() {
-		return amount;
-	}
+    public String getAmount() {
+        return amount;
+    }
 
-	public Double getAmountMoney() {
-		
-		return LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount);
-	}
+    public Double getAmountMoney() {
 
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
+        return LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount);
+    }
 
-	public boolean isPeriodic() {
-		return periodic;
-	}
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
-	public String getFeeId() {
-		return feeId;
-	}
+    public boolean isPeriodic() {
+        return periodic;
+    }
 
-	public void setFeeId(String feeId) {
-		this.feeId = feeId;
-	}
+    public String getFeeId() {
+        return feeId;
+    }
 
-	public String getFeeName() {
-		return feeName;
-	}
+    public void setFeeId(String feeId) {
+        this.feeId = feeId;
+    }
 
-	public Short getFeeRemoved() {
-		return feeRemoved;
-	}
+    public String getFeeName() {
+        return feeName;
+    }
 
-	public void setFeeRemoved(Short feeRemoved) {
-		this.feeRemoved = feeRemoved;
-	}
+    public Short getFeeRemoved() {
+        return feeRemoved;
+    }
 
-	public boolean isRemoved() {
-		return feeRemoved.equals(YesNoFlag.YES.getValue());
-	}
+    public void setFeeRemoved(Short feeRemoved) {
+        this.feeRemoved = feeRemoved;
+    }
 
-	public Short getFeeIdValue() {
-		return StringUtils.isNullAndEmptySafe(feeId) ? Short.valueOf(feeId)
-				: null;
-	}
+    public boolean isRemoved() {
+        return feeRemoved.equals(YesNoFlag.YES.getValue());
+    }
 
-	public Double getAmountDoubleValue() {
-		return new Money(amount).getAmountDoubleValue();
-	}
+    public Short getFeeIdValue() {
+        return StringUtils.isNullAndEmptySafe(feeId) ? Short.valueOf(feeId) : null;
+    }
 
-	public String getFeeFormula() {
-		return feeFormula;
-	}
+    public Double getAmountDoubleValue() {
+        return new Money(amount).getAmountDoubleValue();
+    }
 
-	public Short getLocaleId() {
-		return localeId;
-	}
+    public String getFeeFormula() {
+        return feeFormula;
+    }
 
-	public RecurrenceType getFrequencyType() {
-		return frequencyType;
-	}
+    public Short getLocaleId() {
+        return localeId;
+    }
 
-	public void setFrequencyType(RecurrenceType frequencyType) {
-		this.frequencyType = frequencyType;
-	}
+    public RecurrenceType getFrequencyType() {
+        return frequencyType;
+    }
+
+    public void setFrequencyType(RecurrenceType frequencyType) {
+        this.frequencyType = frequencyType;
+    }
 
 }

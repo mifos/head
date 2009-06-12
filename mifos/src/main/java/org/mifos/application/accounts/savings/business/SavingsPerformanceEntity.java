@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.savings.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -25,89 +25,89 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPerformanceEntity extends PersistentObject {
 
-	@SuppressWarnings("unused")
-	// See Hibernate mapping
-	private final Integer id;
+    @SuppressWarnings("unused")
+    // See Hibernate mapping
+    private final Integer id;
 
-	private Money totalDeposits;
+    private Money totalDeposits;
 
-	private Money totalWithdrawals;
+    private Money totalWithdrawals;
 
-	private Money totalInterestEarned;
+    private Money totalInterestEarned;
 
-	private Integer missedDeposits;
+    private Integer missedDeposits;
 
-	private final SavingsBO savings;
+    private final SavingsBO savings;
 
-	protected SavingsPerformanceEntity() {
-		id = null;
-		savings = null;
-	}
+    protected SavingsPerformanceEntity() {
+        id = null;
+        savings = null;
+    }
 
-	protected SavingsPerformanceEntity(SavingsBO savings) {
-		id = null;
-		this.savings = savings;
-	}
+    protected SavingsPerformanceEntity(SavingsBO savings) {
+        id = null;
+        this.savings = savings;
+    }
 
-	public SavingsBO getSavings() {
-		return savings;
-	}
+    public SavingsBO getSavings() {
+        return savings;
+    }
 
-	public Integer getMissedDeposits() {
-		return missedDeposits;
-	}
+    public Integer getMissedDeposits() {
+        return missedDeposits;
+    }
 
-	void setMissedDeposits(Integer missedDeposits) {
-		this.missedDeposits = missedDeposits;
-	}
+    void setMissedDeposits(Integer missedDeposits) {
+        this.missedDeposits = missedDeposits;
+    }
 
-	public Money getTotalDeposits() {
-		return totalDeposits;
-	}
+    public Money getTotalDeposits() {
+        return totalDeposits;
+    }
 
-	void setTotalDeposits(Money totalDeposits) {
-		this.totalDeposits = totalDeposits;
-	}
+    void setTotalDeposits(Money totalDeposits) {
+        this.totalDeposits = totalDeposits;
+    }
 
-	public Money getTotalInterestEarned() {
-		return totalInterestEarned;
-	}
+    public Money getTotalInterestEarned() {
+        return totalInterestEarned;
+    }
 
-	void setTotalInterestEarned(Money totalInterstEarned) {
-		this.totalInterestEarned = totalInterstEarned;
-	}
+    void setTotalInterestEarned(Money totalInterstEarned) {
+        this.totalInterestEarned = totalInterstEarned;
+    }
 
-	public Money getTotalWithdrawals() {
-		return totalWithdrawals;
-	}
+    public Money getTotalWithdrawals() {
+        return totalWithdrawals;
+    }
 
-	void setTotalWithdrawals(Money totalWithdrawals) {
-		this.totalWithdrawals = totalWithdrawals;
-	}
+    void setTotalWithdrawals(Money totalWithdrawals) {
+        this.totalWithdrawals = totalWithdrawals;
+    }
 
-	void setPaymentDetails(Money totalAmount) {
-		if (totalDeposits == null)
-			totalDeposits = new Money();
-		totalDeposits = totalDeposits.add(totalAmount);
-	}
+    void setPaymentDetails(Money totalAmount) {
+        if (totalDeposits == null)
+            totalDeposits = new Money();
+        totalDeposits = totalDeposits.add(totalAmount);
+    }
 
-	void setWithdrawDetails(Money totalAmount) {
-		if (totalWithdrawals == null)
-			totalWithdrawals = new Money();
-		totalWithdrawals = totalWithdrawals.add(totalAmount);
-	}
+    void setWithdrawDetails(Money totalAmount) {
+        if (totalWithdrawals == null)
+            totalWithdrawals = new Money();
+        totalWithdrawals = totalWithdrawals.add(totalAmount);
+    }
 
-	void setTotalInterestDetails(Money totalAmount) {
-		if (totalInterestEarned == null)
-			totalInterestEarned = new Money();
-		totalInterestEarned = totalInterestEarned.add(totalAmount);
-	}
+    void setTotalInterestDetails(Money totalAmount) {
+        if (totalInterestEarned == null)
+            totalInterestEarned = new Money();
+        totalInterestEarned = totalInterestEarned.add(totalAmount);
+    }
 
-	void addMissedDeposits(int missedDeposits) {
-		if (this.missedDeposits == null) {
-			this.missedDeposits = Integer.valueOf(0);
-		}
-		this.missedDeposits = this.missedDeposits + missedDeposits;
-	}
+    void addMissedDeposits(int missedDeposits) {
+        if (this.missedDeposits == null) {
+            this.missedDeposits = Integer.valueOf(0);
+        }
+        this.missedDeposits = this.missedDeposits + missedDeposits;
+    }
 
 }

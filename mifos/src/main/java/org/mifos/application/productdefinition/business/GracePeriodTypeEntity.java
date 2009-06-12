@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -28,21 +28,20 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
-	public GracePeriodTypeEntity(GraceType graceType) {
-		super(graceType.getValue());
-	}
+    public GracePeriodTypeEntity(GraceType graceType) {
+        super(graceType.getValue());
+    }
 
-	protected GracePeriodTypeEntity() {
-		super();
-	}
+    protected GracePeriodTypeEntity() {
+        super();
+    }
 
-	public void update(String name)
-			throws ProductDefinitionException {
-		setName(name);
-	}
+    public void update(String name) throws ProductDefinitionException {
+        setName(name);
+    }
 
-	public GraceType asEnum() {
-		return GraceType.fromInt(getId());
-	}
+    public GraceType asEnum() {
+        return GraceType.fromInt(getId());
+    }
 
 }

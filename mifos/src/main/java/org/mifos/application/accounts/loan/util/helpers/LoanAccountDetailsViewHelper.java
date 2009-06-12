@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.accounts.loan.util.helpers;
 
+package org.mifos.application.accounts.loan.util.helpers;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.mifos.framework.business.BusinessObject;
@@ -27,210 +26,198 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class LoanAccountDetailsViewHelper extends BusinessObject {
 
+    public LoanAccountDetailsViewHelper(Integer individualAccountId) {
+        this.individualAccountId = individualAccountId;
+    }
 
-	public LoanAccountDetailsViewHelper(Integer individualAccountId) {
-		this.individualAccountId = individualAccountId;
-	}
+    public LoanAccountDetailsViewHelper() {
+        this(null);
+    }
 
-	public LoanAccountDetailsViewHelper() {
-		this(null);
-	}
-	
-	LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount){
-		this(null);
-		this.clientId = clientId;
-		this.businessActivity = businessActivity;
-		this.loanAmount = loanAmount;
-	}
-	
-	LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount, String accountId){
-		this(null);
-		this.clientId = clientId;
-		this.businessActivity = businessActivity;
-		this.loanAmount = loanAmount;
-		this.accountId = accountId;
-	}
-	
-	private final Integer individualAccountId;
+    LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount) {
+        this(null);
+        this.clientId = clientId;
+        this.businessActivity = businessActivity;
+        this.loanAmount = loanAmount;
+    }
 
-	private String accountId;
+    LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount, String accountId) {
+        this(null);
+        this.clientId = clientId;
+        this.businessActivity = businessActivity;
+        this.loanAmount = loanAmount;
+        this.accountId = accountId;
+    }
 
-	private String clientId;
+    private final Integer individualAccountId;
 
-	private String clientName;
+    private String accountId;
 
-	private String govermentId;
+    private String clientId;
 
-	private String loanPurpose;
+    private String clientName;
 
-	private Double loanAmount;
+    private String govermentId;
 
-	private String businessActivity;
-	
-	private String businessActivityName;
+    private String loanPurpose;
 
-	public String getBusinessActivityName() {
-		return businessActivityName;
-	}
+    private Double loanAmount;
 
-	public void setBusinessActivityName(String businessActivityName) {
-		this.businessActivityName = businessActivityName;
-	}
+    private String businessActivity;
 
-	public Double getLoanAmount() {
-		return loanAmount;
-	}
+    private String businessActivityName;
 
-	public void setLoanAmount(Double loanAmount) {
-		this.loanAmount = loanAmount;
-	}
+    public String getBusinessActivityName() {
+        return businessActivityName;
+    }
 
-	public String getBusinessActivity() {
-		return businessActivity;
-	}
+    public void setBusinessActivityName(String businessActivityName) {
+        this.businessActivityName = businessActivityName;
+    }
 
-	public void setBusinessActivity(String businessActivity) {
-		this.businessActivity = businessActivity;
-	}
+    public Double getLoanAmount() {
+        return loanAmount;
+    }
 
-	public String getGovermentId() {
-		return govermentId;
-	}
+    public void setLoanAmount(Double loanAmount) {
+        this.loanAmount = loanAmount;
+    }
 
-	public void setGovermentId(String govermentId) {
-		this.govermentId = govermentId;
-	}
+    public String getBusinessActivity() {
+        return businessActivity;
+    }
 
-	public String getLoanPurpose() {
-		return loanPurpose;
-	}
+    public void setBusinessActivity(String businessActivity) {
+        this.businessActivity = businessActivity;
+    }
 
-	public void setLoanPurpose(String loanPurpose) {
-		this.loanPurpose = loanPurpose;
-	}
+    public String getGovermentId() {
+        return govermentId;
+    }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public void setGovermentId(String govermentId) {
+        this.govermentId = govermentId;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    public String getLoanPurpose() {
+        return loanPurpose;
+    }
 
-	
-	public String getClientName() {
-		return clientName;
-	}
+    public void setLoanPurpose(String loanPurpose) {
+        this.loanPurpose = loanPurpose;
+    }
 
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-	}
+    public String getClientId() {
+        return clientId;
+    }
 
-	public Integer getIndividualAccountId() {
-		return individualAccountId;
-	}
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
-	public String getAccountId() {
-		return accountId;
-	}
+    public String getClientName() {
+        return clientName;
+    }
 
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
-	
-	public boolean isEmpty() {
-		return loanAmount == null
-				&& StringUtils.isNullOrEmpty(businessActivity);
-	}
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
 
-	public boolean isAmountZeroOrNull() {
-		return loanAmount == null
-				|| (Double.compare(loanAmount, NumberUtils.DOUBLE_ZERO) == 0);
-	}
+    public Integer getIndividualAccountId() {
+        return individualAccountId;
+    }
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + ((accountId == null) ? 0 : accountId.hashCode());
-		result = PRIME * result + ((businessActivity == null) ? 0 : businessActivity.hashCode());
-		result = PRIME * result + ((businessActivityName == null) ? 0 : businessActivityName.hashCode());
-		result = PRIME * result + ((clientId == null) ? 0 : clientId.hashCode());
-		result = PRIME * result + ((clientName == null) ? 0 : clientName.hashCode());
-		result = PRIME * result + ((govermentId == null) ? 0 : govermentId.hashCode());
-		result = PRIME * result + ((individualAccountId == null) ? 0 : individualAccountId.hashCode());
-		result = PRIME * result + ((loanAmount == null) ? 0 : loanAmount.hashCode());
-		result = PRIME * result + ((loanPurpose == null) ? 0 : loanPurpose.hashCode());
-		return result;
-	}
+    public String getAccountId() {
+        return accountId;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final LoanAccountDetailsViewHelper other = (LoanAccountDetailsViewHelper) obj;
-		if (accountId == null) {
-			if (other.accountId != null)
-				return false;
-		}
-		else if (!accountId.equals(other.accountId))
-			return false;
-		if (businessActivity == null) {
-			if (other.businessActivity != null)
-				return false;
-		}
-		else if (!businessActivity.equals(other.businessActivity))
-			return false;
-		if (businessActivityName == null) {
-			if (other.businessActivityName != null)
-				return false;
-		}
-		else if (!businessActivityName.equals(other.businessActivityName))
-			return false;
-		if (clientId == null) {
-			if (other.clientId != null)
-				return false;
-		}
-		else if (!clientId.equals(other.clientId))
-			return false;
-		if (clientName == null) {
-			if (other.clientName != null)
-				return false;
-		}
-		else if (!clientName.equals(other.clientName))
-			return false;
-		if (govermentId == null) {
-			if (other.govermentId != null)
-				return false;
-		}
-		else if (!govermentId.equals(other.govermentId))
-			return false;
-		if (individualAccountId == null) {
-			if (other.individualAccountId != null)
-				return false;
-		}
-		else if (!individualAccountId.equals(other.individualAccountId))
-			return false;
-		if (loanAmount == null) {
-			if (other.loanAmount != null)
-				return false;
-		}
-		else if (!loanAmount.equals(other.loanAmount))
-			return false;
-		if (loanPurpose == null) {
-			if (other.loanPurpose != null)
-				return false;
-		}
-		else if (!loanPurpose.equals(other.loanPurpose))
-			return false;
-		return true;
-	}
-	
-	public static LoanAccountDetailsViewHelper createInstanceForTest(String clientId, String businessActivity, Double loanAmount, String accountId){
-		return new LoanAccountDetailsViewHelper(clientId, businessActivity, loanAmount, accountId);
-	}
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public boolean isEmpty() {
+        return loanAmount == null && StringUtils.isNullOrEmpty(businessActivity);
+    }
+
+    public boolean isAmountZeroOrNull() {
+        return loanAmount == null || (Double.compare(loanAmount, NumberUtils.DOUBLE_ZERO) == 0);
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + ((accountId == null) ? 0 : accountId.hashCode());
+        result = PRIME * result + ((businessActivity == null) ? 0 : businessActivity.hashCode());
+        result = PRIME * result + ((businessActivityName == null) ? 0 : businessActivityName.hashCode());
+        result = PRIME * result + ((clientId == null) ? 0 : clientId.hashCode());
+        result = PRIME * result + ((clientName == null) ? 0 : clientName.hashCode());
+        result = PRIME * result + ((govermentId == null) ? 0 : govermentId.hashCode());
+        result = PRIME * result + ((individualAccountId == null) ? 0 : individualAccountId.hashCode());
+        result = PRIME * result + ((loanAmount == null) ? 0 : loanAmount.hashCode());
+        result = PRIME * result + ((loanPurpose == null) ? 0 : loanPurpose.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final LoanAccountDetailsViewHelper other = (LoanAccountDetailsViewHelper) obj;
+        if (accountId == null) {
+            if (other.accountId != null)
+                return false;
+        } else if (!accountId.equals(other.accountId))
+            return false;
+        if (businessActivity == null) {
+            if (other.businessActivity != null)
+                return false;
+        } else if (!businessActivity.equals(other.businessActivity))
+            return false;
+        if (businessActivityName == null) {
+            if (other.businessActivityName != null)
+                return false;
+        } else if (!businessActivityName.equals(other.businessActivityName))
+            return false;
+        if (clientId == null) {
+            if (other.clientId != null)
+                return false;
+        } else if (!clientId.equals(other.clientId))
+            return false;
+        if (clientName == null) {
+            if (other.clientName != null)
+                return false;
+        } else if (!clientName.equals(other.clientName))
+            return false;
+        if (govermentId == null) {
+            if (other.govermentId != null)
+                return false;
+        } else if (!govermentId.equals(other.govermentId))
+            return false;
+        if (individualAccountId == null) {
+            if (other.individualAccountId != null)
+                return false;
+        } else if (!individualAccountId.equals(other.individualAccountId))
+            return false;
+        if (loanAmount == null) {
+            if (other.loanAmount != null)
+                return false;
+        } else if (!loanAmount.equals(other.loanAmount))
+            return false;
+        if (loanPurpose == null) {
+            if (other.loanPurpose != null)
+                return false;
+        } else if (!loanPurpose.equals(other.loanPurpose))
+            return false;
+        return true;
+    }
+
+    public static LoanAccountDetailsViewHelper createInstanceForTest(String clientId, String businessActivity,
+            Double loanAmount, String accountId) {
+        return new LoanAccountDetailsViewHelper(clientId, businessActivity, loanAmount, accountId);
+    }
 }

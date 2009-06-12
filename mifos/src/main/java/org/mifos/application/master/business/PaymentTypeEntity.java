@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -26,21 +26,21 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class PaymentTypeEntity extends MasterDataEntity {
 
-	public PaymentTypeEntity() {
-		super();
-	}
+    public PaymentTypeEntity() {
+        super();
+    }
 
-	public PaymentTypeEntity(Short id) {
-		super(id);
-	}
+    public PaymentTypeEntity(Short id) {
+        super(id);
+    }
 
-	public void update(String name) throws PersistenceException {
-		setName(name);
-		//new MasterPersistence().createOrUpdate(this);
-	}
+    public void update(String name) throws PersistenceException {
+        setName(name);
+        // new MasterPersistence().createOrUpdate(this);
+    }
 
     @Override
-	public String toString() {
+    public String toString() {
         return PaymentTypes.getPaymentType(getId()).toString();
     }
 }

@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
 public enum RateAmountFlag {
-	AMOUNT((short) 0), RATE((short) 1);
+    AMOUNT((short) 0), RATE((short) 1);
 
-	Short value;
+    Short value;
 
-	RateAmountFlag(Short value) {
-		this.value = value;
-	}
+    RateAmountFlag(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 }

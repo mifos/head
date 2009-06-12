@@ -17,29 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ppi.business;
 
 import org.mifos.application.surveys.business.QuestionChoice;
 
 public class PPIChoice extends QuestionChoice {
-	
-	private int points;
-	
-	public PPIChoice() {
-		super();
-	}
 
-	public PPIChoice(String text) {
-		super(text);
-	}
+    private int points;
 
-	public void setPoints(int points) {
-		this.points = points;
-	}
+    public PPIChoice() {
+        super();
+    }
 
-	public int getPoints() {
-		return points;
-	}
+    public PPIChoice(String text) {
+        super(text);
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getPoints() {
+        return points;
+    }
 
 }

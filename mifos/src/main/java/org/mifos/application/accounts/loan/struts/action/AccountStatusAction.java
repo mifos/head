@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.ArrayList;
@@ -58,216 +58,179 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountStatusAction extends BaseAction {
-	private MasterDataService masterService;
+    private MasterDataService masterService;
 
-	private LoanBusinessService loanService;
+    private LoanBusinessService loanService;
 
-	public AccountStatusAction() {
-		super();
-	}
+    public AccountStatusAction() {
+        super();
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return new OfficeBusinessService();
-	}
-	
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("ChangeAccountStatus");
-		security.allow("load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
-		security.allow("searchResults", SecurityConstants.VIEW);
-		security.allow("update", SecurityConstants.VIEW);
-		security.allow("getLoanOfficers", SecurityConstants.VIEW);
-		return security;
-	}
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return new OfficeBusinessService();
+    }
 
-	@TransactionDemarcate(saveToken = true)
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		cleanUp(form, request);
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("ChangeAccountStatus");
+        security.allow("load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
+        security.allow("searchResults", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("getLoanOfficers", SecurityConstants.VIEW);
+        return security;
+    }
 
-		masterService = (MasterDataService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.MasterDataService);
+    @TransactionDemarcate(saveToken = true)
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        cleanUp(form, request);
 
-		UserContext userContext = getUserContext(request);
-		List<OfficeView> activeBranches = masterService
-				.getActiveBranches(userContext.getBranchId());
+        masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
+                BusinessServiceName.MasterDataService);
 
-		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
-				activeBranches, request);
+        UserContext userContext = getUserContext(request);
+        List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
 
-		if (activeBranches.size() == 1) {
-			List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
-					userContext, activeBranches.get(0).getOfficeId());
-			SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS,
-					loanOfficers, request);
-		} else {
-			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
-					new ArrayList<PersonnelView>(), request);
-		}
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
 
-		return mapping.findForward(ActionForwards.changeAccountStatus_success
-				.toString());
-	}
+        if (activeBranches.size() == 1) {
+            List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext, activeBranches.get(0)
+                    .getOfficeId());
+            SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers, request);
+        } else {
+            SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, new ArrayList<PersonnelView>(), request);
+        }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward searchResults(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
+    }
 
-		List<LoanBO> searchResults;
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward searchResults(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
-		searchResults = getSearchResults(accountStatusActionForm.getOfficeId(),
-				accountStatusActionForm.getPersonnelId(),
-				accountStatusActionForm.getType(), accountStatusActionForm
-						.getCurrentStatus());
-		for (LoanBO loanBO : searchResults)
-			loanBO.getAccountState().setLocaleId(
-					getUserContext(request).getLocaleId());
-		if (searchResults == null) {
-			throw new AccountException(LoanConstants.NOSEARCHRESULTS);
-		}
-		if (searchResults.size() == 0) {
-			return mapping.findForward(ActionForwards.noresultfound.toString());
-		}
+        List<LoanBO> searchResults;
 
-		SessionUtils.setCollectionAttribute(LoanConstants.SEARCH_RESULTS, searchResults,
-				request);
+        searchResults = getSearchResults(accountStatusActionForm.getOfficeId(), accountStatusActionForm
+                .getPersonnelId(), accountStatusActionForm.getType(), accountStatusActionForm.getCurrentStatus());
+        for (LoanBO loanBO : searchResults)
+            loanBO.getAccountState().setLocaleId(getUserContext(request).getLocaleId());
+        if (searchResults == null) {
+            throw new AccountException(LoanConstants.NOSEARCHRESULTS);
+        }
+        if (searchResults.size() == 0) {
+            return mapping.findForward(ActionForwards.noresultfound.toString());
+        }
 
-		return mapping
-				.findForward(ActionForwards.changeAccountStatusSearch_success
-						.toString());
-	}
+        SessionUtils.setCollectionAttribute(LoanConstants.SEARCH_RESULTS, searchResults, request);
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        return mapping.findForward(ActionForwards.changeAccountStatusSearch_success.toString());
+    }
 
-		List accountList = updateAccountsStatus(accountStatusActionForm
-				.getAccountRecords(), accountStatusActionForm.getNewStatus(),
-				accountStatusActionForm.getComments(), getUserContext(request),
-				new CustomerPersistence());
-		request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountList);
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
-		return mapping
-				.findForward(ActionForwards.changeAccountStatusConfirmation_success
-						.toString());
-	}
+        List accountList = updateAccountsStatus(accountStatusActionForm.getAccountRecords(), accountStatusActionForm
+                .getNewStatus(), accountStatusActionForm.getComments(), getUserContext(request),
+                new CustomerPersistence());
+        request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountList);
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward getLoanOfficers(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse httpservletresponse) throws Exception {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
-		Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
-		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
-				getUserContext(request), officeId);
-		SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers,
-				request);
+        return mapping.findForward(ActionForwards.changeAccountStatusConfirmation_success.toString());
+    }
 
-		if (officeId != null) {
-			AccountStateEntity accountStateEntity = null;
-			if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
-				accountStateEntity = (AccountStateEntity) new MasterDataService()
-						.getMasterDataEntity(AccountStateEntity.class,
-								AccountState.LOAN_PENDING_APPROVAL.getValue());
-			} else {
-				accountStateEntity = (AccountStateEntity) new MasterDataService()
-						.getMasterDataEntity(AccountStateEntity.class,
-								AccountState.LOAN_PARTIAL_APPLICATION
-										.getValue());
-			}
-			accountStateEntity.setLocaleId(getUserContext(request)
-					.getLocaleId());
-			SessionUtils.setAttribute(LoanConstants.LOANACCOUNTSTAES,
-					accountStateEntity, request);
-		}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward getLoanOfficers(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
+        List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(getUserContext(request), officeId);
+        SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers, request);
 
-		return mapping.findForward(ActionForwards.changeAccountStatus_success
-				.toString());
-	}
+        if (officeId != null) {
+            AccountStateEntity accountStateEntity = null;
+            if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
+                accountStateEntity = (AccountStateEntity) new MasterDataService().getMasterDataEntity(
+                        AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
+            } else {
+                accountStateEntity = (AccountStateEntity) new MasterDataService().getMasterDataEntity(
+                        AccountStateEntity.class, AccountState.LOAN_PARTIAL_APPLICATION.getValue());
+            }
+            accountStateEntity.setLocaleId(getUserContext(request).getLocaleId());
+            SessionUtils.setAttribute(LoanConstants.LOANACCOUNTSTAES, accountStateEntity, request);
+        }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
+        return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
+    }
 
-		if (method.equalsIgnoreCase(Methods.searchResults.toString())) {
-			return mapping
-					.findForward(ActionForwards.changeAccountStatus_success
-							.toString());
-		}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        String method = (String) request.getAttribute("methodCalled");
 
-		if (method.equalsIgnoreCase(Methods.update.toString())) {
-			return mapping
-					.findForward(ActionForwards.changeAccountStatusSearch_success
-							.toString());
-		}
+        if (method.equalsIgnoreCase(Methods.searchResults.toString())) {
+            return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
+        }
 
-		return null;
-	}
+        if (method.equalsIgnoreCase(Methods.update.toString())) {
+            return mapping.findForward(ActionForwards.changeAccountStatusSearch_success.toString());
+        }
 
-	private List<PersonnelView> loadLoanOfficersForBranch(
-			UserContext userContext, Short officeId) throws Exception {
-		masterService = (MasterDataService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.MasterDataService);
+        return null;
+    }
 
-		return masterService.getListOfActiveLoanOfficers(
-				PersonnelConstants.LOAN_OFFICER, officeId, userContext.getId(),
-				userContext.getLevelId());
-	}
+    private List<PersonnelView> loadLoanOfficersForBranch(UserContext userContext, Short officeId) throws Exception {
+        masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
+                BusinessServiceName.MasterDataService);
 
-	private List<LoanBO> getSearchResults(String officeId, String personnelId,
-			String type, String currentStatus) throws Exception {
-		loanService = new LoanBusinessService();
+        return masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER, officeId,
+                userContext.getId(), userContext.getLevelId());
+    }
 
-		return loanService.getSearchResults(officeId, personnelId, type,
-				currentStatus);
-	}
+    private List<LoanBO> getSearchResults(String officeId, String personnelId, String type, String currentStatus)
+            throws Exception {
+        loanService = new LoanBusinessService();
 
-	private List updateAccountsStatus(List<String> accountList,
-			String newStatus, String comments, UserContext userContext,
-			CustomerPersistence customerPersistence)
-			throws Exception {
-		loanService = new LoanBusinessService();
+        return loanService.getSearchResults(officeId, personnelId, type, currentStatus);
+    }
 
-		List accountNumbers = new ArrayList();
+    private List updateAccountsStatus(List<String> accountList, String newStatus, String comments,
+            UserContext userContext, CustomerPersistence customerPersistence) throws Exception {
+        loanService = new LoanBusinessService();
 
-		for (String accountId : accountList) {
-			if (!accountId.equals("")) {
-				LoanBO loanBO = loanService.getAccount(Integer
-						.parseInt(accountId));
+        List accountNumbers = new ArrayList();
 
-				accountNumbers.add(loanBO.getGlobalAccountNum());
-				loanBO.setUserContext(userContext);
-				loanBO.changeStatus(getShortValue(newStatus), null, comments);
-				loanBO.update();
-			}
-		}
+        for (String accountId : accountList) {
+            if (!accountId.equals("")) {
+                LoanBO loanBO = loanService.getAccount(Integer.parseInt(accountId));
 
-		return accountNumbers;
-	}
+                accountNumbers.add(loanBO.getGlobalAccountNum());
+                loanBO.setUserContext(userContext);
+                loanBO.changeStatus(getShortValue(newStatus), null, comments);
+                loanBO.update();
+            }
+        }
 
-	private void cleanUp(ActionForm form, HttpServletRequest request) {
-		AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
-		accountStatusActionForm.setAccountRecords(new ArrayList<String>());
-		accountStatusActionForm.setComments("");
-		accountStatusActionForm.setCurrentStatus("");
-		accountStatusActionForm.setLoadOfficer("");
-		accountStatusActionForm.setNewStatus("");
-		accountStatusActionForm.setOfficeId("");
-		accountStatusActionForm.setOfficeName("");
-		accountStatusActionForm.setPersonnelId("");
-		accountStatusActionForm.setType("");
-		request.setAttribute("session", null);
-	}
+        return accountNumbers;
+    }
+
+    private void cleanUp(ActionForm form, HttpServletRequest request) {
+        AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
+        accountStatusActionForm.setAccountRecords(new ArrayList<String>());
+        accountStatusActionForm.setComments("");
+        accountStatusActionForm.setCurrentStatus("");
+        accountStatusActionForm.setLoadOfficer("");
+        accountStatusActionForm.setNewStatus("");
+        accountStatusActionForm.setOfficeId("");
+        accountStatusActionForm.setOfficeName("");
+        accountStatusActionForm.setPersonnelId("");
+        accountStatusActionForm.setType("");
+        request.setAttribute("session", null);
+    }
 }

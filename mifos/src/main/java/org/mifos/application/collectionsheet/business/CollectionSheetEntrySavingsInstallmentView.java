@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
@@ -26,34 +26,33 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CollectionSheetEntrySavingsInstallmentView extends CollectionSheetEntryInstallmentView {
 
-	private final Money deposit;
+    private final Money deposit;
 
-	private final Money depositPaid;
+    private final Money depositPaid;
 
-	public CollectionSheetEntrySavingsInstallmentView(Integer accountId,
-			Integer customerId, Short installmentId, Integer actionDateId,
-			Date actionDate, Money deposit, Money depositPaid) {
-		super(accountId, customerId, installmentId, actionDateId, actionDate);
-		this.deposit = deposit;
-		this.depositPaid = depositPaid;
-	}
+    public CollectionSheetEntrySavingsInstallmentView(Integer accountId, Integer customerId, Short installmentId,
+            Integer actionDateId, Date actionDate, Money deposit, Money depositPaid) {
+        super(accountId, customerId, installmentId, actionDateId, actionDate);
+        this.deposit = deposit;
+        this.depositPaid = depositPaid;
+    }
 
-	public CollectionSheetEntrySavingsInstallmentView(Integer accountId, Integer customerId) {
-		super(accountId, customerId, null, null, null);
-		this.deposit = null;
-		this.depositPaid = null;
-	}
+    public CollectionSheetEntrySavingsInstallmentView(Integer accountId, Integer customerId) {
+        super(accountId, customerId, null, null, null);
+        this.deposit = null;
+        this.depositPaid = null;
+    }
 
-	public Money getDeposit() {
-		return deposit;
-	}
+    public Money getDeposit() {
+        return deposit;
+    }
 
-	public Money getDepositPaid() {
-		return depositPaid;
-	}
+    public Money getDepositPaid() {
+        return depositPaid;
+    }
 
-	public Money getTotalDepositDue() {
-		return getDeposit().subtract(getDepositPaid());
-	}
+    public Money getTotalDepositDue() {
+        return getDeposit().subtract(getDepositPaid());
+    }
 
 }

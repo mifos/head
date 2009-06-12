@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys.business;
 
 /**
@@ -48,144 +48,146 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class Survey implements Serializable {
-	
-	private int surveyId;
-	private String name;
-	private SurveyType appliesTo;
-	private Date dateOfCreation;
-	private SurveyState state;
-	private List<SurveyQuestion> questions;
-	
-	public Survey() {
-		dateOfCreation = DateUtils.getCurrentDateWithoutTimeStamp();
-		state = SurveyState.INACTIVE;
-		questions = new ArrayList<SurveyQuestion>();
-	}
-	
-	public Survey(String name, SurveyState state, SurveyType appliesTo) {
-		this();
-		this.name = name;
-		this.state = state;
-		this.appliesTo = appliesTo;
-	}
 
-	// for hibernate and jsp
-	public String getAppliesTo() {
-		return appliesTo.getValue();
-	}
-	
-	/**
-	 * implements a dispatch pattern so that a client will get the correct
-	 * class of survey without having to invoke instanceOf(). Since this class
-	 * represents custom surveys, the client gets a (custom) SurveyInstance instance.
-	 * <p>
-	 * @see {@link PpiSurvey.createInstance()}
-	 */
-	public SurveyInstance createSurveyInstance() {
-		return new SurveyInstance();
-	}
-	
-	public SurveyType getAppliesToAsEnum() {
-		return appliesTo;
-	}
+    private int surveyId;
+    private String name;
+    private SurveyType appliesTo;
+    private Date dateOfCreation;
+    private SurveyState state;
+    private List<SurveyQuestion> questions;
 
-	public void setAppliesTo(String appliesTo) {
-		this.appliesTo = SurveyType.fromString(appliesTo);
-	}
-	
-	public void setAppliesTo(SurveyType appliesTo) {
-		this.appliesTo = appliesTo;
-	}
+    public Survey() {
+        dateOfCreation = DateUtils.getCurrentDateWithoutTimeStamp();
+        state = SurveyState.INACTIVE;
+        questions = new ArrayList<SurveyQuestion>();
+    }
 
-	public Date getDateOfCreation() {
-		return dateOfCreation;
-	}
+    public Survey(String name, SurveyState state, SurveyType appliesTo) {
+        this();
+        this.name = name;
+        this.state = state;
+        this.appliesTo = appliesTo;
+    }
 
-	public void setDateOfCreation(Date dateofCreation) {
-		this.dateOfCreation = dateofCreation;
-	}
+    // for hibernate and jsp
+    public String getAppliesTo() {
+        return appliesTo.getValue();
+    }
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * implements a dispatch pattern so that a client will get the correct class
+     * of survey without having to invoke instanceOf(). Since this class
+     * represents custom surveys, the client gets a (custom) SurveyInstance
+     * instance.
+     * <p>
+     * 
+     * @see {@link PpiSurvey.createInstance()}
+     */
+    public SurveyInstance createSurveyInstance() {
+        return new SurveyInstance();
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public SurveyType getAppliesToAsEnum() {
+        return appliesTo;
+    }
 
-	public SurveyState getStateAsEnum() {
-		return state;
-	}
-	
-	// Called from jsp as well as hibernate
-	public int getState() {
-		return state.getValue();
-	}
+    public void setAppliesTo(String appliesTo) {
+        this.appliesTo = SurveyType.fromString(appliesTo);
+    }
 
-	public void setState(SurveyState state) {
-		this.state = state;
-	}
-	
-	public void setState(int state) {
-		this.state = SurveyState.fromInt(state);
-	}
+    public void setAppliesTo(SurveyType appliesTo) {
+        this.appliesTo = appliesTo;
+    }
 
-	public int getSurveyId() {
-		return surveyId;
-	}
+    public Date getDateOfCreation() {
+        return dateOfCreation;
+    }
 
-	public void setSurveyId(int surveyId) {
-		this.surveyId = surveyId;
-	}
+    public void setDateOfCreation(Date dateofCreation) {
+        this.dateOfCreation = dateofCreation;
+    }
 
-	public List<SurveyQuestion> getQuestions() {
-		return questions;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setQuestions(List<SurveyQuestion> questions) {
-		this.questions = questions;
-	}
-	
-	public Question getQuestion(int i) {
-		return getQuestions().get(i).getQuestion();
-	}
-	
-	public SurveyQuestion getSurveyQuestionById(int id) {
-		for (SurveyQuestion surveyQuestion : getQuestions()) {
-			if (surveyQuestion.getSurveyQuestionId() == id)
-				return surveyQuestion;
-		}
-		throw new IllegalArgumentException("Survey does not contain a question with id: " + id);
-	}
-	
-	public Question getQuestionById(int id) {
-		for (SurveyQuestion surveyQuestion : this.getQuestions()) {
-			Question question = surveyQuestion.getQuestion();
-			if (question.getQuestionId() == id)
-				return question;
-		}
-		return null;
-	}
-	
-	public String getQuestionText(int i) {
-		return getQuestion(i).getQuestionText();
-	}
-	
-	public SurveyQuestion addQuestion(Question question, boolean mandatory) {
-		SurveyQuestion surveyQuestion = new SurveyQuestion();
-		surveyQuestion.setMandatory(mandatory ? 1 : 0);
-		surveyQuestion.setQuestion(question);
-		surveyQuestion.setOrder(getQuestions().size());
-		surveyQuestion.setSurvey(this);
-		if (surveyQuestion.getOrder() == null)
-			surveyQuestion.setOrder(getQuestions().size());
-		getQuestions().add(surveyQuestion);
-		return surveyQuestion;
-	}
-	
-	@Override
-	public String toString() {
-		return "<Survey " + getName() + " " + appliesTo.getValue() + ">" ;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SurveyState getStateAsEnum() {
+        return state;
+    }
+
+    // Called from jsp as well as hibernate
+    public int getState() {
+        return state.getValue();
+    }
+
+    public void setState(SurveyState state) {
+        this.state = state;
+    }
+
+    public void setState(int state) {
+        this.state = SurveyState.fromInt(state);
+    }
+
+    public int getSurveyId() {
+        return surveyId;
+    }
+
+    public void setSurveyId(int surveyId) {
+        this.surveyId = surveyId;
+    }
+
+    public List<SurveyQuestion> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<SurveyQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public Question getQuestion(int i) {
+        return getQuestions().get(i).getQuestion();
+    }
+
+    public SurveyQuestion getSurveyQuestionById(int id) {
+        for (SurveyQuestion surveyQuestion : getQuestions()) {
+            if (surveyQuestion.getSurveyQuestionId() == id)
+                return surveyQuestion;
+        }
+        throw new IllegalArgumentException("Survey does not contain a question with id: " + id);
+    }
+
+    public Question getQuestionById(int id) {
+        for (SurveyQuestion surveyQuestion : this.getQuestions()) {
+            Question question = surveyQuestion.getQuestion();
+            if (question.getQuestionId() == id)
+                return question;
+        }
+        return null;
+    }
+
+    public String getQuestionText(int i) {
+        return getQuestion(i).getQuestionText();
+    }
+
+    public SurveyQuestion addQuestion(Question question, boolean mandatory) {
+        SurveyQuestion surveyQuestion = new SurveyQuestion();
+        surveyQuestion.setMandatory(mandatory ? 1 : 0);
+        surveyQuestion.setQuestion(question);
+        surveyQuestion.setOrder(getQuestions().size());
+        surveyQuestion.setSurvey(this);
+        if (surveyQuestion.getOrder() == null)
+            surveyQuestion.setOrder(getQuestions().size());
+        getQuestions().add(surveyQuestion);
+        return surveyQuestion;
+    }
+
+    @Override
+    public String toString() {
+        return "<Survey " + getName() + " " + appliesTo.getValue() + ">";
+    }
 
 }

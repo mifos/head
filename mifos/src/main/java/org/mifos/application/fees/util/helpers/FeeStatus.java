@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.util.helpers;
 
-
 public enum FeeStatus {
-	ACTIVE((short) 1), INACTIVE((short) 2);
+    ACTIVE((short) 1), INACTIVE((short) 2);
 
-	Short value;
+    Short value;
 
-	FeeStatus(Short value) {
-		this.value = value;
-	}
+    FeeStatus(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static FeeStatus getFeeStatus(int target) {
-		for (FeeStatus candidate : FeeStatus.values()) {
-			if (candidate.getValue() == target) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no fee status " + target);
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static FeeStatus getFeeStatus(int target) {
+        for (FeeStatus candidate : FeeStatus.values()) {
+            if (candidate.getValue() == target) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no fee status " + target);
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.action;
 
 import java.io.IOException;
@@ -36,40 +36,38 @@ import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 
 public class BirtReportValidationAction extends HttpServlet {
 
-	private static final String ERRORS = "reportErrors";
+    private static final String ERRORS = "reportErrors";
 
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		validateReportParameters(request, response);
-	}
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        validateReportParameters(request, response);
+    }
 
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
+        doGet(request, response);
+    }
 
-	private void validateReportParameters(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
-				.getValidator(request.getParameter("__report"));
-		if (validator == null || validator.isAFreshRequest(request)) {
-			// go to report parameter page
-			request.getRequestDispatcher("/run").forward(request, response);
-			return;
-		}
+    private void validateReportParameters(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
+                .getValidator(request.getParameter("__report"));
+        if (validator == null || validator.isAFreshRequest(request)) {
+            // go to report parameter page
+            request.getRequestDispatcher("/run").forward(request, response);
+            return;
+        }
 
-		ReportParameterForm form = validator.buildReportParameterForm(request);
-		Errors errors = new Errors(((UserContext) request.getSession()
-				.getAttribute("UserContext")).getPreferredLocale());
-		validator.validate(form, errors);
-		ModifiableParameterServletRequest modifiedRequest = new ModifiableParameterServletRequest(
-				request);
-		if (errors.hasErrors()) {
-			request.setAttribute(ERRORS, errors);
-			validator.removeRequestParameters(modifiedRequest, form, errors);
-		}
-		request.getRequestDispatcher("/run").forward(modifiedRequest, response);
-	}
+        ReportParameterForm form = validator.buildReportParameterForm(request);
+        Errors errors = new Errors(((UserContext) request.getSession().getAttribute("UserContext"))
+                .getPreferredLocale());
+        validator.validate(form, errors);
+        ModifiableParameterServletRequest modifiedRequest = new ModifiableParameterServletRequest(request);
+        if (errors.hasErrors()) {
+            request.setAttribute(ERRORS, errors);
+            validator.removeRequestParameters(modifiedRequest, form, errors);
+        }
+        request.getRequestDispatcher("/run").forward(modifiedRequest, response);
+    }
 }

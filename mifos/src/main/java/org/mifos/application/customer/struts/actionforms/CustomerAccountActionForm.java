@@ -17,21 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-public class CustomerAccountActionForm extends BaseActionForm{
-	
-	private String globalCustNum;
+public class CustomerAccountActionForm extends BaseActionForm {
 
-	public String getGlobalCustNum() {
-		return globalCustNum;
-	}
+    private String globalCustNum;
 
-	public void setGlobalCustNum(String globalCustNum) {
-		this.globalCustNum = globalCustNum;
-	}
-	
+    public String getGlobalCustNum() {
+        return globalCustNum;
+    }
+
+    public void setGlobalCustNum(String globalCustNum) {
+        this.globalCustNum = globalCustNum;
+    }
+
 }

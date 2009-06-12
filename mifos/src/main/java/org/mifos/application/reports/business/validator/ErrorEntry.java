@@ -17,24 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.validator;
 
 public class ErrorEntry {
-	final String fieldName;
-	final String errorCode;
+    final String fieldName;
+    final String errorCode;
 
-	public ErrorEntry(String fieldName, String errorCode) {
-		super();
-		this.fieldName = fieldName;
-		this.errorCode = errorCode;
-	}
+    public ErrorEntry(String fieldName, String errorCode) {
+        super();
+        this.fieldName = fieldName;
+        this.errorCode = errorCode;
+    }
 
-	public String getErrorCode() {
-		return errorCode;
-	}
+    public String getErrorCode() {
+        return errorCode;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public String getFieldName() {
+        return fieldName;
+    }
 }

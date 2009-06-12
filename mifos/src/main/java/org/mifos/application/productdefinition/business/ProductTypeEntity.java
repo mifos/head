@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import java.util.Set;
@@ -33,75 +33,74 @@ import org.mifos.application.master.MessageLookup;
 
 public class ProductTypeEntity extends BusinessObject {
 
-	private Short productTypeID;
+    private Short productTypeID;
 
-	private LookUpValueEntity lookUpValue;
+    private LookUpValueEntity lookUpValue;
 
-	private Short latenessDays;
+    private Short latenessDays;
 
-	private Short dormancyDays;
+    private Short dormancyDays;
 
-	public ProductTypeEntity(Short prdTypeId) {
-		super();
-		this.productTypeID = prdTypeId;
-	}
+    public ProductTypeEntity(Short prdTypeId) {
+        super();
+        this.productTypeID = prdTypeId;
+    }
 
-	protected ProductTypeEntity() {
-		super();
-	}
+    protected ProductTypeEntity() {
+        super();
+    }
 
-	public LookUpValueEntity getLookUpValue() {
-		return lookUpValue;
-	}
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
 
-	public void setLookUpValue(LookUpValueEntity lookUpValue) {
-		this.lookUpValue = lookUpValue;
-	}
+    public void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
 
-	public Short getProductTypeID() {
-		return productTypeID;
-	}
-	
-	public ProductType getType() {
-		return ProductType.getProductType(productTypeID);
-	}
+    public Short getProductTypeID() {
+        return productTypeID;
+    }
 
-	public void setProductTypeID(Short productTypeID) {
-		this.productTypeID = productTypeID;
-	}
+    public ProductType getType() {
+        return ProductType.getProductType(productTypeID);
+    }
 
-	public Short getDormancyDays() {
-		return dormancyDays;
-	}
+    public void setProductTypeID(Short productTypeID) {
+        this.productTypeID = productTypeID;
+    }
 
-	 void setDormancyDays(Short dormancyDays) {
-		this.dormancyDays = dormancyDays;
-	}
+    public Short getDormancyDays() {
+        return dormancyDays;
+    }
 
-	public Short getLatenessDays() {
-		return latenessDays;
-	}
+    void setDormancyDays(Short dormancyDays) {
+        this.dormancyDays = dormancyDays;
+    }
 
-	void setLatenessDays(Short latenessDays) {
-		this.latenessDays = latenessDays;
-	}
+    public Short getLatenessDays() {
+        return latenessDays;
+    }
 
-	public String getName() {
-		String lookupKey = lookUpValue.getLookUpName();
-		return MessageLookup.getInstance().lookup(lookupKey);
-	}
+    void setLatenessDays(Short latenessDays) {
+        this.latenessDays = latenessDays;
+    }
 
-	public void update(Short latenessDormancy)
-			throws ProductDefinitionException {
+    public String getName() {
+        String lookupKey = lookUpValue.getLookUpName();
+        return MessageLookup.getInstance().lookup(lookupKey);
+    }
 
-		if (productTypeID.equals(ProductType.LOAN.getValue()))
-			this.latenessDays = latenessDormancy;
-		else
-			this.dormancyDays = latenessDormancy;
-		try {
-			new LoanPrdPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
-	}
+    public void update(Short latenessDormancy) throws ProductDefinitionException {
+
+        if (productTypeID.equals(ProductType.LOAN.getValue()))
+            this.latenessDays = latenessDormancy;
+        else
+            this.dormancyDays = latenessDormancy;
+        try {
+            new LoanPrdPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+    }
 }

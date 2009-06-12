@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,94 +38,104 @@ import org.mifos.framework.util.helpers.FilePaths;
 
 public class CustomerNotesActionForm extends ValidatorActionForm {
 
-	private String customerId;
-	private String levelId;
-	private String customerName;
-	private String comment;
-	private String commentDate;
-	private String globalCustNum;
-	private String input;
+    private String customerId;
+    private String levelId;
+    private String customerName;
+    private String comment;
+    private String commentDate;
+    private String globalCustNum;
+    private String input;
 
-	public String getCommentDate() {
-		return commentDate;
-	}
-	public void setCommentDate(String commentDate) {
-		this.commentDate = commentDate;
-	}
-	public String getCustomerId() {
-		return customerId;
-	}
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
-	public String getCustomerName() {
-		return customerName;
-	}
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-	public String getLevelId() {
-		return levelId;
-	}
-	public void setLevelId(String levelId) {
-		this.levelId = levelId;
-	}
-	public String getComment() {
-		return comment;
-	}
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public String getCommentDate() {
+        return commentDate;
+    }
 
-	public String getGlobalCustNum() {
-		return globalCustNum;
-	}
-	public void setGlobalCustNum(String globalCustNum) {
-		this.globalCustNum = globalCustNum;
-	}
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
+    }
 
-	public String getInput() {
-		return input;
-	}
-	public void setInput(String input) {
-		this.input = input;
-	}
-	@Override
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		String methodCalled = request.getParameter(Methods.method.toString());
-		ActionErrors errors = null;
-		if(null !=methodCalled) {
-			if (Methods.preview.toString().equals(methodCalled)) {
-				errors = handlePreviewValidations(request,errors);
-			}
-		}
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
-		}
-		return errors;
-	}
+    public String getCustomerId() {
+        return customerId;
+    }
 
-	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
-		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
-		Locale locale = userContext.getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle
-				(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
-		if (ValidateMethods.isNullOrBlank(getComment())) {
-			if (null == errors) {
-				errors = new ActionErrors();
-			}
-			errors.add(CustomerConstants.ERROR_MANDATORY_TEXT_AREA, new ActionMessage(
-					CustomerConstants.ERROR_MANDATORY_TEXT_AREA , resources.getString("Customer.notes")));
-		} else if (getComment().length() > CustomerConstants.COMMENT_LENGTH) {
-			if (null == errors) {
-				errors = new ActionErrors();
-			}
-			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(
-					CustomerConstants.MAXIMUM_LENGTH, resources.getString("Customer.notes"),
-					CustomerConstants.COMMENT_LENGTH));
-		}
-		return errors;
-	}
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getLevelId() {
+        return levelId;
+    }
+
+    public void setLevelId(String levelId) {
+        this.levelId = levelId;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getGlobalCustNum() {
+        return globalCustNum;
+    }
+
+    public void setGlobalCustNum(String globalCustNum) {
+        this.globalCustNum = globalCustNum;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        String methodCalled = request.getParameter(Methods.method.toString());
+        ActionErrors errors = null;
+        if (null != methodCalled) {
+            if (Methods.preview.toString().equals(methodCalled)) {
+                errors = handlePreviewValidations(request, errors);
+            }
+        }
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", methodCalled);
+        }
+        return errors;
+    }
+
+    private ActionErrors handlePreviewValidations(HttpServletRequest request, ActionErrors errors) {
+        UserContext userContext = (UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+        Locale locale = userContext.getPreferredLocale();
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
+        if (ValidateMethods.isNullOrBlank(getComment())) {
+            if (null == errors) {
+                errors = new ActionErrors();
+            }
+            errors.add(CustomerConstants.ERROR_MANDATORY_TEXT_AREA, new ActionMessage(
+                    CustomerConstants.ERROR_MANDATORY_TEXT_AREA, resources.getString("Customer.notes")));
+        } else if (getComment().length() > CustomerConstants.COMMENT_LENGTH) {
+            if (null == errors) {
+                errors = new ActionErrors();
+            }
+            errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, resources
+                    .getString("Customer.notes"), CustomerConstants.COMMENT_LENGTH));
+        }
+        return errors;
+    }
 
 }

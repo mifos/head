@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
-
 public enum InterestCalcType {
-	MINIMUM_BALANCE((short) 1), AVERAGE_BALANCE((short) 2);
+    MINIMUM_BALANCE((short) 1), AVERAGE_BALANCE((short) 2);
 
-	private Short value;
+    private Short value;
 
-	private InterestCalcType(Short value) {
-		this.value = value;
-	}
+    private InterestCalcType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static InterestCalcType fromInt(int value) {
-		for (InterestCalcType candidate : InterestCalcType.values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no interest type " + value);
-	}
+    public static InterestCalcType fromInt(int value) {
+        for (InterestCalcType candidate : InterestCalcType.values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no interest type " + value);
+    }
 
 }

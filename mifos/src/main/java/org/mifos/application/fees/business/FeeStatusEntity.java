@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeeStatus;
@@ -25,14 +25,14 @@ import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeStatusEntity extends MasterDataEntity {
 
-	public FeeStatusEntity(FeeStatus feeStatus) {
-		super(feeStatus.getValue());
-	}
+    public FeeStatusEntity(FeeStatus feeStatus) {
+        super(feeStatus.getValue());
+    }
 
-	protected FeeStatusEntity() {
-	}
+    protected FeeStatusEntity() {
+    }
 
-	public boolean isActive() {
-		return getId().equals(FeeStatus.ACTIVE.getValue());
-	}
+    public boolean isActive() {
+        return getId().equals(FeeStatus.ACTIVE.getValue());
+    }
 }

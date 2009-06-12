@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeeLevel;
@@ -25,29 +25,29 @@ import org.mifos.framework.business.PersistentObject;
 
 public class FeeLevelEntity extends PersistentObject {
 
-	private final Short feeLevelId;
+    private final Short feeLevelId;
 
-	private final FeeBO fee;
+    private final FeeBO fee;
 
-	private Short levelId;
+    private Short levelId;
 
-	public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel) {
-		this.feeLevelId = null;
-		this.fee = fee;
-		this.levelId = feeLevel.getValue();
-	}
+    public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel) {
+        this.feeLevelId = null;
+        this.fee = fee;
+        this.levelId = feeLevel.getValue();
+    }
 
-	protected FeeLevelEntity() {
-		fee = null;
-		feeLevelId = null;
-	}
+    protected FeeLevelEntity() {
+        fee = null;
+        feeLevelId = null;
+    }
 
-	public Short getLevelId() {
-		return levelId;
-	}
+    public Short getLevelId() {
+        return levelId;
+    }
 
-	private void setLevelId(Short levelId) {
-		this.levelId = levelId;
-	}
+    private void setLevelId(Short levelId) {
+        this.levelId = levelId;
+    }
 
 }

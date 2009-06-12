@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.io.Serializable;
@@ -26,49 +26,49 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.persistence.Persistence;
 
 /**
- * This class depicts the different account types.
- * Obsolete; replaced by {@link AccountTypes}.
+ * This class depicts the different account types. Obsolete; replaced by
+ * {@link AccountTypes}.
  */
-public class AccountTypeEntity extends Persistence implements Serializable{
+public class AccountTypeEntity extends Persistence implements Serializable {
 
-	public AccountTypeEntity() {
-		super();
+    public AccountTypeEntity() {
+        super();
 
-	}
+    }
 
-	public AccountTypeEntity(Short accountTypeId) {
-		super();
-		this.accountTypeId = accountTypeId;
-	}
+    public AccountTypeEntity(Short accountTypeId) {
+        super();
+        this.accountTypeId = accountTypeId;
+    }
 
-	private java.lang.Short accountTypeId;
+    private java.lang.Short accountTypeId;
 
-	private Integer lookUpId;
+    private Integer lookUpId;
 
-	private java.lang.String description;
+    private java.lang.String description;
 
-	public java.lang.Short getAccountTypeId() {
-		return accountTypeId;
-	}
+    public java.lang.Short getAccountTypeId() {
+        return accountTypeId;
+    }
 
-	public void setAccountTypeId(java.lang.Short accountTypeId) {
-		this.accountTypeId = accountTypeId;
-	}
+    public void setAccountTypeId(java.lang.Short accountTypeId) {
+        this.accountTypeId = accountTypeId;
+    }
 
-	public java.lang.String getDescription() {
-		return description;
-	}
+    public java.lang.String getDescription() {
+        return description;
+    }
 
-	public void setDescription(java.lang.String description) {
-		this.description = description;
-	}
+    public void setDescription(java.lang.String description) {
+        this.description = description;
+    }
 
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
+    public Integer getLookUpId() {
+        return lookUpId;
+    }
 
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
+    public void setLookUpId(Integer lookUpId) {
+        this.lookUpId = lookUpId;
+    }
 
 }

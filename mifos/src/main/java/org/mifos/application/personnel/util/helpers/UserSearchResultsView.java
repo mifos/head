@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.util.helpers;
 
 import org.mifos.framework.business.View;
@@ -28,53 +28,53 @@ import org.mifos.framework.business.View;
  */
 public class UserSearchResultsView extends View {
 
-	short officeId;
+    short officeId;
 
-	String officeName;
+    String officeName;
 
-	short personnelId;
+    short personnelId;
 
-	String globalPersonnelNum;
+    String globalPersonnelNum;
 
-	String personnelName;
+    String personnelName;
 
-	public String getGlobalPersonnelNum() {
-		return globalPersonnelNum;
-	}
+    public String getGlobalPersonnelNum() {
+        return globalPersonnelNum;
+    }
 
-	public void setGlobalPersonnelNum(String globalPersonnelNum) {
-		this.globalPersonnelNum = globalPersonnelNum;
-	}
+    public void setGlobalPersonnelNum(String globalPersonnelNum) {
+        this.globalPersonnelNum = globalPersonnelNum;
+    }
 
-	public short getOfficeId() {
-		return officeId;
-	}
+    public short getOfficeId() {
+        return officeId;
+    }
 
-	public void setOfficeId(short officeId) {
-		this.officeId = officeId;
-	}
+    public void setOfficeId(short officeId) {
+        this.officeId = officeId;
+    }
 
-	public String getOfficeName() {
-		return officeName;
-	}
+    public String getOfficeName() {
+        return officeName;
+    }
 
-	public void setOfficeName(String officeName) {
-		this.officeName = officeName;
-	}
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
-	public short getPersonnelId() {
-		return personnelId;
-	}
+    public short getPersonnelId() {
+        return personnelId;
+    }
 
-	public void setPersonnelId(short personnelId) {
-		this.personnelId = personnelId;
-	}
+    public void setPersonnelId(short personnelId) {
+        this.personnelId = personnelId;
+    }
 
-	public String getPersonnelName() {
-		return personnelName;
-	}
+    public String getPersonnelName() {
+        return personnelName;
+    }
 
-	public void setPersonnelName(String personnelName) {
-		this.personnelName = personnelName;
-	}
+    public void setPersonnelName(String personnelName) {
+        this.personnelName = personnelName;
+    }
 }

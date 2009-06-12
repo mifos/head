@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.business.service;
 
 import java.util.List;
@@ -36,40 +36,34 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
-public class MeetingBusinessService implements BusinessService{
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
-	
-	
-	public List<WeekDay> getWorkingDays()throws RuntimeException{
-			return new MeetingPersistence().getWorkingDays();
-		
-	}
-	
-	public MeetingBO getMeeting(Integer meetingId)throws ServiceException{
-		try {
-			return new MeetingPersistence().getMeeting(meetingId);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-	
-	public void checkPermissionForEditMeetingSchedule(CustomerLevel customerLevel,
-			UserContext userContext, Short recordOfficeId,
-			Short recordLoanOfficerId) throws ApplicationException {
-		if (!isPermissionAllowed(customerLevel, userContext,
-				recordOfficeId, recordLoanOfficerId))
-			throw new CustomerException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
+public class MeetingBusinessService implements BusinessService {
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	private boolean isPermissionAllowed(CustomerLevel customerLevel,
-			UserContext userContext, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isEditMeetingSchedulePermittedForCustomers(
-				customerLevel, userContext, recordOfficeId,
-				recordLoanOfficerId);
-	}
+    public List<WeekDay> getWorkingDays() throws RuntimeException {
+        return new MeetingPersistence().getWorkingDays();
+
+    }
+
+    public MeetingBO getMeeting(Integer meetingId) throws ServiceException {
+        try {
+            return new MeetingPersistence().getMeeting(meetingId);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public void checkPermissionForEditMeetingSchedule(CustomerLevel customerLevel, UserContext userContext,
+            Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
+        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId))
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+    }
+
+    private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId,
+            Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isEditMeetingSchedulePermittedForCustomers(customerLevel, userContext,
+                recordOfficeId, recordLoanOfficerId);
+    }
 }

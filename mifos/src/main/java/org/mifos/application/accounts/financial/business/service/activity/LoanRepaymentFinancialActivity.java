@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
@@ -31,19 +31,19 @@ import org.mifos.application.accounts.financial.business.service.activity.accoun
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.PrincipalAccountingEntry;
 
 public class LoanRepaymentFinancialActivity extends BaseFinancialActivity {
-	public LoanRepaymentFinancialActivity(AccountTrxnEntity accountTrxn) {
-		super(accountTrxn);
-	}
+    public LoanRepaymentFinancialActivity(AccountTrxnEntity accountTrxn) {
+        super(accountTrxn);
+    }
 
-	@Override
-	protected List<BaseAccountingEntry> getFinancialActionEntry() {
-		List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
-		financialActionEntryList.add(new PrincipalAccountingEntry());
-		financialActionEntryList.add(new InterestAccountingEntry());
-		financialActionEntryList.add(new FeesAccountingEntry());
-		financialActionEntryList.add(new PenaltyAccountingEntry());
-		
-		return financialActionEntryList;
-	}
+    @Override
+    protected List<BaseAccountingEntry> getFinancialActionEntry() {
+        List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
+        financialActionEntryList.add(new PrincipalAccountingEntry());
+        financialActionEntryList.add(new InterestAccountingEntry());
+        financialActionEntryList.add(new FeesAccountingEntry());
+        financialActionEntryList.add(new PenaltyAccountingEntry());
+
+        return financialActionEntryList;
+    }
 
 }

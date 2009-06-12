@@ -17,41 +17,41 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business;
 
 import org.mifos.framework.business.PersistentObject;
 
 public class COAHierarchyEntity extends PersistentObject {
-	private Short accountId;
+    private Short accountId;
 
-	private COABO coa;
+    private COABO coa;
 
-	private COAHierarchyEntity parentAccount;
+    private COAHierarchyEntity parentAccount;
 
-	protected COAHierarchyEntity() {
-		super();
-		accountId = null;
-		coa = null;
-		parentAccount = null;
-	}
+    protected COAHierarchyEntity() {
+        super();
+        accountId = null;
+        coa = null;
+        parentAccount = null;
+    }
 
-	public COAHierarchyEntity(COABO coa, COAHierarchyEntity parentAccount) {
-		super();
-		this.coa = coa;
-		this.parentAccount = parentAccount;
-	}
+    public COAHierarchyEntity(COABO coa, COAHierarchyEntity parentAccount) {
+        super();
+        this.coa = coa;
+        this.parentAccount = parentAccount;
+    }
 
-	public COABO getCoa() {
-		return coa;
-	}
+    public COABO getCoa() {
+        return coa;
+    }
 
-	public Short getAccountId() {
-		return accountId;
-	}
+    public Short getAccountId() {
+        return accountId;
+    }
 
-	public COAHierarchyEntity getParentAccount() {
-		return parentAccount;
-	}
+    public COAHierarchyEntity getParentAccount() {
+        return parentAccount;
+    }
 
 }

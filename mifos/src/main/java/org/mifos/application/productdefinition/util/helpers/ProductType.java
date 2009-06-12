@@ -17,32 +17,31 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.util.helpers;
 
 /*
  * ProductType corresponds to ProductTypeEntity instances.
  */
 public enum ProductType {
-	LOAN((short) 1), 
-	SAVINGS((short) 2);
+    LOAN((short) 1), SAVINGS((short) 2);
 
-	Short value;
+    Short value;
 
-	ProductType(Short value) {
-		this.value = value;
-	}
+    ProductType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static ProductType getProductType(int value) {
-		for (ProductType productType : ProductType.values()) {
-			if (productType.getValue() == value) {
-				return productType;
-			}
-		}
-		throw new RuntimeException("no product type " + value);
-	}
+    public static ProductType getProductType(int value) {
+        for (ProductType productType : ProductType.values()) {
+            if (productType.getValue() == value) {
+                return productType;
+            }
+        }
+        throw new RuntimeException("no product type " + value);
+    }
 }

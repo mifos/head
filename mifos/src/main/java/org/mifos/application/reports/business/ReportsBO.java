@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import org.mifos.framework.business.BusinessObject;
@@ -25,81 +25,82 @@ import org.mifos.framework.security.util.UserContext;
 
 public class ReportsBO extends BusinessObject {
 
-	public ReportsBO(){	
-		this.reportsCategoryBO = new ReportsCategoryBO();
-		this.reportsJasperMap = new ReportsJasperMap();
-	}
+    public ReportsBO() {
+        this.reportsCategoryBO = new ReportsCategoryBO();
+        this.reportsJasperMap = new ReportsJasperMap();
+    }
 
-	public ReportsBO(UserContext userContext) {
-		super(userContext);		
-	}
-	
-	private Short reportId;
-	private String reportName;
-	private String reportIdentifier;
-	private ReportsCategoryBO reportsCategoryBO;		
-	private ReportsJasperMap reportsJasperMap;
-	private Short activityId;
-	private Short isActive;
-	public static final Short ACTIVE = Short.valueOf("1");
+    public ReportsBO(UserContext userContext) {
+        super(userContext);
+    }
 
-	public Short getReportId() {
-		return reportId;
-	}
-	public void setReportId(Short reportId) {
-		this.reportId = reportId;
-	}
-	public String getReportName() {
-		return reportName;
-	}
-	public void setReportName(String reportName) {
-		this.reportName = reportName;
-	}		
+    private Short reportId;
+    private String reportName;
+    private String reportIdentifier;
+    private ReportsCategoryBO reportsCategoryBO;
+    private ReportsJasperMap reportsJasperMap;
+    private Short activityId;
+    private Short isActive;
+    public static final Short ACTIVE = Short.valueOf("1");
 
-	public String getReportIdentifier() {
-		return reportIdentifier;
-	}
+    public Short getReportId() {
+        return reportId;
+    }
 
-	public void setReportIdentifier(String reportIdentifier) {
-		this.reportIdentifier = reportIdentifier;
-	}
+    public void setReportId(Short reportId) {
+        this.reportId = reportId;
+    }
 
-	public ReportsCategoryBO getReportsCategoryBO() {
-		return reportsCategoryBO;
-	}
+    public String getReportName() {
+        return reportName;
+    }
 
-	public void setReportsCategoryBO(ReportsCategoryBO reportsCategoryBO) {
-		this.reportsCategoryBO = reportsCategoryBO;
-	}
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
+    }
 
-	
-	public Short getEntityID() {
-		return null;
-	}
+    public String getReportIdentifier() {
+        return reportIdentifier;
+    }
 
-	public ReportsJasperMap getReportsJasperMap() {
-		return reportsJasperMap;
-	}
+    public void setReportIdentifier(String reportIdentifier) {
+        this.reportIdentifier = reportIdentifier;
+    }
 
-	public void setReportsJasperMap(ReportsJasperMap reportsJasperMap) {
-		this.reportsJasperMap = reportsJasperMap;
-	}
+    public ReportsCategoryBO getReportsCategoryBO() {
+        return reportsCategoryBO;
+    }
 
-	public Short getActivityId() {
-		return activityId;
-	}
+    public void setReportsCategoryBO(ReportsCategoryBO reportsCategoryBO) {
+        this.reportsCategoryBO = reportsCategoryBO;
+    }
 
-	public void setActivityId(Short activityId) {
-		this.activityId = activityId;
-	}
+    public Short getEntityID() {
+        return null;
+    }
 
-	public Short getIsActive() {
-		return isActive;
-	}
+    public ReportsJasperMap getReportsJasperMap() {
+        return reportsJasperMap;
+    }
 
-	public void setIsActive(Short isActive) {
-		this.isActive = isActive;
-	}
+    public void setReportsJasperMap(ReportsJasperMap reportsJasperMap) {
+        this.reportsJasperMap = reportsJasperMap;
+    }
 
-	
+    public Short getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Short activityId) {
+        this.activityId = activityId;
+    }
+
+    public Short getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Short isActive) {
+        this.isActive = isActive;
+    }
+
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 import java.sql.Blob;
@@ -27,39 +27,39 @@ import org.mifos.framework.business.PersistentObject;
 
 public class CustomerPictureEntity extends PersistentObject {
 
-	private final Integer pictureId;
+    private final Integer pictureId;
 
-	private final CustomerBO customer;
+    private final CustomerBO customer;
 
-	private Blob picture;
+    private Blob picture;
 
-	public CustomerPictureEntity(CustomerBO customer, Blob picture) {
-		super();
-		this.pictureId = null;
-		this.customer = customer;
-		this.picture = picture;
-	}
+    public CustomerPictureEntity(CustomerBO customer, Blob picture) {
+        super();
+        this.pictureId = null;
+        this.customer = customer;
+        this.picture = picture;
+    }
 
-	protected CustomerPictureEntity() {
-		super();
-		this.pictureId = null;
-		this.customer = null;
-		this.picture = null;
-	}
-	
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    protected CustomerPictureEntity() {
+        super();
+        this.pictureId = null;
+        this.customer = null;
+        this.picture = null;
+    }
 
-	public Blob getPicture() {
-		return picture;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
 
-	public void setPicture(Blob picture) {
-		this.picture = picture;
-	}
+    public Blob getPicture() {
+        return picture;
+    }
 
-	public Integer getPictureId() {
-		return pictureId;
-	}
+    public void setPicture(Blob picture) {
+        this.picture = picture;
+    }
+
+    public Integer getPictureId() {
+        return pictureId;
+    }
 }

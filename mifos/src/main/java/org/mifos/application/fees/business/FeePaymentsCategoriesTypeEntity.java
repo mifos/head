@@ -17,66 +17,59 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * A class that represents a row in the 'fee_payments_categories_type' table. 
- * This class may be customized as it is never re-generated 
- * after being created.
+ * A class that represents a row in the 'fee_payments_categories_type' table.
+ * This class may be customized as it is never re-generated after being created.
  */
 public class FeePaymentsCategoriesTypeEntity extends PersistentObject {
-	
 
-	
-	private Short feePaymentsCategoryTypeId;
+    private Short feePaymentsCategoryTypeId;
 
-	
-	private FeeTypeEntity feeType;
+    private FeeTypeEntity feeType;
 
-	
-	private CategoryTypeEntity categoryType;
+    private CategoryTypeEntity categoryType;
 
-	
-	private FeePaymentEntity feePayment;
+    private FeePaymentEntity feePayment;
 
-	public FeePaymentsCategoriesTypeEntity() {
-	}
-	
-	public Short getFeePaymentsCategoryTypeId() {
-		return feePaymentsCategoryTypeId;
-	}
+    public FeePaymentsCategoriesTypeEntity() {
+    }
 
-	
-	public void setFeePaymentsCategoryTypeId(Short feePaymentsCategoryTypeId) {
+    public Short getFeePaymentsCategoryTypeId() {
+        return feePaymentsCategoryTypeId;
+    }
 
-		this.feePaymentsCategoryTypeId = feePaymentsCategoryTypeId;
-	}
+    public void setFeePaymentsCategoryTypeId(Short feePaymentsCategoryTypeId) {
 
-	public FeePaymentEntity getFeePayment() {
-		return this.feePayment;
-	}
+        this.feePaymentsCategoryTypeId = feePaymentsCategoryTypeId;
+    }
 
-	public void setFeePayment(FeePaymentEntity feePayment) {
-		this.feePayment = feePayment;
-	}
+    public FeePaymentEntity getFeePayment() {
+        return this.feePayment;
+    }
 
-	public CategoryTypeEntity getCategoryType() {
-		return this.categoryType;
-	}
+    public void setFeePayment(FeePaymentEntity feePayment) {
+        this.feePayment = feePayment;
+    }
 
-	public void setCategoryType(CategoryTypeEntity categoryType) {
-		this.categoryType = categoryType;
-	}
+    public CategoryTypeEntity getCategoryType() {
+        return this.categoryType;
+    }
 
-	public FeeTypeEntity getFeeType() {
-		return this.feeType;
-	}
+    public void setCategoryType(CategoryTypeEntity categoryType) {
+        this.categoryType = categoryType;
+    }
 
-	public void setFeeType(FeeTypeEntity feeType) {
-		this.feeType = feeType;
-	}
+    public FeeTypeEntity getFeeType() {
+        return this.feeType;
+    }
+
+    public void setFeeType(FeeTypeEntity feeType) {
+        this.feeType = feeType;
+    }
 
 }

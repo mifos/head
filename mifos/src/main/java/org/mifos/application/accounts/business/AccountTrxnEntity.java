@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.sql.Timestamp;
@@ -38,150 +38,143 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 
     private final Integer accountTrxnId = null;
 
-	private final AccountBO account;
+    private final AccountBO account;
 
-	private final AccountPaymentEntity accountPayment;
+    private final AccountPaymentEntity accountPayment;
 
-	private final PersonnelBO personnel;
+    private final PersonnelBO personnel;
 
-	private final AccountActionEntity accountActionEntity;
+    private final AccountActionEntity accountActionEntity;
 
-	private final Money amount;
+    private final Money amount;
 
-	private final Date dueDate;
+    private final Date dueDate;
 
-	private final String comments;
+    private final String comments;
 
-	private final Date actionDate;
+    private final Date actionDate;
 
-	private final CustomerBO customer;
+    private final CustomerBO customer;
 
-	private final Timestamp trxnCreatedDate;
+    private final Timestamp trxnCreatedDate;
 
-	private final Set<FinancialTransactionBO> financialTransactions;
+    private final Set<FinancialTransactionBO> financialTransactions;
 
-	private final Short installmentId;
+    private final Short installmentId;
 
-	private final AccountTrxnEntity relatedTrxn;
+    private final AccountTrxnEntity relatedTrxn;
 
-	protected AccountTrxnEntity() {
-		createdDate = new DateTimeService().getCurrentJavaDateTime();
-		trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
-		// Note: the GK mifos branch is using a TreeSet instead of HashSet here.
-		// Is there a good reason to use a TreeSet rather than HashSet?
-		financialTransactions = new HashSet<FinancialTransactionBO>();
-		accountActionEntity = null;
-		installmentId = null;
-		dueDate = null;
-		customer = null;
-		personnel = null;
-		actionDate = null;
-		account = null;
-		relatedTrxn = null;
-		amount = null;
-		accountPayment = null;
-		comments = null;
-	}
+    protected AccountTrxnEntity() {
+        createdDate = new DateTimeService().getCurrentJavaDateTime();
+        trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
+        // Note: the GK mifos branch is using a TreeSet instead of HashSet here.
+        // Is there a good reason to use a TreeSet rather than HashSet?
+        financialTransactions = new HashSet<FinancialTransactionBO>();
+        accountActionEntity = null;
+        installmentId = null;
+        dueDate = null;
+        customer = null;
+        personnel = null;
+        actionDate = null;
+        account = null;
+        relatedTrxn = null;
+        amount = null;
+        accountPayment = null;
+        comments = null;
+    }
 
-	public AccountTrxnEntity(AccountPaymentEntity accountPayment,
-			AccountActionEntity accountActionEntity, Short installmentId,
-			Date dueDate, PersonnelBO personnel, CustomerBO customer,
-			Date actionDate, Money amount, String comments,
-			AccountTrxnEntity relatedTrxn) {
-		createdDate = new DateTimeService().getCurrentJavaDateTime();
-		trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
-		financialTransactions = new HashSet<FinancialTransactionBO>();
-		this.account = accountPayment.getAccount();
-		this.accountActionEntity = accountActionEntity;
-		this.installmentId = installmentId;
-		this.dueDate = dueDate;
-		if (customer == null)
-			this.customer = account.getCustomer();
-		else
-			this.customer = customer;
-		this.personnel = personnel;
-		this.actionDate = actionDate;
-		this.amount = amount;
-		this.relatedTrxn = relatedTrxn;
-		this.accountPayment = accountPayment;
-		this.comments = comments;
-	}
+    public AccountTrxnEntity(AccountPaymentEntity accountPayment, AccountActionEntity accountActionEntity,
+            Short installmentId, Date dueDate, PersonnelBO personnel, CustomerBO customer, Date actionDate,
+            Money amount, String comments, AccountTrxnEntity relatedTrxn) {
+        createdDate = new DateTimeService().getCurrentJavaDateTime();
+        trxnCreatedDate = new Timestamp(new DateTimeService().getCurrentDateTime().getMillis());
+        financialTransactions = new HashSet<FinancialTransactionBO>();
+        this.account = accountPayment.getAccount();
+        this.accountActionEntity = accountActionEntity;
+        this.installmentId = installmentId;
+        this.dueDate = dueDate;
+        if (customer == null)
+            this.customer = account.getCustomer();
+        else
+            this.customer = customer;
+        this.personnel = personnel;
+        this.actionDate = actionDate;
+        this.amount = amount;
+        this.relatedTrxn = relatedTrxn;
+        this.accountPayment = accountPayment;
+        this.comments = comments;
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public AccountBO getAccount() {
+        return account;
+    }
 
-	public AccountActionEntity getAccountActionEntity() {
-		return accountActionEntity;
-	}
+    public AccountActionEntity getAccountActionEntity() {
+        return accountActionEntity;
+    }
 
-	public AccountActionTypes getAccountAction() {
-		return AccountActionTypes.fromInt(accountActionEntity.getId());
-	}
+    public AccountActionTypes getAccountAction() {
+        return AccountActionTypes.fromInt(accountActionEntity.getId());
+    }
 
-	public AccountPaymentEntity getAccountPayment() {
-		return accountPayment;
-	}
+    public AccountPaymentEntity getAccountPayment() {
+        return accountPayment;
+    }
 
-	public Integer getAccountTrxnId() {
-		return accountTrxnId;
-	}
+    public Integer getAccountTrxnId() {
+        return accountTrxnId;
+    }
 
-	public Date getActionDate() {
-		return actionDate;
-	}
+    public Date getActionDate() {
+        return actionDate;
+    }
 
-	public Money getAmount() {
-		return amount;
-	}
+    public Money getAmount() {
+        return amount;
+    }
 
-	public String getComments() {
-		return comments;
-	}
+    public String getComments() {
+        return comments;
+    }
 
-	public Date getDueDate() {
-		return dueDate;
-	}
+    public Date getDueDate() {
+        return dueDate;
+    }
 
-	public CustomerBO getCustomer() {
-		return customer;
-	}
+    public CustomerBO getCustomer() {
+        return customer;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
-	public void addFinancialTransction(
-			FinancialTransactionBO financialTransaction) {
-		this.financialTransactions.add(financialTransaction);
-	}
+    public void addFinancialTransction(FinancialTransactionBO financialTransaction) {
+        this.financialTransactions.add(financialTransaction);
+    }
 
-	public Set<FinancialTransactionBO> getFinancialTransactions() {
-		return financialTransactions;
-	}
+    public Set<FinancialTransactionBO> getFinancialTransactions() {
+        return financialTransactions;
+    }
 
-	public Short getInstallmentId() {
-		return installmentId;
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
 
-	public AccountTrxnEntity getRelatedTrxn() {
-		return relatedTrxn;
-	}
+    public AccountTrxnEntity getRelatedTrxn() {
+        return relatedTrxn;
+    }
 
-	public Timestamp getTrxnCreatedDate() {
-		return trxnCreatedDate;
-	}
+    public Timestamp getTrxnCreatedDate() {
+        return trxnCreatedDate;
+    }
 
-	protected abstract AccountTrxnEntity generateReverseTrxn(
-			PersonnelBO personnel, String adjustmentComment) throws AccountException;
+    protected abstract AccountTrxnEntity generateReverseTrxn(PersonnelBO personnel, String adjustmentComment)
+            throws AccountException;
 
     @Override
-	public String toString() {
-        return "{" +
-                accountTrxnId + ", " +
-                account + ", " +
-                accountActionEntity + ", " +
-                amount + ", " +
-                installmentId + "}";
+    public String toString() {
+        return "{" + accountTrxnId + ", " + account + ", " + accountActionEntity + ", " + amount + ", " + installmentId
+                + "}";
     }
 }

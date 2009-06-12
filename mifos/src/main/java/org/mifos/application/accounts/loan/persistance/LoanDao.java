@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.persistance;
 
 import java.util.Arrays;
@@ -43,85 +43,66 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /**
- * The Loan Data Access Object (DAO) for create, read,
- * update, delete (CRUD) operations on loans.
- *
- * Further refactoring: loan creation seems like a good
- * candidate to make use of the Factory pattern.
+ * The Loan Data Access Object (DAO) for create, read, update, delete (CRUD)
+ * operations on loans.
+ * 
+ * Further refactoring: loan creation seems like a good candidate to make use of
+ * the Factory pattern.
  */
 public class LoanDao implements DataAccessObject {
 
-    public LoanBO createLoan(UserContext userContext,
-            LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount,
-            Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate,
-            Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-            List<CustomFieldView> customFields, Double maxLoanAmount,
-            Double minLoanAmount, Short maxNoOfInstall, Short minNoOfInstall)
-            throws AccountException {
-        
+    public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
+            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
+            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
+            List<FeeView> feeViews, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
+            Short maxNoOfInstall, Short minNoOfInstall) throws AccountException {
+
         if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate))
-            throw new AccountException(
-                    AccountExceptionConstants.CREATEEXCEPTION);
+            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
 
         if (!customer.isActive()) {
 
-            throw new AccountException(
-                    AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
+            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
         }
 
         if (!loanOffering.isActive())
-            throw new AccountException(
-                    AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
+            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
 
         if (isDisbursementDateLessThanCurrentDate(disbursementDate))
-            throw new AccountException(
-                    LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+            throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
 
         if (!isDisbursementDateValid(customer, disbursementDate))
-            throw new AccountException(
-                    LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+            throw new AccountException(LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
 
-        if (interestDeductedAtDisbursement == true
-                && noOfinstallments.shortValue() <= 1)
-            throw new AccountException(
-                    LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+        if (interestDeductedAtDisbursement == true && noOfinstallments.shortValue() <= 1)
+            throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
 
-        return new LoanBO(userContext, loanOffering, customer, accountState,
-                loanAmount, noOfinstallments, disbursementDate,
-                interestDeductedAtDisbursement, interestRate,
-                gracePeriodDuration, fund, feeViews, customFields, false,
-                maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
-                false, null);
+        return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
+                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
+                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall, false, null);
     }
 
     private boolean isAnyLoanParamsNull(Object... args) {
         return Arrays.asList(args).contains(null);
     }
 
-    private boolean isDisbursementDateLessThanCurrentDate(
-            Date disbursementDate) {
+    private boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
         if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp()))
             return true;
         return false;
     }
-    
-    private Boolean isDisbursementDateValid(
-            CustomerBO specifiedCustomer, Date disbursementDate)
+
+    private Boolean isDisbursementDateValid(CustomerBO specifiedCustomer, Date disbursementDate)
             throws AccountException {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-                "IsDisbursementDateValid invoked ");
+        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("IsDisbursementDateValid invoked ");
         Boolean isValid = false;
         try {
-            isValid = specifiedCustomer.getCustomerMeeting().getMeeting()
-                    .isValidMeetingDate(disbursementDate,
-                            DateUtils.getLastDayOfNextYear());
-        }
-        catch (MeetingException e) {
+            isValid = specifiedCustomer.getCustomerMeeting().getMeeting().isValidMeetingDate(disbursementDate,
+                    DateUtils.getLastDayOfNextYear());
+        } catch (MeetingException e) {
             throw new AccountException(e);
         }
         return isValid;
     }
-    
+
 }

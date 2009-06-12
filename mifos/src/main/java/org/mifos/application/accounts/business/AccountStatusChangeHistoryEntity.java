@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.util.Date;
@@ -29,82 +29,80 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class AccountStatusChangeHistoryEntity extends PersistentObject {
-	private final Integer accountStatusChangeId;
+    private final Integer accountStatusChangeId;
 
-	private final AccountBO account;
+    private final AccountBO account;
 
-	private final AccountStateEntity oldStatus;
+    private final AccountStateEntity oldStatus;
 
-	private final AccountStateEntity newStatus;
+    private final AccountStateEntity newStatus;
 
-	private final PersonnelBO personnel;
+    private final PersonnelBO personnel;
 
-	private Locale locale = null;
+    private Locale locale = null;
 
-	protected AccountStatusChangeHistoryEntity() {
-		accountStatusChangeId = null;
-		this.oldStatus = null;
-		this.newStatus = null;
-		this.personnel = null;
-		this.account = null;
-	}
+    protected AccountStatusChangeHistoryEntity() {
+        accountStatusChangeId = null;
+        this.oldStatus = null;
+        this.newStatus = null;
+        this.personnel = null;
+        this.account = null;
+    }
 
-	public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus,
-			AccountStateEntity newStatus, PersonnelBO personnel,
-			AccountBO account) {
-		accountStatusChangeId = null;
-		this.oldStatus = oldStatus;
-		this.newStatus = newStatus;
-		this.personnel = personnel;
-		this.account = account;
-		this.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-	}
+    public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus, AccountStateEntity newStatus,
+            PersonnelBO personnel, AccountBO account) {
+        accountStatusChangeId = null;
+        this.oldStatus = oldStatus;
+        this.newStatus = newStatus;
+        this.personnel = personnel;
+        this.account = account;
+        this.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public AccountBO getAccount() {
+        return account;
+    }
 
-	public Integer getAccountStatusChangeId() {
-		return accountStatusChangeId;
-	}
+    public Integer getAccountStatusChangeId() {
+        return accountStatusChangeId;
+    }
 
-	public AccountStateEntity getNewStatus() {
-		return newStatus;
-	}
+    public AccountStateEntity getNewStatus() {
+        return newStatus;
+    }
 
-	public AccountStateEntity getOldStatus() {
-		return oldStatus;
-	}
+    public AccountStateEntity getOldStatus() {
+        return oldStatus;
+    }
 
-	public PersonnelBO getPersonnel() {
-		return personnel;
-	}
+    public PersonnelBO getPersonnel() {
+        return personnel;
+    }
 
-	public String getPersonnelName() {
-		return personnel.getDisplayName();
-	}
+    public String getPersonnelName() {
+        return personnel.getDisplayName();
+    }
 
-	public String getOldStatusName() {
-		if (oldStatus.getId().equals(newStatus.getId()))
-			return "-";
-		return oldStatus.getName();
-	}
+    public String getOldStatusName() {
+        if (oldStatus.getId().equals(newStatus.getId()))
+            return "-";
+        return oldStatus.getName();
+    }
 
-	public String getNewStatusName() {
-		return newStatus.getName();
-	}
+    public String getNewStatusName() {
+        return newStatus.getName();
+    }
 
-	public Locale getLocale() {
-		return locale;
-	}
+    public Locale getLocale() {
+        return locale;
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 
-	public String getUserPrefferedTransactionDate() {
-		return DateUtils.getUserLocaleDate(getLocale(), getCreatedDate()
-		.toString());
-	}
+    public String getUserPrefferedTransactionDate() {
+        return DateUtils.getUserLocaleDate(getLocale(), getCreatedDate().toString());
+    }
 
 }

@@ -17,34 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.checklist.util.helpers;
 
 import java.io.Serializable;
 
 public class CheckListStatesView implements Serializable {
 
-	private String stateName;
+    private String stateName;
 
-	private Short stateId;
+    private Short stateId;
 
-	private Short id;
+    private Short id;
 
-	public CheckListStatesView(Short stateId, String stateName, Short id) {
-		this.stateId = stateId;
-		this.stateName = stateName;
-		this.id = id;
-	}
+    public CheckListStatesView(Short stateId, String stateName, Short id) {
+        this.stateId = stateId;
+        this.stateName = stateName;
+        this.id = id;
+    }
 
-	public Short getStateId() {
-		return stateId;
-	}
+    public Short getStateId() {
+        return stateId;
+    }
 
-	public String getStateName() {
-		return stateName;
-	}
+    public String getStateName() {
+        return stateName;
+    }
 
-	public Short getId() {
-		return id;
-	}
+    public Short getId() {
+        return id;
+    }
 }

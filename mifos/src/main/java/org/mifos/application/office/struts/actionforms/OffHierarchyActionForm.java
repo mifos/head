@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,78 +27,78 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class OffHierarchyActionForm extends BaseActionForm {
 
-	private String headOffice;
+    private String headOffice;
 
-	private String branchOffice;
+    private String branchOffice;
 
-	private String regionalOffice;
+    private String regionalOffice;
 
-	private String subRegionalOffice;
+    private String subRegionalOffice;
 
-	private String areaOffice;
+    private String areaOffice;
 
-	public OffHierarchyActionForm() {
-		super();
-	}
+    public OffHierarchyActionForm() {
+        super();
+    }
 
-	public String getAreaOffice() {
-		return areaOffice;
-	}
+    public String getAreaOffice() {
+        return areaOffice;
+    }
 
-	public void setAreaOffice(String areaOffice) {
-		this.areaOffice = areaOffice;
-	}
+    public void setAreaOffice(String areaOffice) {
+        this.areaOffice = areaOffice;
+    }
 
-	public String getRegionalOffice() {
-		return regionalOffice;
-	}
+    public String getRegionalOffice() {
+        return regionalOffice;
+    }
 
-	public void setRegionalOffice(String regionalOffice) {
-		this.regionalOffice = regionalOffice;
-	}
+    public void setRegionalOffice(String regionalOffice) {
+        this.regionalOffice = regionalOffice;
+    }
 
-	public String getSubRegionalOffice() {
-		return subRegionalOffice;
-	}
+    public String getSubRegionalOffice() {
+        return subRegionalOffice;
+    }
 
-	public void setSubRegionalOffice(String subRegionalOffice) {
-		this.subRegionalOffice = subRegionalOffice;
-	}
+    public void setSubRegionalOffice(String subRegionalOffice) {
+        this.subRegionalOffice = subRegionalOffice;
+    }
 
-	public String getBranchOffice() {
-		return branchOffice;
-	}
+    public String getBranchOffice() {
+        return branchOffice;
+    }
 
-	public void setBranchOffice(String branchOffice) {
-		this.branchOffice = branchOffice;
-	}
+    public void setBranchOffice(String branchOffice) {
+        this.branchOffice = branchOffice;
+    }
 
-	public String getHeadOffice() {
-		return headOffice;
-	}
+    public String getHeadOffice() {
+        return headOffice;
+    }
 
-	public void setHeadOffice(String headOffice) {
-		this.headOffice = headOffice;
-	}
+    public void setHeadOffice(String headOffice) {
+        this.headOffice = headOffice;
+    }
 
-	public boolean getRegionalOfficeValue() {
-		return getBooleanValue(getRegionalOffice());
-	}
+    public boolean getRegionalOfficeValue() {
+        return getBooleanValue(getRegionalOffice());
+    }
 
-	public boolean getSubRegionalOfficeValue() {
-		return getBooleanValue(getSubRegionalOffice());
-	}
+    public boolean getSubRegionalOfficeValue() {
+        return getBooleanValue(getSubRegionalOffice());
+    }
 
-	public boolean getAreaOfficeValue() {
-		return getBooleanValue(getAreaOffice());
-	}
+    public boolean getAreaOfficeValue() {
+        return getBooleanValue(getAreaOffice());
+    }
 
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		super.reset(mapping, request);
-		regionalOffice = null;
-		subRegionalOffice = null;
-		areaOffice = null;
-	}
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        super.reset(mapping, request);
+        regionalOffice = null;
+        subRegionalOffice = null;
+        areaOffice = null;
+    }
 
 }

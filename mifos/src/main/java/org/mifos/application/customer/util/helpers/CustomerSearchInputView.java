@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 import org.mifos.framework.business.View;
@@ -27,24 +27,24 @@ import org.mifos.framework.business.View;
  */
 public class CustomerSearchInputView extends View {
 
-	private String customerInputPage;
+    private String customerInputPage;
 
-	private Short officeId;
+    private Short officeId;
 
-	public String getCustomerInputPage() {
-		return customerInputPage;
-	}
+    public String getCustomerInputPage() {
+        return customerInputPage;
+    }
 
-	public void setCustomerInputPage(String customerInputPage) {
-		this.customerInputPage = customerInputPage;
-	}
+    public void setCustomerInputPage(String customerInputPage) {
+        this.customerInputPage = customerInputPage;
+    }
 
-	public Short getOfficeId() {
-		return officeId;
-	}
+    public Short getOfficeId() {
+        return officeId;
+    }
 
-	public void setOfficeId(Short officeId) {
-		this.officeId = officeId;
-	}
+    public void setOfficeId(Short officeId) {
+        this.officeId = officeId;
+    }
 
 }

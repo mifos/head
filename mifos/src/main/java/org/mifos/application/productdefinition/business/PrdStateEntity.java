@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -28,16 +28,16 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
  */
 public class PrdStateEntity extends MasterDataEntity {
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected PrdStateEntity() {
-		super();
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected PrdStateEntity() {
+        super();
+    }
 
-	PrdStateEntity(PrdStatus prdStatus){
-		super(prdStatus.getValue());
-	}
-	
+    PrdStateEntity(PrdStatus prdStatus) {
+        super(prdStatus.getValue());
+    }
+
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -28,16 +28,16 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
  */
 public class PrdApplicableMasterEntity extends MasterDataEntity {
 
-	public PrdApplicableMasterEntity() {
-		super();
-	}
+    public PrdApplicableMasterEntity() {
+        super();
+    }
 
-	public PrdApplicableMasterEntity(ApplicableTo prdApplicableMaster) {
-		super(prdApplicableMaster.getValue());
-	}
+    public PrdApplicableMasterEntity(ApplicableTo prdApplicableMaster) {
+        super(prdApplicableMaster.getValue());
+    }
 
-	public ApplicableTo asEnum() {
-		return ApplicableTo.fromInt(getId());
-	}
+    public ApplicableTo asEnum() {
+        return ApplicableTo.fromInt(getId());
+    }
 
 }

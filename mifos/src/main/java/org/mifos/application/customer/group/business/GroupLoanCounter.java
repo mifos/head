@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.group.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
@@ -28,48 +28,48 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Transformer;
 
 public class GroupLoanCounter {
-	public static Transformer<GroupLoanCounter, Short> TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE = new Transformer<GroupLoanCounter, Short>() {
-		public Short transform(GroupLoanCounter input) {
-			return input.getLoanCycleCounter();
-		}
-	};
+    public static Transformer<GroupLoanCounter, Short> TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE = new Transformer<GroupLoanCounter, Short>() {
+        public Short transform(GroupLoanCounter input) {
+            return input.getLoanCycleCounter();
+        }
+    };
 
-	@SuppressWarnings("unused")
-	private Integer loanCounterId;
+    @SuppressWarnings("unused")
+    private Integer loanCounterId;
 
-	@SuppressWarnings("unused")
-	private GroupPerformanceHistoryEntity groupPeformanceHistory;
+    @SuppressWarnings("unused")
+    private GroupPerformanceHistoryEntity groupPeformanceHistory;
 
-	private Short loanCycleCounter = SHORT_ZERO;
+    private Short loanCycleCounter = SHORT_ZERO;
 
-	private LoanOfferingBO loanOffering;
+    private LoanOfferingBO loanOffering;
 
-	public GroupLoanCounter(
-			GroupPerformanceHistoryEntity groupPerformanceHistory,
-			LoanOfferingBO loanOffering, YesNoFlag yesNoFlag) {
-		this.groupPeformanceHistory = groupPerformanceHistory;
-		this.loanOffering = loanOffering;
-		updateLoanCounter(yesNoFlag);
-	}
+    public GroupLoanCounter(GroupPerformanceHistoryEntity groupPerformanceHistory, LoanOfferingBO loanOffering,
+            YesNoFlag yesNoFlag) {
+        this.groupPeformanceHistory = groupPerformanceHistory;
+        this.loanOffering = loanOffering;
+        updateLoanCounter(yesNoFlag);
+    }
 
-	protected GroupLoanCounter() {
-	}
+    protected GroupLoanCounter() {
+    }
 
-	public LoanOfferingBO getLoanOffering() {
-		return loanOffering;
-	}
+    public LoanOfferingBO getLoanOffering() {
+        return loanOffering;
+    }
 
-	public void updateLoanCounter(YesNoFlag yesNoFlag) {
-		if (yesNoFlag.yes())
-			loanCycleCounter++;
-		else loanCycleCounter--;
-	}
+    public void updateLoanCounter(YesNoFlag yesNoFlag) {
+        if (yesNoFlag.yes())
+            loanCycleCounter++;
+        else
+            loanCycleCounter--;
+    }
 
-	public boolean isOfSameProduct(PrdOfferingBO prdOffering) {
-		return loanOffering.isOfSameOffering(prdOffering);
-	}
+    public boolean isOfSameProduct(PrdOfferingBO prdOffering) {
+        return loanOffering.isOfSameOffering(prdOffering);
+    }
 
-	public Short getLoanCycleCounter() {
-		return loanCycleCounter;
-	}
+    public Short getLoanCycleCounter() {
+        return loanCycleCounter;
+    }
 }

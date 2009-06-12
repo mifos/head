@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -26,63 +26,61 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public class AccountCustomFieldEntity extends PersistentObject {
 
-	private Integer accountCustomFieldId;
+    private Integer accountCustomFieldId;
 
-	private AccountBO account;
+    private AccountBO account;
 
-	/*
-	 * Reference to a {@link CustomFieldDefinitionEntity}
-	 */
-	private Short fieldId;
+    /*
+     * Reference to a {@link CustomFieldDefinitionEntity}
+     */
+    private Short fieldId;
 
-	private String fieldValue;
+    private String fieldValue;
 
-	public AccountCustomFieldEntity() {
-	}
+    public AccountCustomFieldEntity() {
+    }
 
-	public AccountCustomFieldEntity(AccountBO account, Short fieldId,
-			String fieldValue) {
-		super();
-		this.account = account;
-		this.fieldId = fieldId;
-		this.fieldValue = fieldValue;
+    public AccountCustomFieldEntity(AccountBO account, Short fieldId, String fieldValue) {
+        super();
+        this.account = account;
+        this.fieldId = fieldId;
+        this.fieldValue = fieldValue;
 
-	}
+    }
 
-	public Integer getAccountCustomFieldId() {
-		return accountCustomFieldId;
-	}
+    public Integer getAccountCustomFieldId() {
+        return accountCustomFieldId;
+    }
 
-	public void setAccountCustomFieldId(Integer accountCustomFieldId) {
-		this.accountCustomFieldId = accountCustomFieldId;
-	}
+    public void setAccountCustomFieldId(Integer accountCustomFieldId) {
+        this.accountCustomFieldId = accountCustomFieldId;
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public AccountBO getAccount() {
+        return account;
+    }
 
-	public void setAccount(AccountBO account) {
-		this.account = account;
-	}
+    public void setAccount(AccountBO account) {
+        this.account = account;
+    }
 
-	public Short getFieldId() {
-		return fieldId;
-	}
+    public Short getFieldId() {
+        return fieldId;
+    }
 
-	public void setFieldId(Short fieldId) {
-		this.fieldId = fieldId;
-	}
+    public void setFieldId(Short fieldId) {
+        this.fieldId = fieldId;
+    }
 
-	public String getFieldValue() {
-		return fieldValue;
-	}
+    public String getFieldValue() {
+        return fieldValue;
+    }
 
-	public void setFieldValue(String fieldValue) {
-		this.fieldValue = fieldValue;
-	}
+    public void setFieldValue(String fieldValue) {
+        this.fieldValue = fieldValue;
+    }
 
-	public void save(AccountCustomFieldEntity accountCustomFieldEntity) throws ApplicationException
-	{
-		new SavingsPersistence().createOrUpdate(accountCustomFieldEntity);
-	}
+    public void save(AccountCustomFieldEntity accountCustomFieldEntity) throws ApplicationException {
+        new SavingsPersistence().createOrUpdate(accountCustomFieldEntity);
+    }
 }

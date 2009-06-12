@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 public class LoanAmountFromLoanCycleBO extends LoanAmountOption {
-	@SuppressWarnings("unused")
-	private Short loanAmountFromLoanCycleID;
-	private Short rangeIndex;
+    @SuppressWarnings("unused")
+    private Short loanAmountFromLoanCycleID;
+    private Short rangeIndex;
 
-	public LoanAmountFromLoanCycleBO(Double minLoanAmount,
-			Double maxLoanAmount, Double defaultLoanAmount, Short rangeIndex,
-			LoanOfferingBO loanOffering) {
-		super(minLoanAmount, maxLoanAmount, defaultLoanAmount, loanOffering);
-		this.rangeIndex = rangeIndex;
-	}
+    public LoanAmountFromLoanCycleBO(Double minLoanAmount, Double maxLoanAmount, Double defaultLoanAmount,
+            Short rangeIndex, LoanOfferingBO loanOffering) {
+        super(minLoanAmount, maxLoanAmount, defaultLoanAmount, loanOffering);
+        this.rangeIndex = rangeIndex;
+    }
 
-	public LoanAmountFromLoanCycleBO() {
-		this(null, null, null, null, null);
-	}
+    public LoanAmountFromLoanCycleBO() {
+        this(null, null, null, null, null);
+    }
 
-	public Short getRangeIndex() {
-		return rangeIndex;
-	}
+    public Short getRangeIndex() {
+        return rangeIndex;
+    }
 
-	public boolean sameRangeIndex(Short otherRangeIndex) {
-		return rangeIndex.equals(otherRangeIndex);
-	}
+    public boolean sameRangeIndex(Short otherRangeIndex) {
+        return rangeIndex.equals(otherRangeIndex);
+    }
 }

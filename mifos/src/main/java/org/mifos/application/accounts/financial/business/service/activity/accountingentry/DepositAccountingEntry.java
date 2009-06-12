@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -31,29 +31,22 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 
 public class DepositAccountingEntry extends BaseAccountingEntry {
 
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity
-				.getAccountTrxn();
-		SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
-		FinancialActionBO finActionDeposit = null;
-		if (savings.getSavingsType().getId()
-				.equals(SavingsType.MANDATORY.getValue())) {
-			finActionDeposit = FinancialActionCache
-					.getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
-		}
-		if (savings.getSavingsType().getId()
-				.equals(SavingsType.VOLUNTARY.getValue())) {
-			finActionDeposit = FinancialActionCache
-					.getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
-		}
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
+        SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
+        SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
+        FinancialActionBO finActionDeposit = null;
+        if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
+            finActionDeposit = FinancialActionCache.getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
+        }
+        if (savings.getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())) {
+            finActionDeposit = FinancialActionCache.getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
+        }
 
-		addAccountEntryDetails(savingsTrxn.getDepositAmount(),
-				finActionDeposit, getGLcode(finActionDeposit
-						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
-		addAccountEntryDetails(savingsTrxn.getDepositAmount(),
-				finActionDeposit, savings.getSavingsOffering()
-						.getDepositGLCode(), FinancialConstants.CREDIT);
-	}
+        addAccountEntryDetails(savingsTrxn.getDepositAmount(), finActionDeposit, getGLcode(finActionDeposit
+                .getApplicableDebitCharts()), FinancialConstants.DEBIT);
+        addAccountEntryDetails(savingsTrxn.getDepositAmount(), finActionDeposit, savings.getSavingsOffering()
+                .getDepositGLCode(), FinancialConstants.CREDIT);
+    }
 
 }

@@ -17,8 +17,9 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
+
 import static org.mifos.application.reports.ui.SelectionItem.SELECT_BRANCH_OFFICE_SELECTION_ITEM;
 import static org.mifos.application.reports.util.helpers.ReportValidationConstants.BRANCH_ID_INVALID_MSG;
 import static org.mifos.application.reports.util.helpers.ReportValidationConstants.BRANCH_ID_PARAM;
@@ -32,47 +33,47 @@ import org.mifos.framework.util.helpers.ServletUtils;
 
 public class BranchReportParameterForm extends AbstractReportParameterForm {
 
-	private final String branchId;
-	private final String runDate;
+    private final String branchId;
+    private final String runDate;
 
-	public BranchReportParameterForm(String branchId, String runDate) {
-		this.branchId = branchId;
-		this.runDate = runDate;
-	}
+    public BranchReportParameterForm(String branchId, String runDate) {
+        this.branchId = branchId;
+        this.runDate = runDate;
+    }
 
-	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
-		removeRequestParams(modifiedRequest, errors);
-	}
+    public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors) {
+        removeRequestParams(modifiedRequest, errors);
+    }
 
-	public void validate(Errors errors) {
-		addErrorIfInvalid(errors, branchId, SELECT_BRANCH_OFFICE_SELECTION_ITEM
-				.getId(), BRANCH_ID_PARAM, BRANCH_ID_INVALID_MSG);
-		addErrorIfInvalidRunDate(errors, runDate, ReportValidationConstants.RUN_DATE_PARAM, ReportValidationConstants.RUN_DATE_INVALID_MSG);
-	}
-	
+    public void validate(Errors errors) {
+        addErrorIfInvalid(errors, branchId, SELECT_BRANCH_OFFICE_SELECTION_ITEM.getId(), BRANCH_ID_PARAM,
+                BRANCH_ID_INVALID_MSG);
+        addErrorIfInvalidRunDate(errors, runDate, ReportValidationConstants.RUN_DATE_PARAM,
+                ReportValidationConstants.RUN_DATE_INVALID_MSG);
+    }
 
-	public static BranchReportParameterForm build(HttpServletRequest request) {
-	    return new BranchReportParameterForm(extractBranchId(request), extractRunDate(request));	
-	}
-	
-	private static String extractRunDate(HttpServletRequest request) {
-		return ServletUtils.getParameter(request, ReportValidationConstants.RUN_DATE_PARAM);
-	}
+    public static BranchReportParameterForm build(HttpServletRequest request) {
+        return new BranchReportParameterForm(extractBranchId(request), extractRunDate(request));
+    }
 
-	public boolean isFormEmpty() {
-		return branchId == null && runDate == null;
-	}
+    private static String extractRunDate(HttpServletRequest request) {
+        return ServletUtils.getParameter(request, ReportValidationConstants.RUN_DATE_PARAM);
+    }
 
-	@Override
-	public String[] getAllFormParameterNames() {
-		return ReportValidationConstants.BRANCH_REPORT_PARAMS_ARRAY;
-	}
+    public boolean isFormEmpty() {
+        return branchId == null && runDate == null;
+    }
 
-	public String getBranchId() {
-		return branchId;
-	}
+    @Override
+    public String[] getAllFormParameterNames() {
+        return ReportValidationConstants.BRANCH_REPORT_PARAMS_ARRAY;
+    }
 
-	public String getRunDate() {
-		return runDate;
-	}
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public String getRunDate() {
+        return runDate;
+    }
 }

@@ -17,31 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productdefinition.util.helpers;
 
+package org.mifos.application.productdefinition.util.helpers;
 
 public enum GraceType {
 
-	NONE((short) 1), 
-	GRACEONALLREPAYMENTS((short) 2), 
-	PRINCIPALONLYGRACE((short) 3);
-	Short value;
+    NONE((short) 1), GRACEONALLREPAYMENTS((short) 2), PRINCIPALONLYGRACE((short) 3);
+    Short value;
 
-	GraceType(Short value) {
-		this.value = value;
-	}
+    GraceType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static GraceType fromInt(int value) {
-		for (GraceType graceTypeConstants : GraceType.values()) {
-			if (graceTypeConstants.getValue() == value) {
-				return graceTypeConstants;
-			}
-		}
-		throw new RuntimeException("no grace type " + value);
-	}
+    public static GraceType fromInt(int value) {
+        for (GraceType graceTypeConstants : GraceType.values()) {
+            if (graceTypeConstants.getValue() == value) {
+                return graceTypeConstants;
+            }
+        }
+        throw new RuntimeException("no grace type " + value);
+    }
 }

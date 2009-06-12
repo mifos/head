@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.configuration.struts.tag;
 
+package org.mifos.application.configuration.struts.tag;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -32,110 +31,101 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 
 public class CustomFieldCategoryListTag extends BodyTagSupport {
-	private String actionName;
+    private String actionName;
 
-	private String methodName;
-	
-	private String flowKey;
+    private String methodName;
 
-	public CustomFieldCategoryListTag() {
-	}
+    private String flowKey;
 
-	public CustomFieldCategoryListTag(String action, String method, String flow) {
-		actionName = action;
-		methodName = method;
-		flowKey = flow;
-	}
+    public CustomFieldCategoryListTag() {
+    }
 
-	@Override
-	public int doStartTag() throws JspException {
-		try {
-			UserContext userContext = (UserContext) pageContext.getSession()
-			.getAttribute(Constants.USERCONTEXT);
+    public CustomFieldCategoryListTag(String action, String method, String flow) {
+        actionName = action;
+        methodName = method;
+        flowKey = flow;
+    }
 
-			TagUtils.getInstance().write(pageContext, getCustomFieldCategoryList(userContext));
-			
-		} catch (Exception e) {
-			/**
-			    This turns into a (rather ugly) error 500.
-			    TODO: make it more reasonable.
-			 */
-			throw new JspException(e);
-		}
-		return EVAL_PAGE;
-	}
+    @Override
+    public int doStartTag() throws JspException {
+        try {
+            UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
 
-	public String getActionName() {
-		return actionName;
-	}
+            TagUtils.getInstance().write(pageContext, getCustomFieldCategoryList(userContext));
 
-	public void setActionName(String actionName) {
-		this.actionName = actionName;
-	}
+        } catch (Exception e) {
+            /**
+             * This turns into a (rather ugly) error 500. TODO: make it more
+             * reasonable.
+             */
+            throw new JspException(e);
+        }
+        return EVAL_PAGE;
+    }
 
-	public String getMethodName() {
-		return methodName;
-	}
+    public String getActionName() {
+        return actionName;
+    }
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
-	
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
+    }
 
-	String getCustomFieldCategoryList(UserContext userContext) throws Exception {
-		XmlBuilder html = new XmlBuilder();
-		html.startTag(
-				"table", "width", "95%", "border", "0",
-				"cellspacing", "0", "cellpadding", "0");
+    public String getMethodName() {
+        return methodName;
+    }
 
-		CustomFieldCategory[] values = CustomFieldCategory.values();
-		for (int i=0; i < values.length; i++) {
-			String category = MessageLookup.getInstance().lookupLabel(values[i].name());
-			html.append(getCategoryRow(values[i].name(), category));
-		}			
-			
-		html.endTag("table");
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 
-		return html.getOutput();
-	}
+    String getCustomFieldCategoryList(UserContext userContext) throws Exception {
+        XmlBuilder html = new XmlBuilder();
+        html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "0");
 
-	
-	XmlBuilder getCategoryRow(String category, String categoryName) {
-		String urlencodedCategoryName = replaceSpaces(categoryName);
-		XmlBuilder html = new XmlBuilder();
-		String url = (actionName + "?method=" + methodName
-						+ "&category=" + category
-						+ "&categoryName=" + urlencodedCategoryName
-						+ "&currentFlowKey=" + flowKey);
-		html.startTag("tr", "class", "fontnormal");		
-			bullet(html);
-			html.startTag("td");
-				html.startTag("a", "href", url);
-				html.text(categoryName);
-				html.endTag("a");
-			html.endTag("td");
-		html.endTag("tr");
+        CustomFieldCategory[] values = CustomFieldCategory.values();
+        for (int i = 0; i < values.length; i++) {
+            String category = MessageLookup.getInstance().lookupLabel(values[i].name());
+            html.append(getCategoryRow(values[i].name(), category));
+        }
 
-		return html;
-	}
+        html.endTag("table");
 
-	public String replaceSpaces(String name) {
-		return name.trim().replaceAll(" ", "%20");
-	}
+        return html.getOutput();
+    }
 
-	private void bullet(XmlBuilder html) {
-		html.startTag("td", "width", "1%");
-		html.singleTag("img", 
-				"src", "pages/framework/images/bullet_circle.gif",
-				"width", "9", "height", "11");
-		html.endTag("td");
-	}
+    XmlBuilder getCategoryRow(String category, String categoryName) {
+        String urlencodedCategoryName = replaceSpaces(categoryName);
+        XmlBuilder html = new XmlBuilder();
+        String url = (actionName + "?method=" + methodName + "&category=" + category + "&categoryName="
+                + urlencodedCategoryName + "&currentFlowKey=" + flowKey);
+        html.startTag("tr", "class", "fontnormal");
+        bullet(html);
+        html.startTag("td");
+        html.startTag("a", "href", url);
+        html.text(categoryName);
+        html.endTag("a");
+        html.endTag("td");
+        html.endTag("tr");
 
-	public String getFlowKey() {
-		return flowKey;
-	}
+        return html;
+    }
 
-	public void setFlowKey(String flowKey) {
-		this.flowKey = flowKey;
-	}
+    public String replaceSpaces(String name) {
+        return name.trim().replaceAll(" ", "%20");
+    }
+
+    private void bullet(XmlBuilder html) {
+        html.startTag("td", "width", "1%");
+        html.singleTag("img", "src", "pages/framework/images/bullet_circle.gif", "width", "9", "height", "11");
+        html.endTag("td");
+    }
+
+    public String getFlowKey() {
+        return flowKey;
+    }
+
+    public void setFlowKey(String flowKey) {
+        this.flowKey = flowKey;
+    }
 }

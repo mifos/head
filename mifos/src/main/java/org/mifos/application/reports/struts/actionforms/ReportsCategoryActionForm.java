@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,64 +34,58 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReportsCategoryActionForm extends ValidatorActionForm {
 
-	private String categoryName;
-	private short categoryId;
+    private String categoryName;
+    private short categoryId;
 
-	public ReportsCategoryActionForm() {
-		super();
-	}
+    public ReportsCategoryActionForm() {
+        super();
+    }
 
-	public void clear() {
-		categoryId = 0;
-		categoryName = null;
-	}
+    public void clear() {
+        categoryId = 0;
+        categoryName = null;
+    }
 
-	public String getCategoryName() {
-		return categoryName;
-	}
+    public String getCategoryName() {
+        return categoryName;
+    }
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
-	
-	public short getCategoryId() {
-		return categoryId;
-	}
-	
-	public void setCategoryId(short categoryId) {
-		this.categoryId = categoryId;
-	}
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		request.setAttribute(Constants.CURRENTFLOWKEY, request
-				.getParameter(Constants.CURRENTFLOWKEY));
-		request.getSession().setAttribute(Constants.CURRENTFLOWKEY,
-				request.getParameter(Constants.CURRENTFLOWKEY));
-		String method = request.getParameter("method");
+    public short getCategoryId() {
+        return categoryId;
+    }
 
-		validateMethod(errors, Methods.preview.toString(), method);
-		validateMethod(errors, Methods.editPreview.toString(), method);
+    public void setCategoryId(short categoryId) {
+        this.categoryId = categoryId;
+    }
 
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        request.getSession().setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        String method = request.getParameter("method");
 
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-		}
+        validateMethod(errors, Methods.preview.toString(), method);
+        validateMethod(errors, Methods.editPreview.toString(), method);
 
-		return errors;
-	}
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", method);
+        }
 
-	private void validateMethod(ActionErrors errors, String verifyMethod,
-			String methodFromRequest) {
-		if (methodFromRequest.equals(verifyMethod)) {
-			if (StringUtils.isNullOrEmpty(categoryName)) {
-				errors.add(ReportsConstants.ERROR_CATEGORYNAME,
-						new ActionMessage(ReportsConstants.ERROR_CATEGORYNAME));
-			}
-		}
-	}
+        return errors;
+    }
+
+    private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
+        if (methodFromRequest.equals(verifyMethod)) {
+            if (StringUtils.isNullOrEmpty(categoryName)) {
+                errors.add(ReportsConstants.ERROR_CATEGORYNAME, new ActionMessage(ReportsConstants.ERROR_CATEGORYNAME));
+            }
+        }
+    }
 
 }

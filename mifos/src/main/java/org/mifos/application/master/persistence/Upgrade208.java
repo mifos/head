@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.persistence;
 
 import java.util.List;
@@ -25,8 +25,8 @@ import java.util.List;
 public class Upgrade208 extends LanguageUpgrade {
 
     public Upgrade208() {
-		super(208);
-	}
+        super(208);
+    }
 
     @Override
     public void addData(List<String[]> languageNameAndCodesToAdd) {

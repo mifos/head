@@ -17,32 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class ClientInitialSavingsOfferingEntity extends PersistentObject {
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private final Integer clientOfferingId; 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private final ClientBO client;
-	private final SavingsOfferingBO savingsOffering;
-	
-	public ClientInitialSavingsOfferingEntity(ClientBO client, SavingsOfferingBO savingsOffering){
-		this.client=client;
-		this.savingsOffering=savingsOffering;
-		this.clientOfferingId=null;
-	}
-	
-	protected ClientInitialSavingsOfferingEntity(){
-		this.clientOfferingId=null;
-		this.client=null;
-		this.savingsOffering=null;
-	}
-	
-	public SavingsOfferingBO getSavingsOffering(){
-		return savingsOffering;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final Integer clientOfferingId;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final ClientBO client;
+    private final SavingsOfferingBO savingsOffering;
+
+    public ClientInitialSavingsOfferingEntity(ClientBO client, SavingsOfferingBO savingsOffering) {
+        this.client = client;
+        this.savingsOffering = savingsOffering;
+        this.clientOfferingId = null;
+    }
+
+    protected ClientInitialSavingsOfferingEntity() {
+        this.clientOfferingId = null;
+        this.client = null;
+        this.savingsOffering = null;
+    }
+
+    public SavingsOfferingBO getSavingsOffering() {
+        return savingsOffering;
+    }
 }

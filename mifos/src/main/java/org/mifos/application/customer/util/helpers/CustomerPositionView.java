@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 import org.mifos.framework.business.View;
@@ -26,44 +26,44 @@ import org.mifos.framework.business.View;
  * A class that is used for displaying customer positions
  */
 public class CustomerPositionView extends View {
-	
-	private Integer customerId;
 
-	private String positionName;
+    private Integer customerId;
 
-	private String customerName;
+    private String positionName;
 
-	private Integer positionId;
+    private String customerName;
 
-	public String getCustomerName() {
-		return customerName;
-	}
+    private Integer positionId;
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
+    public String getCustomerName() {
+        return customerName;
+    }
 
-	public String getPositionName() {
-		return positionName;
-	}
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
-	public void setPositionName(String positionName) {
-		this.positionName = positionName;
-	}
+    public String getPositionName() {
+        return positionName;
+    }
 
-	public Integer getCustomerId() {
-		return customerId;
-	}
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
-	}
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-	public Integer getPositionId() {
-		return positionId;
-	}
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
-	public void setPositionId(Integer positionId) {
-		this.positionId = positionId;
-	}
+    public Integer getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Integer positionId) {
+        this.positionId = positionId;
+    }
 }

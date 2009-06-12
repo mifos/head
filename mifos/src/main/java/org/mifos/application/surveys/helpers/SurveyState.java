@@ -17,30 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.surveys.helpers;
 
 public enum SurveyState {
-	ACTIVE(1),
-	INACTIVE(0);
+    ACTIVE(1), INACTIVE(0);
 
-	private final int value;
+    private final int value;
 
-	private SurveyState(int value) {
-		this.value = value;
-	}
+    private SurveyState(int value) {
+        this.value = value;
+    }
 
-	public int getValue() {
-		return value;
-	}
+    public int getValue() {
+        return value;
+    }
 
-	public static SurveyState fromInt(int state) {
-		for (SurveyState candidate : SurveyState.values()) {
-			if (state == candidate.getValue()) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no survey state " + state);
-	}
+    public static SurveyState fromInt(int state) {
+        for (SurveyState candidate : SurveyState.values()) {
+            if (state == candidate.getValue()) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no survey state " + state);
+    }
 
 }

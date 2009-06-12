@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.actionforms;
 
 import java.util.Locale;
@@ -41,74 +41,66 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReverseLoanDisbursalActionForm extends BaseActionForm {
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	private String searchString;
+    private String searchString;
 
-	private String note;
+    private String note;
 
-	public String getSearchString() {
-		return searchString;
-	}
+    public String getSearchString() {
+        return searchString;
+    }
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
-	}
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
-	public String getNote() {
-		return note;
-	}
+    public String getNote() {
+        return note;
+    }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+    public void setNote(String note) {
+        this.note = note;
+    }
 
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		logger.debug("reset method called");
-		super.reset(mapping, request);
-	}
+    @Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+        logger.debug("reset method called");
+        super.reset(mapping, request);
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		logger.debug("Inside validate method");
-		String method = request.getParameter(Methods.method.toString());
-		ActionErrors errors = new ActionErrors();
-		if (method.equals(Methods.load.toString())) {
-			checkValidationForLoad(errors, getUserContext(request));
-		} else if (method.equals(Methods.preview.toString())) {
-			checkValidationForPreview(errors, getUserContext(request)
-					.getPreferredLocale());
-		}
-		if (!errors.isEmpty()) {
-			request.setAttribute("methodCalled", method);
-		}
-		logger.debug("outside validate method");
-		return errors;
-	}
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        logger.debug("Inside validate method");
+        String method = request.getParameter(Methods.method.toString());
+        ActionErrors errors = new ActionErrors();
+        if (method.equals(Methods.load.toString())) {
+            checkValidationForLoad(errors, getUserContext(request));
+        } else if (method.equals(Methods.preview.toString())) {
+            checkValidationForPreview(errors, getUserContext(request).getPreferredLocale());
+        }
+        if (!errors.isEmpty()) {
+            request.setAttribute("methodCalled", method);
+        }
+        logger.debug("outside validate method");
+        return errors;
+    }
 
-	private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
-		if (StringUtils.isNullOrEmpty(getSearchString())) {
-			addError(errors, "SearchString",
-					LoanConstants.ERROR_LOAN_ACCOUNT_ID, getLabel(
-							ConfigurationConstants.LOAN, userContext));
-		}
-	}
+    private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
+        if (StringUtils.isNullOrEmpty(getSearchString())) {
+            addError(errors, "SearchString", LoanConstants.ERROR_LOAN_ACCOUNT_ID, getLabel(ConfigurationConstants.LOAN,
+                    userContext));
+        }
+    }
 
-	private void checkValidationForPreview(ActionErrors errors,
-			Locale userLocale) {
-		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
-				userLocale);
-		String note = resources.getString("loan.note");
-		if (StringUtils.isNullOrEmpty(getNote()))
-			addError(errors, LoanConstants.NOTE, LoanConstants.MANDATORY,
-					note);
-		else if (getNote().length() > 500)
-			addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH,
-					note, String
-							.valueOf(LoanConstants.COMMENT_LENGTH));
-	}
+    private void checkValidationForPreview(ActionErrors errors, Locale userLocale) {
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
+        String note = resources.getString("loan.note");
+        if (StringUtils.isNullOrEmpty(getNote()))
+            addError(errors, LoanConstants.NOTE, LoanConstants.MANDATORY, note);
+        else if (getNote().length() > 500)
+            addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH, note, String
+                    .valueOf(LoanConstants.COMMENT_LENGTH));
+    }
 
 }

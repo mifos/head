@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.struts.actionforms;
 
 import java.util.Date;
@@ -38,201 +38,191 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelSettingsActionForm extends BaseActionForm {
 
-	private String firstName;
+    private String firstName;
 
-	private String middleName;
+    private String middleName;
 
-	private String lastName;
+    private String lastName;
 
-	private String secondLastName;
+    private String secondLastName;
 
-	private String emailId;
+    private String emailId;
 
-	private String governmentIdNumber;
+    private String governmentIdNumber;
 
-	private String dob;
+    private String dob;
 
-	private String maritalStatus;
+    private String maritalStatus;
 
-	private String gender;
+    private String gender;
 
-	private String preferredLocale;
+    private String preferredLocale;
 
-	private String userName;
+    private String userName;
 
-	private Address address;
+    private Address address;
 
-	public String getDisplayName() {
-		return getName().getDisplayName();
-	}
+    public String getDisplayName() {
+        return getName().getDisplayName();
+    }
 
-	public PersonnelSettingsActionForm() {
-		address = new Address();
-	}
+    public PersonnelSettingsActionForm() {
+        address = new Address();
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	public String getDob() {
-		return dob;
-	}
-	
-	public Date getDobDateObject() {
-		return DateUtils.getDateAsRetrievedFromDb(dob);
-	}
+    public String getDob() {
+        return dob;
+    }
 
-	public void setDob(String dob) {
-		this.dob = dob;
-	}
+    public Date getDobDateObject() {
+        return DateUtils.getDateAsRetrievedFromDb(dob);
+    }
 
-	public String getEmailId() {
-		return emailId;
-	}
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
 
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
+    public String getEmailId() {
+        return emailId;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getGender() {
-		return gender;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    public String getGender() {
+        return gender;
+    }
 
-	public String getGovernmentIdNumber() {
-		return governmentIdNumber;
-	}
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	public void setGovernmentIdNumber(String governmentIdNumber) {
-		this.governmentIdNumber = governmentIdNumber;
-	}
+    public String getGovernmentIdNumber() {
+        return governmentIdNumber;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setGovernmentIdNumber(String governmentIdNumber) {
+        this.governmentIdNumber = governmentIdNumber;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getMaritalStatus() {
-		return maritalStatus;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setMaritalStatus(String maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
 
-	public String getMiddleName() {
-		return middleName;
-	}
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
 
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
+    public String getMiddleName() {
+        return middleName;
+    }
 
-	public String getPreferredLocale() {
-		return preferredLocale;
-	}
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
 
-	public void setPreferredLocale(String preferredLocale) {
-		this.preferredLocale = preferredLocale;
-	}
+    public String getPreferredLocale() {
+        return preferredLocale;
+    }
 
-	public String getSecondLastName() {
-		return secondLastName;
-	}
+    public void setPreferredLocale(String preferredLocale) {
+        this.preferredLocale = preferredLocale;
+    }
 
-	public void setSecondLastName(String secondLastName) {
-		this.secondLastName = secondLastName;
-	}
+    public String getSecondLastName() {
+        return secondLastName;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public void setSecondLastName(String secondLastName) {
+        this.secondLastName = secondLastName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public String getAddressDetails() {
-		return address.getDisplayAddress();
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public Integer getGenderValue() {
-		return getIntegerValue(getGender());
-	}
+    public String getAddressDetails() {
+        return address.getDisplayAddress();
+    }
 
-	public Short getPreferredLocaleValue() {
-		return getShortValue(getPreferredLocale());
-	}
+    public Integer getGenderValue() {
+        return getIntegerValue(getGender());
+    }
 
-	public Name getName() {
-		return new Name(firstName, middleName, secondLastName, lastName);
-	}
+    public Short getPreferredLocaleValue() {
+        return getShortValue(getPreferredLocale());
+    }
 
-	public Integer getMaritalStatusValue() {
-		return getIntegerValue(getMaritalStatus());
-	}
+    public Name getName() {
+        return new Name(firstName, middleName, secondLastName, lastName);
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		String method = request.getParameter(Methods.method.toString());
-		if (method.equals(Methods.preview.toString())) {
-			if (StringUtils.isNullOrEmpty(getFirstName()))
-				addError(errors, PersonnelConstants.FIRSTNAME,
-						PersonnelConstants.ERRORMANDATORY,
-						PersonnelConstants.FIRST_NAME);
-			else if (getFirstName().length() > PersonnelConstants.PERSONNELLENGTH)
-				addError(errors, PersonnelConstants.FIRSTNAME,
-						PersonnelConstants.MAXIMUM_LENGTH,
-						PersonnelConstants.FIRST_NAME,
-						PersonnelConstants.PERSONNELNAMELENGTH);
-			if (StringUtils.isNullOrEmpty(getLastName()))
-				addError(errors, PersonnelConstants.LASTNAME,
-						PersonnelConstants.ERRORMANDATORY,
-						PersonnelConstants.LAST_NAME);
-			else if (getLastName().length() > PersonnelConstants.PERSONNELLENGTH)
-				addError(errors, PersonnelConstants.LASTNAME,
-						PersonnelConstants.MAXIMUM_LENGTH,
-						PersonnelConstants.LAST_NAME,
-						PersonnelConstants.PERSONNELNAMELENGTH);
-			if (StringUtils.isNullOrEmpty(getGender()))
-				addError(errors, PersonnelConstants.GENDERVALUE,
-						PersonnelConstants.MANDATORYSELECT,
-						PersonnelConstants.GENDERVALUE);
-			if (getDisplayName().length() > PersonnelConstants.PERSONNELDISPLAYNAMELENGTH)
-				addError(errors, PersonnelConstants.DISPLAYNAME,
-						PersonnelConstants.MAXIMUM_LENGTH,
-						PersonnelConstants.DISPLAY_NAME,
-						PersonnelConstants.PERSONNELDISPLAYLENGTH);
-			validateEmail(errors);
-		}
-		if (!method.equals(Methods.validate.toString()))
-			request.setAttribute("methodCalled", method);
-		return errors;
-	}
-	private void validateEmail(ActionErrors errors) {
-		if (!StringUtils.isNullOrEmpty(emailId)&&!GenericValidator.isEmail(emailId)) {
-			errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(
-					PersonnelConstants.ERROR_VALID_EMAIL));
-		}
-	}
+    public Integer getMaritalStatusValue() {
+        return getIntegerValue(getMaritalStatus());
+    }
+
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        String method = request.getParameter(Methods.method.toString());
+        if (method.equals(Methods.preview.toString())) {
+            if (StringUtils.isNullOrEmpty(getFirstName()))
+                addError(errors, PersonnelConstants.FIRSTNAME, PersonnelConstants.ERRORMANDATORY,
+                        PersonnelConstants.FIRST_NAME);
+            else if (getFirstName().length() > PersonnelConstants.PERSONNELLENGTH)
+                addError(errors, PersonnelConstants.FIRSTNAME, PersonnelConstants.MAXIMUM_LENGTH,
+                        PersonnelConstants.FIRST_NAME, PersonnelConstants.PERSONNELNAMELENGTH);
+            if (StringUtils.isNullOrEmpty(getLastName()))
+                addError(errors, PersonnelConstants.LASTNAME, PersonnelConstants.ERRORMANDATORY,
+                        PersonnelConstants.LAST_NAME);
+            else if (getLastName().length() > PersonnelConstants.PERSONNELLENGTH)
+                addError(errors, PersonnelConstants.LASTNAME, PersonnelConstants.MAXIMUM_LENGTH,
+                        PersonnelConstants.LAST_NAME, PersonnelConstants.PERSONNELNAMELENGTH);
+            if (StringUtils.isNullOrEmpty(getGender()))
+                addError(errors, PersonnelConstants.GENDERVALUE, PersonnelConstants.MANDATORYSELECT,
+                        PersonnelConstants.GENDERVALUE);
+            if (getDisplayName().length() > PersonnelConstants.PERSONNELDISPLAYNAMELENGTH)
+                addError(errors, PersonnelConstants.DISPLAYNAME, PersonnelConstants.MAXIMUM_LENGTH,
+                        PersonnelConstants.DISPLAY_NAME, PersonnelConstants.PERSONNELDISPLAYLENGTH);
+            validateEmail(errors);
+        }
+        if (!method.equals(Methods.validate.toString()))
+            request.setAttribute("methodCalled", method);
+        return errors;
+    }
+
+    private void validateEmail(ActionErrors errors) {
+        if (!StringUtils.isNullOrEmpty(emailId) && !GenericValidator.isEmail(emailId)) {
+            errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(PersonnelConstants.ERROR_VALID_EMAIL));
+        }
+    }
 }

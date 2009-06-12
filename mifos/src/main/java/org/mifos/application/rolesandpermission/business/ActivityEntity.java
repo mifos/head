@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.rolesandpermission.business;
 
 import java.util.HashSet;
@@ -29,67 +29,66 @@ import org.mifos.framework.business.PersistentObject;
 
 public class ActivityEntity extends PersistentObject {
 
-	private final Short id;
+    private final Short id;
 
-	private ActivityEntity parent;
+    private ActivityEntity parent;
 
-	private final LookUpValueEntity activityNameLookupValues;
+    private final LookUpValueEntity activityNameLookupValues;
 
-	private final LookUpValueEntity descriptionLookupValues;
-	private final Set<RoleActivityEntity> roles = 
-		new HashSet<RoleActivityEntity>();
+    private final LookUpValueEntity descriptionLookupValues;
+    private final Set<RoleActivityEntity> roles = new HashSet<RoleActivityEntity>();
 
-	protected ActivityEntity() {
-		this.id = null;
-		this.parent = null;
-		this.activityNameLookupValues = null;
-		this.descriptionLookupValues = null;
-	}
-	
-	ActivityEntity(int id) {
-		this.id = (short)id;
-		this.parent = null;
-		this.activityNameLookupValues = null;
-		this.descriptionLookupValues = null;
-	}
-	
-	public ActivityEntity(short id, ActivityEntity parentActivityEntity, LookUpValueEntity lookUpValueEntity) {
-		this.id = id;
-		this.parent = parentActivityEntity;
-		this.activityNameLookupValues = lookUpValueEntity;
-		this.descriptionLookupValues = this.activityNameLookupValues;
-	}
+    protected ActivityEntity() {
+        this.id = null;
+        this.parent = null;
+        this.activityNameLookupValues = null;
+        this.descriptionLookupValues = null;
+    }
 
-	public Short getId() {
-		return id;
-	}
+    ActivityEntity(int id) {
+        this.id = (short) id;
+        this.parent = null;
+        this.activityNameLookupValues = null;
+        this.descriptionLookupValues = null;
+    }
 
-	public ActivityEntity getParent() {
-		return parent;
-	}
+    public ActivityEntity(short id, ActivityEntity parentActivityEntity, LookUpValueEntity lookUpValueEntity) {
+        this.id = id;
+        this.parent = parentActivityEntity;
+        this.activityNameLookupValues = lookUpValueEntity;
+        this.descriptionLookupValues = this.activityNameLookupValues;
+    }
 
-	public LookUpValueEntity getActivityNameLookupValues() {
-		return activityNameLookupValues;
-	}
+    public Short getId() {
+        return id;
+    }
 
-	public LookUpValueEntity getDescriptionLookupValues() {
-		return descriptionLookupValues;
-	}
+    public ActivityEntity getParent() {
+        return parent;
+    }
 
-	public String getDescription() {
-		return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
-	}
+    public LookUpValueEntity getActivityNameLookupValues() {
+        return activityNameLookupValues;
+    }
 
-	public String getActivityName() {
-		return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
-	}
+    public LookUpValueEntity getDescriptionLookupValues() {
+        return descriptionLookupValues;
+    }
 
-	public void setParent(ActivityEntity parent) {
-		this.parent = parent;
-	}
+    public String getDescription() {
+        return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
+    }
 
-	public Set<RoleActivityEntity> getRoles() {
-		return roles;
-	}
+    public String getActivityName() {
+        return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
+    }
+
+    public void setParent(ActivityEntity parent) {
+        this.parent = parent;
+    }
+
+    public Set<RoleActivityEntity> getRoles() {
+        return roles;
+    }
 
 }

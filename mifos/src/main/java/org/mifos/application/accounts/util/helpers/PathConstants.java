@@ -17,17 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 /**
  * This class gives path constants for accounts modules.
  */
 public interface PathConstants {
-	public final String LOANACCOUNTSPATH = "loanAccounts";
-	public final String DISBURSELOAN="loanDisbursment";
-	public final String APPLYADJUSTMENT="applyAdjustment";
-	public final String EARLYREPAYMENT="earlyRepayment";
-	public final String REPAYMENT="repayment";
-	public final String PAYMENT="payment";
+    public final String LOANACCOUNTSPATH = "loanAccounts";
+    public final String DISBURSELOAN = "loanDisbursment";
+    public final String APPLYADJUSTMENT = "applyAdjustment";
+    public final String EARLYREPAYMENT = "earlyRepayment";
+    public final String REPAYMENT = "repayment";
+    public final String PAYMENT = "payment";
 }

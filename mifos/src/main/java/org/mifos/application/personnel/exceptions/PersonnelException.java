@@ -17,40 +17,46 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
+
 /**
  * This is general exception for the personnel
  */
-public class PersonnelException extends ApplicationException{
-	
-	public PersonnelException(String key) {
-		super(key);
-	}
-	
-	/** Constructor for PersonnelException
-	 * @param key
-	 * @param values
-	 */
-	public PersonnelException(String key,Object[] values) {
-		super(key, values);
-	}
+public class PersonnelException extends ApplicationException {
 
-	/** Constructor for PersonnelException
-	 * @param cause
-	 */
-	public PersonnelException(Throwable cause) {
-		super(cause);
-	}
-	
+    public PersonnelException(String key) {
+        super(key);
+    }
 
-/** Constructor for PersonnelException
-	 * @param cause
-	 */
-	public PersonnelException(String key ,Throwable cause) {
-		super(key , cause);
-	}
+    /**
+     * Constructor for PersonnelException
+     * 
+     * @param key
+     * @param values
+     */
+    public PersonnelException(String key, Object[] values) {
+        super(key, values);
+    }
+
+    /**
+     * Constructor for PersonnelException
+     * 
+     * @param cause
+     */
+    public PersonnelException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * Constructor for PersonnelException
+     * 
+     * @param cause
+     */
+    public PersonnelException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
 }

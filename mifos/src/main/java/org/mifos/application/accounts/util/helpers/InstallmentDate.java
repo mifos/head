@@ -17,38 +17,34 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import java.util.Date;
 
-public class InstallmentDate
-{
+public class InstallmentDate {
 
-	private Date installmentDueDate = null;
-	private Short installmentId;
+    private Date installmentDueDate = null;
+    private Short installmentId;
 
-	private InstallmentDate(){}
-	public InstallmentDate(Short installmentId , Date installmentDueDate)
-	{
-		this.installmentId = installmentId;
-		this.installmentDueDate = installmentDueDate;
-	}
+    private InstallmentDate() {
+    }
 
-	public void setInstallmentId(Short installmentId)
-	{
-		this.installmentId = installmentId;
-	}
+    public InstallmentDate(Short installmentId, Date installmentDueDate) {
+        this.installmentId = installmentId;
+        this.installmentDueDate = installmentDueDate;
+    }
 
-	public Short getInstallmentId()
-	{
-		return installmentId;
-	}
+    public void setInstallmentId(Short installmentId) {
+        this.installmentId = installmentId;
+    }
 
-	public Date getInstallmentDueDate()
-	{
-		return installmentDueDate;
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
+
+    public Date getInstallmentDueDate() {
+        return installmentDueDate;
+    }
 
 }
-

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import java.util.HashSet;
@@ -32,73 +32,73 @@ import org.mifos.application.util.helpers.YesNoFlag;
  */
 public class CustomerStatusEntity extends StateEntity {
 
-	private String description;
+    private String description;
 
-	private CustomerLevelEntity customerLevel;
+    private CustomerLevelEntity customerLevel;
 
-	private Short optional;
-	
-	private Set<CustomerStatusFlagEntity> flagSet;
-	
-	public CustomerStatusEntity(CustomerStatus customerStatus) {
-		super(customerStatus.getValue());
-		this.flagSet = new HashSet<CustomerStatusFlagEntity>();
-	}
-	
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerStatusEntity() {
-	}
-	
-	public CustomerStatusEntity(Short customerStateId) {
-		super(customerStateId);
-		this.flagSet = new HashSet<CustomerStatusFlagEntity>();
-		
-	}
+    private Short optional;
 
-	public CustomerLevelEntity getCustomerLevel() {
-		return customerLevel;
-	}
+    private Set<CustomerStatusFlagEntity> flagSet;
 
-	public String getDescription() {
-		return description;
-	}
-	
-	public Short getOptional() {
-		return optional;
-	}
-	
-	/**
-	 * Safer, preferred method for getting the "optional" property.
-	 * Can't be "isOptional()" because hibernate gets confused.
-	 */
-	public boolean getIsOptional(){
-		return optional.equals(YesNoFlag.YES.getValue());
-	}
-	
-	public void setOptional(Short optional) {
-		this.optional = optional;
-	}
-	
-	/**
-	 * Safer, preferred method for setting the "optional" property.
-	 * Can't be "setOptional(boolean)" because hibernate gets confused.
-	 */
-	public void setIsOptional(boolean optional) {
-		if (optional)
-			setOptional(YesNoFlag.YES.getValue());
-		else
-			setOptional(YesNoFlag.NO.getValue());
-	}
+    public CustomerStatusEntity(CustomerStatus customerStatus) {
+        super(customerStatus.getValue());
+        this.flagSet = new HashSet<CustomerStatusFlagEntity>();
+    }
 
-	public Set<CustomerStatusFlagEntity> getFlagSet() {
-		return flagSet;
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerStatusEntity() {
+    }
 
-	public void setFlagSet(Set<CustomerStatusFlagEntity> flagSet) {
-		this.flagSet = flagSet;
-	}
-		
+    public CustomerStatusEntity(Short customerStateId) {
+        super(customerStateId);
+        this.flagSet = new HashSet<CustomerStatusFlagEntity>();
+
+    }
+
+    public CustomerLevelEntity getCustomerLevel() {
+        return customerLevel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Short getOptional() {
+        return optional;
+    }
+
+    /**
+     * Safer, preferred method for getting the "optional" property. Can't be
+     * "isOptional()" because hibernate gets confused.
+     */
+    public boolean getIsOptional() {
+        return optional.equals(YesNoFlag.YES.getValue());
+    }
+
+    public void setOptional(Short optional) {
+        this.optional = optional;
+    }
+
+    /**
+     * Safer, preferred method for setting the "optional" property. Can't be
+     * "setOptional(boolean)" because hibernate gets confused.
+     */
+    public void setIsOptional(boolean optional) {
+        if (optional)
+            setOptional(YesNoFlag.YES.getValue());
+        else
+            setOptional(YesNoFlag.NO.getValue());
+    }
+
+    public Set<CustomerStatusFlagEntity> getFlagSet() {
+        return flagSet;
+    }
+
+    public void setFlagSet(Set<CustomerStatusFlagEntity> flagSet) {
+        this.flagSet = flagSet;
+    }
+
 }

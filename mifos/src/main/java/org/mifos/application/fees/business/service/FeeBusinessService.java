@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business.service;
 
 import java.util.List;
@@ -33,51 +33,50 @@ import org.mifos.framework.security.util.UserContext;
 
 public class FeeBusinessService implements BusinessService {
 
-	private FeePersistence feePersistence;
+    private FeePersistence feePersistence;
 
-	public FeeBusinessService() {
-		feePersistence = new FeePersistence();
-	}
+    public FeeBusinessService() {
+        feePersistence = new FeePersistence();
+    }
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	};
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    };
 
-	public FeeBO getFee(Short feeId) {
-		return feePersistence.getFee(feeId);
-	}
+    public FeeBO getFee(Short feeId) {
+        return feePersistence.getFee(feeId);
+    }
 
-	public List<FeeBO> retrieveCustomerFees() throws ServiceException {
-		try {
-			return feePersistence.retrieveCustomerFees();
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
+    public List<FeeBO> retrieveCustomerFees() throws ServiceException {
+        try {
+            return feePersistence.retrieveCustomerFees();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 
-	public List<FeeBO> retrieveProductFees() throws ServiceException {
-		try {
-			return feePersistence.retrieveProductFees();
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-	
-	public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws ServiceException {
-		try {
-			return feePersistence.retrieveCustomerFeesByCategaroyType(feeCategory);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-	
-	public List<FeeBO> getAllApplicableFeesForLoanCreation()
-			throws ServiceException {
-		try {
-			return feePersistence.getAllAppllicableFeeForLoanCreation();
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<FeeBO> retrieveProductFees() throws ServiceException {
+        try {
+            return feePersistence.retrieveProductFees();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws ServiceException {
+        try {
+            return feePersistence.retrieveCustomerFeesByCategaroyType(feeCategory);
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
+    public List<FeeBO> getAllApplicableFeesForLoanCreation() throws ServiceException {
+        try {
+            return feePersistence.getAllAppllicableFeeForLoanCreation();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

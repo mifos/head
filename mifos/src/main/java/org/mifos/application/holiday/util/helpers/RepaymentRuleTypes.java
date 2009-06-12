@@ -17,21 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.holiday.util.helpers;
 
 public enum RepaymentRuleTypes {
-	SAME_DAY((short) 1), NEXT_MEETING_OR_REPAYMENT((short) 2), NEXT_WORKING_DAY((short) 3);
+    SAME_DAY((short) 1), NEXT_MEETING_OR_REPAYMENT((short) 2), NEXT_WORKING_DAY((short) 3);
 
-	Short value;
+    Short value;
 
-	RepaymentRuleTypes(Short value) {
-		this.value = value;
-	}
+    RepaymentRuleTypes(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 }
-
-

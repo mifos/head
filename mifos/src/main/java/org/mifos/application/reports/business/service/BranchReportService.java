@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.reports.business.service;
 
+package org.mifos.application.reports.business.service;
 
 import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
 
@@ -51,257 +50,210 @@ import org.mifos.framework.util.CollectionUtils;
 
 public class BranchReportService implements IBranchReportService {
 
-	private OfficeBusinessService officeBusinessService;
-	private PersonnelBusinessService personnelBusinessService;
-	private BranchReportPersistence branchReportPersistence;
+    private OfficeBusinessService officeBusinessService;
+    private PersonnelBusinessService personnelBusinessService;
+    private BranchReportPersistence branchReportPersistence;
 
-	public BranchReportService(OfficeBusinessService officeBusinessService,
-			PersonnelBusinessService personnelBusinessService,
-			BranchReportPersistence branchReportPersistence) {
-		this.officeBusinessService = officeBusinessService;
-		this.personnelBusinessService = personnelBusinessService;
-		this.branchReportPersistence = branchReportPersistence;
-	}
+    public BranchReportService(OfficeBusinessService officeBusinessService,
+            PersonnelBusinessService personnelBusinessService, BranchReportPersistence branchReportPersistence) {
+        this.officeBusinessService = officeBusinessService;
+        this.personnelBusinessService = personnelBusinessService;
+        this.branchReportPersistence = branchReportPersistence;
+    }
 
-	public BranchReportService() {
-		this(new OfficeBusinessService(), new PersonnelBusinessService(),
-				new BranchReportPersistence());
-	}
+    public BranchReportService() {
+        this(new OfficeBusinessService(), new PersonnelBusinessService(), new BranchReportPersistence());
+    }
 
-	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId, String runDate)
-			throws ServiceException {
-		Short officeId = convertIntegerToShort(branchId);
-		PersonnelBO branchManager = CollectionUtils
-				.first(personnelBusinessService
-						.getActiveBranchManagersUnderOffice(officeId));
-		try {
-			return new BranchReportHeaderDTO(officeBusinessService
-					.getOffice(officeId), branchManager == null ? null
-					: branchManager.getDisplayName(), ReportUtils.parseReportDate(runDate));
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId, String runDate) throws ServiceException {
+        Short officeId = convertIntegerToShort(branchId);
+        PersonnelBO branchManager = CollectionUtils.first(personnelBusinessService
+                .getActiveBranchManagersUnderOffice(officeId));
+        try {
+            return new BranchReportHeaderDTO(officeBusinessService.getOffice(officeId), branchManager == null ? null
+                    : branchManager.getDisplayName(), ReportUtils.parseReportDate(runDate));
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public boolean isReportDataPresentForRundateAndBranchId(String branchId,
-			String runDate) {
-		try {
-			return getBranchReport(Short.valueOf(branchId),
-					ReportUtils.parseReportDate(runDate)) != null;
-		}
-		catch (ServiceException e) {
-			return false;
-		}
-		catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public boolean isReportDataPresentForRundateAndBranchId(String branchId, String runDate) {
+        try {
+            return getBranchReport(Short.valueOf(branchId), ReportUtils.parseReportDate(runDate)) != null;
+        } catch (ServiceException e) {
+            return false;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public boolean isReportDataPresentForRundate(Date runDate)
-			throws ServiceException {
-		try {
-			List<BranchReportBO> branchReports = branchReportPersistence
-					.getBranchReport(runDate);
-			return branchReports != null && !branchReports.isEmpty();
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public boolean isReportDataPresentForRundate(Date runDate) throws ServiceException {
+        try {
+            List<BranchReportBO> branchReports = branchReportPersistence.getBranchReport(runDate);
+            return branchReports != null && !branchReports.isEmpty();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportLoanArrearsAgingBO> getLoanArrearsAgingInfo(
-			Integer branchId, String runDate) throws ServiceException {
-		try {
-			return branchReportPersistence.getLoanArrearsAgingReport(
-					convertIntegerToShort(branchId), ReportUtils.parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportLoanArrearsAgingBO> getLoanArrearsAgingInfo(Integer branchId, String runDate)
+            throws ServiceException {
+        try {
+            return branchReportPersistence.getLoanArrearsAgingReport(convertIntegerToShort(branchId), ReportUtils
+                    .parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportClientSummaryBO> getClientSummaryInfo(
-			Integer branchId, String runDate) throws ServiceException {
-		try {
-			return branchReportPersistence.getBranchReportClientSummary(
-					convertIntegerToShort(branchId), ReportUtils.parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportClientSummaryBO> getClientSummaryInfo(Integer branchId, String runDate)
+            throws ServiceException {
+        try {
+            return branchReportPersistence.getBranchReportClientSummary(convertIntegerToShort(branchId), ReportUtils
+                    .parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportStaffingLevelSummaryBO> getStaffingLevelSummary(
-			Integer branchId, String runDate) throws ServiceException {
-		try {
-			List<BranchReportStaffingLevelSummaryBO> staffingLevelSummary = branchReportPersistence
-					.getBranchReportStaffingLevelSummary(
-							convertIntegerToShort(branchId),
-							ReportUtils.parseReportDate(runDate));
-			Collections.sort(staffingLevelSummary);
-			return staffingLevelSummary;
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportStaffingLevelSummaryBO> getStaffingLevelSummary(Integer branchId, String runDate)
+            throws ServiceException {
+        try {
+            List<BranchReportStaffingLevelSummaryBO> staffingLevelSummary = branchReportPersistence
+                    .getBranchReportStaffingLevelSummary(convertIntegerToShort(branchId), ReportUtils
+                            .parseReportDate(runDate));
+            Collections.sort(staffingLevelSummary);
+            return staffingLevelSummary;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportStaffSummaryBO> getStaffSummary(Integer branchId,
-			String runDate) throws ServiceException {
-		try {
-			return branchReportPersistence.getBranchReportStaffSummary(
-					convertIntegerToShort(branchId), ReportUtils.parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportStaffSummaryBO> getStaffSummary(Integer branchId, String runDate) throws ServiceException {
+        try {
+            return branchReportPersistence.getBranchReportStaffSummary(convertIntegerToShort(branchId), ReportUtils
+                    .parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportLoanDetailsBO> getLoanDetails(Integer branchId,
-			String runDate) throws ServiceException {
-		try {
-			return branchReportPersistence.getLoanDetails(
-					convertIntegerToShort(branchId), ReportUtils.parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportLoanDetailsBO> getLoanDetails(Integer branchId, String runDate) throws ServiceException {
+        try {
+            return branchReportPersistence.getLoanDetails(convertIntegerToShort(branchId), ReportUtils
+                    .parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportLoanArrearsProfileBO> getLoanArrearsProfile(
-			Integer branchId, String runDate) throws ServiceException {
-		try {
-			return branchReportPersistence.getLoanArrearsProfile(
-					convertIntegerToShort(branchId), ReportUtils.parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
+    public List<BranchReportLoanArrearsProfileBO> getLoanArrearsProfile(Integer branchId, String runDate)
+            throws ServiceException {
+        try {
+            return branchReportPersistence.getLoanArrearsProfile(convertIntegerToShort(branchId), ReportUtils
+                    .parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
 
-	}
+    }
 
-	public void removeBranchReport(BranchReportBO branchReport)
-			throws ServiceException {
-		try {
-			branchReportPersistence.delete(branchReport);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public void removeBranchReport(BranchReportBO branchReport) throws ServiceException {
+        try {
+            branchReportPersistence.delete(branchReport);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportBO> getBranchReports(Date runDate)
-			throws ServiceException {
-		try {
-			return branchReportPersistence.getBranchReport(runDate);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportBO> getBranchReports(Date runDate) throws ServiceException {
+        try {
+            return branchReportPersistence.getBranchReport(runDate);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public BranchReportBO getBranchReport(Short branchId, Date runDate)
-			throws ServiceException {
-		try {
-			return CollectionUtils.first(branchReportPersistence
-					.getBranchReport(branchId, runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public BranchReportBO getBranchReport(Short branchId, Date runDate) throws ServiceException {
+        try {
+            return CollectionUtils.first(branchReportPersistence.getBranchReport(branchId, runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public void removeBranchReports(List<BranchReportBO> branchReports)
-			throws ServiceException {
-		for (BranchReportBO branchReport : branchReports) {
-			removeBranchReport(branchReport);
-		}
-	}
+    public void removeBranchReports(List<BranchReportBO> branchReports) throws ServiceException {
+        for (BranchReportBO branchReport : branchReports) {
+            removeBranchReport(branchReport);
+        }
+    }
 
-	public BranchReportLoanArrearsAgingBO extractLoanArrearsAgingInfoInPeriod(
-			Short officeId, LoanArrearsAgingPeriod loanArrearsAgingPeriod, MifosCurrency currency)
-			throws ServiceException {
-		try {
-			return branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(
-					loanArrearsAgingPeriod, officeId, currency);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public BranchReportLoanArrearsAgingBO extractLoanArrearsAgingInfoInPeriod(Short officeId,
+            LoanArrearsAgingPeriod loanArrearsAgingPeriod, MifosCurrency currency) throws ServiceException {
+        try {
+            return branchReportPersistence.extractLoanArrearsAgingInfoInPeriod(loanArrearsAgingPeriod, officeId,
+                    currency);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportStaffSummaryBO> extractBranchReportStaffSummary(
-			Short officeId, Integer daysInArrears, MifosCurrency currency) throws ServiceException {
-		try {
-			return branchReportPersistence
-					.extractBranchReportStaffSummary(officeId, daysInArrears, currency);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportStaffSummaryBO> extractBranchReportStaffSummary(Short officeId, Integer daysInArrears,
+            MifosCurrency currency) throws ServiceException {
+        try {
+            return branchReportPersistence.extractBranchReportStaffSummary(officeId, daysInArrears, currency);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public BigDecimal extractPortfolioAtRiskForOffice(OfficeBO office,
-			Integer daysInArrears) throws ServiceException {
-		try {
-			return branchReportPersistence.extractPortfolioAtRiskForOffice(
-					office, daysInArrears);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public BigDecimal extractPortfolioAtRiskForOffice(OfficeBO office, Integer daysInArrears) throws ServiceException {
+        try {
+            return branchReportPersistence.extractPortfolioAtRiskForOffice(office, daysInArrears);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummaries(
-			Short branchId) throws ServiceException {
-		try {
-			return branchReportPersistence
-					.extractBranchReportStaffingLevelSummary(branchId);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+    public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummaries(Short branchId)
+            throws ServiceException {
+        try {
+            return branchReportPersistence.extractBranchReportStaffingLevelSummary(branchId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
 
-	}
+    }
 
-	public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)
-			throws ServiceException {
-		try {
-			return branchReportPersistence.extractLoanDetails(branchId, currency);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)
+            throws ServiceException {
+        try {
+            return branchReportPersistence.extractLoanDetails(branchId, currency);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(
-			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) throws ServiceException {
-		try {
-			return branchReportPersistence
-					.extractLoansArrearsProfileForBranch(branchId, currency, daysInArrearsForRisk);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(Short branchId, MifosCurrency currency,
+            Integer daysInArrearsForRisk) throws ServiceException {
+        try {
+            return branchReportPersistence
+                    .extractLoansArrearsProfileForBranch(branchId, currency, daysInArrearsForRisk);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
 }

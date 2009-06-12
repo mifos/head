@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -25,32 +25,32 @@ import org.mifos.framework.business.util.Address;
 
 public class OfficeAddressEntity extends PersistentObject {
 
-	private final Short officeAdressId;
+    private final Short officeAdressId;
 
-	private final OfficeBO office;
+    private final OfficeBO office;
 
-	private Address address;
+    private Address address;
 
-	public OfficeAddressEntity(OfficeBO office, Address address) {
-		super();
+    public OfficeAddressEntity(OfficeBO office, Address address) {
+        super();
 
-		this.office = office;
-		this.address = address;
-		this.officeAdressId = null;
-	}
+        this.office = office;
+        this.address = address;
+        this.officeAdressId = null;
+    }
 
-	protected OfficeAddressEntity() {
-		super();
-		officeAdressId = null;
-		office = null;
-		address = new Address();
-	}
+    protected OfficeAddressEntity() {
+        super();
+        officeAdressId = null;
+        office = null;
+        address = new Address();
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }

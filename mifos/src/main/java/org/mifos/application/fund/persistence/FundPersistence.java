@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fund.persistence;
 
 import java.util.HashMap;
@@ -35,32 +35,30 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class FundPersistence extends Persistence {
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.FUNDLOGGER);
+    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
 
-	public Long getFundNameCount(String fundName)throws PersistenceException {
-		logger.debug("getting the fund name count for :" + fundName);
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(FundConstants.FUND_NAME, fundName);
-		return (Long) execUniqueResultNamedQuery(
-				NamedQueryConstants.CHECK_FUND_NAME_EXIST, queryParameters);
-	}
-	
-	public List<FundCodeEntity> getFundCodes() throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.GET_FUND_CODES,null);
-	}
-	
-	public List<FundBO> getSourcesOfFund() throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
-	}
-	
-	public FundBO getFund(String fundName) throws PersistenceException{
-		Map<String,Object> queryParameters=new HashMap<String,Object>();
-		queryParameters.put(FundConstants.FUND_NAME,fundName);
-		return (FundBO)execUniqueResultNamedQuery(NamedQueryConstants.GET_FUND_FOR_GIVEN_NAME,queryParameters);
-	}
-	
-	public FundBO getFund(Short fundId)	throws PersistenceException {
-		return (FundBO) getPersistentObject(FundBO.class,fundId);
-	}
+    public Long getFundNameCount(String fundName) throws PersistenceException {
+        logger.debug("getting the fund name count for :" + fundName);
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(FundConstants.FUND_NAME, fundName);
+        return (Long) execUniqueResultNamedQuery(NamedQueryConstants.CHECK_FUND_NAME_EXIST, queryParameters);
+    }
+
+    public List<FundCodeEntity> getFundCodes() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.GET_FUND_CODES, null);
+    }
+
+    public List<FundBO> getSourcesOfFund() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
+    }
+
+    public FundBO getFund(String fundName) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(FundConstants.FUND_NAME, fundName);
+        return (FundBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_FUND_FOR_GIVEN_NAME, queryParameters);
+    }
+
+    public FundBO getFund(Short fundId) throws PersistenceException {
+        return (FundBO) getPersistentObject(FundBO.class, fundId);
+    }
 }

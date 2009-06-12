@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
 import java.util.Date;
@@ -57,8 +57,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     public Money getTotalAmount() {
         if (getAmount() == null || getAmount().equals("")) {
             return null;
-        }
-        else {
+        } else {
             return new Money(amount);
         }
     }
@@ -75,8 +74,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         String date = getDate();
         if (date != null && !date.equals("")) {
             return DateUtils.getLocaleDate(locale, date);
-        }
-        else {
+        } else {
             return null;
         }
     }

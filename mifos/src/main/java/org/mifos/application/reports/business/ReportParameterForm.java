@@ -17,16 +17,16 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business;
 
 import org.mifos.application.reports.business.validator.Errors;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
 
 public interface ReportParameterForm {
-	public void validate(Errors errors);
+    public void validate(Errors errors);
 
-	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors);
-	
-	public boolean isFormEmpty();
+    public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors);
+
+    public boolean isFormEmpty();
 }

@@ -17,32 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.personnel.util.helpers;
 
+package org.mifos.application.personnel.util.helpers;
 
 public enum PersonnelLevel {
 
-	LOAN_OFFICER(1), 
-	NON_LOAN_OFFICER(2);
+    LOAN_OFFICER(1), NON_LOAN_OFFICER(2);
 
-	private short value;
+    private short value;
 
-	private PersonnelLevel(int value) {
-		this.value = (short) value;
-	}
+    private PersonnelLevel(int value) {
+        this.value = (short) value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static PersonnelLevel fromInt(int id) {
-		for (PersonnelLevel candidate : PersonnelLevel.values()) {
-			if (candidate.value == id) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no level " + id);
-	}
+    public static PersonnelLevel fromInt(int id) {
+        for (PersonnelLevel candidate : PersonnelLevel.values()) {
+            if (candidate.value == id) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no level " + id);
+    }
 
 }

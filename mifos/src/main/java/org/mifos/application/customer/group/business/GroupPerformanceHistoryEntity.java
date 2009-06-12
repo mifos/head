@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.group.business;
 
 import static org.mifos.application.customer.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
@@ -52,323 +52,293 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 
-
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
-	private Integer id;
+    private Integer id;
 
-	private Integer clientCount;
+    private Integer clientCount;
 
-	private Money lastGroupLoanAmount;
+    private Money lastGroupLoanAmount;
 
-	private Money avgLoanForMember;
+    private Money avgLoanForMember;
 
-	private Money totalOutstandingPortfolio;
+    private Money totalOutstandingPortfolio;
 
-	private Money totalSavings;
+    private Money totalSavings;
 
-	private Money portfolioAtRisk;
+    private Money portfolioAtRisk;
 
-	private GroupBO group;
-	
-	
-	
-	/**
-	 * stores the loan cycle information based
-	 * on products 
-	 */
-	private Set<GroupLoanCounter> loanCounters;
+    private GroupBO group;
 
-	private ConfigurationBusinessService configService;
+    /**
+     * stores the loan cycle information based on products
+     */
+    private Set<GroupLoanCounter> loanCounters;
 
-	private AccountBusinessService accountBusinessService;
-	
-	public GroupPerformanceHistoryEntity(GroupBO group) {
-		this(0, new Money(), new Money(), new Money(), new Money(), new Money());
-		this.group = group;
-	}
+    private ConfigurationBusinessService configService;
 
-	private GroupPerformanceHistoryEntity(Integer clientCount,
-			Money lastGroupLoanAmount, Money avgLoanForMember,
-			Money totalOutstandingPortfolio, Money totalSavings,
-			Money portfolioAtRisk, ConfigurationBusinessService configService,
-			AccountBusinessService accountBusinessService) {
-		this.portfolioAtRisk = portfolioAtRisk;
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-		this.totalSavings = totalSavings;
-		this.avgLoanForMember = avgLoanForMember;
-		this.lastGroupLoanAmount = lastGroupLoanAmount;
-		this.clientCount = clientCount;
-		this.configService = configService;
-		this.accountBusinessService = accountBusinessService;
-		this.loanCounters = new HashSet<GroupLoanCounter>();
-		this.id = null;
-	}
+    private AccountBusinessService accountBusinessService;
 
-	GroupPerformanceHistoryEntity(ConfigurationBusinessService configService,
-			AccountBusinessService accountBusinessService) {
-		this(0, new Money(), new Money(), new Money(), new Money(),
-				new Money(), configService, accountBusinessService);
-	}
+    public GroupPerformanceHistoryEntity(GroupBO group) {
+        this(0, new Money(), new Money(), new Money(), new Money(), new Money());
+        this.group = group;
+    }
 
-	public GroupPerformanceHistoryEntity(Integer clientCount,
-			Money lastGroupLoanAmount, Money avgLoanForMember,
-			Money totalOutstandingPortfolio, Money totalSavings,
-			Money portfolioAtRisk) {
-		this(clientCount, lastGroupLoanAmount, avgLoanForMember,
-				totalOutstandingPortfolio, totalSavings, portfolioAtRisk,
-				new ConfigurationBusinessService(),
-				new AccountBusinessService());
-	}
+    private GroupPerformanceHistoryEntity(Integer clientCount, Money lastGroupLoanAmount, Money avgLoanForMember,
+            Money totalOutstandingPortfolio, Money totalSavings, Money portfolioAtRisk,
+            ConfigurationBusinessService configService, AccountBusinessService accountBusinessService) {
+        this.portfolioAtRisk = portfolioAtRisk;
+        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+        this.totalSavings = totalSavings;
+        this.avgLoanForMember = avgLoanForMember;
+        this.lastGroupLoanAmount = lastGroupLoanAmount;
+        this.clientCount = clientCount;
+        this.configService = configService;
+        this.accountBusinessService = accountBusinessService;
+        this.loanCounters = new HashSet<GroupLoanCounter>();
+        this.id = null;
+    }
 
-	protected GroupPerformanceHistoryEntity() {
-		this(0, null, null, null, null, null);
-	}
+    GroupPerformanceHistoryEntity(ConfigurationBusinessService configService,
+            AccountBusinessService accountBusinessService) {
+        this(0, new Money(), new Money(), new Money(), new Money(), new Money(), configService, accountBusinessService);
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public GroupPerformanceHistoryEntity(Integer clientCount, Money lastGroupLoanAmount, Money avgLoanForMember,
+            Money totalOutstandingPortfolio, Money totalSavings, Money portfolioAtRisk) {
+        this(clientCount, lastGroupLoanAmount, avgLoanForMember, totalOutstandingPortfolio, totalSavings,
+                portfolioAtRisk, new ConfigurationBusinessService(), new AccountBusinessService());
+    }
 
-	void setId(Integer id) {
-		this.id = id;
-	}
+    protected GroupPerformanceHistoryEntity() {
+        this(0, null, null, null, null, null);
+    }
 
-	private Money getAvgLoanForMember() {
-		return avgLoanForMember;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	void setAvgLoanForMember(Money avgLoanForMember) {
-		this.avgLoanForMember = avgLoanForMember;
-	}
+    void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getClientCount() {
-		return clientCount;
-	}
+    private Money getAvgLoanForMember() {
+        return avgLoanForMember;
+    }
 
-	void setClientCount(Integer clientCount) {
-		this.clientCount = clientCount;
-	}
+    void setAvgLoanForMember(Money avgLoanForMember) {
+        this.avgLoanForMember = avgLoanForMember;
+    }
 
-	public Money getLastGroupLoanAmount() {
-		return lastGroupLoanAmount;
-	}
+    public Integer getClientCount() {
+        return clientCount;
+    }
 
-	public void setLastGroupLoanAmount(Money lastGroupLoanAmount) {
-		this.lastGroupLoanAmount = lastGroupLoanAmount;
-	}
+    void setClientCount(Integer clientCount) {
+        this.clientCount = clientCount;
+    }
 
-	private Money getTotalOutstandingPortfolio() {
-		return totalOutstandingPortfolio;
-	}
+    public Money getLastGroupLoanAmount() {
+        return lastGroupLoanAmount;
+    }
 
-	void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-	}
+    public void setLastGroupLoanAmount(Money lastGroupLoanAmount) {
+        this.lastGroupLoanAmount = lastGroupLoanAmount;
+    }
 
-	public Money getPortfolioAtRisk() {
-		return portfolioAtRisk;
-	}
+    private Money getTotalOutstandingPortfolio() {
+        return totalOutstandingPortfolio;
+    }
 
-	void setPortfolioAtRisk(Money portfolioAtRisk) {
-		this.portfolioAtRisk = portfolioAtRisk;
-	}
+    void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
+        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+    }
 
-	private Money getTotalSavings() {
-		return totalSavings;
-	}
+    public Money getPortfolioAtRisk() {
+        return portfolioAtRisk;
+    }
 
-	void setTotalSavings(Money totalSavings) {
-		this.totalSavings = totalSavings;
-	}
+    void setPortfolioAtRisk(Money portfolioAtRisk) {
+        this.portfolioAtRisk = portfolioAtRisk;
+    }
 
-	public GroupBO getGroup() {
-		return group;
-	}
+    private Money getTotalSavings() {
+        return totalSavings;
+    }
 
-	void setGroup(GroupBO group) {
-		this.group = group;
-	}
+    void setTotalSavings(Money totalSavings) {
+        this.totalSavings = totalSavings;
+    }
 
-	public Money getAvgLoanAmountForMember() throws CustomerException {
-		Money amountForActiveAccount = new Money();
-		Integer countOfActiveLoans = 0;
-		List<CustomerBO> clients = getChildren();
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amountForActiveAccount = amountForActiveAccount.add(client
-						.getOutstandingLoanAmount());
-				countOfActiveLoans += client.getActiveLoanCounts();
-			}
-		}
-		if (countOfActiveLoans.intValue() > 0)
-			return new Money(String.valueOf(amountForActiveAccount
-					.getAmountDoubleValue()
-					/ countOfActiveLoans.intValue()));
-		return new Money();
-	}
+    public GroupBO getGroup() {
+        return group;
+    }
 
-	public Integer getActiveClientCount() throws CustomerException {
-		List<CustomerBO> clients = getChildren();
-		if (clients != null) {
-			return Integer.valueOf(clients.size());
-		}
-		return Integer.valueOf(0);
-	}
+    void setGroup(GroupBO group) {
+        this.group = group;
+    }
 
-	public Money getTotalOutStandingLoanAmount() throws CustomerException {
-		Money amount = group.getOutstandingLoanAmount();
-		//System.out.println("group outstanding amount: " + amount.toString());
-		Money clientAmount = new Money();
-		List<CustomerBO> clients = getChildren();
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amount = amount.add(client.getOutstandingLoanAmount());
-				clientAmount = clientAmount.add(client.getOutstandingLoanAmount());
-			}
-		}
-		//System.out.println("client outstanding amount: " + clientAmount.toString());
-		
-		return amount;
-	}
+    public Money getAvgLoanAmountForMember() throws CustomerException {
+        Money amountForActiveAccount = new Money();
+        Integer countOfActiveLoans = 0;
+        List<CustomerBO> clients = getChildren();
+        if (clients != null) {
+            for (CustomerBO client : clients) {
+                amountForActiveAccount = amountForActiveAccount.add(client.getOutstandingLoanAmount());
+                countOfActiveLoans += client.getActiveLoanCounts();
+            }
+        }
+        if (countOfActiveLoans.intValue() > 0)
+            return new Money(String.valueOf(amountForActiveAccount.getAmountDoubleValue()
+                    / countOfActiveLoans.intValue()));
+        return new Money();
+    }
 
-	public Money getTotalSavingsAmount() throws CustomerException {
-		Money amount = group.getSavingsBalance();
-		List<CustomerBO> clients = getChildren();
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amount = amount.add(client.getSavingsBalance());
-			}
-		}
-		return amount;
-	}
-	
-	// this method calculates the PAR using the method LoanBO.hasPortfolioAtRisk() to determine if a loan is in arrears
-	public void generatePortfolioAtRisk() throws CustomerException {
-		Money amount = group.getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = getChildren();
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amount = amount.add(client.getBalanceForAccountsAtRisk());
-			}
-		}
-		double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
-		if (totalOutstandingLoanAmount != 0.0)
-			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/totalOutstandingLoanAmount)));
-	}
-	
-	
-	
-	private List<CustomerBO> getChildren() throws CustomerException {
+    public Integer getActiveClientCount() throws CustomerException {
+        List<CustomerBO> clients = getChildren();
+        if (clients != null) {
+            return Integer.valueOf(clients.size());
+        }
+        return Integer.valueOf(0);
+    }
+
+    public Money getTotalOutStandingLoanAmount() throws CustomerException {
+        Money amount = group.getOutstandingLoanAmount();
+        // System.out.println("group outstanding amount: " + amount.toString());
+        Money clientAmount = new Money();
+        List<CustomerBO> clients = getChildren();
+        if (clients != null) {
+            for (CustomerBO client : clients) {
+                amount = amount.add(client.getOutstandingLoanAmount());
+                clientAmount = clientAmount.add(client.getOutstandingLoanAmount());
+            }
+        }
+        // System.out.println("client outstanding amount: " +
+        // clientAmount.toString());
+
+        return amount;
+    }
+
+    public Money getTotalSavingsAmount() throws CustomerException {
+        Money amount = group.getSavingsBalance();
+        List<CustomerBO> clients = getChildren();
+        if (clients != null) {
+            for (CustomerBO client : clients) {
+                amount = amount.add(client.getSavingsBalance());
+            }
+        }
+        return amount;
+    }
+
+    // this method calculates the PAR using the method
+    // LoanBO.hasPortfolioAtRisk() to determine if a loan is in arrears
+    public void generatePortfolioAtRisk() throws CustomerException {
+        Money amount = group.getBalanceForAccountsAtRisk();
+        List<CustomerBO> clients = getChildren();
+        if (clients != null) {
+            for (CustomerBO client : clients) {
+                amount = amount.add(client.getBalanceForAccountsAtRisk());
+            }
+        }
+        double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
+        if (totalOutstandingLoanAmount != 0.0)
+            setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue() / totalOutstandingLoanAmount)));
+    }
+
+    private List<CustomerBO> getChildren() throws CustomerException {
         return group.getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
     }
 
-	public void updateLoanCounter(final LoanOfferingBO loanOffering,
-			YesNoFlag yesNoFlag) {
-		GroupLoanCounter loanCounter = null;
-		try {
-			loanCounter = findLoanCounterForProduct(loanOffering);
-		}
-		catch (Exception e) {
-		}
-		if (loanCounter == null) {
-			loanCounter = new GroupLoanCounter(this, loanOffering, yesNoFlag);
-			loanCounters.add(loanCounter);
-		}
-		else {
-			loanCounter.updateLoanCounter(yesNoFlag);
-		}
-	}
+    public void updateLoanCounter(final LoanOfferingBO loanOffering, YesNoFlag yesNoFlag) {
+        GroupLoanCounter loanCounter = null;
+        try {
+            loanCounter = findLoanCounterForProduct(loanOffering);
+        } catch (Exception e) {
+        }
+        if (loanCounter == null) {
+            loanCounter = new GroupLoanCounter(this, loanOffering, yesNoFlag);
+            loanCounters.add(loanCounter);
+        } else {
+            loanCounter.updateLoanCounter(yesNoFlag);
+        }
+    }
 
-	GroupLoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
-		return find(loanCounters, new Predicate<GroupLoanCounter>() {
-			public boolean evaluate(GroupLoanCounter loanCounter)
-					throws Exception {
-				return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
-			}
-		});
-	}
+    GroupLoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
+        return find(loanCounters, new Predicate<GroupLoanCounter>() {
+            public boolean evaluate(GroupLoanCounter loanCounter) throws Exception {
+                return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
+            }
+        });
+    }
 
-	public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {
-		{
-			Set<GroupLoanCounter> loanCounters = getLoanCounters();
-			try {
-				Collection<Short> loanCyclesForProduct = select(
-						loanCounters, new Predicate<GroupLoanCounter>() {
-							public boolean evaluate(GroupLoanCounter counter) throws Exception {
-								return counter.isOfSameProduct(prdOffering);
-							}
-						}, TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE);
-				return loanCyclesForProduct.isEmpty() ? SHORT_ZERO
-						: Collections.max(loanCyclesForProduct);
-			}
-			catch (Exception e) {
-				return SHORT_ZERO;
-			}
-		}
-	}
+    public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {
+        {
+            Set<GroupLoanCounter> loanCounters = getLoanCounters();
+            try {
+                Collection<Short> loanCyclesForProduct = select(loanCounters, new Predicate<GroupLoanCounter>() {
+                    public boolean evaluate(GroupLoanCounter counter) throws Exception {
+                        return counter.isOfSameProduct(prdOffering);
+                    }
+                }, TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE);
+                return loanCyclesForProduct.isEmpty() ? SHORT_ZERO : Collections.max(loanCyclesForProduct);
+            } catch (Exception e) {
+                return SHORT_ZERO;
+            }
+        }
+    }
 
-	public void updateOnDisbursement(LoanBO loan, Money disburseAmount)
-			throws AccountException {
-		setLastGroupLoanAmount(disburseAmount);
-		LoanOfferingBO loanOffering = loan.getLoanOffering();
-		updateLoanCounter(loanOffering, YesNoFlag.YES);
-		try {
-			if (configService.isGlimEnabled()) {
-				CollectionUtils.forAllDo(accountBusinessService
-						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new UpdateClientPerfHistoryForGroupLoanOnDisbursement(loan));
-			}
-		}
-		catch (ServiceException e) {
-			throw new AccountException(e);
-		}
-	}
+    public void updateOnDisbursement(LoanBO loan, Money disburseAmount) throws AccountException {
+        setLastGroupLoanAmount(disburseAmount);
+        LoanOfferingBO loanOffering = loan.getLoanOffering();
+        updateLoanCounter(loanOffering, YesNoFlag.YES);
+        try {
+            if (configService.isGlimEnabled()) {
+                CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
+                        new UpdateClientPerfHistoryForGroupLoanOnDisbursement(loan));
+            }
+        } catch (ServiceException e) {
+            throw new AccountException(e);
+        }
+    }
 
-	public Set<GroupLoanCounter> getLoanCounters() {
-		return loanCounters;
-	}
+    public Set<GroupLoanCounter> getLoanCounters() {
+        return loanCounters;
+    }
 
-	public void updateOnWriteOff(LoanBO loan) throws AccountException {
-		updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
-		try {
-			if (configService.isGlimEnabled()) {
-				CollectionUtils.forAllDo(accountBusinessService
-						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new UpdateClientPerfHistoryForGroupLoanOnWriteOff(loan));
-			}
-		}
-		catch (ServiceException e) {
-			throw new AccountException(e);
-		}
-	}
-	
-	public void updateOnReversal(LoanBO loan, Money lastLoanAmount)
-			throws AccountException {
-		setLastGroupLoanAmount(lastLoanAmount);
-		updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
-		try {
-			if (configService.isGlimEnabled()) {
-				CollectionUtils.forAllDo(accountBusinessService
-						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new UpdateClientPerfHistoryForGroupLoanOnReversal(loan));
-			}
-		}
-		catch (ServiceException e) {
-			throw new AccountException(e);
-		}
-	}
+    public void updateOnWriteOff(LoanBO loan) throws AccountException {
+        updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
+        try {
+            if (configService.isGlimEnabled()) {
+                CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
+                        new UpdateClientPerfHistoryForGroupLoanOnWriteOff(loan));
+            }
+        } catch (ServiceException e) {
+            throw new AccountException(e);
+        }
+    }
 
-	public void updateOnRepayment(LoanBO loan, Money totalAmount) throws AccountException {
-		try {
-			if (configService.isGlimEnabled()) {
-				CollectionUtils.forAllDo(accountBusinessService
-						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new UpdateClientPerfHistoryForGroupLoanOnRepayment(loan));
-			}
-		}
-		catch (ServiceException e) {
-			throw new AccountException(e);
-		}
-	}
-	
+    public void updateOnReversal(LoanBO loan, Money lastLoanAmount) throws AccountException {
+        setLastGroupLoanAmount(lastLoanAmount);
+        updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
+        try {
+            if (configService.isGlimEnabled()) {
+                CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
+                        new UpdateClientPerfHistoryForGroupLoanOnReversal(loan));
+            }
+        } catch (ServiceException e) {
+            throw new AccountException(e);
+        }
+    }
+
+    public void updateOnRepayment(LoanBO loan, Money totalAmount) throws AccountException {
+        try {
+            if (configService.isGlimEnabled()) {
+                CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),
+                        new UpdateClientPerfHistoryForGroupLoanOnRepayment(loan));
+            }
+        } catch (ServiceException e) {
+            throw new AccountException(e);
+        }
+    }
+
 }

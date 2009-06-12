@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -27,21 +27,21 @@ import org.mifos.application.master.business.MasterDataEntity;
  * Also see {@link AccountActionTypes}.
  */
 public class AccountActionEntity extends MasterDataEntity {
-	
-	public AccountActionEntity() {
-		super();
-	}
 
-	public AccountActionEntity(AccountActionTypes myEnum) {
-		super(myEnum.getValue());
-	}
+    public AccountActionEntity() {
+        super();
+    }
 
-	public AccountActionTypes asEnum() {
-		return AccountActionTypes.fromInt(getId());
-	}
+    public AccountActionEntity(AccountActionTypes myEnum) {
+        super(myEnum.getValue());
+    }
+
+    public AccountActionTypes asEnum() {
+        return AccountActionTypes.fromInt(getId());
+    }
 
     @Override
-	public String toString() {
+    public String toString() {
         return AccountActionTypes.fromInt(getId()).toString();
     }
 }

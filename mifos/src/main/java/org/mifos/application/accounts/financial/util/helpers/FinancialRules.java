@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.util.helpers;
 
 import java.util.HashMap;
@@ -32,62 +32,54 @@ import org.mifos.framework.spring.SpringUtil;
  * <p>
  * Example use case: principal is added to a new loan (a credit) and GL accounts
  * appropriate for this action must be fetched. <a
- * href="http://www.mifos.org/knowledge/functional-specs/accounting-in-mifos">More
- * use cases</a>.
+ * href="http://www.mifos.org/knowledge/functional-specs/accounting-in-mifos"
+ * >More use cases</a>.
  * <p>
  * Spring must be initialized prior to using this class. This is currently
  * performed via {@link SpringUtil#initializeSpring()}.
  */
 public class FinancialRules {
-	/** Values are general ledger account codes. */
-	private Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
-	/** Values are general ledger account codes. */
-	private Map<FinancialActionConstants, String> actionToCreditAccount = new HashMap<FinancialActionConstants, String>();
+    /** Values are general ledger account codes. */
+    private Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
+    /** Values are general ledger account codes. */
+    private Map<FinancialActionConstants, String> actionToCreditAccount = new HashMap<FinancialActionConstants, String>();
 
-	private static FinancialRules financialRules = new FinancialRules();
+    private static FinancialRules financialRules = new FinancialRules();
 
-	public static final FinancialRules getInstance() {
-		return financialRules;
-	}
+    public static final FinancialRules getInstance() {
+        return financialRules;
+    }
 
-	public String getGLAccountForAction(short financialActionId,
-			FinancialConstants type) throws FinancialException {
-		FinancialActionConstants financialAction = FinancialActionConstants
-				.getFinancialAction(financialActionId);
-		return getGLAccountForAction(financialAction, type);
-	}
+    public String getGLAccountForAction(short financialActionId, FinancialConstants type) throws FinancialException {
+        FinancialActionConstants financialAction = FinancialActionConstants.getFinancialAction(financialActionId);
+        return getGLAccountForAction(financialAction, type);
+    }
 
-	public String getGLAccountForAction(
-			FinancialActionConstants financialAction, FinancialConstants type)
-			throws FinancialException {
-		if (type.equals(FinancialConstants.DEBIT)) {
-			return actionToDebitAccount.get(financialAction);
-		}
-		else if (type.equals(FinancialConstants.CREDIT)) {
-			return actionToCreditAccount.get(financialAction);
-		}
-		else {
-			throw new IllegalArgumentException(
-					"Unrecognized FinancialConstants type: " + type
-							+ ". Only DEBIT and CREDIT are allowed.");
-		}
-	}
+    public String getGLAccountForAction(FinancialActionConstants financialAction, FinancialConstants type)
+            throws FinancialException {
+        if (type.equals(FinancialConstants.DEBIT)) {
+            return actionToDebitAccount.get(financialAction);
+        } else if (type.equals(FinancialConstants.CREDIT)) {
+            return actionToCreditAccount.get(financialAction);
+        } else {
+            throw new IllegalArgumentException("Unrecognized FinancialConstants type: " + type
+                    + ". Only DEBIT and CREDIT are allowed.");
+        }
+    }
 
-	public Map<FinancialActionConstants, String> getActionToDebitAccount() {
-		return actionToDebitAccount;
-	}
+    public Map<FinancialActionConstants, String> getActionToDebitAccount() {
+        return actionToDebitAccount;
+    }
 
-	public void setActionToDebitAccount(
-			Map<FinancialActionConstants, String> actionToDebitAccount) {
-		this.actionToDebitAccount = actionToDebitAccount;
-	}
+    public void setActionToDebitAccount(Map<FinancialActionConstants, String> actionToDebitAccount) {
+        this.actionToDebitAccount = actionToDebitAccount;
+    }
 
-	public Map<FinancialActionConstants, String> getActionToCreditAccount() {
-		return actionToCreditAccount;
-	}
+    public Map<FinancialActionConstants, String> getActionToCreditAccount() {
+        return actionToCreditAccount;
+    }
 
-	public void setActionToCreditAccount(
-			Map<FinancialActionConstants, String> actionToCreditAccount) {
-		this.actionToCreditAccount = actionToCreditAccount;
-	}
+    public void setActionToCreditAccount(Map<FinancialActionConstants, String> actionToCreditAccount) {
+        this.actionToCreditAccount = actionToCreditAccount;
+    }
 }

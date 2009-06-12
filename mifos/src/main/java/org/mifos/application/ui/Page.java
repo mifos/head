@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ui;
 
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class Page {
 
-	static void head(XmlBuilder html, String title) {
-		html.startTag("head");
-		html.startTag("title");
-		html.text(title);
-		html.endTag("title");
-		html.endTag("head");
-	}
+    static void head(XmlBuilder html, String title) {
+        html.startTag("head");
+        html.startTag("title");
+        html.text(title);
+        html.endTag("title");
+        html.endTag("head");
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import static org.mifos.application.reports.util.helpers.ReportUtils.parseReportDate;
@@ -41,130 +41,103 @@ import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
 
-public class BranchCashConfirmationReportService implements
-		IBranchCashConfirmationReportService {
+public class BranchCashConfirmationReportService implements IBranchCashConfirmationReportService {
 
-	BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
-	private OfficeBusinessService officeBusinessService;
+    BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
+    private OfficeBusinessService officeBusinessService;
 
-	public BranchCashConfirmationReportService(
-			BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence,
-			OfficeBusinessService officeBusinessService) {
-		this.branchCashConfirmationReportPersistence = branchCashConfirmationReportPersistence;
-		this.officeBusinessService = officeBusinessService;
-	}
+    public BranchCashConfirmationReportService(
+            BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence,
+            OfficeBusinessService officeBusinessService) {
+        this.branchCashConfirmationReportPersistence = branchCashConfirmationReportPersistence;
+        this.officeBusinessService = officeBusinessService;
+    }
 
-	public List<BranchCashConfirmationCenterRecoveryBO> getCenterRecoveries(
-			Integer branchId, String runDate) throws ServiceException {
-		try {
-			return branchCashConfirmationReportPersistence.getCenterRecoveries(
-					convertIntegerToShort(branchId), parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchCashConfirmationCenterRecoveryBO> getCenterRecoveries(Integer branchId, String runDate)
+            throws ServiceException {
+        try {
+            return branchCashConfirmationReportPersistence.getCenterRecoveries(convertIntegerToShort(branchId),
+                    parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchCashConfirmationInfoBO> getCenterIssues(Integer branchId,
-			String runDate) throws ServiceException {
-		try {
-			return branchCashConfirmationReportPersistence.getCenterIssues(
-					convertIntegerToShort(branchId), parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchCashConfirmationInfoBO> getCenterIssues(Integer branchId, String runDate) throws ServiceException {
+        try {
+            return branchCashConfirmationReportPersistence.getCenterIssues(convertIntegerToShort(branchId),
+                    parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchCashConfirmationDisbursementBO> getDisbursements(
-			Integer branchId, String runDate) throws ServiceException {
-		try {
-			return branchCashConfirmationReportPersistence.getDisbursements(
-					convertIntegerToShort(branchId), parseReportDate(runDate));
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchCashConfirmationDisbursementBO> getDisbursements(Integer branchId, String runDate)
+            throws ServiceException {
+        try {
+            return branchCashConfirmationReportPersistence.getDisbursements(convertIntegerToShort(branchId),
+                    parseReportDate(runDate));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(
-			Date actionDate, AccountTypes accountType,
-			List<Short> prdOfferingsForRecoveries,
-			List<Short> prdOfferingsForIssues,
-			List<Short> prdOfferingsForDisbursements, MifosCurrency currency,
-			Date runDate) throws ServiceException {
-		try {
-			return branchCashConfirmationReportPersistence
-					.extractBranchCashConfirmationReport(actionDate,
-							accountType, prdOfferingsForRecoveries,
-							prdOfferingsForIssues,
-							prdOfferingsForDisbursements, currency, runDate);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(Date actionDate,
+            AccountTypes accountType, List<Short> prdOfferingsForRecoveries, List<Short> prdOfferingsForIssues,
+            List<Short> prdOfferingsForDisbursements, MifosCurrency currency, Date runDate) throws ServiceException {
+        try {
+            return branchCashConfirmationReportPersistence.extractBranchCashConfirmationReport(actionDate, accountType,
+                    prdOfferingsForRecoveries, prdOfferingsForIssues, prdOfferingsForDisbursements, currency, runDate);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(
-			Date runDate) throws ServiceException {
-		try {
-			return branchCashConfirmationReportPersistence
-					.getBranchCashConfirmationReportsForDate(runDate);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
+    public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(Date runDate)
+            throws ServiceException {
+        try {
+            return branchCashConfirmationReportPersistence.getBranchCashConfirmationReportsForDate(runDate);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
 
-	}
+    }
 
-	public void deleteBranchCashConfirmationReports(
-			List<BranchCashConfirmationReportBO> reports)
-			throws ServiceException {
-		try {
-			for (BranchCashConfirmationReportBO report : reports)
-				branchCashConfirmationReportPersistence.delete(report);
-		}
-		catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public void deleteBranchCashConfirmationReports(List<BranchCashConfirmationReportBO> reports)
+            throws ServiceException {
+        try {
+            for (BranchCashConfirmationReportBO report : reports)
+                branchCashConfirmationReportPersistence.delete(report);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public boolean isReportDataPresentForRundateAndBranchId(String branchId,
-			String runDate) {
-		try {
-			return CollectionUtils
-					.first(branchCashConfirmationReportPersistence
-							.getBranchCashConfirmationReportsForDateAndBranch(
-									Short.valueOf(branchId),
-									parseReportDate(runDate))) != null;
-		}
-		catch (PersistenceException e) {
-			return false;
-		}
-		catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public boolean isReportDataPresentForRundateAndBranchId(String branchId, String runDate) {
+        try {
+            return CollectionUtils
+                    .first(branchCashConfirmationReportPersistence.getBranchCashConfirmationReportsForDateAndBranch(
+                            Short.valueOf(branchId), parseReportDate(runDate))) != null;
+        } catch (PersistenceException e) {
+            return false;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public BranchCashConfirmationReportHeader getReportHeader(Integer branchId,
-			String runDate) throws ServiceException {
-		try {
-			return new BranchCashConfirmationReportHeader(officeBusinessService
-					.getOffice(NumberUtils.convertIntegerToShort(branchId))
-					.getOfficeName(), parseReportDate(runDate));
-		}
-		catch (ParseException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public BranchCashConfirmationReportHeader getReportHeader(Integer branchId, String runDate) throws ServiceException {
+        try {
+            return new BranchCashConfirmationReportHeader(officeBusinessService.getOffice(
+                    NumberUtils.convertIntegerToShort(branchId)).getOfficeName(), parseReportDate(runDate));
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
 
 }

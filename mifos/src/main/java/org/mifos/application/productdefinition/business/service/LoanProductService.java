@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business.service;
 
 import java.util.List;
@@ -32,18 +32,18 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 
 /**
- * LoanProductService is a service layer encapsulation of methods
- * related to Loan Products (still called LoanOfferingBO).  Unlike 
- * the existing LoanPrdBusinessService class which returns business
- * objects, LoanProductService is intended not to expose business 
- * objects in any of its return values.  It can return primitives and
- * Data Transfer Objects (DTOs).  It appears that existing "View" 
- * classes (such as FeeView) serve as a kind of DTO.
+ * LoanProductService is a service layer encapsulation of methods related to
+ * Loan Products (still called LoanOfferingBO). Unlike the existing
+ * LoanPrdBusinessService class which returns business objects,
+ * LoanProductService is intended not to expose business objects in any of its
+ * return values. It can return primitives and Data Transfer Objects (DTOs). It
+ * appears that existing "View" classes (such as FeeView) serve as a kind of
+ * DTO.
  */
 public class LoanProductService implements Service {
     private LoanPrdBusinessService loanProductBusinessService;
     private FeeBusinessService feeBusinessService;
-    
+
     public LoanPrdBusinessService getLoanProductBusinessService() {
         return this.loanProductBusinessService;
     }
@@ -63,36 +63,36 @@ public class LoanProductService implements Service {
     public LoanProductService() {
         // null constructor to use with setter injection.
     }
-    
-    public LoanProductService(LoanPrdBusinessService loanPrdBusinessService,
-            FeeBusinessService feeBusinessService) {
+
+    public LoanProductService(LoanPrdBusinessService loanPrdBusinessService, FeeBusinessService feeBusinessService) {
         this.loanProductBusinessService = loanPrdBusinessService;
         this.feeBusinessService = feeBusinessService;
     }
-    
+
     /*
-     * For a given loan product, return the default fees associated with the loan
-     * product and any additional fees that could be applied to it.
+     * For a given loan product, return the default fees associated with the
+     * loan product and any additional fees that could be applied to it.
      * 
      * @param loanProductId the loan product id
+     * 
      * @param userContext the user context to use when constructing FeeViews
+     * 
      * @param defaultFees the default fees list to populate
+     * 
      * @param additionalFees the additional fees list to populate
      * 
      * @return the default and additional fees
      * 
      * @throws ServiceException the service exception
      */
-    public void getDefaultAndAdditionalFees(Short loanProductId, 
-            UserContext userContext, List<FeeView> defaultFees, List<FeeView> additionalFees) throws ServiceException {
-        LoanOfferingBO loanOffering = loanProductBusinessService
-            .getLoanOffering(loanProductId);
+    public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeView> defaultFees,
+            List<FeeView> additionalFees) throws ServiceException {
+        LoanOfferingBO loanOffering = loanProductBusinessService.getLoanOffering(loanProductId);
         List<FeeBO> fees = feeBusinessService.getAllApplicableFeesForLoanCreation();
         for (FeeBO fee : fees) {
-            if (!fee.isPeriodic() || 
-                (MeetingBO.isMeetingMatched(
-                      fee.getFeeFrequency().getFeeMeetingFrequency(), 
-                      loanOffering.getLoanOfferingMeeting().getMeeting()))) {
+            if (!fee.isPeriodic()
+                    || (MeetingBO.isMeetingMatched(fee.getFeeFrequency().getFeeMeetingFrequency(), loanOffering
+                            .getLoanOfferingMeeting().getMeeting()))) {
                 FeeView feeView = new FeeView(userContext, fee);
                 if (loanOffering.isFeePresent(fee)) {
                     defaultFees.add(feeView);
@@ -101,5 +101,5 @@ public class LoanProductService implements Service {
                 }
             }
         }
-    }   
+    }
 }

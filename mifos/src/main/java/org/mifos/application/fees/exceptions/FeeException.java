@@ -17,22 +17,22 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class FeeException extends ApplicationException {
 
-	public FeeException(String key) {
-		super(key);
-	}
+    public FeeException(String key) {
+        super(key);
+    }
 
-	public FeeException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public FeeException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
-	public FeeException(Throwable cause) {
-		super(cause);
-	}
+    public FeeException(Throwable cause) {
+        super(cause);
+    }
 }

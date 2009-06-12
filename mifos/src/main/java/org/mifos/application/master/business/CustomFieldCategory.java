@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -36,16 +36,16 @@ import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.application.util.helpers.EntityType;
 
 /**
- * CustomFieldCategory is the set of object types for which custom 
- * fields are defined.  Each custom field for a given object type 
- * is defined by a {@link CustomFieldDefinitionEntity}.
+ * CustomFieldCategory is the set of object types for which custom fields are
+ * defined. Each custom field for a given object type is defined by a
+ * {@link CustomFieldDefinitionEntity}.
  * 
  * Custom field instances are represented by:
  * 
- * {@link CustomerCustomFieldEntity} in {@link CustomerBO} (from which 
+ * {@link CustomerCustomFieldEntity} in {@link CustomerBO} (from which
  * {@link ClientBO}, {@link GroupBO} and {@link CenterBO} are derived)
  * 
- * {@link AccountCustomFieldEntity} in {@link AccountBO} (from which 
+ * {@link AccountCustomFieldEntity} in {@link AccountBO} (from which
  * {@link LoanBO} and {@link SavingsBO} are derived)
  * 
  * {@link PersonnelCustomFieldEntity} in {@link PersonnelBO}
@@ -53,52 +53,54 @@ import org.mifos.application.util.helpers.EntityType;
  * {@link OfficeCustomFieldEntity} in {@link OfficeBO}
  */
 public enum CustomFieldCategory {
-	Personnel (17),
-	Office (15),
-	Client (1),
-	Group (12),
-	Center (20),
-	Loan (22),
-	Savings (21);
-	
-	Short value;
+    Personnel(17), Office(15), Client(1), Group(12), Center(20), Loan(22), Savings(21);
 
-	CustomFieldCategory(int value) {
-		this.value = (short)value;
-	}
+    Short value;
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static CustomFieldCategory fromInt(int type) {
-		for (CustomFieldCategory candidate : CustomFieldCategory.values()) {
-			if (candidate.getValue() == type) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("no custom field category type " + type);
-	}
-	
-	public EntityType mapToEntityType() {
-		switch (this) {
-			case Personnel: return EntityType.PERSONNEL;
-			case Office: 	return EntityType.OFFICE;
-			case Client:	return EntityType.CLIENT;
-			case Group:		return EntityType.GROUP;
-			case Center:	return EntityType.CENTER;
-			case Loan:		return EntityType.LOAN;
-			case Savings:	return EntityType.SAVINGS;
-			default:		throw new RuntimeException("Unrecognized CustomFieldCategory: \"" + this + "\"");
-		}
-	}
-	
-	public static CustomFieldCategory getCustomFieldCategoryFromString(String category) {
-		for (CustomFieldCategory customFieldCategory : values()) {
-			if (category.equalsIgnoreCase(customFieldCategory.toString())) {
-				return customFieldCategory;
-			}
-		}
-		throw new RuntimeException("Unrecognized CustomFieldCategory: \"" + category + "\"");
-	}
+    CustomFieldCategory(int value) {
+        this.value = (short) value;
+    }
+
+    public Short getValue() {
+        return value;
+    }
+
+    public static CustomFieldCategory fromInt(int type) {
+        for (CustomFieldCategory candidate : CustomFieldCategory.values()) {
+            if (candidate.getValue() == type) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("no custom field category type " + type);
+    }
+
+    public EntityType mapToEntityType() {
+        switch (this) {
+        case Personnel:
+            return EntityType.PERSONNEL;
+        case Office:
+            return EntityType.OFFICE;
+        case Client:
+            return EntityType.CLIENT;
+        case Group:
+            return EntityType.GROUP;
+        case Center:
+            return EntityType.CENTER;
+        case Loan:
+            return EntityType.LOAN;
+        case Savings:
+            return EntityType.SAVINGS;
+        default:
+            throw new RuntimeException("Unrecognized CustomFieldCategory: \"" + this + "\"");
+        }
+    }
+
+    public static CustomFieldCategory getCustomFieldCategoryFromString(String category) {
+        for (CustomFieldCategory customFieldCategory : values()) {
+            if (category.equalsIgnoreCase(customFieldCategory.toString())) {
+                return customFieldCategory;
+            }
+        }
+        throw new RuntimeException("Unrecognized CustomFieldCategory: \"" + category + "\"");
+    }
 }

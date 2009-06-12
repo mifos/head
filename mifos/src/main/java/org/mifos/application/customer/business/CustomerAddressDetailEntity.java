@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -28,41 +28,43 @@ import org.mifos.framework.business.util.Address;
  */
 public class CustomerAddressDetailEntity extends PersistentObject {
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private final Integer customerAddressId;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final Integer customerAddressId;
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private final CustomerBO customer;
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private final CustomerBO customer;
 
-	private Address address;
-	
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerAddressDetailEntity(){
-		this.customerAddressId = null;
-		this.customer = null;
-		this.address = null;
-	}
-	
-	public CustomerAddressDetailEntity(CustomerBO customer, Address address){
-		this.customer = customer;
-		this.address = address;
-		this.customerAddressId = null;
-	}
-	
-	public Address getAddress() {
-		if(address==null)
-			address = new Address();
-		return address;
-	}
-	
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-	
-	public String getDisplayAddress(){
-		return getAddress().getDisplayAddress();
-	}
+    private Address address;
+
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerAddressDetailEntity() {
+        this.customerAddressId = null;
+        this.customer = null;
+        this.address = null;
+    }
+
+    public CustomerAddressDetailEntity(CustomerBO customer, Address address) {
+        this.customer = customer;
+        this.address = address;
+        this.customerAddressId = null;
+    }
+
+    public Address getAddress() {
+        if (address == null)
+            address = new Address();
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getDisplayAddress() {
+        return getAddress().getDisplayAddress();
+    }
 }

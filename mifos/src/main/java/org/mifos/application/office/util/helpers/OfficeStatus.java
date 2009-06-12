@@ -17,27 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.util.helpers;
 
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum OfficeStatus {
-	ACTIVE(Short.valueOf("1")), INACTIVE(Short.valueOf("2"));
-	Short value;
+    ACTIVE(Short.valueOf("1")), INACTIVE(Short.valueOf("2"));
+    Short value;
 
-	OfficeStatus(Short value) {
-		this.value = value;
-	}
+    OfficeStatus(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	public static OfficeStatus getOfficeStatus(Short id) throws PropertyNotFoundException{
-		for (OfficeStatus status : OfficeStatus.values()) {
-			if ( status.value.equals(id))
-				return status;
-		}
-		throw new PropertyNotFoundException(OfficeConstants.ERROR_STATUS);
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static OfficeStatus getOfficeStatus(Short id) throws PropertyNotFoundException {
+        for (OfficeStatus status : OfficeStatus.values()) {
+            if (status.value.equals(id))
+                return status;
+        }
+        throw new PropertyNotFoundException(OfficeConstants.ERROR_STATUS);
+    }
 }

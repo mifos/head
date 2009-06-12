@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import java.sql.Date;
@@ -35,182 +35,171 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerScheduleEntity extends AccountActionDateEntity {
 
-	private Money miscFee;
+    private Money miscFee;
 
-	private Money miscFeePaid;
+    private Money miscFeePaid;
 
-	private Money miscPenalty;
+    private Money miscPenalty;
 
-	private Money miscPenaltyPaid;
+    private Money miscPenaltyPaid;
 
-	private Set<AccountFeesActionDetailEntity> accountFeesActionDetails;
+    private Set<AccountFeesActionDetailEntity> accountFeesActionDetails;
 
-	protected CustomerScheduleEntity() {
-		super(null, null, null, null, null);
-	}
+    protected CustomerScheduleEntity() {
+        super(null, null, null, null, null);
+    }
 
-	public CustomerScheduleEntity(AccountBO account, CustomerBO customer,
-			Short installmentId, Date actionDate, PaymentStatus paymentStatus) {
-		super(account, customer, installmentId, actionDate, paymentStatus);
-		accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
-		miscFee = new Money();
-		miscFeePaid = new Money();
-		miscPenalty = new Money();
-		miscPenaltyPaid = new Money();
-	}
+    public CustomerScheduleEntity(AccountBO account, CustomerBO customer, Short installmentId, Date actionDate,
+            PaymentStatus paymentStatus) {
+        super(account, customer, installmentId, actionDate, paymentStatus);
+        accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
+        miscFee = new Money();
+        miscFeePaid = new Money();
+        miscPenalty = new Money();
+        miscPenaltyPaid = new Money();
+    }
 
-	public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {
-		return accountFeesActionDetails;
-	}
+    public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {
+        return accountFeesActionDetails;
+    }
 
-	public void addAccountFeesAction(
-			AccountFeesActionDetailEntity accountFeesAction) {
-		accountFeesActionDetails.add(accountFeesAction);
-	}
+    public void addAccountFeesAction(AccountFeesActionDetailEntity accountFeesAction) {
+        accountFeesActionDetails.add(accountFeesAction);
+    }
 
-	public Money getMiscFee() {
-		return miscFee;
-	}
+    public Money getMiscFee() {
+        return miscFee;
+    }
 
-	void setMiscFee(Money miscFee) {
-		this.miscFee = miscFee;
-	}
+    void setMiscFee(Money miscFee) {
+        this.miscFee = miscFee;
+    }
 
-	public Money getMiscFeePaid() {
-		return miscFeePaid;
-	}
+    public Money getMiscFeePaid() {
+        return miscFeePaid;
+    }
 
-	void setMiscFeePaid(Money miscFeePaid) {
-		this.miscFeePaid = miscFeePaid;
-	}
+    void setMiscFeePaid(Money miscFeePaid) {
+        this.miscFeePaid = miscFeePaid;
+    }
 
-	public Money getMiscPenalty() {
-		return miscPenalty;
-	}
+    public Money getMiscPenalty() {
+        return miscPenalty;
+    }
 
-	void setMiscPenalty(Money miscPenalty) {
-		this.miscPenalty = miscPenalty;
-	}
+    void setMiscPenalty(Money miscPenalty) {
+        this.miscPenalty = miscPenalty;
+    }
 
-	public Money getMiscPenaltyPaid() {
-		return miscPenaltyPaid;
-	}
+    public Money getMiscPenaltyPaid() {
+        return miscPenaltyPaid;
+    }
 
-	void setMiscPenaltyPaid(Money miscPenaltyPaid) {
-		this.miscPenaltyPaid = miscPenaltyPaid;
-	}
+    void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+        this.miscPenaltyPaid = miscPenaltyPaid;
+    }
 
-	public Money getMiscFeeDue() {
-		return getMiscFee().subtract(getMiscFeePaid());
-	}
+    public Money getMiscFeeDue() {
+        return getMiscFee().subtract(getMiscFeePaid());
+    }
 
-	public Money getMiscPenaltyDue() {
-		return getMiscPenalty().subtract(getMiscPenaltyPaid());
-	}
+    public Money getMiscPenaltyDue() {
+        return getMiscPenalty().subtract(getMiscPenaltyPaid());
+    }
 
-	public Money getTotalFeeDue() {
-		Money totalFees = new Money();
-		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
-			totalFees = totalFees.add(obj.getFeeDue());
-		}
-		return totalFees;
-	}
+    public Money getTotalFeeDue() {
+        Money totalFees = new Money();
+        for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
+            totalFees = totalFees.add(obj.getFeeDue());
+        }
+        return totalFees;
+    }
 
-	public Money getTotalFeeDueWithMiscFee() {
-		Money totalFees = new Money();
-		totalFees = totalFees.add(getTotalFeeDue()).add(getMiscFeeDue());
-		return totalFees;
-	}
+    public Money getTotalFeeDueWithMiscFee() {
+        Money totalFees = new Money();
+        totalFees = totalFees.add(getTotalFeeDue()).add(getMiscFeeDue());
+        return totalFees;
+    }
 
-	public Money getTotalFees() {
-		return getMiscFee().add(getTotalFeeDue());
-	}
+    public Money getTotalFees() {
+        return getMiscFee().add(getTotalFeeDue());
+    }
 
-	public Money getTotalDueWithFees() {
-		return getMiscPenaltyDue().add(getTotalFeeDueWithMiscFee());
-	}
+    public Money getTotalDueWithFees() {
+        return getMiscPenaltyDue().add(getTotalFeeDueWithMiscFee());
+    }
 
-	void applyPeriodicFees(Short feeId, Money totalAmount) {
-		AccountFeesEntity accountFeesEntity = account.getAccountFees(feeId);
-		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
-				this, accountFeesEntity.getFees(), accountFeesEntity,
-				totalAmount);
-		addAccountFeesAction(accountFeesActionDetailEntity);
-	}
+    void applyPeriodicFees(Short feeId, Money totalAmount) {
+        AccountFeesEntity accountFeesEntity = account.getAccountFees(feeId);
+        AccountFeesActionDetailEntity accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(this,
+                accountFeesEntity.getFees(), accountFeesEntity, totalAmount);
+        addAccountFeesAction(accountFeesActionDetailEntity);
+    }
 
-	void setPaymentDetails(
-			CustomerAccountPaymentData customerAccountPaymentData,
-			Date paymentDate) {
-		this.miscFeePaid = customerAccountPaymentData.getMiscFeePaid();
-		this.miscPenaltyPaid = customerAccountPaymentData.getMiscPenaltyPaid();
-		this.paymentStatus = customerAccountPaymentData.getPaymentStatus();
-		this.paymentDate = paymentDate;
-	}
+    void setPaymentDetails(CustomerAccountPaymentData customerAccountPaymentData, Date paymentDate) {
+        this.miscFeePaid = customerAccountPaymentData.getMiscFeePaid();
+        this.miscPenaltyPaid = customerAccountPaymentData.getMiscPenaltyPaid();
+        this.paymentStatus = customerAccountPaymentData.getPaymentStatus();
+        this.paymentDate = paymentDate;
+    }
 
-	Money waiveCharges() {
-		Money chargeWaived = new Money();
-		chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
-		setMiscFee(new Money());
-		setMiscPenalty(new Money());
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
-			chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity)accountFeesActionDetailEntity)
-					.waiveCharges());
-		}
-		return chargeWaived;
-	}
+    Money waiveCharges() {
+        Money chargeWaived = new Money();
+        chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
+        setMiscFee(new Money());
+        setMiscPenalty(new Money());
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
+            chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
+        }
+        return chargeWaived;
+    }
 
-	Money waiveFeeCharges() {
-		Money chargeWaived = new Money();
-		chargeWaived = chargeWaived.add(getMiscFee());
-		setMiscFee(new Money());
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
-			chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity)accountFeesActionDetailEntity)
-					.waiveCharges());
-		}
-		return chargeWaived;
-	}
+    Money waiveFeeCharges() {
+        Money chargeWaived = new Money();
+        chargeWaived = chargeWaived.add(getMiscFee());
+        setMiscFee(new Money());
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
+            chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity) accountFeesActionDetailEntity).waiveCharges());
+        }
+        return chargeWaived;
+    }
 
-	void removeAccountFeesActionDetailEntity(
-			AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
-		accountFeesActionDetails.remove(accountFeesActionDetailEntity);
-	}
+    void removeAccountFeesActionDetailEntity(AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
+        accountFeesActionDetails.remove(accountFeesActionDetailEntity);
+    }
 
-	public AccountFeesActionDetailEntity getAccountFeesAction(
-			Integer accountFeeId) {
-		for (AccountFeesActionDetailEntity accountFeesAction : getAccountFeesActionDetails()) {
-			if (accountFeesAction.getAccountFee().getAccountFeeId().equals(
-					accountFeeId)) {
-				return accountFeesAction;
-			}
-		}
-		return null;
-	}
+    public AccountFeesActionDetailEntity getAccountFeesAction(Integer accountFeeId) {
+        for (AccountFeesActionDetailEntity accountFeesAction : getAccountFeesActionDetails()) {
+            if (accountFeesAction.getAccountFee().getAccountFeeId().equals(accountFeeId)) {
+                return accountFeesAction;
+            }
+        }
+        return null;
+    }
 
-	Money removeFees(Short feeId) {
-		Money feeAmount = null;
-		AccountFeesActionDetailEntity objectToRemove = null;
-		Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
-				.getAccountFeesActionDetails();
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
-			if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)) {
-				objectToRemove = accountFeesActionDetailEntity;
-				break;
-			}
-		}
-		if (objectToRemove != null) {
-			feeAmount = objectToRemove.getFeeAmount();
-			this.removeAccountFeesActionDetailEntity(objectToRemove);
-		}
+    Money removeFees(Short feeId) {
+        Money feeAmount = null;
+        AccountFeesActionDetailEntity objectToRemove = null;
+        Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this.getAccountFeesActionDetails();
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
+            if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)) {
+                objectToRemove = accountFeesActionDetailEntity;
+                break;
+            }
+        }
+        if (objectToRemove != null) {
+            feeAmount = objectToRemove.getFeeAmount();
+            this.removeAccountFeesActionDetailEntity(objectToRemove);
+        }
 
-		return feeAmount;
-	}
+        return feeAmount;
+    }
 
-	void applyMiscCharge(Short chargeType, Money charge) {
-		if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
-			setMiscFee(getMiscFee().add(charge));
-		else if (chargeType
-				.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
-			setMiscPenalty(getMiscPenalty().add(charge));
-	}
-	
+    void applyMiscCharge(Short chargeType, Money charge) {
+        if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+            setMiscFee(getMiscFee().add(charge));
+        else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+            setMiscPenalty(getMiscPenalty().add(charge));
+    }
+
 }

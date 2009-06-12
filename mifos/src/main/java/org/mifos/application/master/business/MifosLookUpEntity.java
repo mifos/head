@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import java.util.Set;
@@ -25,82 +25,82 @@ import java.util.Set;
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant
- * classes. {@link LookUpEntity} usage has now been replaced by this class.
+ * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant classes.
+ * {@link LookUpEntity} usage has now been replaced by this class.
  * 
  * The entityType field should be a CamelCase name containing no whitespace
- * (since it is used as part of a properties file key value)  
- * The no whitespace requirement is enforced by the unit test 
+ * (since it is used as part of a properties file key value) The no whitespace
+ * requirement is enforced by the unit test
  * ApplicationConfigurationPersistenceIntegrationTest.testGetLookupEntities()
  */
 
 public class MifosLookUpEntity extends PersistentObject {
 
-	public static final Short DEFAULT_LOCALE_ID = 1;
-	
-	public static final int ETHNICITY = 19;
-	public static final int ACCOUNT_ACTION = 69;
-	public static final int ACCOUNT_STATE_FLAG = 70;
-	public static final int ACTIVITY = 87;
-	public static final int REPAYMENT_RULE = 91;
-	public static final int INTEREST_TYPES = 37;
-	public static final int FINANCIAL_ACTION = 76;
-	
-	private Short entityId;
+    public static final Short DEFAULT_LOCALE_ID = 1;
 
-	private String entityType;
+    public static final int ETHNICITY = 19;
+    public static final int ACCOUNT_ACTION = 69;
+    public static final int ACCOUNT_STATE_FLAG = 70;
+    public static final int ACTIVITY = 87;
+    public static final int REPAYMENT_RULE = 91;
+    public static final int INTEREST_TYPES = 37;
+    public static final int FINANCIAL_ACTION = 76;
 
-	private Set<LookUpLabelEntity> lookUpLabels;
+    private Short entityId;
 
-	private Set<LookUpValueEntity> lookUpValues;
+    private String entityType;
 
-	public MifosLookUpEntity() {
-		super();
-	}
+    private Set<LookUpLabelEntity> lookUpLabels;
 
-	public Short getEntityId() {
-		return entityId;
-	}
+    private Set<LookUpValueEntity> lookUpValues;
 
-	public void setEntityId(Short entityId) {
-		this.entityId = entityId;
-	}
+    public MifosLookUpEntity() {
+        super();
+    }
 
-	public String getEntityType() {
-		return entityType;
-	}
+    public Short getEntityId() {
+        return entityId;
+    }
 
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
-	}
+    public void setEntityId(Short entityId) {
+        this.entityId = entityId;
+    }
 
-	public Set<LookUpLabelEntity> getLookUpLabels() {
-		return lookUpLabels;
-	}
+    public String getEntityType() {
+        return entityType;
+    }
 
-	public void setLookUpLabels(Set<LookUpLabelEntity> lookUpLabels) {
-		this.lookUpLabels = lookUpLabels;
-	}
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
 
-	public Set<LookUpValueEntity> getLookUpValues() {
-		return lookUpValues;
-	}
+    public Set<LookUpLabelEntity> getLookUpLabels() {
+        return lookUpLabels;
+    }
 
-	public void setLookUpValues(Set<LookUpValueEntity> lookUpValues) {
-		this.lookUpValues = lookUpValues;
-	}
+    public void setLookUpLabels(Set<LookUpLabelEntity> lookUpLabels) {
+        this.lookUpLabels = lookUpLabels;
+    }
 
-	public String getLabel() {
-		return getLabelForLocale(DEFAULT_LOCALE_ID);
-	}
-	
-	private String getLabelForLocale(Short localeId) {
-		for (LookUpLabelEntity lookUpLabel : lookUpLabels) {
-			if (lookUpLabel.getLocaleId().equals(localeId)) {
-				return lookUpLabel.getLabelText();
-			}
-		}
-		throw new RuntimeException("Label not found for locale with id: \"" + localeId + "\"");
-	}
+    public Set<LookUpValueEntity> getLookUpValues() {
+        return lookUpValues;
+    }
+
+    public void setLookUpValues(Set<LookUpValueEntity> lookUpValues) {
+        this.lookUpValues = lookUpValues;
+    }
+
+    public String getLabel() {
+        return getLabelForLocale(DEFAULT_LOCALE_ID);
+    }
+
+    private String getLabelForLocale(Short localeId) {
+        for (LookUpLabelEntity lookUpLabel : lookUpLabels) {
+            if (lookUpLabel.getLocaleId().equals(localeId)) {
+                return lookUpLabel.getLabelText();
+            }
+        }
+        throw new RuntimeException("Label not found for locale with id: \"" + localeId + "\"");
+    }
 
 }

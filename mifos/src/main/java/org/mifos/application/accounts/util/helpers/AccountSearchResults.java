@@ -17,126 +17,126 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.framework.business.View;
 
 public class AccountSearchResults extends View {
 
-	private String officeName;
+    private String officeName;
 
-	private short levelId;
+    private short levelId;
 
-	private String centerName;
+    private String centerName;
 
-	private String groupName;
+    private String groupName;
 
-	private String clientName;
+    private String clientName;
 
-	private int clientId;
+    private int clientId;
 
-	private String globelNo;
+    private String globelNo;
 
-	public String getCenterName() {
-		return this.centerName;
-	}
+    public String getCenterName() {
+        return this.centerName;
+    }
 
-	public void setCenterName(String centerName) {
-		if (centerName == null) {
-			centerName = "";
-		}
-		this.centerName = centerName;
-	}
+    public void setCenterName(String centerName) {
+        if (centerName == null) {
+            centerName = "";
+        }
+        this.centerName = centerName;
+    }
 
-	public int getClientId() {
-		return clientId;
-	}
+    public int getClientId() {
+        return clientId;
+    }
 
-	public void setClientId(int clientId) {
-		this.clientId = clientId;
-	}
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
 
-	public short getLevelId() {
-		return levelId;
-	}
+    public short getLevelId() {
+        return levelId;
+    }
 
-	public void setLevelId(short levelId) {
-		this.levelId = levelId;
-	}
+    public void setLevelId(short levelId) {
+        this.levelId = levelId;
+    }
 
-	public String getClientName() {
+    public String getClientName() {
 
-		return clientName;
-	}
+        return clientName;
+    }
 
-	public void setClientName(String clientName) {
-		if (null == clientName) {
-			clientName = "";
-		}
-		this.clientName = clientName;
-	}
+    public void setClientName(String clientName) {
+        if (null == clientName) {
+            clientName = "";
+        }
+        this.clientName = clientName;
+    }
 
-	public String getGroupName() {
+    public String getGroupName() {
 
-		return groupName;
+        return groupName;
 
-	}
+    }
 
-	public void setGroupName(String groupName) {
-		if (null == groupName) {
-			groupName = "";
-		}
-		this.groupName = groupName;
-	}
+    public void setGroupName(String groupName) {
+        if (null == groupName) {
+            groupName = "";
+        }
+        this.groupName = groupName;
+    }
 
-	public String getOfficeName() {
-		return officeName;
-	}
+    public String getOfficeName() {
+        return officeName;
+    }
 
-	public void setOfficeName(String officeName) {
-		this.officeName = officeName;
-	}
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
-	public String getGroupId() {
-		if (null == this.centerName) {
-			return String.valueOf(this.clientId);
-		} else {
-			return "";
-		}
-	}
+    public String getGroupId() {
+        if (null == this.centerName) {
+            return String.valueOf(this.clientId);
+        } else {
+            return "";
+        }
+    }
 
-	public String getGroupLink() {
-		if (null == this.centerName) {
-			return "true";
-		} else {
-			return "false";
-		}
-	}
+    public String getGroupLink() {
+        if (null == this.centerName) {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
 
-	public String getClientLink() {
-		if (null != this.centerName) {
-			return "true";
-		} else {
-			return "false";
-		}
+    public String getClientLink() {
+        if (null != this.centerName) {
+            return "true";
+        } else {
+            return "false";
+        }
 
-	}
+    }
 
-	public String getIdClient() {
-		if (null == this.centerName) {
-			return "";
-		} else {
-			return String.valueOf(this.clientId);
-		}
+    public String getIdClient() {
+        if (null == this.centerName) {
+            return "";
+        } else {
+            return String.valueOf(this.clientId);
+        }
 
-	}
+    }
 
-	public String getGlobelNo() {
-		return globelNo;
-	}
+    public String getGlobelNo() {
+        return globelNo;
+    }
 
-	public void setGlobelNo(String globelNo) {
-		this.globelNo = globelNo;
-	}
+    public void setGlobelNo(String globelNo) {
+        this.globelNo = globelNo;
+    }
 }

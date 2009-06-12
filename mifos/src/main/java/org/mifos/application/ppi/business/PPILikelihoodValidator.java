@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.ppi.business;
 
 /**
@@ -36,38 +36,39 @@ import java.util.List;
 import org.mifos.framework.exceptions.ValidationException;
 
 public class PPILikelihoodValidator implements Serializable {
-	
-	public static void validate(List<PPILikelihood> likelihoods) throws ValidationException {
-		for (PPILikelihood likelihood : likelihoods) {
-			validateNoNulls(likelihood);
-			validateNoScoreOverlaps(likelihoods, likelihood);
-		}
-		validateCompleteScoreCoverage(likelihoods);
-	}
 
-	private static void validateNoNulls(PPILikelihood likelihood) throws ValidationException {
-		if (likelihood == null) 
-			throw new ValidationException("exception.validation.ppi.MissingLikelihoodChartRowException");
-	}
+    public static void validate(List<PPILikelihood> likelihoods) throws ValidationException {
+        for (PPILikelihood likelihood : likelihoods) {
+            validateNoNulls(likelihood);
+            validateNoScoreOverlaps(likelihoods, likelihood);
+        }
+        validateCompleteScoreCoverage(likelihoods);
+    }
 
-	private static void validateNoScoreOverlaps(List<PPILikelihood> likelihoods, PPILikelihood likelihood) throws ValidationException {
-		for (PPILikelihood l : likelihoods) {
-			if (likelihood != l && likelihood.getScore().overlapsRange(l.getScore()))
-				throw new ValidationException("Some score ranges overlap");
-		}
-	}
-	
-	private static void validateCompleteScoreCoverage(List<PPILikelihood> likelihoods) throws ValidationException {
-		boolean found;
-		for (int i = 0; i <= 100; i++) {
-			found = false;
-			for (PPILikelihood likelihood : likelihoods) {
-				if (likelihood.getScore().containsInteger(i))
-					found = true;
-			}
-			if (!found)
-				throw new ValidationException("Not all scores are covered");
-		}
-	}
+    private static void validateNoNulls(PPILikelihood likelihood) throws ValidationException {
+        if (likelihood == null)
+            throw new ValidationException("exception.validation.ppi.MissingLikelihoodChartRowException");
+    }
+
+    private static void validateNoScoreOverlaps(List<PPILikelihood> likelihoods, PPILikelihood likelihood)
+            throws ValidationException {
+        for (PPILikelihood l : likelihoods) {
+            if (likelihood != l && likelihood.getScore().overlapsRange(l.getScore()))
+                throw new ValidationException("Some score ranges overlap");
+        }
+    }
+
+    private static void validateCompleteScoreCoverage(List<PPILikelihood> likelihoods) throws ValidationException {
+        boolean found;
+        for (int i = 0; i <= 100; i++) {
+            found = false;
+            for (PPILikelihood likelihood : likelihoods) {
+                if (likelihood.getScore().containsInteger(i))
+                    found = true;
+            }
+            if (!found)
+                throw new ValidationException("Not all scores are covered");
+        }
+    }
 
 }

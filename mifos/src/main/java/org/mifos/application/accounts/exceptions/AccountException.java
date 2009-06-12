@@ -17,26 +17,26 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class AccountException extends ApplicationException {
 
-	public AccountException(String key, Object[] values) {
-		super(key, values);
-	}
+    public AccountException(String key, Object[] values) {
+        super(key, values);
+    }
 
-	public AccountException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public AccountException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
-	public AccountException(Throwable cause) {
-		super(cause);
-	}
-	
-	public AccountException(String key) {
-		super(key);
-	}
+    public AccountException(Throwable cause) {
+        super(cause);
+    }
+
+    public AccountException(String key) {
+        super(key);
+    }
 }

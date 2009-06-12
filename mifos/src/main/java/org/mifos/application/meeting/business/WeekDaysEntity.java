@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -33,63 +33,61 @@ import org.mifos.config.FiscalCalendarRules;
  */
 public class WeekDaysEntity extends MasterDataEntity {
 
-	private Short workDay;
-	
-	private Short startOfWeek;
-	
-	public WeekDaysEntity(WeekDay weekDay) {
-		super(weekDay.getValue());
-		this.workDay = null;
-	}
-	
-	public WeekDaysEntity() {
-	}
-	
-	public boolean isWorkingDay(){
-		return FiscalCalendarRules.isWorkingDay(getId());
-	}
-	
-	public boolean isStartOfFiscalWeek(){
-		return FiscalCalendarRules.isStartOfFiscalWeek(getId());
-	}
-		
-	
-	public Short getStartOfWeek() {
-		return startOfWeek;
-	}
+    private Short workDay;
 
-	public void setStartOfWeek(Short startOfWeek) {
-		this.startOfWeek = startOfWeek;
-	}
+    private Short startOfWeek;
 
-	public Short getWorkDay() {
-		return workDay;
-	}
+    public WeekDaysEntity(WeekDay weekDay) {
+        super(weekDay.getValue());
+        this.workDay = null;
+    }
 
-	public void setWorkDay(Short workDay) {
-		this.workDay = workDay;
-	}
+    public WeekDaysEntity() {
+    }
 
-	public void save() throws RuntimeException {
-		try {
-			new MasterPersistence().createOrUpdate(this);
-			} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				throw new RuntimeException(e);
-			}		
-	}
- 
-	public void update(Short startOfWeek, Short workDay)
-			throws RuntimeException {
-		this.startOfWeek = startOfWeek;
-		this.workDay = workDay;
-		// this block should not be here
-		try {
-			new MasterPersistence().createOrUpdate(this);			
-		} catch (PersistenceException e) {
-			throw new RuntimeException(e);
-		}
-		// end of block
-	}
+    public boolean isWorkingDay() {
+        return FiscalCalendarRules.isWorkingDay(getId());
+    }
+
+    public boolean isStartOfFiscalWeek() {
+        return FiscalCalendarRules.isStartOfFiscalWeek(getId());
+    }
+
+    public Short getStartOfWeek() {
+        return startOfWeek;
+    }
+
+    public void setStartOfWeek(Short startOfWeek) {
+        this.startOfWeek = startOfWeek;
+    }
+
+    public Short getWorkDay() {
+        return workDay;
+    }
+
+    public void setWorkDay(Short workDay) {
+        this.workDay = workDay;
+    }
+
+    public void save() throws RuntimeException {
+        try {
+            new MasterPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            // TODO Auto-generated catch block
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void update(Short startOfWeek, Short workDay) throws RuntimeException {
+        this.startOfWeek = startOfWeek;
+        this.workDay = workDay;
+        // this block should not be here
+        try {
+            new MasterPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }
+        // end of block
+    }
 
 }

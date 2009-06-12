@@ -17,34 +17,32 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productdefinition.util.helpers;
 
+package org.mifos.application.productdefinition.util.helpers;
 
 public enum InterestType {
 
-	FLAT((short) 1), 
-	DECLINING((short) 2), 
-	COMPOUND((short) 3),
-	DECLINING_EPI((short) 4); //Equal Principal Installments
+    FLAT((short) 1), DECLINING((short) 2), COMPOUND((short) 3), DECLINING_EPI((short) 4); // Equal
+                                                                                          // Principal
+                                                                                          // Installments
 
-	private Short value;
+    private Short value;
 
-	private InterestType(Short value) {
-		this.value = value;
-	}
+    private InterestType(Short value) {
+        this.value = value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
+    public Short getValue() {
+        return value;
+    }
 
-	public static InterestType fromInt(int value) {
-		for (InterestType candidate : InterestType.values()) {
-			if (candidate.getValue() == value) {
-				return candidate;
-			}
-		}
-		throw new RuntimeException("interest type " + value + " not recognized");
-	}
+    public static InterestType fromInt(int value) {
+        for (InterestType candidate : InterestType.values()) {
+            if (candidate.getValue() == value) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("interest type " + value + " not recognized");
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.framework.business.PersistentObject;
@@ -25,75 +25,79 @@ import org.mifos.config.Localization;
 
 public class SupportedLocalesEntity extends PersistentObject {
 
-	private Short localeId;
+    private Short localeId;
 
-	private String localeName;
+    private String localeName;
 
-	private Short defaultLocale;
+    private Short defaultLocale;
 
-	private LanguageEntity language;
-	private CountryEntity country;
-	
-	public SupportedLocalesEntity() {
-		super();
-		
-	}
-	public SupportedLocalesEntity(Short localeId) {
-		super();
-		this.localeId = localeId;
-	}
+    private LanguageEntity language;
+    private CountryEntity country;
 
-	public String getCountryCode() {
-		return country.getCountryShortName();
-	}
+    public SupportedLocalesEntity() {
+        super();
 
-	
-	public String getCountryName() {
-		return country.getCountryName();
-	}
+    }
 
-	public String getLanguageCode() {
-		return language.getLanguageShortName();
-	}
-	
-	public String getLanguageName() {
-		return language.getLanguageName();
-	}
+    public SupportedLocalesEntity(Short localeId) {
+        super();
+        this.localeId = localeId;
+    }
 
-	public Short getDefaultLocale() {
-		return defaultLocale;
-	}
+    public String getCountryCode() {
+        return country.getCountryShortName();
+    }
 
-	public void setDefaultLocale(Short defaultLocale) {
-		this.defaultLocale = defaultLocale;
-	}
+    public String getCountryName() {
+        return country.getCountryName();
+    }
 
-	public Short getLocaleId() {
-		return localeId;
-	}
+    public String getLanguageCode() {
+        return language.getLanguageShortName();
+    }
 
-	public void setLocaleId(Short localeId) {
-		this.localeId = localeId;
-	}
+    public String getLanguageName() {
+        return language.getLanguageName();
+    }
 
-	public String getLocaleName() {
-		return localeName;
-	}
+    public Short getDefaultLocale() {
+        return defaultLocale;
+    }
 
-	public void setLocaleName(String localeName) {
-		this.localeName = localeName;
-	}
-	public CountryEntity getCountry() {
-		return country;
-	}
-	public void setCountry(CountryEntity country) {
-		this.country = country;
-	}
-	public LanguageEntity getLanguage() {
-		return language;
-	}
-	public void setLanguage(LanguageEntity language) {
-		this.language = language;
-	}
+    public void setDefaultLocale(Short defaultLocale) {
+        this.defaultLocale = defaultLocale;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    public String getLocaleName() {
+        return localeName;
+    }
+
+    public void setLocaleName(String localeName) {
+        this.localeName = localeName;
+    }
+
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
+
+    public LanguageEntity getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(LanguageEntity language) {
+        this.language = language;
+    }
 
 }

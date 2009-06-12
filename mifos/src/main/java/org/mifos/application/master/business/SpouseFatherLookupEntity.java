@@ -17,27 +17,27 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 
 public class SpouseFatherLookupEntity extends MasterDataEntity {
-	
-	protected SpouseFatherLookupEntity() {
-		super();
-	}
-	
-	public SpouseFatherLookupEntity(Short id) {
-		super(id);
-	}
-	public boolean isSpouse(){
-		return getId().equals(ClientConstants.SPOUSE_VALUE );
-	}
-	
-	public boolean isOneTime(){
-		return getId().equals(ClientConstants.FATHER_VALUE);
-	}
 
-	
+    protected SpouseFatherLookupEntity() {
+        super();
+    }
+
+    public SpouseFatherLookupEntity(Short id) {
+        super(id);
+    }
+
+    public boolean isSpouse() {
+        return getId().equals(ClientConstants.SPOUSE_VALUE);
+    }
+
+    public boolean isOneTime() {
+        return getId().equals(ClientConstants.FATHER_VALUE);
+    }
+
 }

@@ -17,21 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class MeetingException extends ApplicationException {
 
-	private static final long serialVersionUID = 000l;
+    private static final long serialVersionUID = 000l;
 
-	public MeetingException(Throwable cause) {
-		super(cause);
-	}
+    public MeetingException(Throwable cause) {
+        super(cause);
+    }
 
-	public MeetingException(String key) {
-		super(key);
-	}
-		
+    public MeetingException(String key) {
+        super(key);
+    }
+
 }

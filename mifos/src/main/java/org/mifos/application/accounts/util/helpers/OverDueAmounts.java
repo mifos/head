@@ -17,74 +17,72 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.framework.util.helpers.Money;
 
-
-
 /**
  * This class acts as wrapper class for overdue amounts.
  */
-public class OverDueAmounts  {
-	private Money principalOverDue ;
-	
-	private Money interestOverdue ;
-	
-	private Money penaltyOverdue ;
-	
-	private Money feesOverdue ;
+public class OverDueAmounts {
+    private Money principalOverDue;
 
-	private Money totalPrincipalPaid;
+    private Money interestOverdue;
 
-	public Money getFeesOverdue() {
-		return feesOverdue;
-	}
+    private Money penaltyOverdue;
 
-	public void setFeesOverdue(Money feesOverdue) {
-		this.feesOverdue = feesOverdue;
-	}
+    private Money feesOverdue;
 
-	public Money getInterestOverdue() {
-		return interestOverdue;
-	}
+    private Money totalPrincipalPaid;
 
-	public void setInterestOverdue(Money interestOverdue) {
-		this.interestOverdue = interestOverdue;
-	}
+    public Money getFeesOverdue() {
+        return feesOverdue;
+    }
 
-	public Money getPenaltyOverdue() {
-		return penaltyOverdue;
-	}
+    public void setFeesOverdue(Money feesOverdue) {
+        this.feesOverdue = feesOverdue;
+    }
 
-	public void setPenaltyOverdue(Money penaltyOverdue) {
-		this.penaltyOverdue = penaltyOverdue;
-	}
+    public Money getInterestOverdue() {
+        return interestOverdue;
+    }
 
-	public Money getPrincipalOverDue() {
-		return principalOverDue;
-	}
+    public void setInterestOverdue(Money interestOverdue) {
+        this.interestOverdue = interestOverdue;
+    }
 
-	public void setPrincipalOverDue(Money principalOverDue) {
-		this.principalOverDue = principalOverDue;
-	}
+    public Money getPenaltyOverdue() {
+        return penaltyOverdue;
+    }
 
-	public void setTotalPrincipalPaid(Money principalPaid) {
-		this.totalPrincipalPaid = principalPaid;
-		
-	}
+    public void setPenaltyOverdue(Money penaltyOverdue) {
+        this.penaltyOverdue = penaltyOverdue;
+    }
 
-	public Money getTotalPrincipalPaid() {
-		
-		return this.totalPrincipalPaid;
-	}
+    public Money getPrincipalOverDue() {
+        return principalOverDue;
+    }
 
-	public void add(OverDueAmounts dueAmounts) {
-		this.principalOverDue = new Money().add(principalOverDue).add(dueAmounts.getPrincipalOverDue()) ;
-		this.interestOverdue = new Money().add(interestOverdue).add(dueAmounts.getInterestOverdue());
-		this.penaltyOverdue = new Money().add(penaltyOverdue).add(dueAmounts.getPenaltyOverdue());
-		this.feesOverdue = new Money().add(feesOverdue).add(dueAmounts.getFeesOverdue());
-				
-	}
+    public void setPrincipalOverDue(Money principalOverDue) {
+        this.principalOverDue = principalOverDue;
+    }
+
+    public void setTotalPrincipalPaid(Money principalPaid) {
+        this.totalPrincipalPaid = principalPaid;
+
+    }
+
+    public Money getTotalPrincipalPaid() {
+
+        return this.totalPrincipalPaid;
+    }
+
+    public void add(OverDueAmounts dueAmounts) {
+        this.principalOverDue = new Money().add(principalOverDue).add(dueAmounts.getPrincipalOverDue());
+        this.interestOverdue = new Money().add(interestOverdue).add(dueAmounts.getInterestOverdue());
+        this.penaltyOverdue = new Money().add(penaltyOverdue).add(dueAmounts.getPenaltyOverdue());
+        this.feesOverdue = new Money().add(feesOverdue).add(dueAmounts.getFeesOverdue());
+
+    }
 }

@@ -17,22 +17,22 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 /**
  * This interface stores keys for accounts related exceptions.
  */
 public interface AccountExceptionConstants {
-	public final String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";
-	public final String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
-	public final String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
-	public final String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
-	public final String CREATEEXCEPTION = "exception.accounts.create";
-	public final String CREATEEXCEPTIONPRDINACTIVE = "exception.accounts.create.prd.inactive";
-	public final String CREATEEXCEPTIONCUSTOMERINACTIVE = "exception.accounts.create.customer.inactive";
-	public final String APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION = "error.applycharge.nocustomermeeting";
-	public final String CHANGEINLOANMEETING ="exception.accounts.changeInLoanMeeting";
-	public final String CANT_APPLY_FEE_EXCEPTION ="exception.accounts.cantapplyfee";
-	public final String CANT_APPLY_CHARGE_EXCEPTION ="exception.accounts.cantapplycharge";
+    public final String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";
+    public final String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
+    public final String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
+    public final String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
+    public final String CREATEEXCEPTION = "exception.accounts.create";
+    public final String CREATEEXCEPTIONPRDINACTIVE = "exception.accounts.create.prd.inactive";
+    public final String CREATEEXCEPTIONCUSTOMERINACTIVE = "exception.accounts.create.customer.inactive";
+    public final String APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION = "error.applycharge.nocustomermeeting";
+    public final String CHANGEINLOANMEETING = "exception.accounts.changeInLoanMeeting";
+    public final String CANT_APPLY_FEE_EXCEPTION = "exception.accounts.cantapplyfee";
+    public final String CANT_APPLY_CHARGE_EXCEPTION = "exception.accounts.cantapplycharge";
 }

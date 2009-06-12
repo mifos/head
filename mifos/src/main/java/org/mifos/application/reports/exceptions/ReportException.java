@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.exceptions;
 
 /**
@@ -61,21 +61,21 @@ package org.mifos.application.reports.exceptions;
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class ReportException extends ApplicationException {
-	
-	public ReportException(String key) {
-		super(key);
-	}
-	
-	public ReportException(String key, Object[] values) {
-		super(key, values);
-	}
 
-	public ReportException(Throwable cause) {
-		super(cause);
-	}
-	
-	public ReportException(String key, Throwable cause) {
-		super(key, cause);
-	}
+    public ReportException(String key) {
+        super(key);
+    }
+
+    public ReportException(String key, Object[] values) {
+        super(key, values);
+    }
+
+    public ReportException(Throwable cause) {
+        super(cause);
+    }
+
+    public ReportException(String key, Throwable cause) {
+        super(key, cause);
+    }
 
 }

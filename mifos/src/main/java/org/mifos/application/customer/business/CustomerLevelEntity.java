@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.business;
 
 import org.mifos.application.customer.center.business.CenterBO;
@@ -28,58 +28,57 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 
 /**
- * This class represents customer level e.g client,center etc.
- * Most code will want {@link CustomerLevel} (or perhaps something
- * else entirely, like calling a method in {@link CustomerBO}
- * which can be implemented differently for 
+ * This class represents customer level e.g client,center etc. Most code will
+ * want {@link CustomerLevel} (or perhaps something else entirely, like calling
+ * a method in {@link CustomerBO} which can be implemented differently for
  * {@link ClientBO}, {@link CenterBO}, and {@link GroupBO}).
  */
 // FIXME: this should just be an enum, not a persisted class
 public class CustomerLevelEntity extends MasterDataEntity {
 
-	// Set/gotten via .hbm.xml file
-	private CustomerLevelEntity parentCustomerLevel;
+    // Set/gotten via .hbm.xml file
+    private CustomerLevelEntity parentCustomerLevel;
 
-	public CustomerLevelEntity(CustomerLevel customerLevel) {
-		super(customerLevel.getValue());
-	}
+    public CustomerLevelEntity(CustomerLevel customerLevel) {
+        super(customerLevel.getValue());
+    }
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerLevelEntity() {
-		super();
-	}
-	
-	public CustomerLevelEntity getParentCustomerLevel() {
-		return parentCustomerLevel;
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerLevelEntity() {
+        super();
+    }
 
-	/**
-	 * Based on the customer level , it returns the product applicable type.
-	 * This is being used, when savings/loan products are to find as per
-	 * customer level.
-	 */
-	public Short getProductApplicableType() {
-		if (getId().equals(CustomerLevel.CLIENT.getValue())) {
-			return ApplicableTo.CLIENTS.getValue();
-		} else if (getId().equals(CustomerLevel.GROUP.getValue())) {
-			return ApplicableTo.GROUPS.getValue();
-		} else
-			return ApplicableTo.CENTERS.getValue();
-	}
-	
-	public boolean isCenter(){
-		return getId().equals(CustomerLevel.CENTER.getValue());
-	}
-	
-	public boolean isGroup(){
-		return getId().equals(CustomerLevel.GROUP.getValue());
-	}
+    public CustomerLevelEntity getParentCustomerLevel() {
+        return parentCustomerLevel;
+    }
 
-	public boolean isClient(){
-		return getId().equals(CustomerLevel.CLIENT.getValue());
-	}
+    /**
+     * Based on the customer level , it returns the product applicable type.
+     * This is being used, when savings/loan products are to find as per
+     * customer level.
+     */
+    public Short getProductApplicableType() {
+        if (getId().equals(CustomerLevel.CLIENT.getValue())) {
+            return ApplicableTo.CLIENTS.getValue();
+        } else if (getId().equals(CustomerLevel.GROUP.getValue())) {
+            return ApplicableTo.GROUPS.getValue();
+        } else
+            return ApplicableTo.CENTERS.getValue();
+    }
+
+    public boolean isCenter() {
+        return getId().equals(CustomerLevel.CENTER.getValue());
+    }
+
+    public boolean isGroup() {
+        return getId().equals(CustomerLevel.GROUP.getValue());
+    }
+
+    public boolean isClient() {
+        return getId().equals(CustomerLevel.CLIENT.getValue());
+    }
 
 }

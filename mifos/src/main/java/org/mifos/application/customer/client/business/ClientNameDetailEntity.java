@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.client.business;
 
 import org.mifos.application.customer.business.CustomerBO;
@@ -26,98 +26,98 @@ import org.mifos.framework.business.util.Name;
 
 public class ClientNameDetailEntity extends PersistentObject {
 
-	// Set/gotten by Hibernate
-	private final Integer customerNameId;
+    // Set/gotten by Hibernate
+    private final Integer customerNameId;
 
-	private final ClientBO client;
+    private final ClientBO client;
 
-	private Short nameType;
+    private Short nameType;
 
-	/* 47=Mr, 48=Mrs, 228=Ms (is this right?)*/
-	private Integer salutation;
+    /* 47=Mr, 48=Mrs, 228=Ms (is this right?) */
+    private Integer salutation;
 
-	private String secondMiddleName;
+    private String secondMiddleName;
 
-	private String displayName;
+    private String displayName;
 
-	private Name name;
+    private Name name;
 
-	public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
-		super();
-		this.customerNameId = null;
-		this.client = client;
-		this.nameType = view.getNameType();
-		this.salutation = view.getSalutation();
-		this.secondMiddleName = secondMiddleName;
-		this.displayName = view.getDisplayName();
-		this.name = view.asName();
-	}
+    public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
+        super();
+        this.customerNameId = null;
+        this.client = client;
+        this.nameType = view.getNameType();
+        this.salutation = view.getSalutation();
+        this.secondMiddleName = secondMiddleName;
+        this.displayName = view.getDisplayName();
+        this.name = view.asName();
+    }
 
-	protected ClientNameDetailEntity() {
-		super();
-		this.customerNameId = null;
-		this.client = null;
-		this.nameType = null;
-		this.salutation = null;
-		this.secondMiddleName = null;
-		this.displayName = null;
-		this.name = null;
-	}
-	
-	public String getDisplayName() {
-		return displayName;
-	}
+    protected ClientNameDetailEntity() {
+        super();
+        this.customerNameId = null;
+        this.client = null;
+        this.nameType = null;
+        this.salutation = null;
+        this.secondMiddleName = null;
+        this.displayName = null;
+        this.name = null;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	public Integer getSalutation() {
-		return salutation;
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	public void setSalutation(Integer salutation) {
-		this.salutation = salutation;
-	}
+    public Integer getSalutation() {
+        return salutation;
+    }
 
-	public String getSecondMiddleName() {
-		return secondMiddleName;
-	}
+    public void setSalutation(Integer salutation) {
+        this.salutation = salutation;
+    }
 
-	public void setSecondMiddleName(String secondMiddleName) {
-		this.secondMiddleName = secondMiddleName;
-	}
+    public String getSecondMiddleName() {
+        return secondMiddleName;
+    }
 
-	public CustomerBO getClient() {
-		return client;
-	}
+    public void setSecondMiddleName(String secondMiddleName) {
+        this.secondMiddleName = secondMiddleName;
+    }
 
-	public Short getNameType() {
-		return this.nameType;
-	}
+    public CustomerBO getClient() {
+        return client;
+    }
 
-	public void setNameType(Short nameType) {
-		this.nameType = nameType;
-	}
+    public Short getNameType() {
+        return this.nameType;
+    }
 
-	public Integer getCustomerNameId() {
-		return customerNameId;
-	}
+    public void setNameType(Short nameType) {
+        this.nameType = nameType;
+    }
 
-	public Name getName() {
-		return name;
-	}
+    public Integer getCustomerNameId() {
+        return customerNameId;
+    }
 
-	public void setName(Name name) {
-		this.name = name;
-	}
+    public Name getName() {
+        return name;
+    }
 
-	public void updateNameDetails(ClientNameDetailView nameView) {
-		this.nameType = nameView.getNameType();
-		this.salutation = nameView.getSalutation();
-		//this.secondMiddleName = what?;
-		this.displayName = nameView.getDisplayName();
-		this.name = nameView.asName();
-	}
+    public void setName(Name name) {
+        this.name = name;
+    }
+
+    public void updateNameDetails(ClientNameDetailView nameView) {
+        this.nameType = nameView.getNameType();
+        this.salutation = nameView.getSalutation();
+        // this.secondMiddleName = what?;
+        this.displayName = nameView.getDisplayName();
+        this.name = nameView.asName();
+    }
 
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -31,21 +31,19 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 
 public class InterestPostingAccountingEntry extends BaseAccountingEntry {
 
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		
-		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity
-				.getAccountTrxn();
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
 
-		FinancialActionBO finIntPostingAction = FinancialActionCache.getFinancialAction(FinancialActionConstants.SAVINGS_INTERESTPOSTING);
-		SavingsOfferingBO savingsOffering = ((SavingsBO)savingsTrxn.getAccount()).getSavingsOffering();
+        SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
 
-		addAccountEntryDetails(savingsTrxn
-				.getInterestAmount(), finIntPostingAction,
-				savingsOffering.getInterestGLCode(),FinancialConstants.DEBIT);
-		addAccountEntryDetails(savingsTrxn
-				.getInterestAmount(), finIntPostingAction,
-				savingsOffering.getDepositGLCode(),FinancialConstants.CREDIT);		
-	}
+        FinancialActionBO finIntPostingAction = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.SAVINGS_INTERESTPOSTING);
+        SavingsOfferingBO savingsOffering = ((SavingsBO) savingsTrxn.getAccount()).getSavingsOffering();
+
+        addAccountEntryDetails(savingsTrxn.getInterestAmount(), finIntPostingAction, savingsOffering
+                .getInterestGLCode(), FinancialConstants.DEBIT);
+        addAccountEntryDetails(savingsTrxn.getInterestAmount(), finIntPostingAction,
+                savingsOffering.getDepositGLCode(), FinancialConstants.CREDIT);
+    }
 
 }

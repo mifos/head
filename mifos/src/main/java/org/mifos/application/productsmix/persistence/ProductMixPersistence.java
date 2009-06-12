@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productsmix.persistence;
 
 import java.util.HashMap;
@@ -35,54 +35,44 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
-public class ProductMixPersistence  extends Persistence{
-	private MifosLogger prdLogger = MifosLogManager
-	.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+public class ProductMixPersistence extends Persistence {
+    private MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
-	
-	public ProductMixBO getAllLoanOfferingMixByID(Short prdofferingMixId)
-			throws PersistenceException {
-		prdLogger.debug("in getAllLoanOfferingMix");
-		return (ProductMixBO) getPersistentObject(ProductMixBO.class,
-				prdofferingMixId);
-	}
-	
+    public ProductMixBO getAllLoanOfferingMixByID(Short prdofferingMixId) throws PersistenceException {
+        prdLogger.debug("in getAllLoanOfferingMix");
+        return (ProductMixBO) getPersistentObject(ProductMixBO.class, prdofferingMixId);
+    }
 
-	@SuppressWarnings("cast")
-	public List<ProductMixBO> getAllProductMix() throws PersistenceException {
-		return (List<ProductMixBO>) executeNamedQuery(
-				NamedQueryConstants.LOAD_ALL_DEFINED_PRODUCTS_MIX, null);
-	}
-	
-	
-	@SuppressWarnings("cast")
-	public List<PrdOfferingBO> getNotAllowedProducts(Short prdofferingId) throws PersistenceException {
-		
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(AccountConstants.PRDOFFERINGID, prdofferingId);
-		return (List<PrdOfferingBO>) executeNamedQuery(
-				NamedQueryConstants.LOAD_NOT_ALLOWED_PRODUCTS, queryParameters);
-	}
+    @SuppressWarnings("cast")
+    public List<ProductMixBO> getAllProductMix() throws PersistenceException {
+        return (List<ProductMixBO>) executeNamedQuery(NamedQueryConstants.LOAD_ALL_DEFINED_PRODUCTS_MIX, null);
+    }
 
-	public ProductMixBO getPrdOfferingMixByPrdOfferingID(Short productID,
-			Short notAllowedProductID) throws PersistenceException {
+    @SuppressWarnings("cast")
+    public List<PrdOfferingBO> getNotAllowedProducts(Short prdofferingId) throws PersistenceException {
 
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(ProductDefinitionConstants.PRODUCTID, productID);
-		queryParameters.put(ProductDefinitionConstants.NOTALLOWEDPRODUCTID,
-				notAllowedProductID);
-		ProductMixBO prdOffring = (ProductMixBO) execUniqueResultNamedQuery(
-				NamedQueryConstants.PRD_MIX_BYID, queryParameters);
-		return prdOffring;
-	}
-	
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(AccountConstants.PRDOFFERINGID, prdofferingId);
+        return (List<PrdOfferingBO>) executeNamedQuery(NamedQueryConstants.LOAD_NOT_ALLOWED_PRODUCTS, queryParameters);
+    }
 
-	public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A,Short idPrdOff_B) throws PersistenceException {
-		if(null==getPrdOfferingMixByPrdOfferingID(idPrdOff_A, idPrdOff_B))
-			if(null==getPrdOfferingMixByPrdOfferingID(idPrdOff_B,idPrdOff_A))			
-				return true;			
-			
-			return false;
+    public ProductMixBO getPrdOfferingMixByPrdOfferingID(Short productID, Short notAllowedProductID)
+            throws PersistenceException {
 
-	}
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(ProductDefinitionConstants.PRODUCTID, productID);
+        queryParameters.put(ProductDefinitionConstants.NOTALLOWEDPRODUCTID, notAllowedProductID);
+        ProductMixBO prdOffring = (ProductMixBO) execUniqueResultNamedQuery(NamedQueryConstants.PRD_MIX_BYID,
+                queryParameters);
+        return prdOffring;
+    }
+
+    public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A, Short idPrdOff_B) throws PersistenceException {
+        if (null == getPrdOfferingMixByPrdOfferingID(idPrdOff_A, idPrdOff_B))
+            if (null == getPrdOfferingMixByPrdOfferingID(idPrdOff_B, idPrdOff_A))
+                return true;
+
+        return false;
+
+    }
 }

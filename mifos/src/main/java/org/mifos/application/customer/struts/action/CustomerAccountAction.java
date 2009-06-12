@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.struts.action;
 
 import java.util.List;
@@ -46,48 +46,46 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomerAccountAction extends AccountAppAction {
-	public CustomerAccountAction() throws Exception {
-		super();
-	}
+    public CustomerAccountAction() throws Exception {
+        super();
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		return true;
-	}
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("customerAccountAction");
-		security.allow("load", SecurityConstants.VIEW);
-		return security;
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
 
-	@TransactionDemarcate(saveToken = true)
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String globalCustNum = ((CustomerAccountActionForm) form).getGlobalCustNum();
-		CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Customer);
-		CustomerBO customerBO = customerService.findBySystemId(globalCustNum);
-		CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
-		List<CustomerRecentActivityView> recentActivities = customerService
-				.getRecentActivityView(customerBO.getCustomerId());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);
-		//SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount, request);
-		SessionUtils.setCollectionAttribute(CustomerConstants.RECENT_ACTIVITIES,recentActivities, request);
-		ActionForwards forward = getForward(customerBO);
-		return mapping.findForward(forward.toString());
-	}
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("customerAccountAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
 
-	private ActionForwards getForward(CustomerBO customerBO) {
-		if (customerBO.getCustomerLevel().getId().equals(
-				CustomerLevel.CLIENT.getValue()))
-			return ActionForwards.client_detail_page;
-		if (customerBO.getCustomerLevel().getId().equals(
-				CustomerLevel.GROUP.getValue()))
-			return ActionForwards.group_detail_page;
-		if (customerBO.getCustomerLevel().getId().equals(
-				CustomerLevel.CENTER.getValue()))
-			return ActionForwards.center_detail_page;
-		return null;
-	}
+    @TransactionDemarcate(saveToken = true)
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        String globalCustNum = ((CustomerAccountActionForm) form).getGlobalCustNum();
+        CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance()
+                .getBusinessService(BusinessServiceName.Customer);
+        CustomerBO customerBO = customerService.findBySystemId(globalCustNum);
+        CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
+        List<CustomerRecentActivityView> recentActivities = customerService.getRecentActivityView(customerBO
+                .getCustomerId());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);
+        // SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount,
+        // request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.RECENT_ACTIVITIES, recentActivities, request);
+        ActionForwards forward = getForward(customerBO);
+        return mapping.findForward(forward.toString());
+    }
+
+    private ActionForwards getForward(CustomerBO customerBO) {
+        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()))
+            return ActionForwards.client_detail_page;
+        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue()))
+            return ActionForwards.group_detail_page;
+        if (customerBO.getCustomerLevel().getId().equals(CustomerLevel.CENTER.getValue()))
+            return ActionForwards.center_detail_page;
+        return null;
+    }
 }

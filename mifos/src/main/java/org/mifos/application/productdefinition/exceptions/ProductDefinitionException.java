@@ -17,20 +17,20 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
 public class ProductDefinitionException extends ApplicationException {
 
-	public ProductDefinitionException(Throwable cause) {
-		super(cause);
-	}
+    public ProductDefinitionException(Throwable cause) {
+        super(cause);
+    }
 
-	public ProductDefinitionException(String key) {
-		super(key);
-	}
+    public ProductDefinitionException(String key) {
+        super(key);
+    }
 
-	private static final long serialVersionUID = 6223987933034497348L;
+    private static final long serialVersionUID = 6223987933034497348L;
 }

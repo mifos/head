@@ -17,31 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 public enum AccountTypes {
-	LOAN_ACCOUNT(1), 
-	SAVINGS_ACCOUNT(2), 
-	CUSTOMER_ACCOUNT(3),
-	INDIVIDUAL_LOAN_ACCOUNT(4);
+    LOAN_ACCOUNT(1), SAVINGS_ACCOUNT(2), CUSTOMER_ACCOUNT(3), INDIVIDUAL_LOAN_ACCOUNT(4);
 
-	Short value;
+    Short value;
 
-	private AccountTypes(int value) {
-		this.value = (short)value;
-	}
+    private AccountTypes(int value) {
+        this.value = (short) value;
+    }
 
-	public Short getValue() {
-		return value;
-	}
-	
-	public static AccountTypes getAccountType(Short value){
-		for (AccountTypes accountTypes : AccountTypes.values()) {
-			if (accountTypes.getValue().equals(value)) {
-				return accountTypes;
-			}
-		}
-		throw new RuntimeException("no account type " + value);
-	}
+    public Short getValue() {
+        return value;
+    }
+
+    public static AccountTypes getAccountType(Short value) {
+        for (AccountTypes accountTypes : AccountTypes.values()) {
+            if (accountTypes.getValue().equals(value)) {
+                return accountTypes;
+            }
+        }
+        throw new RuntimeException("no account type " + value);
+    }
 }

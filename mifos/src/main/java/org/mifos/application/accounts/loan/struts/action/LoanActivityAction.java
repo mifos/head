@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.struts.action;
 
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
@@ -25,17 +25,19 @@ import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.framework.business.service.BusinessService;
 
 public class LoanActivityAction extends AccountAppAction {
-	
-	private LoanBusinessService loanService;
-//	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
-	public LoanActivityAction()throws Exception {
-		loanService = new LoanBusinessService();
-	}
-	
-	@Override
-	protected BusinessService getService() {
-		return loanService;
-	}	
+
+    private LoanBusinessService loanService;
+
+    // private MifosLogger logger =
+    // MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
+    public LoanActivityAction() throws Exception {
+        loanService = new LoanBusinessService();
+    }
+
+    @Override
+    protected BusinessService getService() {
+        return loanService;
+    }
 
 }

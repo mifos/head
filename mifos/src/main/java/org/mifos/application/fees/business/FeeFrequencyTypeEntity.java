@@ -17,29 +17,29 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.master.business.MasterDataEntity;
 
 /**
- * Is the fee periodic or one-time?  See {@link FeeFrequencyType}.
+ * Is the fee periodic or one-time? See {@link FeeFrequencyType}.
  */
 public class FeeFrequencyTypeEntity extends MasterDataEntity {
 
-	public FeeFrequencyTypeEntity(FeeFrequencyType feeFrequency) {
-		super(feeFrequency.getValue());
-	}
+    public FeeFrequencyTypeEntity(FeeFrequencyType feeFrequency) {
+        super(feeFrequency.getValue());
+    }
 
-	protected FeeFrequencyTypeEntity() {
-	}
+    protected FeeFrequencyTypeEntity() {
+    }
 
-	public boolean isPeriodic() {
-		return getId().equals(FeeFrequencyType.PERIODIC.getValue());
-	}
+    public boolean isPeriodic() {
+        return getId().equals(FeeFrequencyType.PERIODIC.getValue());
+    }
 
-	public boolean isOneTime() {
-		return getId().equals(FeeFrequencyType.ONETIME.getValue());
-	}
+    public boolean isOneTime() {
+        return getId().equals(FeeFrequencyType.ONETIME.getValue());
+    }
 }

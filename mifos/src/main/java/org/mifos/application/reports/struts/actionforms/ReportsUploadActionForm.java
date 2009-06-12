@@ -17,22 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-
 
 /**
  * This class is the ActionForm associated with the Reports Upload Action.
  */
 public class ReportsUploadActionForm extends BaseActionForm {
-	
-	/**
-	 * Default constructor
-	 */
-	public ReportsUploadActionForm() {
-		super();
-	}
-	
+
+    /**
+     * Default constructor
+     */
+    public ReportsUploadActionForm() {
+        super();
+    }
+
 }

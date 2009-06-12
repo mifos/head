@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.loan.business.service;
 
 import java.util.ArrayList;
@@ -43,190 +43,168 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanBusinessService implements BusinessService {
 
-	private LoanPersistence loanPersistence;
-	private ConfigurationBusinessService configService;
-	private AccountBusinessService accountBusinessService;
+    private LoanPersistence loanPersistence;
+    private ConfigurationBusinessService configService;
+    private AccountBusinessService accountBusinessService;
 
-	
-	public LoanBusinessService() {
-		this(new LoanPersistence(), new ConfigurationBusinessService(),new AccountBusinessService());
-	}
-	
-	LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService, AccountBusinessService accountBusinessService) {
-		this.loanPersistence = loanPersistence;
-		this.configService = configService;
-		this.accountBusinessService = accountBusinessService;
-	}
+    public LoanBusinessService() {
+        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService());
+    }
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
+            AccountBusinessService accountBusinessService) {
+        this.loanPersistence = loanPersistence;
+        this.configService = configService;
+        this.accountBusinessService = accountBusinessService;
+    }
 
-	public LoanBO findBySystemId(String accountGlobalNum)
-			throws ServiceException {
-		try {
-			return loanPersistence.findBySystemId(accountGlobalNum);
-		} catch (PersistenceException e) {
-			throw new ServiceException(
-					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
-					new Object[] { accountGlobalNum });
-		}
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
+    public LoanBO findBySystemId(String accountGlobalNum) throws ServiceException {
+        try {
+            return loanPersistence.findBySystemId(accountGlobalNum);
+        } catch (PersistenceException e) {
+            throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
+                    new Object[] { accountGlobalNum });
+        }
+    }
 
-	public List<LoanBO>  findIndividualLoans(String accountId)
-			throws ServiceException {
-		try {
-			return loanPersistence.findIndividualLoans(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(
-					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
-					new Object[] { accountId });
-		}
-	}
-	
+    public List<LoanBO> findIndividualLoans(String accountId) throws ServiceException {
+        try {
+            return loanPersistence.findIndividualLoans(accountId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
+                    new Object[] { accountId });
+        }
+    }
 
-	public List<LoanActivityView> getRecentActivityView(
-			String globalAccountNumber, Short localeId) throws ServiceException {
-		LoanBO loanBO = findBySystemId(globalAccountNumber);
-		Set<LoanActivityEntity> loanAccountActivityDetails = loanBO
-				.getLoanActivityDetails();
-		List<LoanActivityView> recentActivityView = new ArrayList<LoanActivityView>();
+    public List<LoanActivityView> getRecentActivityView(String globalAccountNumber, Short localeId)
+            throws ServiceException {
+        LoanBO loanBO = findBySystemId(globalAccountNumber);
+        Set<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        List<LoanActivityView> recentActivityView = new ArrayList<LoanActivityView>();
 
-		int count = 0;
-		for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-			recentActivityView.add(getLoanActivityView(loanActivity));
-			if (++count == 3)
-				break;
-		}
-		return recentActivityView;
-	}
+        int count = 0;
+        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+            recentActivityView.add(getLoanActivityView(loanActivity));
+            if (++count == 3)
+                break;
+        }
+        return recentActivityView;
+    }
 
-	public List<LoanActivityView> getAllActivityView(
-			String globalAccountNumber, Short localeId) throws ServiceException {
-		LoanBO loanBO = findBySystemId(globalAccountNumber);
-		Set<LoanActivityEntity> loanAccountActivityDetails = loanBO
-				.getLoanActivityDetails();
-		List<LoanActivityView> loanActivityViewSet = new ArrayList<LoanActivityView>();
-		for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-			loanActivityViewSet.add(getLoanActivityView(loanActivity));
-		}
-		return loanActivityViewSet;
-	}
+    public List<LoanActivityView> getAllActivityView(String globalAccountNumber, Short localeId)
+            throws ServiceException {
+        LoanBO loanBO = findBySystemId(globalAccountNumber);
+        Set<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        List<LoanActivityView> loanActivityViewSet = new ArrayList<LoanActivityView>();
+        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+            loanActivityViewSet.add(getLoanActivityView(loanActivity));
+        }
+        return loanActivityViewSet;
+    }
 
-	private LoanActivityView getLoanActivityView(LoanActivityEntity loanActivity) {
-		LoanActivityView loanActivityView = new LoanActivityView();
-		loanActivityView.setId(loanActivity.getAccount().getAccountId());
-		loanActivityView.setActionDate(loanActivity.getTrxnCreatedDate());
-		loanActivityView.setActivity(loanActivity.getComments());
-		loanActivityView.setPrincipal(removeSign(loanActivity.getPrincipal()));
-		loanActivityView.setInterest(removeSign(loanActivity.getInterest()));
-		loanActivityView.setPenalty(removeSign(loanActivity.getPenalty()));
-		loanActivityView.setFees(removeSign(loanActivity.getFee()));
-		loanActivityView.setTotal(removeSign(loanActivity.getFee()).add(
-				removeSign(loanActivity.getPenalty())).add(
-				removeSign(loanActivity.getPrincipal())).add(
-				removeSign(loanActivity.getInterest())));
-		loanActivityView.setTimeStamp(loanActivity.getTrxnCreatedDate());
-		loanActivityView.setRunningBalanceInterest(loanActivity
-				.getInterestOutstanding());
-		loanActivityView.setRunningBalancePrinciple(loanActivity
-				.getPrincipalOutstanding());
-		loanActivityView
-				.setRunningBalanceFees(loanActivity.getFeeOutstanding());
-		loanActivityView.setRunningBalancePenalty(loanActivity
-				.getPenaltyOutstanding());
+    private LoanActivityView getLoanActivityView(LoanActivityEntity loanActivity) {
+        LoanActivityView loanActivityView = new LoanActivityView();
+        loanActivityView.setId(loanActivity.getAccount().getAccountId());
+        loanActivityView.setActionDate(loanActivity.getTrxnCreatedDate());
+        loanActivityView.setActivity(loanActivity.getComments());
+        loanActivityView.setPrincipal(removeSign(loanActivity.getPrincipal()));
+        loanActivityView.setInterest(removeSign(loanActivity.getInterest()));
+        loanActivityView.setPenalty(removeSign(loanActivity.getPenalty()));
+        loanActivityView.setFees(removeSign(loanActivity.getFee()));
+        loanActivityView.setTotal(removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
+                removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest())));
+        loanActivityView.setTimeStamp(loanActivity.getTrxnCreatedDate());
+        loanActivityView.setRunningBalanceInterest(loanActivity.getInterestOutstanding());
+        loanActivityView.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding());
+        loanActivityView.setRunningBalanceFees(loanActivity.getFeeOutstanding());
+        loanActivityView.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding());
 
-		return loanActivityView;
-	}
+        return loanActivityView;
+    }
 
-	private Money removeSign(Money amount) {
-		if (amount != null && amount.getAmountDoubleValue() < 0)
-			return amount.negate();
-		else
-			return amount;
-	}
+    private Money removeSign(Money amount) {
+        if (amount != null && amount.getAmountDoubleValue() < 0)
+            return amount.negate();
+        else
+            return amount;
+    }
 
-	public LoanBO getAccount(Integer accountId) throws ServiceException {
-		try {
-			return loanPersistence.getAccount(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	public  List<LoanBO> getLoanAccountsActiveInGoodBadStanding(
-			Integer customerId) throws ServiceException {
-		try {
-			return loanPersistence.getLoanAccountsActiveInGoodBadStanding(customerId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
-	public Short getLastPaymentAction(Integer accountId)
-			throws ServiceException {
-		try {
-			return loanPersistence.getLastPaymentAction(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public LoanBO getAccount(Integer accountId) throws ServiceException {
+        try {
+            return loanPersistence.getAccount(accountId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<LoanBO> getSearchResults(String officeId, String personnelId,
-			String type, String currentStatus) throws ServiceException {
-		try {
-			return loanPersistence.getSearchResults(officeId,
-					personnelId, type, currentStatus);
-		} catch (PersistenceException he) {
-			throw new ServiceException(he);
-		}
-	}
-	
-	public List<LoanBO> getAllLoanAccounts()
-			throws ServiceException {		
-		try {
-			return loanPersistence.getAllLoanAccounts();
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
+    public List<LoanBO> getLoanAccountsActiveInGoodBadStanding(Integer customerId) throws ServiceException {
+        try {
+            return loanPersistence.getLoanAccountsActiveInGoodBadStanding(customerId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public void initialize(Object object) {
-		loanPersistence.initialize(object);
-	}
-	
-	public List<LoanBO> getAllChildrenForParentGlobalAccountNum(
-			String globalAccountNum) throws ServiceException {
-		return findIndividualLoans(findBySystemId(globalAccountNum)
-				.getAccountId().toString());
-	}
+    public Short getLastPaymentAction(Integer accountId) throws ServiceException {
+        try {
+            return loanPersistence.getLastPaymentAction(accountId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
-	public List<LoanBO> getActiveLoansForAllClientsAssociatedWithGroupLoan(
-			LoanBO loan) throws ServiceException {
-		List<LoanBO> activeLoans = new ArrayList<LoanBO>();
-		Collection<CustomerBO> clients = getClientsAssociatedWithGroupLoan(loan);
+    public List<LoanBO> getSearchResults(String officeId, String personnelId, String type, String currentStatus)
+            throws ServiceException {
+        try {
+            return loanPersistence.getSearchResults(officeId, personnelId, type, currentStatus);
+        } catch (PersistenceException he) {
+            throw new ServiceException(he);
+        }
+    }
 
-		for (CustomerBO customerBO : clients) {
-			for (AccountBO accountBO : customerBO.getAccounts()) {
-				if (accountBO.isActiveLoanAccount()) {
-					activeLoans.add((LoanBO) accountBO);
-				}
-			}
-		}
-		return activeLoans;
-	}
+    public List<LoanBO> getAllLoanAccounts() throws ServiceException {
+        try {
+            return loanPersistence.getAllLoanAccounts();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
 
-	private Collection<CustomerBO> getClientsAssociatedWithGroupLoan(LoanBO loan)
-			throws ServiceException {
-		Collection<CustomerBO> clients;
+    public void initialize(Object object) {
+        loanPersistence.initialize(object);
+    }
 
-		if (configService.isGlimEnabled()) {
-			clients = accountBusinessService.getCoSigningClientsForGlim(loan
-					.getAccountId());
-		}else {
-			clients = loan.getCustomer().getChildren();
-		}
-		return clients;
-	}
+    public List<LoanBO> getAllChildrenForParentGlobalAccountNum(String globalAccountNum) throws ServiceException {
+        return findIndividualLoans(findBySystemId(globalAccountNum).getAccountId().toString());
+    }
+
+    public List<LoanBO> getActiveLoansForAllClientsAssociatedWithGroupLoan(LoanBO loan) throws ServiceException {
+        List<LoanBO> activeLoans = new ArrayList<LoanBO>();
+        Collection<CustomerBO> clients = getClientsAssociatedWithGroupLoan(loan);
+
+        for (CustomerBO customerBO : clients) {
+            for (AccountBO accountBO : customerBO.getAccounts()) {
+                if (accountBO.isActiveLoanAccount()) {
+                    activeLoans.add((LoanBO) accountBO);
+                }
+            }
+        }
+        return activeLoans;
+    }
+
+    private Collection<CustomerBO> getClientsAssociatedWithGroupLoan(LoanBO loan) throws ServiceException {
+        Collection<CustomerBO> clients;
+
+        if (configService.isGlimEnabled()) {
+            clients = accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId());
+        } else {
+            clients = loan.getCustomer().getChildren();
+        }
+        return clients;
+    }
 }

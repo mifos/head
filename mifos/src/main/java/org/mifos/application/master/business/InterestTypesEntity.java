@@ -17,42 +17,42 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 
 public class InterestTypesEntity extends MasterDataEntity {
-	private java.lang.String descripton;
-	private ProductTypeEntity productType;
-	
-	protected InterestTypesEntity() {
-		super();
-	}
-	
-	public InterestTypesEntity(InterestType interestType) {
-		super(interestType.getValue());
-	}
+    private java.lang.String descripton;
+    private ProductTypeEntity productType;
 
-	public java.lang.String getDescripton() {
-		return descripton;
-	}
+    protected InterestTypesEntity() {
+        super();
+    }
 
-	public void setDescripton(java.lang.String descripton) {
-		this.descripton = descripton;
-	}
+    public InterestTypesEntity(InterestType interestType) {
+        super(interestType.getValue());
+    }
 
-	public ProductTypeEntity getProductType() {
-		return productType;
-	}
+    public java.lang.String getDescripton() {
+        return descripton;
+    }
 
-	public void setProductType(ProductTypeEntity productType) {
-		this.productType = productType;
-	}
+    public void setDescripton(java.lang.String descripton) {
+        this.descripton = descripton;
+    }
 
-	public InterestType asEnum() {
-		return InterestType.fromInt(getId());
-	}
-	
+    public ProductTypeEntity getProductType() {
+        return productType;
+    }
+
+    public void setProductType(ProductTypeEntity productType) {
+        this.productType = productType;
+    }
+
+    public InterestType asEnum() {
+        return InterestType.fromInt(getId());
+    }
+
 }

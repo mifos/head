@@ -17,41 +17,40 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.productdefinition.business;
 
+package org.mifos.application.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.isBetween;
 
 import org.mifos.framework.business.PersistentObject;
 
 public abstract class InstallmentRange extends PersistentObject {
-	private Short minNoOfInstall;
-	private Short maxNoOfInstall;
-	
-	public InstallmentRange(Short minNoOfInstall, Short maxNoOfInstall) {
-		super();
-		this.minNoOfInstall = minNoOfInstall;
-		this.maxNoOfInstall = maxNoOfInstall;
-	}
+    private Short minNoOfInstall;
+    private Short maxNoOfInstall;
 
-	public Short getMaxNoOfInstall() {
-		return maxNoOfInstall;
-	}
+    public InstallmentRange(Short minNoOfInstall, Short maxNoOfInstall) {
+        super();
+        this.minNoOfInstall = minNoOfInstall;
+        this.maxNoOfInstall = maxNoOfInstall;
+    }
 
-	public void setMaxNoOfInstall(Short maxNoOfInstall) {
-		this.maxNoOfInstall = maxNoOfInstall;
-	}
+    public Short getMaxNoOfInstall() {
+        return maxNoOfInstall;
+    }
 
-	public Short getMinNoOfInstall() {
-		return minNoOfInstall;
-	}
+    public void setMaxNoOfInstall(Short maxNoOfInstall) {
+        this.maxNoOfInstall = maxNoOfInstall;
+    }
 
-	public void setMinNoOfInstall(Short minNoOfInstall) {
-		this.minNoOfInstall = minNoOfInstall;
-	}
-	
-	public boolean isInRange(Short amount) {
-		return isBetween(minNoOfInstall, maxNoOfInstall, amount);
-	}
+    public Short getMinNoOfInstall() {
+        return minNoOfInstall;
+    }
+
+    public void setMinNoOfInstall(Short minNoOfInstall) {
+        this.minNoOfInstall = minNoOfInstall;
+    }
+
+    public boolean isInRange(Short amount) {
+        return isBetween(minNoOfInstall, maxNoOfInstall, amount);
+    }
 }

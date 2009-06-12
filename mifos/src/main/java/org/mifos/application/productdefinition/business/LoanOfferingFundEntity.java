@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.fund.business.FundBO;
@@ -25,48 +25,47 @@ import org.mifos.framework.business.PersistentObject;
 
 public class LoanOfferingFundEntity extends PersistentObject {
 
-	private final Short loanOfferingFundId;
+    private final Short loanOfferingFundId;
 
-	private final FundBO fund;
+    private final FundBO fund;
 
-	private final LoanOfferingBO loanOffering;
+    private final LoanOfferingBO loanOffering;
 
-	protected LoanOfferingFundEntity() {
-		this.loanOfferingFundId = null;
-		this.fund = null;
-		this.loanOffering = null;
-	}
+    protected LoanOfferingFundEntity() {
+        this.loanOfferingFundId = null;
+        this.fund = null;
+        this.loanOffering = null;
+    }
 
-	protected LoanOfferingFundEntity(FundBO fund, LoanOfferingBO loanOffering) {
-		this.loanOfferingFundId = null;
-		this.fund = fund;
-		this.loanOffering = loanOffering;
-	}
+    protected LoanOfferingFundEntity(FundBO fund, LoanOfferingBO loanOffering) {
+        this.loanOfferingFundId = null;
+        this.fund = fund;
+        this.loanOffering = loanOffering;
+    }
 
-	public FundBO getFund() {
-		return fund;
-	}
+    public FundBO getFund() {
+        return fund;
+    }
 
-	public LoanOfferingBO getLoanOffering() {
-		return loanOffering;
-	}
+    public LoanOfferingBO getLoanOffering() {
+        return loanOffering;
+    }
 
-	public Short getLoanOfferingFundId() {
-		return loanOfferingFundId;
-	}
+    public Short getLoanOfferingFundId() {
+        return loanOfferingFundId;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		LoanOfferingFundEntity loanOfferingFund = null;
-		boolean value = false;
-		if (object != null) {
-			loanOfferingFund = (LoanOfferingFundEntity) object;
-			if (loanOfferingFund.getLoanOfferingFundId().equals(
-					this.loanOfferingFundId)) {
-				value = true;
-			}
-		}
-		return value;
-	}
+    @Override
+    public boolean equals(Object object) {
+        LoanOfferingFundEntity loanOfferingFund = null;
+        boolean value = false;
+        if (object != null) {
+            loanOfferingFund = (LoanOfferingFundEntity) object;
+            if (loanOfferingFund.getLoanOfferingFundId().equals(this.loanOfferingFundId)) {
+                value = true;
+            }
+        }
+        return value;
+    }
 
 }

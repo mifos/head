@@ -17,25 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.master.business;
 
 /**
- * This is a deprecated piece of the code which is being
- * replaced by enums.
+ * This is a deprecated piece of the code which is being replaced by enums.
  */
 public class StateEntity extends MasterDataEntity {
 
-	protected StateEntity() {
-		super();
-	}
+    protected StateEntity() {
+        super();
+    }
 
-	public StateEntity(Short id) {
-		super(id);
-	}
+    public StateEntity(Short id) {
+        super(id);
+    }
 
-	public boolean sameId(StateEntity obj) {
-		return obj.getId().equals(this.getId());
-	}
+    public boolean sameId(StateEntity obj) {
+        return obj.getId().equals(this.getId());
+    }
 
 }

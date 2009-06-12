@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.personnel.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -28,31 +28,31 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
  */
 public class PersonnelLevelEntity extends MasterDataEntity {
 
-	private Short interactionFlag;
+    private Short interactionFlag;
 
-	private final PersonnelLevelEntity parent;
+    private final PersonnelLevelEntity parent;
 
-	public PersonnelLevelEntity(PersonnelLevel level) {
-		super(level.getValue());
-		this.parent = null;
-	}
+    public PersonnelLevelEntity(PersonnelLevel level) {
+        super(level.getValue());
+        this.parent = null;
+    }
 
-	protected PersonnelLevelEntity() {
-		super();
-		this.parent = null;
+    protected PersonnelLevelEntity() {
+        super();
+        this.parent = null;
 
-	}
+    }
 
-	public boolean isInteractionFlag() {
-		return this.interactionFlag > 0;
-	}
+    public boolean isInteractionFlag() {
+        return this.interactionFlag > 0;
+    }
 
-	public PersonnelLevelEntity getParent() {
-		return parent;
-	}
+    public PersonnelLevelEntity getParent() {
+        return parent;
+    }
 
     @Override
-	public String toString() {
+    public String toString() {
         return PersonnelLevel.fromInt(getId()).toString();
     }
 }

@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,75 +32,75 @@ import org.mifos.framework.util.helpers.Constants;
  * This class is the action form for Applying adjustments.
  */
 public class ApplyAdjustmentActionForm extends ValidatorActionForm {
-	private String input;
-	
-	private String adjustmentNote;
-	
-	private String globalAccountNum;
-	
-	private boolean adjustcheckbox ;
+    private String input;
 
-	public String getInput() {
-		return input;
-	}
+    private String adjustmentNote;
 
-	public void setInput(String input) {
-		this.input = input;
-	}
+    private String globalAccountNum;
 
-	public String getAdjustmentNote() {
-		return adjustmentNote;
-	}
+    private boolean adjustcheckbox;
 
-	public void setAdjustmentNote(String adjustmentNote) {
-		this.adjustmentNote = adjustmentNote;
-	}
+    public String getInput() {
+        return input;
+    }
 
-	public String getGlobalAccountNum() {
-		return globalAccountNum;
-	}
+    public void setInput(String input) {
+        this.input = input;
+    }
 
-	public void setGlobalAccountNum(String globalAccountNum) {
-		this.globalAccountNum = globalAccountNum;
-	}
+    public String getAdjustmentNote() {
+        return adjustmentNote;
+    }
 
-	public boolean getAdjustcheckbox() {
-		return adjustcheckbox;
-	}
+    public void setAdjustmentNote(String adjustmentNote) {
+        this.adjustmentNote = adjustmentNote;
+    }
 
-	public void setAdjustcheckbox(boolean adjustcheckbox) {
-		this.adjustcheckbox = adjustcheckbox;
-		
-	}
-	
-	@Override
-	public void reset(ActionMapping actionMapping,HttpServletRequest request){
-		this.adjustcheckbox = false;
-		
-	}
-	
-	@Override
-	public ActionErrors validate(ActionMapping actionMapping,HttpServletRequest request){
-		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
-			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
-		ActionErrors actionErrors = new ActionErrors();
-		String method = request.getParameter("method");
-		if(null != method && method.equals("previewAdjustment")){
-			if(!adjustcheckbox){
-				request.setAttribute("method", "loadAdjustment");
-				 actionErrors.add("", new ActionMessage("errors.mandatorycheckbox"));
-			}
-			if(adjustmentNote == null || adjustmentNote.trim() == ""){
-				request.setAttribute("method", "loadAdjustment");
-				actionErrors.add("", new ActionMessage("errors.mandatorytextarea"));
-			}else if(adjustmentNote.length()>300){
-				request.setAttribute("method", "loadAdjustment");
-				actionErrors.add("", new ActionMessage("errors.adjustmentNoteTooBig"));
-			}
-			if(!actionErrors.isEmpty()){
-				return actionErrors;
-			}
-		}
-		return super.validate(actionMapping, request);
-	}
+    public String getGlobalAccountNum() {
+        return globalAccountNum;
+    }
+
+    public void setGlobalAccountNum(String globalAccountNum) {
+        this.globalAccountNum = globalAccountNum;
+    }
+
+    public boolean getAdjustcheckbox() {
+        return adjustcheckbox;
+    }
+
+    public void setAdjustcheckbox(boolean adjustcheckbox) {
+        this.adjustcheckbox = adjustcheckbox;
+
+    }
+
+    @Override
+    public void reset(ActionMapping actionMapping, HttpServletRequest request) {
+        this.adjustcheckbox = false;
+
+    }
+
+    @Override
+    public ActionErrors validate(ActionMapping actionMapping, HttpServletRequest request) {
+        if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+            request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        ActionErrors actionErrors = new ActionErrors();
+        String method = request.getParameter("method");
+        if (null != method && method.equals("previewAdjustment")) {
+            if (!adjustcheckbox) {
+                request.setAttribute("method", "loadAdjustment");
+                actionErrors.add("", new ActionMessage("errors.mandatorycheckbox"));
+            }
+            if (adjustmentNote == null || adjustmentNote.trim() == "") {
+                request.setAttribute("method", "loadAdjustment");
+                actionErrors.add("", new ActionMessage("errors.mandatorytextarea"));
+            } else if (adjustmentNote.length() > 300) {
+                request.setAttribute("method", "loadAdjustment");
+                actionErrors.add("", new ActionMessage("errors.adjustmentNoteTooBig"));
+            }
+            if (!actionErrors.isEmpty()) {
+                return actionErrors;
+            }
+        }
+        return super.validate(actionMapping, request);
+    }
 }

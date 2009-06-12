@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,123 +36,109 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtReportsUploadActionForm extends ValidatorActionForm {
-	private String reportCategoryId;
-	private String reportTitle;
-	protected FormFile file;
-	private String reportId;
-	private String isActive;
+    private String reportCategoryId;
+    private String reportTitle;
+    protected FormFile file;
+    private String reportId;
+    private String isActive;
 
-	public BirtReportsUploadActionForm() {
-		super();
-	}
+    public BirtReportsUploadActionForm() {
+        super();
+    }
 
-	public void clear() {
-		this.reportCategoryId = null;
-		this.reportTitle = null;
-		this.file = null;
-		this.reportId = null;
-		this.isActive = null;
-	}
+    public void clear() {
+        this.reportCategoryId = null;
+        this.reportTitle = null;
+        this.file = null;
+        this.reportId = null;
+        this.isActive = null;
+    }
 
-	@Override
-	public ActionErrors validate(ActionMapping mapping,
-			HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		request.setAttribute(Constants.CURRENTFLOWKEY, request
-				.getParameter(Constants.CURRENTFLOWKEY));
-		request.getSession().setAttribute(Constants.CURRENTFLOWKEY,
-				request.getParameter(Constants.CURRENTFLOWKEY));
-		String method = request.getParameter("method");
+    @Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = new ActionErrors();
+        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        request.getSession().setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        String method = request.getParameter("method");
 
-		validateMethod(errors, Methods.preview.toString(), method);
-		validateMethod(errors, Methods.editpreview.toString(), method);
+        validateMethod(errors, Methods.preview.toString(), method);
+        validateMethod(errors, Methods.editpreview.toString(), method);
 
+        if (null != errors && !errors.isEmpty()) {
+            request.setAttribute(Globals.ERROR_KEY, errors);
+            request.setAttribute("methodCalled", method);
+        }
 
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-		}
+        return errors;
+    }
 
-		return errors;
-	}
+    private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
+        if (methodFromRequest.equals(verifyMethod)) {
+            if (StringUtils.isNullOrEmpty(reportTitle)) {
+                errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(ReportsConstants.ERROR_TITLE));
+            }
+            if (StringUtils.isNullOrEmpty(reportCategoryId) || this.getReportCategoryId().equals("-1")) {
+                errors.add(ReportsConstants.ERROR_CATEGORYID, new ActionMessage(ReportsConstants.ERROR_CATEGORYID));
+            }
+            if (StringUtils.isNullOrEmpty(isActive) || this.getIsActive().equals("-1")) {
+                errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(ReportsConstants.ERROR_STATUS));
+            }
+            if (methodFromRequest.equals(Methods.preview.toString())) {
+                if (file == null || !file.getFileName().endsWith(".rptdesign")) {
+                    errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
+                }
+            }
+            if (methodFromRequest.equals(Methods.editpreview.toString())) {
+                if (file != null && !StringUtils.isEmpty(file.getFileName())
+                        && !file.getFileName().endsWith(".rptdesign")) {
+                    errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(ReportsConstants.ERROR_FILE));
+                }
+            }
+        }
+    }
 
-	private void validateMethod(ActionErrors errors, String verifyMethod,
-			String methodFromRequest) {
-		if (methodFromRequest.equals(verifyMethod)) {
-			if (StringUtils.isNullOrEmpty(reportTitle)) {
-				errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(
-						ReportsConstants.ERROR_TITLE));
-			}
-			if (StringUtils.isNullOrEmpty(reportCategoryId)
-					|| this.getReportCategoryId().equals("-1")) {
-				errors.add(ReportsConstants.ERROR_CATEGORYID,
-						new ActionMessage(ReportsConstants.ERROR_CATEGORYID));
-			}
-			if (StringUtils.isNullOrEmpty(isActive)
-					|| this.getIsActive().equals("-1")) {
-				errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(
-						ReportsConstants.ERROR_STATUS));
-			}
-			if (methodFromRequest.equals(Methods.preview.toString())) {
-				if (file == null || !file.getFileName().endsWith(".rptdesign")) {
-					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
-							ReportsConstants.ERROR_FILE));
-				}
-			}
-			if (methodFromRequest.equals(Methods.editpreview.toString())) {
-				if (file != null && !StringUtils.isEmpty(file.getFileName())
-						&& !file.getFileName().endsWith(".rptdesign")) {
-					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
-							ReportsConstants.ERROR_FILE));
-				}
-			}
-		}
-	}
+    public String getReportCategoryId() {
+        return reportCategoryId;
+    }
 
-	public String getReportCategoryId() {
-		return reportCategoryId;
-	}
+    public void setReportCategoryId(String reportCategoryId) {
+        this.reportCategoryId = reportCategoryId;
+    }
 
-	public void setReportCategoryId(String reportCategoryId) {
-		this.reportCategoryId = reportCategoryId;
-	}
+    public void populate(ReportsCategoryBO reportsCategoryBO) throws OfficeException {
+        this.reportCategoryId = reportsCategoryBO.getReportCategoryId().toString();
+    }
 
-	public void populate(ReportsCategoryBO reportsCategoryBO)
-			throws OfficeException {
-		this.reportCategoryId = reportsCategoryBO.getReportCategoryId()
-				.toString();
-	}
+    public String getReportTitle() {
+        return reportTitle;
+    }
 
-	public String getReportTitle() {
-		return reportTitle;
-	}
+    public void setReportTitle(String reportTitle) {
+        this.reportTitle = reportTitle;
+    }
 
-	public void setReportTitle(String reportTitle) {
-		this.reportTitle = reportTitle;
-	}
+    public void setFile(FormFile file) {
+        this.file = file;
+    }
 
-	public void setFile(FormFile file) {
-		this.file = file;
-	}
+    public FormFile getFile() {
+        return file;
+    }
 
-	public FormFile getFile() {
-		return file;
-	}
+    public String getReportId() {
+        return reportId;
+    }
 
-	public String getReportId() {
-		return reportId;
-	}
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
+    }
 
-	public void setReportId(String reportId) {
-		this.reportId = reportId;
-	}
+    public String getIsActive() {
+        return isActive;
+    }
 
-	public String getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(String isActive) {
-		this.isActive = isActive;
-	}
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
+    }
 
 }

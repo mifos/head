@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.util.helpers;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -25,50 +25,49 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 
 public abstract class AccountPaymentData {
 
-	private Short installmentId;
+    private Short installmentId;
 
-	private Short paymentStatus;
+    private Short paymentStatus;
 
-	private AccountActionDateEntity accountActionDateEntity = null;
+    private AccountActionDateEntity accountActionDateEntity = null;
 
-	public Short getInstallmentId() {
-		return installmentId;
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
 
-	protected void setInstallmentId(Short installmentId) {
-		this.installmentId = installmentId;
-	}
+    protected void setInstallmentId(Short installmentId) {
+        this.installmentId = installmentId;
+    }
 
-	public void setAccountActionDate(
-			AccountActionDateEntity accountActionDateEntity) {
-		this.accountActionDateEntity = accountActionDateEntity;
-	}
+    public void setAccountActionDate(AccountActionDateEntity accountActionDateEntity) {
+        this.accountActionDateEntity = accountActionDateEntity;
+    }
 
-	public AccountActionDateEntity getAccountActionDate() {
-		return accountActionDateEntity;
-	}
+    public AccountActionDateEntity getAccountActionDate() {
+        return accountActionDateEntity;
+    }
 
-	public Short getPaymentStatus() {
-		return paymentStatus;
-	}
+    public Short getPaymentStatus() {
+        return paymentStatus;
+    }
 
-	protected void setPaymentStatus(Short paymentStatus) {
-		this.paymentStatus = paymentStatus;
-	}
+    protected void setPaymentStatus(Short paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 
-	public AccountPaymentData(AccountActionDateEntity accountActionDate) {
-		if (accountActionDate != null)
-			setInstallmentId(accountActionDate.getInstallmentId());
-		this.accountActionDateEntity = accountActionDate;
-	}
+    public AccountPaymentData(AccountActionDateEntity accountActionDate) {
+        if (accountActionDate != null)
+            setInstallmentId(accountActionDate.getInstallmentId());
+        this.accountActionDateEntity = accountActionDate;
+    }
 
-	public AccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
-		if (bulkEntryAccountAction != null)
-			setInstallmentId(bulkEntryAccountAction.getInstallmentId());
-		setPaymentStatus(PaymentStatus.PAID.getValue());
-	}
+    public AccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+        if (bulkEntryAccountAction != null)
+            setInstallmentId(bulkEntryAccountAction.getInstallmentId());
+        setPaymentStatus(PaymentStatus.PAID.getValue());
+    }
 
-	public boolean isPaid() {
-		return paymentStatus.shortValue() == PaymentStatus.PAID.getValue().shortValue();
-	}
+    public boolean isPaid() {
+        return paymentStatus.shortValue() == PaymentStatus.PAID.getValue().shortValue();
+    }
 }

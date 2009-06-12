@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
@@ -47,164 +47,147 @@ public class AccountPaymentEntity extends PersistentObject {
 
     private final Integer paymentId = null;
 
-	private final AccountBO account;
+    private final AccountBO account;
 
-	private final PaymentTypeEntity paymentType;
+    private final PaymentTypeEntity paymentType;
 
-	private final String receiptNumber;
+    private final String receiptNumber;
 
-	private final String voucherNumber;
+    private final String voucherNumber;
 
-	private final String checkNumber;
+    private final String checkNumber;
 
-	private final Date receiptDate;
+    private final Date receiptDate;
 
-	private final String bankName;
+    private final String bankName;
 
-	private final Date paymentDate;
+    private final Date paymentDate;
 
-	private Money amount;
+    private Money amount;
 
-	private Set<AccountTrxnEntity> accountTrxns;
+    private Set<AccountTrxnEntity> accountTrxns;
 
-	private MifosLogger logger;
+    private MifosLogger logger;
 
-	protected AccountPaymentEntity() {
-		this(null, null, null, null, null, new DateTimeService().getCurrentJavaDateTime());
-	}
+    protected AccountPaymentEntity() {
+        this(null, null, null, null, null, new DateTimeService().getCurrentJavaDateTime());
+    }
 
-	public AccountPaymentEntity(AccountBO account, Money amount,
-			String receiptNumber, Date receiptDate,
-			PaymentTypeEntity paymentType, Date paymentDate) {
-		this.accountTrxns = new HashSet<AccountTrxnEntity>();
-		this.paymentDate = paymentDate;
-		this.account = account;
-		this.receiptNumber = receiptNumber;
-		this.paymentType = paymentType;
-		this.receiptDate = receiptDate;
-		this.amount = amount;
-		this.bankName = null;
-		this.voucherNumber = null;
-		this.checkNumber = null;
-		this.logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	}
+    public AccountPaymentEntity(AccountBO account, Money amount, String receiptNumber, Date receiptDate,
+            PaymentTypeEntity paymentType, Date paymentDate) {
+        this.accountTrxns = new HashSet<AccountTrxnEntity>();
+        this.paymentDate = paymentDate;
+        this.account = account;
+        this.receiptNumber = receiptNumber;
+        this.paymentType = paymentType;
+        this.receiptDate = receiptDate;
+        this.amount = amount;
+        this.bankName = null;
+        this.voucherNumber = null;
+        this.checkNumber = null;
+        this.logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    }
 
-	public Integer getPaymentId() {
-		return paymentId;
-	}
+    public Integer getPaymentId() {
+        return paymentId;
+    }
 
-	public AccountBO getAccount() {
-		return account;
-	}
+    public AccountBO getAccount() {
+        return account;
+    }
 
-	public PaymentTypeEntity getPaymentType() {
-		return paymentType;
-	}
+    public PaymentTypeEntity getPaymentType() {
+        return paymentType;
+    }
 
-	public Date getPaymentDate() {
-		return paymentDate;
-	}
+    public Date getPaymentDate() {
+        return paymentDate;
+    }
 
-	public Set<AccountTrxnEntity> getAccountTrxns() {
-		return accountTrxns;
-	}
+    public Set<AccountTrxnEntity> getAccountTrxns() {
+        return accountTrxns;
+    }
 
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private void setAccountTrxns(Set<AccountTrxnEntity> accountTrxns) {
-		this.accountTrxns = accountTrxns;
-	}
+    @SuppressWarnings("unused")
+    // see .hbm.xml file
+    private void setAccountTrxns(Set<AccountTrxnEntity> accountTrxns) {
+        this.accountTrxns = accountTrxns;
+    }
 
-	public String getBankName() {
-		return bankName;
-	}
+    public String getBankName() {
+        return bankName;
+    }
 
-	public String getCheckNumber() {
-		return checkNumber;
-	}
+    public String getCheckNumber() {
+        return checkNumber;
+    }
 
-	public Date getReceiptDate() {
-		return receiptDate;
-	}
+    public Date getReceiptDate() {
+        return receiptDate;
+    }
 
-	public String getReceiptNumber() {
-		return receiptNumber;
-	}
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
 
-	public String getVoucherNumber() {
-		return voucherNumber;
-	}
+    public String getVoucherNumber() {
+        return voucherNumber;
+    }
 
-	public Money getAmount() {
-		return amount;
-	}
+    public Money getAmount() {
+        return amount;
+    }
 
-	public void setAmount(Money amount) {
-		this.amount = amount;
-	}
+    public void setAmount(Money amount) {
+        this.amount = amount;
+    }
 
-	public void addAccountTrxn(AccountTrxnEntity accountTrxn) {
-		accountTrxns.add(accountTrxn);
-	}
+    public void addAccountTrxn(AccountTrxnEntity accountTrxn) {
+        accountTrxns.add(accountTrxn);
+    }
 
-	/**
-	 * Create reverse entries of all the transactions associated with this
-	 * payment and adds them to the set of transactions associated.
-	 */
-	List<AccountTrxnEntity> reversalAdjustment(PersonnelBO personnel,
-			String adjustmentComment) throws AccountException {
-		List<AccountTrxnEntity> newlyAddedTrxns = null;
-		this.setAmount(getAmount().subtract(getAmount()));
-		logger.debug("The amount in account payment is "
-				+ getAmount().getAmountDoubleValue());
+    /**
+     * Create reverse entries of all the transactions associated with this
+     * payment and adds them to the set of transactions associated.
+     */
+    List<AccountTrxnEntity> reversalAdjustment(PersonnelBO personnel, String adjustmentComment) throws AccountException {
+        List<AccountTrxnEntity> newlyAddedTrxns = null;
+        this.setAmount(getAmount().subtract(getAmount()));
+        logger.debug("The amount in account payment is " + getAmount().getAmountDoubleValue());
 
-		if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
-			newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
-			logger.debug("The number of transactions before adjustment are "
-					+ getAccountTrxns().size());
-			Set<AccountTrxnEntity> reverseAccntTrxns = generateReverseAccountTransactions(
-					personnel, adjustmentComment);
+        if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
+            newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
+            logger.debug("The number of transactions before adjustment are " + getAccountTrxns().size());
+            Set<AccountTrxnEntity> reverseAccntTrxns = generateReverseAccountTransactions(personnel, adjustmentComment);
 
-			for (AccountTrxnEntity reverseAccntTrxn : reverseAccntTrxns) {
-				addAccountTrxn(reverseAccntTrxn);
-			}
+            for (AccountTrxnEntity reverseAccntTrxn : reverseAccntTrxns) {
+                addAccountTrxn(reverseAccntTrxn);
+            }
 
-			newlyAddedTrxns.addAll(reverseAccntTrxns);
-		}
+            newlyAddedTrxns.addAll(reverseAccntTrxns);
+        }
 
-		logger
-				.debug("After adding adjustment transactions the total no of transactions are "
-						+ getAccountTrxns().size());
-		return newlyAddedTrxns;
-	}
+        logger.debug("After adding adjustment transactions the total no of transactions are "
+                + getAccountTrxns().size());
+        return newlyAddedTrxns;
+    }
 
-	private Set<AccountTrxnEntity> generateReverseAccountTransactions(PersonnelBO personnel, String adjustmentComment) throws AccountException {
-		Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
-		for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
-			logger
-					.debug(
-							"Generating reverse transactions for transaction id "
-									+ accntTrxn.getAccountTrxnId());
-			AccountTrxnEntity reverseAccntTrxn = accntTrxn
-					.generateReverseTrxn(personnel, adjustmentComment);
-			logger
-					.debug(
-							"Amount associated with reverse transaction is "
-									+ reverseAccntTrxn.getAmount()
-											.getAmountDoubleValue());
-			reverseAccntTrxns.add(reverseAccntTrxn);
-			logger
-					.debug(
-							"After succesfully adding the reverse transaction");
-		}
-		return reverseAccntTrxns;
-	}
+    private Set<AccountTrxnEntity> generateReverseAccountTransactions(PersonnelBO personnel, String adjustmentComment)
+            throws AccountException {
+        Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
+        for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
+            logger.debug("Generating reverse transactions for transaction id " + accntTrxn.getAccountTrxnId());
+            AccountTrxnEntity reverseAccntTrxn = accntTrxn.generateReverseTrxn(personnel, adjustmentComment);
+            logger.debug("Amount associated with reverse transaction is "
+                    + reverseAccntTrxn.getAmount().getAmountDoubleValue());
+            reverseAccntTrxns.add(reverseAccntTrxn);
+            logger.debug("After succesfully adding the reverse transaction");
+        }
+        return reverseAccntTrxns;
+    }
 
     @Override
-	public String toString() {
-        return "{" +
-                paymentId + ", " +
-                account + ", " +
-                paymentType + ", " +
-                amount + "}";
+    public String toString() {
+        return "{" + paymentId + ", " + account + ", " + paymentType + ", " + amount + "}";
     }
 }

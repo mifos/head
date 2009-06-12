@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -27,20 +27,20 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public class OfficeStatusEntity extends MasterDataEntity {
 
-	public OfficeStatusEntity(OfficeStatus status) {
-		super(status.getValue());
-	}
+    public OfficeStatusEntity(OfficeStatus status) {
+        super(status.getValue());
+    }
 
-	protected OfficeStatusEntity() {
-		super();
-	}
+    protected OfficeStatusEntity() {
+        super();
+    }
 
-	public OfficeStatus getStatus() throws OfficeException {
-		try {
-		return  	OfficeStatus.getOfficeStatus(this.getId());
-		} catch (PropertyNotFoundException e) {
-			throw new OfficeException(e);
-		}
-		
-	}
+    public OfficeStatus getStatus() throws OfficeException {
+        try {
+            return OfficeStatus.getOfficeStatus(this.getId());
+        } catch (PropertyNotFoundException e) {
+            throw new OfficeException(e);
+        }
+
+    }
 }

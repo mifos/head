@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.financial.business.service.activity.accountingentry;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
@@ -27,25 +27,19 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 
-public class CustomerPenaltyAdjustmentAccountingEntry extends
-		BaseAccountingEntry {
+public class CustomerPenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 
-	@Override
-	protected void getSpecificAccountActionEntry() throws FinancialException {
-		CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity)financialActivity
-				.getAccountTrxn();
-		FinancialActionBO finActionMiscPenalty = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
-		
-		
-		addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()),
-				finActionMiscPenalty, getGLcode(finActionMiscPenalty
-						.getApplicableDebitCharts()), FinancialConstants.CREDIT);
-		
-		
-		addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()),
-				finActionMiscPenalty, getGLcode(finActionMiscPenalty
-						.getApplicableCreditCharts()), FinancialConstants.DEBIT);
+    @Override
+    protected void getSpecificAccountActionEntry() throws FinancialException {
+        CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity.getAccountTrxn();
+        FinancialActionBO finActionMiscPenalty = FinancialActionCache
+                .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
 
-	}
+        addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()), finActionMiscPenalty,
+                getGLcode(finActionMiscPenalty.getApplicableDebitCharts()), FinancialConstants.CREDIT);
+
+        addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()), finActionMiscPenalty,
+                getGLcode(finActionMiscPenalty.getApplicableCreditCharts()), FinancialConstants.DEBIT);
+
+    }
 }

@@ -17,42 +17,42 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.customer.business;
 
+package org.mifos.application.customer.business;
 
 import java.util.Date;
 
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * A class that represents a row in the 'customer flag' table.
- * A customer may have several of these flags (rows).
+ * A class that represents a row in the 'customer flag' table. A customer may
+ * have several of these flags (rows).
  */
 public class CustomerFlagDetailEntity extends PersistentObject {
 
-	@SuppressWarnings("unused")
-	private final Integer customerFlagId;
+    @SuppressWarnings("unused")
+    private final Integer customerFlagId;
 
-	private final CustomerStatusFlagEntity statusFlag;
+    private final CustomerStatusFlagEntity statusFlag;
 
-	/*
-	 * Adding a default constructor is hibernate's requirement and should not be
-	 * used to create a valid Object.
-	 */
-	protected CustomerFlagDetailEntity() {
-		this.customerFlagId = null;
-		this.statusFlag = null;
-	}
+    /*
+     * Adding a default constructor is hibernate's requirement and should not be
+     * used to create a valid Object.
+     */
+    protected CustomerFlagDetailEntity() {
+        this.customerFlagId = null;
+        this.statusFlag = null;
+    }
 
-	protected CustomerFlagDetailEntity(CustomerBO customer, CustomerStatusFlagEntity statusFlag, Short createdBy, Date createdDate) {
-		this.statusFlag= statusFlag;
-		this.customerFlagId = null;
-		this.createdBy = createdBy;
-		this.createdDate = createdDate;
-	}
+    protected CustomerFlagDetailEntity(CustomerBO customer, CustomerStatusFlagEntity statusFlag, Short createdBy,
+            Date createdDate) {
+        this.statusFlag = statusFlag;
+        this.customerFlagId = null;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+    }
 
-	public CustomerStatusFlagEntity getStatusFlag() {
-		return statusFlag;
-	}
+    public CustomerStatusFlagEntity getStatusFlag() {
+        return statusFlag;
+    }
 }

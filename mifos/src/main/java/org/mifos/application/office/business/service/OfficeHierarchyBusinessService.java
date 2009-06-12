@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.office.business.service;
 
 import java.util.List;
@@ -32,22 +32,21 @@ import org.mifos.framework.security.util.UserContext;
 
 public class OfficeHierarchyBusinessService implements BusinessService {
 
-	public OfficeHierarchyBusinessService() {
-		super();
-	}
+    public OfficeHierarchyBusinessService() {
+        super();
+    }
 
-	@Override
-	public BusinessObject getBusinessObject(UserContext userContext) {
-		return null;
-	}
+    @Override
+    public BusinessObject getBusinessObject(UserContext userContext) {
+        return null;
+    }
 
-	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) 
-	throws ServiceException {
-		try {
-			return new OfficeHierarchyPersistence().getOfficeLevels(localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
+    public List<OfficeLevelEntity> getOfficeLevels(Short localeId) throws ServiceException {
+        try {
+            return new OfficeHierarchyPersistence().getOfficeLevels(localeId);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        }
+    }
 
 }

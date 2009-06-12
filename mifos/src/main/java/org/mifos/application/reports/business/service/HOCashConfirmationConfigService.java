@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.reports.business.service;
 
 import static org.mifos.framework.util.TransformerUtils.TRANSFORM_STRING_TO_SHORT;
@@ -34,39 +34,35 @@ import org.springframework.core.io.Resource;
 
 public class HOCashConfirmationConfigService extends CashConfirmationConfigService {
 
-	private static final String PRODUCT_OFFERING_DISBURSEMENT_IDS = "product.offering.disbursement.ids";
-	private static final String CENTER_RECOVERY_PRODUCT_OFFERING_IDS = "product.offering.recovery.ids";
-	private static final String CENTER_ISSUE_PRODUCT_OFFERING_IDS = "product.offering.issue.ids";
+    private static final String PRODUCT_OFFERING_DISBURSEMENT_IDS = "product.offering.disbursement.ids";
+    private static final String CENTER_RECOVERY_PRODUCT_OFFERING_IDS = "product.offering.recovery.ids";
+    private static final String CENTER_ISSUE_PRODUCT_OFFERING_IDS = "product.offering.issue.ids";
 
-	public HOCashConfirmationConfigService(Resource resource) {
-		super(resource);
-	}
+    public HOCashConfirmationConfigService(Resource resource) {
+        super(resource);
+    }
 
-	public Date getActionDate() {
-		return DateUtils.currentDate();
-	}
+    public Date getActionDate() {
+        return DateUtils.currentDate();
+    }
 
-	public List<Short> getProductOfferingsForRecoveries()
-			throws ServiceException {
-		return getProductIds(CENTER_RECOVERY_PRODUCT_OFFERING_IDS);
-	}
+    public List<Short> getProductOfferingsForRecoveries() throws ServiceException {
+        return getProductIds(CENTER_RECOVERY_PRODUCT_OFFERING_IDS);
+    }
 
-	public List<Short> getProductOfferingsForIssues() throws ServiceException {
-		return getProductIds(CENTER_ISSUE_PRODUCT_OFFERING_IDS);
-	}
+    public List<Short> getProductOfferingsForIssues() throws ServiceException {
+        return getProductIds(CENTER_ISSUE_PRODUCT_OFFERING_IDS);
+    }
 
-	public List<Short> getProductOfferingsForDisbursements()
-			throws ServiceException {
-		return getProductIds(PRODUCT_OFFERING_DISBURSEMENT_IDS);
-	}
+    public List<Short> getProductOfferingsForDisbursements() throws ServiceException {
+        return getProductIds(PRODUCT_OFFERING_DISBURSEMENT_IDS);
+    }
 
-	public MifosCurrency getCurrency() {
-		return Configuration.getInstance().getSystemConfig().getCurrency();
-	}
+    public MifosCurrency getCurrency() {
+        return Configuration.getInstance().getSystemConfig().getCurrency();
+    }
 
-	private List<Short> getProductIds(String productIdKey)
-			throws ServiceException {
-		return (List<Short>) CollectionUtils.collect(
-				getPropertyValues(productIdKey), TRANSFORM_STRING_TO_SHORT);
-	}
+    private List<Short> getProductIds(String productIdKey) throws ServiceException {
+        return (List<Short>) CollectionUtils.collect(getPropertyValues(productIdKey), TRANSFORM_STRING_TO_SHORT);
+    }
 }

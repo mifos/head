@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
@@ -25,12 +25,12 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 
 public class SavingsTypeEntity extends MasterDataEntity {
 
-	public SavingsTypeEntity(SavingsType savingsType) {
-		super(savingsType.getValue());
-	}
+    public SavingsTypeEntity(SavingsType savingsType) {
+        super(savingsType.getValue());
+    }
 
-	protected SavingsTypeEntity() {
-		super();
-	}
+    protected SavingsTypeEntity() {
+        super();
+    }
 
 }

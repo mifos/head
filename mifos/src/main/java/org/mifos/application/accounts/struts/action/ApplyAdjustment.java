@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,126 +48,116 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
  */
 public class ApplyAdjustment extends BaseAction {
 
-	@Override
-	protected BusinessService getService() throws ServiceException {
-		return new AccountBusinessService();
-	}
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return new AccountBusinessService();
+    }
 
-	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("applyAdjustment");
-		security.allow("loadAdjustment", SecurityConstants.VIEW);
-		security.allow("previewAdjustment", SecurityConstants.VIEW);
-		security.allow("applyAdjustment", SecurityConstants.VIEW);
-		security.allow("cancelAdjustment", SecurityConstants.VIEW);
-		security.allow("loadAdjustmentWhenObligationMet",
-				SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
+    public static ActionSecurity getSecurity() {
+        ActionSecurity security = new ActionSecurity("applyAdjustment");
+        security.allow("loadAdjustment", SecurityConstants.VIEW);
+        security.allow("previewAdjustment", SecurityConstants.VIEW);
+        security.allow("applyAdjustment", SecurityConstants.VIEW);
+        security.allow("cancelAdjustment", SecurityConstants.VIEW);
+        security.allow("loadAdjustmentWhenObligationMet", SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
 
-		return security;
-	}
-	
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
-		request.setAttribute("method", "loadAdjustment");
-		return mapping.findForward("loadadjustment_success");
+        return security;
+    }
 
-	}
-	
-	
-	/*  This method do the same thing as loadAdjustment,
-	 but added to allow handling permission : can adjust payment 
-	 when account is closed obligation met
-	 */
-	 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward loadAdjustmentWhenObligationMet(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
-		request.setAttribute("method", "loadAdjustmentWhenObligationMet");
-		return mapping.findForward("loadadjustment_success");
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
+        request.setAttribute("method", "loadAdjustment");
+        return mapping.findForward("loadadjustment_success");
 
-	}
+    }
 
-	@TransactionDemarcate(joinToken = true)
-	public ActionForward previewAdjustment(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		request.setAttribute("method", "previewAdjustment");
-		return mapping.findForward("previewadj_success");
-	}
+    /*
+     * This method do the same thing as loadAdjustment, but added to allow
+     * handling permission : can adjust payment when account is closed
+     * obligation met
+     */
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	@CloseSession
-	public ActionForward applyAdjustment(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		request.setAttribute("method", "applyAdjustment");
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accountBOInSession = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		checkVersionMismatch(accountBOInSession.getVersionNo(),accnt.getVersionNo());
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		accnt.setUserContext(uc);
-		if (accnt.getPersonnel() != null)
-			getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
-					accnt.getOffice().getOfficeId(), accnt.getPersonnel()
-							.getPersonnelId());
-		else
-			getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
-					accnt.getOffice().getOfficeId(), uc.getId());
-		try {
-			accnt.adjustLastPayment(appAdjustActionForm.getAdjustmentNote());
-		} catch (ApplicationException ae) {
-			request.setAttribute("method", "previewAdjustment");
-			throw ae;
-		}
-		resetActionFormFields(appAdjustActionForm);
-		return mapping.findForward("applyadj_success");
-	}
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward loadAdjustmentWhenObligationMet(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
+        request.setAttribute("method", "loadAdjustmentWhenObligationMet");
+        return mapping.findForward("loadadjustment_success");
 
-	@TransactionDemarcate(validateAndResetToken = true)
-	public ActionForward cancelAdjustment(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		resetActionFormFields(appAdjustActionForm);
-		return mapping.findForward("canceladj_success");
-	}
+    }
 
-	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward previewAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        request.setAttribute("method", "previewAdjustment");
+        return mapping.findForward("previewadj_success");
+    }
 
-		return true;
+    @TransactionDemarcate(validateAndResetToken = true)
+    @CloseSession
+    public ActionForward applyAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        request.setAttribute("method", "applyAdjustment");
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        checkVersionMismatch(accountBOInSession.getVersionNo(), accnt.getVersionNo());
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        accnt.setUserContext(uc);
+        if (accnt.getPersonnel() != null)
+            getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
+                    accnt.getOffice().getOfficeId(), accnt.getPersonnel().getPersonnelId());
+        else
+            getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
+                    accnt.getOffice().getOfficeId(), uc.getId());
+        try {
+            accnt.adjustLastPayment(appAdjustActionForm.getAdjustmentNote());
+        } catch (ApplicationException ae) {
+            request.setAttribute("method", "previewAdjustment");
+            throw ae;
+        }
+        resetActionFormFields(appAdjustActionForm);
+        return mapping.findForward("applyadj_success");
+    }
 
-	}
+    @TransactionDemarcate(validateAndResetToken = true)
+    public ActionForward cancelAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+        resetActionFormFields(appAdjustActionForm);
+        return mapping.findForward("canceladj_success");
+    }
 
-	/**
-	 * This method resets action form fields after successfully applying payment
-	 * or on cancel.
-	 */
-	private void resetActionFormFields(
-			ApplyAdjustmentActionForm appAdjustActionForm) {
-		appAdjustActionForm.setAdjustmentNote(null);
-	}
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
 
-	@Override
-	protected boolean isNewBizRequired(HttpServletRequest request)
-			throws ServiceException {
-		if (request.getAttribute(Constants.BUSINESS_KEY) != null) {
-			return false;
-		}
-		return true;
-	}
-	
-	private AccountBusinessService getBizService(){
-		return new AccountBusinessService();
-	}
+        return true;
+
+    }
+
+    /**
+     * This method resets action form fields after successfully applying payment
+     * or on cancel.
+     */
+    private void resetActionFormFields(ApplyAdjustmentActionForm appAdjustActionForm) {
+        appAdjustActionForm.setAdjustmentNote(null);
+    }
+
+    @Override
+    protected boolean isNewBizRequired(HttpServletRequest request) throws ServiceException {
+        if (request.getAttribute(Constants.BUSINESS_KEY) != null) {
+            return false;
+        }
+        return true;
+    }
+
+    private AccountBusinessService getBizService() {
+        return new AccountBusinessService();
+    }
 }

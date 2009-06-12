@@ -17,9 +17,8 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
-package org.mifos.application.accounts.financial.business.service.activity;
 
+package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +30,16 @@ import org.mifos.application.accounts.financial.business.service.activity.accoun
 
 public class RescheduleFinancialActivity extends BaseFinancialActivity {
 
-	public RescheduleFinancialActivity(AccountTrxnEntity accountTrxn) {
-		super(accountTrxn);
-	}
+    public RescheduleFinancialActivity(AccountTrxnEntity accountTrxn) {
+        super(accountTrxn);
+    }
 
-	@Override
-	protected List<BaseAccountingEntry> getFinancialActionEntry() {
-		List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
-		financialActionEntryList.add(new RescheduleAccountingEntry());
+    @Override
+    protected List<BaseAccountingEntry> getFinancialActionEntry() {
+        List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
+        financialActionEntryList.add(new RescheduleAccountingEntry());
 
-		return financialActionEntryList;
-	}
+        return financialActionEntryList;
+    }
 
 }

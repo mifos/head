@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.center.business;
 
 import java.io.Serializable;
@@ -25,67 +25,67 @@ import java.io.Serializable;
 import org.mifos.framework.util.helpers.Money;
 
 public class CenterPerformanceHistory implements Serializable {
-	private Integer numberOfGroups;
+    private Integer numberOfGroups;
 
-	private Integer numberOfClients;
+    private Integer numberOfClients;
 
-	private Money totalOutstandingPortfolio;
+    private Money totalOutstandingPortfolio;
 
-	private Money totalSavings;
+    private Money totalSavings;
 
-	private Money portfolioAtRisk;
+    private Money portfolioAtRisk;
 
-	public CenterPerformanceHistory(){	}
-	
-	public Integer getNumberOfClients() {
-		return numberOfClients;
-	}
+    public CenterPerformanceHistory() {
+    }
 
-	void setNumberOfClients(Integer numberOfClients) {
-		this.numberOfClients = numberOfClients;
-	}
+    public Integer getNumberOfClients() {
+        return numberOfClients;
+    }
 
-	public Integer getNumberOfGroups() {
-		return numberOfGroups;
-	}
+    void setNumberOfClients(Integer numberOfClients) {
+        this.numberOfClients = numberOfClients;
+    }
 
-	void setNumberOfGroups(Integer numberOfGroups) {
-		this.numberOfGroups = numberOfGroups;
-	}
+    public Integer getNumberOfGroups() {
+        return numberOfGroups;
+    }
 
-	public Money getTotalOutstandingPortfolio() {
-		return totalOutstandingPortfolio;
-	}
+    void setNumberOfGroups(Integer numberOfGroups) {
+        this.numberOfGroups = numberOfGroups;
+    }
 
-	void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-	}
+    public Money getTotalOutstandingPortfolio() {
+        return totalOutstandingPortfolio;
+    }
 
-	public Money getTotalSavings() {
-		return totalSavings;
-	}
+    void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
+        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+    }
 
-	void setTotalSavings(Money totalSavings) {
-		this.totalSavings = totalSavings;
-	}
+    public Money getTotalSavings() {
+        return totalSavings;
+    }
 
-	public Money getPortfolioAtRisk() {
-		return portfolioAtRisk;
-	}
+    void setTotalSavings(Money totalSavings) {
+        this.totalSavings = totalSavings;
+    }
 
-	void setPortfolioAtRisk(Money portfolioAtRisk) {
-		this.portfolioAtRisk = portfolioAtRisk;
-	}
+    public Money getPortfolioAtRisk() {
+        return portfolioAtRisk;
+    }
 
-	public void setPerformanceHistoryDetails(Integer numberOfGroups,
-			Integer numberOfClients, Money totalOutstandingPortfolio,
-			Money totalSavings, Money portfolioAtRisk) {
-		setNumberOfGroups(numberOfGroups);
-		setNumberOfClients(numberOfClients);
-		setTotalOutstandingPortfolio(totalOutstandingPortfolio);
-		setTotalSavings(totalSavings);
-		setPortfolioAtRisk(portfolioAtRisk);
+    void setPortfolioAtRisk(Money portfolioAtRisk) {
+        this.portfolioAtRisk = portfolioAtRisk;
+    }
 
-	}
+    public void setPerformanceHistoryDetails(Integer numberOfGroups, Integer numberOfClients,
+            Money totalOutstandingPortfolio, Money totalSavings, Money portfolioAtRisk) {
+        setNumberOfGroups(numberOfGroups);
+        setNumberOfClients(numberOfClients);
+        setTotalOutstandingPortfolio(totalOutstandingPortfolio);
+        setTotalSavings(totalSavings);
+        setPortfolioAtRisk(portfolioAtRisk);
+
+    }
 
 }

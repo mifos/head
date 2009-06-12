@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.meeting.persistence;
 
 import java.util.ArrayList;
@@ -32,25 +32,24 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
-public class MeetingPersistence extends Persistence{
-	
-	
-	List<WeekDaysEntity> getWorkingDays(Short localeId)throws PersistenceException{
-	List<WeekDaysEntity> workingDays = new ArrayList<WeekDaysEntity>(); 
-		List<MasterDataEntity> weekDaysList = new MasterPersistence().retrieveMasterEntities(WeekDaysEntity.class, localeId);
-		for(MasterDataEntity weekDay: weekDaysList){
-			if(((WeekDaysEntity)weekDay).isWorkingDay())
-				workingDays.add((WeekDaysEntity)weekDay);			
-		}
-		return workingDays;
-	}
-	
-	public List<WeekDay> getWorkingDays()
-	{
-		return FiscalCalendarRules.getWorkingDays();
-	}
-	
-	public MeetingBO getMeeting(Integer meetingId)throws PersistenceException{
-		return (MeetingBO) getPersistentObject(MeetingBO.class, meetingId);
-	}
+public class MeetingPersistence extends Persistence {
+
+    List<WeekDaysEntity> getWorkingDays(Short localeId) throws PersistenceException {
+        List<WeekDaysEntity> workingDays = new ArrayList<WeekDaysEntity>();
+        List<MasterDataEntity> weekDaysList = new MasterPersistence().retrieveMasterEntities(WeekDaysEntity.class,
+                localeId);
+        for (MasterDataEntity weekDay : weekDaysList) {
+            if (((WeekDaysEntity) weekDay).isWorkingDay())
+                workingDays.add((WeekDaysEntity) weekDay);
+        }
+        return workingDays;
+    }
+
+    public List<WeekDay> getWorkingDays() {
+        return FiscalCalendarRules.getWorkingDays();
+    }
+
+    public MeetingBO getMeeting(Integer meetingId) throws PersistenceException {
+        return (MeetingBO) getPersistentObject(MeetingBO.class, meetingId);
+    }
 }

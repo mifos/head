@@ -17,47 +17,47 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.accounts.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class AccountStateFlagEntity extends MasterDataEntity {
-	private Short statusId;
+    private Short statusId;
 
-	private String flagDescription;
+    private String flagDescription;
 
-	private Short retained;
+    private Short retained;
 
-	protected AccountStateFlagEntity() {
-	}
+    protected AccountStateFlagEntity() {
+    }
 
-	public String getFlagDescription() {
-		return flagDescription;
-	}
+    public String getFlagDescription() {
+        return flagDescription;
+    }
 
-	public void setFlagDescription(String flagDescription) {
-		this.flagDescription = flagDescription;
-	}
+    public void setFlagDescription(String flagDescription) {
+        this.flagDescription = flagDescription;
+    }
 
-	public Short getStatusId() {
-		return statusId;
-	}
+    public Short getStatusId() {
+        return statusId;
+    }
 
-	public void setStatusId(Short statusId) {
-		this.statusId = statusId;
-	}
+    public void setStatusId(Short statusId) {
+        this.statusId = statusId;
+    }
 
-	void setRetained(Short retained) {
-		this.retained = retained;
-	}
+    void setRetained(Short retained) {
+        this.retained = retained;
+    }
 
-	Short getRetained() {
-		return this.retained;
-	}
+    Short getRetained() {
+        return this.retained;
+    }
 
-	public boolean isFlagRetained() {
-		return this.getRetained() == 1;
-	}
+    public boolean isFlagRetained() {
+        return this.getRetained() == 1;
+    }
 
 }

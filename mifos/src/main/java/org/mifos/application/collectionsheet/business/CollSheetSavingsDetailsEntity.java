@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.collectionsheet.business;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -31,122 +31,126 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CollSheetSavingsDetailsEntity extends PersistentObject {
 
-	public CollSheetSavingsDetailsEntity() {
-		super();
-	}
-	
-	private Long savingsDetailsId;
-	
-	private CollSheetCustBO collectionSheetCustomer;
-	
-	private Integer accountId;
-	
-	private Money accountBalance ;
-	
-	private Money recommendedAmntDue ;
-	
-	private Money amntOverDue;
-	
-	private Short installmentId;
-	
-	public Money getAccountBalance() {
-		return accountBalance;
-	}
+    public CollSheetSavingsDetailsEntity() {
+        super();
+    }
 
-	public void setAccountBalance(Money accountBalance) {
-		this.accountBalance = accountBalance;
-	}
+    private Long savingsDetailsId;
 
-	public Integer getAccountId() {
-		return accountId;
-	}
+    private CollSheetCustBO collectionSheetCustomer;
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
+    private Integer accountId;
 
-	public Money getAmntOverDue() {
-		return amntOverDue;
-	}
+    private Money accountBalance;
 
-	public void setAmntOverDue(Money amntOverDue) {
-		this.amntOverDue = amntOverDue;
-	}
+    private Money recommendedAmntDue;
 
-	public CollSheetCustBO getCollectionSheetCustomer() {
-		return collectionSheetCustomer;
-	}
+    private Money amntOverDue;
 
-	public void setCollectionSheetCustomer(
-			CollSheetCustBO collectionSheetCustomer) {
-		this.collectionSheetCustomer = collectionSheetCustomer;
-	}
+    private Short installmentId;
 
-	public Short getInstallmentId() {
-		return installmentId;
-	}
+    public Money getAccountBalance() {
+        return accountBalance;
+    }
 
-	public void setInstallmentId(Short installmentId) {
-		this.installmentId = installmentId;
-	}
+    public void setAccountBalance(Money accountBalance) {
+        this.accountBalance = accountBalance;
+    }
 
-	public Money getRecommendedAmntDue() {
-		return recommendedAmntDue;
-	}
+    public Integer getAccountId() {
+        return accountId;
+    }
 
-	public void setRecommendedAmntDue(Money recommendedAmntDue) {
-		this.recommendedAmntDue = recommendedAmntDue;
-	}
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
 
-	public Long getSavingsDetailsId() {
-		return savingsDetailsId;
-	}
+    public Money getAmntOverDue() {
+        return amntOverDue;
+    }
 
-	public void setSavingsDetailsId(Long savingsDetailsId) {
-		this.savingsDetailsId = savingsDetailsId;
-	}
+    public void setAmntOverDue(Money amntOverDue) {
+        this.amntOverDue = amntOverDue;
+    }
 
-	public Money getTotalSavingsAmntDue() {
-		return getAmntOverDue().add(getRecommendedAmntDue());
-	}
+    public CollSheetCustBO getCollectionSheetCustomer() {
+        return collectionSheetCustomer;
+    }
 
-	/**
-	 * Is this column in the database used for anything?  Reports?
-	 */
-	public void setTotalSavingsAmntDue(Money totalSavingsAmntDue) {
-	}
+    public void setCollectionSheetCustomer(CollSheetCustBO collectionSheetCustomer) {
+        this.collectionSheetCustomer = collectionSheetCustomer;
+    }
 
-	@Override
-	public boolean equals(Object obj){
-		CollSheetSavingsDetailsEntity collSheetSavingsDetailsObj = (CollSheetSavingsDetailsEntity)obj;
-		if(null != savingsDetailsId && null != collSheetSavingsDetailsObj.getSavingsDetailsId()){
-			return savingsDetailsId.equals(collSheetSavingsDetailsObj.getSavingsDetailsId());
-		}else if(null != this.collectionSheetCustomer && null != collSheetSavingsDetailsObj.getCollectionSheetCustomer()){
-			return this.accountId.equals(collSheetSavingsDetailsObj.getAccountId()) && this.collectionSheetCustomer.equals(collSheetSavingsDetailsObj.getCollectionSheetCustomer()); 
-		}else{
-			return super.equals(collSheetSavingsDetailsObj);
-		}
-		
-	}
-	
-	@Override
-	public int hashCode(){
-		return this.accountId.hashCode();
-	}
+    public Short getInstallmentId() {
+        return installmentId;
+    }
 
-	/**
-	 * This method sets values to the account details object , it also calculates over due amounts upto the current installment
-	 * and sets it here.		
-	 * @param accountActionDate
-	 */
-	public void addAccountDetails(AccountActionDateEntity accountActionDate)throws SystemException,ApplicationException   {
-		SavingsScheduleEntity savingsSchedule = (SavingsScheduleEntity)accountActionDate;
-		this.accountId = savingsSchedule.getAccount().getAccountId();
-		SavingsBO savings= new SavingsPersistence().findById(accountId);
-		this.installmentId = savingsSchedule.getInstallmentId();
-		this.accountBalance = savings.getSavingsBalance();
-		this.recommendedAmntDue = savingsSchedule.getDeposit() .subtract( savingsSchedule.getDepositPaid());
-		this.amntOverDue = savings.getOverDueDepositAmount(savingsSchedule.getActionDate());
-	}
+    public void setInstallmentId(Short installmentId) {
+        this.installmentId = installmentId;
+    }
+
+    public Money getRecommendedAmntDue() {
+        return recommendedAmntDue;
+    }
+
+    public void setRecommendedAmntDue(Money recommendedAmntDue) {
+        this.recommendedAmntDue = recommendedAmntDue;
+    }
+
+    public Long getSavingsDetailsId() {
+        return savingsDetailsId;
+    }
+
+    public void setSavingsDetailsId(Long savingsDetailsId) {
+        this.savingsDetailsId = savingsDetailsId;
+    }
+
+    public Money getTotalSavingsAmntDue() {
+        return getAmntOverDue().add(getRecommendedAmntDue());
+    }
+
+    /**
+     * Is this column in the database used for anything? Reports?
+     */
+    public void setTotalSavingsAmntDue(Money totalSavingsAmntDue) {
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        CollSheetSavingsDetailsEntity collSheetSavingsDetailsObj = (CollSheetSavingsDetailsEntity) obj;
+        if (null != savingsDetailsId && null != collSheetSavingsDetailsObj.getSavingsDetailsId()) {
+            return savingsDetailsId.equals(collSheetSavingsDetailsObj.getSavingsDetailsId());
+        } else if (null != this.collectionSheetCustomer
+                && null != collSheetSavingsDetailsObj.getCollectionSheetCustomer()) {
+            return this.accountId.equals(collSheetSavingsDetailsObj.getAccountId())
+                    && this.collectionSheetCustomer.equals(collSheetSavingsDetailsObj.getCollectionSheetCustomer());
+        } else {
+            return super.equals(collSheetSavingsDetailsObj);
+        }
+
+    }
+
+    @Override
+    public int hashCode() {
+        return this.accountId.hashCode();
+    }
+
+    /**
+     * This method sets values to the account details object , it also
+     * calculates over due amounts upto the current installment and sets it
+     * here.
+     * 
+     * @param accountActionDate
+     */
+    public void addAccountDetails(AccountActionDateEntity accountActionDate) throws SystemException,
+            ApplicationException {
+        SavingsScheduleEntity savingsSchedule = (SavingsScheduleEntity) accountActionDate;
+        this.accountId = savingsSchedule.getAccount().getAccountId();
+        SavingsBO savings = new SavingsPersistence().findById(accountId);
+        this.installmentId = savingsSchedule.getInstallmentId();
+        this.accountBalance = savings.getSavingsBalance();
+        this.recommendedAmntDue = savingsSchedule.getDeposit().subtract(savingsSchedule.getDepositPaid());
+        this.amntOverDue = savings.getOverDueDepositAmount(savingsSchedule.getActionDate());
+    }
 
 }

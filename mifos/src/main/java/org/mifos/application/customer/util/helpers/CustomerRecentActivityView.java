@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.application.customer.util.helpers;
 
 import java.util.Date;
@@ -28,71 +28,70 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class CustomerRecentActivityView extends View {
 
-	public CustomerRecentActivityView(java.util.Date activityDate,String description,String amount,String postedBy){
-		this.activityDate = new java.sql.Date(activityDate.getTime());
-		this.description = description;
-		this.amount = amount;
-		this.postedBy=postedBy;
-	}
+    public CustomerRecentActivityView(java.util.Date activityDate, String description, String amount, String postedBy) {
+        this.activityDate = new java.sql.Date(activityDate.getTime());
+        this.description = description;
+        this.amount = amount;
+        this.postedBy = postedBy;
+    }
 
-	public CustomerRecentActivityView(){
-	}
-	
-	private Date activityDate;
-	
-	private String description;
-	
-	private String amount="-";
-	
-	private String postedBy="-";
-	
-	private Locale locale=null;
-	
-	private String userPrefferedDate=null;
-	
-	public Date getActivityDate() {
-		return activityDate;
-	}
+    public CustomerRecentActivityView() {
+    }
 
-	public void setActivityDate(Date activityDate) {
-		this.activityDate = activityDate;
-	}
+    private Date activityDate;
 
-	public String getAmount() {
-		return amount;
-	}
+    private String description;
 
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
+    private String amount = "-";
 
-	public String getDescription() {
-		return description;
-	}
+    private String postedBy = "-";
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    private Locale locale = null;
 
-	public String getPostedBy() {
-		return postedBy;
-	}
+    private String userPrefferedDate = null;
 
-	public void setPostedBy(String postedBy) {
-		this.postedBy = postedBy;
-	}
+    public Date getActivityDate() {
+        return activityDate;
+    }
 
-	public String getUserPrefferedDate() {
-		return DateUtils.getUserLocaleDate(getLocale(), getActivityDate().toString()); 
-	}
+    public void setActivityDate(Date activityDate) {
+        this.activityDate = activityDate;
+    }
 
+    public String getAmount() {
+        return amount;
+    }
 
-	public Locale getLocale() {
-		return locale;
-	}
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
-	
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPostedBy() {
+        return postedBy;
+    }
+
+    public void setPostedBy(String postedBy) {
+        this.postedBy = postedBy;
+    }
+
+    public String getUserPrefferedDate() {
+        return DateUtils.getUserLocaleDate(getLocale(), getActivityDate().toString());
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
 }
