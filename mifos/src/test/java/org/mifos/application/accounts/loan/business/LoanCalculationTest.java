@@ -44,13 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -92,6 +85,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.ClasspathResource;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -110,9 +104,13 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * expected behavior for different loan payment calculations.
  * 
  */
-public class LoanCalculationTest {
+public class LoanCalculationTest extends MifosIntegrationTest {
 
-    @BeforeClass
+    public LoanCalculationTest() throws SystemException, ApplicationException {
+        super();
+        init();
+    }
+
     public static void init() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
     }
@@ -173,7 +171,6 @@ public class LoanCalculationTest {
 
     private LoanDao loanDao;
 
-    @Before
     public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
 
@@ -188,7 +185,6 @@ public class LoanCalculationTest {
         loanDao = new LoanDao();
     }
 
-    @After
     public void tearDown() throws Exception {
         TestObjectFactory.removeObject(loanOffering);
         if (accountBO != null)
@@ -769,7 +765,6 @@ public class LoanCalculationTest {
         setUpLoanAndVerify999AccountWhenLoanIsRepaid(config, loanParams, testCaseData.expectedResult);
     }
 
-    @Test
     public void testDecliningInterestEPITestCases() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         String[] dataFileNames = getCSVFiles(rootPath);
@@ -783,58 +778,44 @@ public class LoanCalculationTest {
     }
 
     // decliningEPI
-    @Test
     public void testDecliningEPISoham25Installments1DigitAfterDecimal() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham25Installments1DigitAfterDecimal.csv");
 
     }
 
-    @Test
     public void testDecliningEPISoham60Installments1DigitAfterDecimal() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham60Installments1DigitAfterDecimal.csv");
 
     }
 
-    @Test
     public void testDecliningEPISoham25Installments() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham25Installments.csv");
 
     }
 
-    @Test
     public void testDecliningEPISoham60Installments() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham60Installments.csv");
-
     }
 
-    @Test
     public void testDecliningEPINoFeeNoGrace() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-NoGrace.csv");
-
     }
 
-    @Test
     public void testDecliningEPIWithFeeWithGrace() throws Exception {
-
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-WithFee-WithGrace.csv");
-
     }
 
-    @Test
     public void testDecliningEPINoFeeWithGrace() throws Exception {
-
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
         runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-WithGrace.csv");
-
     }
 
-    @Test
     public void test999AccountLoansWithFees() throws NumberFormatException, PropertyNotFoundException, SystemException,
             ApplicationException, URISyntaxException, Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
@@ -848,7 +829,6 @@ public class LoanCalculationTest {
         }
     }
 
-    @Test
     public void test999AccountLoansWithFees2() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
@@ -865,21 +845,18 @@ public class LoanCalculationTest {
 
     // verify that 999 account transactions are logged after last payment is
     // made
-    @Test
     public void testPositive999AccountTest2LoanWithFees() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException {
         String dataFileName = "account999-withfees.csv";
         runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
     }
 
-    @Test
     public void test999AccountWhenLoanIsRepaid() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
         run999AccountWhenLoanIsRepaid(rootPath + dataFileName);
     }
 
-    @Test
     public void test999AccountForLoanReversal() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
@@ -890,7 +867,6 @@ public class LoanCalculationTest {
                 expected999AccountTransactions, paymentToReverse, payLastPayment);
     }
 
-    @Test
     public void test999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
@@ -901,14 +877,12 @@ public class LoanCalculationTest {
                 expected999AccountTransactions, paymentToReverse, payLastPayment);
     }
 
-    @Test
     public void testLoanScheduleGenerationWhenLastPaymentIsReversed() throws NumberFormatException,
             PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
         runOneLoanScheduleGenerationForLastPaymentReversal(rootPath + dataFileName);
     }
 
-    @Test
     public void testLoanScheduleGenerationWhenLoanIsReversed() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
@@ -917,7 +891,6 @@ public class LoanCalculationTest {
 
     // verify that 999 account transactions are logged after last payment is
     // made
-    @Test
     public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test2.csv";
@@ -926,7 +899,6 @@ public class LoanCalculationTest {
 
     // verify that 999 account transactions are logged after last payment is
     // made
-    @Test
     public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test1.csv";
@@ -934,7 +906,6 @@ public class LoanCalculationTest {
     }
 
     // no 999account should be logged in this case
-    @Test
     public void test999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException, Exception {
         String dataFileName = "account999-test3.csv";
@@ -946,7 +917,6 @@ public class LoanCalculationTest {
     }
 
     // payment is reversed and repay to the last payment
-    @Test
     public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException,
             PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException {
         String dataFileName = "account999-test3.csv";
@@ -1194,7 +1164,6 @@ public class LoanCalculationTest {
 
     // verify that 999 account transactions are logged after last payment is
     // made
-    @Test
     public void testPositive999AccountTest2() throws NumberFormatException, PropertyNotFoundException, SystemException,
             ApplicationException, URISyntaxException {
         String dataFileName = "account999-test3.csv";
@@ -2130,7 +2099,6 @@ public class LoanCalculationTest {
 
     }
 
-    @Test
     public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException {
         // String rootPath =
@@ -2143,7 +2111,6 @@ public class LoanCalculationTest {
             runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
     }
 
-    @Test
     public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException, URISyntaxException {
 
@@ -2154,7 +2121,6 @@ public class LoanCalculationTest {
 
     }
 
-    @Test
     public void testFlatInterestTestCases() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
@@ -2171,7 +2137,6 @@ public class LoanCalculationTest {
         }
     }
 
-    @Test
     public void testDecliningInterestTestCases() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
         String[] dataFileNames = getCSVFiles(rootPath);
@@ -2185,8 +2150,7 @@ public class LoanCalculationTest {
         }
     }
 
-    @Ignore
-    public void testAllDecliningInterestEdgeTestCases() throws Exception {
+    public void xtestAllDecliningInterestEdgeTestCases() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterestedge/";
         String[] dataFileNames = getCSVFiles(rootPath);
         for (int i = 0; i < dataFileNames.length; i++) {
@@ -2198,8 +2162,8 @@ public class LoanCalculationTest {
         }
     }
 
-    @Ignore
-    public void testAllFlatInterestEdgeTestCases() throws Exception {
+    // marked "@Ignore" in JUnit4, so converting to xtest so it won't run in JUnit3
+    public void xtestAllFlatInterestEdgeTestCases() throws Exception {
         String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatinterestedge/";
         String[] dataFileNames = getCSVFiles(rootPath);
         for (int i = 0; i < dataFileNames.length; i++) {
@@ -2317,8 +2281,7 @@ public class LoanCalculationTest {
      * This test case populates data from spreadsheet for loan params and
      * expected results
      */
-    @Test
-    @Ignore
+    // marked "@Ignore" in JUnit4, so converting to xtest so it won't run in JUnit3
     // getting NullPointerException
     public void testOneExampleOfTestCaseFromSpreadSheet() throws NumberFormatException, PropertyNotFoundException,
             SystemException, ApplicationException {
@@ -2467,10 +2430,6 @@ public class LoanCalculationTest {
         }
 
         return sortedList;
-    }
-
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(LoanCalculationTest.class);
     }
 
 }

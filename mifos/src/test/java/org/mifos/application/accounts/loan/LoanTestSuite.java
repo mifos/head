@@ -52,8 +52,8 @@ public class LoanTestSuite extends TestSuite {
 
     public static Test suite() {
         TestSuite testSuite = new LoanTestSuite();
-        testSuite.addTest(LoanAccountActionTest.testSuite());
-        testSuite.addTest(LoanCalculationTest.testSuite());
+        testSuite.addTestSuite(LoanAccountActionTest.class);
+        testSuite.addTestSuite(LoanCalculationTest.class);
         testSuite.addTestSuite(LoanPersistenceIntegrationTest.class);
         testSuite.addTestSuite(LoanBOIntegrationTest.class);
         testSuite.addTestSuite(RepayLoanActionTest.class);

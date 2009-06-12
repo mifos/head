@@ -35,11 +35,11 @@ public class PPITestSuite extends TestSuite {
     public static Test suite() throws Exception {
         TestSuite testSuite = new PPITestSuite();
         testSuite.addTest(XmlPPIParserTest.suite());
-        testSuite.addTest(PPIChoiceIntegrationTest.suite());
+        testSuite.addTestSuite(PPIChoiceIntegrationTest.class);
         testSuite.addTest(PPISurveyIntegrationTest.suite());
         testSuite.addTestSuite(PPIActionTest.class);
         testSuite.addTest(PpiLikelihoodTest.suite());
-        testSuite.addTest(PpiSurveyInstanceTest.suite());
+        testSuite.addTestSuite(PpiSurveyInstanceTest.class);
         return testSuite;
     }
 }

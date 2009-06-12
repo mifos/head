@@ -20,23 +20,24 @@
 
 package org.mifos.application.accounts.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Session;
-import org.junit.Test;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
-public class AddAccountActionTest {
+public class AddAccountActionTest extends MifosIntegrationTest {
+
+    public AddAccountActionTest() throws SystemException, ApplicationException {
+        super();
+    }
 
     private static final short SEND_TO_ORPHANS = 43;
 
-    @Test
     public void startFromStandardStore() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
 
@@ -55,8 +56,7 @@ public class AddAccountActionTest {
         assertEquals(" ", action.getLookUpValue().getLookUpName());
     }
 
-    @Test
-    public void validateLookupValueKeyTest() throws Exception {
+    public void testValidateLookupValueKey() throws Exception {
         String validKey = "AccountAction-LoanRepayment";
         String format = "AccountAction-";
         assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
@@ -64,8 +64,7 @@ public class AddAccountActionTest {
         assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test
-    public void constructorTest() throws Exception {
+    public void testConstructor() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         short newId = 31000;
         AddAccountAction upgrade = null;
@@ -91,10 +90,6 @@ public class AddAccountActionTest {
         Session session = database.openSession();
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
         assertEquals(goodKey, action.getLookUpValue().getLookUpName());
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(AddAccountActionTest.class);
     }
 
 }

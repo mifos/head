@@ -20,18 +20,12 @@
 
 package org.mifos.application.admin.system;
 
-import static org.junit.Assert.assertEquals;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.mifos.core.service.ApplicationInformationDto;
 import org.mifos.core.service.ApplicationInformationService;
 
-public class ApplicationInformationTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ApplicationInformationTest.class);
-    }
+public class ApplicationInformationTest extends TestCase {
 
     private static final String BUILD_ID = "ID_1";
     private static final String BUILD_NUMBER = "BUILD_1";
@@ -39,7 +33,6 @@ public class ApplicationInformationTest {
 
     private ApplicationInformationService applicationInfoService;
 
-    @Before
     public void setUp() throws Exception {
         applicationInfoService = new StandardApplicationInformationService();
         ApplicationInformationDto applicationInformationDto = new ApplicationInformationDto();
@@ -49,7 +42,6 @@ public class ApplicationInformationTest {
         applicationInfoService.setApplicationInformation(applicationInformationDto);
     }
 
-    @Test
     public void testGetApplicationInformation() {
         assertEquals(applicationInfoService.getApplicationInformation().getBuildId(), BUILD_ID);
         assertEquals(applicationInfoService.getApplicationInformation().getBuildTag(), BUILD_NUMBER);

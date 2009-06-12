@@ -20,7 +20,6 @@
 
 package org.mifos.application.branchreport;
 
-import static org.junit.Assert.assertEquals;
 import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK;
 import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.FOUR_WEEK;
 import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.MORE_THAN_TWELVE;
@@ -28,15 +27,12 @@ import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.NINE_TO_
 import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.ONE_WEEK;
 import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.THREE_WEEK;
 import static org.mifos.application.branchreport.LoanArrearsAgingPeriod.TWO_WEEK;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
-
-public class LoanArrearsAgingPeriodTest {
+public class LoanArrearsAgingPeriodTest extends TestCase {
 
     private static final int TOTAL_WEEK_DAYS = 7;
 
-    @Test
     public void testLoanArrearsAgingPeriodValues() throws Exception {
         assertEquals(1, (int) ONE_WEEK.getMinDays());
         assertEquals(TOTAL_WEEK_DAYS, (int) ONE_WEEK.getMaxDays());
@@ -67,13 +63,8 @@ public class LoanArrearsAgingPeriodTest {
         assertEquals(Integer.MAX_VALUE, (int) MORE_THAN_TWELVE.getNotLessThanDays());
     }
 
-    @Test
     public void testNumberOfArrearsPeriods() throws Exception {
         assertEquals(7, LoanArrearsAgingPeriod.values().length);
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(LoanArrearsAgingPeriodTest.class);
     }
 
 }

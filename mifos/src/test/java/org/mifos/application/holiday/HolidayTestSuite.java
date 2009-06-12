@@ -45,7 +45,7 @@ public class HolidayTestSuite extends TestSuite {
         testSuite.addTestSuite(HolidayPersistenceIntegrationTest.class);
         testSuite.addTestSuite(HolidayActionTest.class);
         testSuite.addTestSuite(HolidayUtilsIntegrationTest.class);
-        testSuite.addTest(AddRepaymentRuleTest.testSuite());
+        testSuite.addTestSuite(AddRepaymentRuleTest.class);
 
         return testSuite;
     }

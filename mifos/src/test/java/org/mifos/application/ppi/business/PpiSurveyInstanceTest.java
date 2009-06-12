@@ -20,29 +20,24 @@
 
 package org.mifos.application.ppi.business;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.framework.exceptions.ValidationException;
 
-public class PpiSurveyInstanceTest {
+public class PpiSurveyInstanceTest extends TestCase {
 
     private static final double DELTA = 0.00000001;
 
-    @Test
     public void testComputeScore() {
         PPISurveyInstance instance = new PPISurveyInstance();
         instance.setSurveyResponses(createSurveyResponses());
         assertEquals(instance.computeScore(), 12);
     }
 
-    @Test
     public void testLikelihoodsAfterInitialize() throws Exception {
         PPISurveyInstance instance = createPPISurveyInstance();
         assertEquals(20.0, instance.getBottomHalfBelowPovertyLinePercent(), DELTA);
@@ -72,10 +67,6 @@ public class PpiSurveyInstanceTest {
         instance.setSurveyResponses(createSurveyResponses());
         instance.initialize();
         return instance;
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(PpiSurveyInstanceTest.class);
     }
 
 }

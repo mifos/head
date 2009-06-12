@@ -24,24 +24,21 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 
-public class ClientBoTest {
+public class ClientBoTest extends TestCase {
 
-    @Before
     public void setUp() throws Exception {
         MifosLogManager.configureLogging();
     }
 
-    @Test
     public void testAddClientAttendance() {
         ClientBO client = new ClientBO();
         Assert.assertEquals("Expecting no attendance entries on a new object", 0, client.getClientAttendances().size());
@@ -50,7 +47,6 @@ public class ClientBoTest {
         Assert.assertEquals("Expecting no attendance entries on a new object", 1, client.getClientAttendances().size());
     }
 
-    @Test
     public void testGetClientAttendanceForMeeting() {
         ClientBO client = new ClientBO();
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
@@ -69,7 +65,6 @@ public class ClientBoTest {
         return client;
     }
 
-    @Test
     public void testHandleAttendance() throws Exception {
         ClientBO client = createUpdatableClient();
 
@@ -84,7 +79,6 @@ public class ClientBoTest {
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
     }
 
-    @Test
     public void testHandleAttendanceForDifferentDates() throws Exception {
         ClientBO client = createUpdatableClient();
 

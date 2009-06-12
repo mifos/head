@@ -48,8 +48,8 @@ public class AdminTestSuite extends TestSuite {
     public static Test suite() throws Exception {
         TestSuite testSuite = new AdminTestSuite();
         testSuite.addTestSuite(AdminActionTest.class);
-        testSuite.addTest(SystemInfoTest.suite());
-        testSuite.addTest(ApplicationInformationTest.suite());
+        testSuite.addTestSuite(SystemInfoTest.class);
+        testSuite.addTestSuite(ApplicationInformationTest.class);
         testSuite.addTestSuite(ViewOrganizationSettingsActionTest.class);
         return testSuite;
     }

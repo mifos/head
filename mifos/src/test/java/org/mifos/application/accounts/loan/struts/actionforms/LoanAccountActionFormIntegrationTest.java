@@ -42,7 +42,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.junit.Test;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.productdefinition.business.AmountRange;
@@ -66,7 +65,6 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
     private static final String INTEREST_ERROR_KEY = "interest.invalid";
     private static final String AMOUNT_ERROR_KEY = "amount.invalid";
 
-    @Test
     public void testShouldAddErrorIfTransactionDateForAPaymentIsInFuture() {
         expect(paymentMock.getTransactionDate()).andReturn(DateUtils.getDateFromToday(1));
         replay(paymentMock);
@@ -76,12 +74,10 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
         assertErrorKey(errors, LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT);
     }
 
-    @Test
     public void testShouldNotAddErrorIfTransactionDateForAPaymentIsToday() {
         validateForNoErrorsOnDate(DateUtils.currentDate());
     }
 
-    @Test
     public void testShouldNotAddErrorIfTransactionDateForAPaymentIsInPast() {
         validateForNoErrorsOnDate(DateUtils.getDateFromToday(-1));
     }

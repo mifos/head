@@ -28,11 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import junit.framework.Assert;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.Assert;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
@@ -64,19 +62,23 @@ import org.mifos.framework.util.helpers.Money;
  * There is a related integration test class LoanAccountActionEasyMockTest
  * which uses the "old style" of testing which hits the database.
  */
-public class LoanAccountActionTest {
-    static Short shortOne = Short.valueOf((short) 1);
-
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(LoanAccountActionTest.class);
+public class LoanAccountActionTest extends TestCase {
+    public LoanAccountActionTest() {
+        super();
+        before();
     }
 
-    @BeforeClass
+    public LoanAccountActionTest(String name) {
+        super(name);
+        before();
+    }
+
+    static Short shortOne = Short.valueOf((short) 1);
+
     public static void before() {
         MifosLogManager.configureLogging();
     }
 
-    @Test
     public void testGetDefaultAndAdditionalFees() throws Exception {
         ConfigurationBusinessService mockConfigurationBusinessService = createMock(ConfigurationBusinessService.class);
         LoanBusinessService mockLoanBusinessService = createMock(LoanBusinessService.class);

@@ -20,26 +20,23 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class FinancialRulesTest {
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(FinancialRulesTest.class);
+public class FinancialRulesTest extends MifosIntegrationTest {
+
+    public FinancialRulesTest() throws SystemException, ApplicationException {
+        super();
+        init();
     }
 
-    @BeforeClass
-    public static void init() throws Exception {
+    public static void init() throws SystemException, ApplicationException {
         // initialize Spring, Hibernate, etc.
         new TestCaseInitializer().initialize();
     }
 
-    @Test
     public void testSupportedActions() throws Exception {
         assertEquals("11201", FinancialRules.getInstance().getGLAccountForAction(
                 FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
@@ -50,9 +47,13 @@ public class FinancialRulesTest {
     /**
      * Ensure a lookup for a category of a nonexistant financial action fails.
      */
-    @Test(expected = RuntimeException.class)
     public void testUnsupportedAction01() throws Exception {
-        FinancialRules.getInstance().getGLAccountForAction((short) -1, FinancialConstants.DEBIT);
+        try {
+            FinancialRules.getInstance().getGLAccountForAction((short) -1, FinancialConstants.DEBIT);
+            fail("Expected RuntimeException.");
+        } catch (RuntimeException e) {
+            // do nothing
+        }
     }
 
     /**

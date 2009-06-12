@@ -22,7 +22,6 @@ package org.mifos.application.accounts.offsetting;
 
 import java.util.Date;
 
-import org.junit.Test;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -68,7 +67,6 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTest {
          */
     }
 
-    @Test
     public void testLoanAccountBOOfsetAllowablePersistence() {
         assertTrue(accountBO.getOffsettingAllowable().intValue() == 1);
     }
@@ -87,7 +85,7 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTest {
         super.tearDown();
     }
 
-    public LoanBO createLoanAccount() {
+    private LoanBO createLoanAccount() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("OffsetCenter", meeting);

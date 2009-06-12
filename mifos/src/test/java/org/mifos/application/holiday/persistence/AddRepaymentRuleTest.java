@@ -20,43 +20,32 @@
 
 package org.mifos.application.holiday.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-import junit.framework.JUnit4TestAdapter;
-
-import org.hibernate.Session;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
-import org.mifos.application.holiday.persistence.AddRepaymentRule;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
 
-public class AddRepaymentRuleTest {
+public class AddRepaymentRuleTest extends MifosIntegrationTest {
+
+    public AddRepaymentRuleTest() throws SystemException, ApplicationException {
+        super();
+        init();
+    }
 
     /*
      * We need the test case initializer in order to set up the message cache in
      * MifosConfiguration.
      */
-    @BeforeClass
     public static void init() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
     }
 
-    @Test
-    public void validateLookupValueKeyTest() throws Exception {
+    public void testValidateLookupValueKey() throws Exception {
         String validKey = "RepaymentRule-NewSameDay";
         String format = "RepaymentRule-";
         assertTrue(AddRepaymentRule.validateLookupValueKey(format, validKey));
@@ -64,8 +53,7 @@ public class AddRepaymentRuleTest {
         assertFalse(AddRepaymentRule.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test
-    public void constructorTest() throws Exception {
+    public void testConstructor() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         String start = database.dumpForComparison();
         AddRepaymentRule upgrade = null;
@@ -93,10 +81,6 @@ public class AddRepaymentRuleTest {
         String afterUpAndDownGrade = database.dumpForComparison();
         assertEquals(start, afterUpAndDownGrade);
 
-    }
-
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(AddRepaymentRuleTest.class);
     }
 
 }

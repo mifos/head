@@ -20,31 +20,23 @@
 
 package org.mifos.application.admin.system;
 
-import static org.junit.Assert.assertEquals;
-
 import java.net.URI;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.util.DateTimeService;
 
 import servletunit.ServletContextSimulator;
 
-public class SystemInfoTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SystemInfoTest.class);
-    }
+public class SystemInfoTest extends TestCase {
 
     private SystemInfo info;
 
-    @Before
     public void setUp() throws Exception {
         ServletContext servletContext = new ServletContextSimulator();
         MockDatabaseMetaData metaData = new MockDatabaseMetaData();
@@ -54,12 +46,10 @@ public class SystemInfoTest {
         info.setSvnRevision(new MockSvnRevision());
     }
 
-    @Test
     public void testApplicationDatabaseVersion() throws Exception {
         assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
     }
 
-    @Test
     public void testDatabaseDetails() throws Exception {
         assertEquals("vendorName", info.getDatabaseVendor());
         assertEquals("1.0", info.getDatabaseVersion());
@@ -67,7 +57,6 @@ public class SystemInfoTest {
         assertEquals("2.0", info.getDriverVersion());
     }
 
-    @Test
     public void testDatabaseInfos() throws Exception {
         String infoSourceValue = "test";
         info.setInfoSource(infoSourceValue);
@@ -82,28 +71,28 @@ public class SystemInfoTest {
         assertEquals("mysql", info.getDatabaseUser());
     }
 
-    @Test
     public void testJava() throws Exception {
         assertEquals("Sun", info.getJavaVendor());
         assertEquals("1.5", info.getJavaVersion());
     }
 
-    @Test
     public void testApplicationServer() throws Exception {
         assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
     }
 
-    @Test
     public void testGetSubversionRevision() throws Exception {
         assertEquals("123456", info.getSvnRevision());
     }
 
-    @Test(expected = RuntimeException.class)
     public void testGetSubversionRevisionFromMissingFile() throws Exception {
-        info.setSvnRevision(new SvnRevision("non-existant.file"));
+        try {
+            info.setSvnRevision(new SvnRevision("non-existant.file"));
+            fail("Expected RuntimeException.");
+        } catch (RuntimeException e) {
+            // expected
+        }
     }
 
-    @Test
     public void testGetDateTime() {
         DateTime referenceDateTime = new DateTime(2008, 12, 5, 1, 10, 0, 0);
         DateTimeService dateTimeService = new DateTimeService();

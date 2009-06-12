@@ -27,14 +27,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.JUnit4TestAdapter;
 import junitx.framework.ObjectAssert;
 
 import org.joda.time.DateMidnight;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
@@ -51,12 +46,11 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosInMemoryIntegrationTest;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
-    @Test
-    public void retrievePPIChoice() throws Exception {
+
+    public void testRetrievePPIChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
         question.addChoice(ppiChoice);
@@ -70,8 +64,7 @@ public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
         assertEquals("Hello World", retrievedChoice.getChoiceText());
     }
 
-    @Test
-    public void retrieveRegularChoice() throws Exception {
+    public void testRetrieveRegularChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         QuestionChoice regularChoice = new QuestionChoice("Hello World");
         question.addChoice(regularChoice);
@@ -88,19 +81,17 @@ public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
         assertEquals(null, new PPIPersistence().getPPIChoice(choiceId));
     }
 
-    @Test
-    public void notFound() throws Exception {
+    public void testNotFound() throws Exception {
         QuestionChoice retrieved = new PPIPersistence().getPPIChoice(123456);
         assertEquals(null, retrieved);
     }
 
-    @Test
-    @Ignore
     /*
      * Test throws a SQLException: Attempt to read SQL NULL as an object When
      * trying to retrieve responses from db.
      */
-    public void viaResponses() throws Exception {
+    // marked @Ignore in JUnit 4 so converting to xtest
+    public void xtestViaResponses() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
         question.addChoice(ppiChoice);
@@ -145,10 +136,6 @@ public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
         return new PersonnelBO(PersonnelLevel.LOAN_OFFICER, null, Integer.valueOf("1"), TestObjectFactory.TEST_LOCALE,
                 "PASSWORD", "a test officer", "xyz@yahoo.com", null, null, name, "govId", date, Integer.valueOf("1"),
                 Integer.valueOf("1"), date, date, null, PersonnelConstants.SYSTEM_USER);
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(PPIChoiceIntegrationTest.class);
     }
 
 }

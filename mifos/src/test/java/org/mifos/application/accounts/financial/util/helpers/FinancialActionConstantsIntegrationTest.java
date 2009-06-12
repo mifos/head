@@ -20,10 +20,7 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-import junit.framework.JUnit4TestAdapter;
-
 import org.hibernate.Query;
-import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -40,7 +37,6 @@ public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTes
      * FinancialActionConstants} matches the number of elements in the
      * corresponding table "financial_actions".
      */
-    @Test
     public void testGetFinancialAction() {
         Query queryFinancialAction = StaticHibernateUtil.getSessionTL().getNamedQuery(
                 FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
@@ -51,10 +47,6 @@ public class FinancialActionConstantsIntegrationTest extends MifosIntegrationTes
         // The (-2) adjustment to the assert compensates for this difference
 
         assertEquals(FinancialActionConstants.values().length, queryFinancialAction.list().size() - 2);
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(FinancialActionConstantsIntegrationTest.class);
     }
 
 }

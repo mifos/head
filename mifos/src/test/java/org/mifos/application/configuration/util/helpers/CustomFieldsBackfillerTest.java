@@ -20,18 +20,10 @@
 
 package org.mifos.application.configuration.util.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
@@ -42,11 +34,19 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CustomFieldsBackfillerTest {
+public class CustomFieldsBackfillerTest extends MifosIntegrationTest {
+    public CustomFieldsBackfillerTest() throws SystemException, ApplicationException {
+        super();
+        setUpBeforeClass();
+    }
+
     // reused by unit tests
     ClientBO client;
     CustomFieldDefinitionEntity customField;
@@ -56,22 +56,15 @@ public class CustomFieldsBackfillerTest {
     private static final String CUSTOM_FIELD_LABEL = "Favorite Color";
     private static final String CUSTOM_FIELD_LABEL2 = "Lucky Number";
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws SystemException, ApplicationException  {
         new TestCaseInitializer().initialize();
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    @Before
     public void setUp() throws Exception {
         // create client
         client = TestObjectFactory.createClient("Joe Client", null, CustomerStatus.CLIENT_PARTIAL);
     }
 
-    @After
     public void tearDown() throws Exception {
         Session session = StaticHibernateUtil.getSessionTL();
 
@@ -113,7 +106,6 @@ public class CustomFieldsBackfillerTest {
     /**
      * Ensure a newly added field is also added to an existing client.
      */
-    @Test
     public void testExistingClientGetsNewField() throws Exception {
         createCustomField();
         assertEquals(CUSTOM_FIELD_LABEL, customField.getLabel());
@@ -138,7 +130,6 @@ public class CustomFieldsBackfillerTest {
      * Ensure a non-mandatory newly added field (without a default value) is
      * also added to an existing client.
      */
-    @Test
     public void testExistingClientGetsNewNonmandatoryFieldWithoutDefault() throws Exception {
         createNonMandatoryCustomFieldWithoutDefault();
         assertEquals(CUSTOM_FIELD_LABEL2, customField.getLabel());

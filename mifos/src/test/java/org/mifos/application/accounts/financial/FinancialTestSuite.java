@@ -47,12 +47,12 @@ public class FinancialTestSuite extends TestSuite {
     public static Test suite() throws Exception {
         TestSuite testSuite = new FinancialTestSuite();
         testSuite.addTestSuite(FinancialActionCacheIntegrationTest.class);
-        testSuite.addTest(FinancialInitializerTest.suite());
-        testSuite.addTest(ChartOfAccountsCacheTest.suite());
-        testSuite.addTest(FinancialRulesTest.testSuite());
+        testSuite.addTestSuite(FinancialInitializerTest.class);
+        testSuite.addTestSuite(ChartOfAccountsCacheTest.class);
+        testSuite.addTestSuite(FinancialRulesTest.class);
         testSuite.addTestSuite(COABOIntegrationTest.class);
         testSuite.addTestSuite(FinancialBOIntegrationTest.class);
-        testSuite.addTest(FinancialActionConstantsIntegrationTest.suite());
+        testSuite.addTestSuite(FinancialActionConstantsIntegrationTest.class);
 
         return testSuite;
 

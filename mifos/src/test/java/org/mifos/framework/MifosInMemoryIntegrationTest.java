@@ -20,8 +20,8 @@
 
 package org.mifos.framework;
 
-import org.junit.After;
-import org.junit.Before;
+import junit.framework.TestCase;
+
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -31,16 +31,14 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * Marker superclass for integration tests that can be run using an in-memory
  * database like Mayfly.
  */
-public class MifosInMemoryIntegrationTest {
+public class MifosInMemoryIntegrationTest extends TestCase {
     protected TestDatabase database;
 
-    @Before
     public void setUp() {
         database = TestDatabase.makeStandard();
         database.installInThreadLocal();
     }
 
-    @After
     public void tearDown() {
         StaticHibernateUtil.resetDatabase();
     }

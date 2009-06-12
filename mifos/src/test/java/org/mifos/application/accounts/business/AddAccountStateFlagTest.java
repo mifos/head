@@ -20,16 +20,11 @@
 
 package org.mifos.application.accounts.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Session;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -37,7 +32,12 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class AddAccountStateFlagTest {
+public class AddAccountStateFlagTest extends MifosIntegrationTest {
+
+    public AddAccountStateFlagTest() throws SystemException, ApplicationException {
+        super();
+        init();
+    }
 
     private static final short FLAG_FEET_TOO_BIG = 12;
 
@@ -47,7 +47,6 @@ public class AddAccountStateFlagTest {
      * We need the test case initializer in order to set up the message cache in
      * MifosConfiguration.
      */
-    @BeforeClass
     public static void init() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
     }
@@ -61,8 +60,7 @@ public class AddAccountStateFlagTest {
      * }
      */
 
-    @Test
-    public void startFromStandardStore() throws Exception {
+    public void testStartFromStandardStore() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         String start = database.dumpForComparison();
 
@@ -98,8 +96,7 @@ public class AddAccountStateFlagTest {
         assertEquals("Rejected because feet are too big", flag.getName());
     }
 
-    @Test
-    public void validateLookupValueKeyTest() throws Exception {
+    public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "AccountFlags-Withdraw";
         String format = "AccountFlags-";
         assertTrue(AddAccountStateFlag.validateLookupValueKey(format, validKey));
@@ -107,8 +104,7 @@ public class AddAccountStateFlagTest {
         assertFalse(AddAccountStateFlag.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test
-    public void constructorTest() throws Exception {
+    public void testConstructor() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         short newId = 31500;
         AddAccountStateFlag upgrade = null;
@@ -137,10 +133,6 @@ public class AddAccountStateFlagTest {
         assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
         MifosConfiguration.getInstance().init();
 
-    }
-
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(AddAccountStateFlagTest.class);
     }
 
 }

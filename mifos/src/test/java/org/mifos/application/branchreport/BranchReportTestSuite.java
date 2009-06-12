@@ -52,7 +52,7 @@ public class BranchReportTestSuite extends TestSuite {
         suite.addTestSuite(BranchReportStaffingLevelSummaryHelperIntegrationTest.class);
         suite.addTestSuite(BranchReportStaffingLevelSummaryBOTest.class);
         suite.addTestSuite(ReportParameterValidatorFactoryIntegrationTest.class);
-        suite.addTest(LoanArrearsAgingPeriodTest.suite());
+        suite.addTestSuite(LoanArrearsAgingPeriodTest.class);
         return suite;
     }
 }
