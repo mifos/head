@@ -64,8 +64,15 @@ public class SearchResultsPage extends MifosPage {
     public int countSearchResults() {
         // Get first bit of orange text on search results page,
         // which should look like "11 results for"
-        String heading = selenium.getText( "//span[@class='headingorange'][1]" );
-        heading = heading.substring(0, heading.indexOf(' '));
-        return Integer.parseInt(heading);
+        String heading = null;
+        int resultCount;
+        try {
+            heading = selenium.getText( "//span[@class='headingorange'][1]" );
+            resultCount = Integer.parseInt(heading.substring(0, heading.indexOf(' ')));
+        } catch (Exception e) {
+            // failed to retrieve result
+            resultCount = 0; 
+        }
+        return resultCount;
     }
 }
