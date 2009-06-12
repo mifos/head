@@ -44,6 +44,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<input type="hidden" id="page.id" value="viewFunds"/>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
 <html-el:form action="/fundAction.do">
@@ -70,7 +71,7 @@
             </tr>
           </table>            
             <br>
-            <table width="80%" border="0" cellpadding="3" cellspacing="0">
+            <table id="fundDisplayTable" width="80%" border="0" cellpadding="3" cellspacing="0">
               <tr>
               <font class="fontnormalRedBold">
 				<html-el:errors	bundle="fundUIResources" /> 
@@ -83,6 +84,7 @@
                 </td>
                 <td width="23%" class="drawtablerowboldnoline">&nbsp;</td>
               </tr>  
+              
               <c:forEach var="fundItem" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'fundList')}" >
 	              <tr>
 	                <td width="33%" class="drawtablerow">${fundItem.fundName}</td>

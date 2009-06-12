@@ -220,7 +220,13 @@ public class AdminPage extends MifosPage {
         return new ViewAdditionalFieldCategoriesPage(selenium);
     }
   
-    
+    public ViewFundsPage navigateToViewFundsPage() {
+        selenium.click("admin.link.viewFunds");
+        waitForPageToLoad();
+        return new ViewFundsPage(selenium);
+    }
+           
+
     public CreateHolidayEntryPage navigateToDefineHolidayPage() {
         selenium.click("admin.link.defineNewHoliday");
         waitForPageToLoad();
