@@ -20,7 +20,6 @@
 
 package org.mifos.framework.persistence;
 
-import static org.junit.Assert.assertEquals;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 
 import java.io.InputStream;
@@ -32,14 +31,13 @@ import java.sql.Statement;
 import junit.framework.Assert;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
-import net.sourceforge.mayfly.dump.SqlDumper;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-/*
- * This class contains common methods used to test database upgrade and downgrade
- * scripts on the test classes that extend this base class.
+/**
+ * Contains common methods used to test database upgrade scripts on the test
+ * classes that extend this base class.
  */
 public class LatestBaseTest {
 
@@ -93,7 +91,7 @@ public class LatestBaseTest {
     }
 
     private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
-        String[] sqlStatements = upgrade.readFile((InputStream) upgrade.sql().getContent());
+        String[] sqlStatements = SqlUpgrade.readFile((InputStream) upgrade.sql().getContent());
         for (int i = 0; i < sqlStatements.length; i++) {
             Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues
                     .checkLookupValue(sqlStatements[i]));
