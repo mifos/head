@@ -156,7 +156,7 @@
             excludes="${global.exclude}">
             <classpath>
                 <path refid="class.path"/>
-                <path refid="maven-dependencies.classpath"/>
+                <path refid="maven-dependencies.compile"/>
             </classpath>
         </javac>
     </target>
@@ -507,6 +507,9 @@
 
     <target name="maven_dependencies">
         <artifact:dependencies pathId="maven-dependencies.classpath" useScope="runtime">
+            <artifact:pom id="maven.project.dependencies" file="pom.xml" />
+        </artifact:dependencies>
+        <artifact:dependencies pathId="maven-dependencies.compile" useScope="compile">
             <artifact:pom id="maven.project.dependencies" file="pom.xml" />
         </artifact:dependencies>
         <artifact:dependencies filesetId="maven-dependencies.fileset" useScope="runtime">
