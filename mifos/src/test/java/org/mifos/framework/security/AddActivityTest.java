@@ -20,19 +20,14 @@
 
 package org.mifos.framework.security;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -52,25 +47,22 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AddActivityTest {
+public class AddActivityTest extends TestCase {
 
     /*
      * We need the test case initializer in order to set up the message cache in
      * MifosConfiguration.
      */
-    @BeforeClass
-    public static void init() throws SystemException, ApplicationException {
+    public void setUp() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
     }
 
-    @Test
-    public void startFromStandardStore() throws Exception {
+    public void testStartFromStandardStore() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         upgradeAndCheck(database);
     }
 
-    @Test
-    public void startFromSystemWithAddedLookupValues() throws Exception {
+    public void testStartFromSystemWithAddedLookupValues() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
 
         Session writer = database.openSession();
@@ -116,8 +108,7 @@ public class AddActivityTest {
         return upgrade;
     }
 
-    @Test
-    public void noParent() throws Exception {
+    public void testNoParent() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
 
         short newId = 17032;
@@ -129,8 +120,7 @@ public class AddActivityTest {
         assertEquals(null, fetched.getParent());
     }
 
-    @Test
-    public void validateLookupValueKeyTest() throws Exception {
+    public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "Permissions-CanCreateFunds";
         String format = "Permissions-";
         assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
@@ -138,8 +128,7 @@ public class AddActivityTest {
         assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test
-    public void constructorTest() throws Exception {
+    public void testConstructorTest() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         short newId = 30000;
         AddActivity upgrade = null;
@@ -167,9 +156,4 @@ public class AddActivityTest {
         assertEquals(goodKey, fetched.getActivityName());
         assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
     }
-
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(AddActivityTest.class);
-    }
-
 }

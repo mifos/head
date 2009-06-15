@@ -20,13 +20,8 @@
 
 package org.mifos.application.surveys.persistence;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
@@ -38,6 +33,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
 public class SurveysPersistenceIntegrationTest extends MifosInMemoryIntegrationTest {
+    
     public SurveysPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
@@ -46,7 +42,6 @@ public class SurveysPersistenceIntegrationTest extends MifosInMemoryIntegrationT
     private Question question2;
     private Question question3;
 
-    @Test
     public void testPpi() throws Exception {
         createQuestions();
         SurveysPersistence persistence = new SurveysPersistence();
@@ -96,9 +91,4 @@ public class SurveysPersistenceIntegrationTest extends MifosInMemoryIntegrationT
         surveysPersistence.createOrUpdate(question2);
         surveysPersistence.createOrUpdate(question3);
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SurveysPersistenceIntegrationTest.class);
-    }
-
 }

@@ -23,17 +23,15 @@ package org.mifos.application.ppi.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
 import org.junit.Assert;
-import org.junit.Test;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.exceptions.ValidationException;
 
-public class PpiLikelihoodTest {
+public class PpiLikelihoodTest extends TestCase {
     private static final double DELTA = 0.000001;
 
-    @Test
     public void testLikelihoodConstructor() throws Exception {
         PPILikelihood lh = new PPILikelihood(0, 5, 20.1, 21.2);
         Assert.assertEquals(20.1, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
@@ -42,7 +40,6 @@ public class PpiLikelihoodTest {
         Assert.assertEquals(58.7, lh.getAbovePovertyLinePercent(), DELTA);
     }
 
-    @Test
     public void testLikelihoodConstructorZeroBottomHalf() throws Exception {
         PPILikelihood lh = new PPILikelihood(0, 5, 0.0, 21.2);
         Assert.assertEquals(0.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
@@ -51,7 +48,6 @@ public class PpiLikelihoodTest {
         Assert.assertEquals(78.8, lh.getAbovePovertyLinePercent(), DELTA);
     }
 
-    @Test
     public void testLikelihoodConstructorZeroTopHalf() throws Exception {
         PPILikelihood lh = new PPILikelihood(0, 5, 20.1, 0.0);
         Assert.assertEquals(20.1, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
@@ -60,7 +56,6 @@ public class PpiLikelihoodTest {
         Assert.assertEquals(79.9, lh.getAbovePovertyLinePercent(), DELTA);
     }
 
-    @Test
     public void testLikelihoodConstructorBothZero() throws Exception {
         PPILikelihood lh = new PPILikelihood(0, 5, 0.0, 0.0);
         Assert.assertEquals(0.0, lh.getBottomHalfBelowPovertyLinePercent(), DELTA);
@@ -69,45 +64,69 @@ public class PpiLikelihoodTest {
         Assert.assertEquals(100.0, lh.getAbovePovertyLinePercent(), DELTA);
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorScoreOutOfRange() throws Exception {
-        int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
-        PPILikelihood lh = new PPILikelihood(0, nonPoorMax + 1, 10.5, 30.2);
+        try {
+            int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
+            PPILikelihood lh = new PPILikelihood(0, nonPoorMax + 1, 10.5, 30.2);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorBottomHalfNegative() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, -10.5, 30.2);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, -10.5, 30.2);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorTopHalfNegative() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, 10.5, -30.2);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, 10.5, -30.2);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorBothNegative() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, 10.5, -30.2);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, 10.5, -30.2);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorTooBig() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, 85.5, 30.2);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, 85.5, 30.2);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorTopHalfTooBig() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, 110.1, 5.5);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, 110.1, 5.5);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorBothTooBig() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, 5.5, 110.5);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, 5.5, 110.5);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testLikelihoodConstructorPosNeg() throws Exception {
-        PPILikelihood lh = new PPILikelihood(0, 5, 105.0, -20.5);
+        try {
+            PPILikelihood lh = new PPILikelihood(0, 5, 105.0, -20.5);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
     private List<PPILikelihood> createRows() throws ValidationException {
@@ -120,43 +139,52 @@ public class PpiLikelihoodTest {
         return likelihoods;
     }
 
-    @Test(expected = ValidationException.class)
     public void testScoreRangeOverlap() throws Exception {
-        List<PPILikelihood> list = new ArrayList<PPILikelihood>();
-        list.add(new PPILikelihood(0, 5, 1, 2));
-        // this range overlaps the previous range
-        list.add(new PPILikelihood(4, 10, 1, 2));
-        PPISurvey survey = new PPISurvey();
-        survey.setLikelihoods(list);
+        try {
+            List<PPILikelihood> list = new ArrayList<PPILikelihood>();
+            list.add(new PPILikelihood(0, 5, 1, 2));
+            // this range overlaps the previous range
+            list.add(new PPILikelihood(4, 10, 1, 2));
+            PPISurvey survey = new PPISurvey();
+            survey.setLikelihoods(list);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = ValidationException.class)
     public void testScoreCoverage() throws Exception {
-        List<PPILikelihood> list = new ArrayList<PPILikelihood>();
-        list.add(new PPILikelihood(0, 5, 1, 2));
-        list.add(new PPILikelihood(6, 30, 1, 2));
-        // score 31 is missing
-        list.add(new PPILikelihood(32, 100, 1, 2));
-        PPISurvey survey = new PPISurvey();
-        survey.setLikelihoods(list);
+        try {
+            List<PPILikelihood> list = new ArrayList<PPILikelihood>();
+            list.add(new PPILikelihood(0, 5, 1, 2));
+            list.add(new PPILikelihood(6, 30, 1, 2));
+            // score 31 is missing
+            list.add(new PPILikelihood(32, 100, 1, 2));
+            PPISurvey survey = new PPISurvey();
+            survey.setLikelihoods(list);
+            fail("expected ValidationException !!!");
+        } catch (ValidationException e) {
+        }
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void testGetRowForNegativeScore() throws Exception {
-        PPISurvey survey = new PPISurvey();
-        survey.setLikelihoods(createRows());
-        PPILikelihood l = survey.getLikelihood(-1);
+        try {
+            PPISurvey survey = new PPISurvey();
+            survey.setLikelihoods(createRows());
+            PPILikelihood l = survey.getLikelihood(-1);
+            fail("expected IllegalArgumentException !!!");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void testGetScoreOutOfRange() throws Exception {
-        PPISurvey survey = new PPISurvey();
-        survey.setLikelihoods(createRows());
-        int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
-        PPILikelihood l = survey.getLikelihood(nonPoorMax + 1);
+        try {
+            PPISurvey survey = new PPISurvey();
+            survey.setLikelihoods(createRows());
+            int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
+            PPILikelihood l = survey.getLikelihood(nonPoorMax + 1);
+            fail("expected IllegalArgumentException !!!");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(PpiLikelihoodTest.class);
-    }
 }

@@ -28,6 +28,7 @@ import org.mifos.application.fees.business.FeeBOIntegrationTest;
 import org.mifos.application.fees.business.service.FeeBusinessServiceIntegrationTest;
 import org.mifos.application.fees.persistence.FeePersistenceIntegrationTest;
 import org.mifos.application.fees.struts.action.FeeActionTest;
+import org.mifos.application.fees.struts.actionforms.FeeActionFormTest;
 
 public class FeeTestSuite extends TestSuite {
 
@@ -51,6 +52,7 @@ public class FeeTestSuite extends TestSuite {
         testSuite.addTestSuite(FeeBOIntegrationTest.class);
         testSuite.addTestSuite(FeePersistenceIntegrationTest.class);
         testSuite.addTestSuite(FeeBusinessServiceIntegrationTest.class);
+        testSuite.addTestSuite(FeeActionFormTest.class);
         return testSuite;
     }
 }

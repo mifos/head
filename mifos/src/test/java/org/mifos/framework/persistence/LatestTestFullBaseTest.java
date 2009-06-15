@@ -20,17 +20,13 @@
 
 package org.mifos.framework.persistence;
 
-import static org.junit.Assert.assertEquals;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
 import java.sql.ResultSet;
 
-import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
-
-import org.junit.Test;
 
 /*
  * This class runs tests on database upgrade scripts (both SQL
@@ -41,8 +37,7 @@ import org.junit.Test;
  */
 public class LatestTestFullBaseTest extends LatestBaseTest {
 
-    @Test
-    public void realSchema() throws Exception {
+    public void testRealSchema() throws Exception {
         Database database = TestDatabase.makeDatabase();
         loadRealLatest(database);
         assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
@@ -71,8 +66,7 @@ public class LatestTestFullBaseTest extends LatestBaseTest {
         return firstNumberedVersion;
     }
 
-    @Test
-    public void afterLookupValues() throws Exception {
+    public void testAfterLookupValues() throws Exception {
         Database database = new Database(firstNumberedVersion());
         /*
          * A customer will typically add records such as these during
@@ -100,9 +94,4 @@ public class LatestTestFullBaseTest extends LatestBaseTest {
     private DataStore upgrade(DataStore current) throws Exception {
         return upgrade(FIRST_NUMBERED_VERSION, current);
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(LatestTestFullBaseTest.class);
-    }
-
 }

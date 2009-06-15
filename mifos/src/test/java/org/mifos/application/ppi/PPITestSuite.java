@@ -23,22 +23,24 @@ package org.mifos.application.ppi;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.ppi.business.PpiLikelihoodTest;
-import org.mifos.application.ppi.business.PpiSurveyInstanceTest;
 import org.mifos.application.ppi.business.PPIChoiceIntegrationTest;
 import org.mifos.application.ppi.business.PPISurveyIntegrationTest;
+import org.mifos.application.ppi.business.PpiLikelihoodTest;
+import org.mifos.application.ppi.business.PpiSurveyInstanceTest;
 import org.mifos.application.ppi.helpers.XmlPPIParserTest;
+import org.mifos.application.ppi.persistence.PPIPersistenceIntegrationTest;
 import org.mifos.application.ppi.struts.action.PPIActionTest;
 
 public class PPITestSuite extends TestSuite {
 
     public static Test suite() throws Exception {
         TestSuite testSuite = new PPITestSuite();
-        testSuite.addTest(XmlPPIParserTest.suite());
+        testSuite.addTestSuite(XmlPPIParserTest.class);
         testSuite.addTestSuite(PPIChoiceIntegrationTest.class);
-        testSuite.addTest(PPISurveyIntegrationTest.suite());
+        testSuite.addTestSuite(PPISurveyIntegrationTest.class);
         testSuite.addTestSuite(PPIActionTest.class);
-        testSuite.addTest(PpiLikelihoodTest.suite());
+        testSuite.addTestSuite(PpiLikelihoodTest.class);
+        testSuite.addTestSuite(PPIPersistenceIntegrationTest.class);
         testSuite.addTestSuite(PpiSurveyInstanceTest.class);
         return testSuite;
     }

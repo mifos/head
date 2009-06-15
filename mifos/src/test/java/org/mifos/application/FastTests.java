@@ -22,6 +22,7 @@ package org.mifos.application;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import org.mifos.application.accounts.business.AccountBOIntegrationTest;
 import org.mifos.application.collectionsheet.business.BulkEntryAccountFeeActionViewTest;
 import org.mifos.application.customer.business.CustomFieldViewTest;
@@ -33,13 +34,12 @@ import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.meeting.util.helpers.WeekDayTest;
 import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.application.ppi.helpers.XmlPPIParserTest;
-import org.mifos.application.productdefinition.business.PrdOfferingBOIntegrationTest;
+import org.mifos.application.productdefinition.business.PrdOfferingBOTest;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.surveys.business.QuestionTest;
 import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.ProperlyAdaptedJUnit4Test;
 import org.mifos.framework.components.batchjobs.business.TaskTest;
 import org.mifos.framework.components.configuration.cache.KeyTest;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
@@ -87,7 +87,7 @@ public class FastTests extends TestSuite {
 
     public static Test suite() throws Exception {
         TestSuite suite = new FastTests();
-        suite.addTest(MoneyTest.suite());
+        suite.addTestSuite(MoneyTest.class);
         suite.addTestSuite(MifosCurrencyTest.class);
         suite.addTestSuite(DateUtilsTest.class);
         suite.addTestSuite(CustomFieldViewTest.class);
@@ -102,7 +102,7 @@ public class FastTests extends TestSuite {
         suite.addTestSuite(OfficeListTagTest.class);
 
         suite.addTestSuite(TableTagTest.class);
-        suite.addTest(MifosSelectTest.suite());
+        suite.addTestSuite(MifosSelectTest.class);
         suite.addTestSuite(XmlBuilderTest.class);
         suite.addTestSuite(MethodInvokerTest.class);
         suite.addTestSuite(ConvertionUtilTest.class);
@@ -111,9 +111,9 @@ public class FastTests extends TestSuite {
         suite.addTestSuite(CreateReportTest.class);
 
         suite.addTestSuite(DatabaseInitFilterTest.class);
-        suite.addTest(DatabaseVersionPersistenceTest.suite());
-        suite.addTest(UpgradeTest.suite());
-        suite.addTest(CompositeUpgradeTest.suite());
+        suite.addTestSuite(DatabaseVersionPersistenceTest.class);
+        suite.addTestSuite(UpgradeTest.class);
+        suite.addTestSuite(CompositeUpgradeTest.class);
 
         suite.addTestSuite(RoleActivityEntityTest.class);
         suite.addTestSuite(TaskTest.class);
@@ -121,21 +121,23 @@ public class FastTests extends TestSuite {
         suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
         suite.addTestSuite(LoanCycleCounterTest.class);
         suite.addTestSuite(AccountBOIntegrationTest.class);
-        suite.addTestSuite(PrdOfferingBOIntegrationTest.class);
+        suite.addTestSuite(PrdOfferingBOTest.class);
 
-        suite.addTest(QuestionTest.suite());
+        suite.addTestSuite(QuestionTest.class);
 
         suite.addTestSuite(CustomerStatusFlagTest.class);
 
         suite.addTestSuite(ValidatorsTest.class);
 
-        suite.addTest(XmlPPIParserTest.suite());
+        suite.addTestSuite(XmlPPIParserTest.class);
 
-        suite.addTest(StringUtilsTest.suite());
-        suite.addTest(ChapterNumSortTest.suite());
-        suite.addTest(ProperlyAdaptedJUnit4Test.suite());
-        suite.addTest(LocalizationConverterTest.suite());
-        suite.addTest(TestingServiceTest.suite());
+        suite.addTestSuite(StringUtilsTest.class);
+        suite.addTestSuite(ChapterNumSortTest.class);
+        // This test has been excluded as there is no Junit4 
+        // For details refer card 1626
+        //suite.addTest(ProperlyAdaptedJUnit4Test.suite());
+        suite.addTestSuite(LocalizationConverterTest.class);
+        suite.addTestSuite(TestingServiceTest.class);
         return suite;
     }
 

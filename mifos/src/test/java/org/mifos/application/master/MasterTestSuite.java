@@ -33,8 +33,8 @@ public class MasterTestSuite extends TestSuite {
         MasterTestSuite testSuite = new MasterTestSuite();
         testSuite.addTestSuite(MasterPersistenceIntegrationTest.class);
         testSuite.addTestSuite(MasterBusinessServiceIntegrationTest.class);
-        testSuite.addTest(CustomFieldDefinitionEntityTest.suite());
-        testSuite.addTest(MessageLookupTest.suite());
+        testSuite.addTestSuite(CustomFieldDefinitionEntityTest.class);
+        testSuite.addTestSuite(MessageLookupTest.class);
         return testSuite;
     }
 

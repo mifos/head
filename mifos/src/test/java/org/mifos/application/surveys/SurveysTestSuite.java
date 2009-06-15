@@ -39,7 +39,7 @@ public class SurveysTestSuite extends TestSuite {
         testSuite.addTestSuite(QuestionsActionTest.class);
         testSuite.addTestSuite(SurveyInstanceActionTest.class);
         testSuite.addTestSuite(QuestionTagIntegrationTest.class);
-        testSuite.addTest(SurveysPersistenceIntegrationTest.suite());
+        testSuite.addTestSuite(SurveysPersistenceIntegrationTest.class);
         return testSuite;
     }
 }

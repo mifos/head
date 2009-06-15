@@ -20,12 +20,11 @@
 
 package org.mifos.application.reports.persistence;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.junit.Test;
+import junit.framework.TestCase;
+
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
@@ -34,10 +33,9 @@ import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
-public class AddReportTest {
+public class AddReportTest extends TestCase {
 
-    @Test
-    public void startFromStandardStore() throws Exception {
+    public void testStartFromStandardStore() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         upgradeAndCheck(database);
     }

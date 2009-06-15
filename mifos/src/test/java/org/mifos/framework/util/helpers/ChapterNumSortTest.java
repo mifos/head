@@ -21,38 +21,29 @@
 package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
+import junit.framework.TestCase;
 
 /**
  * Demonstrate sorting number-like strings such as 1.4.2 and 1.4.10, where 1.4.2
  * would come before 1.4.10 in the sequence.
  */
-public class ChapterNumSortTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ChapterNumSortTest.class);
-    }
+public class ChapterNumSortTest extends TestCase {
 
-    @Test
-    public void chapterNumberOrder() {
+    public void testChapterNumberOrder() {
         String[] dottedNums = { "1.4.10", "2", "1.4", "1.15.3", "1.4", "0.1", "1.4.2" };
         String[] expected = { "0.1", "1.4", "1.4", "1.4.2", "1.4.10", "1.15.3", "2" };
         String[] actual = ChapterNumSorter.sortChapterNumbers(dottedNums);
         assertArrayEquals(expected, actual);
     }
 
-    @Test
-    public void chapterNumberOrderWithGarbage() {
+    public void testChapterNumberOrderWithGarbage() {
         String[] dottedNums = { "1", "3", "", "blah", "2.1", "-3" };
         String[] expected = { "1", "2.1", "3" };
         String[] actual = ChapterNumSorter.sortChapterNumbers(dottedNums);
         assertArrayEquals(expected, actual);
     }
 
-    @Test
-    public void simpleCompare() {
+    public void testSimpleCompare() {
         assertEquals(1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.0")));
         assertEquals(-1, ChapterNum.fromString("1.4.1").compareTo(ChapterNum.fromString("1.4.10")));
     }

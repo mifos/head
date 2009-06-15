@@ -20,24 +20,18 @@
 
 package org.mifos.application.master.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.TestUtils;
 
-public class CustomFieldDefinitionEntityTest {
-    @BeforeClass
-    public static void init() throws Exception {
+public class CustomFieldDefinitionEntityTest extends TestCase {
+
+    public void setUp() throws Exception {
         TestUtils.initializeSpring();
     }
 
-    @Test
     public void testMandatory() {
         MifosLookUpEntity customFieldName = new MifosLookUpEntity();
         customFieldName.setEntityId((short) 1);
@@ -53,10 +47,6 @@ public class CustomFieldDefinitionEntityTest {
 
         assertTrue(customFieldMandatory.isMandatory());
         assertEquals(customFieldMandatory.getMandatoryStringValue(), "yes");
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CustomFieldDefinitionEntityTest.class);
     }
 
 }

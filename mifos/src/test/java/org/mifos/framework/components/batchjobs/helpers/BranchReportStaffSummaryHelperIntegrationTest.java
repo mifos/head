@@ -23,7 +23,6 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.Date;
 import java.util.Set;
 
-import org.junit.Test;
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.master.business.MifosCurrency;
@@ -47,7 +46,6 @@ public class BranchReportStaffSummaryHelperIntegrationTest extends MifosIntegrat
     private static final Date RUN_DATE = DateUtils.currentDate();
     private static final Short BRANCH_ID_SHORT = Short.valueOf("2");
 
-    @Test
     public void testPopulateStaffSummary() throws BatchJobException {
         BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID_SHORT, RUN_DATE);
         BranchReportStaffSummaryHelper staffSummaryHelper = new BranchReportStaffSummaryHelper(branchReportBO,

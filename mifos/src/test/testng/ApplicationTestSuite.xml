@@ -3,5 +3,6 @@
     <suite-files>
       <suite-file path="ConfigTestSuite.xml" />
       <suite-file path="ProductMixTestSuite.xml" />
+   <!-- <suite-file path="FastTestsSuite.xml" /> -->
    </suite-files>
 </suite>

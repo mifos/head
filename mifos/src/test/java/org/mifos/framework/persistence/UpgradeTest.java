@@ -20,32 +20,24 @@
 
 package org.mifos.framework.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 
-import org.junit.Test;
+public class UpgradeTest extends TestCase {
 
-public class UpgradeTest {
-
-    @Test
-    public void incrementVersion() throws Exception {
+    public void testIncrementVersion() throws Exception {
         Database database = DummyUpgrade.databaseWithVersionTable(53);
         new DummyUpgrade(54).upgradeVersion(database.openConnection());
         assertEquals(54, new DatabaseVersionPersistence(database.openConnection()).read());
     }
 
-    @Test
-    public void notReadyToIncrement() throws Exception {
+    public void testNotReadyToIncrement() throws Exception {
         Database database = DummyUpgrade.databaseWithVersionTable(53);
         new DummyUpgrade(55).upgradeVersion(database.openConnection());
         assertEquals(53, new DatabaseVersionPersistence(database.openConnection()).read());
     }
 
-    @Test
-    public void validateLookupValueKeyTest() throws Exception {
+    public void testValidateLookupValueKey() throws Exception {
         String validKey = "Permissions-Groups-CanBlacklistAGroup";
         String format = "Permissions-";
         assertTrue(DummyUpgrade.validateLookupValueKey(format, validKey));
@@ -56,9 +48,4 @@ public class UpgradeTest {
         invalidKey = "";
         assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(UpgradeTest.class);
-    }
-
 }

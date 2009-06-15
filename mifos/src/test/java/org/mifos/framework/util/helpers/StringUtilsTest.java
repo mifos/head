@@ -20,31 +20,22 @@
 
 package org.mifos.framework.util.helpers;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
-public class StringUtilsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(StringUtilsTest.class);
-    }
+public class StringUtilsTest extends TestCase {
 
-    @Test
     public void testLpad() {
         assertEquals("___blah", StringUtils.lpad("blah", '_', 7));
     }
 
-    @Test
     public void testCamelCase() {
         assertEquals("AbcDef_ghIjKL", StringUtils.camelCase("aBc dEF_gh-iJ  k.l"));
     }
 
-    @Test
     public void testGenerateLookupName() {
         String newElementText = "OfficeLevels";
         String lookupName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(),
@@ -58,7 +49,6 @@ public class StringUtilsTest {
 
     }
 
-    @Test
     public void testCreateCsv() throws Exception {
         ArrayList<String> list = new ArrayList<String>();
         list.add("1");
@@ -68,7 +58,6 @@ public class StringUtilsTest {
         assertEquals("1,2,3", csv);
     }
 
-    // @Test
     // public void testTemp() throws Exception {
     // String csv = StringUtils.createCsv(new
     // RolesPermissionsPersistence().getRoles(),

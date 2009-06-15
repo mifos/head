@@ -20,36 +20,26 @@
 
 package org.mifos.application.productdefinition.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
 import org.hibernate.Session;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
-import org.mifos.application.master.business.InterestTypesEntity;
 
-public class AddInterestCalcRuleTest {
+public class AddInterestCalcRuleTest extends TestCase {
 
     /*
      * We need the test case initializer in order to set up the message cache in
      * MifosConfiguration.
      */
-    @BeforeClass
-    public static void init() throws SystemException, ApplicationException {
+    public void setUp() throws Exception {
         new TestCaseInitializer().initialize();
     }
 
-    @Test
-    public void validateLookupValueKeyTest() throws Exception {
+    public void testValidateLookupValueKeyTest() throws Exception {
         String validKey = "InterestTypes-DecliningBalance";
         String format = "InterestTypes-";
         assertTrue(AddInterestCalcRule.validateLookupValueKey(format, validKey));
@@ -57,8 +47,7 @@ public class AddInterestCalcRuleTest {
         assertFalse(AddInterestCalcRule.validateLookupValueKey(format, invalidKey));
     }
 
-    @Test
-    public void constructorTest() throws Exception {
+    public void testConstructor() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         short newRuleId = 2555;
         short categoryId = 1;
@@ -88,10 +77,6 @@ public class AddInterestCalcRuleTest {
         Session session = database.openSession();
         InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
         assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
-    }
-
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(AddInterestCalcRuleTest.class);
     }
 
 }

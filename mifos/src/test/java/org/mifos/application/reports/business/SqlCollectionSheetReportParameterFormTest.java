@@ -23,13 +23,12 @@ package org.mifos.application.reports.business;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.mifos.application.reports.business.validator.Errors;
 
-public class SqlCollectionSheetReportParameterFormTest {
+public class SqlCollectionSheetReportParameterFormTest extends TestCase {
 
-    @Test
     public void testValidateAcceptsDateEvenIfItHasExtraCharactersAtTheEnd() {
         SqlCollectionSheetReportParameterForm form = new SqlCollectionSheetReportParameterForm("1", "1", "1",
                 "23/06/2008ss");

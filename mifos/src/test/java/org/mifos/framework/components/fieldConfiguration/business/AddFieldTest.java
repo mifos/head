@@ -20,25 +20,20 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
-public class AddFieldTest {
+public class AddFieldTest extends TestCase {
 
-    @Test
-    public void startFromStandardStore() throws Exception {
+    public void testStartFromStandardStore() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         upgradeAndCheck(database);
     }
@@ -69,9 +64,4 @@ public class AddFieldTest {
 
         return upgrade;
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(AddFieldTest.class);
-    }
-
 }

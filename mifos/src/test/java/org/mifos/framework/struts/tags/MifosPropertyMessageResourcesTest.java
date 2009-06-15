@@ -20,31 +20,21 @@
 
 package org.mifos.framework.struts.tags;
 
-import static org.junit.Assert.assertEquals;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
 import org.apache.struts.util.MessageResources;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class MifosPropertyMessageResourcesTest {
+public class MifosPropertyMessageResourcesTest extends TestCase {
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public void setUp() throws Exception {
         TestCaseInitializer initializer = new TestCaseInitializer();
         initializer.initialize();
     }
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @Test
     public void testGetMessageLocaleString() {
         MifosPropertyMessageResourcesFactory factory = new MifosPropertyMessageResourcesFactory();
         MessageResources resource = factory.createResources(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
@@ -54,5 +44,4 @@ public class MifosPropertyMessageResourcesTest {
         // get a LookupValue
         assertEquals("Branch Office", resource.getMessage(TestUtils.ukLocale(), ConfigurationConstants.BRANCHOFFICE));
     }
-
 }

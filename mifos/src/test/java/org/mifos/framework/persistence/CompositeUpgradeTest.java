@@ -20,22 +20,16 @@
 
 package org.mifos.framework.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 
-import org.junit.Test;
+public class CompositeUpgradeTest extends TestCase {
 
-public class CompositeUpgradeTest {
-
-    @Test
-    public void basics() throws Exception {
+    public void testBasics() throws Exception {
         DummyUpgrade upgradeOne = new DummyUpgrade(53);
         DummyUpgrade upgradeTwo = new DummyUpgrade(53);
         Upgrade composite = new CompositeUpgrade(upgradeOne, upgradeTwo);
@@ -48,8 +42,7 @@ public class CompositeUpgradeTest {
         assertEquals(53, new DatabaseVersionPersistence(data).read());
     }
 
-    @Test
-    public void mismatch() throws Exception {
+    public void testMismatch() throws Exception {
         DummyUpgrade upgradeOne = new DummyUpgrade(111);
         DummyUpgrade upgradeTwo = new DummyUpgrade(112);
         try {
@@ -60,8 +53,7 @@ public class CompositeUpgradeTest {
         }
     }
 
-    @Test
-    public void empty() throws Exception {
+    public void testEmpty() throws Exception {
         try {
             new CompositeUpgrade();
             fail();
@@ -72,8 +64,7 @@ public class CompositeUpgradeTest {
 
     StringBuilder log;
 
-    @Test
-    public void order() throws Exception {
+    public void testOrder() throws Exception {
         log = new StringBuilder();
         Upgrade composite = new CompositeUpgrade(new MyUpgrade("first"), new MyUpgrade("second"),
                 new MyUpgrade("third"));
@@ -107,9 +98,4 @@ public class CompositeUpgradeTest {
         Database database = DummyUpgrade.databaseWithVersionTable(version);
         return database.openConnection();
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CompositeUpgradeTest.class);
-    }
-
 }

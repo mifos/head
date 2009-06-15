@@ -20,16 +20,12 @@
 
 package org.mifos.framework.struts.tags;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Collections;
 import java.util.Map;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
-
-public class MifosSelectTest {
+public class MifosSelectTest extends TestCase {
 
     private static final String INTRODUCTORY_STYLES_AND_SCRIPT = " <STYLE> " + ".ttip {border:1px solid black;"
             + "font-size:12px;" + "layer-background-color:lightyellow;" + "background-color:lightyellow}  "
@@ -37,8 +33,7 @@ public class MifosSelectTest {
             + "<link rel=\"stylesheet\" type=\"text/css\" " + "href=\"pages/framework/css/tooltip.css\" "
             + "title=\"MyCSS\"/>";
 
-    @Test
-    public void gettersAndSetters() {
+    public void testGettersAndSetters() {
         MifosSelect mifosSelect = new MifosSelect();
         mifosSelect.setId("id");
         mifosSelect.setInput("input");
@@ -67,8 +62,7 @@ public class MifosSelectTest {
         assertEquals("newlabel", mifosSelect.getLabel());
     }
 
-    @Test
-    public void renderEmpty() throws Exception {
+    public void testRenderEmpty() throws Exception {
         String output = new MifosSelect().render(Collections.EMPTY_LIST, Collections.EMPTY_LIST);
         // TestUtils.assertWellFormedFragment(output);
         assertEquals(INTRODUCTORY_STYLES_AND_SCRIPT + "<table >" + "<tr> " + "<td>" + selectTheItem(true) + "</td>"
@@ -95,37 +89,36 @@ public class MifosSelectTest {
                 + (leftSelect ? "name=\"LeftSelect\" " : "") + "size=\"5\">" + "</SELECT> ";
     }
 
-    @Test
-    public void helperEmpty() throws Exception {
-        Map map = new MifosSelect().helper(Collections.EMPTY_LIST);
+    public void testHelperEmpty() throws Exception {
+        Map<?, ?> map = new MifosSelect().helper(Collections.EMPTY_LIST);
         assertEquals(null, map);
     }
 
-    @Test
-    public void helperSameClass() throws Exception {
+    public void testHelperSameClass() throws Exception {
         MifosSelect select = new MifosSelect();
         select.setProperty1("propertyOne");
         select.setProperty2("propertyTwo");
-        Map map = select.helper(Collections.singletonList(new Foo()));
+        Map<?, ?> map = select.helper(Collections.singletonList(new Foo()));
         assertEquals(1, map.size());
         assertEquals(new Integer(5), map.keySet().iterator().next());
         assertEquals("Acorn", map.get(5));
     }
 
-    @Test(expected = NoSuchMethodException.class)
-    public void helperPrivate() throws Exception {
+    public void testHelperPrivate() throws Exception {
         MifosSelect select = new MifosSelect();
         select.setProperty1("propertyOne");
         select.setProperty2("privateProperty");
+        try {
         select.helper(Collections.singletonList(new Foo()));
-    }
+        fail("NoSuchMethodException was expected !!!");
+        } catch (NoSuchMethodException e){}
+        }
 
-    @Test
-    public void helperParent() throws Exception {
+    public void testHelperParent() throws Exception {
         MifosSelect select = new MifosSelect();
         select.setProperty1("parentPropertyOne");
         select.setProperty2("parentPropertyTwo");
-        Map map = select.helper(Collections.singletonList(new Foo()));
+        Map<?, ?> map = select.helper(Collections.singletonList(new Foo()));
         assertEquals(1, map.size());
         assertEquals(new Integer(55), map.keySet().iterator().next());
         assertEquals("Oak", map.get(55));
@@ -155,9 +148,4 @@ public class MifosSelectTest {
             return "Oak";
         }
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(MifosSelectTest.class);
-    }
-
 }

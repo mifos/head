@@ -37,7 +37,7 @@ public class FieldConfigurationTestSuite extends TestSuite {
         testSuite.addTestSuite(FieldConfigurationPersistenceIntegrationTest.class);
         testSuite.addTestSuite(FieldConfigIntegrationTest.class);
         testSuite.addTestSuite(FieldConfigurationHelperIntegrationTest.class);
-        testSuite.addTest(AddFieldTest.suite());
+        testSuite.addTestSuite(AddFieldTest.class);
         return testSuite;
     }
 }

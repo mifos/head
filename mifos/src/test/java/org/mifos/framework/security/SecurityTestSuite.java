@@ -33,8 +33,8 @@ public class SecurityTestSuite extends TestSuite {
         TestSuite suite = new SecurityTestSuite();
         suite.addTestSuite(SecurityHelperIntegrationTest.class);
         suite.addTestSuite(LoginFilterTest.class);
-        suite.addTest(AddActivityTest.testSuite());
-        suite.addTest(ActivityMapperIntegrationTest.suite());
+        suite.addTestSuite(AddActivityTest.class);
+        suite.addTestSuite(ActivityMapperIntegrationTest.class);
         return suite;
     }
 }

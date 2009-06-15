@@ -20,17 +20,12 @@
 
 package org.mifos.application.ppi.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
@@ -58,13 +53,11 @@ public class PPIPersistenceIntegrationTest extends MifosInMemoryIntegrationTest 
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 
-    @Before
     public void setUp() {
         super.setUp();
         persistence = new PPIPersistence();
     }
 
-    @Test
     public void testLikelihoods() throws Exception {
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey retreivedSurvey = (PPISurvey) persistence.getSurvey(surveyId);
@@ -82,31 +75,26 @@ public class PPIPersistenceIntegrationTest extends MifosInMemoryIntegrationTest 
         assertEquals(70.0, lh.getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
-    @Test
     public void testRetrieveActivePPISurvey() throws Exception {
         createSurveyWithLikelihoods("surveyName");
         assertEquals("surveyName", persistence.retrieveActivePPISurvey().getName());
     }
 
-    @Test
     public void testRetrieveAllPPISurveys() throws Exception {
         createSurveyWithLikelihoods("survey1");
         assertEquals(1, persistence.retrieveAllPPISurveys().size());
     }
 
-    @Test
     public void testRetrievePPISurveyByCountry() throws Exception {
         createSurveyWithLikelihoods("surveyForIndia");
         assertEquals(Country.INDIA, persistence.retrievePPISurveyByCountry(Country.INDIA).getCountryAsEnum());
     }
 
-    @Test
     public void testGetPPISurvey() throws Exception {
         createSurveyWithLikelihoods("surveyName");
         assertEquals("surveyName", persistence.getPPISurvey(1).getName());
     }
 
-    @Test
     public void testPersistPPISurveyInstance() throws Exception {
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey survey = persistence.getPPISurvey(surveyId);

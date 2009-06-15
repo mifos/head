@@ -20,21 +20,20 @@
 
 package org.mifos.application.reports.business;
 
-import static org.junit.Assert.*;
-
-import java.util.Locale;
-
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import org.junit.Test;
+
+import java.util.Locale;
+
+import junit.framework.TestCase;
+
 import org.mifos.application.reports.business.validator.Errors;
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 
-public class JdbcBranchCashConfirmationReportParameterFormTest {
+public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase {
 
-    @Test
-    public void shouldAcceptValidBranchIdAndDate() {
+    public void testShouldAcceptValidBranchIdAndDate() {
         JdbcBranchCashConfirmationReportParameterForm form = new JdbcBranchCashConfirmationReportParameterForm("1",
                 "26/06/2008");
         Errors errorsMock = createMock(Errors.class);
@@ -44,8 +43,7 @@ public class JdbcBranchCashConfirmationReportParameterFormTest {
 
     }
 
-    @Test
-    public void shouldReportErrorIfBranchIdAndDateAreInvalid() throws Exception {
+    public void testShouldReportErrorIfBranchIdAndDateAreInvalid() throws Exception {
 
         JdbcBranchCashConfirmationReportParameterForm form = new JdbcBranchCashConfirmationReportParameterForm("-2",
                 "262008");
@@ -65,5 +63,5 @@ public class JdbcBranchCashConfirmationReportParameterFormTest {
     private String getErrorCode(Errors errors, String fieldName) {
         return errors.getFieldError(fieldName).getErrorCode();
     }
-
+    
 }

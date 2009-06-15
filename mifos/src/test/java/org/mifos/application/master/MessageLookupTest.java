@@ -20,14 +20,10 @@
 
 package org.mifos.application.master;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Locale;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -38,11 +34,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class MessageLookupTest {
+public class MessageLookupTest extends TestCase {
     private static MessageLookup messageLookup;
 
-    @BeforeClass
-    public static void init() throws Exception {
+
+    public void setUp() throws Exception {
         try {
             Class.forName(TestCaseInitializer.class.getName());
         } catch (ClassNotFoundException e) {
@@ -51,7 +47,6 @@ public class MessageLookupTest {
         messageLookup = MessageLookup.getInstance();
     }
 
-    @Test
     public void testWeekDayLookup() {
         // default locale
         assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));
@@ -75,7 +70,6 @@ public class MessageLookupTest {
 
     }
 
-    @Test
     public void testLabelLookup() throws PersistenceException {
         Localization localization = Localization.getInstance();
         ConfigLocale originalConfig = localization.getConfigLocale();
@@ -130,10 +124,6 @@ public class MessageLookupTest {
             messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
             localization.setCountryCodeLanguageCodeToConfigFile(originalConfig);
         }
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(MessageLookupTest.class);
     }
 
 }

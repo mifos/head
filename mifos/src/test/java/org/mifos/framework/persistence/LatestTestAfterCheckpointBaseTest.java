@@ -20,17 +20,14 @@
 
 package org.mifos.framework.persistence;
 
-import static org.junit.Assert.assertEquals;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION;
 
 import java.sql.ResultSet;
 
-import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
-import org.junit.Test;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /*
@@ -51,8 +48,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
 
-    @Test
-    public void simple() throws Exception {
+    public void testSimple() throws Exception {
         Database database = TestDatabase.makeDatabase();
         loadLatest(database);
         String latestDump = new SqlDumper().dump(database.dataStore());
@@ -74,8 +70,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
         database.execute("insert into foo(x, y) values(5,7)");
     }
 
-    @Test
-    public void realSchemaFromCheckpoint() throws Exception {
+    public void testRealSchemaFromCheckpoint() throws Exception {
         Database database = TestDatabase.makeDatabase();
         loadRealLatest(database);
         assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, version(database));
@@ -93,8 +88,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
         return database.dataStore();
     }
 
-    @Test
-    public void dropTables() throws Exception {
+    public void testDropTables() throws Exception {
         Database database = TestDatabase.makeDatabase();
         String blankDB = new SqlDumper().dump(database.dataStore());
         DatabaseSetup.executeScript(database, "latest-schema.sql");
@@ -108,8 +102,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
      * right order to deal with foreign keys. I'm not sure we fully succeed,
      * however.
      */
-    @Test
-    public void dropTablesWithData() throws Exception {
+    public void testDropTablesWithData() throws Exception {
         TestDatabase database = TestDatabase.makeStandard();
         DatabaseSetup.executeScript(database.openConnection(), "mifosdroptables.sql");
         assertEquals("", database.dumpForComparison());
@@ -126,8 +119,7 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
         return latestCheckpointVersion;
     }
 
-    @Test
-    public void afterLookupValuesAfterCheckpoint() throws Exception {
+    public void testAfterLookupValuesAfterCheckpoint() throws Exception {
         Database database = new Database(latestCheckpointVersion());
 
         int nextLookupId = largestLookupId(database.openConnection()) + 1;
@@ -150,9 +142,4 @@ public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
         assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(LatestTestAfterCheckpointBaseTest.class);
-    }
-
 }

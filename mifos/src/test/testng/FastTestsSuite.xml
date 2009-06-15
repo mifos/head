@@ -1,0 +1,55 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Fast Tests Suite" verbose="4" parallel="classes" thread-count="1">
+  <test name="Fast Tests" junit="true">
+    <classes>
+        <class name="org.mifos.framework.util.helpers.MoneyTest" />
+        <class name="org.mifos.application.master.business.MifosCurrencyTest" /> 
+        <class name="org.mifos.framework.util.helpers.DateUtilsTest" />
+        <class name="org.mifos.application.customer.business.CustomFieldViewTest" />
+        <class name="org.mifos.framework.struts.tags.MifosTagUtilsTest" />
+        <class name="org.mifos.framework.exceptions.FrameworkExceptionTest" />
+        <class name="org.mifos.application.meeting.util.helpers.WeekDayTest" />
+        
+        <class name="org.mifos.application.customer.struts.actionforms.CustomerActionFormTest" />
+        <class name="org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest" />
+        <class name="org.mifos.application.customer.client.struts.actionforms.ClientCustActionFormTest" />
+        
+        <class name="org.mifos.application.office.struts.tag.OfficeListTagTest" />
+        
+        <class name="org.mifos.framework.components.tabletag.TableTagTest" />
+        <class name="org.mifos.framework.struts.tags.MifosSelectTest" />
+        <class name="org.mifos.framework.struts.tags.XmlBuilderTest" />
+        <class name="org.mifos.framework.util.helpers.MethodInvokerTest" />
+        <class name="org.mifos.framework.util.helpers.ConvertionUtilTest" />
+        <class name="org.mifos.framework.components.customTableTag.TableTagParserTest" />
+        <class name="org.mifos.application.ui.DispatcherTest" />
+        <class name="org.mifos.application.CreateReportTest" />
+        
+        <class name="org.mifos.framework.persistence.DatabaseInitFilterTest" />
+        <class name="org.mifos.framework.persistence.DatabaseVersionPersistenceTest" />
+        <class name="org.mifos.framework.persistence.UpgradeTest" />
+        <class name="org.mifos.framework.persistence.CompositeUpgradeTest" />
+        
+        <class name="org.mifos.application.rolesandpermission.business.RoleActivityEntityTest" />
+        <class name="org.mifos.framework.components.batchjobs.business.TaskTest" />
+        <class name="org.mifos.framework.components.configuration.cache.KeyTest" />
+        <class name="org.mifos.application.collectionsheet.business.BulkEntryAccountFeeActionViewTest" />
+        <class name="org.mifos.application.customer.util.helpers.LoanCycleCounterTest" />
+        <class name="org.mifos.application.accounts.business.AccountBOIntegrationTest" />
+        <class name="org.mifos.application.productdefinition.business.PrdOfferingBOIntegrationTest" />
+        
+        <class name="org.mifos.application.surveys.business.QuestionTest" />
+               
+        <class name="org.mifos.application.customer.util.helpers.CustomerStatusFlagTest" />
+        
+        <class name="org.mifos.framework.formulaic.ValidatorsTest" />
+        
+        <class name="org.mifos.application.ppi.helpers.XmlPPIParserTest" />
+        
+        <class name="org.mifos.framework.util.helpers.StringUtilsTest" />
+        <class name="org.mifos.framework.util.helpers.ChapterNumSortTest" />
+        <class name="org.mifos.framework.util.LocalizationConverterTest" />
+        <class name="org.mifos.framework.util.TestingServiceTest" />
+     </classes>
+   </test>
+</suite>

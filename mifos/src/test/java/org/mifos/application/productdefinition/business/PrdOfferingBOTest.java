@@ -20,29 +20,26 @@
 
 package org.mifos.application.productdefinition.business;
 
-import junit.framework.Assert;
+import junit.framework.TestCase;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.components.logger.MifosLogManager;
 
-public class PrdOfferingBOIntegrationTest extends MifosIntegrationTest {
-    public PrdOfferingBOIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class PrdOfferingBOTest extends TestCase {
+    
+   public void setUp(){
+       MifosLogManager.configureLogging();
+   }
 
     public void testReturnTrueForEqualsIfPrdOfferingIdIsSame() {
         LoanOfferingBO loanOfferingBO = LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"));
-        Assert.assertTrue(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
-        Assert.assertFalse(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("4321"))));
-        Assert.assertFalse(loanOfferingBO.equals(SavingsOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
+        assertTrue(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
+        assertFalse(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("4321"))));
+        assertFalse(loanOfferingBO.equals(SavingsOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
     }
 
     public void testReturnTrueForIsOfSameOfferingIfPrdOfferingIdIsSame() {
         LoanOfferingBO loanOfferingBO = LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"));
-        Assert.assertTrue(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
-        Assert
-                .assertFalse(loanOfferingBO.isOfSameOffering(LoanOfferingBO
-                        .createInstanceForTest(Short.valueOf("4321"))));
+        assertTrue(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
+        assertFalse(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("4321"))));
     }
 }

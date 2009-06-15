@@ -20,14 +20,10 @@
 
 package org.mifos.application.ppi.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.io.ByteArrayInputStream;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.business.Question;
@@ -36,14 +32,13 @@ import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.config.GeneralConfig;
 
-public class XmlPPIParserTest {
+public class XmlPPIParserTest extends TestCase {
     private static final double DELTA = 0.00000001;
     private static XmlPPISurveyParser parser = new XmlPPISurveyParser();
 
     /**
      * Assumes {{@link #testParse()} passes -- parser#parse must work correctly
      */
-    @Test
     public void testBuildXmlFrom() throws Exception {
         PPISurvey comparisonSurvey = new PPISurvey("Test PPI Survey", SurveyState.ACTIVE, SurveyType.CLIENT,
                 Country.INDIA);
@@ -62,7 +57,6 @@ public class XmlPPIParserTest {
         assertEquals(comparisonSurvey.toString(), generatedSurvey.toString());
     }
 
-    @Test
     public void testParse() throws Exception {
         PPISurvey survey = parser.parse(new ByteArrayInputStream(getMockXmlSurvey().getBytes("UTF-8")));
 
@@ -77,7 +71,6 @@ public class XmlPPIParserTest {
         assertEquals(31.0, survey.getLikelihood(17).getAbovePovertyLinePercent(), DELTA);
     }
 
-    @Test
     public void testMaximumPoints() throws Exception {
         try {
             parser.parse(new ByteArrayInputStream(getInvalidXmlSurvey().getBytes("UTF-8")));
@@ -144,7 +137,4 @@ public class XmlPPIParserTest {
         return xml.toString();
     }
 
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(XmlPPIParserTest.class);
-    }
 }

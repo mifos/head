@@ -20,14 +20,10 @@
 
 package org.mifos.framework.struts.tags;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import junit.framework.TestCase;
 
-import org.junit.Test;
+public class RawButtonTest extends TestCase {
 
-public class RawButtonTest {
-
-    @Test
     public void testRawButton() {
         RawButton rawButton = new RawButton();
         rawButton.setDisabled("disabled");

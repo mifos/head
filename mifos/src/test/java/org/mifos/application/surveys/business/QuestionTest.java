@@ -20,14 +20,12 @@
 
 package org.mifos.application.surveys.business;
 
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.Test;
 import org.mifos.framework.TestUtils;
 
-public class QuestionTest {
+public class QuestionTest extends TestCase {
 
-    @Test
     public void testEquals() {
         Question question1 = new Question("what color?");
         question1.setQuestionId(5);
@@ -45,9 +43,4 @@ public class QuestionTest {
         TestUtils.verifyBasicEqualsContract(new Question[] { question1, question2, subclass },
                 new Question[] { question3 });
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(QuestionTest.class);
-    }
-
 }

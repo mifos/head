@@ -18,10 +18,15 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.customer.client.business.service;
+package org.mifos.application.fees.struts.actionforms;
 
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import junit.framework.TestCase;
 
-public class Junit4SpringContextTestHelper extends AbstractJUnit4SpringContextTests {
-
+public class FeeActionFormTest extends TestCase {
+    
+    public void testIsAmountValidWithInvalidString() {
+        FeeActionForm form = new FeeActionForm();
+        form.setAmount("aaa");
+        assertFalse(form.isAmountValid());
+    }
 }

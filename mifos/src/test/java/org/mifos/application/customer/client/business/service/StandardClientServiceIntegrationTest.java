@@ -32,9 +32,6 @@ import junit.framework.Assert;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.joda.time.LocalDate;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.AttendanceType;
@@ -57,9 +54,10 @@ import org.mifos.test.framework.util.SimpleDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit38.AbstractJUnit38SpringContextTests;
 
 @ContextConfiguration(locations = { "classpath:integration-test-context.xml" })
-public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBase {
+public class StandardClientServiceIntegrationTest extends AbstractJUnit38SpringContextTests {
 
     private static final String CUSTOMER_ATTENDANCE = "CUSTOMER_ATTENDANCE";
     private StandardClientService clientService;
@@ -75,7 +73,6 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
     @Autowired
     private DatabaseTestUtils databaseTestUtils;
 
-    @Before
     public void setUp() throws Exception {
         initializeMifosSoftware();
 
@@ -86,11 +83,9 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         databaseTestUtils.deleteDataFromTables(dataSource, CUSTOMER_ATTENDANCE);
     }
 
-    @After
     public void tearDown() throws Exception {
     }
 
-    @Test
     public void testGetClientAttendanceTwoIds() throws Exception {
         initializeData();
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
@@ -105,7 +100,6 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         Assert.assertEquals(client2Attendance, clientAttendance.get(client2Id).getAttendance());
     }
 
-    @Test
     public void testSetClientAttendanceTwoIds() throws Exception {
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
         clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, AttendanceType.PRESENT));
@@ -114,7 +108,6 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         databaseTestUtils.verifyTable(getAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
     }
 
-    @Test
     public void testSetClientAttendanceReplaceOneId() throws Exception {
         initializeData();
         List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
@@ -127,7 +120,6 @@ public class StandardClientServiceIntegrationTest extends IntegrationTestCaseBas
         databaseTestUtils.verifyTable(getReplacedAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
     }
 
-    @Test
     public void testGetBulkEntryClientAttendance() throws SystemException, ApplicationException {
 
         new TestCaseInitializer().initialize();

@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.junit.Test;
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportClientSummaryBO;
 import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
@@ -39,8 +38,8 @@ import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
-import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.BranchReportIntegrationTestCase;
+import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -59,7 +58,6 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
     private Session session;
     private Transaction transaction;
 
-    @Test
     public void testBatchCreatesRowForBranchReportBatchBO() throws PersistenceException, ServiceException,
             BatchJobException {
         branchReportHelper = new BranchReportHelper(new BranchReportTask());

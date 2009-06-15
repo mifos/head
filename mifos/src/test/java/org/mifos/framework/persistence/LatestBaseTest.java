@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 
@@ -39,7 +40,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * Contains common methods used to test database upgrade scripts on the test
  * classes that extend this base class.
  */
-public class LatestBaseTest {
+public class LatestBaseTest extends TestCase {
 
     protected int version(Database database) throws SQLException {
         return new DatabaseVersionPersistence(database.openConnection()).read();

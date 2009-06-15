@@ -22,9 +22,6 @@ package org.mifos.framework.security.util;
 
 import java.util.regex.Pattern;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -36,7 +33,6 @@ public class ActivityMapperIntegrationTest extends MifosIntegrationTest {
 
     Pattern allowableActionName = Pattern.compile("([a-zA-Z])+");
 
-    @Test
     public void testNamesAcceptable() {
         for (ActionSecurity security : ActivityMapper.getInstance().getAllSecurity()) {
             String name = security.getActionName();
@@ -44,7 +40,6 @@ public class ActivityMapperIntegrationTest extends MifosIntegrationTest {
         }
     }
 
-    @Test
     public void testMachinery() {
         assertTrue(acceptableName("openSesame"));
         assertFalse(acceptableName("/bin/sh"));
@@ -62,9 +57,4 @@ public class ActivityMapperIntegrationTest extends MifosIntegrationTest {
         }
         return allowableActionName.matcher(name).matches();
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ActivityMapperIntegrationTest.class);
-    }
-
 }

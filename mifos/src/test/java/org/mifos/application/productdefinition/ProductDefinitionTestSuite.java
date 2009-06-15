@@ -59,7 +59,7 @@ public class ProductDefinitionTestSuite extends TestSuite {
         testSuite.addTestSuite(LoanOfferingBOIntegrationTest.class);
         testSuite.addTestSuite(LoanPrdBusinessServiceIntegrationTest.class);
         testSuite.addTestSuite(LoanPrdActionTest.class);
-        testSuite.addTest(AddInterestCalcRuleTest.testSuite());
+        testSuite.addTestSuite(AddInterestCalcRuleTest.class);
         return testSuite;
     }
 

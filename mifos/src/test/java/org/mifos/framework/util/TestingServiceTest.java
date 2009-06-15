@@ -24,45 +24,37 @@ import java.io.IOException;
 import java.util.Properties;
 
 import junit.framework.Assert;
-import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.service.test.TestMode;
 
-public class TestingServiceTest {
+public class TestingServiceTest extends TestCase {
     static StandardTestingService standardTestingService = null;
     static TestMode savedTestMode = null;
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
+    public void setUp() {
         MifosLogManager.configureLogging();
         standardTestingService = new StandardTestingService();
         savedTestMode = standardTestingService.getTestMode();
         standardTestingService.setTestMode(TestMode.ACCEPTANCE);
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+    public void tearDown() {
         standardTestingService.setTestMode(savedTestMode);
     }
 
-    @Test
     public void testGetDatabaseConnectionSettings() throws IOException {
         Properties p = standardTestingService.getDatabaseConnectionSettings();
         Assert.assertNotNull(p.getProperty("hibernate.connection.url"));
     }
 
-    @Test
     public void testGetDefaultSettingsFilename() {
 
         String actual = standardTestingService.getDefaultSettingsFilename(standardTestingService.getTestMode());
         Assert.assertEquals("acceptanceDatabase.properties", actual);
     }
 
-    @Test
     public void testTranslateToHibernate() {
         Properties p = new Properties();
         p.setProperty("integration.database", "fozzy");
@@ -72,7 +64,4 @@ public class TestingServiceTest {
         Assert.assertTrue(url.contains("fozzy"));
     }
 
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(TestingServiceTest.class);
-    }
 }
