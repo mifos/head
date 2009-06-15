@@ -30,7 +30,7 @@ package org.mifos.service.test;
  * methods, and other non-filesystem, non-network, non-database units of code
  * (ie: true, fast "unit" tests).
  * 
- * @see {@link TestMode}
+ * @see TestMode
  */
 public interface TestingService {
     String TEST_MODE_SYSTEM_PROPERTY = "mifos.test.mode";

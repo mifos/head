@@ -42,7 +42,7 @@ package org.mifos.service.test;
  * </tr>
  * </table>
  *  
- * @see {@link TestingService}
+ * @see TestingService
  */
 public enum TestMode {
     MAIN, ACCEPTANCE, INTEGRATION;
