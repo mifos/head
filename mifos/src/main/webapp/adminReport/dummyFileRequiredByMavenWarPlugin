@@ -1,0 +1,7 @@
+This file is necessary due to a bug in the maven-war-plugin.
+  URL: http://jira.codehaus.org/browse/MWAR-128
+  Summary: war goal does not copy empty directories from webapp directory
+
+The adminReport directory is required due to a bug in Mifos.
+  URL: https://mifos.dev.java.net/issues/show_bug.cgi?id=1993
+  Summary: admin documents are stored in a volatile location (exploded WAR dir)
