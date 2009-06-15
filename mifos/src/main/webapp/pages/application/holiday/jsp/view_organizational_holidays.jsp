@@ -83,8 +83,8 @@
 			     <span class="fontnormal">
 	                <mifos:mifoslabel name="holiday.labelLinkListOrganizationalHolidays" bundle="HolidayUIResources"/>
 	                <mifos:mifoslabel name="holiday.labelLinkClickHere" bundle="HolidayUIResources"/>
-					<html-el:link action="holidayAction.do?method=addHoliday&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-						<mifos:mifoslabel styleId="holiday.link.defineNewHoliday" name="holiday.labelAddNewHolidayNow" bundle="HolidayUIResources"/>
+					<html-el:link styleId="holiday.link.defineNewHoliday" action="holidayAction.do?method=addHoliday&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<mifos:mifoslabel name="holiday.labelAddNewHolidayNow" bundle="HolidayUIResources"/>
 					</html-el:link>
 	             </span>
             	 <br><br>
