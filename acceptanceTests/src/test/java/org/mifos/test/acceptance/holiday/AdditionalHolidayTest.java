@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"holiday"})
+@Test(sequential=true, groups={"holiday","workInProgress"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
     
     private AppLauncher appLauncher;
@@ -45,6 +45,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private static final String SAME_DAY = "Same Day";
     private static final String NEXT_MEETING_OR_REPAYMENT = "Next Meeting/Repayment";
     
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
@@ -143,7 +144,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         return params;
     }
     
-    private CreateHolidaySubmitParameters getParametersForHolidayOverlappingTwoMeetings(String repaymentRule) {
+/* Comment out this currently unused method for now to avoid PMD violation.
+ *     private CreateHolidaySubmitParameters getParametersForHolidayOverlappingTwoMeetings(String repaymentRule) {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         
         params.setName("Additional Test Holiday");
@@ -157,7 +159,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         
         return params;
     }
-    
+*/    
     private CreateHolidaySubmitParameters getParametersForHolidayOnAMeeting(String repaymentRule) {
         CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
         
