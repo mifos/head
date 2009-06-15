@@ -21,7 +21,6 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
-import org.mifos.test.acceptance.loan.CreateClientLoanAccountTest.CreateLoanAccountSearchParameters;
 
 import com.thoughtworks.selenium.Selenium;
 

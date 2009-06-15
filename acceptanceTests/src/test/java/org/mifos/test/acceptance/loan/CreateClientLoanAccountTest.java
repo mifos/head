@@ -29,6 +29,8 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -127,38 +129,4 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
-
-    public class CreateLoanAccountSearchParameters {
-        private String searchString;
-        private String loanProduct;
-
-        public String getSearchString() {
-            return this.searchString;
-        }
-
-        public void setSearchString(String searchString) {
-            this.searchString = searchString;
-        }
-
-        public String getLoanProduct() {
-            return this.loanProduct;
-        }
-
-        public void setLoanProduct(String loanProduct) {
-            this.loanProduct = loanProduct;
-        }
-    }
-
-    public class CreateLoanAccountSubmitParameters {
-        private String amount;
-
-        public String getAmount() {
-            return this.amount;
-        }
-
-        public void setAmount(String amount) {
-            this.amount = amount;
-        }
-    }
-
 }
