@@ -134,7 +134,7 @@
 						</c:otherwise>
 						</c:choose>
 
-						<fmt:message key="client.createNewGroup">
+						<fmt:message key="client.createNewClient">
 							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 						</fmt:message> </a> <br>
 						<!-- Link to create a new client --> <a id="client_creationConfirmation.link.createNewClient"
