@@ -77,21 +77,43 @@
                                 <version>5.1.6</version>
                             </dependency>
                         </dependencies>
+                        <configuration>
+                            <driver>com.mysql.jdbc.Driver</driver>
+                            <url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
+                            <username>${main.database.user}</username>
+                            <password>${main.database.password}</password>
+                            <autocommit>true</autocommit>
+                        </configuration>
                         <executions>
                             <execution>
-                                <id>build_db</id>
+                                <id>drop_db</id>
                                 <phase>validate</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <driver>com.mysql.jdbc.Driver</driver>
-                                    <url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
-                                    <username>${main.database.user}</username>
-                                    <password>${main.database.password}</password>
-                                    <autocommit>true</autocommit>
+	                            	<sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>create_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+	                            	<sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>populate_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+ 	                            	<sqlCommand>USE ${main.database}</sqlCommand>
                                     <srcFiles>
-                                        <srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
@@ -144,21 +166,43 @@
                                 <version>5.1.6</version>
                             </dependency>
                         </dependencies>
+                        <configuration>
+                            <driver>com.mysql.jdbc.Driver</driver>
+                            <url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
+                            <username>${main.database.user}</username>
+                            <password>${main.database.password}</password>
+                            <autocommit>true</autocommit>
+                        </configuration>
                         <executions>
                             <execution>
-                                <id>build_db</id>
+                                <id>drop_db</id>
                                 <phase>validate</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <driver>com.mysql.jdbc.Driver</driver>
-                                    <url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
-                                    <username>${main.database.user}</username>
-                                    <password>${main.database.password}</password>
-                                    <autocommit>true</autocommit>
+	                            	<sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>create_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+	                            	<sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>populate_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+  	                            	<sqlCommand>USE ${main.database}</sqlCommand>
                                     <srcFiles>
-                                        <srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
@@ -714,31 +758,53 @@
                         <artifactId>mysql-connector-java</artifactId>
                         <version>5.1.6</version>
                     </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>build_test_db</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <driver>com.mysql.jdbc.Driver</driver>
-                            <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
-                            <username>${integration.database.user}</username>
-                            <password>${integration.database.password}</password>
-                            <autocommit>true</autocommit>
-                            <srcFiles>
-                                <srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
-                                <srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
-                            </srcFiles>
-                        </configuration>
-                    </execution>
-                </executions>
+			    </dependencies>
+				<configuration>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+					<username>${integration.database.user}</username>
+					<password>${integration.database.password}</password>
+					<autocommit>true</autocommit>
+				</configuration>
+				<executions>
+					<execution>
+						<id>drop_db</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<sqlCommand>DROP DATABASE IF EXISTS ${integration.database}</sqlCommand>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create_db</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<sqlCommand>CREATE DATABASE ${integration.database}</sqlCommand>
+						</configuration>
+					</execution>
+					<execution>
+						<id>populate_db</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<sqlCommand>USE ${integration.database}</sqlCommand>
+							<srcFiles>
+								<srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+								<srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+				</executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
