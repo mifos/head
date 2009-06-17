@@ -138,21 +138,15 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        ActionForwards forward = null;
+        String forward = null;
         String method = (String) request.getAttribute("methodCalled");
         if (method != null) {
-            if (method.equals(Methods.preview.toString()))
-                forward = ActionForwards.preview_failure;
-            else if (method.equals(Methods.editPreview.toString()))
-                forward = ActionForwards.editpreview_failure;
-            else if (method.equals(Methods.previous.toString()) || method.equals(Methods.create.toString()))
-                forward = ActionForwards.previous_failure;
-            else if (method.equals(Methods.editPrevious.toString()) || method.equals(Methods.update.toString()))
-                forward = ActionForwards.editprevious_failure;
-            else if (method.equals(Methods.cancelCreate.toString()))
-                forward = ActionForwards.cancelCreate_failure;
-            else if (method.equals(Methods.cancelEdit.toString())) {
-                forward = ActionForwards.cancelEdit_failure;
+            if (method.equals(Methods.previous.toString()) || method.equals(Methods.create.toString())) {
+                forward = ActionForwards.previous_failure.toString();
+            } else if (method.equals(Methods.editPrevious.toString()) || method.equals(Methods.update.toString())) {
+                forward = ActionForwards.editprevious_failure.toString();
+            } else {
+                forward = method + "_failure";
             }
         }
         return mapping.findForward(forward.toString());

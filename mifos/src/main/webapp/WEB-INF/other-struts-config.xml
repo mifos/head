@@ -200,6 +200,7 @@
         <action path="/feeaction" type="org.mifos.application.fees.struts.action.FeeAction" parameter="method"
                 input="/feeaction.do?method=validate" name="feeactionform">
             <forward name="load_success" path="/pages/application/fees/jsp/feescreate.jsp"/>
+            <forward name="load_failure" path="/pages/framework/jsp/error.jsp"/>
             <forward name="preview_failure" path="/pages/application/fees/jsp/feescreate.jsp"/>
             <forward name="preview_success" path="/pages/application/fees/jsp/previewfeescreate.jsp"/>
             <forward name="previous_success" path="/pages/application/fees/jsp/feescreate.jsp"/>

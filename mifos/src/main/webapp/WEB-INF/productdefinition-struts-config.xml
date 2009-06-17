@@ -72,6 +72,7 @@
                 type="org.mifos.application.productdefinition.struts.action.SavingsPrdAction"
                 input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">
             <forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"/>
+            <forward name="load_failure" path="/pages/framework/jsp/error.jsp"/>
             <forward name="preview_success"
                      path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"/>
             <forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"/>
