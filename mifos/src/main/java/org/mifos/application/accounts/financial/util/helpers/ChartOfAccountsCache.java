@@ -46,6 +46,13 @@ public class ChartOfAccountsCache {
                     + coa.getGlCode() + ". name is: " + coa.getAccountName() + ", id is: " + coa.getAccountId());
         }
     }
+    
+    /**
+     * Required for unit tests.
+     */
+    protected static COABO remove(COABO key) {
+        return cache.remove(key.getGlCode());
+    }
 
     public static COABO get(String glCode) throws FinancialException {
         COABO glAccount = cache.get(glCode);

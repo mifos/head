@@ -32,36 +32,50 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 
 public class ChartOfAccountsCacheTest extends TestCase {
 
-
     private static final Short GL_CODE_ENTITY_ID = 197;
     private static final String GL_CODE = "17777";
     private static final int ACCOUNT_ID = 197;
     private static final String ACCOUNT_NAME = "test account";
     private static final String INCOME_GL_ACCOUNT_CODE = "30000";
-    
-    public void testAddAndGet() throws FinancialException {
 
-        GLCodeEntity glCodeEntity = new GLCodeEntity(GL_CODE_ENTITY_ID, GL_CODE);
-        COABO newAccount = new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntity);
-        ChartOfAccountsCache.add(newAccount);
-        
+    private COABO testAccount = null;
+    private COABO testIncomeAccount = null;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        GLCodeEntity glCodeEntityForStandardAccount = new GLCodeEntity(GL_CODE_ENTITY_ID, GL_CODE);
+        testAccount = new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntityForStandardAccount);
+        ChartOfAccountsCache.add(testAccount);
+
+        GLCodeEntity glCodeEntityForTopLevelAccount = new GLCodeEntity(GL_CODE_ENTITY_ID, INCOME_GL_ACCOUNT_CODE);
+        testIncomeAccount = new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntityForTopLevelAccount);
+        ChartOfAccountsCache.add(testIncomeAccount);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+
+        ChartOfAccountsCache.remove(testAccount);
+        testAccount = null;
+
+        ChartOfAccountsCache.remove(testIncomeAccount);
+        testIncomeAccount = null;
+    }
+
+    public void testAddAndGet() throws FinancialException {
         COABO cachedAccount = ChartOfAccountsCache.get(GL_CODE);
-        
         assertEquals(GL_CODE, cachedAccount.getGlCode());
         assertEquals(ACCOUNT_NAME, cachedAccount.getAccountName());
-        assertEquals(newAccount, cachedAccount);
+        assertEquals(testAccount, cachedAccount);
     }
 
     public void testTopLevelAccountCached() throws Exception {
-        
-        GLCodeEntity glCodeEntity = new GLCodeEntity(GL_CODE_ENTITY_ID, INCOME_GL_ACCOUNT_CODE);
-        ChartOfAccountsCache.add(new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntity));
-        
         AccountPersistence ap = createMockAccountPersistance();
         COABO income = ap.getCategory(GLCategoryType.INCOME);
-        
         COABO cachedIncome = ChartOfAccountsCache.get(INCOME_GL_ACCOUNT_CODE);
-        
         assertEquals(income, cachedIncome);
     }
 
