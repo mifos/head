@@ -22,14 +22,9 @@ package org.mifos.framework.security.util;
 
 import java.util.regex.Pattern;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import junit.framework.TestCase;
 
-public class ActivityMapperIntegrationTest extends MifosIntegrationTest {
-    public ActivityMapperIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class ActivityMapperTest extends TestCase {
 
     Pattern allowableActionName = Pattern.compile("([a-zA-Z])+");
 

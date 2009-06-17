@@ -8,7 +8,7 @@
         <class name="org.mifos.config.ClientRulesIntegrationTest" /> 
         <class name="org.mifos.config.ProcessFlowRulesTest" /> 
         <class name="org.mifos.config.ChartOfAccountsConfigTest" />
-        <class name="org.mifos.config.GeneralConfigIntegrationTest" />
+        <class name="org.mifos.config.GeneralConfigTest" />
         <class name="org.mifos.config.ConfigurationManagerTest" />
      </classes>
    </test>

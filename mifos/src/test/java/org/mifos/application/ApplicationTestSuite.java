@@ -62,7 +62,7 @@ import org.mifos.framework.persistence.PersistenceIntegrationTest;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
-import org.mifos.framework.util.helpers.StringToMoneyConverterIntegrationTest;
+import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { //ConfigTestSuite.class, 
@@ -75,7 +75,7 @@ import org.mifos.framework.util.helpers.StringToMoneyConverterIntegrationTest;
                        MasterTestSuite.class, 
                        AccountTestSuite.class,
                        FinancialTestSuite.class, 
-                       StringToMoneyConverterIntegrationTest.class, 
+                       StringToMoneyConverterTest.class, 
                        ConfigurationTestSuite.class,
                        BatchJobTestSuite.class, 
                        LoanTestSuite.class, 

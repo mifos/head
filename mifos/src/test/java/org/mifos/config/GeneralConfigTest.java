@@ -20,45 +20,16 @@
 
 package org.mifos.config;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import junit.framework.TestCase;
+
 import org.testng.annotations.Test;
 
 /**
  * FIXME: These tests are probably entirely unnecessary--we should be confident
  * that Apache Commons Configuration works and only test Mifos-specific code.
  */
-@Test(groups="integration")
-public class GeneralConfigIntegrationTest extends MifosIntegrationTest {
-
-    public GeneralConfigIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
-
-    @BeforeMethod
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @AfterMethod
-    @Override
-    protected void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
-        super.tearDown();
-    }
-
-    @BeforeClass
-    public static void init() throws Exception {
-        MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
-    }
+@Test(groups="unit")
+public class GeneralConfigTest extends TestCase {
 
     @Test
     public void testGetMaxPointsPerPPISurvey() {

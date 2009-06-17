@@ -20,28 +20,32 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
+import java.util.HashMap;
+import java.util.Map;
 
-public class FinancialRulesTest extends MifosIntegrationTest {
+import junit.framework.TestCase;
 
-    public FinancialRulesTest() throws SystemException, ApplicationException {
-        super();
-        init();
+public class FinancialRulesTest extends TestCase {
+
+    FinancialRules mock;
+    
+    public void setUp() throws Exception {
+        mock = new FinancialRules();
+        Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
+        Map<FinancialActionConstants, String> actionToCreditAccount = new HashMap<FinancialActionConstants, String>();
+        actionToDebitAccount.put(FinancialActionConstants.PRINCIPALPOSTING, "11201");
+        actionToCreditAccount.put(FinancialActionConstants.PRINCIPALPOSTING, "13100");
+        mock.setActionToCreditAccount(actionToCreditAccount);
+        mock.setActionToDebitAccount(actionToDebitAccount);
     }
-
-    public static void init() throws SystemException, ApplicationException {
-        // initialize Spring, Hibernate, etc.
-        new TestCaseInitializer().initialize();
+    
+    public void tearDown() {
+        mock = null;
     }
-
+    
     public void testSupportedActions() throws Exception {
-        assertEquals("11201", FinancialRules.getInstance().getGLAccountForAction(
-                FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
-        assertEquals("13100", FinancialRules.getInstance().getGLAccountForAction(
-                FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT));
+        assertEquals("11201", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.DEBIT));
+        assertEquals("13100", mock.getGLAccountForAction(FinancialActionConstants.PRINCIPALPOSTING, FinancialConstants.CREDIT));
     }
 
     /**
@@ -49,7 +53,7 @@ public class FinancialRulesTest extends MifosIntegrationTest {
      */
     public void testUnsupportedAction01() throws Exception {
         try {
-            FinancialRules.getInstance().getGLAccountForAction((short) -1, FinancialConstants.DEBIT);
+            mock.getGLAccountForAction((short) -1, FinancialConstants.DEBIT);
             fail("Expected RuntimeException.");
         } catch (RuntimeException e) {
             // do nothing
@@ -62,8 +66,7 @@ public class FinancialRulesTest extends MifosIntegrationTest {
      * {@link FinancialRules}.
      */
     public void testUnsupportedAction02() throws Exception {
-        assertNull(FinancialRules.getInstance().getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT,
-                FinancialConstants.CREDIT));
+        assertNull(mock.getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT, FinancialConstants.CREDIT));
     }
 
     /**
@@ -72,8 +75,7 @@ public class FinancialRulesTest extends MifosIntegrationTest {
      * {@link FinancialRules}
      */
     public void testUnsupportedAction03() throws Exception {
-        assertNull(FinancialRules.getInstance().getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT,
-                FinancialConstants.DEBIT));
+        assertNull(mock.getGLAccountForAction(FinancialActionConstants.REVERSAL_ADJUSTMENT, FinancialConstants.DEBIT));
     }
 
     // TODO: test override functionality of FinancialRules Spring bean config

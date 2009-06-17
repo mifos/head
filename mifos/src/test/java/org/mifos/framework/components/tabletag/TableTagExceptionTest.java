@@ -20,22 +20,16 @@
 
 package org.mifos.framework.components.tabletag;
 
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import junit.framework.TestCase;
+
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TableTagExceptionIntegrationTest extends MifosIntegrationTest {
-
-    public TableTagExceptionIntegrationTest() throws SystemException, ApplicationException {
-        super();
-    }
+public class TableTagExceptionTest extends TestCase {
 
     public void testTableTagException() throws Exception {
         try {
-            UserContext userContext = TestObjectFactory.getContext();
+            UserContext userContext = new UserContext();
             Text.getImage(this, "name", userContext.getPreferredLocale());
             fail();
         } catch (TableTagException tte) {

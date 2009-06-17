@@ -23,7 +23,7 @@ package org.mifos.framework.security;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.security.util.ActivityMapperIntegrationTest;
+import org.mifos.framework.security.util.ActivityMapperTest;
 import org.mifos.framework.security.util.LoginFilterTest;
 import org.mifos.framework.security.util.SecurityHelperIntegrationTest;
 
@@ -34,7 +34,7 @@ public class SecurityTestSuite extends TestSuite {
         suite.addTestSuite(SecurityHelperIntegrationTest.class);
         suite.addTestSuite(LoginFilterTest.class);
         suite.addTestSuite(AddActivityTest.class);
-        suite.addTestSuite(ActivityMapperIntegrationTest.class);
+        suite.addTestSuite(ActivityMapperTest.class);
         return suite;
     }
 }

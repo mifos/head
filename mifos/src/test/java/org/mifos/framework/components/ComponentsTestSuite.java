@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 import org.mifos.framework.components.logger.LoggingTest;
 import org.mifos.framework.components.logger.MessageTest;
-import org.mifos.framework.components.tabletag.TableTagExceptionIntegrationTest;
+import org.mifos.framework.components.tabletag.TableTagExceptionTest;
 import org.mifos.framework.components.taggenerator.TagGeneratorIntegrationTest;
 
 public class ComponentsTestSuite extends TestSuite {
@@ -38,7 +38,7 @@ public class ComponentsTestSuite extends TestSuite {
         testSuite.addTestSuite(TagGeneratorIntegrationTest.class);
         testSuite.addTestSuite(LoggingTest.class);
         testSuite.addTestSuite(MessageTest.class);
-        testSuite.addTestSuite(TableTagExceptionIntegrationTest.class);
+        testSuite.addTestSuite(TableTagExceptionTest.class);
         return testSuite;
     }
 }

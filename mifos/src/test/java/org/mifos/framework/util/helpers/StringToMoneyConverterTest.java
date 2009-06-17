@@ -20,20 +20,27 @@
 
 package org.mifos.framework.util.helpers;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.beanutils.Converter;
-import org.mifos.framework.MifosIntegrationTest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.application.master.business.MifosCurrency;
 
 /**
  * This class is used to test StringToMoneyConverter.
  */
-public class StringToMoneyConverterIntegrationTest extends MifosIntegrationTest {
+public class StringToMoneyConverterTest extends TestCase {
 
-    public StringToMoneyConverterIntegrationTest() throws SystemException, ApplicationException {
-        super();
+    private MifosCurrency oldMifosCurrency = null;
+    
+    public void setUp() {
+        oldMifosCurrency = Money.getDefaultCurrency();
+        Short zero = Short.valueOf("0");
+        Money.setDefaultCurrency(new MifosCurrency(zero,null,null,zero,0.0F,zero,zero,null));
     }
 
+    public void tearDown() {
+        Money.setDefaultCurrency(oldMifosCurrency);
+    }
     /**
      *This method creates a money object with MFI currency because as of now
      * the converter creates a new Money object with the currency set to MFI
@@ -41,7 +48,7 @@ public class StringToMoneyConverterIntegrationTest extends MifosIntegrationTest 
      */
     public void testConvert() {
         Converter stringToMoney = new StringToMoneyConverter();
-        Money money = new Money(TestObjectFactory.getMFICurrency(), "142.34");
+        Money money = new Money("142.34");
         assertEquals("testing StringToMoneyConverter should have returned a Money object.", money,
                 (Money) stringToMoney.convert(Money.class, "142.34"));
     }
@@ -56,7 +63,7 @@ public class StringToMoneyConverterIntegrationTest extends MifosIntegrationTest 
     public void testConvertWithEmptyString() {
 
         Converter stringToMoney = new StringToMoneyConverter();
-        Money money = new Money(TestObjectFactory.getMFICurrency(), "0");
+        Money money = new Money("0");
         assertEquals("testing StringToMoneyConverter should have returned a Money object with amount set to zero.",
                 money, (Money) stringToMoney.convert(Money.class, ""));
 
