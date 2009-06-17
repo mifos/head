@@ -19,6 +19,8 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
+    	<current.release.number>1.3.0</current.release.number>
+    	<current.release.name>mifos_v${current.release.number}</current.release.name>
 
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
@@ -662,7 +664,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2-beta-3</version>
 				<configuration>
-					<finalName>mifos</finalName>
+					<finalName>mifos_v1.3.0</finalName>
 					<descriptors>
 						<descriptor>src/main/assembly/release.xml</descriptor>
 					</descriptors>

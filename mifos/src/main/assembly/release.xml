@@ -18,7 +18,6 @@
 			<outputDirectory></outputDirectory>
 		    <directory>${basedir}/..</directory>
 	    	<includes>
-				<include>README*</include>
 				<include>LICENSE*</include>
 				<include>INSTALL*</include>
 	      	</includes>
@@ -31,4 +30,17 @@
 			</includes>
 		</fileSet>
 	</fileSets>
+	<files>
+		<file>
+			<source>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</source>
+			<outputDirectory>config</outputDirectory>
+			<destName>applicationConfiguration.custom.properties</destName>
+		</file>
+		<file>
+			<source>src/main/resources/org/mifos/config/resources/mainDatabase.properties</source>
+			<outputDirectory>config</outputDirectory>
+			<destName>local.properties</destName>
+		</file>
+	</files>
+
 </assembly>
