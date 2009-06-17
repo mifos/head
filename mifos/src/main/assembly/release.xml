@@ -1,0 +1,34 @@
+<assembly>
+	<id>release</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<outputDirectory>sql</outputDirectory>
+		    <directory>src/main/sql</directory>
+			<includes>
+				<include>create_mifos_db.sql</include>
+				<include>latest-schema.sql</include>
+				<include>latest-data.sql</include>
+				<include>init_mifos_password.sql</include>
+			</includes>
+		</fileSet>
+	    <fileSet>
+			<outputDirectory></outputDirectory>
+		    <directory>${basedir}/..</directory>
+	    	<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>INSTALL*</include>
+	      	</includes>
+	    </fileSet>
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>*.war</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>

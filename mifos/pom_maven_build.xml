@@ -36,7 +36,6 @@
 
     </properties>
     <profiles>
-
         <profile>
             <id>build_production_db</id>
             <activation>
@@ -659,6 +658,18 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-3</version>
+				<configuration>
+					<finalName>mifos</finalName>
+					<descriptors>
+						<descriptor>src/main/assembly/release.xml</descriptor>
+					</descriptors>
+					<outputDirectory>target</outputDirectory>
+					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -812,7 +823,7 @@
                 <version>2.4.3</version>
                 <configuration>
                     <useSystemClassLoader>true</useSystemClassLoader>
-                    <suiteXmlFiles>
+	                <suiteXmlFiles>
                         <suiteXmlFile>target/test-classes/ApplicationTestSuite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
