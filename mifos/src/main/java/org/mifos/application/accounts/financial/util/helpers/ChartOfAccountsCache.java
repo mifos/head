@@ -27,6 +27,10 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
 
+/**
+ * TODO: make this into, for instance, a Spring-managed bean instead of a static
+ * class. This would make testing cleaner.
+ */
 public class ChartOfAccountsCache {
     /** Keys are general ledger account codes, like "10000". */
     private static Map<String, COABO> cache = new HashMap<String, COABO>();
@@ -46,7 +50,7 @@ public class ChartOfAccountsCache {
                     + coa.getGlCode() + ". name is: " + coa.getAccountName() + ", id is: " + coa.getAccountId());
         }
     }
-    
+
     /**
      * Required for unit tests.
      */
@@ -57,7 +61,7 @@ public class ChartOfAccountsCache {
     public static COABO get(String glCode) throws FinancialException {
         COABO glAccount = cache.get(glCode);
         if (glAccount == null) {
-            throw new FinancialException(FinancialExceptionConstants.ACCOUNT_NOT_FOUND, new String[]{glCode});
+            throw new FinancialException(FinancialExceptionConstants.ACCOUNT_NOT_FOUND, new String[] { glCode });
         }
 
         return glAccount;

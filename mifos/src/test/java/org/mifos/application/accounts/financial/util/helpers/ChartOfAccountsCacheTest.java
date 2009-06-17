@@ -39,7 +39,6 @@ public class ChartOfAccountsCacheTest extends TestCase {
     private static final String INCOME_GL_ACCOUNT_CODE = "30000";
 
     private COABO testAccount = null;
-    private COABO testIncomeAccount = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -47,22 +46,35 @@ public class ChartOfAccountsCacheTest extends TestCase {
 
         GLCodeEntity glCodeEntityForStandardAccount = new GLCodeEntity(GL_CODE_ENTITY_ID, GL_CODE);
         testAccount = new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntityForStandardAccount);
+
+        /*
+         * Hack. Has no effect when this test is run alone. When running as part
+         * of a full unit/integration test, the ChartOfAccounts static cache
+         * will have already been populated, so the add (below) would otherwise
+         * cause an exception to be thrown.
+         */
+        ChartOfAccountsCache.remove(testAccount);
+
         ChartOfAccountsCache.add(testAccount);
 
         GLCodeEntity glCodeEntityForTopLevelAccount = new GLCodeEntity(GL_CODE_ENTITY_ID, INCOME_GL_ACCOUNT_CODE);
-        testIncomeAccount = new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntityForTopLevelAccount);
+        COABO testIncomeAccount = new COABO(ACCOUNT_ID, ACCOUNT_NAME, glCodeEntityForTopLevelAccount);
+
+        /*
+         * Hack. Has no effect when this test is run alone. When running as part
+         * of a full unit/integration test, the ChartOfAccounts static cache
+         * will have already been populated, so the add (below) would otherwise
+         * cause an exception to be thrown.
+         */
+        ChartOfAccountsCache.remove(testIncomeAccount);
+
         ChartOfAccountsCache.add(testIncomeAccount);
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-
-        ChartOfAccountsCache.remove(testAccount);
         testAccount = null;
-
-        ChartOfAccountsCache.remove(testIncomeAccount);
-        testIncomeAccount = null;
     }
 
     public void testAddAndGet() throws FinancialException {
