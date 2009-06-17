@@ -955,7 +955,7 @@ public class AccountBO extends BusinessObject {
                 financialBusinessService.buildAccountingEntries(accountTrxn);
             }
         } catch (FinancialException e) {
-            throw new AccountException("errors.update", e);
+            throw new AccountException("errors.unexpected", e);
         }
     }
 
