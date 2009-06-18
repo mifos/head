@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
@@ -217,11 +218,17 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         return getViewBirtAdminDocumentPage(mapping, form, request, response);
 
     }
+    
+    private static String getServletRoot(ActionServlet servlet) {
+        return servlet.getServletContext().getRealPath("/");
+    }
+    
+    public static String getAdminDocumentStorageDirectory(ActionServlet servlet) {
+        return getServletRoot(servlet) + "adminReport";
+    }
 
     private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
-        String dirPath = getServlet().getServletContext().getRealPath("/");
-        File dir = new File(dirPath + "adminReport");
-        File file = new File(dir, formFile.getFileName());
+        File file = new File(getAdminDocumentStorageDirectory(getServlet()), formFile.getFileName());
         InputStream is = formFile.getInputStream();
         OutputStream os;
         /*
@@ -231,7 +238,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
          * not produce any sort of file that can be retirieved. !! it only
          * allows us to perform the upload action.
          */
-        if (dirPath != null)
+        if (getServletRoot(getServlet()) != null)
             os = new FileOutputStream(file);
         else
             os = new ByteArrayOutputStream();

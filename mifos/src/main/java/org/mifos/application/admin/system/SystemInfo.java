@@ -20,7 +20,6 @@
 
 package org.mifos.application.admin.system;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -95,7 +94,6 @@ public class SystemInfo implements Serializable {
         setOsName(System.getProperty("os.name"));
         setOsArch(System.getProperty("os.arch"));
         setOsVersion(System.getProperty("os.version"));
-        setCustomReportsDir(System.getProperty("user.home") + File.separatorChar + ".mifos");
     }
 
     public int getApplicationVersion() {
@@ -166,7 +164,7 @@ public class SystemInfo implements Serializable {
         this.svnRevision = svnRevision;
     }
 
-    private void setCustomReportsDir(String dir) {
+    public void setCustomReportsDir(String dir) {
         customReportsDir = dir;
     }
 

@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admin.business.service.SystemInfoService;
 import org.mifos.application.admin.system.SystemInfo;
+import org.mifos.application.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
 import org.mifos.framework.business.service.BusinessService;
@@ -49,6 +50,7 @@ public class SystemInfoAction extends BaseAction {
             DatabaseMetaData metaData = StaticHibernateUtil.getSessionTL().connection().getMetaData();
             ServletContext context = request.getSession().getServletContext();
             SystemInfo systemInfo = new SystemInfo(metaData, context, Localization.getInstance().getMainLocale(), true);
+            systemInfo.setCustomReportsDir(BirtReportsUploadAction.getCustomReportStorageDirectory(getServlet()));
             SessionUtils.setAttribute("systemInfo", systemInfo, request.getSession());
             return mapping.findForward(ActionForwards.load_success.toString());
         } finally {

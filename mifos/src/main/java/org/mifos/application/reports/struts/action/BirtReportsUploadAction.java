@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.hibernate.HibernateException;
 import org.mifos.application.reports.business.ReportsBO;
@@ -167,11 +168,17 @@ public class BirtReportsUploadAction extends BaseAction {
 
         AuthorizationManager.getInstance().init();
     }
+    
+    private static String getServletRoot(ActionServlet servlet) {
+        return servlet.getServletContext().getRealPath("/");
+    }
+    
+    public static String getCustomReportStorageDirectory(ActionServlet servlet) {
+        return getServletRoot(servlet) + "report";
+    }
 
     private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
-        String dirPath = getServlet().getServletContext().getRealPath("/");
-        File dir = new File(dirPath + "report");
-        File file = new File(dir, formFile.getFileName());
+        File file = new File(getCustomReportStorageDirectory(getServlet()), formFile.getFileName());
         InputStream is = formFile.getInputStream();
         OutputStream os;
         /*
@@ -181,7 +188,7 @@ public class BirtReportsUploadAction extends BaseAction {
          * not produce any sort of file that can be retirieved. !! it only
          * allows us to perform the upload action.
          */
-        if (dirPath != null)
+        if (getServletRoot(getServlet()) != null)
             os = new FileOutputStream(file);
         else
             os = new ByteArrayOutputStream();
