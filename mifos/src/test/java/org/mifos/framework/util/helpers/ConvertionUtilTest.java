@@ -26,8 +26,10 @@ import junit.framework.TestCase;
 
 import org.mifos.framework.exceptions.ValueObjectConversionException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.testng.annotations.Test;
 
 // TODO: fix spelling of this class name
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class ConvertionUtilTest extends TestCase {
 
     public void testPopulateBusinessObjectFail() throws Exception {

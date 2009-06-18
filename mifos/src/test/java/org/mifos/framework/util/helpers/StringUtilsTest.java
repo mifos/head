@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class StringUtilsTest extends TestCase {
 
     public void testLpad() {

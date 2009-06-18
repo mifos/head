@@ -44,12 +44,14 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
+@Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
 public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
     public ProductMixBusinessServiceIntegrationTest() throws SystemException, ApplicationException {

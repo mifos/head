@@ -26,54 +26,45 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import junit.framework.TestCase;
 
 import org.mifos.application.accounts.financial.business.GLCategoryType;
+import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-@Test(groups="unit")
-public class ChartOfAccountsConfigTest {
+@Test(groups={"integration", "configTestSuite"})
+public class ChartOfAccountsConfigTest extends MifosIntegrationTest {
+
+    public ChartOfAccountsConfigTest() throws SystemException, ApplicationException {
+        super();
+        setUpBeforeClass();
+    }
 
     ChartOfAccountsConfig coa;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws SystemException, ApplicationException {
         // initialize Spring, Hibernate, etc.
         new TestCaseInitializer().initialize();
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    @BeforeMethod
     public void setUp() throws Exception {
         coa = ChartOfAccountsConfig.load(FilePaths.CHART_OF_ACCOUNTS_DEFAULT);
     }
 
-    @AfterMethod
     public void tearDown() throws Exception {
         coa = null;
     }
 
-    @Test
     public void testCreateCoa() throws Exception {
         assertNotNull("error loading chart of accounts from " + "configuration file", coa);
     }
 
-    @Test
     public void testGetAllAccounts() throws Exception {
         Set<GLAccount> glAccounts = coa.getGLAccounts();
         assertEquals("default chart of accounts should have 56 " + "general ledger accounts", 56, glAccounts.size());
@@ -87,13 +78,11 @@ public class ChartOfAccountsConfigTest {
      * iterating through the {@link Set} returned from
      * {@link ChartOfAccountsConfig#getGLAccounts()}.
      */
-    @Test
     public void testFirstIsTopLevelAccount() throws Exception {
         GLAccount first = coa.getGLAccounts().iterator().next();
         assertNull(first.parentGlCode);
     }
 
-    @Test
     public void testGetCategory() throws Exception {
         Node category = coa.getCategory(GLCategoryType.ASSET);
         assertNotNull("failed to fetch a top-level GL account " + "(aka category)", category);
@@ -104,21 +93,24 @@ public class ChartOfAccountsConfigTest {
         assertEquals("assets category has unexpected name", "ASSETS", name);
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
     public void testConfigWithDupes() throws Exception {
-        String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
-                + "<GLAccount code=\"11101\" name=\"Cash 1\" />" + "<GLAccount code=\"11101\" name=\"Cash 1\" />"
-                + "<GLAccount code=\"11102\" name=\"Cash 2\" />" + "</GLAccount>";
-        ByteArrayInputStream bstr = new ByteArrayInputStream(invalid.getBytes("UTF-8"));
-
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder parser = dbf.newDocumentBuilder();
-        Document document = parser.parse(bstr);
-
-        ChartOfAccountsConfig.traverse(document.getFirstChild(), null);
+        try {
+            String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
+                    + "<GLAccount code=\"11101\" name=\"Cash 1\" />" + "<GLAccount code=\"11101\" name=\"Cash 1\" />"
+                    + "<GLAccount code=\"11102\" name=\"Cash 2\" />" + "</GLAccount>";
+            ByteArrayInputStream bstr = new ByteArrayInputStream(invalid.getBytes("UTF-8"));
+    
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder parser = dbf.newDocumentBuilder();
+            Document document = parser.parse(bstr);
+    
+            ChartOfAccountsConfig.traverse(document.getFirstChild(), null);
+            fail("Expected RuntimeException");
+        } catch (RuntimeException e) {
+            // expected
+        }
     }
 
-    @Test
     public void testTraverse() throws Exception {
         String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
                 + "<GLAccount code=\"AB CD\" name=\"Cash 1\" />" + "<GLAccount code=\"11102\" name=\"Cash 2\" />"

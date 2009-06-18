@@ -29,7 +29,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.testng.annotations.Test;
 
+@Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
 public class ProductMixBOIntegrationTest extends MifosIntegrationTest {
 
     public ProductMixBOIntegrationTest() throws SystemException, ApplicationException {

@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="Fast Tests Suite" verbose="4" parallel="classes" thread-count="1">
+<suite name="Fast Tests Suite" verbose="4">
   <test name="Fast Tests" junit="true">
     <classes>
         <class name="org.mifos.framework.util.helpers.MoneyTest" />
@@ -24,7 +24,7 @@
         <class name="org.mifos.framework.components.customTableTag.TableTagParserTest" />
         <class name="org.mifos.application.ui.DispatcherTest" />
         <class name="org.mifos.application.CreateReportTest" />
-        
+
         <class name="org.mifos.framework.persistence.DatabaseInitFilterTest" />
         <class name="org.mifos.framework.persistence.DatabaseVersionPersistenceTest" />
         <class name="org.mifos.framework.persistence.UpgradeTest" />
@@ -36,7 +36,7 @@
         <class name="org.mifos.application.collectionsheet.business.BulkEntryAccountFeeActionViewTest" />
         <class name="org.mifos.application.customer.util.helpers.LoanCycleCounterTest" />
         <class name="org.mifos.application.accounts.business.AccountBOIntegrationTest" />
-        <class name="org.mifos.application.productdefinition.business.PrdOfferingBOIntegrationTest" />
+        <class name="org.mifos.application.productdefinition.business.PrdOfferingBOTest" />
         
         <class name="org.mifos.application.surveys.business.QuestionTest" />
                

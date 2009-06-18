@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.mifos.framework.security.util.SecurityConstants;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class FrameworkExceptionTest extends TestCase {
 
     public void testAppNotConfiguredException() throws Exception {

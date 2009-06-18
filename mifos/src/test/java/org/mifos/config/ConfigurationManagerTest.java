@@ -22,31 +22,43 @@ package org.mifos.config;
 
 import java.util.NoSuchElementException;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.Configuration;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test(groups="unit")
-public class ConfigurationManagerTest {
+@Test(groups={"unit", "configTestSuite"})
+public class ConfigurationManagerTest extends TestCase {
+
+    public ConfigurationManagerTest() throws Exception {
+        super();
+        init();
+    }
+
+    public ConfigurationManagerTest(String name) throws Exception {
+        super(name);
+        init();
+    }
 
     Configuration configuration;
     private static final String badKey = "Bad Key";
 
-    @BeforeClass
     public static void init() throws Exception {
         MifosLogManager.configure(FilePaths.LOG_CONFIGURATION_FILE);
     }
 
-    @BeforeMethod
-    public void before() {
+    public void setUp() {
         configuration = ConfigurationManager.getInstance().getConfiguration();
     }
 
-    @Test(expectedExceptions = NoSuchElementException.class)
     public void testGetUndefinedProperty() {
-        configuration.getShort(badKey);
+        try {
+            configuration.getShort(badKey);
+            fail("Expected NoSuchElementException.");
+        } catch (NoSuchElementException e) {
+            // expected
+        }
     }
 }

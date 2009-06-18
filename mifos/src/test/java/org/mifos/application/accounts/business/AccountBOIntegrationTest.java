@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.mifos.application.accounts.AccountIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
@@ -57,7 +58,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.testng.annotations.Test;
 
+@Test(groups={"integration", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class AccountBOIntegrationTest extends AccountIntegrationTest {
 
     public AccountBOIntegrationTest() throws SystemException, ApplicationException {
@@ -75,6 +78,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
      * code, make it look like it was supposed to test failure. But it doesn't
      * (and I don't see a corresponding success test).
      */
+    @Test
     public void testFailureRemoveFees() throws Exception {
         StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
@@ -86,6 +90,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         StaticHibernateUtil.getTransaction().commit();
     }
 
+    @Test(dependsOnMethods = {"testFailureRemoveFees"})
     public void testSuccessGetLastPmntAmntToBeAdjusted() throws Exception {
 
         LoanBO loan = accountBO;
@@ -106,12 +111,14 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         // the loan has to be reloaded from db so that the payment list will be
         // in desc order and the
         // last payment will be the first in the payment list
-        loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loan.getAccountId());
+        Session session = StaticHibernateUtil.getSessionTL();
+        loan = (LoanBO) session.get(LoanBO.class, loan.getAccountId());
 
         assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted(), DELTA);
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Test(dependsOnMethods = {"testSuccessGetLastPmntAmntToBeAdjusted"})
     public void testSuccessAdjustLastPayment() throws Exception {
         LoanBO loan = accountBO;
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
@@ -159,6 +166,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Test(dependsOnMethods = {"testSuccessAdjustLastPayment"})
     public void testSuccessUpdateAccountActionDateEntity() {
         List<Short> installmentIdList;
         installmentIdList = getApplicableInstallmentIdsForRemoveFees(accountBO);
@@ -171,6 +179,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         // TODO: assert what?
     }
 
+    @Test(dependsOnMethods = {"testSuccessUpdateAccountActionDateEntity"})
     public void testSuccessUpdateAccountFeesEntity() {
         Set<AccountFeesEntity> accountFeesEntitySet = accountBO.getAccountFees();
         assertEquals(1, accountFeesEntitySet.size());
@@ -182,6 +191,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         }
     }
 
+    @Test(dependsOnMethods = {"testSuccessUpdateAccountFeesEntity"})
     public void testGetLastLoanPmntAmnt() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = accountBO;
@@ -198,6 +208,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Test(dependsOnMethods = {"testGetLastLoanPmntAmnt"})
     public void testLoanAdjustment() throws Exception {
         StaticHibernateUtil.closeSession();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -233,6 +244,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Test(dependsOnMethods = {"testLoanAdjustment"})
     public void testAdjustmentForClosedAccnt() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = accountBO;
@@ -255,6 +267,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         }
     }
 
+    @Test(dependsOnMethods = {"testAdjustmentForClosedAccnt"})
     public void testRetrievalOfNullMonetaryValue() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = accountBO;
@@ -279,6 +292,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
                 .getMoneyForMFICurrency(0), accntPmnt.getAmount());
     }
 
+    @Test(dependsOnMethods = {"testRetrievalOfNullMonetaryValue"})
     public void testGetTransactionHistoryView() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = accountBO;
@@ -313,6 +327,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Test(dependsOnMethods = {"testGetTransactionHistoryView"})
     public void testGetTransactionHistoryViewByOtherUser() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = accountBO;
@@ -337,6 +352,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
+    @Test(dependsOnMethods = {"testGetTransactionHistoryViewByOtherUser"})
     public void testGetPeriodicFeeList() throws PersistenceException {
         FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.LOAN, "20",
                 FeePayment.TIME_OF_DISBURSMENT);
@@ -348,6 +364,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         assertEquals(1, accountBO.getPeriodicFeeList().size());
     }
 
+    @Test(dependsOnMethods = {"testGetPeriodicFeeList"})
     public void testIsTrxnDateValid() throws Exception {
 
         Calendar calendar = new GregorianCalendar();
@@ -361,6 +378,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
 
     }
 
+    @Test(dependsOnMethods = {"testIsTrxnDateValid"})
     public void testHandleChangeInMeetingSchedule() throws ApplicationException, SystemException {
         TestObjectFactory.flushandCloseSession();
         // center initially set up with meeting today
@@ -391,6 +409,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         }
     }
 
+    @Test(dependsOnMethods = {"testHandleChangeInMeetingSchedule"})
     public void testDeleteFutureInstallments() throws HibernateException, SystemException, AccountException {
         TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
@@ -402,6 +421,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
 
     }
 
+    @Test(dependsOnMethods = {"testDeleteFutureInstallments"})
     public void testUpdate() throws Exception {
         TestObjectFactory.flushandCloseSession();
         accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
@@ -427,6 +447,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         }
     }
 
+    @Test(dependsOnMethods = {"testUpdate"})
     public void testGetPastInstallments() {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -443,6 +464,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         TestObjectFactory.cleanUp(centerBO);
     }
 
+    @Test(dependsOnMethods = {"testGetPastInstallments"})
     public void testGetAllInstallments() {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -456,6 +478,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         TestObjectFactory.cleanUp(centerBO);
     }
 
+    @Test(dependsOnMethods = {"testGetAllInstallments"})
     public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         StaticHibernateUtil.closeSession();
@@ -488,6 +511,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
 
     }
 
+    @Test(dependsOnMethods = {"testUpdatePerformanceHistoryOnAdjustment"})
     public void testAccountBOClosedDate() {
         AccountBO account = new AccountBO();
         java.util.Date originalDate = new java.util.Date();
@@ -509,6 +533,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         assertEquals(account.getClosedDate(), originalDate);
     }
 
+    @Test(dependsOnMethods = {"testAccountBOClosedDate"})
     public void testGetInstalmentDates() throws Exception {
         AccountBO account = new AccountBO();
         MeetingBO meeting = new MeetingBO(RecurrenceType.DAILY, (short) 1, getDate("18/08/2005"),
@@ -519,6 +544,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTest {
         account.getInstallmentDates(meeting, (short) 0, (short) 0);
     }
 
+    @Test(dependsOnMethods = {"testGetInstalmentDates"})
     public void testGenerateId() throws Exception {
         AccountBO account = new AccountBO(35);
         String officeGlobalNum = "0567";

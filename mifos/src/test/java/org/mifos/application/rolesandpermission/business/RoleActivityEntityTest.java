@@ -24,7 +24,9 @@ import junit.framework.TestCase;
 
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.logger.TestLogger;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class RoleActivityEntityTest extends TestCase {
 
     public void testEquals() throws Exception {

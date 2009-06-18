@@ -23,7 +23,9 @@ package org.mifos.application.customer.struts.actionforms;
 import junit.framework.TestCase;
 
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class CustomerActionFormTest extends TestCase {
 
     public void testNullInCustomerId() throws Exception {

@@ -27,8 +27,12 @@ import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.CLI
 import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
 import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CLOSED_BLACKLISTED;
 import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CLOSED_LEFTPROGRAM;
+
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class CustomerStatusFlagTest extends TestCase {
 
     public void testIsBlacklisted() throws Exception {

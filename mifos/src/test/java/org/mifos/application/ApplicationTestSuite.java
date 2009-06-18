@@ -67,7 +67,7 @@ import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { //ConfigTestSuite.class, 
                        //ProductMixTestSuite.class,
-                       FastTests.class, 
+                       //FastTests.class, 
                        SecurityTestSuite.class, 
                        CollectionSheetTestSuite.class, 
                        CustomerTestSuite.class,

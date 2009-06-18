@@ -23,8 +23,11 @@ package org.mifos.framework.struts.tags;
 import java.util.Collections;
 import java.util.Map;
 
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MifosSelectTest extends TestCase {
 
     private static final String INTRODUCTORY_STYLES_AND_SCRIPT = " <STYLE> " + ".ttip {border:1px solid black;"

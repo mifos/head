@@ -20,8 +20,11 @@
 
 package org.mifos.framework.struts.tags;
 
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MifosTagUtilsTest extends TestCase {
 
     public void testFilter() throws Exception {

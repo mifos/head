@@ -25,7 +25,9 @@ import junit.framework.TestCase;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class ClientCustActionFormTest extends TestCase {
 
     public void testGoodDate() throws Exception {

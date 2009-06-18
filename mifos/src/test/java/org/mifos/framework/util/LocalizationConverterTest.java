@@ -31,7 +31,9 @@ import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class LocalizationConverterTest extends TestCase {
 
     public void testDateFormattingWithFourDigitsInYear() throws Exception {

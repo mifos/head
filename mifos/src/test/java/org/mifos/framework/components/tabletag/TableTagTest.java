@@ -38,10 +38,10 @@ import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.http.request.RequestConstants;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.SearchObject;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class TableTagTest extends TestCase {
 
     public void testNoResults() throws Exception {

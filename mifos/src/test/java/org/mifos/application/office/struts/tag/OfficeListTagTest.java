@@ -30,6 +30,7 @@ import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;
@@ -39,8 +40,11 @@ import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class OfficeListTagTest extends TestCase {
 
     private XmlBuilder result;
@@ -53,10 +57,24 @@ public class OfficeListTagTest extends TestCase {
 
     private OfficeBO branch;
 
+    public OfficeListTagTest() {
+        super();
+        initialize();
+    }
+
+    public OfficeListTagTest(String name) {
+        super(name);
+        initialize();
+    }
+
+    private void initialize() {
+        MifosLogManager.configureLogging();
+        SpringUtil.initializeSpring();
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        MifosLogManager.configureLogging();
         result = new XmlBuilder();
         userContext = TestUtils.makeUser();
     }

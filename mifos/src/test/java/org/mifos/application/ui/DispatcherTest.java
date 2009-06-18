@@ -27,9 +27,11 @@ import static org.mifos.application.ui.DispatchTestUtil.getSuccessfulDocument;
 import junit.framework.TestCase;
 
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.testng.annotations.Test;
 
 import servletunit.HttpServletResponseSimulator;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class DispatcherTest extends TestCase {
 
     public void testMainPageNoTrailingSlash() throws Exception {

@@ -30,7 +30,9 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class ValidatorsTest extends TestCase {
 
     private void checkException(Validator val, Object input, String error) {

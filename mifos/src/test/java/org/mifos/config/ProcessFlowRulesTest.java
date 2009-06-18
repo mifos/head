@@ -20,9 +20,6 @@
 
 package org.mifos.config;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -30,47 +27,23 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 /**
  * Validate configuration override logic for optional process flow states.
  */
-public class ProcessFlowRulesTest {
+@Test(groups={"integration", "configTestSuite"})
+public class ProcessFlowRulesTest extends MifosIntegrationTest {
     public ProcessFlowRulesTest() throws SystemException, ApplicationException {
         new TestCaseInitializer().initialize();
     }
 
-    @Test
-    public void testOverrideNeeded() throws Exception {
-        assertTrue(ProcessFlowRules.needsOverride(false, true));
-    }
-
-    @Test
-    public void testOverrideNotNecessary() throws Exception {
-        assertFalse(ProcessFlowRules.needsOverride(false, false));
-        assertFalse(ProcessFlowRules.needsOverride(true, true));
-    }
-
-    @Test
-    public void testOverrideValidation() throws Exception {
-        assertTrue(ProcessFlowRules.isValidOverride(true, true));
-        assertTrue(ProcessFlowRules.isValidOverride(false, true));
-        assertTrue(ProcessFlowRules.isValidOverride(false, false));
-        assertFalse(ProcessFlowRules.isValidOverride(true, false));
-    }
-
-    @Test(expectedExceptions = ConfigurationException.class)
-    public void testInvalidOverride() throws Exception {
-        ProcessFlowRules.needsOverride(true, false);
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
+    public void tearDown() {
         AccountPersistence ap = new AccountPersistence();
         AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
                 AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
@@ -78,7 +51,31 @@ public class ProcessFlowRulesTest {
         StaticHibernateUtil.commitTransaction();
     }
 
-    @Test
+    public void testOverrideNeeded() throws Exception {
+        assertTrue(ProcessFlowRules.needsOverride(false, true));
+    }
+
+    public void testOverrideNotNecessary() throws Exception {
+        assertFalse(ProcessFlowRules.needsOverride(false, false));
+        assertFalse(ProcessFlowRules.needsOverride(true, true));
+    }
+
+    public void testOverrideValidation() throws Exception {
+        assertTrue(ProcessFlowRules.isValidOverride(true, true));
+        assertTrue(ProcessFlowRules.isValidOverride(false, true));
+        assertTrue(ProcessFlowRules.isValidOverride(false, false));
+        assertFalse(ProcessFlowRules.isValidOverride(true, false));
+    }
+
+    public void testInvalidOverride() throws Exception {
+        try {
+            ProcessFlowRules.needsOverride(true, false);
+            fail("Expected ConfigurationException");
+        } catch (ConfigurationException e){
+            // expected
+        }
+    }
+
     public void testValidOverrideAgainstDb() throws Exception {
         CustomerPersistence cp = new CustomerPersistence();
         CustomerStatusEntity cse = (CustomerStatusEntity) cp.loadPersistentObject(CustomerStatusEntity.class,
@@ -92,15 +89,19 @@ public class ProcessFlowRulesTest {
         assertTrue(cse.getIsOptional());
     }
 
-    @Test(expectedExceptions = ConfigurationException.class, dependsOnMethods = { "testValidOverrideAgainstDb" })
     public void testInvalidOverrideAgainstDb() throws Exception {
-        AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
-                AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
-        ase.setIsOptional(true);
-        StaticHibernateUtil.commitTransaction();
-        assertTrue(ase.getIsOptional());
-        assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
-        ProcessFlowRules.init();
+        try {
+            AccountPersistence ap = new AccountPersistence();
+            AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
+                    AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
+            ase.setIsOptional(true);
+            StaticHibernateUtil.commitTransaction();
+            assertTrue(ase.getIsOptional());
+            assertFalse(ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled());
+            ProcessFlowRules.init();
+            fail("Expected ConfigurationException");
+        } catch (ConfigurationException e){
+            // expected
+        }
     }
 }

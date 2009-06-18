@@ -23,7 +23,9 @@ package org.mifos.application.surveys.business;
 import junit.framework.TestCase;
 
 import org.mifos.framework.TestUtils;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class QuestionTest extends TestCase {
 
     public void testEquals() {

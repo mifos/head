@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.customTableTag;
 
+import static junitx.framework.StringAssert.assertContains;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +29,13 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
-import static junitx.framework.StringAssert.assertContains;
-import org.mifos.application.office.business.OfficeView;
-import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.core.ClasspathResource;
 
+import org.mifos.application.office.business.OfficeView;
+import org.mifos.core.ClasspathResource;
+import org.mifos.framework.exceptions.TableTagParseException;
+import org.testng.annotations.Test;
+
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class TableTagParserTest extends TestCase {
 
     public void testParserFailure() {

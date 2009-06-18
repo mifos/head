@@ -31,7 +31,9 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.config.GeneralConfig;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class XmlPPIParserTest extends TestCase {
     private static final double DELTA = 0.00000001;
     private static XmlPPISurveyParser parser = new XmlPPISurveyParser();

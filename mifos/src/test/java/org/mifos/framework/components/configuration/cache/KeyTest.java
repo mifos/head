@@ -23,7 +23,9 @@ package org.mifos.framework.components.configuration.cache;
 import junit.framework.TestCase;
 
 import org.mifos.framework.TestUtils;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class KeyTest extends TestCase {
 
     public void testEquals() throws Exception {

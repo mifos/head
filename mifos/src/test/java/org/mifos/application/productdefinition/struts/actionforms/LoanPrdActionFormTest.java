@@ -24,7 +24,9 @@ import junit.framework.TestCase;
 
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.components.logger.TestLogger;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class LoanPrdActionFormTest extends TestCase {
 
     public void testApplicableMaster() throws Exception {

@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@Test(groups="integration")
+@Test(groups= {"integration", "configTestSuite"} )
 public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
 
     public AccountingRulesIntegrationTest() throws SystemException, ApplicationException {

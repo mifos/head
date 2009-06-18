@@ -29,10 +29,12 @@ import junit.framework.TestCase;
 
 import org.mifos.application.ui.DispatchTestUtil;
 import org.mifos.application.ui.Dispatcher;
+import org.testng.annotations.Test;
 
 import servletunit.HttpServletRequestSimulator;
 import servletunit.HttpServletResponseSimulator;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class CreateReportTest extends TestCase {
 
     public void testCreateReportPage() throws Exception {

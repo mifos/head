@@ -25,8 +25,12 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.SATURDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.SUNDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.TUESDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.WEDNESDAY;
+
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class WeekDayTest extends TestCase {
 
     public void testNext() throws Exception {

@@ -28,7 +28,9 @@ import java.math.BigDecimal;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MoneyTest extends TestCase {
     private static final double DELTA = 0.00000001;
 

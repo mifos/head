@@ -41,7 +41,9 @@ import junitx.framework.StringAssert;
 import net.sourceforge.mayfly.Database;
 
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class DatabaseVersionPersistenceTest extends TestCase {
 
     public void setUp() throws Exception {

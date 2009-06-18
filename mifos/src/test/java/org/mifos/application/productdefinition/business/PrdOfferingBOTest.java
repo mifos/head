@@ -23,7 +23,9 @@ package org.mifos.application.productdefinition.business;
 import junit.framework.TestCase;
 
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class PrdOfferingBOTest extends TestCase {
     
    public void setUp(){

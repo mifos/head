@@ -26,6 +26,7 @@
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
         <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
+        <test.sql.resources.src.directory>${modules.root.dir}/mifos/src/test/sql</test.sql.resources.src.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
@@ -650,9 +651,38 @@
                 <directory>src/test/testng</directory>
                 <filtering>false</filtering>
             </testResource>
+            <testResource>
+                <directory>${test.sql.resources.src.directory}</directory>
+                <filtering>true</filtering>
+                <targetPath>sql</targetPath>
+            </testResource>
         </testResources>
 
         <plugins>
+            <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-resources</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target/mifos/WEB-INF</outputDirectory>
+                  <resources>          
+                    <resource>
+                      <directory>src/main/webapp/WEB-INF</directory>
+                      <includes>
+                        <include>*.xml</include>
+                      </includes>
+                      <filtering>false</filtering>
+                    </resource>
+                  </resources>              
+                </configuration>            
+              </execution>
+            </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -824,7 +854,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
-                    <useSystemClassLoader>true</useSystemClassLoader>
+                   <useSystemClassLoader>true</useSystemClassLoader>
+                   <additionalClasspathElements>
+                     <additionalClasspathElement>${basedir}/target/mifos</additionalClasspathElement>
+                   </additionalClasspathElements> 
 	                <suiteXmlFiles>
                         <suiteXmlFile>target/test-classes/ApplicationTestSuite.xml</suiteXmlFile>
                     </suiteXmlFiles>

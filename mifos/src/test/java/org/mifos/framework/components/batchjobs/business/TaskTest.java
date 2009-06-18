@@ -23,7 +23,9 @@ package org.mifos.framework.components.batchjobs.business;
 import junit.framework.TestCase;
 
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class TaskTest extends TestCase {
 
     public void testStatus() throws Exception {

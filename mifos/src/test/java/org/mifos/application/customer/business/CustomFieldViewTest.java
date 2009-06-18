@@ -23,7 +23,9 @@ package org.mifos.application.customer.business;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.CustomFieldView;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class CustomFieldViewTest extends TestCase {
 
     public void testEmpty() throws Exception {

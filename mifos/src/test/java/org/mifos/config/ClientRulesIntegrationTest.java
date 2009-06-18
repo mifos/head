@@ -29,7 +29,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.testng.annotations.Test;
 
-@Test(groups="integration")
+@Test(groups={"integration", "configTestSuite"})
 public class ClientRulesIntegrationTest extends MifosIntegrationTest {
 
     public ClientRulesIntegrationTest() throws SystemException, ApplicationException {

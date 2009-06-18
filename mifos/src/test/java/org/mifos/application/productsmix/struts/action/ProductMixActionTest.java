@@ -56,8 +56,11 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.testng.annotations.Test;
+
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+@Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
 public class ProductMixActionTest extends MifosMockStrutsTestCase {
 
     public ProductMixActionTest() throws SystemException, ApplicationException {

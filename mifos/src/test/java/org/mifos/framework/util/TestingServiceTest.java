@@ -28,7 +28,9 @@ import junit.framework.TestCase;
 
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.service.test.TestMode;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class TestingServiceTest extends TestCase {
     static StandardTestingService standardTestingService = null;
     static TestMode savedTestMode = null;

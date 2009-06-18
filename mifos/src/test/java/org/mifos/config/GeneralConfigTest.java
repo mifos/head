@@ -31,7 +31,6 @@ import org.testng.annotations.Test;
 @Test(groups="unit")
 public class GeneralConfigTest extends TestCase {
 
-    @Test
     public void testGetMaxPointsPerPPISurvey() {
         int configuredValue = GeneralConfig.getMaxPointsPerPPISurvey();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -49,7 +48,6 @@ public class GeneralConfigTest extends TestCase {
 
     }
 
-    @Test
     public void testGetBatchSizeForBatchJobs() {
         int configuredValue = GeneralConfig.getBatchSizeForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -67,7 +65,6 @@ public class GeneralConfigTest extends TestCase {
 
     }
 
-    @Test
     public void testGetRecordCommittingSizeForBatchJobs() {
         int configuredValue = GeneralConfig.getRecordCommittingSizeForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -85,7 +82,6 @@ public class GeneralConfigTest extends TestCase {
 
     }
     
-    @Test 
     public void testGetOutputIntervalForBatchJobs() {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();

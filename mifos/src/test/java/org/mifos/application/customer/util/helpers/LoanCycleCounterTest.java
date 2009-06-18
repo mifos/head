@@ -23,7 +23,9 @@ package org.mifos.application.customer.util.helpers;
 import junit.framework.TestCase;
 
 import org.mifos.framework.TestUtils;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class LoanCycleCounterTest extends TestCase {
 
     public void testEqualsObject() {

@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Config Test Suite" verbose="4" >
-  <test name="Config Test" >
+  <test name="Config Test" junit="true" >
     <classes>
         <class name="org.mifos.config.AccountingRulesIntegrationTest" />
         <class name="org.mifos.config.LocalizationIntegrationTest" /> 

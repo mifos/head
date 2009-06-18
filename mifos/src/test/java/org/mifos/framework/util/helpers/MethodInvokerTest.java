@@ -26,7 +26,9 @@ import junit.framework.TestCase;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.SystemException;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MethodInvokerTest extends TestCase {
 
     EMIInstallment installment;

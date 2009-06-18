@@ -20,9 +20,12 @@
 
 package org.mifos.framework.persistence;
 
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class UpgradeTest extends TestCase {
 
     public void testIncrementVersion() throws Exception {

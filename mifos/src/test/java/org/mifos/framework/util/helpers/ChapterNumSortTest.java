@@ -21,12 +21,16 @@
 package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertArrayEquals;
+
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
 /**
  * Demonstrate sorting number-like strings such as 1.4.2 and 1.4.10, where 1.4.2
  * would come before 1.4.10 in the sequence.
  */
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class ChapterNumSortTest extends TestCase {
 
     public void testChapterNumberOrder() {

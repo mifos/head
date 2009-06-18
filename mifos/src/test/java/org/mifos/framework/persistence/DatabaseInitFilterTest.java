@@ -30,7 +30,9 @@ import junitx.framework.StringAssert;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.DatabaseErrorCode;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.testng.annotations.Test;
 
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class DatabaseInitFilterTest extends TestCase {
 
     @Override

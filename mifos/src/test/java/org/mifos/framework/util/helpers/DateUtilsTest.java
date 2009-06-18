@@ -35,7 +35,9 @@ import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.Localization;
+import org.testng.annotations.Test;
 
+@Test(groups={"integration", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class DateUtilsTest extends TestCase {
 
     private Locale savedDefaultLocale;
