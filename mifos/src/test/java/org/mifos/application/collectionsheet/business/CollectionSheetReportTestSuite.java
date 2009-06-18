@@ -33,7 +33,7 @@ import org.mifos.application.reports.business.service.ReportServiceFactoryIntegr
 public class CollectionSheetReportTestSuite extends TestSuite {
     public static Test suite() throws Exception {
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(CollectionSheetBOIntegrationTest.class);
+        suite.addTestSuite(CollectionSheetBOTest.class);
         suite.addTestSuite(CollectionSheetReportServiceIntegrationTest.class);
         suite.addTestSuite(CollectionSheetServiceIntegrationTest.class);
         suite.addTestSuite(ReportServiceFactoryIntegrationTest.class);

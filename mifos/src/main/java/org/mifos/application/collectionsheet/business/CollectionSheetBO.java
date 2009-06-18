@@ -59,6 +59,20 @@ public class CollectionSheetBO extends BusinessObject {
 
     private Set<CollSheetCustBO> collectionSheetCustomers;
 
+    private CollectionSheetPersistence collectionSheetPersistence;
+
+    public CollectionSheetPersistence getCollectionSheetPersistence() {
+
+        if (collectionSheetPersistence == null) {
+            collectionSheetPersistence = new CollectionSheetPersistence();
+        }
+        return collectionSheetPersistence;
+    }
+
+    public void setCollectionSheetPersistence(CollectionSheetPersistence collectionSheetPersistence) {
+        this.collectionSheetPersistence = collectionSheetPersistence;
+    }
+
     private Map<Integer, CollSheetCustBO> collectionSheetCustomerLookup = new HashMap<Integer, CollSheetCustBO>(
             CUSTOMER_ID_MAP_INITIAL_CAPACITY);
 
@@ -208,7 +222,7 @@ public class CollectionSheetBO extends BusinessObject {
      */
     public void create() throws PersistenceException {
         this.statusFlag = CollectionSheetConstants.COLLECTION_SHEET_GENERATION_STARTED;
-        new CollectionSheetPersistence().createOrUpdate(this);
+        getCollectionSheetPersistence().createOrUpdate(this);
     }
 
     /**
@@ -270,7 +284,7 @@ public class CollectionSheetBO extends BusinessObject {
      */
     public void update(Short statusId) throws PersistenceException {
         this.statusFlag = statusId;
-        new CollectionSheetPersistence().createOrUpdate(this);
+        getCollectionSheetPersistence().createOrUpdate(this);
     }
 
     public void populateAccountActionDates(List<AccountActionDateEntity> accountActionDates) throws SystemException,

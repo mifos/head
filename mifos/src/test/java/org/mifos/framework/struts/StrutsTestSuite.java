@@ -39,7 +39,7 @@ import org.mifos.framework.struts.tags.MifosPropertyMessageResourcesTest;
 import org.mifos.framework.struts.tags.MifosTextareaTagTest;
 import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
-import org.mifos.framework.util.LocalizationConverterIntegrationTest;
+import org.mifos.framework.util.LocalizationConverterTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { ConstPluginTest.class, EnumPluginTest.class, InitializerPluginTest.class,
@@ -47,7 +47,7 @@ import org.mifos.framework.util.LocalizationConverterIntegrationTest;
         MifosCheckBoxTagTest.class, MifosTextareaTagTest.class,
         MifosFileTagTest.class, MifosLabelTagTest.class, MifosImageTagTest.class,
         MifosFileTagTest.class, MifosAlphaNumTextTagTest.class,
-        MifosNumberTextTagTest.class, LocalizationConverterIntegrationTest.class,
+        MifosNumberTextTagTest.class, LocalizationConverterTest.class,
         MifosPropertyMessageResourcesTest.class })
 public class StrutsTestSuite extends TestSuite {
     // placeholder class
