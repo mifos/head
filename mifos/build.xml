@@ -327,6 +327,7 @@
         <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
         <testng xmlfilesetref="testng-suite-files"
             classpathref="test-classpath"
+            haltonfailure="${test.haltonfailure}"
             outputdir="${dist.dir}" />
 
         <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
