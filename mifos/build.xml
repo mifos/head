@@ -15,7 +15,7 @@
     <property name="reporting.dir" value="${basedir}/reporting"/>
     <property name="test.resources.dir" value="${basedir}/src/test/resources"/>
     <property name="test.dir" value="${basedir}/src/test/java"/>
-	<property name="config.dir" value = "${basedir}/src/main/resources/org/mifos/config"/>
+    <property name="config.dir" value = "${basedir}/src/main/resources/org/mifos/config"/>
     <property name="conf.dir" value="${config.dir}/resources"/>
     <property name="test.config.dir" value = "${basedir}/src/test/resources/org/mifos/config"/>
     <property name="test.conf.dir" value="${test.config.dir}/resources"/>
@@ -300,36 +300,36 @@
         <copy todir="${test.classes}">
             <fileset dir="${test.resources.dir}"/>
         </copy>     
-      <copy todir="${test.classes}">
-          <fileset dir="src/test/testng">
-              <include name="*.xml"/>
-          </fileset>
-      </copy>
+        <copy todir="${test.classes}">
+            <fileset dir="src/test/testng">
+                <include name="*.xml"/>
+            </fileset>
+        </copy>
     </target>
 
     <taskdef resource="testngtasks" classpath="${build-time-libraries}/testng-5.8-jdk15.jar"/>
-	
+
     <path id="test-classpath">
-       <path refid="class.path"/>
-       <pathelement location="${build.classes}"/>
-       <pathelement location="${test.classes}"/>
-       <pathelement location="${test.classes}/org/mifos/config/resources"/>
-       <path refid="test.maven-dependencies.classpath"/>
+        <path refid="class.path"/>
+        <pathelement location="${build.classes}"/>
+        <pathelement location="${test.classes}"/>
+        <pathelement location="${test.classes}/org/mifos/config/resources"/>
+        <path refid="test.maven-dependencies.classpath"/>
     </path>
-  
-	<fileset id="testng-suite-files" dir="${test.classes}">
-		<include name="**/ApplicationTestSuite.xml" />
-	</fileset>
-	
-	<target name="run_test" 
-       depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
-       description="Run tests.">
-       <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
-     	 <testng xmlfilesetref="testng-suite-files"
-         classpathref="test-classpath"
-		   outputdir="${dist.dir}" />
-    	
-    	 <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+
+    <fileset id="testng-suite-files" dir="${test.classes}">
+        <include name="**/ApplicationTestSuite.xml" />
+    </fileset>
+
+    <target name="run_test" 
+        depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
+        description="Run tests.">
+        <echo>Using database: ${integration.database} at ${integration.database.host} port ${integration.database.port}</echo>
+        <testng xmlfilesetref="testng-suite-files"
+            classpathref="test-classpath"
+            outputdir="${dist.dir}" />
+
+        <junit printsummary="on" fork="true" maxmemory="${test.memory}" 
             dir="${basedir}"
             haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
             failureproperty="tests.failure">
@@ -361,7 +361,7 @@
             failureproperty="tests.failure">
             <sysproperty key="mifos.test.mode" value="integration"/>
             <classpath refid="test-classpath" />
-  
+
             <formatter type="xml" />
             <batchtest todir="${dist.dir}" >
                 <fileset dir="${test.classes}">
@@ -516,15 +516,15 @@
             <artifact:pom id="maven.project.dependencies" file="pom.xml" />
         </artifact:dependencies>
         <copy todir="${build.web-inf}/lib" >
-		    <fileset refid="maven-dependencies.fileset"/>
+            <fileset refid="maven-dependencies.fileset"/>
             <mapper type="flatten" />
         </copy>
-    	<delete>
-	        <fileset dir="${build.web-inf}/lib" includes="easymock*.jar,javax.servlet.jar,jsp-api*.jar,junit*.jar,servlet-api*.jar,strutstest*.jar,jsp-api*.jar,junit*.jar,servlet-api*.jar"/>
-    	</delete>
+        <delete>
+            <fileset dir="${build.web-inf}/lib" includes="easymock*.jar,javax.servlet.jar,jsp-api*.jar,junit*.jar,servlet-api*.jar,strutstest*.jar,jsp-api*.jar,junit*.jar,servlet-api*.jar"/>
+        </delete>
 
     </target>
-	
+
     <target name="maven_test_dependencies">
         <artifact:dependencies pathId="test.maven-dependencies.classpath" useScope="test">
             <artifact:pom id="maven.project.dependencies" file="pom.xml" />
