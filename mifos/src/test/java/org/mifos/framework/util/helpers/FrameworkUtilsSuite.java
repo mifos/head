@@ -23,6 +23,19 @@ package org.mifos.framework.util.helpers;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.mifos.framework.util.helpers.FlowManagerHelperTest;
+
+import org.mifos.framework.util.helpers.FlowManagerTest;
+import org.mifos.framework.util.helpers.FlowTest;
+import org.mifos.framework.util.helpers.MifosDoubleConverterTest;
+import org.mifos.framework.util.helpers.ConvertionUtilTest;
+import org.mifos.framework.util.helpers.MifosNodeTest;
+import org.mifos.framework.util.helpers.CacheTest;
+import org.mifos.framework.util.helpers.BundleKeyTest;
+import org.mifos.framework.util.helpers.MifosSelectHelperTest;
+import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
+
+
 public class FrameworkUtilsSuite extends TestSuite {
 
     public FrameworkUtilsSuite() {
@@ -40,6 +53,7 @@ public class FrameworkUtilsSuite extends TestSuite {
         suite.addTestSuite(CacheTest.class);
         suite.addTestSuite(BundleKeyTest.class);
         suite.addTestSuite(MifosSelectHelperTest.class);
+        suite.addTestSuite(StringToMoneyConverterTest.class);
         return suite;
     }
 

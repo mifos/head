@@ -26,6 +26,7 @@ import junit.framework.TestSuite;
 import org.mifos.framework.security.util.ActivityMapperTest;
 import org.mifos.framework.security.util.LoginFilterTest;
 import org.mifos.framework.security.util.SecurityHelperIntegrationTest;
+import org.mifos.framework.security.AddActivityTest;
 
 public class SecurityTestSuite extends TestSuite {
 

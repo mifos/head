@@ -29,6 +29,7 @@ import org.mifos.application.reports.business.service.CollectionSheetReportServi
 import org.mifos.application.reports.business.service.CollectionSheetServiceIntegrationTest;
 import org.mifos.application.reports.business.service.ReportProductOfferingServiceIntegrationTest;
 import org.mifos.application.reports.business.service.ReportServiceFactoryIntegrationTest;
+import org.mifos.application.collectionsheet.business.CollectionSheetBOTest;;
 
 public class CollectionSheetReportTestSuite extends TestSuite {
     public static Test suite() throws Exception {

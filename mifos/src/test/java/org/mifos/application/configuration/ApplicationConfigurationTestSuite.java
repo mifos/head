@@ -31,6 +31,8 @@ import org.mifos.application.configuration.struts.action.LookupOptionsActionTest
 import org.mifos.application.configuration.struts.tag.CustomFieldCategoryListTagTest;
 import org.mifos.application.configuration.struts.tag.CustomFieldsListTagIntegrationTest;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceIntegrationTest;
+import org.mifos.application.configuration.ApplicationConfigurationPersistenceIntegrationTest;
+import org.mifos.application.configuration.ConfigurationIntegrationTest;
 
 public class ApplicationConfigurationTestSuite extends TestSuite {
 

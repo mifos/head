@@ -38,6 +38,7 @@ import org.mifos.framework.components.batchjobs.helpers.RegenerateScheduleHelper
 import org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcHelperIntegrationTest;
 import org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingHelperIntegrationTest;
 import org.mifos.framework.components.batchjobs.persistence.TaskPersistenceIntegrationTest;
+import org.mifos.framework.components.batchjobs.MifosSchedulerIntegrationTest;
 
 public class BatchJobTestSuite extends TestSuite {
 

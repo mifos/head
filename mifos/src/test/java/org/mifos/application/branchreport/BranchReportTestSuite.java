@@ -35,6 +35,8 @@ import org.mifos.framework.components.batchjobs.helpers.BranchReportHelperIntegr
 import org.mifos.framework.components.batchjobs.helpers.BranchReportLoanArrearsAgingHelperIntegrationTest;
 import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffSummaryHelperIntegrationTest;
 import org.mifos.framework.components.batchjobs.helpers.BranchReportStaffingLevelSummaryHelperIntegrationTest;
+import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBOTest;
+import org.mifos.application.branchreport.LoanArrearsAgingPeriodTest;;
 
 public class BranchReportTestSuite extends TestSuite {
     public static Test suite() throws Exception {
