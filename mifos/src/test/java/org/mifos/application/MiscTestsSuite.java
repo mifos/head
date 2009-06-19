@@ -36,7 +36,7 @@ import org.mifos.application.MayflyMiscTest;
     MayflyMiscTest.class,
     MenuParserIntegrationTest.class,
     HibernateHelperIntegrationTest.class,
-    PersistenceIntegrationTest.class,
+    PersistenceIntegrationTest.class
     })
 public class MiscTestsSuite {
     // the class remains completely empty,

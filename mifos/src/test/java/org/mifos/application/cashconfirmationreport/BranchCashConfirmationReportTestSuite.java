@@ -30,7 +30,6 @@ import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmatio
 public class BranchCashConfirmationReportTestSuite extends TestSuite {
     public static Test suite() throws Exception {
         TestSuite suite = new TestSuite();
-        // suite.addTestSuite(BranchCashConfirmationReportHelperTest.class);
         suite.addTestSuite(BranchCashConfirmationConfigServiceTest.class);
         suite.addTestSuite(BranchCashConfirmationReportPersistenceIntegrationTest.class);
         suite.addTestSuite(BranchCashConfirmationReportServiceIntegrationTest.class);

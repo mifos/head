@@ -44,60 +44,75 @@ import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 
+/*
+ * Generate a TestNG suite XML fragment corresponding to the class list in generateTestNgXml
+ * (taken from ApplicationTestSuite.java) where the output will be of the form:
+ *
+ *  <test name="SecurityTestSuite" >
+ *      <classes>
+ *          <class name="org.mifos.framework.security.util.SecurityHelperIntegrationTest" />
+ *          <class name="org.mifos.framework.security.util.LoginFilterTest" />
+ *          <class name="org.mifos.framework.security.AddActivityTest" />
+ *          <class name="org.mifos.framework.security.util.ActivityMapperTest" />
+ *      </classes>
+ *  </test>
+ *
+ */
 public class TestNGScriptGenerator {
 
-    Map<String,String> shortToFullClassName = new HashMap<String,String>();
-    boolean readingClasses = false;
+    private Map<String,String> shortToFullClassName = new HashMap<String,String>();
+    private boolean readingClasses = false;
+    private final String TEST_CODE_ROOT_PATH = "/home/van/workspace/mifos-gazelle/mifos/src/test/java/";
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        new TestNGScriptGenerator().test();
+    public static void main(String[] args) throws ClassNotFoundException, IOException {
+        new TestNGScriptGenerator().generateTestNgXml();
     }
 
-    public void test() throws ClassNotFoundException {
+    public void generateTestNgXml() throws ClassNotFoundException, IOException {
+        // list of test suites to convert corresponding to what's in ApplicationTestSuite.java
+        Class[] testSuiteClassArray = {
+            SecurityTestSuite.class,
+            CollectionSheetTestSuite.class,
+            CustomerTestSuite.class,
+            ApplicationConfigurationTestSuite.class,
+            MasterTestSuite.class,
+            AccountTestSuite.class,
+            FinancialTestSuite.class,
+            ConfigurationTestSuite.class,
+            BatchJobTestSuite.class,
+            LoanTestSuite.class,
+            SavingsTestSuite.class,
+            ProductDefinitionTestSuite.class,
+            ReportsTestSuite.class,
+            FeeTestSuite.class,
+            FieldConfigurationTestSuite.class,
+            OfficeTestSuite.class,
+            ComponentsTestSuite.class,
+            PersonnelTestSuite.class,
+            RolesAndPermissionTestSuite.class,
+            MeetingTestSuite.class,
+            LoginTestSuite.class,
+            FundTestSuite.class,
+            AuditLogTestSuite.class,
+            CheckListTestSuite.class,
+            AdminTestSuite.class,
+            StrutsTestSuite.class,
+            MiscTestsSuite.class,
+            FrameworkUtilsSuite.class,
+            HolidayTestSuite.class,
+            SurveysTestSuite.class,
+            PPITestSuite.class,
+            ApplicationAcceptedPaymentTypeTestSuite.class,
+            CollectionSheetTestSuite.class,
+            CollectionSheetReportTestSuite.class,
+            BranchReportTestSuite.class,
+            BranchCashConfirmationReportTestSuite.class,
+            IntegrationTests.class };
 
-    Class[] classes = {
-        SecurityTestSuite.class,
-        CollectionSheetTestSuite.class,
-        CustomerTestSuite.class,
-        ApplicationConfigurationTestSuite.class,
-        MasterTestSuite.class,
-        AccountTestSuite.class,
-        FinancialTestSuite.class,
-        ConfigurationTestSuite.class,
-        BatchJobTestSuite.class,
-        LoanTestSuite.class,
-        SavingsTestSuite.class,
-        ProductDefinitionTestSuite.class,
-        ReportsTestSuite.class,
-        FeeTestSuite.class,
-        FieldConfigurationTestSuite.class,
-        OfficeTestSuite.class,
-        ComponentsTestSuite.class,
-        PersonnelTestSuite.class,
-        RolesAndPermissionTestSuite.class,
-        MeetingTestSuite.class,
-        LoginTestSuite.class,
-        FundTestSuite.class,
-        AuditLogTestSuite.class,
-        CheckListTestSuite.class,
-        AdminTestSuite.class,
-        StrutsTestSuite.class,
-        MiscTestsSuite.class,
-        FrameworkUtilsSuite.class,
-        HolidayTestSuite.class,
-        SurveysTestSuite.class,
-        PPITestSuite.class,
-        ApplicationAcceptedPaymentTypeTestSuite.class,
-        CollectionSheetTestSuite.class,
-        CollectionSheetReportTestSuite.class,
-        BranchReportTestSuite.class,
-        BranchCashConfirmationReportTestSuite.class,
-        IntegrationTests.class };
-
-        for (Class aClass: classes) {
-            String suiteName = aClass.getName();
+        for (Class testSuiteClass: testSuiteClassArray) {
+            String suiteName = testSuiteClass.getName();
             //System.out.println(suiteName);
-            processSuite(suiteName);
+            generateTestSuiteXml(suiteName);
         }
 
     }
@@ -111,48 +126,60 @@ public class TestNGScriptGenerator {
         System.out.println("    <test name=\"" + last + "\" >\n        <classes>");
     }
 
-    public void processSuite(String suiteName) throws ClassNotFoundException {
+    public void generateTestSuiteXml(String suiteName) throws ClassNotFoundException, IOException {
         printHeader(suiteName);
-        String filename = "/home/van/workspace/mifos-gazelle/mifos/src/test/java/" + suiteName;
-        filename = filename.replace('.','/') + ".java";
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(filename));
-            String str;
-            while ((str = in.readLine()) != null) {
-                processFileLine(str);
-            }
-            in.close();
-        } catch (IOException e) {
-        }
+        processTestSuiteFile(suiteName);
         printFooter();
     }
+
+    private void processTestSuiteFile(String suiteName) throws ClassNotFoundException, IOException {
+        String filename = TEST_CODE_ROOT_PATH + suiteName;
+        // convert "/home/mypath/org.mifos.MyTest" to "/home/mypath/org/mifos/MyTest.java"
+        filename = filename.replace('.','/') + ".java";
+
+        BufferedReader in = new BufferedReader(new FileReader(filename));
+        String str;
+        while ((str = in.readLine()) != null) {
+            processFileLine(str);
+        }
+        in.close();
+    }
+
     public void processFileLine(String line) throws ClassNotFoundException {
-        StringTokenizer st = new StringTokenizer(line,"() ;{}");
-        while (st.hasMoreTokens()) {
-            String word = st.nextToken();
+        StringTokenizer tokenizer = new StringTokenizer(line,"() ;{}");
+        while (tokenizer.hasMoreTokens()) {
+            String word = tokenizer.nextToken();
             //System.out.println(word);
 
+            // if we find an import, then add a mapping from class name only
+            // to fully qualified class name (e.g. "MyTest" -> "org.mifos.MyTest")
             if (word.equals("import")) {
-                String fullName = st.nextToken();
+                String fullName = tokenizer.nextToken();
                 String shortName = fullName.substring(fullName.lastIndexOf(".")+1);
                 shortToFullClassName.put(shortName,fullName);
                 //System.out.println("put:" + shortName + "," + fullName);
             }
+            // if we find a line ending with "addTestSuite" then pull off the
+            // testName (e.g. "MyTest.class") and output a line with "org.mifos.MyTest"
             if (word.endsWith(".addTestSuite")) {
-                String testName = st.nextToken();
+                String testName = tokenizer.nextToken();
                 String className = testName.substring(0,testName.indexOf("."));
                 //System.out.println(className);
                 System.out.println("            <class name=\"" + shortToFullClassName.get(className) + "\" />");
             }
+            // the "public" token marks the end of a JUnit4 style list of classes
             if (word.endsWith("public")) {
                 readingClasses = false;
             }
+            // when we see "@Suite.SuiteClasses" then start reading the JUnit4 style list classes that follows
             if (word.endsWith("@Suite.SuiteClasses")) {
                 readingClasses = true;
-                if (st.hasMoreTokens()) {
-                    word = st.nextToken();
+                if (tokenizer.hasMoreTokens()) {
+                    word = tokenizer.nextToken();
                 }
             }
+            // if we're reading a JUnit4 style list of classes then generate a script entry for each
+            // element (e.g. "MyTest.class") in the list
             if (readingClasses && !word.endsWith("@Suite.SuiteClasses")) {
                 String testName = word;
                 String className = testName.substring(0,testName.indexOf("."));
