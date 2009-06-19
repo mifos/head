@@ -13,20 +13,26 @@ import sys
 
 class JunitToTestNgConverter:
    def __init__(self):
-      if len(sys.argv) != 2:
-         self.usage()
-         sys.exit(0)
-      self.filename = sys.argv[1]
       self.testNgIgnoreImportLine = "import org.testng.annotations.Ignore;"
       self.testNgTestImportLine = "import org.testng.annotations.Test;"
       self.testNgBeforeMethodImportLine = "import org.testng.annotations.BeforeMethod;"
       self.testNgAfterMethodImportLine = "import org.testng.annotations.AfterMethod;"
-      self.classAnnotationLine = "@Test(groups={'%s', '%s', '%s'}, dependsOnGroups={'%s'})"
+      self.classAnnotationLine = '@Test(groups={"%s", "%s", "%s"}, dependsOnGroups={%s})'
       self.ignoreAnnotationLine = "@Ignore"
       self.testMethodAnnotationLine = "@Test"
       self.testMethodAnnotationWithDependsLine = "@Test(dependsOnMethods={'%s'})"
       self.beforeMethodAnnotationLine = "@BeforeMethod"
       self.afterMethodAnnotationLine = "@AfterMethod"
+      self.parseArgs()
+
+   def parseArgs(self):
+      if len(sys.argv) != 4:
+         self.usage()
+         sys.exit(0)         
+      self.currentSuiteName = sys.argv[1]
+      self.currentSuiteClassesFile = sys.argv[2]
+      self.filename = sys.argv[3]
+      self.suiteClasses = self.readEntireFileAsLines(self.currentSuiteClassesFile)
       
    def readEntireFile(self, filename):
       file = open(filename)
@@ -37,8 +43,24 @@ class JunitToTestNgConverter:
    def splitFileIntoLines(self, contents):
       return contents.split('\n')
    
+   def readEntireFileAsLines(self, filename):
+      return self.splitFileIntoLines(self.readEntireFile(filename))
+   
+   def getDependsOnClass(self, currentClassName):
+      index = 0
+      for className in self.suiteClasses:
+         if currentClassName == className:
+            dependsOnIndex = index - 1
+            if dependsOnIndex < 0:
+               return ""
+            else:
+               return '"%s"' % self.suiteClasses[dependsOnIndex]
+         index += 1
+      return ""
+   
    def getClassAnnotationLine(self):
-      return self.classAnnotationLine % (self.testType, "2", self.className, "4")
+      self.dependsOnClass = self.getDependsOnClass(self.className)
+      return self.classAnnotationLine % (self.testType, self.currentSuiteName, self.className, self.dependsOnClass)
    
    def getListOfTestMethodNames(self):
       allMethodNames = []
@@ -105,7 +127,6 @@ class JunitToTestNgConverter:
       self.allMethodNames, self.testMethodNames, self.methodLines = self.getListOfTestMethodNames()
       for index in xrange(0, len(self.lines)):
          currentLine = self.lines[index].strip()
-         print currentLine
          if currentLine.startswith("import"):
             next
          if len(currentLine) == 0:
@@ -115,15 +136,13 @@ class JunitToTestNgConverter:
             newlines = self.lines[:index] + self.getImportLines() + self.lines[index:]
             self.lines = newlines
             break
-      print
-      print
       
    def getIndent(self):
       return "    "
       
    def insertTestMethodAnnotionLines(self):
       self.allMethodNames, self.testMethodNames, self.methodLines = self.getListOfTestMethodNames()
-      print self.methodLines
+      #print self.methodLines
       keys = self.allMethodNames
       keys.reverse()
       for key in keys:
