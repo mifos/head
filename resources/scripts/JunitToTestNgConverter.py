@@ -6,12 +6,11 @@ from gnosis.xml.objectify import XML_Objectify, DOM
 
 class JunitToTestNgConverter:
    def __init__(self):
-      self.testNgIgnoreImportLine = "import org.testng.annotations.Ignore;"
       self.testNgTestImportLine = "import org.testng.annotations.Test;"
       self.testNgBeforeMethodImportLine = "import org.testng.annotations.BeforeMethod;"
       self.testNgAfterMethodImportLine = "import org.testng.annotations.AfterMethod;"
       self.classAnnotationLine = '@Test(groups={"%s", "%s", "%s"}, dependsOnGroups={%s})'
-      self.ignoreAnnotationLine = "@Ignore"
+      self.ignoreAnnotationLine = "@Test(enabled=false)"
       self.testMethodAnnotationLine = "@Test"
       self.testMethodAnnotationWithDependsLine = '@Test(dependsOnMethods={"%s"})'
       self.beforeMethodAnnotationLine = "@BeforeMethod"
@@ -23,6 +22,11 @@ class JunitToTestNgConverter:
       contents = file.read()
       file.close()
       return contents
+
+   def writeEntireFile(self, filename, contents):
+      file = open(filename, "w")
+      contents = file.write(contents)
+      file.close()
 
    def splitFileIntoLines(self, contents):
       return contents.split('\n')
@@ -69,7 +73,9 @@ class JunitToTestNgConverter:
          if (currentLine.startswith("public void test") or  
              currentLine.startswith("public void xtest") or 
              currentLine.startswith("protected void setUp") or 
-             currentLine.startswith("protected void tearDown") ) :
+             currentLine.startswith("protected void tearDown") or 
+             currentLine.startswith("public void setUp") or 
+             currentLine.startswith("public void tearDown") ) :
             words = currentLine.split(' ')
             methodName = words[2].split('(')[0]
             allMethodNames.append(methodName)
@@ -109,8 +115,6 @@ class JunitToTestNgConverter:
    
    def getImportLines(self, previousTestSuite, currentTestSuite, previousTestClass, currentTestClass):
       importLines = []
-      if self.xTestMethodsExist():
-         importLines.append(self.testNgIgnoreImportLine)
       if self.setUpMethodExists():
          importLines.append(self.testNgBeforeMethodImportLine)
       if self.tearDownMethodExists():
@@ -178,7 +182,9 @@ class JunitToTestNgConverter:
       self.lines = self.removeTestNgLines(self.splitFileIntoLines(self.fileContents))
       self.insertImportAndAnnotationLine(previousTestSuite, currentTestSuite, previousTestClass, currentTestClass)
       self.insertTestMethodAnnotionLines()
-      print '\n'.join(self.lines)
+      newContents = '\n'.join(self.lines)
+      self.writeEntireFile(currentTestClassFilename, newContents)
+      print "Wrote %s." % currentTestClassFilename
    
    def parseArgs(self):
       if len(sys.argv) != 3:
@@ -196,6 +202,7 @@ class JunitToTestNgConverter:
 
    def main(self):
       self.parseArgs()
+      testClasses = {}
       previousTestSuite = None
       suiteXml = XML_Objectify(self.suiteXmlFilename, parser=DOM).make_instance()
       for test in suiteXml.test:

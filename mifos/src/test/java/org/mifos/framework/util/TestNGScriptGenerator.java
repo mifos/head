@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.mifos.application.FastTests;
 import org.mifos.application.IntegrationTests;
 import org.mifos.application.MiscTestsSuite;
 import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
@@ -32,9 +33,11 @@ import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.ppi.PPITestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
+import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
+import org.mifos.config.ConfigTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.AuditLogTestSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
@@ -60,9 +63,11 @@ import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
  */
 public class TestNGScriptGenerator {
 
+    private static final int PRESENT = 1;
     private Map<String,String> shortToFullClassName = new HashMap<String,String>();
     private boolean readingClasses = false;
-    private final String TEST_CODE_ROOT_PATH = "/home/van/workspace/mifos-gazelle/mifos/src/test/java/";
+    private final String TEST_CODE_ROOT_PATH = "/Users/adam/work/mifos/workspace/mifos-gazelle/mifos/src/test/java/";
+    private Map<String, Integer> classNames = new HashMap<String, Integer>();
 
     public static void main(String[] args) throws ClassNotFoundException, IOException {
         new TestNGScriptGenerator().generateTestNgXml();
@@ -71,6 +76,9 @@ public class TestNGScriptGenerator {
     public void generateTestNgXml() throws ClassNotFoundException, IOException {
         // list of test suites to convert corresponding to what's in ApplicationTestSuite.java
         Class[] testSuiteClassArray = {
+            ConfigTestSuite.class,
+            ProductMixTestSuite.class,
+            FastTests.class,
             SecurityTestSuite.class,
             CollectionSheetTestSuite.class,
             CustomerTestSuite.class,
@@ -164,8 +172,7 @@ public class TestNGScriptGenerator {
             if (word.endsWith(".addTestSuite")) {
                 String testName = tokenizer.nextToken();
                 String className = testName.substring(0,testName.indexOf("."));
-                //System.out.println(className);
-                System.out.println("            <class name=\"" + shortToFullClassName.get(className) + "\" />");
+                printClassLineIfNecessary(className);
             }
             // the "public" token marks the end of a JUnit4 style list of classes
             if (word.endsWith("public")) {
@@ -184,8 +191,16 @@ public class TestNGScriptGenerator {
                 String testName = word;
                 String className = testName.substring(0,testName.indexOf("."));
                 //System.out.println(className);
-                System.out.println("            <class name=\"" + shortToFullClassName.get(className) + "\" />");
+                printClassLineIfNecessary(className);
             }
+        }
+    }
+
+    private void printClassLineIfNecessary(String className) {
+        String fullClassName = shortToFullClassName.get(className);
+        if (!classNames.containsKey(fullClassName)) {
+            System.out.println("            <class name=\"" + fullClassName + "\" />");
+            classNames.put(fullClassName, PRESENT);
         }
     }
 
