@@ -118,21 +118,31 @@ public class TestNGScriptGenerator {
             BranchCashConfirmationReportTestSuite.class,
             IntegrationTests.class };
 
-        printHeader("AllTests");
+        pringFileHeader();
+        printTestHeader("AllTests");
         for (Class testSuiteClass: testSuiteClassArray) {
             String suiteName = testSuiteClass.getName();
             //System.out.println(suiteName);
             generateTestSuiteXml(suiteName);
         }
-        printFooter();
+        printTestFooter();
+        printFileFooter();
 
     }
 
-    public void printFooter() {
+    private void printFileFooter() {
+        System.out.println(" </suite>");
+    }
+
+    private void pringFileHeader() {
+        System.out.println("<!DOCTYPE suite SYSTEM \"http://testng.org/testng-1.0.dtd\" >\n<suite name=\"Application Test Suite\" verbose=\"8\" >");
+    }
+
+    public void printTestFooter() {
         System.out.println("        </classes>\n    </test>");
     }
 
-    public void printHeader(String suiteName) {
+    public void printTestHeader(String suiteName) {
         String last = suiteName.substring(suiteName.lastIndexOf('.')+1);
         System.out.println("    <test name=\"" + last + "\" >\n        <classes>");
     }
