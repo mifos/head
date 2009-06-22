@@ -66,7 +66,8 @@ public class TestNGScriptGenerator {
     private static final int PRESENT = 1;
     private Map<String,String> shortToFullClassName = new HashMap<String,String>();
     private boolean readingClasses = false;
-    private final String TEST_CODE_ROOT_PATH = "/Users/adam/work/mifos/workspace/mifos-gazelle/mifos/src/test/java/";
+//    private final String TEST_CODE_ROOT_PATH = "/Users/adam/work/mifos/workspace/mifos-gazelle/mifos/src/test/java/";
+    private final String TEST_CODE_ROOT_PATH = "/home/van/workspace/mifos-gazelle/mifos/src/test/java/";
     private Map<String, Integer> classNames = new HashMap<String, Integer>();
 
     public static void main(String[] args) throws ClassNotFoundException, IOException {
@@ -117,11 +118,13 @@ public class TestNGScriptGenerator {
             BranchCashConfirmationReportTestSuite.class,
             IntegrationTests.class };
 
+        printHeader("AllTests");
         for (Class testSuiteClass: testSuiteClassArray) {
             String suiteName = testSuiteClass.getName();
             //System.out.println(suiteName);
             generateTestSuiteXml(suiteName);
         }
+        printFooter();
 
     }
 
@@ -135,9 +138,9 @@ public class TestNGScriptGenerator {
     }
 
     public void generateTestSuiteXml(String suiteName) throws ClassNotFoundException, IOException {
-        printHeader(suiteName);
+//        printHeader(suiteName);
         processTestSuiteFile(suiteName);
-        printFooter();
+//        printFooter();
     }
 
     private void processTestSuiteFile(String suiteName) throws ClassNotFoundException, IOException {
@@ -201,6 +204,9 @@ public class TestNGScriptGenerator {
         if (!classNames.containsKey(fullClassName)) {
             System.out.println("            <class name=\"" + fullClassName + "\" />");
             classNames.put(fullClassName, PRESENT);
+        } else {
+            System.out.println("<!--            <class name=\"" + fullClassName + "\" /> -->");
+
         }
     }
 

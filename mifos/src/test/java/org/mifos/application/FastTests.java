@@ -63,19 +63,20 @@ import org.mifos.framework.util.helpers.DateUtilsTest;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 import org.mifos.framework.util.helpers.StringUtilsTest;
+import org.mifos.application.CreateReportTest;
 
 /**
  * Tests which run quickly (say, <10ms per test, or some such, so that the whole
  * run can be done in seconds or at most a minute or two).
- * 
+ *
  * Test setup should also be fast (say, <1-2 seconds). This currently means that
  * a fast test cannot inherit from {@link MifosIntegrationTest}, call Hibernate,
  * or other things which take many seconds to start up.
- * 
+ *
  * It is also true that tests here do not depend on the MySQL test database. We
  * want to keep it that way (partly for speed, partly for isolation from other
  * test runs and the like).
- * 
+ *
  * If your only reason for wanting {@link MifosIntegrationTest} is logging, you
  * can call {@link MifosLogManager#configureLogging()} (this seems fast enough).
  * Another choice is to pass around a {@link TestLogger} (see
@@ -133,7 +134,7 @@ public class FastTests extends TestSuite {
 
         suite.addTestSuite(StringUtilsTest.class);
         suite.addTestSuite(ChapterNumSortTest.class);
-        // This test has been excluded as there is no Junit4 
+        // This test has been excluded as there is no Junit4
         // For details refer card 1626
         //suite.addTest(ProperlyAdaptedJUnit4Test.suite());
         suite.addTestSuite(LocalizationConverterTest.class);
