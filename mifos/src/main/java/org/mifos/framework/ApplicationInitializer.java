@@ -197,6 +197,13 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 }
             }
         } catch (Exception e) {
+            String errMsgStart = "unable to start Mifos web application"; 
+            if (null == LOG) {
+                System.err.println(errMsgStart + " and logger is not available!");
+                e.printStackTrace();
+            } else {
+                LOG.error(errMsgStart, e);
+            }
             throw new Error(e);
         }
     }
