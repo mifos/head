@@ -679,16 +679,10 @@
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>              
+                            <encoding>UTF-8</encoding>
                         </configuration>            
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
