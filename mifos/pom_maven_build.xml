@@ -19,8 +19,8 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
-    	<current.release.number>1.3.0</current.release.number>
-    	<current.release.name>mifos_v${current.release.number}</current.release.name>
+        <current.release.number>1.3.0</current.release.number>
+        <current.release.name>mifos_v${current.release.number}</current.release.name>
 
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
@@ -32,9 +32,9 @@
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <!--
-            Don't search System.getProperty("conf.dir") for
-            local.properties; no need. It is only used to override
-            settings in acceptanceDatabase.properties.
+        Don't search System.getProperty("conf.dir") for
+        local.properties; no need. It is only used to override
+        settings in acceptanceDatabase.properties.
         -->
 
     </properties>
@@ -94,7 +94,7 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-	                            	<sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                    <sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -104,7 +104,7 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-	                            	<sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                    <sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -114,7 +114,7 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
- 	                            	<sqlCommand>USE ${main.database}</sqlCommand>
+                                    <sqlCommand>USE ${main.database}</sqlCommand>
                                     <srcFiles>
                                         <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
@@ -183,7 +183,7 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-	                            	<sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                    <sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -193,7 +193,7 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-	                            	<sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                    <sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
                                 </configuration>
                             </execution>
                             <execution>
@@ -203,7 +203,7 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-  	                            	<sqlCommand>USE ${main.database}</sqlCommand>
+                                    <sqlCommand>USE ${main.database}</sqlCommand>
                                     <srcFiles>
                                         <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
                                         <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
@@ -660,28 +660,28 @@
 
         <plugins>
             <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-resources</id>
-                <phase>process-resources</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${basedir}/target/mifos/WEB-INF</outputDirectory>
-                  <resources>          
-                    <resource>
-                      <directory>src/main/webapp/WEB-INF</directory>
-                      <includes>
-                        <include>*.xml</include>
-                      </includes>
-                      <filtering>false</filtering>
-                    </resource>
-                  </resources>              
-                </configuration>            
-              </execution>
-            </executions>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/mifos/WEB-INF</outputDirectory>
+                            <resources>          
+                                <resource>
+                                    <directory>src/main/webapp/WEB-INF</directory>
+                                    <includes>
+                                        <include>*.xml</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>              
+                        </configuration>            
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -690,18 +690,18 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-3</version>
-				<configuration>
-					<finalName>mifos_v1.3.0</finalName>
-					<descriptors>
-						<descriptor>src/main/assembly/release.xml</descriptor>
-					</descriptors>
-					<outputDirectory>target</outputDirectory>
-					<workDirectory>target/assembly/work</workDirectory>
-				</configuration>
-			</plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-3</version>
+                <configuration>
+                    <finalName>mifos_v1.3.0</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/release.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>target</outputDirectory>
+                    <workDirectory>target/assembly/work</workDirectory>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -801,64 +801,64 @@
                         <artifactId>mysql-connector-java</artifactId>
                         <version>5.1.6</version>
                     </dependency>
-			    </dependencies>
-				<configuration>
-					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
-					<username>${integration.database.user}</username>
-					<password>${integration.database.password}</password>
-					<autocommit>true</autocommit>
-				</configuration>
-				<executions>
-					<execution>
-						<id>drop_db</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<sqlCommand>DROP DATABASE IF EXISTS ${integration.database}</sqlCommand>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create_db</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<sqlCommand>CREATE DATABASE ${integration.database}</sqlCommand>
-						</configuration>
-					</execution>
-					<execution>
-						<id>populate_db</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<sqlCommand>USE ${integration.database}</sqlCommand>
-							<srcFiles>
-								<srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
-								<srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
-								<srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
-								<srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
-								<srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-				</executions>
+                </dependencies>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+                    <username>${integration.database.user}</username>
+                    <password>${integration.database.password}</password>
+                    <autocommit>true</autocommit>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>drop_db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>DROP DATABASE IF EXISTS ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>CREATE DATABASE ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate_db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>USE ${integration.database}</sqlCommand>
+                            <srcFiles>
+                                <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
-                   <useSystemClassLoader>true</useSystemClassLoader>
-                   <additionalClasspathElements>
-                     <additionalClasspathElement>${basedir}/target/mifos</additionalClasspathElement>
-                   </additionalClasspathElements> 
-	                <suiteXmlFiles>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${basedir}/target/mifos</additionalClasspathElement>
+                    </additionalClasspathElements> 
+                    <suiteXmlFiles>
                         <suiteXmlFile>target/test-classes/ApplicationTestSuite.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
