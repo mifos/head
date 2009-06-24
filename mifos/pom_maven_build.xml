@@ -622,6 +622,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit</artifactId>
+            <version>1.7.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>mifos-from-maven</finalName>
@@ -661,6 +667,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>2.3</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -669,7 +676,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/mifos/WEB-INF</outputDirectory>
+                            <outputDirectory>${basedir}/target/test-classes/WEB-INF</outputDirectory>
                             <resources>          
                                 <resource>
                                     <directory>src/main/webapp/WEB-INF</directory>
@@ -846,15 +853,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
                 <configuration>
-                    <useSystemClassLoader>true</useSystemClassLoader>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>${basedir}/target/mifos</additionalClasspathElement>
-                    </additionalClasspathElements> 
-                    <suiteXmlFiles>
-                        <suiteXmlFile>target/test-classes/ApplicationTestSuite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
             <plugin>
@@ -897,6 +897,46 @@
                 <configuration>
                     <doUpdate>false</doUpdate>
                     <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <classpathScope>test</classpathScope>
+                    <outputFile>${basedir}/dist/testConsoleOutput</outputFile>
+                    <arguments>
+                        <argument>-Xmx1024m</argument>
+                        <argument>-Dmifos.test.mode=integration</argument>
+                        <argument>-cp</argument>
+                        <classpath/>
+                        <argument>-ea</argument>
+                        <argument>org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner</argument>
+                        <argument>org.mifos.application.ApplicationTestSuite</argument>
+                        <argument>filtertrace=true</argument>
+                        <argument>haltOnError=true</argument>
+                        <argument>haltOnFailure=true</argument>
+                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter</argument>
+                        <argument>showoutput=false</argument>
+                        <argument>outputtoformatters=true</argument>
+                        <argument>logtestlistenerevents=true</argument>
+                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,dist/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
+                        <argument>crashfile=dist/crashfile</argument>
+                        <!-- TODO: Still necessary? -->
+                        <argument>ApplicationTestSuite</argument>
+                    </arguments>
+                    <dependencies>
+                    </dependencies>
                 </configuration>
             </plugin>
         </plugins>
