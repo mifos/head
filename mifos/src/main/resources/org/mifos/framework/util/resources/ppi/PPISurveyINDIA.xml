@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <ppi country="INDIA" name="PPI Survey India">
 <questions>
 	<question name="Number of children" mandatory="true" order="0">
