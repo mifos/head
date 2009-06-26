@@ -46,29 +46,24 @@ import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.ppi.PPITestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
+import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
+import org.mifos.config.ConfigTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.AuditLogTestSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
-import org.mifos.framework.components.mifosmenu.MenuParserIntegrationTest;
-import org.mifos.framework.hibernate.HibernateIntegrationTest;
-import org.mifos.framework.hibernate.helper.HibernateHelperIntegrationTest;
-import org.mifos.framework.persistence.LatestTestAfterCheckpointBaseTest;
-import org.mifos.framework.persistence.PersistenceIntegrationTest;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
-import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
-import org.mifos.application.MiscTestsSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { //ConfigTestSuite.class,
-                       //ProductMixTestSuite.class,
-                       //FastTests.class,
+@Suite.SuiteClasses( { ConfigTestSuite.class,
+                       ProductMixTestSuite.class,
+                       FastTests.class,
                        SecurityTestSuite.class,
                        CollectionSheetTestSuite.class,
                        CustomerTestSuite.class,

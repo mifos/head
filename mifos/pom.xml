@@ -2,8 +2,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
-    <artifactId>mifos-application</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>gazelle</artifactId>
+    <packaging>war</packaging>
     <version>0.0.4-SNAPSHOT</version>
     <name>Mifos - Application</name>
     <parent>
@@ -11,6 +11,215 @@
         <artifactId>mifos-parent</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
+    <scm>
+        <url>https://mifos.dev.java.net/svn/mifos/</url>
+        <connection>scm:svn:https://guest@mifos.dev.java.net/svn/mifos/</connection>
+        <developerConnection>scm:svn:https://guest@mifos.dev.java.net/svn/mifos/</developerConnection>
+    </scm>
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+        <jdk.version>1.6</jdk.version>
+        <current.release.number>1.3.0</current.release.number>
+        <current.release.name>mifos_v${current.release.number}</current.release.name>
+
+        <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
+        <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
+        <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/sql</sql.resources.src.directory>
+        <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
+        <test.sql.resources.src.directory>${modules.root.dir}/mifos/src/test/sql</test.sql.resources.src.directory>
+        <!-- mimics ConfigurationLocator directory search behavior -->
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
+        <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
+        <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+        <!--
+        Don't search System.getProperty("conf.dir") for
+        local.properties; no need. It is only used to override
+        settings in acceptanceDatabase.properties.
+        -->
+
+    </properties>
+    <profiles>
+        <profile>
+            <id>build_production_db</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0-alpha-1</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <quiet>true</quiet>
+                                    <files>
+                                        <file>${main.database.properties.file}</file>
+                                        <file>${mifos.overrides.conf}</file>
+                                        <file>${mifos.overrides.env}</file>
+                                        <file>${mifos.overrides.home}</file>
+                                    </files>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <version>1.2</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>5.1.6</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <driver>com.mysql.jdbc.Driver</driver>
+                            <url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
+                            <username>${main.database.user}</username>
+                            <password>${main.database.password}</password>
+                            <autocommit>true</autocommit>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>drop_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>create_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>populate_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <sqlCommand>USE ${main.database}</sqlCommand>
+                                    <srcFiles>
+                                        <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
+                                    </srcFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>build_demo_db</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0-alpha-1</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <quiet>true</quiet>
+                                    <files>
+                                        <file>${main.database.properties.file}</file>
+                                        <file>${mifos.overrides.conf}</file>
+                                        <file>${mifos.overrides.env}</file>
+                                        <file>${mifos.overrides.home}</file>
+                                    </files>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <version>1.2</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>5.1.6</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <driver>com.mysql.jdbc.Driver</driver>
+                            <url>jdbc:mysql://${main.database.host}:${main.database.port}/?${main.database.params}</url>
+                            <username>${main.database.user}</username>
+                            <password>${main.database.password}</password>
+                            <autocommit>true</autocommit>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>drop_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <sqlCommand>DROP DATABASE IF EXISTS ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>create_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <sqlCommand>CREATE DATABASE ${main.database}</sqlCommand>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>populate_db</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <sqlCommand>USE ${main.database}</sqlCommand>
+                                    <srcFiles>
+                                        <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+                                        <srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
+                                    </srcFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 
     <repositories>
         <repository>
@@ -37,6 +246,14 @@
             <layout>default</layout>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-repository.mifos.org</id>
+            <name>Mifos Maven Repository</name>
+            <url>http://neem.mifos.org/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -320,7 +537,7 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.1</version>
-        </dependency>		
+        </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
@@ -330,12 +547,12 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-libs</artifactId>
             <version>1.0.5</version>
-        </dependency>			
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.1.2</version>
-        </dependency>										       
+        </dependency>
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
@@ -377,13 +594,12 @@
             <version>2.1.4</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
             <scope>provided</scope>
-        </dependency>		
+        </dependency>
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>servlet-api</artifactId>
@@ -405,35 +621,161 @@
                     <artifactId>xmlParserAPIs</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>								
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit</artifactId>
+            <version>1.7.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
-        <!-- START only used by Eclipse WTP -->
-        <!--
-        Ant is still required to build the Mifos WAR. See
-        http://mifos.org/developers/wiki/GazelleMavenMigration
-        -->
-        <finalName>mifos-webapp</finalName>
+        <finalName>mifos</finalName>
         <defaultGoal>war:war</defaultGoal>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
-        <outputDirectory>target/mifos/WEB-INF/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
-        <!-- END   only used by Eclipse WTP -->
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
+        <outputDirectory>${basedir}/target/mifos/WEB-INF/classes</outputDirectory>
+        <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
+
+        <resources>
+            <resource>
+                <directory>${sql.resources.src.directory}</directory>
+                <filtering>true</filtering>
+                <targetPath>sql</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/testng</directory>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>${test.sql.resources.src.directory}</directory>
+                <filtering>true</filtering>
+                <targetPath>sql</targetPath>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/WEB-INF</outputDirectory>
+                            <resources>          
+                                <resource>
+                                    <directory>src/main/webapp/WEB-INF</directory>
+                                    <includes>
+                                        <include>*.xml</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>              
+                            <encoding>UTF-8</encoding>
+                        </configuration>            
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-3</version>
+                <configuration>
+                    <finalName>mifos_v1.3.0</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/release.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>target</outputDirectory>
+                    <workDirectory>target/assembly/work</workDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <debug>true</debug>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.mobilvox.ossi.mojo</groupId>
+                <artifactId>maven-js-plugin</artifactId>
+                <version>1.3.1</version>
+                <configuration>
+                    <!-- Whether to merge the WAR files into one or not. -->
+                    <mergeWarFiles>true</mergeWarFiles>
+                    <!-- The classifier for compressed files. -->
+                    <classifier>js-compressed</classifier>
+                    <!-- Whether to replace JS files in the site and custom goals. -->
+                    <replaceJavaScript>true</replaceJavaScript>
+                    <!-- Includes and excludes for compression (should we exclude birt?)-->
+                    <includes>
+                        <include>**/**.js</include>
+                    </includes>
+                    <!-- Input and output directories for the custom MOJO. -->
+                    <jsDirectory>target/mifos/pages</jsDirectory>
+                    <outputDirectory>target/mifos/pages</outputDirectory>
+                </configuration>
+                <!-- Not sure if package phase is where this should go. -->
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <id>build-mifos-war</id>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <files>
+                                <file>${main.database.properties.file}</file>
+                                <file>${test.database.properties.file}</file>
+                                <file>${mifos.overrides.conf}</file>
+                                <file>${mifos.overrides.env}</file>
+                                <file>${mifos.overrides.home}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>process-test-resources</phase>
                         <configuration>
                             <tasks>
-                                <property name="build.compiler"
-                                    value="extJavac" />
-                                <ant>
-                                    <target name="war" />
-                                </ant>
+                                <echo>test.database.properties.file:
+                                    ${test.database.properties.file}</echo>
+                                <echo>integration.database.port:
+                                    ${integration.database.port}</echo>
                             </tasks>
                         </configuration>
                         <goals>
@@ -450,23 +792,149 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <artifactId>maven-install-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.6</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://${integration.database.host}:${integration.database.port}/?${integration.database.params}</url>
+                    <username>${integration.database.user}</username>
+                    <password>${integration.database.password}</password>
+                    <autocommit>true</autocommit>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>install</phase>
-                        <id>install-mifos-war</id>
-                        <configuration>
-                            <file>${basedir}/dist/mifos.war</file>
-                            <version>0.0.4-SNAPSHOT</version>
-                            <groupId>org.mifos</groupId>
-                            <packaging>war</packaging>
-                            <artifactId>mifos-webapp</artifactId>
-                        </configuration>
+                        <id>drop_db</id>
+                        <phase>process-test-resources</phase>
                         <goals>
-                            <goal>install-file</goal>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>DROP DATABASE IF EXISTS ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create_db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>CREATE DATABASE ${integration.database}</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate_db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <sqlCommand>USE ${integration.database}</sqlCommand>
+                            <srcFiles>
+                                <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+                                <srcFile>${sql.resources.target.directory}/testdbinsertionscript.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${basedir}/reporting/BirtReportDesign</directory>
+                            <targetPath>report</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${basedir}/reporting/BirtReportResource</directory>
+                            <targetPath>report/BirtReportResource</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${basedir}/reporting/BirtWebViewer</directory>
+                            <excludes>
+                                <exclude>*.jsp</exclude>
+                                <exclude>*.rptdesign</exclude>
+                                <exclude>**/web.xml</exclude>
+                            </excludes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.0-mifos-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <doUpdate>false</doUpdate>
+                    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <classpathScope>test</classpathScope>
+                    <outputFile>${basedir}/dist/testConsoleOutput</outputFile>
+                    <arguments>
+                        <argument>-Xmx1024m</argument>
+                        <argument>-Dmifos.test.mode=integration</argument>
+                        <argument>-cp</argument>
+                        <classpath/>
+                        <argument>-ea</argument>
+                        <argument>org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner</argument>
+                        <argument>org.mifos.application.ApplicationTestSuite</argument>
+                        <argument>filtertrace=true</argument>
+                        <argument>haltOnError=true</argument>
+                        <argument>haltOnFailure=true</argument>
+                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter</argument>
+                        <argument>showoutput=false</argument>
+                        <argument>outputtoformatters=true</argument>
+                        <argument>logtestlistenerevents=true</argument>
+                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,dist/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
+                        <argument>crashfile=dist/crashfile</argument>
+                    </arguments>
+                    <dependencies>
+                    </dependencies>
+                </configuration>
             </plugin>
         </plugins>
     </build>

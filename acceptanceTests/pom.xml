@@ -57,6 +57,7 @@
                                 </zipUrlInstaller>
                             </container>
                             <configuration>
+                                <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>
                                 <properties>
                                     <cargo.jvmargs>-Xms1024m -Xmx1024m</cargo.jvmargs>
                                 </properties>
