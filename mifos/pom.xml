@@ -913,7 +913,7 @@
                 <configuration>
                     <executable>java</executable>
                     <classpathScope>test</classpathScope>
-                    <outputFile>${basedir}/dist/testConsoleOutput</outputFile>
+                    <outputFile>${basedir}/target/junit/testConsoleOutput</outputFile>
                     <arguments>
                         <argument>-Xmx1024m</argument>
                         <argument>-Dmifos.test.mode=integration</argument>
@@ -929,8 +929,8 @@
                         <argument>showoutput=false</argument>
                         <argument>outputtoformatters=true</argument>
                         <argument>logtestlistenerevents=true</argument>
-                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,dist/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
-                        <argument>crashfile=dist/crashfile</argument>
+                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,target/junit/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
+                        <argument>crashfile=target/junit/crashfile</argument>
                     </arguments>
                     <dependencies>
                     </dependencies>
