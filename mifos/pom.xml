@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
-    <artifactId>gazelle</artifactId>
+    <artifactId>mifos-webapp</artifactId>
     <packaging>war</packaging>
     <version>0.0.4-SNAPSHOT</version>
     <name>Mifos - Application</name>
@@ -630,7 +630,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>mifos</finalName>
+        <finalName>mifos-webapp</finalName>
         <defaultGoal>war:war</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
@@ -727,8 +727,8 @@
                         <include>**/**.js</include>
                     </includes>
                     <!-- Input and output directories for the custom MOJO. -->
-                    <jsDirectory>target/mifos/pages</jsDirectory>
-                    <outputDirectory>target/mifos/pages</outputDirectory>
+                    <jsDirectory>target/mifos-webapp/pages</jsDirectory>
+                    <outputDirectory>target/mifos-webapp/pages</outputDirectory>
                 </configuration>
                 <!-- Not sure if package phase is where this should go. -->
                 <executions>
