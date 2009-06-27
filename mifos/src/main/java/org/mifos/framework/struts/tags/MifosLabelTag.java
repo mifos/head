@@ -128,6 +128,16 @@ public class MifosLabelTag extends BodyTagSupport {
         this.bundle = bundle;
     }
 
+    private String styleId;
+
+    public String getStyleId() {
+        return styleId;
+    }
+
+    public void setStyleId(String styleId) {
+        this.styleId = styleId;
+    }
+
     // --------------------------------------------------------- Constructors
     /**
      * Construct a new instance of this tag.
