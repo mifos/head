@@ -39,6 +39,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+@ContextConfiguration(locations={"classpath:ui-test-context.xml"})
+@Test(sequential=true, groups={"smoke","loan","acceptance","ui", "workInProgress"})
 public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
     private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";
     @Autowired
