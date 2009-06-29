@@ -71,4 +71,10 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new ViewInstallmentDetailsPage(selenium);
     }
+    
+    public RepayLoanPage navigateToRepayLoan() {
+        selenium.click("id=loanaccountdetail.link.repayLoan");
+        waitForPageToLoad();
+        return new RepayLoanPage(selenium);
+    }
 }

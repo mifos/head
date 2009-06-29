@@ -113,7 +113,7 @@ explanation of the license and how it is applied.
 									:
 								</td>
 								<td class="fontnormal">
-									<mifos:select name="repayLoanActionForm" property="paymentTypeId" style="width:136px;">
+									<mifos:select styleId="RepayLoan.input.modeOfRepayment" name="repayLoanActionForm" property="paymentTypeId" style="width:136px;">
 										<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 								</c:forEach>
