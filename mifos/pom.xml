@@ -853,6 +853,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!--
+                    Disable surefire.
+                    Our unit/integration tests are broken in that they
+                    currently must be run in a particular order; some tests
+                    require a dirty database state, and some tests leave the
+                    database in a dirty state.
+                    Surefire can't run our tests in order or can't run them in
+                    a single thread, we're not sure which. So, for now we
+                    disable surefire and manually run ApplicationTestSuite
+                    using the exec-maven-plugin.
+                    -->
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
