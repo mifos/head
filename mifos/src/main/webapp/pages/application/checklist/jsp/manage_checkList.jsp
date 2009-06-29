@@ -175,7 +175,7 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 								<tr>
-									<td><img src="../images/trans.gif" width="1" height="1"></td>
+									<td><img src="pages/framework/images/trans.gif" width="1" height="1"></td>
 								</tr>
 							</table>
 							<table width="86%" border="0" cellspacing="0" cellpadding="0">
