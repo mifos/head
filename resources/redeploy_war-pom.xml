@@ -1,43 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-  Useful for copying an acceptance-tested WAR file to publicly accessible
-  location(s). Requires WAR_ARCHIVE environment variable to be set, which is
-  currently the case with Hudson.
+Useful for copying an acceptance-tested WAR file to publicly accessible
+location(s). Requires WAR_ARCHIVE environment variable to be set, which is
+currently the case with Hudson.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.mifos</groupId>
-	<artifactId>gazelle-copy</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>Copy Tested Mifos WAR to Public Locations</name>
-	<url>http://mifos.org</url>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.mifos</groupId>
+    <artifactId>gazelle-copy</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>Copy Tested Mifos WAR to Public Locations</name>
+    <url>http://mifos.org</url>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<configuration>
-					<artifactItems>
-						<artifactItem>
-							<groupId>org.mifos</groupId>
-							<artifactId>mifos-webapp</artifactId>
-							<version>0.0.4-SNAPSHOT</version>
-							<destFileName>mifos.war</destFileName>
-							<type>war</type>
-							<overWrite>true</overWrite>
-							<outputDirectory>${env.WAR_ARCHIVE}</outputDirectory>
-						</artifactItem>
-					</artifactItems>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.mifos</groupId>
+                            <artifactId>mifos-webapp</artifactId>
+                            <version>0.0.4-SNAPSHOT</version>
+                            <destFileName>mifos.war</destFileName>
+                            <type>war</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${env.WAR_ARCHIVE}</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
-<!-- 
-  vim: noet ts=4
--->
