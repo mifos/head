@@ -6,7 +6,7 @@
 
 tdir=`mktemp -d`
 vinfo=WEB-INF/classes/org/mifos/config/resources/versionInfo.properties
-src_war=$WAR_ARCHIVE/mifos-webapp.war
+src_war=$WAR_ARCHIVE/mifos.war
 
 if [ ! -r $src_war ]
 then
