@@ -27,6 +27,7 @@ import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
@@ -34,22 +35,24 @@ import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","loan","acceptance","ui", "workInProgress"})
+@Test(sequential=true, groups={"smoke","loan","acceptance"})
 public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
+    
     private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";
+    private AppLauncher appLauncher;
+    
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
-    private AppLauncher appLauncher;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
@@ -58,11 +61,11 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         
+        appLauncher = new AppLauncher(selenium);
+        
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         DateTime targetTime = new DateTime(2009,6,25,8,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
-        
-        appLauncher = new AppLauncher(selenium);
     }
 
     @AfterMethod
@@ -93,7 +96,6 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile("LoanAccountPerformanceHistoryTest_001_result_dbunit.xml.zip");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { CLIENT_PERFORMANCE_HISTORY });
 
-        dbUnitUtilities.verifyTable(CLIENT_PERFORMANCE_HISTORY, databaseDataSet, expectedDataSet);
-        
+        dbUnitUtilities.verifyTable(CLIENT_PERFORMANCE_HISTORY, databaseDataSet, expectedDataSet);     
     }
 }
