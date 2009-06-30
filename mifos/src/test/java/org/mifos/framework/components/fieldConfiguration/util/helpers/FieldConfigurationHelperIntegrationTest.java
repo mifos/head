@@ -38,6 +38,9 @@ public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTes
      * {@link ApplicationTestSuite}, not when run by themselves on a fresh test
      * database. There must be some state which is left around or set up by some
      * other part of the test suite.
+     * 
+     * LabelConfigurationActionTest provides the "dirty" state required and must
+     * be run prior to this test.
      */
 
     public void testGetConfiguredFieldName() throws Exception {
