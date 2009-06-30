@@ -37,151 +37,145 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-@SuppressWarnings({"PMD.SystemPrintln",  // as a command line utility System.out output seems ok 
-"PMD.SingularField"}) // Option fields could be local, but for consistency keep them at the class level
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"DM_EXIT"}, justification="Command line tool exit")
+@SuppressWarnings( { "PMD.SystemPrintln", // as a command line utility
+                                          // System.out output seems ok
+        "PMD.SingularField" })
+// Option fields could be local, but for consistency keep them at the class
+// level
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "DM_EXIT" }, justification = "Command line tool exit")
 public class PseudoLocalizationGenerator {
     private static final Log LOG = LogFactory.getLog(PseudoLocalizationGenerator.class);
-	private static final String PREFIX = "@@@";
-	private static final String SUFFIX = "###";
+    private static final String PREFIX = "@@@";
+    private static final String SUFFIX = "###";
 
     private static final String FILE_OPTION_NAME = "f";
     private static final String LOCALE_OPTION_NAME = "l";
     private static final String DIRECTORY_OPTION_NAME = "d";
     private static final String HELP_OPTION_NAME = "h";
-    
+
     private String locale = "is";
     private String baseFileName = "messages";
-    private String directory = ""; 
-    
+    private String directory = "";
+
     private final Options options = new Options();
     private Option baseFileNameOption;
     private Option helpOption;
     private Option localeOption;
     private Option directoryOption;
-	
+
     public PseudoLocalizationGenerator() {
         defineOptions();
     }
-    
-	/**
-	 * Work in progress on a pseudolocalizer that can generate
-	 * a pseudolocalized properties file on the fly.  Here
-	 * pseudolocalization means simply prepending and appending
-	 * some characters to each string.
-	 * 
-	 *   TODO: pseudolocalizer work
-	 *   * take multiple properties files as inputs and loop on them
-	 *   * integrate this in the maven build using the exec plugin
-	 *   * pass prop files in from maven and autogenerate the _is localization
-	 *   * remove _is localization from version control
-	 */
-	public static void main(String[] args) throws IOException {
-	    PseudoLocalizationGenerator generator = new PseudoLocalizationGenerator();
-	    generator.parseOptions(args);
-	    generator.generatePseudoLocalization();
-	}
-	
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // doesn't seem like an issue for a small utility like this
-	public void generatePseudoLocalization() throws IOException {
-	    Properties defaultProps = new Properties();
-		FileInputStream in = null;
-		
-		try {
-    		in = new FileInputStream(directory + baseFileName + ".properties");
-    		defaultProps.load(in);
-		} finally {
-		    if (in != null) {
-		        in.close();
-		    }
-		}
-		
-		for (Entry<Object,Object> entry : defaultProps.entrySet()) {
-			String key = (String)entry.getKey();
-			String value = (String)entry.getValue();
-			LOG.info(key + "=" + value);
-			StringBuffer buffer = new StringBuffer(PREFIX); 
-			buffer.append(value);
-			buffer.append(SUFFIX);
-			defaultProps.setProperty(key, buffer.toString());
-		}
-		for (Entry<Object,Object> entry : defaultProps.entrySet()) {
-			String key = (String)entry.getKey();
-			String value = (String)entry.getValue();
-			LOG.info( key + "=" + value);
-		}
-		
-		FileOutputStream out = null;
-		try {
-		    out = new FileOutputStream(directory + baseFileName + "_" + locale + ".properties");
-		    defaultProps.store(out, "---Auto Generated Properties---");
-		} finally {
-		    out.close();
-		}		
-	}
+
+    /**
+     * Work in progress on a pseudolocalizer that can generate a pseudolocalized
+     * properties file on the fly. Here pseudolocalization means simply
+     * prepending and appending some characters to each string.
+     * 
+     * <h1>TODO: pseudolocalizer work</h1>
+     * <ul>
+     * <li>take multiple properties files as inputs and loop on them</li>
+     * <li>integrate this in the maven build using the exec plugin</li>
+     * <li>pass prop files in from maven and autogenerate the _is localization</li>
+     * <li>remove _is localization from version control</li>
+     * </ul>
+     */
+    public static void main(String[] args) throws IOException {
+        PseudoLocalizationGenerator generator = new PseudoLocalizationGenerator();
+        generator.parseOptions(args);
+        generator.generatePseudoLocalization();
+    }
+
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    // doesn't seem like an issue for a small utility like this
+    public void generatePseudoLocalization() throws IOException {
+        Properties defaultProps = new Properties();
+        FileInputStream in = null;
+
+        try {
+            in = new FileInputStream(directory + baseFileName + ".properties");
+            defaultProps.load(in);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+
+        for (Entry<Object, Object> entry : defaultProps.entrySet()) {
+            String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
+            LOG.info(key + "=" + value);
+            StringBuffer buffer = new StringBuffer(PREFIX);
+            buffer.append(value);
+            buffer.append(SUFFIX);
+            defaultProps.setProperty(key, buffer.toString());
+        }
+        for (Entry<Object, Object> entry : defaultProps.entrySet()) {
+            String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
+            LOG.info(key + "=" + value);
+        }
+
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(directory + baseFileName + "_" + locale + ".properties");
+            defaultProps.store(out, "---Auto Generated Properties---");
+        } finally {
+            out.close();
+        }
+    }
 
     private void defineOptions() {
-        baseFileNameOption = OptionBuilder.withArgName( "base file name" )
-        .withLongOpt("baseFileName")
-        .hasArg()
-        .withDescription( "use given base file name to read a <baseFileName>.properties (default= " + baseFileName + ")" )
-        .create( FILE_OPTION_NAME );
+        baseFileNameOption = OptionBuilder.withArgName("base file name").withLongOpt("baseFileName").hasArg()
+                .withDescription(
+                        "use given base file name to read a <baseFileName>.properties (default= " + baseFileName + ")")
+                .create(FILE_OPTION_NAME);
 
-        localeOption = OptionBuilder.withArgName( "target locale" )
-        .withLongOpt("locale")
-        .hasArg()
-        .withDescription( "target locale to generate (default= " + locale + ")" )
-        .create( LOCALE_OPTION_NAME );
+        localeOption = OptionBuilder.withArgName("target locale").withLongOpt("locale").hasArg().withDescription(
+                "target locale to generate (default= " + locale + ")").create(LOCALE_OPTION_NAME);
 
-        directoryOption = OptionBuilder.withArgName( "directory" )
-        .withLongOpt("directory")
-        .hasArg()
-        .withDescription( "the directory for reading and writing properties files (including trailing separator)" )
-        .create( DIRECTORY_OPTION_NAME );
+        directoryOption = OptionBuilder.withArgName("directory").withLongOpt("directory").hasArg().withDescription(
+                "the directory for reading and writing properties files (including trailing separator)").create(
+                DIRECTORY_OPTION_NAME);
 
-        helpOption = OptionBuilder
-        .withLongOpt("help")
-        .withDescription( "display help" )
-        .create( HELP_OPTION_NAME );
-
+        helpOption = OptionBuilder.withLongOpt("help").withDescription("display help").create(HELP_OPTION_NAME);
 
         options.addOption(baseFileNameOption);
         options.addOption(localeOption);
         options.addOption(directoryOption);
-        options.addOption(helpOption);        
+        options.addOption(helpOption);
     }
-	
+
     public void parseOptions(String[] args) {
         // create the command line parser
         CommandLineParser parser = new PosixParser();
         try {
             // parse the command line arguments
-            CommandLine line = parser.parse( options, args );
-            if( line.hasOption( HELP_OPTION_NAME ) ) {
+            CommandLine line = parser.parse(options, args);
+            if (line.hasOption(HELP_OPTION_NAME)) {
                 showHelp(options);
                 System.exit(0);
             }
-            if( line.hasOption( FILE_OPTION_NAME ) ) {
+            if (line.hasOption(FILE_OPTION_NAME)) {
                 baseFileName = line.getOptionValue(FILE_OPTION_NAME);
-            } 
-            if( line.hasOption( LOCALE_OPTION_NAME ) ) {
+            }
+            if (line.hasOption(LOCALE_OPTION_NAME)) {
                 locale = line.getOptionValue(LOCALE_OPTION_NAME);
             }
-            if( line.hasOption( DIRECTORY_OPTION_NAME ) ) {
+            if (line.hasOption(DIRECTORY_OPTION_NAME)) {
                 directory = line.getOptionValue(DIRECTORY_OPTION_NAME);
             } else {
                 missingOption(directoryOption);
             }
-            
-        }
-        catch( ParseException exp ) {
-            fail( "Parsing failed.  Reason: " + exp.getMessage() );
+
+        } catch (ParseException exp) {
+            fail("Parsing failed.  Reason: " + exp.getMessage());
         }
     }
-	
+
     private static void showHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp( "PseudoLocalizationGenerator", options );   
+        formatter.printHelp("PseudoLocalizationGenerator", options);
     }
 
     private static void missingOption(Option option) {
@@ -189,7 +183,7 @@ public class PseudoLocalizationGenerator {
     }
 
     private static void fail(String string) {
-        System.err.println( string );
+        System.err.println(string);
         System.exit(0);
     }
 
@@ -215,5 +209,5 @@ public class PseudoLocalizationGenerator {
 
     public void setDirectory(String directory) {
         this.directory = directory;
-    }	
+    }
 }
