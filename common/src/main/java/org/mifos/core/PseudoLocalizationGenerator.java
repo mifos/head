@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
 public class PseudoLocalizationGenerator {
     private static final Log LOG = LogFactory.getLog(PseudoLocalizationGenerator.class);
     private static final String PREFIX = "@@@";
-    private static final String SUFFIX = "###";
+    private static final String SUFFIX = "^^^";
 
     private static final String FILE_OPTION_NAME = "f";
     private static final String LOCALE_OPTION_NAME = "l";
