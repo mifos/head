@@ -17,7 +17,7 @@ permissions and limitations under the License.
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
-6<%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+<%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
