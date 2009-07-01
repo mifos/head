@@ -27,7 +27,7 @@
         <module>testFramework</module>
         <module>serviceInterfaces</module>
         <module>userInterface</module>
-        <module>mifos</module>
+        <module>application</module>
         <module>acceptanceTests</module>
     </modules>
 

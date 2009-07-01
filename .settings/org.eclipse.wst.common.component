@@ -2,11 +2,7 @@
 <project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="mifos-gazelle">
         <wb-resource deploy-path="/" source-path="/acceptanceTests/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/mifos/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/mifos/src/test/resources"/>
-        <wb-resource deploy-path="/" source-path="/mifos/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/mifos/src/main/java"/>
-<wb-resource deploy-path="/" source-path="/acceptanceTests/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/acceptanceTests/src/test/resources"/>
 <wb-resource deploy-path="/" source-path="/userInterface/src/main/resources"/>
 <wb-resource deploy-path="/" source-path="/userInterface/src/test/java"/>
 <wb-resource deploy-path="/" source-path="/userInterface/src/main/java"/>
@@ -17,7 +13,11 @@
 <wb-resource deploy-path="/" source-path="/common/src/main/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/test/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
-<wb-resource deploy-path="/" source-path="/mifos/src/main/webapp/pages"/>
-<wb-resource deploy-path="/" source-path="/mifos/src/main"/>
+<wb-resource deploy-path="/" source-path="/application/src/main"/>
+<wb-resource deploy-path="/" source-path="/application/src/main/java"/>
+<wb-resource deploy-path="/" source-path="/application/src/main/resources"/>
+<wb-resource deploy-path="/" source-path="/application/src/main/webapp/pages"/>
+<wb-resource deploy-path="/" source-path="/application/src/test/java"/>
+<wb-resource deploy-path="/" source-path="/application/src/test/resources"/>
     </wb-module>
 </project-modules>

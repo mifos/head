@@ -24,9 +24,9 @@
 
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
-        <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/sql</sql.resources.src.directory>
+        <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
-        <test.sql.resources.src.directory>${modules.root.dir}/mifos/src/test/sql</test.sql.resources.src.directory>
+        <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/sql</test.sql.resources.src.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
@@ -634,7 +634,7 @@
         <defaultGoal>war:war</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <outputDirectory>${basedir}/target/mifos/WEB-INF/classes</outputDirectory>
+        <outputDirectory>${basedir}/target/mifos-webapp/WEB-INF/classes</outputDirectory>
         <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
 
         <resources>

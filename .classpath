@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/pages" path="mifos/src/main/webapp/pages"/>
-	<classpathentry excluding="java/|resources/|webapp/pages/" including="sql/*" kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main"/>
+	<classpathentry excluding="java/|resources/|webapp/pages/" including="sql/*" kind="src" path="application/src/main"/>
+	<classpathentry kind="src" path="application/src/main/java"/>
+	<classpathentry kind="src" path="application/src/main/resources"/>
+	<classpathentry kind="src" output="application/target/mifos-webapp/pages" path="application/src/main/webapp/pages"/>
+	<classpathentry kind="src" output="application/target/test-classes" path="application/src/test/java"/>
+	<classpathentry kind="src" path="application/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="userInterface/src/main/resources"/>
+	<classpathentry kind="src" output="application/target/mifos/WEB-INF/classes" path="userInterface/src/main/resources"/>
 	<classpathentry kind="src" output="userInterface/target/test-classes" path="userInterface/src/test/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="userInterface/src/main/java"/>
+	<classpathentry kind="src" output="application/target/mifos/WEB-INF/classes" path="userInterface/src/main/java"/>
 	<classpathentry kind="src" output="testFramework/target/test-classes" path="testFramework/src/test/java"/>
 	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/resources"/>
 	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="serviceInterfaces/src/main/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="common/src/main/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main/resources"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/test/resources"/>
-	<classpathentry kind="src" output="mifos/target/test-classes" path="mifos/src/test/java"/>
-	<classpathentry kind="src" output="mifos/target/mifos/WEB-INF/classes" path="mifos/src/main/java"/>
+	<classpathentry kind="src" output="application/target/mifos/WEB-INF/classes" path="serviceInterfaces/src/main/java"/>
+	<classpathentry kind="src" path="common/src/main/java"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER">
@@ -25,5 +25,5 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="output" path="application/target/mifos-webapp/WEB-INF/classes"/>
 </classpath>
