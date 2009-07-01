@@ -49,7 +49,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@SuppressWarnings({"PMD.SystemPrintln"})
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"holiday"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
@@ -209,6 +208,36 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         verifyLoanSchedule("AdditionalHolidayTest_003_result_dbunit.xml.zip");
     }
     
+    // TC19
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextMeeting() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(NEXT_MEETING_OR_REPAYMENT);
+        
+        verifyLoanSchedule("AdditionalHolidayTest_007_result_dbunit.xml.zip");
+    } 
+
+    // TC20
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextDay() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(NEXT_WORKING_DAY);
+        
+        verifyLoanSchedule("AdditionalHolidayTest_008_result_dbunit.xml.zip");
+    }
+    
+    // TC21
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentSameDay() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(SAME_DAY);
+        
+        verifyLoanSchedule("AdditionalHolidayTest_009_result_dbunit.xml.zip");
+    }
+    
     private void createMonthlyLoanScheduleWithMeetingOnAHoliday(String repaymentRule) {        
         // create a holiday on 1st of july
         this.createHolidayOn1stJuly(repaymentRule);
@@ -240,6 +269,22 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         this.createLoan(searchParameters, submitAccountParameters);
     }
     
+    private void createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(String repaymentRule) {
+        // create a holiday that overlaps two Wednesdays
+        this.createHolidayFrom14thJulyThru23rd(repaymentRule);
+        
+        // create a loan for a client who meet at Wednesdays, client with system ID 0003-000000006
+        // in the acceptance_small_003 data set.
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
+        searchParameters.setLoanProduct("WeeklyClientDeclinetLoanWithPeriodicFee");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("2000.0"); 
+        
+        this.createLoan(searchParameters, submitAccountParameters);
+    }
+    
     private void createHoliday(CreateHolidaySubmitParameters params)
     {
         logOut();
@@ -260,6 +305,21 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateDD("1");
         params.setFromDateMM("07");
         params.setFromDateYYYY("2009");
+        params.setRepaymentRule(repaymentRule);
+        
+        createHoliday(params);
+    }
+    
+    private void createHolidayFrom14thJulyThru23rd(String repaymentRule) {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        
+        params.setName("Long holiday");
+        params.setFromDateDD("14");
+        params.setFromDateMM("07");
+        params.setFromDateYYYY("2009");
+        params.setThruDateDD("23");
+        params.setThruDateMM("07");
+        params.setThruDateYYYY("2009");
         params.setRepaymentRule(repaymentRule);
         
         createHoliday(params);
