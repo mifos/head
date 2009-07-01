@@ -9,7 +9,7 @@ export WAR_ARCHIVE=/var/www/gazelle/war/trunk
 cd trunk
 
 # clean up because we're using update rather than a clean checkout
-svn status | grep ^? | awk '{print $2}' | xargs --no-run-if-empty mv --force --target-directory=/tmp
+svn status | grep ^? | awk '{print $2}' | xargs --no-run-if-empty rm
 cd mifos/src/main/resources/org/mifos/config/localizedResources
 svn revert --recursive .
 
