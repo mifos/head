@@ -122,3 +122,8 @@ This file describes how to install Mifos for use in a production environment.
          http://mifos.org/developers/install-mifos/install-windows
          This is an installation guide describing how to install Mifos by
          building it from the source code.
+
+7. Third Party Licenses
+   All software libraries used by Mifos are compatible with the Apache License
+   2.0. To obtain a report detailing these licenses, execute "mvn site" in a
+   local copy of the Mifos source code.
