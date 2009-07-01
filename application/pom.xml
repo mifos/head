@@ -676,7 +676,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${basedir}/target/test-classes/WEB-INF</outputDirectory>
-                            <resources>          
+                            <resources>
                                 <resource>
                                     <directory>src/main/webapp/WEB-INF</directory>
                                     <includes>
@@ -684,9 +684,9 @@
                                     </includes>
                                     <filtering>false</filtering>
                                 </resource>
-                            </resources>              
+                            </resources>
                             <encoding>UTF-8</encoding>
-                        </configuration>            
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -946,7 +946,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.1</version>
+                <version>1.1.1-mifos-mexec-68-patch</version>
                 <executions>
                     <execution>
                         <phase>test</phase>
@@ -958,13 +958,14 @@
                 <configuration>
                     <executable>java</executable>
                     <classpathScope>test</classpathScope>
+                    <longClasspath>true</longClasspath>
                     <outputFile>${basedir}/target/junit/testConsoleOutput</outputFile>
                     <arguments>
                         <argument>-Xmx1024m</argument>
                         <argument>-Dmifos.test.mode=integration</argument>
+                        <argument>-ea</argument>
                         <argument>-cp</argument>
                         <classpath/>
-                        <argument>-ea</argument>
                         <argument>org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner</argument>
                         <argument>org.mifos.application.ApplicationTestSuite</argument>
                         <argument>filtertrace=true</argument>
