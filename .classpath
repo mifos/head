@@ -9,13 +9,13 @@
 	<classpathentry kind="src" path="application/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
-	<classpathentry kind="src" output="application/target/mifos/WEB-INF/classes" path="userInterface/src/main/resources"/>
+	<classpathentry kind="src" path="userInterface/src/main/resources"/>
 	<classpathentry kind="src" output="userInterface/target/test-classes" path="userInterface/src/test/java"/>
-	<classpathentry kind="src" output="application/target/mifos/WEB-INF/classes" path="userInterface/src/main/java"/>
+	<classpathentry kind="src" path="userInterface/src/main/java"/>
 	<classpathentry kind="src" output="testFramework/target/test-classes" path="testFramework/src/test/java"/>
 	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/resources"/>
 	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/java"/>
-	<classpathentry kind="src" output="application/target/mifos/WEB-INF/classes" path="serviceInterfaces/src/main/java"/>
+	<classpathentry kind="src" path="serviceInterfaces/src/main/java"/>
 	<classpathentry kind="src" path="common/src/main/java"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
