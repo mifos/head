@@ -956,6 +956,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${maven.test.skip}</skip>>
                     <executable>java</executable>
                     <classpathScope>test</classpathScope>
                     <longClasspath>true</longClasspath>
