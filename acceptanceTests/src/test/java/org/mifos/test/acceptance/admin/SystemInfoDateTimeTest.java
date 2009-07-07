@@ -97,7 +97,7 @@ public class SystemInfoDateTimeTest extends UiTestCaseBase {
     }
 
     private AdminPage loginAndGoToAdminPage() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
+        HomePage homePage = appLauncher.launchMifos().logout().loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
         AdminPage adminPage = homePage.navigateToAdminPage();
         adminPage.verifyPage();

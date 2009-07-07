@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="CreateMultipleLoanAccounts"/>
+	<input type="hidden" id="page.id" value="DisburseLoan"/>
 
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	<script src="pages/framework/js/conversion.js"></script>
@@ -143,7 +143,7 @@ explanation of the license and how it is applied.
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
-							<td><mifos:select property="paymentTypeId"
+							<td><mifos:select styleId="DisburseLoan.input.paymentType" property="paymentTypeId"
 								style="width:136px;">
 								<c:forEach var="PT"
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">

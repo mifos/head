@@ -26,6 +26,7 @@ import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
+@SuppressWarnings("PMD.SystemPrintln")
 public class LoanAccountPage extends AbstractPage {
 
     public LoanAccountPage(Selenium selenium) {
@@ -60,6 +61,26 @@ public class LoanAccountPage extends AbstractPage {
         Assert.assertTrue(selenium.isTextPresent("Partial Application "));
     }
     
+    /**
+     * Returns the id of the account displayed on the current page, or -1 if no id is found.
+     * The id is the global id (0001...000...263, not just 263).
+     * @return ID of the account.
+     */
+    public String getAccountId() {
+        String returnId = "-1";
+        String heading = selenium.getAttribute("loanaccountdetail.link.editAccountInformation@href");
+        System.err.println("heADING: " + heading);
+        String[] linkParts = heading.split("&");
+        for (String part : linkParts) {
+            String[] partOfLink = part.split("=");
+            // this is an ID that identifies the account
+            if ("globalAccountNum".equals(partOfLink[0])) {
+                returnId = partOfLink[1];
+            }
+        }
+        return returnId;
+    }
+    
     public HomePage navigateToHomePage(){
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();
@@ -76,5 +97,18 @@ public class LoanAccountPage extends AbstractPage {
         selenium.click("id=loanaccountdetail.link.repayLoan");
         waitForPageToLoad();
         return new RepayLoanPage(selenium);
+    }
+    
+    public EditLoanAccountStatusPage navigateToEditAccountStatus() {
+        selenium.click("loanaccountdetail.link.editAccountStatus");
+        waitForPageToLoad();
+        return new EditLoanAccountStatusPage(selenium);
+    }
+    
+
+    public DisburseLoanPage navigateToDisburseLoan() {
+        selenium.click("loanaccountdetail.link.disburseLoan");
+        waitForPageToLoad();
+        return new DisburseLoanPage(selenium);
     }
 }

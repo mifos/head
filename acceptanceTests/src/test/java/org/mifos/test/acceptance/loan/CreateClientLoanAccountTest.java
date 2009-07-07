@@ -20,19 +20,13 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -45,8 +39,8 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = {"smoke","loan","acceptance","ui"})
 public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
-
+    private LoanTestHelper loanTestHelper;
+    
     @Autowired
     private DriverManagerDataSource dataSource;
     @Autowired
@@ -59,7 +53,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
     }
 
     @AfterMethod
@@ -111,22 +105,16 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
     private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
-        CreateLoanAccountSearchPage createLoanAccountSearchPage = navigateToCreateLoanAccountSearchPage();
-        createLoanAccountSearchPage.verifyPage();
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
-                .searchAndNavigateToCreateLoanAccountPage(searchParameters);
-        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
-                .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
-        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
+        
+        LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyPage();
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
     }
 
-    private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
+/*    private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
-    }
+    }*/
 }

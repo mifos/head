@@ -1,0 +1,15 @@
+Database version: 212
+Description:
+A single branch office, Test Branch Office.
+One loan product, Cattle Loan (a flat interest weekly loan)
+No groups.
+Two clients:
+- First Tester (System ID: 0002-000000001), active.
+- Teset Settet (System ID: 0002-000000002), pending approval.
+Three loan accounts (all belonging to "First Tester" and all being instances of Cattle Loan):
+- Acct #000100000000003  	Application Pending Approval
+- Acct #000100000000004 	Partial Application
+- Acct #000100000000005 	Application Approved 
+
+This data set is meant to help with loan status changes, 
+but can also be used to test client status changes.

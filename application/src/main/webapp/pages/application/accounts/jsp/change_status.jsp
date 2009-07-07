@@ -139,7 +139,7 @@ explanation of the license and how it is applied.
 											<td align="center">&nbsp;</td>
 											<td><c:set var="flags" scope="request"
 												value="${status.flagSet}" /> <mifos:select
-												name="editStatusActionForm" property="flagId" size="1" disabled="true">
+												name="editStatusActionForm" styleId="change_status.input.cancel_reason" property="flagId" size="1" disabled="true">
 												<html-el:options collection="flags" property="id"
 													labelProperty="lookUpValue.messageText" />
 											</mifos:select></td>
