@@ -747,7 +747,7 @@ explanation of the license and how it is applied.
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <aid="viewgroupdetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=group">
+                  <a id="viewgroupdetails.link.attachSurvey" href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=group">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                   <a id="viewgroupdetails.link.viewallsurveys" href="surveysAction.do?method=mainpage">
