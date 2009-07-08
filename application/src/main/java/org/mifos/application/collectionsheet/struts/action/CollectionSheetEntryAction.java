@@ -686,31 +686,4 @@ public class CollectionSheetEntryAction extends BaseAction {
         return locale;
     }
 
-    private class LockInfo {
-        private long lockTime;
-        private String userId;
-
-        public LockInfo(long lockTime, String userId) {
-            this.lockTime = lockTime;
-            this.userId = userId;
-        }
-
-        public long getLockTime() {
-            return lockTime;
-        }
-
-        public void setLockTime(long lockTime) {
-            this.lockTime = lockTime;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
-
-    }
-
 }
