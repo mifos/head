@@ -25,12 +25,12 @@ how log4j is setting up logging. -->
     </appender>
 
     <category name="org.hibernate"> 
-        <priority value="ERROR"/> 
+        <priority value="WARN"/> 
     </category>
 
     <root>
         <!-- Any log statement of level less than this priority will not be logged -->
-        <priority value="WARN"/>
+        <priority value="INFO"/>
         <appender-ref ref="MifosAppender"/>
         <appender-ref ref="MifosRollingFileAppender"/>
     </root>

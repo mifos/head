@@ -11,21 +11,7 @@ NAME=tomcat6
 DESC="Tomcat servlet engine"
 DAEMON=/usr/bin/jsvc
 
-# resolve links - $0 may be a softlink
-PRG="$0"
-
-while [ -h "$PRG" ]; do
-  ls=`ls -ld "$PRG"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
-  if expr "$link" : '/.*' > /dev/null; then
-    PRG="$link"
-  else
-    PRG=`dirname "$PRG"`/"$link"
-  fi
-done
-
-# Get standard environment variables
-PRGDIR=`dirname "$PRG"`
+PRGDIR=$HOME/mifos-v1.3.x-deploy
 PRGDIR=`realpath "$PRGDIR"`
 CATALINA_HOME=$PRGDIR/tomcat6
 export MIFOS_CONF=$PRGDIR/mifos_conf
@@ -63,7 +49,7 @@ LOG_PATH=$CATALINA_HOME/logs
 # fi
 
 if [ ! -f "$CATALINA_HOME/bin/bootstrap.jar" ]; then
-    log_failure_msg "$NAME is not installed. Run create.sh first."
+    log_failure_msg "$NAME is not installed."
     exit 1
 fi
 
