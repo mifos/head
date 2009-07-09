@@ -2,7 +2,7 @@
 set -x
 set -o errexit
 
-location=$1
+location=trunk
 
 controlScript=$HOME/continuousIntegrationResources/deploy/$location/tomcat/control.sh
 lastStableWAR=$HOME/hudson-home/jobs/mifos-gazelle-$location/lastStable/archive/trunk/application/target/mifos-webapp.war
