@@ -23,7 +23,7 @@ export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
 
 # Run Tomcat 6 as this user ID
 TOMCAT6_USER=hudson
-JVM_TMP=/tmp/${TOMCAT6_USER}-tomcat-tmp
+JVM_TMP=/tmp/$TOMCAT6_USER-$JOB_NAME-tomcat-tmp
 
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
 # defined in $DEFAULT)
