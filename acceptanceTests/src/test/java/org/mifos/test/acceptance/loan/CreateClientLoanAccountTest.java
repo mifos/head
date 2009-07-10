@@ -110,11 +110,4 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPage();
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
     }
-
-/*    private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
-        LoginPage loginPage = appLauncher.launchMifos();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
-    }*/
 }

@@ -46,6 +46,18 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         waitForPageToLoad();
         return new HomePage(selenium);
     }
+    
+    public LoanAccountPage waiveFee() {
+        selenium.click("nextPayment_loanAccount.link.waiveFeeDue");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
+    
+    public LoanAccountPage waivePenalty() {
+        selenium.click("nextPayment_loanAccount.link.waivePenaltyDue");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
 
     public void waiveCurrentInstallmentFee() {
         selenium.click("id=nextPayment_loanAccount.link.waiveFeeDue");

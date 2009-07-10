@@ -23,6 +23,8 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
+import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
@@ -35,6 +37,7 @@ import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPag
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 
@@ -51,6 +54,7 @@ public class LoanTestHelper {
     public LoanTestHelper(Selenium selenium) {
         this.selenium = selenium;
     }
+    
     /**
      * Creates a loan account.
      * @param searchParameters
@@ -107,6 +111,35 @@ public class LoanTestHelper {
         loanAccountPage.verifyPage();
         
         return loanAccountPage;
+    }
+    
+    /**
+     * 
+     * @param loanId
+     * @param params
+     * @return
+     */
+    public LoanAccountPage applyCharge(String loanId, ChargeParameters params) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        loanAccountPage.verifyPage();
+        
+        ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
+        applyChargePage.verifyPage();
+        
+        loanAccountPage = applyChargePage.submitAndNavigateToApplyChargeConfirmationPage(params);
+        loanAccountPage.verifyPage();
+        
+        return loanAccountPage;
+    }
+    
+    public void waiveFee(String loanId) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        loanAccountPage.verifyPage();
+        
+        ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
+        installmentDetailsPage.verifyPage();
+        
+        installmentDetailsPage.waiveFee();
     }
     
     /**

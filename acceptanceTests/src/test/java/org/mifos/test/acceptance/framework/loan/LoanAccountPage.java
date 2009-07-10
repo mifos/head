@@ -105,10 +105,21 @@ public class LoanAccountPage extends AbstractPage {
         return new EditLoanAccountStatusPage(selenium);
     }
     
-
     public DisburseLoanPage navigateToDisburseLoan() {
         selenium.click("loanaccountdetail.link.disburseLoan");
         waitForPageToLoad();
         return new DisburseLoanPage(selenium);
+    }
+    
+    public ApplyChargePage navigateToApplyCharge() {
+        selenium.click("loanaccountdetail.link.applyCharges");
+        waitForPageToLoad();
+        return new ApplyChargePage(selenium);
+    }
+    
+    public ApplyPaymentPage navigateToApplyPayment() {
+        selenium.click("loanaccountdetail.link.applyPayment");
+        waitForPageToLoad();
+        return new ApplyPaymentPage(selenium);
     }
 }
