@@ -60,7 +60,7 @@ if [ ! -f "$DAEMON" ]; then
     exit 1
 fi
 
-JAVA_OPTS="$JAVA_OPTS -Djava.endorsed.dirs=$CATALINA_HOME/endorsed -Dcatalina.base=$CATALINA_BASE -Dcatalina.home=$CATALINA_HOME -Djava.io.tmpdir=$JVM_TMP"
+JAVA_OPTS="$JAVA_OPTS -Djava.endorsed.dirs=$CATALINA_HOME/endorsed -Dcatalina.base=$CATALINA_BASE -Dcatalina.home=$CATALINA_HOME -Djava.io.tmpdir=$JVM_TMP -Djava.awt.headless=true"
 
 # Set the JSP compiler if set in the tomcat6.default file
 if [ -n "$JSP_COMPILER" ]; then
