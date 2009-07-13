@@ -34,4 +34,26 @@ public class ApplyPaymentPage extends MifosPage {
     public void verifyPage() {
         verifyPage("ApplyPayment");
     }
+    
+    public ApplyPaymentConfirmationPage submitAndNavigateToApplyPaymentConfirmationPage(PaymentParameters params)
+    {
+        selenium.type("transactionDateDD", params.getTransactionDateDD());
+        selenium.type("transactionDateMM", params.getTransactionDateMM());
+        selenium.type("transactionDateYY", params.getTransactionDateYYYY());
+
+        selenium.type("applypayment.input.amount", params.getAmount());
+        
+        selenium.select("applypayment.input.paymentType", params.getPaymentType());
+        
+        this.typeTextIfNotEmpty("applypayment.input.receiptId", params.getReceiptId());
+        
+        this.typeTextIfNotEmpty("receiptDateDD", params.getReceiptDateDD());
+        this.typeTextIfNotEmpty("receiptDateMM", params.getReceiptDateMM());
+        this.typeTextIfNotEmpty("receiptDateYY", params.getReceiptDateYYYY());
+
+        selenium.click("applypayment.button.reviewTransaction");
+        waitForPageToLoad();
+        
+        return new ApplyPaymentConfirmationPage(selenium);
+    }
 }

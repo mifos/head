@@ -24,6 +24,8 @@ import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
@@ -37,6 +39,7 @@ import org.mifos.test.acceptance.framework.loan.EditAccountStatusConfirmationPag
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -114,10 +117,10 @@ public class LoanTestHelper {
     }
     
     /**
-     * 
-     * @param loanId
-     * @param params
-     * @return
+     * Applies a charge to the loan account with id <tt>loanId</tt>. 
+     * @param loanId The account id.
+     * @param params The charge parameters (amount and type). 
+     * @return The loan account page for the loan account.
      */
     public LoanAccountPage applyCharge(String loanId, ChargeParameters params) {
         LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
@@ -132,6 +135,26 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
     
+    public LoanAccountPage applyPayment(String loanId, PaymentParameters params) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        loanAccountPage.verifyPage();
+        
+        ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
+        applyPaymentPage.verifyPage();
+        
+        ApplyPaymentConfirmationPage applyPaymentConfirmationPage = applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(params);
+        applyPaymentConfirmationPage.verifyPage();
+        
+        loanAccountPage = applyPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
+        loanAccountPage.verifyPage();
+        
+        return loanAccountPage;
+    }
+    
+    /**
+     * Waive the fee associated with the loan account with id <tt>loanId</tt>.
+     * @param loanId The loan account id.
+     */
     public void waiveFee(String loanId) {
         LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
@@ -140,6 +163,20 @@ public class LoanTestHelper {
         installmentDetailsPage.verifyPage();
         
         installmentDetailsPage.waiveFee();
+    }
+    
+    /**
+     * Waive the penalty associated with the loan account with id <tt>loanId</tt>.
+     * @param loanId The loan account id.
+     */
+    public void waivePenalty(String loanId) {
+        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        loanAccountPage.verifyPage();
+        
+        ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
+        installmentDetailsPage.verifyPage();
+        
+        installmentDetailsPage.waivePenalty();
     }
     
     /**
@@ -171,4 +208,5 @@ public class LoanTestHelper {
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
+
 }

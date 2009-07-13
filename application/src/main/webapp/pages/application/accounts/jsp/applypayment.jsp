@@ -130,7 +130,7 @@ explanation of the license and how it is applied.
 								name="accounts.mode_of_payment" mandatory="yes" isColonRequired="Yes" /></td>
 
 							<td class="fontnormal"><mifos:select
-								name="applyPaymentActionForm" property="paymentTypeId">
+								name="applyPaymentActionForm" styleId="applypayment.input.paymentType" property="paymentTypeId">
 								<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 								</c:forEach>
