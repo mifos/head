@@ -40,7 +40,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","acceptance","ui", "loan"})
+@Test(sequential=true, groups={"smoke","acceptance","ui", "loan", "workInProgress"})
 public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
 
