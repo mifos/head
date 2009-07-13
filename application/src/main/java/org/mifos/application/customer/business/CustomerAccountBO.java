@@ -82,6 +82,19 @@ import org.mifos.framework.util.LocalizationConverter;
 public class CustomerAccountBO extends AccountBO {
 
     Set<CustomerActivityEntity> customerActivitDetails = null;
+    
+    private FeePersistence feePersistence;
+
+    public FeePersistence getFeePersistence() {
+        if(feePersistence == null){
+            feePersistence = new FeePersistence();
+        }
+        return feePersistence;
+    }
+
+    public void setFeePersistence(FeePersistence feePersistence) {
+        this.feePersistence = feePersistence;
+    }
 
     protected CustomerAccountBO() {
         super();
@@ -92,7 +105,7 @@ public class CustomerAccountBO extends AccountBO {
         super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
         if (fees != null) {
             for (FeeView feeView : fees) {
-                FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
+                FeeBO fee = getFeePersistence().getFee(feeView.getFeeIdValue());
 
                 this.addAccountFees(new AccountFeesEntity(this, fee, LocalizationConverter.getInstance()
                         .getDoubleValueForCurrentLocale(feeView.getAmount())));
@@ -429,7 +442,7 @@ public class CustomerAccountBO extends AccountBO {
                 throw new AccountException(AccountConstants.MISC_CHARGE_NOT_APPLICABLE);
             }
             addFeeToAccountFee(feeId, charge);
-            FeeBO fee = new FeePersistence().getFee(feeId);
+            FeeBO fee = getFeePersistence().getFee(feeId);
             updateCustomerActivity(feeId, new Money(charge.toString()), fee.getFeeName() + AccountConstants.APPLIED);
         } else {
             Money chargeAmount = new Money(String.valueOf(charge));
@@ -444,7 +457,7 @@ public class CustomerAccountBO extends AccountBO {
                 dueInstallments = getTotalDueInstallments();
                 if (dueInstallments.isEmpty())
                     throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
-                FeeBO fee = new FeePersistence().getFee(feeId);
+                FeeBO fee = getFeePersistence().getFee(feeId);
                 if (fee.getFeeFrequency().getFeePayment() != null) {
                     applyOneTimeFee(fee, chargeAmount, dueInstallments.get(0));
                 } else {
@@ -479,7 +492,7 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     private void addFeeToAccountFee(Short feeId, Double charge) {
-        FeeBO fee = new FeePersistence().getFee(feeId);
+        FeeBO fee = getFeePersistence().getFee(feeId);
         AccountFeesEntity accountFee = null;
         if ((fee.isPeriodic() && !isFeeAlreadyApplied(fee)) || !fee.isPeriodic()) {
             accountFee = new AccountFeesEntity(this, fee, charge, FeeStatus.ACTIVE.getValue(), new DateTimeService()

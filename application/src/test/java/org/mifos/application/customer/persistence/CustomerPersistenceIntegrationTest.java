@@ -425,7 +425,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTest {
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        // StaticHibernateUtil.closeSession();
 
         List<ClientBO> clients = new ArrayList<ClientBO>();
         bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(System.currentTimeMillis()),
@@ -463,8 +462,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTest {
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-
-        // StaticHibernateUtil.closeSession();
 
         List<ClientBO> clients = new ArrayList<ClientBO>();
         bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(System.currentTimeMillis()),

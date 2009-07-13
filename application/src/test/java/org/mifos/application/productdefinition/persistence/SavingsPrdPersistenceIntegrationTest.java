@@ -43,6 +43,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -67,10 +68,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTest {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        TestDatabase.resetMySQLDatabase();
         super.tearDown();
     }
 
@@ -82,7 +80,6 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTest {
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
         List<SavingsBO> savingsList = new SavingsPrdPersistence().retrieveSavingsAccountsForPrd(savingsOffering
                 .getPrdOfferingId());
         assertEquals(Integer.valueOf("1").intValue(), savingsList.size());

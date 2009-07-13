@@ -29,6 +29,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.ConfigurationLocator;
@@ -43,6 +44,7 @@ public class MifosSchedulerIntegrationTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        MifosLogManager.configureLogging();
     }
 
     @Override

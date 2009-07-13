@@ -62,6 +62,21 @@ public abstract class FeeBO extends BusinessObject {
     private FeeStatusEntity feeStatus;
 
     private Short changeType;
+    
+    private OfficePersistence officePersistence;
+    
+    
+
+    public OfficePersistence getOfficePersistence() {
+        if(officePersistence == null){
+            officePersistence = new OfficePersistence();
+        }
+        return officePersistence;
+    }
+
+    public void setOfficePersistence(OfficePersistence officePersistence) {
+        this.officePersistence = officePersistence;
+    }
 
     /**
      * Constructor to create a valid Fee Object
@@ -83,7 +98,7 @@ public abstract class FeeBO extends BusinessObject {
         this.feeId = null;
         this.feeLevels = new HashSet<FeeLevelEntity>();
         try {
-            this.office = new OfficePersistence().getHeadOffice();
+            this.office = getOfficePersistence().getHeadOffice();
         } catch (PersistenceException e) {
             throw new FeeException(e);
         }

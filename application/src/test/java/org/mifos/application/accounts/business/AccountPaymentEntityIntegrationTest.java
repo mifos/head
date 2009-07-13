@@ -128,7 +128,6 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTest {
         customerAccountBO.addAccountPayment(accountPaymentEntity);
 
         TestObjectFactory.updateObject(customerAccountBO);
-        TestObjectFactory.flushandCloseSession();
         customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
         client = customerAccountBO.getCustomer();
 

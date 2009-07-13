@@ -58,6 +58,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -172,6 +173,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testRetrieveOfferingsApplicableToClient() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         Date currentTimestamp = new Date(System.currentTimeMillis());
         savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, currentTimestamp);
@@ -181,7 +183,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTest {
                 ApplicableTo.GROUPS, currentTimestamp);
         savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4", "s4", SavingsType.VOLUNTARY,
                 ApplicableTo.CENTERS, currentTimestamp);
-        StaticHibernateUtil.closeSession();
         List<SavingsOfferingBO> offerings = new ClientPersistence().retrieveOfferingsApplicableToClient();
         assertEquals(2, offerings.size());
         for (SavingsOfferingBO offering : offerings) {

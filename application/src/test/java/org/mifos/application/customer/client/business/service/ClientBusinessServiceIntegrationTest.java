@@ -37,6 +37,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -61,6 +62,7 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         service = (ClientBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Client);
     }
 
@@ -77,7 +79,6 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTest {
 
     public void testGetClient() throws Exception {
         client = createClient("abc");
-        StaticHibernateUtil.closeSession();
         client = service.getClient(client.getCustomerId());
         assertNotNull(client);
         assertEquals("abc", client.getClientName().getName().getFirstName());
@@ -120,7 +121,7 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTest {
                 ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
         savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4", "s4", SavingsType.VOLUNTARY,
                 ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
-        StaticHibernateUtil.closeSession();
+
         List<SavingsOfferingBO> offerings = service.retrieveOfferingsApplicableToClient();
         assertEquals(2, offerings.size());
         for (SavingsOfferingBO offering : offerings) {

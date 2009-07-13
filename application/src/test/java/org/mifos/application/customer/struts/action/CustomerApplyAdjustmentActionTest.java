@@ -26,16 +26,16 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntityIntegrationTest;
+import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntityIntegrationTest;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -44,7 +44,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -71,6 +70,7 @@ public class CustomerApplyAdjustmentActionTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -82,15 +82,6 @@ public class CustomerApplyAdjustmentActionTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        try {
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
-        }
-        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
@@ -230,7 +221,6 @@ public class CustomerApplyAdjustmentActionTest extends MifosMockStrutsTestCase {
                 .getMoneyForMFICurrency(100), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(
                 System.currentTimeMillis()));
 
-        // Money totalFees = new Money();
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 (AccountActionEntity) masterPersistenceService.getPersistentObject(AccountActionEntity.class,
                         AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"), accountAction.getActionDate(),
@@ -251,7 +241,6 @@ public class CustomerApplyAdjustmentActionTest extends MifosMockStrutsTestCase {
         AccountPaymentEntityIntegrationTest.addAccountPayment(accountPaymentEntity, customerAccountBO);
 
         TestObjectFactory.updateObject(customerAccountBO);
-        TestObjectFactory.flushandCloseSession();
         customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
         client = customerAccountBO.getCustomer();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);

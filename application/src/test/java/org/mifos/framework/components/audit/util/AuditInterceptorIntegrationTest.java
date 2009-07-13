@@ -41,6 +41,7 @@ import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -56,25 +57,9 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTest {
 
     protected CustomerBO group = null;
 
-    private CustomerBO client = null;
-
-    @Override
-    protected void tearDown() throws Exception {
-        if (accountBO != null)
-            accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        if (group != null)
-            group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-        if (center != null)
-            center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
-        super.tearDown();
-    }
 
     public void testUpdateLoanForLogging() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
@@ -85,7 +70,6 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTest {
                 null, null, false, null);
 
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 

@@ -45,6 +45,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -74,6 +75,7 @@ public class BulkEntryPersistenceServiceIntegrationTest extends MifosIntegration
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         accountPersistence = new AccountPersistence();
         bulkEntryPersistanceService = new BulkEntryPersistenceService();
         customerPersistence = new CustomerPersistence();
@@ -98,7 +100,6 @@ public class BulkEntryPersistenceServiceIntegrationTest extends MifosIntegration
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
         assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
@@ -112,7 +113,6 @@ public class BulkEntryPersistenceServiceIntegrationTest extends MifosIntegration
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
         assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
@@ -139,7 +139,6 @@ public class BulkEntryPersistenceServiceIntegrationTest extends MifosIntegration
         ((ClientBO) client).addClientAttendance(clientAttendance);
         customerPersistence.createOrUpdate(client);
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
 
         List<ClientAttendanceDto> collectionSheetEntryClientAttendanceView = bulkEntryPersistanceService
                 .getClientAttendance(meetingDate, client.getOffice().getOfficeId());

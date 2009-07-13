@@ -85,10 +85,6 @@
             <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time-hibernate</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
         </dependency>

@@ -33,20 +33,16 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -75,6 +71,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         accountPersistence = new AccountPersistence();
         bulkEntryPersistence = new BulkEntryPersistence();
         customerPersistence = new CustomerPersistence();
@@ -83,7 +80,6 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
     @Override
     protected void tearDown() throws Exception {
         TestObjectFactory.cleanUp(account);
-        // TestObjectFactory.deleteClientAttendence(client);
         TestObjectFactory.cleanUp(client);
         TestObjectFactory.cleanUp(group);
         TestObjectFactory.cleanUp(center);
@@ -100,7 +96,6 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
         assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
@@ -113,7 +108,6 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
         assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
@@ -143,7 +137,6 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
         assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
@@ -167,7 +160,6 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTest {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
         account = accountPersistence.getAccount(account.getAccountId());
         assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
         for (AccountActionDateEntity actionDate : account.getAccountActionDates()) {

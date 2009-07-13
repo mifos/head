@@ -27,12 +27,12 @@ import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.framework.MifosInMemoryIntegrationTest;
+import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class SurveysPersistenceIntegrationTest extends MifosInMemoryIntegrationTest {
+public class SurveysPersistenceIntegrationTest extends MifosIntegrationTest {
     
     public SurveysPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
