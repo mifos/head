@@ -60,29 +60,31 @@ This file describes how to install Mifos for use in a production environment.
 
 5. Configuring and Running Mifos
     5.1. Configuring Mifos
-         Because some settings in Mifos can only be changed from their default values
-         once, before Mifos is run for the first time, you should review the
-         default Mifos configuration. See section 6.1 for more information.
+         Because some settings in Mifos can only be changed from their default
+         values once, before Mifos is run for the first time, you should review
+         the default Mifos configuration. See section 6.1 for more information.
 
          5.1.1. Using the Default Configuration
                 A default configuration is provided. If you want to quickly get
-                Mifos up and running to try it out, then no configuration is needed.
+                Mifos up and running to try it out, then no configuration is
+                needed.
 
          5.1.2. Using a Custom Configuration
-         		Create an environment variable MIFOS_CONF and set it to the directory
-         		where you want to put Mifos custom configuration files (see
-         		http://mifos.org/developers/wiki/MyConfDir for further details and
-         		options).
+                Create an environment variable MIFOS_CONF and set it to the
+                directory where you want to put Mifos custom configuration
+                files (see http://mifos.org/developers/wiki/MyConfDir for
+                further details and options).
 
          5.1.3. Changing the Default Mifos Configuration
                 To make changes to the default configuration, copy the file
-                conf/applicationConfiguration.custom.properties to the MIFOS_CONF
-                directory defined in 5.1.2.
+                conf/applicationConfiguration.custom.properties to the
+                MIFOS_CONF directory defined in 5.1.2.
 
          5.1.4. Changing the Default Database Connection Settings
-                To use non-default settings for your database connection -- such as
-                a different port number, user name, or password -- copy the file
-                conf/local.properties to the MIFOS_CONF directory defined in 5.1.2.
+                To use non-default settings for your database connection --
+                such as a different port number, user name, or password -- copy
+                the file conf/local.properties to the MIFOS_CONF directory
+                defined in 5.1.2.
 
     5.2. Running Mifos
          Execute the Tomcat startup script in CATALINA_HOME/bin, or if Tomcat
@@ -102,9 +104,10 @@ This file describes how to install Mifos for use in a production environment.
 
     6.1. Configuring Mifos -
          http://mifos.org/developers/wiki/ConfiguringMifos
-         Pay particular attention to "trapdoor" settings (settings that can only
-         be changed to a non-default value once) in the application configuration
-         file. Chart of Accounts configuration is one such "trapdoor".
+         Pay particular attention to "trapdoor" settings (settings that can
+         only be changed to a non-default value once) in the application
+         configuration file. Chart of Accounts configuration is one such
+         "trapdoor".
 
     6.2. Release Notes -
          http://mifos.org/developers/wiki/ReleaseNotes/V13
