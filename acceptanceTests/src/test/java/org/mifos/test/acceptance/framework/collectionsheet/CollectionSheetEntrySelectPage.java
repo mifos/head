@@ -158,31 +158,57 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 
     public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(
             SubmitFormParameters parameters) {
+        boolean onlyTypeIfEmpty = true;
+        boolean waitForPageToLoad = true;
+        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(parameters, onlyTypeIfEmpty,waitForPageToLoad);
+        collectionSheetEntryEnterDataPage.verifyPage();
+        return collectionSheetEntryEnterDataPage;
+    }
 
+    public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(
+            SubmitFormParameters parameters, boolean onlyTypeIfEmpty, boolean waitForPageToLoad) {
+        
+        fillOutDropDownMenus(parameters, waitForPageToLoad);
+        CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = fillOutTransactionAndReceiptFieldsAndContinue(
+                parameters, onlyTypeIfEmpty);
+        return collectionSheetEntryEnterDataPage;
+    }
+
+    private void fillOutDropDownMenus(SubmitFormParameters parameters, boolean waitForPageToLoad) {
         selenium.select("officeId", "label=" + parameters.getBranch());
-        waitForPageToLoad();
+        waitForPageToLoadIfNecessary(waitForPageToLoad);
         selenium.select("loanOfficerId", "label=" + parameters.getLoanOfficer());
-        waitForPageToLoad();
+        waitForPageToLoadIfNecessary(waitForPageToLoad);
         selenium.select("customerId", "label=" + parameters.getCenter());
-        waitForPageToLoad();
-        typeTextIfNotEmpty("transactionDateDD", parameters.getTransactionDay());
-        typeTextIfNotEmpty("transactionDateMM", parameters.getTransactionMonth());
-        typeTextIfNotEmpty("transactionDateYY", parameters.getTransactionYear());
+        waitForPageToLoadIfNecessary(waitForPageToLoad);
+    }    
+
+    private void waitForPageToLoadIfNecessary(boolean waitForPageToLoad) {
+        if (waitForPageToLoad) {
+           waitForPageToLoad();
+        }
+    }
+
+    private CollectionSheetEntryEnterDataPage fillOutTransactionAndReceiptFieldsAndContinue(
+            SubmitFormParameters parameters, boolean onlyTypeIfEmpty) {
+        typeText("transactionDateDD", parameters.getTransactionDay(), onlyTypeIfEmpty);
+        typeText("transactionDateMM", parameters.getTransactionMonth(), onlyTypeIfEmpty);
+        typeText("transactionDateYY", parameters.getTransactionYear(), onlyTypeIfEmpty);
         selenium.select("paymentId", "label=" + parameters.getPaymentMode());
-        typeTextIfNotEmpty(RECEIPT_INPUT_ID, parameters.getReceiptId());
-        typeTextIfNotEmpty("receiptDateDD", parameters.getReceiptDay());
-        typeTextIfNotEmpty("receiptDateMM", parameters.getReceiptMonth());
-        typeTextIfNotEmpty("receiptDateYY", parameters.getReceiptYear());
+        typeText(RECEIPT_INPUT_ID, parameters.getReceiptId(), onlyTypeIfEmpty);
+        typeText("receiptDateDD", parameters.getReceiptDay(), onlyTypeIfEmpty);
+        typeText("receiptDateMM", parameters.getReceiptMonth(), onlyTypeIfEmpty);
+        typeText("receiptDateYY", parameters.getReceiptYear(), onlyTypeIfEmpty);
         selenium.click(CONTINUE_BUTTON_ID);
         waitForPageToLoad();
         CollectionSheetEntryEnterDataPage collectionSheetEntryEnterDataPage = new CollectionSheetEntryEnterDataPage(
                 selenium);
-        collectionSheetEntryEnterDataPage.verifyPage();
         return collectionSheetEntryEnterDataPage;
-    }
-	
-	private void typeTextIfNotEmpty(String locator, String value) {
-		if (value!= null && !value.isEmpty()) {
+    }    
+
+    
+    private void typeText(String locator, String value, boolean onlyTypeIfEmpty) {
+		if (value!= null && (!onlyTypeIfEmpty || !value.isEmpty())) {
 			selenium.type(locator, value);
 		}
 	}

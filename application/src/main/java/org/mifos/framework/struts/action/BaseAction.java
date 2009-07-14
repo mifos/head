@@ -43,6 +43,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.LogUtils;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
@@ -56,11 +57,12 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.exceptions.ValueObjectConversionException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ConvertionUtil;
+import org.mifos.framework.util.helpers.ConversionUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -105,8 +107,12 @@ public abstract class BaseAction extends DispatchAction {
         UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
         Locale locale = getLocale(userContext);
         if (!skipActionFormToBusinessObjectConversion(request.getParameter("method"))) {
-            BusinessObject object = getBusinessObjectFromSession(request);
-            ConvertionUtil.populateBusinessObject(actionForm, object, locale);
+            try {
+                BusinessObject businessObject = getBusinessObjectFromSession(request);
+                ConversionUtil.populateBusinessObject(actionForm, businessObject, locale);
+            } catch (ValueObjectConversionException e) {
+                logger.debug("Value object conversion exception while validating BusinessObject: " + new LogUtils().getStackTrace(e));
+            }
         }
     }
 
@@ -169,12 +175,6 @@ public abstract class BaseAction extends DispatchAction {
         String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
         if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
-            /*
-             * I suppose in the null case we could even have the message say
-             * "you are probably writing a test which needs to call
-             * createFlowAndAddToRequest(Class)", but perhaps that goes too far
-             * in terms of guessing what situation the developer is in.
-             */
             throw new PageExpiredException("no flow for key " + flowKey);
         }
 

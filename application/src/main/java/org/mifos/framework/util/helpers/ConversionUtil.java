@@ -32,8 +32,7 @@ import org.mifos.framework.exceptions.ValueObjectConversionException;
 /**
  * Helper class which has methods to operate upon valueobjects.
  */
-// TODO: fix spelling of this class
-public class ConvertionUtil {
+public class ConversionUtil {
 
     public static void populateBusinessObject(ActionForm actionForm, BusinessObject object, Locale locale)
             throws ValueObjectConversionException {
