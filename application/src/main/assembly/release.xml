@@ -32,9 +32,8 @@
     </fileSets>
     <files>
         <file>
-            <source>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</source>
+            <source>target/applicationConfiguration.custom.properties</source>
             <outputDirectory>config</outputDirectory>
-            <destName>applicationConfiguration.custom.properties</destName>
         </file>
         <file>
             <source>src/main/resources/org/mifos/config/resources/mainDatabase.properties</source>

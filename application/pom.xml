@@ -764,34 +764,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>test</id>
-                        <phase>process-test-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <echo>test.database.properties.file:
-                                    ${test.database.properties.file}</echo>
-                                <echo>integration.database.port:
-                                    ${integration.database.port}</echo>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>ant</groupId>
-                        <artifactId>ant-nodeps</artifactId>
-                        <version>1.6.5</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
                 <version>1.2</version>
@@ -949,39 +921,62 @@
                 <version>1.1.1-mifos-mexec-68-patch</version>
                 <executions>
                     <execution>
+                    	<id>run_tests</id>
                         <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+		                <configuration>
+		                    <skip>${maven.test.skip}</skip>
+		                    <executable>java</executable>
+		                    <classpathScope>test</classpathScope>
+		                    <longClasspath>true</longClasspath>
+		                    <outputFile>${basedir}/target/junit/testConsoleOutput</outputFile>
+		                    <arguments>
+		                        <argument>-Xmx1024m</argument>
+		                        <argument>-Dmifos.test.mode=integration</argument>
+		                        <argument>-ea</argument>
+		                        <argument>-cp</argument>
+		                        <classpath/>
+		                        <argument>org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner</argument>
+		                        <argument>org.mifos.application.ApplicationTestSuite</argument>
+		                        <argument>filtertrace=true</argument>
+		                        <argument>haltOnError=true</argument>
+		                        <argument>haltOnFailure=true</argument>
+		                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter</argument>
+		                        <argument>showoutput=false</argument>
+		                        <argument>outputtoformatters=true</argument>
+		                        <argument>logtestlistenerevents=true</argument>
+		                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,target/junit/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
+		                        <argument>crashfile=target/junit/crashfile</argument>
+		                    </arguments>
+		                    <dependencies>
+		                    </dependencies>
+		                </configuration>
+                    </execution>
+                    <execution>
+                    	<id>update_application_settings_file</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+		                <configuration>
+		                    <executable>java</executable>
+		                    <classpathScope>compile</classpathScope>
+		                    <longClasspath>true</longClasspath>
+		                    <outputFile>target/MungeApplicationWideSettingsFile.out</outputFile>
+		                    <arguments>
+		                        <argument>-cp</argument>
+		                        <classpath/>
+		                        <argument>org.mifos.framework.util.MungeApplicationWideSettingsFile</argument>
+		                        <argument>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</argument>
+		                        <argument>target/applicationConfiguration.custom.properties</argument>
+		                    </arguments>
+		                    <dependencies>
+		                    </dependencies>
+		                </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <skip>${maven.test.skip}</skip>
-                    <executable>java</executable>
-                    <classpathScope>test</classpathScope>
-                    <longClasspath>true</longClasspath>
-                    <outputFile>${basedir}/target/junit/testConsoleOutput</outputFile>
-                    <arguments>
-                        <argument>-Xmx1024m</argument>
-                        <argument>-Dmifos.test.mode=integration</argument>
-                        <argument>-ea</argument>
-                        <argument>-cp</argument>
-                        <classpath/>
-                        <argument>org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner</argument>
-                        <argument>org.mifos.application.ApplicationTestSuite</argument>
-                        <argument>filtertrace=true</argument>
-                        <argument>haltOnError=true</argument>
-                        <argument>haltOnFailure=true</argument>
-                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter</argument>
-                        <argument>showoutput=false</argument>
-                        <argument>outputtoformatters=true</argument>
-                        <argument>logtestlistenerevents=true</argument>
-                        <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,target/junit/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
-                        <argument>crashfile=target/junit/crashfile</argument>
-                    </arguments>
-                    <dependencies>
-                    </dependencies>
-                </configuration>
             </plugin>
         </plugins>
     </build>
