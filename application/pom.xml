@@ -954,27 +954,23 @@
 		                    </dependencies>
 		                </configuration>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.mifos.maven</groupId>
+                <artifactId>mifos-settings-sanitizer</artifactId>
+                <version>0.0.1</version>
+                <executions>
                     <execution>
-                    	<id>update_application_settings_file</id>
+                        <id>create_sanitized_application_settings_file</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>sanitize</goal>
                         </goals>
-		                <configuration>
-		                    <executable>java</executable>
-		                    <classpathScope>compile</classpathScope>
-		                    <longClasspath>true</longClasspath>
-		                    <outputFile>target/MungeApplicationWideSettingsFile.out</outputFile>
-		                    <arguments>
-		                        <argument>-cp</argument>
-		                        <classpath/>
-		                        <argument>org.mifos.framework.util.MungeApplicationWideSettingsFile</argument>
-		                        <argument>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</argument>
-		                        <argument>target/applicationConfiguration.custom.properties</argument>
-		                    </arguments>
-		                    <dependencies>
-		                    </dependencies>
-		                </configuration>
+                        <configuration>
+                            <inputFile>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</inputFile>
+                            <outputFile>target/applicationConfiguration.custom.properties</outputFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
