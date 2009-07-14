@@ -22,13 +22,6 @@
                 <include>INSTALL*</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>target</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>*.war</include>
-            </includes>
-        </fileSet>
     </fileSets>
     <files>
         <file>
@@ -39,6 +32,11 @@
             <source>src/main/resources/org/mifos/config/resources/mainDatabase.properties</source>
             <outputDirectory>config</outputDirectory>
             <destName>local.properties</destName>
+        </file>
+        <file>
+            <source>target/mifos-webapp.war</source>
+            <outputDirectory></outputDirectory>
+            <destName>mifos.war</destName>
         </file>
     </files>
 </assembly>
