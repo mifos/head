@@ -77,13 +77,13 @@ This file describes how to install Mifos for use in a production environment.
 
          5.1.3. Changing the Default Mifos Configuration
                 To make changes to the default configuration, copy the file
-                conf/applicationConfiguration.custom.properties to the
+                config/applicationConfiguration.custom.properties to the
                 MIFOS_CONF directory defined in 5.1.2.
 
          5.1.4. Changing the Default Database Connection Settings
                 To use non-default settings for your database connection --
                 such as a different port number, user name, or password -- copy
-                the file conf/local.properties to the MIFOS_CONF directory
+                the file config/local.properties to the MIFOS_CONF directory
                 defined in 5.1.2.
 
     5.2. Running Mifos
