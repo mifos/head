@@ -29,7 +29,7 @@
             <outputDirectory>config</outputDirectory>
         </file>
         <file>
-            <source>src/main/resources/org/mifos/config/resources/mainDatabase.properties</source>
+            <source>release/example_local.properties</source>
             <outputDirectory>config</outputDirectory>
             <destName>local.properties</destName>
         </file>
