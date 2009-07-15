@@ -9,14 +9,22 @@ This file describes how to install Mifos for use in a production environment.
 
      * Sun Microsystems Java - JDK/JRE 1.6 (see Note)
      * MySQL - Community Edition 5.0.51b
-     * Apache Tomcat - 6.0.16
+     * Apache Tomcat - 6.0.18
 
    Note: Java 1.6 is not supported in earlier versions of Mifos including
    Mifos 1.2.  Also, while most Mifos testing has been done using the JDK,
    only the JRE is needed to run Mifos.
 
-2. Configuring MySQL
-    2.1. Setting Database Parameters
+2. Upgrading Mifos
+   If you are upgrading Mifos from a previous release please refer to the pages
+   referenced below.  For general upgrade procedures see:
+   http://www.mifos.org/knowledge/support/deploying-mifos/upgrading-mifos
+
+   For upgrade instructions for this release see:
+   http://www.mifos.org/knowledge/support/deploying-mifos/upgrade-instructions-for-version-1.3
+
+3. Configuring MySQL
+    3.1. Setting Database Parameters
          Use the following configuration settings for MySQL. You can configure
          these settings using MySQL Administrator or by editing the my.ini file
          in your MySQL home directory.
@@ -27,12 +35,12 @@ This file describes how to install Mifos for use in a production environment.
          log-slow-queries=mysql_slow_query.log
          long_query_time=1
 
-    2.2. Initializing the Mifos Database
+    3.2. Initializing the Mifos Database
          To initialize the Mifos database, run the four commands below
          from the directory that contains this INSTALL file. These commands
          assume a database username of "root" and a password of "mysql".
-         Adjust them if your database login is different. See sections 5.1.4
-         and 6.1 for more information.
+         Adjust them if your database login is different. See sections 6.1.4
+         and 7.1 for more information.
 
          mysql -u root -pmysql < sql/create_mifos_db.sql
          mysql -D mifos -u root -pmysql < sql/latest-schema.sql
@@ -42,7 +50,7 @@ This file describes how to install Mifos for use in a production environment.
          If your database instance already has a "mifos" database, then
          you will need to drop the database before running the above commands.
 
-3. Setting Java and Apache Tomcat Parameters
+4. Setting Java and Apache Tomcat Parameters
          Set the following environment variables:
 
          JAVA_HOME     ... directory where the JDK is installed (if using the JDK)
@@ -50,7 +58,7 @@ This file describes how to install Mifos for use in a production environment.
          CATALINA_HOME ... directory where Tomcat is installed
          CATALINA_OPTS ... -Xms1024M -Xmx1024M -XX:MaxPermSize=256m
 
-4.  Installing the Mifos WAR
+5. Installing the Mifos WAR
          Copy the mifos.war you downloaded to CATALINA_HOME/webapps. If the
          following temporary directories exist, delete them:
 
@@ -58,35 +66,37 @@ This file describes how to install Mifos for use in a production environment.
          CATALINA_HOME/work/Catalina/<hostname>/mifos
             (Where <hostname> is the name of your server.)
 
-5. Configuring and Running Mifos
-    5.1. Configuring Mifos
+6. Configuring and Running Mifos
+    6.1. Configuring Mifos
          Because some settings in Mifos can only be changed from their default
          values once, before Mifos is run for the first time, you should review
-         the default Mifos configuration. See section 6.1 for more information.
+         the default Mifos configuration. See section 7.1 for more information.
 
-         5.1.1. Using the Default Configuration
+         6.1.1. Using the Default Configuration
                 A default configuration is provided. If you want to quickly get
                 Mifos up and running to try it out, then no configuration is
                 needed.
 
-         5.1.2. Using a Custom Configuration
-                Create an environment variable MIFOS_CONF and set it to the
-                directory where you want to put Mifos custom configuration
-                files (see http://mifos.org/developers/wiki/MyConfDir for
-                further details and options).
+         6.1.2. Using a Custom Configuration
+                Create and set a new environment variable:
 
-         5.1.3. Changing the Default Mifos Configuration
+                MIFOS_CONF ... directory for Mifos custom configuration files
+
+                (see http://www.mifos.org/knowledge/support/deploying-mifos/configuration/guide
+                for further details and options).
+
+         6.1.3. Changing the Default Mifos Configuration
                 To make changes to the default configuration, copy the file
                 config/applicationConfiguration.custom.properties to the
-                MIFOS_CONF directory defined in 5.1.2.
+                MIFOS_CONF directory defined in 6.1.2.
 
-         5.1.4. Changing the Default Database Connection Settings
+         6.1.4. Changing the Default Database Connection Settings
                 To use non-default settings for your database connection --
                 such as a different port number, user name, or password -- copy
                 the file config/local.properties to the MIFOS_CONF directory
-                defined in 5.1.2.
+                defined in 6.1.2.
 
-    5.2. Running Mifos
+    6.2. Running Mifos
          Execute the Tomcat startup script in CATALINA_HOME/bin, or if Tomcat
          was installed as a service on Windows, navigate to Control Panel >
          Administrative Tools > Services to verify that the service's status
@@ -99,38 +109,38 @@ This file describes how to install Mifos for use in a production environment.
          username: mifos
          password: testmifos
 
-6. Mifos Documentation Links
+7. Mifos Documentation Links
    Use the following links for more information about Mifos.
 
-    6.1. Configuring Mifos -
-         http://mifos.org/developers/wiki/ConfiguringMifos
+    7.1. Configuring Mifos -
+         http://www.mifos.org/knowledge/support/deploying-mifos/configuration/guide
          Pay particular attention to "trapdoor" settings (settings that can
          only be changed to a non-default value once) in the application
          configuration file. Chart of Accounts configuration is one such
          "trapdoor".
 
-    6.2. Release Notes -
+    7.2. Release Notes -
          http://mifos.org/developers/wiki/ReleaseNotes/V13
 
-    6.3. System Recommendations (hardware, networking) -
+    7.3. System Recommendations (hardware, networking) -
          http://mifos.org/developers/wiki/MifosSystemRecommendations
 
-    6.4. Ubuntu Install Guide -
+    7.4. Ubuntu Install Guide -
          http://mifos.org/developers/wiki/MifosUbuntuInstall
          This is an installation guide describing how to install Mifos by
          building it from the source code.
 
-    6.5. Ubuntu Quick Install Guide -
+    7.5. Ubuntu Quick Install Guide -
          http://mifos.org/developers/wiki/UbuntuWARInstall
          This is an installation guide describing how to install Mifos from the
          WAR file, similar to this INSTALL file.
 
-    6.6. Windows Install Guide -
+    7.6. Windows Install Guide -
          http://mifos.org/developers/install-mifos/install-windows
          This is an installation guide describing how to install Mifos by
          building it from the source code.
 
-7. Third Party Licenses
+8. Third Party Licenses
    All software libraries used by Mifos are compatible with the Apache License
    2.0. To obtain a report detailing these licenses, execute "mvn site" in a
    local copy of the Mifos source code.
