@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryEnterDataPage;
+import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.testhelpers.CollectionSheetEntryTestHelper;
@@ -44,7 +45,7 @@ import org.testng.annotations.Test;
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("CPD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"collectionsheet","acceptance","ui"})
-public class CollectionSheetEntryValueObjectConversionTest extends UiTestCaseBase {
+public class CollectionSheetEntrySimpleTests extends UiTestCaseBase {
 
     
     @Autowired
@@ -70,7 +71,7 @@ public class CollectionSheetEntryValueObjectConversionTest extends UiTestCaseBas
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
+    public void checkForValueObjectConversionErrorWhenEnteringInvalidDate() throws Exception {
         SubmitFormParameters formParameters = getFormParametersWithInvalidReceiptDay();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage = 
@@ -93,14 +94,37 @@ public class CollectionSheetEntryValueObjectConversionTest extends UiTestCaseBas
         enterDataPage.verifyPage();
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void checkThatPreviewEditButtonWorks() throws Exception {
+        SubmitFormParameters formParameters = getFormParameters();
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        CollectionSheetEntrySelectPage selectPage = 
+            new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
+        selectPage.verifyPage();
+        CollectionSheetEntryEnterDataPage enterDataPage = selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterDataPage.verifyPage();
+        CollectionSheetEntryPreviewDataPage previewDataPage = enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+        previewDataPage.verifyPage(formParameters);
+        CollectionSheetEntryEnterDataPage newEnterDataPage = previewDataPage.editAndGoToCollectionSheetEntryEnterDataPage();
+        newEnterDataPage.verifyPage();
+    }
+
     private SubmitFormParameters getFormParametersWithInvalidReceiptDay() {
+        String invalidReceiptDay = "4.";
+        return getFormParameters(invalidReceiptDay);
+    }
+
+    private SubmitFormParameters getFormParameters() {
+        return getFormParameters("4");
+    }
+
+    private SubmitFormParameters getFormParameters(String receiptDay) {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
         formParameters.setLoanOfficer("Bagonza Wilson");
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
-        String invalidReceiptDay = "4.";
-        formParameters.setReceiptDay(invalidReceiptDay);
+        formParameters.setReceiptDay(receiptDay);
         formParameters.setReceiptMonth("11");
         formParameters.setReceiptYear("2009");
         return formParameters;

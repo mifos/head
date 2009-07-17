@@ -40,12 +40,17 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 		return this;
 	}
 
+    public CollectionSheetEntryEnterDataPage editAndGoToCollectionSheetEntryEnterDataPage() {
+        selenium.click("bulkentry_preview.button.editdata");
+        waitForPageToLoad();
+        return new CollectionSheetEntryEnterDataPage(selenium);
+    }
+
     public CollectionSheetEntryConfirmationPage submitAndGotoCollectionSheetEntryConfirmationPage() {
         selenium.click("bulkentry_preview.button.submit");
         waitForPageToLoad();
         return new CollectionSheetEntryConfirmationPage(selenium);
     }
-
 	
 
 }
