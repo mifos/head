@@ -14,9 +14,9 @@
 
     <bean id="selenium" class="com.thoughtworks.selenium.DefaultSelenium" >
         <constructor-arg type="java.lang.String" value="localhost" />
-        <constructor-arg type="int" value="4445" />
+        <constructor-arg type="int" value="${selenium.port}" />
         <constructor-arg type="java.lang.String" value="${selenium.browser.start.command}" />
-        <constructor-arg type="java.lang.String" value="http://localhost:8083/mifos/" />
+        <constructor-arg type="java.lang.String" value="http://localhost:${servlet.port}/mifos/" />
     </bean>
 
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />

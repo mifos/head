@@ -11,8 +11,6 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
-        <selenium.port>4445</selenium.port>
-        <servlet.port>8083</servlet.port>
         <selenium.background>true</selenium.background>
         <tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
         <cargo.wait>false</cargo.wait>
@@ -31,6 +29,7 @@
         need. It is only used to override settings in
         acceptanceDatabase.properties.
         -->
+        <acceptanceTest.settings>${basedir}/src/test/resources/org/mifos/config/resources/acceptanceTest.properties</acceptanceTest.settings>
 
     </properties>
 
@@ -283,6 +282,7 @@
                             <quiet>true</quiet>
                             <files>
                                 <file>${database.properties.file}</file>
+                                <file>${acceptanceTest.settings}</file>
                                 <file>${mifos.overrides.conf}</file>
                                 <file>${mifos.overrides.env}</file>
                                 <file>${mifos.overrides.home}</file>
