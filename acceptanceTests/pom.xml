@@ -12,6 +12,7 @@
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
         <selenium.background>true</selenium.background>
+        <selenium.log.output>true</selenium.log.output>
         <tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
         <cargo.wait>false</cargo.wait>
         <jdk.version>1.6</jdk.version>
