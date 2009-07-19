@@ -60,7 +60,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.testng.annotations.Test;
 
-@Test(groups={"integration", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+@Test(groups={"integration"},  dependsOnGroups={"productMixTestSuite"})
 public class AccountBOIntegrationTest extends AccountIntegrationTest {
 
     public AccountBOIntegrationTest() throws SystemException, ApplicationException {
