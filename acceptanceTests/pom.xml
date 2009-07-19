@@ -473,6 +473,7 @@
                     <background>${selenium.background}</background>
                     <port>${selenium.port}</port>
                     <logOutput>${selenium.log.output}</logOutput>
+                    <browserSideLog>true</browserSideLog>
                 </configuration>
             </plugin>
         </plugins>
