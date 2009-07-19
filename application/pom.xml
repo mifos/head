@@ -19,8 +19,7 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
-        <current.release.number>1.3.0</current.release.number>
-        <current.release.name>mifos_v${current.release.number}</current.release.name>
+        <current.release.name>mifos-trunk_r${buildNumber}</current.release.name>
 
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
