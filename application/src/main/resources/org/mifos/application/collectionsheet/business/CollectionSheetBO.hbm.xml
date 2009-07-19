@@ -105,8 +105,7 @@
 	   and K.status_id = 13 
 	   and G.status_id = 9 
 	   and M.status_id = 3 
-	   and r.days = (case weekday(date(:MEETING_DATE)) when 0 then 2 when 1 then 3 when 2
-	   then 4 when 3 then 5 when 4 then 6 when 5 then 7 else 1 end)
+	   and r.days = dayofweek(:MEETING_DATE)
 	   
            order by K.customer_id, G.customer_id, M.customer_id
         ) coll
