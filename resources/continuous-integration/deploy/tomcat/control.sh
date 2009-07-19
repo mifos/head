@@ -142,7 +142,7 @@ case "$1" in
             --user $TOMCAT6_USER --startas "$JAVA_HOME/bin/java" \
             >/dev/null; then
 
-        if [ -f "$CATALINA_PID" ]; then
+            if [ -f "$CATALINA_PID" ]; then
                 log_success_msg "$DESC is not running, but pid file exists."
                 exit 1
             else
