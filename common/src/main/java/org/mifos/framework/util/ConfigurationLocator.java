@@ -23,6 +23,7 @@ package org.mifos.framework.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -41,6 +42,7 @@ public class ConfigurationLocator {
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
+    private static final Logger LOG = Logger.getLogger("org.mifos.framework.util");
 
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
@@ -87,18 +89,18 @@ public class ConfigurationLocator {
         return new String[] { systemPropertyDirectory, envPropertyDirectory, userConfigDirectory };
     }
 
-    @SuppressWarnings({"PMD.SystemPrintln", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
+    @SuppressWarnings({"PMD.OnlyOneReturn"})
     public String getConfigurationDirectory() throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (directoryExists(directoryPath)) {
-                System.out.println("ConfigurationLocator found configuration directory: " + directoryPath);
+                LOG.info("ConfigurationLocator found configuration directory: " + directoryPath);
                 return directoryPath;
             }
         }
         return CURRENT_WORKING_DIRECTORY_PATH;
     }
     
-    @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"}) // just until we get proper logging. See issue 2388.
+    @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.OnlyOneReturn"})
     private File getConfigurationFile(String filename) throws IOException {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (StringUtils.isNotBlank(directoryPath)) {
@@ -123,10 +125,9 @@ public class ConfigurationLocator {
         return configurationLocatorHelper.getFile(directory);
     }
 
-    @SuppressWarnings({"PMD.SystemPrintln"}) // just until we get proper logging. See issue 2388.
     public File getFile(String filename) throws IOException {
         File fileToReturn = getConfigurationFile(filename);
-        System.out.println("ConfigurationLocator found configuration file: " + fileToReturn);
+        LOG.info("ConfigurationLocator found configuration file: " + fileToReturn);
         return fileToReturn;
     }
 
