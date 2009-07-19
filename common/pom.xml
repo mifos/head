@@ -59,7 +59,6 @@
         </dependency>   
     </dependencies>
     <build>
-        <finalName>mifos-common</finalName>
         <defaultGoal>jar</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <outputDirectory>target/classes</outputDirectory>

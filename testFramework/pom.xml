@@ -147,7 +147,6 @@
       </dependency>
    </dependencies>
    <build>
-      <finalName>mifos-testFramework</finalName>
       <defaultGoal>jar:jar</defaultGoal>
       <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
       <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>

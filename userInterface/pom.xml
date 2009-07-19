@@ -138,7 +138,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>mifos-userInterface</finalName>
         <defaultGoal>jar</defaultGoal>
         <sourceDirectory>${modules.root.dir}/userInterface/src/main/java</sourceDirectory>
         <scriptSourceDirectory>${modules.root.dir}/userInterface/src/main/scripts</scriptSourceDirectory>

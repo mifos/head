@@ -128,7 +128,6 @@
 	  </dependency>
    </dependencies>
    <build>
-      <finalName>mifos-serviceInterfaces</finalName>
       <defaultGoal>jar</defaultGoal>
       <sourceDirectory>${modules.root.dir}/serviceInterfaces/src/main/java</sourceDirectory>
       <scriptSourceDirectory>${modules.root.dir}/serviceInterfaces/src/main/scripts</scriptSourceDirectory>

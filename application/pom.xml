@@ -27,6 +27,7 @@
         <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
         <test.sql.resources.src.directory>${modules.root.dir}/application/src/test/sql</test.sql.resources.src.directory>
+        <create.props.skip>true</create.props.skip>
         <!-- mimics ConfigurationLocator directory search behavior -->
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
@@ -217,6 +218,15 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>continuous-integration</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <create.props.skip>false</create.props.skip>
+            </properties>
         </profile>
 
     </profiles>
@@ -630,7 +640,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>mifos-webapp</finalName>
+        <finalName>${artifactId}</finalName>
         <defaultGoal>war:war</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
@@ -689,18 +699,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-3</version>
-                <configuration>
-                    <finalName>mifos_v1.3.0</finalName>
-                    <descriptors>
-                        <descriptor>src/main/assembly/release.xml</descriptor>
-                    </descriptors>
-                    <outputDirectory>target</outputDirectory>
-                    <workDirectory>target/assembly/work</workDirectory>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -825,18 +823,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <!--
-                    Disable surefire.
-                    Our unit/integration tests are broken in that they
-                    currently must be run in a particular order; some tests
-                    require a dirty database state, and some tests leave the
-                    database in a dirty state.
-                    Surefire can't run our tests in order or can't run them in
-                    a single thread, we're not sure which. So, for now we
-                    disable surefire and manually run ApplicationTestSuite
-                    using the exec-maven-plugin.
-                    -->
-                    <skipTests>true</skipTests>
+                    <testNGArtifactName>null</testNGArtifactName>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <includes>
+                        <include>**/ApplicationTestSuite.java</include>
+                    </includes>
+                    <systemProperties>
+                        <mifos.test.mode>integration</mifos.test.mode>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
@@ -921,37 +915,19 @@
                 <version>1.1.1-mifos-mexec-68-patch</version>
                 <executions>
                     <execution>
-                        <id>run_tests</id>
+                        <id>create_props</id>
                         <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <skip>${maven.test.skip}</skip>
-                            <executable>java</executable>
-                            <classpathScope>test</classpathScope>
-                            <longClasspath>true</longClasspath>
-                            <outputFile>${basedir}/target/junit/testConsoleOutput</outputFile>
+                            <executable>${basedir}/src/main/resources/org/mifos/config/localizedResources/create_props.sh</executable>
+                            <workingDirectory>${java.io.tmpdir}</workingDirectory>
+                            <outputFile>${basedir}/target/create_props.out</outputFile>
                             <arguments>
-                                <argument>-Xmx1024m</argument>
-                                <argument>-Dmifos.test.mode=integration</argument>
-                                <argument>-ea</argument>
-                                <argument>-cp</argument>
-                                <classpath/>
-                                <argument>org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner</argument>
-                                <argument>org.mifos.application.ApplicationTestSuite</argument>
-                                <argument>filtertrace=true</argument>
-                                <argument>haltOnError=true</argument>
-                                <argument>haltOnFailure=true</argument>
-                                <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter</argument>
-                                <argument>showoutput=false</argument>
-                                <argument>outputtoformatters=true</argument>
-                                <argument>logtestlistenerevents=true</argument>
-                                <argument>formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,target/junit/TEST-org.mifos.application.ApplicationTestSuite.xml</argument>
-                                <argument>crashfile=target/junit/crashfile</argument>
+                                <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
+                                <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
                             </arguments>
-                            <dependencies>
-                            </dependencies>
                         </configuration>
                     </execution>
                 </executions>
@@ -973,6 +949,26 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-3</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${current.release.name}</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/release.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>target</outputDirectory>
+                    <workDirectory>target/assembly/work</workDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>

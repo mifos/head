@@ -2,13 +2,15 @@
 set -o errexit
 
 # creates locale-specific .properties files for use by Mifos web app.
-# [_] integrate into build process
-# 	  [_] on build server
-# 	  [_] as part of Maven build
 
-for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
+sourceDir=$1
+targetDir=$2
+
+for localeDir in `find $sourceDir -mindepth 1 -maxdepth 1 \
+    -regex '[^.]*/[a-zA-Z_]+$' -type d`
 do
-    for translated in `find $locale -type f -name "*.po"`
+    locale=`basename $localeDir`
+    for translated in `find $localeDir -type f -name "*.po"`
     do
         # remove directory part of path
         translatedBase=`basename $translated`
@@ -17,7 +19,7 @@ do
         bundleBase=`echo $translatedBase | sed -e 's/\.po$//'`
 
         # create locale-specific .properties files for use by Mifos web app
-        po2prop -t $bundleBase.properties \
-            $translated ${bundleBase}_$locale.properties
+        po2prop -t $sourceDir/$bundleBase.properties \
+            $translated $targetDir/${bundleBase}_$locale.properties
     done
 done

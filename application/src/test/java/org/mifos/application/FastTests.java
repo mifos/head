@@ -121,7 +121,6 @@ public class FastTests extends TestSuite {
         suite.addTestSuite(KeyTest.class);
         suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
         suite.addTestSuite(LoanCycleCounterTest.class);
-        suite.addTestSuite(AccountBOIntegrationTest.class);
         suite.addTestSuite(PrdOfferingBOTest.class);
 
         suite.addTestSuite(QuestionTest.class);
