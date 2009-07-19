@@ -7,7 +7,7 @@
 DEPLOY_ROOT=$HOME/mifos-$JOB_NAME-deploy
 CATALINA_HOME=$DEPLOY_ROOT/tomcat6
 CATALINA_PID=$DEPLOY_ROOT/tomcat.pid
-CATALINA_OPTS="-Xmx512m -Djava.io.tmpdir=/tmp/$TOMCAT6_USER-$JOB_NAME-tomcat-tmp -Djava.awt.headless=true"
+CATALINA_OPTS="-Xmx512m -Djava.io.tmpdir=/tmp/hudson-$JOB_NAME-tomcat-tmp -Djava.awt.headless=true"
 export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
 
 [ -f $CATALINA_HOME/bin/catalina.sh ] || exit 0
