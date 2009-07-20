@@ -969,6 +969,7 @@
                     </descriptors>
                     <outputDirectory>target</outputDirectory>
                     <workDirectory>target/assembly/work</workDirectory>
+                    <skip>${create.props.skip}</skip>
                 </configuration>
             </plugin>
         </plugins>
