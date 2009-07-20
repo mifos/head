@@ -31,6 +31,7 @@
         <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
+        <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
         <!--
         Don't search System.getProperty("conf.dir") for
         local.properties; no need. It is only used to override
@@ -830,7 +831,7 @@
                     <systemProperties>
                         <mifos.test.mode>integration</mifos.test.mode>
                     </systemProperties>
-                    <argLine>-Xmx1024m</argLine>
+                    <argLine>${maven.surefire.memory}</argLine>
                 </configuration>
             </plugin>
             <plugin>
