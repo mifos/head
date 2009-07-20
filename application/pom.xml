@@ -830,6 +830,7 @@
                     <systemProperties>
                         <mifos.test.mode>integration</mifos.test.mode>
                     </systemProperties>
+                    <argLine>-Xmx1024m</argLine>
                 </configuration>
             </plugin>
             <plugin>
