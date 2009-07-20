@@ -3,12 +3,13 @@
 #
 # description: Provides easy control of Hudson-deployed tomcat instance(s)
 
-# Set Tomcat environment.
+# Variables for use within this script
 DEPLOY_ROOT=$HOME/mifos-$JOB_NAME-deploy
-CATALINA_HOME=$DEPLOY_ROOT/tomcat6
-CATALINA_PID=$DEPLOY_ROOT/tomcat.pid
 JVM_TMPDIR=/tmp/hudson-$JOB_NAME-tomcat-tmp
-CATALINA_OPTS="-Xmx512m -Djava.io.tmpdir=$JVM_TMPDIR -Djava.awt.headless=true"
+# Variables for use by children/successors of this script
+export CATALINA_HOME=$DEPLOY_ROOT/tomcat6
+export CATALINA_OPTS="-Xmx512m -Djava.io.tmpdir=$JVM_TMPDIR -Djava.awt.headless=true"
+export CATALINA_PID=$DEPLOY_ROOT/tomcat.pid
 export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
 
 [ -f $CATALINA_HOME/bin/catalina.sh ] || exit 0
