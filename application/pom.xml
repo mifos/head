@@ -929,6 +929,7 @@
                                 <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
                                 <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
                             </arguments>
+                            <skip>${create.props.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -969,7 +970,6 @@
                     </descriptors>
                     <outputDirectory>target</outputDirectory>
                     <workDirectory>target/assembly/work</workDirectory>
-                    <skip>${create.props.skip}</skip>
                 </configuration>
             </plugin>
         </plugins>
