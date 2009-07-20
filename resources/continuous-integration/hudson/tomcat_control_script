@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# Startup script for the Hudson Continuous Integration server 
+# (via Jakarta Tomcat Java Servlets and JSP server)
+#
+# chkconfig: - 85 15
+# description: Jakarta Tomcat Java Servlets and JSP server
+# processname: tomcat
+# pidfile: /var/run/tomcat.pid
+
+# Set Tomcat environment.
+HUDSON_USER=hudson
+LOCKFILE=/var/lock/hudson
+export PATH=/usr/local/bin:$PATH
+export HOME=/home/hudson
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export HUDSON_BASEDIR=/home/hudson
+export TOMCAT_HOME=$HUDSON_BASEDIR/apache-tomcat-6.0.18
+export CATALINA_PID=$HUDSON_BASEDIR/hudson-tomcat.pid
+export CATALINA_OPTS="-DHUDSON_HOME=$HUDSON_BASEDIR/hudson-home -Xmx512m -Djava.awt.headless=true"
+
+[ -f $TOMCAT_HOME/bin/catalina.sh ] || exit 0
+
+export PATH=$PATH:/usr/bin:/usr/local/bin
+
+# See how we were called.
+case "$1" in
+  start)
+        # Start daemon.
+        echo -n "Starting Tomcat: "
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/catalina.sh start"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch $LOCKFILE
+        ;;
+  stop)
+        # Stop daemons.
+        echo -n "Shutting down Tomcat: "
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/catalina.sh stop"
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && rm -f $LOCKFILE
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  condrestart)
+       [ -e $LOCKFILE ] && $0 restart
+       ;;
+  status)
+        status tomcat
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+
+exit 0
+
