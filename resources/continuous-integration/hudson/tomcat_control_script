@@ -1,60 +1,42 @@
-#!/bin/sh
+#!/bin/bash
+# Hudson Tomcat control script
 #
-# Startup script for the Hudson Continuous Integration server 
-# (via Jakarta Tomcat Java Servlets and JSP server)
-#
-# chkconfig: - 85 15
-# description: Jakarta Tomcat Java Servlets and JSP server
-# processname: tomcat
-# pidfile: /var/run/tomcat.pid
+# description: Provides easy control of Hudson's tomcat service
 
 # Set Tomcat environment.
 HUDSON_USER=hudson
-LOCKFILE=/var/lock/hudson
-export PATH=/usr/local/bin:$PATH
-export HOME=/home/hudson
+export HOME=/home/$HUDSON_USER
 export JAVA_HOME=/usr/lib/jvm/java-6-sun
-export HUDSON_BASEDIR=/home/hudson
+export HUDSON_BASEDIR=$HOME
 export TOMCAT_HOME=$HUDSON_BASEDIR/apache-tomcat-6.0.18
 export CATALINA_PID=$HUDSON_BASEDIR/hudson-tomcat.pid
 export CATALINA_OPTS="-DHUDSON_HOME=$HUDSON_BASEDIR/hudson-home -Xmx512m -Djava.awt.headless=true"
 
 [ -f $TOMCAT_HOME/bin/catalina.sh ] || exit 0
 
-export PATH=$PATH:/usr/bin:/usr/local/bin
-
-# See how we were called.
-case "$1" in
-  start)
-        # Start daemon.
-        echo -n "Starting Tomcat: "
-        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/catalina.sh start"
-        RETVAL=$?
-        echo
-        [ $RETVAL = 0 ] && touch $LOCKFILE
+case $1 in
+start)
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/startup.sh"
         ;;
-  stop)
-        # Stop daemons.
-        echo -n "Shutting down Tomcat: "
-        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/catalina.sh stop"
-        RETVAL=$?
-        echo
-        [ $RETVAL = 0 ] && rm -f $LOCKFILE
+stop)  
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/shutdown.sh -force"
+        rm -f $CATALINA_PID
         ;;
-  restart)
-        $0 stop
-        $0 start
+status)  
+        if [ -e $CATALINA_PID ]
+        then
+            echo "Hudson appears to be running as process id `cat $CATALINA_PID`"
+        else
+            echo "$CATALINA_PID does not exist, Hudson probably is not running."
+        fi
         ;;
-  condrestart)
-       [ -e $LOCKFILE ] && $0 restart
-       ;;
-  status)
-        status tomcat
+restart)
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/shutdown.sh"
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/startup.sh"
         ;;
-  *)
-        echo "Usage: $0 {start|stop|restart|status}"
+*)
+        echo "Usage: $0 {start|stop|status}"
         exit 1
-esac
-
+        ;;
+esac   
 exit 0
-
