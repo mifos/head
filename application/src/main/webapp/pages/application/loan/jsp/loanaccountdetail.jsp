@@ -671,7 +671,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:forEach>
 							<tr>
 								<td colspan="2" align="right" class="paddingleft05"><span
-									class="fontnormal8pt"> <a id="loanaccountdetail.link
+									class="fontnormal8pt"> <a id="loanaccountdetail.link"
 									href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=loan">
 								<mifos:mifoslabel name="Surveys.attachasurvey"
 									bundle="SurveysUIResources" /> </a> <br>
