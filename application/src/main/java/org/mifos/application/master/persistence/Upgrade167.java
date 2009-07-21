@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 /**
@@ -66,7 +65,7 @@ public class Upgrade167 extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         if (!CustomFieldsHaveBeenCreated(connection, "PERSONNEL_CUSTOM_FIELD", 1)
                 && !CustomFieldsHaveBeenCreated(connection, "OFFICE_CUSTOM_FIELD", 4)

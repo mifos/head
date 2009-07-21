@@ -42,7 +42,7 @@ public class Upgrade127 extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         reparentActivity(connection, PRODUCT_MIX, PRODUCT_DEFINITION);
 

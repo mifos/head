@@ -104,4 +104,9 @@ public class ClientViewDetailsPage extends MifosPage {
         return new CustomerChangeStatusPage(selenium);
     }    
     
-}
+    public ClientEditMFIPage navigateToEditMFIPage() {
+        selenium.click("viewClientDetails.link.editMfiInformation");
+        waitForPageToLoad();
+        return new ClientEditMFIPage(selenium);
+    }
+}    

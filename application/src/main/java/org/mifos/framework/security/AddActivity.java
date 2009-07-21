@@ -64,7 +64,7 @@ public class AddActivity extends Upgrade {
      */
     public AddActivity(int higherVersion, short newActivityId, Short parentActivity, Short locale, String activityName) {
         super(higherVersion);
-        if (higherVersion > lookupValueChangeVersion)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
             throw new RuntimeException(wrongConstructor);
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;
@@ -92,7 +92,7 @@ public class AddActivity extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         int lookupEntity = MifosLookUpEntity.ACTIVITY;
 

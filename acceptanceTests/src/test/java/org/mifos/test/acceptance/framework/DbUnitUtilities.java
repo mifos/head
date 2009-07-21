@@ -256,19 +256,20 @@ public class DbUnitUtilities {
         return databaseDataSet;
     }    
     
-    public void dumpDatabase(String fileName, DriverManagerDataSource dataSource) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
+    public void dumpDatabase(String fileName, DriverManagerDataSource dataSource) throws SQLException, FileNotFoundException, ClassNotFoundException, DatabaseUnitException, IOException {
         Connection jdbcConnection = null;
-        IDataSet fullDataSet;
         try {
             jdbcConnection = dataSource.getConnection();
-            IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
-            fullDataSet = connection.createDataSet();
-            FlatXmlDataSet.write(fullDataSet, new FileOutputStream(fileName));
+            this.dumpDatabase(fileName, jdbcConnection);
         } finally {
-            if (jdbcConnection != null) {
-                jdbcConnection.close();
-            }
+            jdbcConnection.close();
         }
+    }
+    
+    public void dumpDatabase(String fileName, Connection jdbcConnection) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
+        IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
+        IDataSet fullDataSet = connection.createDataSet();
+        FlatXmlDataSet.write(fullDataSet, new FileOutputStream(fileName));
     }
 
     public void dumpDatabaseToTimestampedFileInConfigurationDirectory(DriverManagerDataSource dataSource) throws FileNotFoundException, ClassNotFoundException, SQLException, DatabaseUnitException, IOException {

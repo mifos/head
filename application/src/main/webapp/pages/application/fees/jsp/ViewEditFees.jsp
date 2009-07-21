@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="viewFees"/>
 		<script>
 				
 			</script>
@@ -60,7 +61,7 @@ explanation of the license and how it is applied.
 										</html-el:link> <br> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <br> </span> </span> <span class="fontnormalbold"> </span> <span class="fontnormal"> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <font
 											class="fontnormalRedBold"> <html-el:errors bundle="FeesUIResources" /> </font> </span> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <mifos:mifoslabel name="Fees.productfees" bundle="FeesUIResources">
 											</mifos:mifoslabel><br> </span> </span> <span class="fontnormalbold"> </span>
-									<table width="90%" border="0" cellspacing="0" cellpadding="0">
+									<table id="productFeeTable" width="90%" border="0" cellspacing="0" cellpadding="0">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'productFees')}" var="productFee">
 											<tr class="fontnormal">
 												<td width="1%">
@@ -87,7 +88,7 @@ explanation of the license and how it is applied.
 									</mifos:mifoslabel>
 									<br>
 
-									<table width="90%" border="0" cellspacing="0" cellpadding="0">
+									<table id="clientFeeTable" width="90%" border="0" cellspacing="0" cellpadding="0">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerFees')}" var="clientFee">
 											<tr class="fontnormal">
 												<td width="1%">

@@ -32,6 +32,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+@SuppressWarnings("PMD.CyclomaticComplexity")
+// Rationale: readFile() has a lot of if's and that's OK.
 public class SqlUpgrade extends Upgrade {
 
     private final URL script;
@@ -52,11 +54,14 @@ public class SqlUpgrade extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         runScript(connection);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification="The resource is closed and the string cannot be static.")
+    @SuppressWarnings("PMD.CloseResource")
+    // Rationale: It's closed.
     public static void execute(InputStream stream, Connection conn) throws SQLException {
         String[] sqls = readFile(stream);
         Statement statement = conn.createStatement();
@@ -71,6 +76,8 @@ public class SqlUpgrade extends Upgrade {
      * 
      * @return individual statements
      * */
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.AssignmentInOperand", "PMD.AppendCharacterWithChar", "PMD.AvoidThrowingRawExceptionTypes", "PMD.DoNotThrowExceptionInFinally"})
+    // Rationale: If the Apache Ant team thinks it's OK, we do too. Perhaps bad reasoning, but inshallah.
     public static String[] readFile(InputStream stream) {
         // mostly ripped from
         // http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/taskdefs/SQLExec.java

@@ -49,10 +49,10 @@ public class CompositeUpgrade extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         for (Upgrade upgrade : upgrades) {
-            upgrade.upgrade(connection, databaseVersionPersistence);
+            upgrade.upgrade(connection);
         }
     }
 

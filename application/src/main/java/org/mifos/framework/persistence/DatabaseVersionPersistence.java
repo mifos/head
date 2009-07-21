@@ -462,7 +462,7 @@ public class DatabaseVersionPersistence {
         int version = read(connection);
         for (Upgrade upgrade : scripts(upgradeTo, version)) {
             try {
-                upgrade.upgrade(connection, this);
+                upgrade.upgrade(connection);
             } catch (Exception e) {
                 throw new RuntimeException("error in upgrading to " + upgrade.higherVersion(), e);
             }

@@ -47,7 +47,7 @@ public class AddFieldTest extends TestCase {
         int newId = 203;
         AddField upgrade = new AddField(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, "AssignClients",
                 EntityType.CLIENT, false, false);
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         FieldConfigurationEntity fetched = (FieldConfigurationEntity) database.openSession().get(
                 FieldConfigurationEntity.class, newId);
         assertEquals(newId, (int) fetched.getFieldConfigId());

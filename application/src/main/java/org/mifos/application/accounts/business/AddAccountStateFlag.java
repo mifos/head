@@ -54,7 +54,7 @@ public class AddAccountStateFlag extends Upgrade {
      */
     public AddAccountStateFlag(int higherVersion, int newFlagId, String description, Short locale, String message) {
         super(higherVersion);
-        if (higherVersion > lookupValueChangeVersion)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
             throw new RuntimeException(wrongConstructor);
         this.newFlagId = newFlagId;
         this.description = description;
@@ -81,7 +81,7 @@ public class AddAccountStateFlag extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         int lookupEntity = MifosLookUpEntity.ACCOUNT_STATE_FLAG;
 

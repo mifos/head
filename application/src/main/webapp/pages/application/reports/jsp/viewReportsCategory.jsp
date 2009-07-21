@@ -31,6 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<input type="hidden" id="page.id" value="ViewReportsCategory"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 	        <td class="bluetablehead05">
@@ -69,7 +70,7 @@ explanation of the license and how it is applied.
 		              		<br />
 		              		<br />
               			</span>
-             		 	<table width="75%" border="0" cellpadding="3" cellspacing="0">
+             		 	<table width="75%" border="0" cellpadding="3" cellspacing="0" id="viewReportsCategory.table.categoryNames">
              		 		<tr width="100%">
 								<td align="left" valign="top" colspan="2">
 									<font class="fontnormalRedBold"><html-el:errors bundle="adminUIResources" /></font>
@@ -85,7 +86,7 @@ explanation of the license and how it is applied.
 								<c:forEach var="reportCategory" items="${sessionScope.listOfReportCategories}">
 		                  				<tr>
 				                	 	   <td width="70%" height="30" class="blueline">
-				                    			<span class="fontnormal"> 
+				                    			<span class="fontnormal" id="viewReportsCategory.text.${reportCategory.reportCategoryId}"> 
 	    			                				<c:out value="${reportCategory.reportCategoryName}"/>
 	                    						</span>
 		                    				</td>

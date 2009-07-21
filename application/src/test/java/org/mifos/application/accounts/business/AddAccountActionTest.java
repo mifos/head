@@ -47,7 +47,7 @@ public class AddAccountActionTest extends MifosIntegrationTest {
     }
 
     private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) throws Exception {
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, SEND_TO_ORPHANS);
         action.setLocaleId(TEST_LOCALE);
@@ -86,7 +86,7 @@ public class AddAccountActionTest extends MifosIntegrationTest {
         String goodKey = "AccountAction-NewAccountAction";
         // use valid construtor and valid key
         upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey);
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);
         assertEquals(goodKey, action.getLookUpValue().getLookUpName());

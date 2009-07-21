@@ -74,10 +74,18 @@ public class SystemException extends RuntimeException {
         this(key, null, cause, values);
     }
 
+    @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.NullAssignment"})
+    // Rationale: It is not stored directly, it's clone():d.
     public SystemException(String key, String internalMessage, Throwable cause, Object[] values) {
         super(internalMessage, cause);
         this.key = key;
-        this.values = values;
+        
+        // we clone to make sure that the Object[] isn't modified outside this method.
+        if (values == null) {
+            this.values = null;
+        } else {
+            this.values = values.clone();
+        }
     }
 
     /**
@@ -94,6 +102,6 @@ public class SystemException extends RuntimeException {
      * parameters to the string in the resource bundle.
      */
     public Object[] getValues() {
-        return values;
+        return values.clone();
     }
 }

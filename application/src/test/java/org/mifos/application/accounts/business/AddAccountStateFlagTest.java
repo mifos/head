@@ -71,7 +71,7 @@ public class AddAccountStateFlagTest extends MifosIntegrationTest {
     }
 
     private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) throws Exception {
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         /*
          * Below is a workaround to make this test case work The upgrade is
          * being done in a Mayfly database. After the upgrade, we set up the
@@ -127,7 +127,7 @@ public class AddAccountStateFlagTest extends MifosIntegrationTest {
         String goodKey = "AccountFlags-NewAccountStateFlag";
         // use valid construtor and valid key
         upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey, goodKey);
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
         assertEquals(goodKey, flag.getLookUpValue().getLookUpName());

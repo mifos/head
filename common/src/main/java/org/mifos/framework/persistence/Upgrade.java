@@ -26,27 +26,39 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.helpers.StringUtils;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.exceptions.SystemException;
+
+@SuppressWarnings("PMD.AbstractNaming")
 public abstract class Upgrade {
 
+    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
+    // Rationale TODO: rename higherVersion and lowerVersion to getXXX.
     private final int higherVersion;
-    protected static final int lookupValueChangeVersion = 174;
+    protected static final int LOOKUP_VALUE_CHANGE_VERSION = 174;
     public static final String wrongConstructor = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
 
     protected Upgrade(int higherVersion) {
         this.higherVersion = higherVersion;
     }
 
-    abstract public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    @SuppressWarnings("PMD.AbstractNaming")
+    // Rationale: I will name abstract methods whatever.
+    abstract public void upgrade(Connection connection)
             throws IOException, SQLException;
 
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    // Rationale: There's no need to add a result variable just to return at a single place in a 10 line method.
     public static boolean validateLookupValueKey(String format, String key) {
-        if (!StringUtils.isNullAndEmptySafe(key))
+        if (StringUtils.isBlank(key)) {
             return false;
-        if (!key.startsWith(format, 0))
+        }
+        
+        if (!key.startsWith(format, 0)) {
             return false;
+        }
+        
         return true;
     }
 
@@ -61,7 +73,8 @@ public abstract class Upgrade {
     protected void upgradeVersion(Connection connection) throws SQLException {
         changeVersion(connection, higherVersion(), lowerVersion());
     }
-
+    
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement is closed.")
     private void changeVersion(Connection connection, int newVersion, int existingVersion) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("update DATABASE_VERSION "
                 + "set DATABASE_VERSION = ? where DATABASE_VERSION = ?");
@@ -69,8 +82,10 @@ public abstract class Upgrade {
         statement.setInt(2, existingVersion);
         statement.executeUpdate();
         connection.commit();
+        statement.close();
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement is closed.")
     protected void insertMessage(Connection connection, int lookupId, Short localeToInsert, String message)
             throws SQLException {
         PreparedStatement statement = connection.prepareStatement("insert into LOOKUP_VALUE_LOCALE("
@@ -82,7 +97,8 @@ public abstract class Upgrade {
         statement.close();
     }
 
-    protected static void updateMessage(Connection connection, int lookupId, short locale, String newMessage)
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification="The statement is closed and the query cannot be static.")
+    protected static void updateMessage(Connection connection, int lookupId, int locale, String newMessage)
             throws SQLException {
         PreparedStatement statement = connection.prepareStatement("update LOOKUP_VALUE_LOCALE set LOOKUP_VALUE = ? "
                 + "where LOCALE_ID = ? and LOOKUP_ID = ?");
@@ -123,6 +139,7 @@ public abstract class Upgrade {
      *         just inserted
      * @throws SQLException
      */
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification="The statement is closed and the query cannot be static.")
     protected int insertLookupValue(Connection connection, int lookupEntity, String lookupKey) throws SQLException {
         /*
          * LOOKUP_ID is not AUTO_INCREMENT until database version 121. Although
@@ -145,6 +162,8 @@ public abstract class Upgrade {
         return newLookupId;
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement and results are closed.")
+    @SuppressWarnings("PMD.CloseResource")
     protected int largestLookupId(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
@@ -158,21 +177,27 @@ public abstract class Upgrade {
         return largestLookupId;
     }
 
-    protected void deleteFromLookupValueLocale(Connection connection, short lookupId) throws SQLException {
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement is closed.")
+    protected void deleteFromLookupValueLocale(Connection connection, int lookupId) throws SQLException {
         PreparedStatement statement = connection
                 .prepareStatement("delete from LOOKUP_VALUE_LOCALE where lookup_id = ?");
         statement.setInt(1, lookupId);
         statement.executeUpdate();
         statement.close();
     }
-
-    protected void deleteFromLookupValue(Connection connection, short lookupId) throws SQLException {
+    
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement is closed.")
+    protected void deleteFromLookupValue(Connection connection, int lookupId) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("delete from LOOKUP_VALUE where lookup_id = ?");
         statement.setInt(1, lookupId);
         statement.executeUpdate();
         statement.close();
     }
-
+ 
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement is closed.")
     protected void addLookupEntity(Connection connection, int entityId, String name, String description)
             throws SQLException {
         PreparedStatement statement = connection
@@ -184,6 +209,8 @@ public abstract class Upgrade {
         statement.close();
     }
 
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION"}, justification="The statement is closed.")
     protected void removeLookupEntity(Connection connection, int entityId) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("DELETE FROM LOOKUP_ENTITY WHERE ENTITY_ID = ?");
         statement.setInt(1, entityId);
@@ -191,6 +218,8 @@ public abstract class Upgrade {
         statement.close();
     }
 
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"}, justification="The statement is closed and the query cannot be static.")
     protected void execute(Connection connection, String sql) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.executeUpdate();
@@ -205,7 +234,9 @@ public abstract class Upgrade {
     protected boolean noOfficesHaveBeenCreatedByEndUsers(Connection connection) throws SQLException {
         return countRows(connection, "OFFICE") == 1;
     }
-
+    
+    @SuppressWarnings("PMD.CloseResource")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"OBL_UNSATISFIED_OBLIGATION", "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"}, justification="The statement is closed and the query cannot be static.")
     private int countRows(Connection connection, String tableName) throws SQLException {
 
         int numFields = 0;

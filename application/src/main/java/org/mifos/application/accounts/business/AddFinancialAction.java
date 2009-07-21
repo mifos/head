@@ -55,7 +55,7 @@ public class AddFinancialAction extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         int lookupEntity = MifosLookUpEntity.FINANCIAL_ACTION;
 

@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.SqlUpgradeScriptFinder;
 
 public abstract class LanguageUpgrade extends Upgrade {
 
@@ -53,11 +53,11 @@ public abstract class LanguageUpgrade extends Upgrade {
     public abstract void addData(List<String[]> languageNameAndCodesToAdd);
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
-        addCountryCodes(connection, databaseVersionPersistence, databaseVersion);
+        addCountryCodes(connection, databaseVersion);
         addLanguageDescriptionLookupValues(connection);
-        addLocales(connection, databaseVersionPersistence, databaseVersion);
+        addLocales(connection, databaseVersion);
         upgradeVersion(connection);
     }
 
@@ -76,19 +76,19 @@ public abstract class LanguageUpgrade extends Upgrade {
         return languageNameAndCodesToAdd;
     }
 
-    private void addCountryCodes(Connection connection, DatabaseVersionPersistence databaseVersionPersistence,
+    private void addCountryCodes(Connection connection,
             int upgradeVersion) throws IOException, SQLException {
-        upgradePart(connection, databaseVersionPersistence, "upgrade_to_" + upgradeVersion + "_part_1.sql");
+        upgradePart(connection, "upgrade_to_" + upgradeVersion + "_part_1.sql");
     }
 
-    private void addLocales(Connection connection, DatabaseVersionPersistence databaseVersionPersistence,
+    private void addLocales(Connection connection,
             int upgradeVersion) throws IOException, SQLException {
-        upgradePart(connection, databaseVersionPersistence, "upgrade_to_" + upgradeVersion + "_part_3.sql");
+        upgradePart(connection, "upgrade_to_" + upgradeVersion + "_part_3.sql");
     }
 
-    private void upgradePart(Connection connection, DatabaseVersionPersistence databaseVersionPersistence,
+    private void upgradePart(Connection connection,
             String sqlUpgradeScriptFilename) throws IOException, SQLException {
-        SqlUpgrade upgradePart = databaseVersionPersistence.findUpgradeScript(this.higherVersion(),
+        SqlUpgrade upgradePart = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                 sqlUpgradeScriptFilename);
         upgradePart.runScript(connection);
     }

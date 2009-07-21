@@ -84,7 +84,7 @@ public class AddActivityTest extends TestCase {
         int databaseVersion = 172;
         AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, SecurityConstants.LOAN_MANAGEMENT,
                 TEST_LOCALE, "Can use the executive washroom");
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
 
         // now reinitialize the cache from the Mayfly database
         database.installInThreadLocal();
@@ -115,7 +115,7 @@ public class AddActivityTest extends TestCase {
         int databaseVersion = 172;
         AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, null, TEST_LOCALE,
                 "Can use the executive washroom");
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
         assertEquals(null, fetched.getParent());
     }
@@ -150,7 +150,7 @@ public class AddActivityTest extends TestCase {
         String goodKey = "Permissions-NewActivity";
         // use valid construtor and valid key
         upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         ActivityEntity fetched = (ActivityEntity) database.openSession().get(ActivityEntity.class, newId);
         assertEquals(null, fetched.getParent());
         assertEquals(goodKey, fetched.getActivityName());

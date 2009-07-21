@@ -54,7 +54,7 @@ public class AddField extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         PreparedStatement statement = connection
                 .prepareStatement("INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,"

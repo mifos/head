@@ -31,6 +31,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.SqlUpgradeScriptFinder;
 
 /**
  * Conditional upgrade that removes default Chart of Accounts configuration from
@@ -67,7 +68,7 @@ public class Upgrade176 extends Upgrade {
      * database.
      */
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence dvp) throws IOException, SQLException {
+    public void upgrade(Connection connection) throws IOException, SQLException {
         execute(connection, "ALTER TABLE coa ADD COLUMN CATEGORY_TYPE VARCHAR(20)");
         if (isTableEmpty("fees", connection) && isTableEmpty("financial_trxn", connection)
                 && isTableEmpty("loan_offering", connection) && isTableEmpty("penalty", connection)
@@ -77,7 +78,7 @@ public class Upgrade176 extends Upgrade {
             // looks like a fresh database, at least in terms of the chart of
             // accounts data. Blow away all chart of accounts tables and let
             // FinancialInitializer do its thing.
-            SqlUpgrade upgrade = dvp.findUpgradeScript(this.higherVersion(), "upgrade_to_176_conditional.sql");
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(), "upgrade_to_176_conditional.sql");
 
             upgrade.runScript(connection);
         } else {

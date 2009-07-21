@@ -38,7 +38,7 @@ public class CompositeUpgradeTest extends TestCase {
         Upgrade composite = new CompositeUpgrade(upgradeOne, upgradeTwo);
         assertEquals(53, composite.higherVersion());
         Connection data = simpleDatabase(52);
-        composite.upgrade(data, null);
+        composite.upgrade(data);
         assertEquals("upgrade to 53\n", upgradeOne.getLog());
         assertEquals("upgrade to 53\n", upgradeTwo.getLog());
 
@@ -73,7 +73,7 @@ public class CompositeUpgradeTest extends TestCase {
                 new MyUpgrade("third"));
 
         Connection data = simpleDatabase(52);
-        composite.upgrade(data, null);
+        composite.upgrade(data);
 
         assertEquals("upgrading first\n" + "upgrading second\n" + "upgrading third\n", log.toString());
 
@@ -90,7 +90,7 @@ public class CompositeUpgradeTest extends TestCase {
         }
 
         @Override
-        public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+        public void upgrade(Connection connection)
                 throws IOException, SQLException {
             log.append("upgrading " + which + "\n");
         }

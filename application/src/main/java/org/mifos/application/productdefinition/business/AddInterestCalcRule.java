@@ -55,7 +55,7 @@ public class AddInterestCalcRule extends Upgrade {
     public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description,
             Short locale, String message) {
         super(higherVersion);
-        if (higherVersion > lookupValueChangeVersion)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
             throw new RuntimeException(wrongConstructor);
         this.newRuleId = newRuleId;
         this.lookupName = lookupName;
@@ -82,7 +82,7 @@ public class AddInterestCalcRule extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         int lookupEntity = MifosLookUpEntity.INTEREST_TYPES;
 

@@ -45,7 +45,7 @@ public class AddReportTest extends TestCase {
         AddReport upgrade = new AddReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
                 ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk", "aging_portfolio_at_risk",
                 "DetailedAgingPortfolioAtRisk.rptdesign");
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         ReportsBO fetched = (ReportsBO) database.openSession().get(ReportsBO.class, newId);
         assertEquals(newId, (int) fetched.getReportId());
         assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());

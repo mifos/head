@@ -133,7 +133,7 @@ public class Upgrade183 extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         updateLookUpNames(connection);
         fixDuplicateLookUpNames(connection);

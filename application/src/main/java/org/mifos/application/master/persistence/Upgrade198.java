@@ -23,9 +23,9 @@ package org.mifos.application.master.persistence;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.SqlUpgradeScriptFinder;
 
 /**
  * Upgrade198 is a conditional upgrade that removes 7 orphan lookup values
@@ -48,10 +48,10 @@ public class Upgrade198 extends Upgrade {
      * upgrade and downgrade a "clean" database.
      */
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         if (noOfficesHaveBeenCreatedByEndUsers(connection)) {
-            SqlUpgrade upgrade = databaseVersionPersistence.findUpgradeScript(this.higherVersion(),
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_198_conditional.sql");
             upgrade.runScript(connection);
         }

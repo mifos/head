@@ -46,7 +46,7 @@ public class AddAccountAction extends Upgrade {
      */
     public AddAccountAction(int higherVersion, int action, Short locale, String message) {
         super(higherVersion);
-        if (higherVersion > lookupValueChangeVersion)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
             throw new RuntimeException(wrongConstructor);
         this.action = action;
         this.locale = locale;
@@ -69,7 +69,7 @@ public class AddAccountAction extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         int lookupEntity = MifosLookUpEntity.ACCOUNT_ACTION;
 

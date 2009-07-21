@@ -257,7 +257,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         Upgrade upgrade = new Upgrade(79) {
 
             @Override
-            public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) {
+            public void upgrade(Connection connection) {
                 throw new RuntimeException("tried but failed");
             }
 
@@ -294,7 +294,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
         Database database = new Database();
         DatabaseVersionPersistence persistence = javaOnlyPersistence(database);
         DummyUpgrade found = (DummyUpgrade) persistence.findUpgrade(69);
-        found.upgrade(null, null);
+        found.upgrade(null);
         assertEquals("upgrade to 69\n", found.getLog());
     }
 

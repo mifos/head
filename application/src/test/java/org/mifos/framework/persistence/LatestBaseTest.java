@@ -87,7 +87,7 @@ public class LatestBaseTest extends TestCase {
         if (upgrade instanceof SqlUpgrade)
             assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
 
-        upgrade.upgrade(database.openConnection(), persistence);
+        upgrade.upgrade(database.openConnection());
         return database.dataStore();
     }
 

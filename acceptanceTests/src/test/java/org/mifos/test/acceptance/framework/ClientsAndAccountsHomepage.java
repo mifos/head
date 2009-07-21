@@ -22,18 +22,19 @@ package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
+import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.CreateClientConfirmationPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientPreviewDataPage;
-import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.collectionsheet.CollectionSheetEntrySelectPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPreviewDataPage;
 import org.mifos.test.acceptance.framework.group.GroupSearchPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
+import org.mifos.test.acceptance.framework.loan.CreateLoanAccountsSearchPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
 import com.thoughtworks.selenium.Selenium;
@@ -122,6 +123,14 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         return clientViewDetailsPage;
     }  
 
+    public ClientSearchResultsPage searchForClient(String searchString)
+    {
+        selenium.type("clients_accounts.input.search", searchString);
+        selenium.click("clients_accounts.button.search");
+        waitForPageToLoad();
+        return new ClientSearchResultsPage(selenium);
+    }
+    
     public ClientViewDetailsPage changeCustomerStatus(ClientViewDetailsPage clientDetailsPage) {    
         CustomerChangeStatusPage statusChangePage = clientDetailsPage.navigateToCustomerChangeStatusPage();
         

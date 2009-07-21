@@ -47,7 +47,7 @@ public class AddRepaymentRule extends Upgrade {
      */
     public AddRepaymentRule(int higherVersion, RepaymentRuleTypes type, short locale, String message) {
         super(higherVersion);
-        if (higherVersion > lookupValueChangeVersion)
+        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION)
             throw new RuntimeException(wrongConstructor);
         this.type = type;
         this.locale = locale;
@@ -70,7 +70,7 @@ public class AddRepaymentRule extends Upgrade {
     }
 
     @Override
-    public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
+    public void upgrade(Connection connection)
             throws IOException, SQLException {
         int lookupEntity = MifosLookUpEntity.REPAYMENT_RULE;
 

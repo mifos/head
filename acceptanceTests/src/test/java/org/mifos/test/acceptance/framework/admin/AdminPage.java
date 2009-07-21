@@ -65,6 +65,12 @@ public class AdminPage extends MifosPage {
         return new ViewHolidaysPage(selenium);     
     }
  
+	public ViewFeesPage navigateToViewFeesPage() {
+        selenium.click("admin.link.viewFees");
+        waitForPageToLoad();
+        return new ViewFeesPage(selenium);
+    }
+	
    public ViewReportsPage navigateToViewReportsPage() {
         selenium.click("admin.link.ViewReportsTemplates");
         waitForPageToLoad();
@@ -237,5 +243,11 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.viewHolidays");  
         waitForPageToLoad();
         return new ViewHolidaysPage(selenium);
+    }
+    
+    public ViewReportCategoriesPage navigateToViewReportCategories() {
+        selenium.click("admin.link.ViewReportsCategory");
+        waitForPageToLoad();
+        return new ViewReportCategoriesPage(selenium);
     }
 }

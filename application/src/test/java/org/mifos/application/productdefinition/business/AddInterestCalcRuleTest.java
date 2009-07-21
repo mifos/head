@@ -73,7 +73,7 @@ public class AddInterestCalcRuleTest extends TestCase {
         // use valid construtor and valid key
         upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId, categoryId,
                 goodKey, description);
-        upgrade.upgrade(database.openConnection(), null);
+        upgrade.upgrade(database.openConnection());
         Session session = database.openSession();
         InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
         assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
