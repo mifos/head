@@ -20,12 +20,17 @@
 
 package org.mifos.test.acceptance.framework;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -38,6 +43,8 @@ import org.apache.commons.cli.PosixParser;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+
+
 
 /*
 
@@ -84,7 +91,7 @@ public class DataSetUpgradeUtil {
     String password;
 
     DbUnitUtilities dbUnitUtilities;
-    private static final String ACCEPTANCE_TEST_DATA_SET_DIRECTORY = "acceptanceTests/src/test/resources/";
+    private static final String ACCEPTANCE_TEST_DATA_SET_DIRECTORY = "acceptanceTests/src/test/resources/dataSets/";
     
     public static void main(String[] args) throws IOException, URISyntaxException, ClassNotFoundException,
             SQLException, DatabaseUnitException {
@@ -101,6 +108,7 @@ public class DataSetUpgradeUtil {
     
     private void upgrade() throws URISyntaxException, DataSetException, IOException {
         dbUnitUtilities = new DbUnitUtilities();
+        System.out.println("data set name: " + dataSetName);
         IDataSet dataSet = dbUnitUtilities.getDataSetFromFile(dataSetName);
         
         DataSetUpgrade upgrade = new DataSetUpgrade(dataSet, databaseName, user, password);
@@ -120,15 +128,62 @@ public class DataSetUpgradeUtil {
         Connection jdbcConnection = DriverManager.getConnection("jdbc:mysql://localhost/" + databaseName
                 + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
         
-        dbUnitUtilities.dumpDatabase(/*ACCEPTANCE_TEST_DATA_SET_DIRECTORY +*/ dataSetName, jdbcConnection);
+        
+        String fileNamewoZip = dataSetName.substring(0, dataSetName.length()-4);
+        String fileEnding = dataSetName.substring(dataSetName.length()-7, dataSetName.length()-4);
+        
+        if ("xml".equals(fileEnding)) {
+            // dump xml
+            dbUnitUtilities.dumpDatabase(ACCEPTANCE_TEST_DATA_SET_DIRECTORY + fileNamewoZip, jdbcConnection);
+        } else if ("sql".equals(fileEnding)) {
+            // dump sql
+            fail("ERROR: SQL dumping not implemented yet. Please dump " + databaseName + " manually with mysqldump. The upgrades have been applied.");
+        } else {
+            fail("ERROR: Bad data set name. The file ending has to be .xml.zip or .sql.zip.");
+        }
+        
+        System.out.println("w/o zip: " + fileNamewoZip);
+        System.out.println("file ending: " + fileEnding);
+        
         
         // TODO zip
+        
+        zip(fileNamewoZip, dataSetName);
         
         jdbcConnection.close();
     }
     
-    
-    
+    @SuppressWarnings("PMD.AssignmentInOperand")
+    private void zip (String entryFileName, String zipFileName) {
+        byte[] buffer = new byte[2048];
+        
+        try {
+            // Create the ZIP file
+            ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(zipFileName));
+        
+            FileInputStream entryStream = new FileInputStream(entryFileName);
+            
+            zipStream.putNextEntry(new ZipEntry(entryFileName));
+            
+            // transfer bytes
+            int len;
+            while ((len = entryStream.read(buffer)) > 0) {
+                zipStream.write(buffer, 0, len);
+            }
+            
+            zipStream.closeEntry();
+            
+            entryStream.close();
+            zipStream.close();
+            
+            File f = new File(ACCEPTANCE_TEST_DATA_SET_DIRECTORY + entryFileName);
+            f.delete();
+        } catch (IOException e) {
+            fail(e.getStackTrace() + "\nERROR: Couldn't zip the file.");
+        }
+
+
+    }
     
     
     private void defineOptions() {
