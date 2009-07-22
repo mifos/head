@@ -34,6 +34,10 @@ public class ClientViewDetailsPage extends MifosPage {
         super(selenium);
     }
     
+    public void verifyPage() {
+        verifyPage("ViewClientDetails");
+    }
+    
     public String getHeading() {
         return selenium.getText("viewClientDetails.heading");
     }
@@ -126,4 +130,12 @@ public class ClientViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ClientNotesPage(selenium);
     }
+
+    public ClosedAccountsPage navigateToClosedAccountsPage() {
+        selenium.click("viewClientDetails.link.viewAllClosedAccounts");
+        waitForPageToLoad();
+        return new ClosedAccountsPage(selenium);
+    }
+    
+    
 }    
