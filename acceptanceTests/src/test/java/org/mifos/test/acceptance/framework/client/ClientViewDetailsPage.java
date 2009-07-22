@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.client;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -108,5 +109,21 @@ public class ClientViewDetailsPage extends MifosPage {
         selenium.click("viewClientDetails.link.editMfiInformation");
         waitForPageToLoad();
         return new ClientEditMFIPage(selenium);
+    }
+    
+    public ClientNotesPage navigateToNotesPage(){
+        selenium.click("viewClientDetails.link.notesLink");
+        waitForPageToLoad();
+        return new ClientNotesPage(selenium);
+    }
+    
+    public void verifyTextOnPage(String text){
+        Assert.assertTrue(selenium.isTextPresent(text));
+    }
+    
+    public ClientNotesPage navigateToAllNotesPage() {
+        selenium.click("viewClientDetails.link.seeAllNotes");
+        waitForPageToLoad();
+        return new ClientNotesPage(selenium);
     }
 }    

@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.center;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -48,6 +49,16 @@ public class CenterViewDetailsPage extends MifosPage {
         Assert.assertEquals(getCenterName(), formParameters.getCenterName());
         Assert.assertEquals(getStatus(), "Active");
         Assert.assertEquals(getLoanOfficer(), formParameters.getLoanOfficer());
-       
+    }
+
+    public CenterViewDetailsPage verifyPage() {
+        verifyPage("CenterDetails");
+        return this;
+    }
+    
+    public ClosedAccountsPage navigateToClosedAccountsPage() {
+        selenium.click("viewCenterDetails.link.viewAllClosedAccounts");
+        waitForPageToLoad();
+        return new ClosedAccountsPage(selenium);
     }
 }

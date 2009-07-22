@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.search;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
+import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 
@@ -54,6 +56,18 @@ public class SearchResultsPage extends MifosPage {
         return new GroupViewDetailsPage(selenium);
     }
     
+    public CenterViewDetailsPage navigateToCenterViewDetailsPage(String locator) {
+        selenium.click(locator);
+        waitForPageToLoad();
+        return new CenterViewDetailsPage(selenium);
+    }
+    
+    public ClientViewDetailsPage navigateToClientViewDetailsPage(String locator) {
+        selenium.click(locator);
+        waitForPageToLoad();
+        return new ClientViewDetailsPage(selenium);
+    }
+
     public LoanAccountPage navigateToLoanAccountDetailPage(String loanId){
       String xpath = "//a[contains(@href,'<loanId>')]";
       selenium.click(xpath.replace("<loanId>", loanId));

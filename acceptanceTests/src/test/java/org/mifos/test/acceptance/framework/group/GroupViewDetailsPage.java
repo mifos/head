@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -51,5 +52,11 @@ public class GroupViewDetailsPage extends MifosPage {
     public void verifyLoanOfficer(String loanOfficer) {
         Assert.assertTrue(selenium.isTextPresent(loanOfficer), "Expected string: " + loanOfficer);     
         
+    }
+    
+    public ClosedAccountsPage navigateToClosedAccountsPage() {
+        selenium.click("viewgroupdetails.link.viewAllClosedAccounts");
+        waitForPageToLoad();
+        return new ClosedAccountsPage(selenium);
     }
 }

@@ -122,4 +122,16 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new ApplyPaymentPage(selenium);
     }
+    
+    public AccountAddNotesPage navigateToAddNotesPage() {
+        selenium.click("loanaccountdetail.link.addNote");
+        waitForPageToLoad();
+        return new AccountAddNotesPage(selenium);
+    }
+    
+    public AccountNotesPage navigateToAccountNotesPage() {
+        selenium.click("loanaccountdetail.link.seeAllNotes");
+        waitForPageToLoad();
+        return new AccountNotesPage(selenium);
+    }
 }
