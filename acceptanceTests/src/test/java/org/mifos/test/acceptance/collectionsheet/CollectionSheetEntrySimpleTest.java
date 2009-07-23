@@ -48,6 +48,10 @@ import org.testng.annotations.Test;
 public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
     
+    private static final String VALID_RECEIPT_DAY = "4";
+
+    private static final String VALID_TRANSACTION_DAY = "7";
+
     @Autowired
     private DriverManagerDataSource dataSource;
     
@@ -71,8 +75,23 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void checkForValueObjectConversionErrorWhenEnteringInvalidDate() throws Exception {
-        SubmitFormParameters formParameters = getFormParametersWithInvalidReceiptDay();
+    public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoReceipt() throws Exception {
+        SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidReceiptDay();
+        SubmitFormParameters validFormParameters = getFormParameters();
+        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters, "Please specify a valid date");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    //@Test(groups={"workInProgress"})
+    public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoTransation() throws Exception {
+        SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidTransactionDay();
+        SubmitFormParameters validFormParameters = getFormParameters();
+        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters, "Date of transaction is invalid");
+    }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters, 
+            SubmitFormParameters validFormParameters, String dateErrorText) throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage = 
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -80,17 +99,15 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         
         boolean onlyTypeIfFieldIsEmpty = true;
         boolean waitForPageToLoad = true;
-        selectPage.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(formParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
+        selectPage.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(invalidFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         CollectionSheetEntrySelectPage collectionSheetEntrySelectPageWithError = new CollectionSheetEntrySelectPage(selenium);
         collectionSheetEntrySelectPageWithError.verifyPage();
-        Assert.assertTrue("Invalid date error message not found!", selenium.isTextPresent("Please specify a valid date"));
+        Assert.assertTrue("Invalid date error message not found!", selenium.isTextPresent(dateErrorText));
 
-        String validReceiptDay = "4";
-        formParameters.setReceiptDay(validReceiptDay);
         onlyTypeIfFieldIsEmpty = false;
         waitForPageToLoad = false;
         CollectionSheetEntryEnterDataPage enterDataPage = 
-            collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(formParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
+            collectionSheetEntrySelectPageWithError.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(validFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         enterDataPage.verifyPage();
     }
 
@@ -111,14 +128,19 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
 
     private SubmitFormParameters getFormParametersWithInvalidReceiptDay() {
         String invalidReceiptDay = "4.";
-        return getFormParameters(invalidReceiptDay);
+        return getFormParameters(invalidReceiptDay, VALID_TRANSACTION_DAY);
+    }
+    
+    private SubmitFormParameters getFormParametersWithInvalidTransactionDay() {
+        String invalidTransactionDay = "7.";
+        return getFormParameters(VALID_RECEIPT_DAY, invalidTransactionDay);
     }
 
     private SubmitFormParameters getFormParameters() {
-        return getFormParameters("4");
+        return getFormParameters(VALID_RECEIPT_DAY,VALID_TRANSACTION_DAY);
     }
 
-    private SubmitFormParameters getFormParameters(String receiptDay) {
+    private SubmitFormParameters getFormParameters(String receiptDay, String transactionDay) {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
         formParameters.setLoanOfficer("Bagonza Wilson");
@@ -127,6 +149,9 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         formParameters.setReceiptDay(receiptDay);
         formParameters.setReceiptMonth("11");
         formParameters.setReceiptYear("2009");
+        formParameters.setTransactionDay(transactionDay);
+        formParameters.setTransactionMonth("2");
+        formParameters.setTransactionYear("2009");
         return formParameters;
     }
 

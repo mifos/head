@@ -21,7 +21,6 @@
 package org.mifos.application.collectionsheet.struts.actionforms;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -34,16 +33,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntryDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -406,9 +406,6 @@ public class BulkEntryActionForm extends BaseActionForm {
         java.sql.Date trxnDate = null;
         String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
                 : ConfigurationConstants.GROUP;
-        if (getTransactionDate() != null && !getTransactionDate().equals("")) {
-            trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
-        }
         if (officeId == null || "".equals(officeId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYFIELDS, getMessageText(ConfigurationConstants.BRANCHOFFICE,
@@ -426,12 +423,16 @@ public class BulkEntryActionForm extends BaseActionForm {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYFIELDS, modeOfPayment));
         }
-        if (getTransactionDate() == null || "".equals(getTransactionDate().trim())) {
+        if (getTransactionDate() != null && !getTransactionDate().equals("")) {
+            try {
+                trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
+            } catch(InvalidDateException e) {
+                errors.add(AccountConstants.ERROR_INVALID_TRXN, new ActionMessage(
+                        AccountConstants.ERROR_INVALID_TRXN));
+            }
+        } else {
             errors.add(CollectionSheetEntryConstants.MANDATORYENTER, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYENTER, dateOfTransaction));
-        } else if (!DateUtils.isValidDate(getTransactionDate())) {
-            errors.add(CollectionSheetEntryConstants.INVALID_TRANSACTION_DATE, new ActionMessage(
-                    CollectionSheetEntryConstants.INVALID_TRANSACTION_DATE));
         }
         if (currentDate != null && meetingDate != null && trxnDate != null
                 && (meetingDate.compareTo(trxnDate) > 0 || trxnDate.compareTo(currentDate) > 0)) {
