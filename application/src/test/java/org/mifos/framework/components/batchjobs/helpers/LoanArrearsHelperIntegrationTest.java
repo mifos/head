@@ -28,7 +28,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -100,9 +100,9 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTest {
     private void setDisbursementDateAsOldDate(AccountBO account) {
         Date startDate = offSetCurrentDate(15);
         LoanBO loan = (LoanBO) account;
-        LoanBOIntegrationTest.modifyDisbursmentDate(loan, startDate);
+        LoanBOTestUtils.modifyDisbursmentDate(loan, startDate);
         for (AccountActionDateEntity actionDate : loan.getAccountActionDates())
-            LoanBOIntegrationTest.setActionDate(actionDate, offSetGivenDate(actionDate.getActionDate(), 18));
+            LoanBOTestUtils.setActionDate(actionDate, offSetGivenDate(actionDate.getActionDate(), 18));
     }
 
     private java.sql.Date offSetGivenDate(Date date, int numberOfDays) {

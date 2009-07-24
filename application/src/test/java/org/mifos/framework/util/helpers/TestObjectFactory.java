@@ -51,7 +51,7 @@ import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCach
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
@@ -376,7 +376,7 @@ public class TestObjectFactory {
         try {
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
-                    parentCustomer);
+                    parentCustomer, new GroupPersistence(), new OfficePersistence());
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -411,7 +411,7 @@ public class TestObjectFactory {
             }
             group = new GroupBO(TestUtils.makeUserWithLocales(), customerName, customerStatus, externalId, trained,
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
-                    new OfficePersistence().getOffice(officeId), meeting, loanOfficer);
+                    new OfficePersistence().getOffice(officeId), meeting, loanOfficer, new GroupPersistence(), new OfficePersistence());
             new GroupPersistence().saveGroup(group);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -712,7 +712,7 @@ public class TestObjectFactory {
 
     public static LoanBO createLoanAccount(String globalNum, CustomerBO customer, AccountState state, Date startDate,
             LoanOfferingBO offering) {
-        LoanBO loan = LoanBOIntegrationTest.createLoanAccount(globalNum, customer, state, startDate, offering);
+        LoanBO loan = LoanBOTestUtils.createLoanAccount(globalNum, customer, state, startDate, offering);
         try {
             loan.save();
         } catch (AccountException e) {
@@ -724,7 +724,7 @@ public class TestObjectFactory {
 
     public static LoanBO createBasicLoanAccount(CustomerBO customer, AccountState state, Date startDate,
             LoanOfferingBO offering) {
-        LoanBO loan = LoanBOIntegrationTest.createBasicLoanAccount(customer, state, startDate, offering);
+        LoanBO loan = LoanBOTestUtils.createBasicLoanAccount(customer, state, startDate, offering);
         try {
             loan.save();
         } catch (AccountException e) {
@@ -736,7 +736,7 @@ public class TestObjectFactory {
 
     public static LoanBO createIndividualLoanAccount(String globalNum, CustomerBO customer, AccountState state,
             Date startDate, LoanOfferingBO offering) {
-        LoanBO loan = LoanBOIntegrationTest
+        LoanBO loan = LoanBOTestUtils
                 .createIndividualLoanAccount(globalNum, customer, state, startDate, offering);
         try {
             loan.save();
@@ -1673,7 +1673,7 @@ public class TestObjectFactory {
     public static LoanBO createLoanAccountWithDisbursement(String globalNum, CustomerBO customer, AccountState state,
             Date startDate, LoanOfferingBO loanOfering, int disbursalType) {
         // loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
-        LoanBO loan = LoanBOIntegrationTest.createLoanAccountWithDisbursement(globalNum, customer, state, startDate,
+        LoanBO loan = LoanBOTestUtils.createLoanAccountWithDisbursement(globalNum, customer, state, startDate,
                 loanOfering, disbursalType, Short.valueOf("6"));
         try {
             loan.save();
@@ -2192,7 +2192,7 @@ public class TestObjectFactory {
         GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
                 .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template
                 .getCustomFieldViews(), template.getFees(), new PersonnelPersistence().getPersonnel(template
-                .getLoanOfficerId()), center);
+                .getLoanOfficerId()), center, new GroupPersistence(), new OfficePersistence());
         group.setCustomerActivationDate(customerActivationDate);
         return group;
     }

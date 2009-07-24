@@ -40,6 +40,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
@@ -81,7 +82,7 @@ public class GroupPersistence extends Persistence {
         }
         GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
                 .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template
-                .getCustomFieldViews(), template.getFees(), loanOfficer, center);
+                .getCustomFieldViews(), template.getFees(), loanOfficer, center, new GroupPersistence(), new OfficePersistence());
         saveGroup(group);
         return group;
     }

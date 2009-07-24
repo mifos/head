@@ -31,7 +31,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -677,7 +677,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
         int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
         currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            LoanBOIntegrationTest.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
+            LoanBOTestUtils.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
                     .getTimeInMillis()));
             break;
         }
@@ -696,9 +696,9 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
 
         for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
             if (installment.getInstallmentId().intValue() == 1) {
-                LoanBOIntegrationTest.setActionDate(installment, lastWeekDate);
+                LoanBOTestUtils.setActionDate(installment, lastWeekDate);
             } else if (installment.getInstallmentId().intValue() == 2) {
-                LoanBOIntegrationTest.setActionDate(installment, twoWeeksBeforeDate);
+                LoanBOTestUtils.setActionDate(installment, twoWeeksBeforeDate);
             }
         }
     }

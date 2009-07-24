@@ -35,7 +35,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
@@ -150,7 +150,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory.getMoneyForMFICurrency(20), null);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
-            LoanBOIntegrationTest.setFeeAmountPaid(accountFeesActionDetailEntity, TestObjectFactory
+            LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestObjectFactory
                     .getMoneyForMFICurrency(100));
             FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(accountTrxnEntity, accountFeesActionDetailEntity
                     .getAccountFee(), accountFeesActionDetailEntity.getFeeAmount());

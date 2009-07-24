@@ -108,9 +108,10 @@ public class GroupBO extends CustomerBO {
 
     public GroupBO(UserContext userContext, String displayName, CustomerStatus customerStatus, String externalId,
             boolean trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<FeeView> fees,
-            PersonnelBO formedBy, CustomerBO parentCustomer) throws CustomerException {
+            PersonnelBO formedBy, CustomerBO parentCustomer, GroupPersistence groupPersistence,
+            OfficePersistence officePersistence) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, trained, trainedDate, address, customFields, fees,
-                formedBy, null, parentCustomer, null, null);
+                formedBy, null, parentCustomer, null, null, groupPersistence, officePersistence);
         validateFieldsForGroupUnderCenter(parentCustomer);
         setValues(trained, trainedDate);
         this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
@@ -118,9 +119,10 @@ public class GroupBO extends CustomerBO {
 
     public GroupBO(UserContext userContext, String displayName, CustomerStatus customerStatus, String externalId,
             boolean trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<FeeView> fees,
-            PersonnelBO formedBy, OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer) throws CustomerException {
+            PersonnelBO formedBy, OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer,
+            GroupPersistence groupPersistence, OfficePersistence officePersistence) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, trained, trainedDate, address, customFields, fees,
-                formedBy, office, null, meeting, loanOfficer);
+                formedBy, office, null, meeting, loanOfficer, groupPersistence, officePersistence);
         validateFieldsForGroupUnderOffice(loanOfficer, meeting, office);
         setValues(trained, trainedDate);
         this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
@@ -133,10 +135,13 @@ public class GroupBO extends CustomerBO {
 
     private GroupBO(UserContext userContext, String displayName, CustomerStatus customerStatus, String externalId,
             boolean trained, Date trainedDate, Address address, List<CustomFieldView> customFields, List<FeeView> fees,
-            PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO loanOfficer)
+            PersonnelBO formedBy, OfficeBO office, CustomerBO parentCustomer, MeetingBO meeting,
+            PersonnelBO loanOfficer, GroupPersistence groupPersistence, OfficePersistence officePersistence)
             throws CustomerException {
         super(userContext, displayName, CustomerLevel.GROUP, customerStatus, externalId, null, address, customFields,
                 fees, formedBy, office, parentCustomer, meeting, loanOfficer);
+        this.setGroupPersistence(groupPersistence);
+        this.setOfficePersistence(officePersistence);
         validateFields(displayName, formedBy, trained, trainedDate);
     }
 

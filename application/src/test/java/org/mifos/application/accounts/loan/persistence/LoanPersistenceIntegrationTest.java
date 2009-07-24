@@ -33,7 +33,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -111,7 +111,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTest {
 
         for (AccountActionDateEntity accountAction : loanAccount.getAccountActionDates()) {
             if (accountAction.getInstallmentId().equals(Short.valueOf("1")))
-                LoanBOIntegrationTest.setActionDate(accountAction, new Date(twoDaysBack.getTimeInMillis()));
+                LoanBOTestUtils.setActionDate(accountAction, new Date(twoDaysBack.getTimeInMillis()));
         }
 
         TestObjectFactory.updateObject(loanAccount);
@@ -169,7 +169,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTest {
         Calendar checkDate = new GregorianCalendar(year, month, day - 15);
         Date startDate = new Date(checkDate.getTimeInMillis());
         for (AccountActionDateEntity accountAction : loanAccount.getAccountActionDates()) {
-            LoanBOIntegrationTest.setActionDate(accountAction, startDate);
+            LoanBOTestUtils.setActionDate(accountAction, startDate);
         }
         TestObjectFactory.updateObject(loanAccount);
         loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());

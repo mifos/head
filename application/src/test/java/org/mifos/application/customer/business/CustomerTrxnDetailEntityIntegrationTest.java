@@ -31,43 +31,51 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.MockMifosTestObjects;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTest {
 
     public CustomerTrxnDetailEntityIntegrationTest() throws SystemException, ApplicationException {
         super();
+
     }
 
     private AccountBO accountBO = null;
+    private MeetingBO meeting = null;
     private CustomerBO center = null;
     private CustomerBO group = null;
     private CustomerBO client = null;
-    private UserContext userContext;
+    private UserContext userContext = null;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
+        userContext = TestUtils.makeUser();
+        meeting = MockMifosTestObjects.createMeeting();
+        center = MockMifosTestObjects.createMockCenter("Center_Active_test", meeting);
+        group = MockMifosTestObjects.createMockGroup("Group_Active_test", center);
+        client = MockMifosTestObjects.createMockClient("Client_Active_test", group);
     }
 
     @Override
     protected void tearDown() throws Exception {
+        accountBO = null;
+        meeting = null;
+        center = null;
+        group = null;
+        client = null;
+        userContext = null;
         super.tearDown();
     }
 
@@ -75,18 +83,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
     }
 
-    private void createInitialObjects() throws MeetingException {
-        MeetingBO meeting = new MeetingBO(RecurrenceType.WEEKLY, TestObjectFactory.EVERY_WEEK, new java.util.Date(),
-                MeetingType.CUSTOMER_MEETING);
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        // TODO: Is CLIENT_ACTIVE right or should this be GROUP_ACTIVE?
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.CLIENT_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client_Active_test", CustomerStatus.CLIENT_ACTIVE, group);
-    }
-
     public void testGenerateReverseTrxn() throws Exception {
-        userContext = TestUtils.makeUser();
-        createInitialObjects();
         accountBO = client.getCustomerAccount();
         Date currentDate = new Date(System.currentTimeMillis());
         CustomerAccountBO customerAccountBO = (CustomerAccountBO) accountBO;
@@ -132,5 +129,5 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         }
 
     }
-
+    
 }

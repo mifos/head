@@ -28,7 +28,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -165,7 +165,7 @@ public class RepayLoanActionTest extends MifosMockStrutsTestCase {
         int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH - 1);
         currentDateCalendar = new GregorianCalendar(year, month, day);
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            LoanBOIntegrationTest.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
+            LoanBOTestUtils.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
                     .getTimeInMillis()));
             break;
         }

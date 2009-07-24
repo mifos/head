@@ -32,7 +32,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanCalculationTest;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -357,7 +357,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutName() throws Exception {
         try {
             group = new GroupBO(TestUtils.makeUser(), "", CustomerStatus.GROUP_PARTIAL, null, false, null, null, null,
-                    null, personnelBo, officeBo1, meeting, personnelBo);
+                    null, personnelBo, officeBo1, meeting, personnelBo, new GroupPersistence(), new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -368,7 +368,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutStatus() throws Exception {
         try {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", null, null, false, null, null, null, null,
-                    personnelBo, officeBo1, meeting, personnelBo);
+                    personnelBo, officeBo1, meeting, personnelBo, new GroupPersistence(), new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -379,7 +379,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutOffice_WithoutCenterHierarchy() throws Exception {
         try {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, false, null,
-                    null, null, null, personnelBo, null, meeting, personnelBo);
+                    null, null, null, personnelBo, null, meeting, personnelBo, new GroupPersistence(),
+                    new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -390,7 +391,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutLO_InActiveState_WithoutCenterHierarchy() throws Exception {
         try {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_ACTIVE, null, false, null,
-                    null, null, null, personnelBo, officeBo1, meeting, null);
+                    null, null, null, personnelBo, officeBo1, meeting, null, new GroupPersistence(),
+                    new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -401,7 +403,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutMeeting_InActiveState_WithoutCenterHierarchy() throws Exception {
         try {
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_ACTIVE, null, false, null,
-                    null, null, null, personnelBo, officeBo1, null, personnelBo);
+                    null, null, null, personnelBo, officeBo1, null, personnelBo, new GroupPersistence(),
+                    new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -413,7 +416,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
         try {
             meeting = getMeeting();
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, false, null,
-                    null, null, null, personnelBo, null);
+                    null, null, null, personnelBo, null, new GroupPersistence(), new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -426,7 +429,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
             createCenter();
             meeting = getMeeting();
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, false, null,
-                    null, null, null, null, center);
+                    null, null, null, null, center, new GroupPersistence(), new OfficePersistence());
             fail();
         } catch (CustomerException ce) {
             assertNull(group);
@@ -439,7 +442,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
             createCenter();
             meeting = getMeeting();
             group = new GroupBO(TestUtils.makeUser(), "GroupName", CustomerStatus.GROUP_PARTIAL, null, true, null,
-                    null, null, null, personnelBo, center);
+                    null, null, null, personnelBo, center, new GroupPersistence(), new OfficePersistence());
             assertFalse("Group Created", true);
         } catch (CustomerException ce) {
             assertNull(group);
@@ -457,7 +460,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
         List<FeeView> fees = getFees();
         try {
             group1 = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, null, false, null, null,
-                    null, fees, personnelBo, center);
+                    null, fees, personnelBo, center, new GroupPersistence(), new OfficePersistence());
             assertFalse(true);
         } catch (CustomerException e) {
             assertTrue(true);
@@ -476,7 +479,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
         assertEquals(0, center.getMaxChildCount().intValue());
 
         group = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
-                getAddress(), getCustomFields(), getFees(), personnelBo, center);
+                getAddress(), getCustomFields(), getFees(), personnelBo, center, new GroupPersistence(),
+                new OfficePersistence());
         new GroupPersistence().saveGroup(group);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -506,7 +510,8 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
         String name = "GroupTest";
         String externalId = "1234";
         group = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, externalId, false, null,
-                getAddress(), getCustomFields(), getFees(), personnelBo, officeBo1, getMeeting(), personnelBo);
+                getAddress(), getCustomFields(), getFees(), personnelBo, officeBo1, getMeeting(), personnelBo,
+                new GroupPersistence(), new OfficePersistence());
         new GroupPersistence().saveGroup(group);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1186,7 +1191,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
 
         try {
             group = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
-                    getAddress(), null, null, personnelBo, center);
+                    getAddress(), null, null, personnelBo, center, new GroupPersistence(), new OfficePersistence());
             TestObjectFactory.simulateInvalidConnection();
             new GroupPersistence().saveGroup(group);
             fail();
@@ -1352,7 +1357,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTest {
         int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
         currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            LoanBOIntegrationTest.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
+            LoanBOTestUtils.setActionDate(accountActionDateEntity, new java.sql.Date(currentDateCalendar
                     .getTimeInMillis()));
             break;
         }

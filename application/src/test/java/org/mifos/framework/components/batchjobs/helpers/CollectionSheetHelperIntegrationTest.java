@@ -28,7 +28,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -113,7 +113,7 @@ public class CollectionSheetHelperIntegrationTest extends MifosIntegrationTest {
         }
 
         for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
-            LoanBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+            LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                     .getActionDate(), collectionSheetHelper.getDaysInAdvance()));
         }
 

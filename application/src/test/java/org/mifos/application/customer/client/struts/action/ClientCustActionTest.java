@@ -1700,7 +1700,7 @@ public class ClientCustActionTest extends MifosMockStrutsTestCase {
         group = new GroupBO(userContext, "groupName", CustomerStatus.GROUP_PENDING, "1234", false, null, null, null,
                 null, new PersonnelPersistence().getPersonnel(Short.valueOf("3")), new OfficePersistence()
                         .getOffice(Short.valueOf("3")), meeting, new PersonnelPersistence().getPersonnel(Short
-                        .valueOf("3")));
+                        .valueOf("3")), new GroupPersistence(), new OfficePersistence());
         new GroupPersistence().saveGroup(group);
         StaticHibernateUtil.commitTransaction();
     }

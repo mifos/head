@@ -133,6 +133,7 @@ public class StandardTestingService implements TestingService {
                 + ".database.hibernate.transaction.factory_class");
         hibernateToMifos.put("hibernate.cache.provider_class", testMode + ".database.hibernate.cache.provider_class");
         hibernateToMifos.put("hibernate.connection.isolation", testMode + ".database.hibernate.connection.isolation");
+        hibernateToMifos.put("hibernate.connection.release_mode", testMode + ".database.hibernate.connection.release_mode");
         hibernateToMifos.put("hibernate.c3p0.acquire_increment", testMode
                 + ".database.hibernate.c3p0.acquire_increment");
         hibernateToMifos.put("hibernate.c3p0.idle_test_period", testMode + ".database.hibernate.c3p0.idle_test_period");

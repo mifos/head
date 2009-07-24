@@ -53,7 +53,7 @@ import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanCalculationTest;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntityIntegrationTest;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -595,10 +595,10 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
         LoanBO loan = (LoanBO) accountBO;
         for (AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()) {
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
-                LoanBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                         .getActionDate(), -14));
             else if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-                LoanBOIntegrationTest.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
+                LoanBOTestUtils.setActionDate(accountActionDateEntity, offSetDate(accountActionDateEntity
                         .getActionDate(), -7));
         }
         TestObjectFactory.updateObject(loan);
@@ -1202,7 +1202,7 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
                 installment.getMiscPenalty(), installment.getMiscPenaltyPaid(), installment.getMiscFee(), installment
                         .getMiscFeePaid(), new Money("20.0"), installment.getPrincipalPaid(), new Money("10.0"),
                 installment.getInterestPaid());
-        LoanBOIntegrationTest.setActionDate(installment, offSetCurrentDate(1));
+        LoanBOTestUtils.setActionDate(installment, offSetCurrentDate(1));
         accountBO = saveAndFetch(accountBO);
     }
 

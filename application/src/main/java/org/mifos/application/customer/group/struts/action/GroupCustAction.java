@@ -496,7 +496,7 @@ public class GroupCustAction extends CustAction {
                 .getPreferredLocale()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
                 new PersonnelPersistence().getPersonnel(actionForm.getFormedByPersonnelValue()),
                 new OfficePersistence().getOffice(actionForm.getOfficeIdValue()), meeting, new PersonnelPersistence()
-                        .getPersonnel(actionForm.getLoanOfficerIdValue()));
+                        .getPersonnel(actionForm.getLoanOfficerIdValue()), new GroupPersistence(), new OfficePersistence());
         return group;
     }
 
@@ -513,7 +513,7 @@ public class GroupCustAction extends CustAction {
                 .getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext
                 .getPreferredLocale()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
                 new PersonnelPersistence().getPersonnel(actionForm.getFormedByPersonnelValue()), actionForm
-                        .getParentCustomer());
+                        .getParentCustomer(), new GroupPersistence(), new OfficePersistence());
         return group;
     }
 }

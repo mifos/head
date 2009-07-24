@@ -42,7 +42,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntityIntegrationTest;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -286,7 +286,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTest {
             AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accntActionDate,
                     null, null, new Money("5"));
 
-            LoanBOIntegrationTest.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
+            LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
                     .getMoneyForMFICurrency(3));
 
             accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
@@ -311,7 +311,7 @@ public class CollSheetBOIntegrationTest extends MifosIntegrationTest {
                     .currentTimeMillis()), PaymentStatus.UNPAID, new Money(), new Money());
             AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(accntActionDate,
                     null, null, new Money("5"));
-            LoanBOIntegrationTest.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
+            LoanBOTestUtils.setFeeAmountPaid(accntFeesActionDetailEntity, TestObjectFactory
                     .getMoneyForMFICurrency(3));
 
             accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
