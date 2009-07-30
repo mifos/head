@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
+	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF/freemarker" path="userInterface/src/main/resources/org/mifos/ui/freemarker/core"/>
 	<classpathentry excluding="java/|resources/|webapp/pages/" including="sql/*" kind="src" path="application/src/main"/>
 	<classpathentry kind="src" path="application/src/main/java"/>
 	<classpathentry kind="src" path="application/src/main/resources"/>
@@ -9,7 +10,7 @@
 	<classpathentry kind="src" path="application/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
-	<classpathentry kind="src" path="userInterface/src/main/resources"/>
+	<classpathentry excluding="org/mifos/ui/freemarker/core/" kind="src" path="userInterface/src/main/resources"/>
 	<classpathentry kind="src" output="userInterface/target/test-classes" path="userInterface/src/test/java"/>
 	<classpathentry kind="src" path="userInterface/src/main/java"/>
 	<classpathentry kind="src" output="testFramework/target/test-classes" path="testFramework/src/test/java"/>

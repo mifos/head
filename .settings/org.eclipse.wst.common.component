@@ -19,5 +19,6 @@
 <wb-resource deploy-path="/" source-path="/application/src/main/webapp/pages"/>
 <wb-resource deploy-path="/" source-path="/application/src/test/java"/>
 <wb-resource deploy-path="/" source-path="/application/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/userInterface/src/main/resources/org/mifos/ui/freemarker/core"/>
     </wb-module>
 </project-modules>
