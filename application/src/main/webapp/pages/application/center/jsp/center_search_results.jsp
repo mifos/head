@@ -38,6 +38,7 @@ explanation of the license and how it is applied.
  </script>
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
+ <span style="display: none" id="page.id">center_search_results</span>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <html-el:form method="post" action="centerCustAction.do">

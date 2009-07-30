@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
-
+<span style="display: none" id="page.id">report_designer</span>
 
 <FORM name='data_form' method='POST' action='<c:url value="/pages/application/reports/jsp/reportsUpload.jsp" />' ENCTYPE='Multipart/Form-Data'>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">

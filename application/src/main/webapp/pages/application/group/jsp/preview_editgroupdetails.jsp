@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
  <tiles:put name="body" type="string">
- <input type="hidden" id="page.id" value="PreviewEditGroupDetails"/>
+ <span style="display: none" id="page.id">PreviewEditGroupDetails</span>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
 function meetingpopup(){

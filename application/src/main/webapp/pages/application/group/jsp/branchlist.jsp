@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
- <input type="hidden" id="page.id" value="GroupBranchList"/>
+ <span style="display: none" id="page.id">GroupBranchList</span>
 
 <html-el:form action="groupCustAction.do?method=preview">
 

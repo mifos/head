@@ -30,6 +30,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">editoffice</span>
+	
 <script language="javascript">
 	function goToCancelPage(){
 		document.offActionForm.action="offAction.do?method=get";

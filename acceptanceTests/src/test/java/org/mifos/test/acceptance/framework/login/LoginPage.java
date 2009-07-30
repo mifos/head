@@ -40,10 +40,10 @@ public class LoginPage extends AbstractPage {
     private static final String USERNAME_INPUT_ID	= "login.input.username";
 	private static final String PASSWORD_INPUT_ID = "login.input.password";
 	private static final String LOGIN_BUTTON_ID 	= "login.button.login";
-	private static final String HEADING_LABEL_ID 	= "login.label.heading";
-	private static final String WELCOME_LABEL_ID 	= "login.label.welcome";
-	private static final String USERNAME_LABEL_ID = "login.label.username";
-	private static final String PASSWORD_LABEL_ID = "login.label.password";
+	//private static final String HEADING_LABEL_ID 	= "login.label.heading";
+	//private static final String WELCOME_LABEL_ID 	= "login.label.welcome";
+	//private static final String USERNAME_LABEL_ID = "login.label.username";
+	//private static final String PASSWORD_LABEL_ID = "login.label.password";
 	private static final String MESSAGE_ERROR_ID 	= "login.error.message";
 
 	public LoginPage() {
@@ -92,10 +92,7 @@ public class LoginPage extends AbstractPage {
 	}
 
 	public LoginPage verifyPage() {
-        Assert.assertEquals(selenium.getText(HEADING_LABEL_ID), "Login");
-        Assert.assertEquals(selenium.getText(WELCOME_LABEL_ID), "Welcome to mifos");
-        Assert.assertEquals(selenium.getText(USERNAME_LABEL_ID), "Username");
-        Assert.assertEquals(selenium.getText(PASSWORD_LABEL_ID), "Password");
+        verifyPage("Login");
 		return this;
 	}
 

@@ -25,6 +25,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
+ <span style="display: none" id="page.id">createuser_confirmation</span>
+
 <html-el:form action="PersonAction.do?method=get">
      <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>

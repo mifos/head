@@ -31,6 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">viewchangelog</span>
 	<script>
 	function returnToDetails(){
 		personActionForm.action="PersonAction.do?method=cancelChangeLog";

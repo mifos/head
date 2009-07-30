@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">createsavingsaccountpreview</span>
 	<html-el:form method="post" action="/savingsAction.do?method=create" >
 
 <SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>

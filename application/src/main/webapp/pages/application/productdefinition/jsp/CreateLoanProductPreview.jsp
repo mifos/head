@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
-<input type="hidden" id="page.id" value="CreateLoanProductPreview"/>
+<span style="display: none" id="page.id">CreateLoanProductPreview</span>
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">

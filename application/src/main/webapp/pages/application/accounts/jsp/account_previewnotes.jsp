@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
- <input type="hidden" id="page.id" value="AccountPreviewNotes"/>
+ <span style="display: none" id="page.id">AccountPreviewNotes</span>
  <script language="javascript">
   function goToEditPage(){
 	notesActionForm.action="notesAction.do?method=previous";

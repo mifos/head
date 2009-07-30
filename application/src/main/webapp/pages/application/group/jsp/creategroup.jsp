@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="CreateGroup"/>
+	<span style="display: none" id="page.id">CreateGroup</span>
 
 
 		<script src="pages/framework/js/conversion.js"></script>

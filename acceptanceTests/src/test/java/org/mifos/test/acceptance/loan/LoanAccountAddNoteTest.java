@@ -33,7 +33,7 @@ import org.mifos.test.acceptance.framework.loan.AccountAddNotesPage;
 import org.mifos.test.acceptance.framework.loan.AccountNotesPage;
 import org.mifos.test.acceptance.framework.loan.AccountPreviewNotesPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     
     private LoanAccountPage addNoteToAccount() {
         // find the loan w/ id TEST_ACCOUNT
-        LoanTestHelper helper = new LoanTestHelper(selenium);
+        NavigationHelper helper = new NavigationHelper(selenium);
 
         LoanAccountPage loanAccountPage = helper.navigateToLoanAccountPage(TEST_ACCOUNT);
         loanAccountPage.verifyPage();

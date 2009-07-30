@@ -28,6 +28,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".noorangetab">
  <tiles:put name="body" type="string">
+ <span style="display: none" id="page.id">yoursettings</span>
+ 
 
 <html-el:form action="yourSettings.do?method=get">
 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="Personnel" />

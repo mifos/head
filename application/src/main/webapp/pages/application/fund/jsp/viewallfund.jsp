@@ -24,7 +24,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="viewFunds"/>
+<span style="display: none" id="page.id">viewFunds</span>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
 <html-el:form action="/fundAction.do">

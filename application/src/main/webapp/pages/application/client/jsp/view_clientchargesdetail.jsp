@@ -40,7 +40,7 @@ explanation of the license and how it is applied.
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivities')}"
 			   var="recentActivities" />
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="ViewClientChargesDetail"/>
+	<span style="display: none" id="page.id">ViewClientChargesDetail</span>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />  

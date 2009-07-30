@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<input type="hidden" id="page.id" value="view_organizational_holidays"/>
+<span style="display: none" id="page.id">view_organizational_holidays</span>
 <html-el:form action="/holidayAction.do">
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>

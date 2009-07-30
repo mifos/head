@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
+<span style="display: none" id="page.id">preview</span>
 <html-el:form action="/ppiAction.do?method=update" focus="name">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr>

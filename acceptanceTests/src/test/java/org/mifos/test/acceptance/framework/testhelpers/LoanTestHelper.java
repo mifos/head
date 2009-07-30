@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
@@ -40,6 +41,13 @@ import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusPage;
 import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalPreviewPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
@@ -53,9 +61,16 @@ import com.thoughtworks.selenium.Selenium;
 public class LoanTestHelper {
 
     private final Selenium selenium;
+    private final NavigationHelper navigationHelper;
 
     public LoanTestHelper(Selenium selenium) {
         this.selenium = selenium;
+        this.navigationHelper = new NavigationHelper(selenium);
+    }
+    
+    public LoanTestHelper(Selenium selenium, NavigationHelper helper) {
+        this.selenium = selenium;
+        this.navigationHelper = helper;
     }
     
     /**
@@ -69,6 +84,7 @@ public class LoanTestHelper {
         createLoanAccountSearchPage.verifyPage();
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage
         .searchAndNavigateToCreateLoanAccountPage(searchParameters);
+        createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
         .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
         createLoanAccountConfirmationPage.verifyPage();
@@ -83,7 +99,7 @@ public class LoanTestHelper {
      * @param params The status parameters.
      */
     public void changeLoanAccountStatus(String loanId, EditLoanAccountStatusParameters params) {
-        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
@@ -101,7 +117,7 @@ public class LoanTestHelper {
      * @
      */
     public LoanAccountPage disburseLoan(String loanId, DisburseLoanParameters params) {
-        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
@@ -123,7 +139,7 @@ public class LoanTestHelper {
      * @return The loan account page for the loan account.
      */
     public LoanAccountPage applyCharge(String loanId, ChargeParameters params) {
-        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
@@ -136,7 +152,7 @@ public class LoanTestHelper {
     }
     
     public LoanAccountPage applyPayment(String loanId, PaymentParameters params) {
-        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
@@ -156,7 +172,7 @@ public class LoanTestHelper {
      * @param loanId The loan account id.
      */
     public void waiveFee(String loanId) {
-        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
@@ -170,7 +186,7 @@ public class LoanTestHelper {
      * @param loanId The loan account id.
      */
     public void waivePenalty(String loanId) {
-        LoanAccountPage loanAccountPage = navigateToLoanAccountPage(loanId);
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
@@ -179,13 +195,30 @@ public class LoanTestHelper {
         installmentDetailsPage.waivePenalty();
     }
     
-    /**
-     * Wraps navigateToLoanAccountPage so that a String can be used.
-     */
-    public LoanAccountPage navigateToLoanAccountPage(String searchParam) {
-        CreateLoanAccountSearchParameters params = new CreateLoanAccountSearchParameters();
-        params.setSearchString(searchParam);
-        return navigateToLoanAccountPage(params);
+    public void redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters params) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        adminPage.verifyPage();
+        
+        RedoLoanDisbursalSearchPage searchPage = adminPage.navigateToRedoLoanDisbursal();
+        searchPage.verifyPage();
+        
+        RedoLoanDisbursalSearchResultsPage resultsPage = searchPage.searchAndNavigateToRedoLoanDisbursalPage(clientName);
+        resultsPage.verifyPage();
+        
+        RedoLoanDisbursalChooseLoanInstancePage chooseLoanPage = resultsPage.navigateToRedoLoanDisbursalChooseLoanProductPage(clientName);
+        chooseLoanPage.verifyPage();
+        
+        RedoLoanDisbursalEntryPage dataEntryPage = chooseLoanPage.submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
+        dataEntryPage.verifyPage();
+        
+        RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(params);
+        schedulePreviewPage.verifyPage();
+        
+        RedoLoanDisbursalPreviewPage previewPage = schedulePreviewPage.submitAndNavigateToRedoLoanDisbursalPreviewPage();
+        previewPage.verifyPage();
+        
+        CreateLoanAccountConfirmationPage confirmationPage = previewPage.submitAndNavigateToLoanAccountConfirmationPage();
+        confirmationPage.verifyPage();
     }
 
     
@@ -195,6 +228,7 @@ public class LoanTestHelper {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
         loginPage.verifyPage();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        homePage.verifyPage();
         SearchResultsPage searchResultsPage = homePage.search(searchString);
         
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(searchString);
@@ -204,9 +238,9 @@ public class LoanTestHelper {
 
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
+        loginPage.verifyPage();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
-
 }

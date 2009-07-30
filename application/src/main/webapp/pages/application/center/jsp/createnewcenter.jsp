@@ -31,6 +31,8 @@ explanation of the license and how it is applied.
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">createnewcenter</span>
+	
 	
 	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>

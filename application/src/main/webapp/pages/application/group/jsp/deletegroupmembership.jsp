@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="DeleteGroupMembership"/>
+	<span style="display: none" id="page.id">DeleteGroupMembership</span>
 
 		<script>
 		function goToCancelPage(){

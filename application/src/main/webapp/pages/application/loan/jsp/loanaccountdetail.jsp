@@ -42,7 +42,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
      	
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="LoanAccountDetail"/>
+	<span style="display: none" id="page.id">LoanAccountDetail</span>
 	
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>

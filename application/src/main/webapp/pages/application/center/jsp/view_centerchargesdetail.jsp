@@ -30,6 +30,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
+<span style="display: none" id="page.id">view_centerchargesdetail</span>
+
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />

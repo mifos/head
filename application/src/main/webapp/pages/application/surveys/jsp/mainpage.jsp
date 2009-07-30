@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
+<span style="display: none" id="page.id">mainpage</span>
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">

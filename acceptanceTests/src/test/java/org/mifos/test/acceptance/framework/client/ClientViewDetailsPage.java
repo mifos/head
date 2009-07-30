@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.client;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.testng.Assert;
 
@@ -135,6 +136,12 @@ public class ClientViewDetailsPage extends MifosPage {
         selenium.click("viewClientDetails.link.viewAllClosedAccounts");
         waitForPageToLoad();
         return new ClosedAccountsPage(selenium);
+    }
+
+    public AttachSurveyPage navigateToAttachSurveyPage() {
+        selenium.click("viewClientDetails.link.attachSurvey");
+        waitForPageToLoad();
+        return new AttachSurveyPage(selenium);
     }
     
     

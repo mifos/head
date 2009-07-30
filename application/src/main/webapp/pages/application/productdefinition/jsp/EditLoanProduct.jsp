@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<input type="hidden" id="page.id" value="EditLoanProduct"/>
+		<span style="display: none" id="page.id">EditLoanProduct</span>
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {

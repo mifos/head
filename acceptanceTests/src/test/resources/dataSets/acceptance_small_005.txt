@@ -1,0 +1,2 @@
+Based on acceptance_small_004.
+Added three questions, a survey and a loan product for groups with a meeting a month.

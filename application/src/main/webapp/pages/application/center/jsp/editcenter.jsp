@@ -30,6 +30,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">editcenter</span>
+	
 	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 	

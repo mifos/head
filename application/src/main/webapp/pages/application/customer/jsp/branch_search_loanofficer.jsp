@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="BranchSearchLoanofficer"/>
+	<span style="display: none" id="page.id">BranchSearchLoanofficer</span>
 		<html-el:form action="custSearchAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<c:set var="Office"

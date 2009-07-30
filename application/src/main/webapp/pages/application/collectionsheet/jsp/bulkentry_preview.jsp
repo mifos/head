@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/mifos/collectionsheettags" prefix="collectionsheet"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="BulkEntryPreview"/>
+<span style="display: none" id="page.id">BulkEntryPreview</span>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">

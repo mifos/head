@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="ChooseBranch"/>	
+	<span style="display: none" id="page.id">ChooseBranch</span>	
 		<script language="javascript">
   
    function goToCancelPage(){

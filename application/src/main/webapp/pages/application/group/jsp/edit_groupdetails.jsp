@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="EditGroupDetails"/>
+	<span style="display: none" id="page.id">EditGroupDetails</span>
 	
 		<script language="javascript">
 	function chkForValidDates(){		

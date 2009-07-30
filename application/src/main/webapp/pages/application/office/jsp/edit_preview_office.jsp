@@ -31,6 +31,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">edit_preview_office</span>
+	
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
 function goToCancelPage(id){

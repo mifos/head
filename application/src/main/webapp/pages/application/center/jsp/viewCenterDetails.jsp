@@ -37,7 +37,7 @@ explanation of the license and how it is applied.
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	    <input type="hidden" id="page.id" value="CenterDetails"/>
+	    <span style="display: none" id="page.id">CenterDetails</span>
 		<script language="javascript">
   function GoToEditPage(){
 	centerActionForm.action="centerAction.do?method=manage";

@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="NextPaymentLoanAccount"/>
+	<span style="display: none" id="page.id">NextPaymentLoanAccount</span>
 	<script>
 			function fun_return(form)
 					{

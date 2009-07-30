@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">survey_edit_preview</span>
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveysAction.do?method=update">
 <table width="93%" border="0" cellpadding="3" cellspacing="0">

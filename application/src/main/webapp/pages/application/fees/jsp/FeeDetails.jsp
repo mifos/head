@@ -31,6 +31,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">FeeDetails</span>
+	
 		<script src="pages/application/fees/js/Fees.js"></script>
 		<html-el:form action="/feeaction.do">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />

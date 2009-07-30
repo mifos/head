@@ -31,6 +31,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">preview_new_office</span>
+	
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
 function goToCreatePage() {

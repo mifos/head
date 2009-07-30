@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-<input type="hidden" id="page.id" value="create_officeHoliday"/>
+<span style="display: none" id="page.id">create_officeHoliday</span>
 	<tiles:put name="body" type="string">
 		<SCRIPT>
 	function ViewHolidays(){

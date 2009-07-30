@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="ViewLoanAccountActivity"/>
+	<span style="display: none" id="page.id">ViewLoanAccountActivity</span>
 	<html-el:form method="post" action="/loanAccountAction.do" >
 	<SCRIPT SRC="pages/application/loan/js/LoanAccountActivity.js"></SCRIPT>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">

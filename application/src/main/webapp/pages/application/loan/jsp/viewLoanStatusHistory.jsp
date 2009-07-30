@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 </script>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<input type="hidden" id="page.id" value="ViewLoanStatusHistory"/>
+		<span style="display: none" id="page.id">ViewLoanStatusHistory</span>
 		<html-el:form action="loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />

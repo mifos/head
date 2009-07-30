@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="ChooseOffice"/>
+	<span style="display: none" id="page.id">ChooseOffice</span>
 
 		<script language="javascript">
 

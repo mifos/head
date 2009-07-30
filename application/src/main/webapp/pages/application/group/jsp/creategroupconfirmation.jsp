@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
-<input type="hidden" id="page.id" value="CreateGroupConfirmation"/>
+<span style="display: none" id="page.id">CreateGroupConfirmation</span>
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupCustAction.do?method=get">

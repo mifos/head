@@ -31,6 +31,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">updatemeeting</span>
+	
 
 
 		<script>

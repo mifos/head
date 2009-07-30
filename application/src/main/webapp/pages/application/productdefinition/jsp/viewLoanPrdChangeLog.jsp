@@ -36,6 +36,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">viewLoanPrdChangeLog</span>
 	<script>
 	function returnToDetails(){
 		loanproductactionform.action="loanproductaction.do?method=cancelChangeLog";

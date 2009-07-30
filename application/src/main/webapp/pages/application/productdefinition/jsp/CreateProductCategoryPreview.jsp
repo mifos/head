@@ -28,6 +28,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">CreateProductCategoryPreview</span>
+	
 
 		<script language="javascript">
 		<!--

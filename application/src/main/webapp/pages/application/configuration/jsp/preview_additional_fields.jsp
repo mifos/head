@@ -24,7 +24,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
-<input type="hidden" id="page.id" value="preview_additional_fields" />
+<span style="display: none" id="page.id">preview_additional_fields</span>
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
 	function fnCreateCancel(){

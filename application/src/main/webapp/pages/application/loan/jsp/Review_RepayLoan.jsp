@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="ReviewRepayLoan"/>
+	<span style="display: none" id="page.id">ReviewRepayLoan</span>
 		<script>
 			function fun_return(form){
 					form.action="loanAccountAction.do?method=get";

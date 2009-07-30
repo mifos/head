@@ -134,4 +134,10 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new AccountNotesPage(selenium);
     }
+
+    public AttachSurveyPage navigateToAttachSurveyPage() {
+        selenium.click("loanaccountdetail.link.attachSurvey"); // TODO what?
+        waitForPageToLoad();
+        return new AttachSurveyPage(selenium);
+    }
 }

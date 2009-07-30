@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
- <input type="hidden" id="page.id" value="AccountNotes"/> 
+ <span style="display: none" id="page.id">AccountNotes</span> 
 <html-el:form action="notesAction.do">
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>

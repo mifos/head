@@ -29,6 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">savingsaccountdetail</span>
 		<html-el:form method="post" action="/savingsAction.do">
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

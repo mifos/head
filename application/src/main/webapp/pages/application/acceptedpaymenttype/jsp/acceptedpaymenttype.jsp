@@ -36,7 +36,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<input type="hidden" id="page.id" value="AcceptedPaymentType"/>
+		<span style="display: none" id="page.id">AcceptedPaymentType</span>
 		<SCRIPT SRC="pages/framework/js/logic.js"></SCRIPT>
 		<html-el:form action="acceptedPaymentTypeAction"  >
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

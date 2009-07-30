@@ -25,6 +25,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
+<span style="display: none" id="page.id">report_designer_params_view</span>
 
 <html-el:form action="/reportsParamsAction.do?method=createParams">
 <html-el:hidden property="parameterId" value='<%=request.getParameter("parameterId")%>'/>

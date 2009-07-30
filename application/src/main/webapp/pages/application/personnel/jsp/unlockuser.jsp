@@ -32,6 +32,8 @@ explanation of the license and how it is applied.
 </script>
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
+ <span style="display: none" id="page.id">unlockuser</span>
+ 
 <html-el:form action="PersonAction.do?method=unLockUserAccount">
 
    <table width="95%" border="0" cellpadding="0" cellspacing="0">

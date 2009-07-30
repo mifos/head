@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withmenu">
  <tiles:put name="body" type="string">
- <input type="hidden" id="page.id" value="ConfirmCenterMembership"/>
+ <span style="display: none" id="page.id">ConfirmCenterMembership</span>
 
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>

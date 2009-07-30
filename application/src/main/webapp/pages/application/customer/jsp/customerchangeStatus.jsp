@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="CustomerChangeStatus"/>
+	<span style="display: none" id="page.id">CustomerChangeStatus</span>
 		<script language="javascript">
 			function goToCancelPage(form){
 				form.action="editCustomerStatusAction.do?method=cancelStatus";
@@ -145,7 +145,7 @@ explanation of the license and how it is applied.
 											<td align="center">&nbsp;</td>
 											<td><c:set var="flags" scope="request"
 												value="${status.flagSet}" /> <mifos:select
-												name="editCustomerStatusActionForm" property="flagId" size="1" disabled="true">
+												name="editCustomerStatusActionForm" property="flagId" styleId="customerchangeStatus.input.cancel_reason" size="1" disabled="true">
 												<html-el:options collection="flags" property="id"
 													labelProperty="lookUpValue.messageText" />
 											</mifos:select></td>

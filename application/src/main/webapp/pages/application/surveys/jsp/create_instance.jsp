@@ -74,6 +74,7 @@ hr {
 </style>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
+<span style="display: none" id="page.id">create_instance</span>
 <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=preview">
 <table width="95%" border="0" cellpadding="0" cellspacing="0">

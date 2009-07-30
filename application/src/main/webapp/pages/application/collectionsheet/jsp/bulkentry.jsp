@@ -18,7 +18,7 @@ See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
 
-<input type="hidden" id="page.id" value="BulkEntry"/>
+<span style="display: none" id="page.id">BulkEntry</span>
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>

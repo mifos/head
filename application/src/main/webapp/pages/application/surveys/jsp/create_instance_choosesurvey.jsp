@@ -32,6 +32,7 @@ explanation of the license and how it is applied.
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">create_instance_choosesurvey</span>
     		<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 		<html-el:form action="surveyInstanceAction.do?method=create_entry">
 

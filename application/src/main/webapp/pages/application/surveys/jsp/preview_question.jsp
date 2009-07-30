@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@page import="org.mifos.application.surveys.helpers.AnswerType"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
+<span style="display: none" id="page.id">preview_question</span>
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			  <tr>

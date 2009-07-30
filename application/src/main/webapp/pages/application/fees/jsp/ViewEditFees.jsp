@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<input type="hidden" id="page.id" value="viewFees"/>
+		<span style="display: none" id="page.id">viewFees</span>
 		<script>
 				
 			</script>

@@ -32,6 +32,8 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
+	<span style="display: none" id="page.id">create_checkList</span>
+	
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="JavaScript"
 			src="pages/application/checklist/js/validator.js"

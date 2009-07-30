@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<input type="hidden" id="page.id" value="RepayLoan"/>
+		<span style="display: none" id="page.id">RepayLoan</span>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script>
 			function fun_return(form)

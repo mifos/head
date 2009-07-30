@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.group;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
 import org.testng.Assert;
 
@@ -59,4 +60,35 @@ public class GroupViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ClosedAccountsPage(selenium);
     }
+    
+    public EditGroupStatusPage navigateToEditGroupStatusPage() {
+        selenium.click("viewgroupdetails.link.editStatus");
+        waitForPageToLoad();
+        return new EditGroupStatusPage(selenium);
+    }
+    
+    public HistoricalDataPage navigateToHistoricalDataPage() {
+        selenium.click("viewgroupdetails.link.viewHistoricalData");
+        waitForPageToLoad();
+        return new HistoricalDataPage(selenium);
+    }
+    
+    public ChangeLogPage navigateToChangeLogPage() {
+        selenium.click("viewgroupdetails.link.viewChangeLog");
+        waitForPageToLoad();
+        return new ChangeLogPage(selenium);
+    }
+    
+    public EditCenterMembershipSearchPage navigateToEditCenterMembership() {
+        selenium.click("viewgroupdetails.link.editCenterMembership");
+        waitForPageToLoad();
+        return new EditCenterMembershipSearchPage(selenium);
+    }
+
+    public AttachSurveyPage navigateToAttachSurveyPage() {
+        selenium.click("viewgroupdetails.link.attachSurvey");
+        waitForPageToLoad();
+        return new AttachSurveyPage(selenium);
+    }
+    
 }

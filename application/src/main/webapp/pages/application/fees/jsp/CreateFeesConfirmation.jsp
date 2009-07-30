@@ -24,6 +24,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
+<span style="display: none" id="page.id">CreateFeesConfirmation</span>
+
 
 <html-el:form action="/feeaction.do?method=get">
           <table width="95%" border="0" cellpadding="0" cellspacing="0">

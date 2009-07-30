@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<input type="hidden" id="page.id" value="SchedulePreview"/>
+		<span style="display: none" id="page.id">SchedulePreview</span>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
 		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>

@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<input type="hidden" id="page.id" value="BulkEntryData"/>
+<span style="display: none" id="page.id">BulkEntryData</span>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">

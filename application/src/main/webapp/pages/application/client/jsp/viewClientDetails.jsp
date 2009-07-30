@@ -35,7 +35,7 @@ explanation of the license and how it is applied.
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<input type="hidden" id="page.id" value="ViewClientDetails"/>
+	<span style="display: none" id="page.id">ViewClientDetails</span>
 		<script language="javascript">
   function photopopup(custId , custName, currentFlow){
 	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");

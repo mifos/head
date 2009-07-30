@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.admin;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
 import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
@@ -111,6 +112,12 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.reverseLoanDisbursal");
         waitForPageToLoad();
         return new UndoLoanDisbursalSearchPage(selenium);
+    }
+    
+    public RedoLoanDisbursalSearchPage navigateToRedoLoanDisbursal() {
+        selenium.click("admin.link.redoLoanDisbursal");
+        waitForPageToLoad();
+        return new RedoLoanDisbursalSearchPage(selenium);
     }
 
     public AdminPage verifyPage() {
