@@ -148,6 +148,7 @@
                 <cargo.wait>true</cargo.wait>
                 <selenium.background>false</selenium.background>
                 <selenium.log.output>false</selenium.log.output>
+                <selenium.port>4445</selenium.port>
             </properties>
         </profile>
         <profile>
