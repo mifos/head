@@ -34,6 +34,7 @@ status)
         ;;
 restart)
         $CATALINA_HOME/bin/shutdown.sh
+        sleep 1
         $CATALINA_HOME/bin/startup.sh
         ;;
 *)
