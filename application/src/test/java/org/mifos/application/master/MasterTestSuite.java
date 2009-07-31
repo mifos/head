@@ -26,7 +26,7 @@ import junit.framework.TestSuite;
 import org.mifos.application.master.business.CustomFieldDefinitionEntityTest;
 import org.mifos.application.master.business.service.MasterBusinessServiceIntegrationTest;
 import org.mifos.application.master.persistence.MasterPersistenceIntegrationTest;
-import org.mifos.application.master.MessageLookupTest;
+import org.mifos.application.master.MessageLookupIntegrationTest;
 
 public class MasterTestSuite extends TestSuite {
 
@@ -35,7 +35,7 @@ public class MasterTestSuite extends TestSuite {
         testSuite.addTestSuite(MasterPersistenceIntegrationTest.class);
         testSuite.addTestSuite(MasterBusinessServiceIntegrationTest.class);
         testSuite.addTestSuite(CustomFieldDefinitionEntityTest.class);
-        testSuite.addTestSuite(MessageLookupTest.class);
+        testSuite.addTestSuite(MessageLookupIntegrationTest.class);
         return testSuite;
     }
 

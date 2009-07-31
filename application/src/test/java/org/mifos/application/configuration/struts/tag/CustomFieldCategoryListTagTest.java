@@ -38,6 +38,7 @@ public class CustomFieldCategoryListTagTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         MifosLogManager.configureLogging();
+        TestUtils.initializeSpring();
         userContext = TestUtils.makeUser();
     }
 

@@ -47,11 +47,17 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.MifosInMemoryIntegrationTest;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIPersistenceIntegrationTest extends MifosInMemoryIntegrationTest {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
+
+    public PPIPersistenceIntegrationTest() {
+        super();
+        StaticHibernateUtil.initialize();
+    }
 
     public void setUp() {
         super.setUp();

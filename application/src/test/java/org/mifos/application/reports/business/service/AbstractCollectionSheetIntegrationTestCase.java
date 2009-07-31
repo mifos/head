@@ -39,6 +39,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -63,7 +64,7 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
     protected static final int MAX_COUNT = 10;
     protected static final Integer ALL_CENTER_ID = ALL_CENTER_SELECTION_ITEM.getId();
     protected static final Integer ALL_LOAN_OFFICER_ID = ALL_LOAN_OFFICER_SELECTION_ITEM.getId();
-    protected static final PersonnelBO LOAN_OFFICER = PersonnelFixture.createLoanOfficer(LOAN_OFFICER_SHORT_ID);
+    protected static PersonnelBO LOAN_OFFICER;
     protected CollectionSheetService collectionSheetService;
     protected CollSheetCustBO centerCollectionSheet;
     protected CollSheetCustBO groupCollectionSheet;
@@ -77,7 +78,7 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
     protected List<SelectionItem> loanOfficersSelectionItems;
     protected List<CustomerBO> centers;
     protected List<SelectionItem> centerSelectionItems;
-    protected static final PersonnelBO ANY_PERSONNEL = PersonnelFixture.createNonLoanOfficer(PERSONNEL_ANY_SHORT_ID);
+    protected static PersonnelBO ANY_PERSONNEL;
     protected PersonnelBO anyPersonnel;
     protected OfficeBO anyOffice;
     protected CenterBO center;
@@ -114,6 +115,8 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        LOAN_OFFICER = PersonnelFixture.createLoanOfficer(LOAN_OFFICER_SHORT_ID);
+        ANY_PERSONNEL = PersonnelFixture.createNonLoanOfficer(PERSONNEL_ANY_SHORT_ID);
         centerCollectionSheet = new CollSheetCustBO();
         centerCollectionSheet.populateInstanceForTest(CENTER_ID, "Sample Center", CustomerLevel.CENTER.getValue(),
                 ANY_SHORT_ID, "", LOAN_OFFICER_SHORT_ID);

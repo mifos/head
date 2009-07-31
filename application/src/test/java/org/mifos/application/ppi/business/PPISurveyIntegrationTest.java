@@ -55,6 +55,11 @@ public class PPISurveyIntegrationTest extends MifosInMemoryIntegrationTest {
     private PPIPersistence persistence;
     private TestDatabase database;
 
+    public PPISurveyIntegrationTest() {
+        super();
+        StaticHibernateUtil.initialize();
+    }
+
     public void setUp() {
         super.setUp();
         persistence = new PPIPersistence();

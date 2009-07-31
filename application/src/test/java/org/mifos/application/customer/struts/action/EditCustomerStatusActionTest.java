@@ -28,16 +28,15 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.PositionEntity;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
@@ -45,7 +44,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
-import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -80,12 +78,10 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
 
     private OfficeBO office;
 
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -98,20 +94,10 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        try {
-            TestObjectFactory.cleanUp(loanBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(office);
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
-        }
-        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
+    @SuppressWarnings("unchecked")
     public void testLoad() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -181,6 +167,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @SuppressWarnings("unchecked")
     public void testPreviewSuccess() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -207,6 +194,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
                 SavingsConstants.FLAG_NAME, request.getSession()));
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateCenterStatus() throws PageExpiredException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);
@@ -241,6 +229,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         assertFalse(center.isActive());
     }
 
+    @SuppressWarnings("unchecked")
     public void testLoadForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -288,6 +277,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @SuppressWarnings("unchecked")
     public void testPreviewSuccessForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -336,6 +326,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateStatusForClient() throws CustomerException, PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -369,6 +360,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         assertFalse(client.isActive());
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientForFirstTimeActive() throws CustomerException, PageExpiredException {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_PARTIAL);
         assertTrue(((ClientBO) client).getCustomerAccount().getAccountActionDates().isEmpty());
@@ -407,6 +399,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
                 .getCustomerActivationDate().getTime()));
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientForActiveLoanOfficer() throws CustomerException, PageExpiredException {
         createInitialObjects();
         CustomerBOIntegrationTest.setCustomerStatus(client, new CustomerStatusEntity(CustomerStatus.CLIENT_PARTIAL
@@ -446,6 +439,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         assertTrue(client.isActive());
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientWhenParentCustomerIsInPartialState() throws CustomerException,
             PageExpiredException {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_PARTIAL);
@@ -480,6 +474,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         assertFalse(client.isActive());
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientWhenClientHasActiveAccounts() throws CustomerException, PageExpiredException {
         createInitialObjects();
         loanBO = getLoanAccount(client, "dsafdsfds", "12ed");
@@ -521,6 +516,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
     }
 
+    @SuppressWarnings("unchecked")
     public void testUpdateStatusForClientWhenClientIsAssignedPosition() throws CustomerException, PageExpiredException {
         createInitialObjects();
         CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(new PositionEntity(Short
@@ -572,6 +568,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testChangeStatusToActiveForClient() throws Exception {
         createObjectsForClient("Client");
         CustomerBOIntegrationTest.setPersonnel(client, null);
@@ -605,6 +602,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.updateStatus_failure.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public void testChangeStatusToActiveForClientForMeetingNull() throws Exception {
         createClientWithoutMeeting("Client");
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -633,6 +631,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.updateStatus_failure.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public void testLoadSuccessForGroup() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -902,60 +901,60 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
 
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("Center_EditCustomerStatusActionTest", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_EditCustomerStatusActionTest", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private void createInitialObjects(CustomerStatus centerStatus, CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
-        client = TestObjectFactory.createClient("Client", clientStatus, group);
+        center = TestObjectFactory.createCenter("Center_EditCustomerStatusActionTest", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_EditCustomerStatusActionTest", groupStatus, center);
+        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group);
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExist(CustomerStatus groupStatus, CustomerStatus clientStatus) {
         Short officeId = new Short("3");
         Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, officeId, getMeeting(), personnel);
-        client = TestObjectFactory.createClient("new client", clientStatus, group, new java.util.Date());
+        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, officeId, getMeeting(), personnel);
+        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoLO(CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         Short officeId = new Short("3");
-        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, officeId, getMeeting(), null);
-        client = TestObjectFactory.createClient("new client", clientStatus, group, new java.util.Date());
+        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, officeId, getMeeting(), null);
+        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
     }
 
     private void createObjectsForClient(String name) throws Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
+                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office_EditCustomerStatusActionTest", "cust");
         client = TestObjectFactory.createClient(name, getMeeting(), CustomerStatus.CLIENT_PARTIAL);
     }
 
     private void createClientWithoutMeeting(String name) throws Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
+                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office_EditCustomerStatusActionTest", "cust");
         client = TestObjectFactory.createClient(name, null, CustomerStatus.CLIENT_PARTIAL);
     }
 
     private void createInitialObjectsOfficeInactive(CustomerStatus groupStatus, CustomerStatus clientStatus)
             throws NumberFormatException, Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
-        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, office.getOfficeId(), getMeeting(),
+                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office_EditCustomerStatusActionTest", "cust");
+        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, office.getOfficeId(), getMeeting(),
                 PersonnelConstants.TEST_USER);
-        client = TestObjectFactory.createClient("new client", clientStatus, group, new java.util.Date());
+        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         Short officeId = new Short("3");
         Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, officeId, null, personnel);
-        client = TestObjectFactory.createClient("new client", clientStatus, group, new java.util.Date());
+        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, officeId, null, personnel);
+        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
     }
 
     private MeetingBO getMeeting() {
@@ -971,6 +970,7 @@ public class EditCustomerStatusActionTest extends MifosMockStrutsTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
     }
 
+    @SuppressWarnings("unchecked")
     private String getStatusName(CustomerStatus customerStatus) throws PageExpiredException {
         List<CustomerStatusEntity> customerStatusList = (List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request);

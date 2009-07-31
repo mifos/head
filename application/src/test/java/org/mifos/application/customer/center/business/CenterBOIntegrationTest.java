@@ -42,7 +42,6 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -90,26 +89,16 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
 
     private OfficePersistence officePersistence = new OfficePersistence();
 
-    private MasterPersistence masterPersistence = new MasterPersistence();
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         officeBo = officePersistence.getOffice(officeId);
         personnelBo = new PersonnelPersistence().getPersonnel(personnelId);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
-        }
-        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
@@ -186,8 +175,8 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutLO() throws Exception {
         try {
             meeting = getMeeting();
-            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null, officeBo, meeting,
-                    null, new CustomerPersistence());
+            center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null, null,
+                    officeBo, meeting, null, new CustomerPersistence());
             fail();
         } catch (CustomerException ce) {
             assertNull(center);
@@ -198,8 +187,8 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
 
     public void testCreateWithoutMeeting() throws Exception {
         try {
-            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null, officeBo, meeting,
-                    personnelBo, new CustomerPersistence());
+            center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null, null,
+                    officeBo, meeting, personnelBo, new CustomerPersistence());
             fail();
         } catch (CustomerException ce) {
             assertNull(center);
@@ -210,8 +199,8 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateWithoutOffice() throws Exception {
         try {
             meeting = getMeeting();
-            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null, null, meeting,
-                    personnelBo, new CustomerPersistence());
+            center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null, null,
+                    null, meeting, personnelBo, new CustomerPersistence());
             fail();
         } catch (CustomerException ce) {
             assertNull(center);
@@ -221,7 +210,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
-        String name = "Center1";
+        String name = "CenterBOIntegrationTest_Center";
         meeting = getMeeting();
         center = new CenterBO(TestUtils.makeUser(), name, null, null, null, null, null, officeBo, meeting, personnelBo,
                 new CustomerPersistence());
@@ -234,7 +223,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testSuccessfulCreateWithoutFee() throws Exception {
-        String name = "Center1";
+        String name = "CenterBOIntegrationTest_Center";
         meeting = getMeeting();
         center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), null, null, null, officeBo, meeting,
                 personnelBo, new CustomerPersistence());
@@ -248,7 +237,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testFailureCreate_DuplicateName() throws Exception {
-        String name = "Center1";
+        String name = "CenterBOIntegrationTest_Center";
         center = TestObjectFactory.createCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
 
@@ -267,7 +256,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testFailureDuplicateName() throws Exception {
-        String name = "Center1";
+        String name = "CenterBOIntegrationTest_Center";
         center = TestObjectFactory.createCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
 
@@ -288,7 +277,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testSuccessfulCreate() throws Exception {
-        String name = "Center1";
+        String name = "CenterBOIntegrationTest_Center";
         String externalId = "12345";
         Date mfiJoiningDate = getDate("11/12/2005");
         meeting = getMeeting();
@@ -347,8 +336,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testSuccessfulUpdateWithoutLO_in_InActiveState() throws Exception {
-        CustomerPersistence customerPersistence = new CustomerPersistence();
-        PersonnelPersistence personnelPersistence = new PersonnelPersistence();
         createCustomers();
         client.changeStatus(CustomerStatus.CLIENT_CANCELLED, CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW,
                 "client cancelled");
@@ -463,11 +450,11 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     public void testCenterSearchResultsView() {
 
         CenterSearchResults searchResults = new CenterSearchResults();
-        searchResults.setCenterName("Center");
+        searchResults.setCenterName("CenterBOIntegrationTest_Center");
         searchResults.setCenterSystemId("1234");
         searchResults.setParentOfficeId(Short.valueOf("1"));
         searchResults.setParentOfficeName("BO");
-        assertEquals("Center", searchResults.getCenterName());
+        assertEquals("CenterBOIntegrationTest_Center", searchResults.getCenterName());
         assertEquals("1234", searchResults.getCenterSystemId());
         assertEquals(Short.valueOf("1").shortValue(), searchResults.getParentOfficeId());
         assertEquals("BO", searchResults.getParentOfficeName());
@@ -485,16 +472,16 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
         MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short) 1, startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
 
         PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-        center = new CenterBO(TestUtils.makeUser(), "center1", null, null, null, null, startDate, branch1, meeting,
-                systemUser, new CustomerPersistence());
+        center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null,
+                startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);
 
-        CenterBO center2 = new CenterBO(TestUtils.makeUser(), "center2", null, null, null, null, startDate,
-                new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), meeting, systemUser,
-                new CustomerPersistence());
+        CenterBO center2 = new CenterBO(TestUtils.makeUser(), "center2_CenterBOIntegrationTest", null, null, null,
+                null, startDate, new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), meeting,
+                systemUser, new CustomerPersistence());
 
-        CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), "sameBranch", null, null, null, null, startDate,
-                branch1, meeting, systemUser, new CustomerPersistence());
+        CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), "sameBranch_CenterBOIntegrationTest", null, null,
+                null, null, startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);
         StaticHibernateUtil.commitTransaction();
 
@@ -506,9 +493,10 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
     private void createCustomers() throws Exception {
         meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK, new Date(),
                 MeetingType.CUSTOMER_MEETING, "Delhi");
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("CenterBOIntegrationTest_Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group_CenterBOIntegrationTest", CustomerStatus.GROUP_ACTIVE,
+                center);
+        client = TestObjectFactory.createClient("Client_CenterBOIntegrationTest", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private MeetingBO getMeeting() {
@@ -525,9 +513,9 @@ public class CenterBOIntegrationTest extends MifosIntegrationTest {
 
     private List<FeeView> getFees() {
         List<FeeView> fees = new ArrayList<FeeView>();
-        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
+        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee_CenterBOIntegrationTest",
                 FeeCategory.CENTER, "200", RecurrenceType.WEEKLY, Short.valueOf("2"));
-        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee",
+        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee_CenterBOIntegrationTest",
                 FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
         fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
         fees.add(new FeeView(TestObjectFactory.getContext(), fee2));

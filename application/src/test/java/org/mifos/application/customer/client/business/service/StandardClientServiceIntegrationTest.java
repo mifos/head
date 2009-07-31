@@ -49,6 +49,8 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.service.test.TestMode;
+import org.mifos.service.test.TestingService;
 import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.mifos.test.framework.util.SimpleDataSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,7 @@ public class StandardClientServiceIntegrationTest extends AbstractJUnit38SpringC
     private DatabaseTestUtils databaseTestUtils;
 
     public void setUp() throws Exception {
+        System.setProperty(TestingService.TEST_MODE_SYSTEM_PROPERTY, TestMode.INTEGRATION.toString().toLowerCase());
         initializeMifosSoftware();
 
         clientService = new StandardClientService();

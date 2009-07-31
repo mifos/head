@@ -20,9 +20,6 @@
 
 package org.mifos.application.ppi.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,9 +43,15 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosInMemoryIntegrationTest;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
+
+    public PPIChoiceIntegrationTest() {
+        super();
+        StaticHibernateUtil.initialize();
+    }
 
     public void testRetrievePPIChoice() throws Exception {
         Question question = new Question("question1", "what is your question", AnswerType.CHOICE);

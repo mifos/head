@@ -39,10 +39,15 @@ public class BranchReportIntegrationTestCase extends MifosIntegrationTest {
     public static final Short BRANCH_ID_SHORT = NumberUtils.convertIntegerToShort(BRANCH_ID);
     protected static final String RUN_DATE_STR = ReportsConstants.REPORT_DATE_FORMAT.format(DateUtils.currentDate());
     public static final Date RUN_DATE = DateUtils.getCurrentDateWithoutTimeStamp();
-    public static final MifosCurrency DEFAULT_CURRENCY = Configuration.getInstance().getSystemConfig().getCurrency();
-    protected static final Short CURRENCY_ID = DEFAULT_CURRENCY.getCurrencyId();
+    public static MifosCurrency DEFAULT_CURRENCY;
+    protected static Short CURRENCY_ID;
 
     public BranchReportIntegrationTestCase() throws SystemException, ApplicationException {
         super();
+    }
+    
+    protected void setUp() throws Exception {
+        DEFAULT_CURRENCY = Configuration.getInstance().getSystemConfig().getCurrency();
+        CURRENCY_ID = DEFAULT_CURRENCY.getCurrencyId();
     }
 }
