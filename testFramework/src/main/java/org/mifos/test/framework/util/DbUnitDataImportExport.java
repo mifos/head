@@ -44,7 +44,9 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 
 @SuppressWarnings({"PMD.SystemPrintln",  // as a command line utility System.out output seems ok 
-                   "PMD.SingularField"}) // Option fields could be local, but for consistency keep them at the class level
+                   "PMD.SingularField",  // Option fields could be local, but for consistency keep them at the class level
+                   "PMD.TooManyFields", // What to do?
+                   "PMD.CyclomaticComplexity"})
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"DM_EXIT"}, justification="Command line tool exit")
 public class DbUnitDataImportExport {
 
@@ -55,11 +57,13 @@ public class DbUnitDataImportExport {
     private static final String IMPORT_OPTION_NAME = "i";
     private static final String EXPORT_OPTION_NAME = "x";
     private static final String DATABASE_OPTION_NAME = "d";
+    private static final String SQL_OPTION_NAME = "s";
     
     private String fileName = "dbunit.xml";
     private String password = "";
     private String user = "";
     private boolean doExport = true;
+    private boolean exportAsSql = false;
     private String databaseName = "mifos";
     
     private final Options options = new Options();
@@ -70,6 +74,7 @@ public class DbUnitDataImportExport {
     private Option importOption;
     private Option exportOption;
     private Option databaseOption;
+    private Option sqlOption;
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
         DbUnitDataImportExport exporter = new DbUnitDataImportExport();
@@ -116,6 +121,11 @@ public class DbUnitDataImportExport {
         .withLongOpt("export")
         .withDescription( "export to a file" )
         .create( EXPORT_OPTION_NAME );
+        
+        sqlOption = OptionBuilder
+        .withLongOpt("sql")
+        .withDescription( "export as an sql dump" )
+        .create( SQL_OPTION_NAME );
 
 
         options.addOption(outputFile);
@@ -124,7 +134,8 @@ public class DbUnitDataImportExport {
         options.addOption(helpOption);        
         options.addOption(importOption);        
         options.addOption(exportOption);        
-        options.addOption(databaseOption);        
+        options.addOption(databaseOption);  
+        options.addOption(sqlOption);
     }
     
     public DbUnitDataImportExport() throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
@@ -161,6 +172,9 @@ public class DbUnitDataImportExport {
                 doExport = false;
             } else if( line.hasOption( EXPORT_OPTION_NAME ) ) {
                 doExport = true;
+                if ( line.hasOption(SQL_OPTION_NAME) ) {
+                    exportAsSql = true;
+                }
             } 
         }
         catch( ParseException exp ) {
@@ -170,11 +184,45 @@ public class DbUnitDataImportExport {
 
     public void importExport() throws FileNotFoundException, ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
         if (doExport) {
-            dumpData(fileName);
+            if (exportAsSql) {
+                dumpSql(fileName);
+            } else {
+                dumpData(fileName);
+            }
         } else {
             loadDataFromFile(fileName);
         }
     }
+    
+    private void dumpSql(String fileName) {
+        // execute mysqldump and provide a reasonable error message if 
+        // mysqldump isn't found on the $PATH.
+        
+        System.out.print("dumping sql to: " + fileName + " ... ");
+        
+        try
+        {            
+            Runtime rt = Runtime.getRuntime();
+            Process proc = rt.exec("mysqldump --password=" + password + 
+                                            " --user=" + user + 
+                                            " --result-file=" + fileName +
+                                            " " + databaseName );
+            int exitVal = proc.waitFor();
+            
+            if (exitVal != 0) {
+                System.err.println("ERROR: Wrong username, password and/or database name!");
+            }
+        } catch (IOException ioe) {
+            System.err.println("ERROR: " + ioe.getMessage());
+            
+            System.err.println("Please make sure that \"mysqldump\" is in your PATH.\nSee http://www.mifos.org/developers/install-mifos/install-windows#add-required-environment-variables for an example %Path on Windows.\nOn linux, run \"which mysqldump\" to find out which directory mysqldump is in, and add it to PATH.");
+        } catch (InterruptedException ie) {
+            System.err.println("ERROR (interruption): " + ie.getLocalizedMessage());
+        }
+        
+        System.out.println("done!");
+    }
+
     public void dumpData(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
         // database connection
         Class.forName("com.mysql.jdbc.Driver");
