@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Written by Eclipse BIRT 2.0 -->
-<library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+<library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
     <property name="units">in</property>
-    <property name="includeResource">BirtReportResource/CollectionSheetReportResources</property>
+    <simple-property-list name="includeResource">
+        <value>BirtReportResource/CollectionSheetReportResources</value>
+    </simple-property-list>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <property name="theme">defaultTheme</property>
     <parameters>
@@ -16,16 +17,14 @@
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.branch"></text-property>
                     <property name="concealValue">false</property>
-                    <property name="allowBlank">true</property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="alignment">auto</property>
                     <property name="dataSetName">BranchOffices</property>
                     <expression name="valueExpr">row["ds_branchId"]</expression>
                     <expression name="labelExpr">row["ds_branchName"]</expression>
-                    <property name="mustMatch">true</property>
                     <property name="fixedOrder">true</property>
-                    <property name="defaultValue">-3</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -46,16 +45,14 @@
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.loanofficer"></text-property>
                     <property name="concealValue">false</property>
-                    <property name="allowBlank">true</property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="alignment">auto</property>
                     <property name="dataSetName">LoanOfficers</property>
                     <expression name="valueExpr">row["ds_loanOfficerId"]</expression>
                     <expression name="labelExpr">row["ds_loanOfficerName"]</expression>
-                    <property name="mustMatch">true</property>
                     <property name="fixedOrder">true</property>
-                    <property name="defaultValue">-3</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -76,16 +73,14 @@
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.center"></text-property>
                     <property name="concealValue">false</property>
-                    <property name="allowBlank">true</property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="alignment">auto</property>
                     <property name="dataSetName">Centers</property>
                     <expression name="valueExpr">row["ds_centerId"]</expression>
                     <expression name="labelExpr">row["ds_centerName"]</expression>
-                    <property name="mustMatch">true</property>
                     <property name="fixedOrder">true</property>
-                    <property name="defaultValue">-3</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -106,14 +101,12 @@
                     <property name="dataType">dateTime</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.meetingdate"></text-property>
                     <property name="concealValue">false</property>
-                    <property name="allowBlank">true</property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="alignment">auto</property>
                     <property name="dataSetName">MeetingDates</property>
                     <expression name="valueExpr">row["ds_meetingDate"]</expression>
                     <expression name="labelExpr">row["ds_meetingDisplayDate"]</expression>
-                    <property name="mustMatch">true</property>
                     <property name="fixedOrder">true</property>
                     <property name="defaultValue">01/01/1970</property>
                     <structure name="format">
@@ -136,6 +129,7 @@
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -161,8 +155,7 @@ try {
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
             <property name="odaURL">jdbc:mysql://localhost:3306/mifos?useUnicode=true&amp;characterEncoding=UTF-8</property>
             <property name="odaUser">root</property>
-            <encrypted-property name="odaPassword">bXlzcWw=</encrypted-property>
-            <property name="odaJndiName"></property>
+            <encrypted-property name="odaPassword" encryptionID="base64">bXlzcWw=</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -359,7 +352,7 @@ return true;]]></method>
             <method name="open"><![CDATA[try {
 	var branchId = params["branchId"];
 	var loanOfficerId = params["loanOfficerId"];
-	if(loanOfficerId instanceof Packages.java.lang.Integer && NA_ID.equals(loanOfficerId) && !NA_ID.equals(branchId)) {
+	if(loanOfficerId instanceof Packages.java.lang.Integer &amp;&amp; NA_ID.equals(loanOfficerId) &amp;&amp; !NA_ID.equals(branchId)) {
 		loanOfficerId = ALL_ID;
 	}  
 	if(!(loanOfficerId instanceof Packages.java.lang.Integer)) {

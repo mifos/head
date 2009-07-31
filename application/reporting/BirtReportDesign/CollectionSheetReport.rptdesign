@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Written by Eclipse BIRT 2.0 -->
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
     <property name="units">in</property>
-    <property name="includeResource">BirtReportResource/CollectionSheetReportResources</property>
+    <simple-property-list name="includeResource">
+        <value>BirtReportResource/CollectionSheetReportResources</value>
+    </simple-property-list>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <method name="initialize"><![CDATA[reportContext.setPersistentGlobalVariable("pageNum","0");]]></method>
     <list-property name="libraries">
@@ -23,13 +24,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.branch"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">BranchOffices</property>
                     <expression name="valueExpr">row["ds_branchId"]</expression>
                     <expression name="labelExpr">row["ds_branchName"]</expression>
-                    <property name="mustMatch">true</property>
-                    <property name="defaultValue">-3</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -38,13 +38,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.loanofficer"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">LoanOfficers</property>
                     <expression name="valueExpr">row["ds_loanOfficerId"]</expression>
                     <expression name="labelExpr">row["ds_loanOfficerName"]</expression>
-                    <property name="mustMatch">true</property>
-                    <property name="defaultValue">-3</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -53,13 +52,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.center"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">Centers</property>
                     <expression name="valueExpr">row["ds_centerId"]</expression>
                     <expression name="labelExpr">row["ds_centerName"]</expression>
-                    <property name="mustMatch">true</property>
-                    <property name="defaultValue">-3</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -70,6 +68,7 @@
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -79,7 +78,7 @@
             <property name="valueType">static</property>
             <property name="dataType">string</property>
             <text-property name="promptText">Enter Date (DD/MM/YYYY)</text-property>
-            <property name="allowBlank">false</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -820,13 +819,17 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     <property name="name">group_loan_balance</property>
                     <expression name="expression">Total.sum(row["total_loan_balance"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_balance</property>
                     <expression name="expression">Total.sum(row["group_loan_balance"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_name</property>
@@ -857,13 +860,17 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     <property name="name">group_loan_due</property>
                     <expression name="expression">Total.sum(row["total_loan_due"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_due</property>
                     <expression name="expression">Total.sum(row["group_loan_due"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">total_loan_disb</property>
@@ -874,13 +881,17 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     <property name="name">group_total_loan_issue</property>
                     <expression name="expression">Total.sum(row["total_loan_disb"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_total_loan_issue</property>
                     <expression name="expression">Total.sum(row["group_total_loan_issue"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">loan_disb</property>
@@ -901,21 +912,28 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     <property name="name">group_total_fees</property>
                     <expression name="expression">Total.sum(row["total_loan_fees"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_total_fees</property>
                     <expression name="expression">Total.sum(row["group_total_fees"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_total_loan_disb</property>
                     <expression name="expression">Total.sum(dataSetRow["total_loan_disb"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">50</property>
             <column id="175">
                 <property name="width">0.6in</property>
             </column>
@@ -960,7 +978,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 <property name="interval">none</property>
                 <property name="sortDirection">asc</property>
                 <expression name="keyExpr">row["loan_officer"]</expression>
-                <expression name="toc">row["loan_officer"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue">row["loan_officer"]</expression>
+                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <property name="pageBreakAfter">always-excluding-last</property>
@@ -995,7 +1015,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 <property name="interval">none</property>
                 <property name="sortDirection">asc</property>
                 <expression name="keyExpr">row["center_id"]</expression>
-                <expression name="toc">row["center_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue">row["center_name"]</expression>
+                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <property name="pageBreakAfter">always-excluding-last</property>
@@ -1550,7 +1572,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                                         <image id="1514">
                                             <property name="height">211px</property>
                                             <property name="width">355px</property>
-                                            <property name="source">url</property>
+                                            <property name="source">file</property>
                                             <expression name="uri">images/announcement.gif</expression>
                                         </image>
                                     </cell>
@@ -1851,7 +1873,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 <property name="interval">none</property>
                 <property name="sortDirection">asc</property>
                 <expression name="keyExpr">row["group_id"]</expression>
-                <expression name="toc">row["group_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue">row["group_name"]</expression>
+                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <property name="pageBreakAfter">auto</property>

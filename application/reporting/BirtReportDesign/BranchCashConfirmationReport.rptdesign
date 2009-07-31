@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Written by Eclipse BIRT 2.0 -->
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
     <property name="units">in</property>
-    <property name="includeResource">BirtReportResource/BranchCashConfirmationResource</property>
+    <simple-property-list name="includeResource">
+        <value>BirtReportResource/BranchCashConfirmationResource</value>
+    </simple-property-list>
     <property name="comments">Copyright (c) 2006 MIFOS, Grameen Foundation, USA</property>
     <method name="initialize"><![CDATA[vTotalPrincipal=0;
 vTotalActual=0;
@@ -24,14 +25,12 @@ vTotalELDisbursement=0;]]></method>
             <property name="dataType">integer</property>
             <text-property name="promptText">Select Branch</text-property>
             <property name="concealValue">false</property>
-            <property name="allowBlank">true</property>
-            <property name="allowNull">false</property>
+            <property name="isRequired">true</property>
             <property name="controlType">list-box</property>
             <property name="dataSetName">BranchOffices</property>
             <expression name="valueExpr">dataSetRow["ds_branchId"]</expression>
             <expression name="labelExpr">dataSetRow["ds_branchName"]</expression>
-            <property name="mustMatch">true</property>
-            <property name="defaultValue">-2</property>
+             <property name="defaultValue">-2</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -40,6 +39,7 @@ vTotalELDisbursement=0;]]></method>
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -49,6 +49,7 @@ vTotalELDisbursement=0;]]></method>
             <property name="valueType">static</property>
             <property name="dataType">string</property>
             <text-property name="promptText">Enter Date (DD/MM/YYYY)</text-property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -1496,8 +1497,8 @@ from
                                             <image id="981">
                                                 <property name="height">50px</property>
                                                 <property name="width">50px</property>
-                                                <property name="source">url</property>
-                                                <expression name="uri">images/GrameenKoota.gif</expression>
+                                                <property name="source">file</property>
+                                                <expression name="uri">images/mfi_logo.GIF</expression>
                                             </image>
                                         </cell>
                                         <cell id="987">
@@ -1751,6 +1752,7 @@ from
                                 <property name="dataType">decimal</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="199">
                             <property name="width">2.5cm</property>
                         </column>
@@ -2738,6 +2740,7 @@ Total.count()!=0</expression>
                                 <property name="dataType">decimal</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="818">
                             <property name="width">2.5cm</property>
                         </column>
@@ -3302,6 +3305,7 @@ Packages.java.util.logging.Logger.getLogger("").error("Out of on Render");]]></m
                                 <property name="dataType">decimal</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="322">
                             <property name="width">10cm</property>
                         </column>
@@ -3496,6 +3500,7 @@ Packages.java.util.logging.Logger.getLogger("").error("Out of on Render");]]></m
                                 <property name="dataType">decimal</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="690">
                             <property name="width">10cm</property>
                         </column>
@@ -3660,6 +3665,7 @@ Packages.java.util.logging.Logger.getLogger("").error("Out of on Render");]]></m
                                 <property name="dataType">decimal</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="283">
                             <property name="width">10cm</property>
                         </column>

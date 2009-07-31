@@ -55,7 +55,7 @@ public class BirtReportValidationAction extends HttpServlet {
                 .getValidator(request.getParameter("__report"));
         if (validator == null || validator.isAFreshRequest(request)) {
             // go to report parameter page
-            request.getRequestDispatcher("/run").forward(request, response);
+            request.getRequestDispatcher("/preview").forward(request, response);
             return;
         }
 
@@ -68,6 +68,6 @@ public class BirtReportValidationAction extends HttpServlet {
             request.setAttribute(ERRORS, errors);
             validator.removeRequestParameters(modifiedRequest, form, errors);
         }
-        request.getRequestDispatcher("/run").forward(modifiedRequest, response);
+        request.getRequestDispatcher("/preview").forward(modifiedRequest, response);
     }
 }

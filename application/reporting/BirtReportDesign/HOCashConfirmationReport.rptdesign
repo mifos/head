@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Written by Eclipse BIRT 2.0 -->
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
     <property name="units">in</property>
-    <property name="includeResource">BirtReportResource/HOCashConfirmationResource</property>
+    <simple-property-list name="includeResource">
+        <value>BirtReportResource/HOCashConfirmationResource</value>
+    </simple-property-list>
     <property name="comments">Copyright (c) 2006 MIFOS, Grameen Foundation, USA</property>
     <list-property name="libraries">
         <structure>
@@ -16,11 +17,12 @@
             <property name="valueType">dynamic</property>
             <property name="dataType">integer</property>
             <text-property name="promptText">Select Branch</text-property>
+            <property name="isRequired">true</property>
             <property name="controlType">list-box</property>
             <property name="dataSetName">BranchOffices</property>
             <expression name="valueExpr">dataSetRow["ds_branchId"]</expression>
             <expression name="labelExpr">dataSetRow["ds_branchName"]</expression>
-            <property name="mustMatch">true</property>
+            <property name="mustMatch">false</property>
             <property name="defaultValue">-2</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -30,7 +32,7 @@
             <property name="valueType">static</property>
             <property name="dataType">string</property>
             <text-property name="promptText">Enter Run Date (DD/MM/YYYY)</text-property>
-            <property name="allowBlank">true</property>
+            <property name="isRequired">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -39,6 +41,7 @@
         <scalar-parameter name="userId" id="601" extends="MifosReport.userId">
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -587,6 +590,7 @@
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="199"/>
                         <column id="200"/>
                         <column id="201"/>
@@ -929,6 +933,7 @@
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="283"/>
                         <column id="284"/>
                         <header>
@@ -1219,6 +1224,7 @@
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
+                        <property name="pageBreakInterval">50</property>
                         <column id="322"/>
                         <column id="323"/>
                         <header>

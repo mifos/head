@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Written by Eclipse BIRT 2.0 -->
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
     <property name="units">in</property>
-    <property name="includeResource">BirtReportResource/BatchCollectionSheetReportResources</property>
+    <simple-property-list name="includeResource">
+        <value>BirtReportResource/BatchCollectionSheetReportResources</value>
+    </simple-property-list>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <parameters>
         <cascading-parameter-group name="branch_loanofficer_center" id="905">
@@ -13,12 +14,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.branch"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">BranchOffices</property>
                     <expression name="valueExpr">row["ds_branchId"]</expression>
                     <expression name="labelExpr">row["ds_branchName"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <property name="defaultValue">-3</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
@@ -28,12 +29,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.loanofficer"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">LoanOfficers</property>
                     <expression name="valueExpr">row["ds_loanOfficerId"]</expression>
                     <expression name="labelExpr">row["ds_loanOfficerName"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <property name="defaultValue">-3</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
@@ -43,12 +44,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.center"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">Centers</property>
                     <expression name="valueExpr">row["ds_centerId"]</expression>
                     <expression name="labelExpr">row["ds_centerName"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <property name="defaultValue">-3</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
@@ -58,12 +59,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">dateTime</property>
                     <text-property name="promptText" key="collection.sheet.report.parameter.meetingdate"></text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">MeetingDates</property>
                     <expression name="valueExpr">row["ds_meetingDate"]</expression>
                     <expression name="labelExpr">row["ds_meetingDisplayDate"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <property name="defaultValue">01/01/1970</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
@@ -75,6 +76,7 @@
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -302,7 +304,7 @@ return true;]]></method>
             <method name="open"><![CDATA[try {
 	var branchId = params["branchId"];
 	var loanOfficerId = params["loanOfficerId"];
-	if(loanOfficerId instanceof Packages.java.lang.Integer && NA_ID.equals(loanOfficerId) && !NA_ID.equals(branchId)) {
+	if(loanOfficerId instanceof Packages.java.lang.Integer &amp;&amp; NA_ID.equals(loanOfficerId) &amp;&amp; !NA_ID.equals(branchId)) {
 		loanOfficerId = ALL_ID;
 	}  
 	if(!(loanOfficerId instanceof Packages.java.lang.Integer)) {
@@ -962,133 +964,177 @@ return true;]]></method>
                     <property name="name">group_loan_1_balance_total</property>
                     <expression name="expression">Total.sum(row["loan_1_balance"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_1_balance_total</property>
                     <expression name="expression">Total.sum(row["group_loan_1_balance_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_loan_2_balance_total</property>
                     <expression name="expression">Total.sum(row["loan_2_balance"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_savings_1_balance_total</property>
                     <expression name="expression">Total.sum(row["savings_1_balance"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_savings_2_balance_total</property>
                     <expression name="expression">Total.sum(row["savings_2_balance"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_loan_1_due_total</property>
                     <expression name="expression">Total.sum(row["loan_1_due"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_loan_2_due_total</property>
                     <expression name="expression">Total.sum(row["loan_2_due"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_savings_1_due_total</property>
                     <expression name="expression">Total.sum(row["savings_1_due"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_savings_2_due_total</property>
                     <expression name="expression">Total.sum(row["savings_2_due"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_due_total</property>
                     <expression name="expression">Total.sum(row["due_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_other_fee_total</property>
                     <expression name="expression">Total.sum(row["other_fee"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">group_other_fine_total</property>
                     <expression name="expression">Total.sum(row["other_fine"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_2_balance_total</property>
                     <expression name="expression">Total.sum(row["group_loan_2_balance_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_other_fine_total</property>
                     <expression name="expression">Total.sum(row["group_other_fine_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_savings_1_balance_total</property>
                     <expression name="expression">Total.sum(row["group_savings_1_balance_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_savings_2_balance_total</property>
                     <expression name="expression">Total.sum(row["group_savings_2_balance_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_1_due_total</property>
                     <expression name="expression">Total.sum(row["group_loan_1_due_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_2_due_total</property>
                     <expression name="expression">Total.sum(row["group_loan_2_due_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_savings_1_due_total</property>
                     <expression name="expression">Total.sum(row["group_savings_1_due_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_savings_2_due_total</property>
                     <expression name="expression">Total.sum(row["group_savings_2_due_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_due_total</property>
                     <expression name="expression">Total.sum(row["group_due_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_other_fee_total</property>
                     <expression name="expression">Total.sum(row["group_other_fee_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">loan_officer_id</property>
@@ -1154,13 +1200,17 @@ return true;]]></method>
                     <property name="name">group_loan_1_issues_total</property>
                     <expression name="expression">Total.sum(row["loan_1_issues"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_1_issues_total</property>
                     <expression name="expression">Total.sum(row["group_loan_1_issues_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">loan_2_issues</property>
@@ -1171,13 +1221,17 @@ return true;]]></method>
                     <property name="name">group_loan_2_issues_total</property>
                     <expression name="expression">Total.sum(row["loan_2_issues"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">center_loan_2_issues_total</property>
                     <expression name="expression">Total.sum(row["group_loan_2_issues_total"])</expression>
                     <property name="dataType">float</property>
-                    <property name="aggregateOn">center_group</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>center_group</value>
+                    </simple-property-list>
                 </structure>
                 <structure>
                     <property name="name">loan_1_name</property>
@@ -1205,6 +1259,7 @@ return true;]]></method>
                     <property name="dataType">any</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">50</property>
             <column id="175">
                 <property name="width">2cm</property>
             </column>
@@ -1256,7 +1311,9 @@ return true;]]></method>
                 <property name="interval">none</property>
                 <property name="sortDirection">asc</property>
                 <expression name="keyExpr">row["loan_officer_id"]</expression>
-                <expression name="toc">row["loan_officer_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue">row["loan_officer_name"]</expression>
+                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <property name="pageBreakAfter">always-excluding-last</property>
@@ -1294,7 +1351,9 @@ return true;]]></method>
                 <property name="interval">none</property>
                 <property name="sortDirection">asc</property>
                 <expression name="keyExpr">row["center_id"]</expression>
-                <expression name="toc">row["center_name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue">row["center_name"]</expression>
+                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <property name="pageBreakAfter">always-excluding-last</property>
@@ -2678,6 +2737,9 @@ return true;]]></method>
                 <property name="interval">none</property>
                 <property name="sortDirection">asc</property>
                 <expression name="keyExpr">row["group_id"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue">row["group_id"]</expression>
+                </structure>
                 <property name="repeatHeader">false</property>
                 <property name="hideDetail">false</property>
                 <property name="pageBreakAfter">auto</property>

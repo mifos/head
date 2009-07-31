@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Written by Eclipse BIRT 2.0 -->
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
     <property name="units">in</property>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <parameters>
@@ -9,6 +8,7 @@
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">string</property>
+            <property name="isRequired">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -18,6 +18,7 @@
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -30,12 +31,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText">Branch Office</text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">Branches</property>
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -44,12 +45,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText">Loan Officer</text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">LoanOfficers</property>
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -58,12 +59,12 @@
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
                     <text-property name="promptText">Loan Product</text-property>
-                    <property name="allowNull">false</property>
+                    <property name="isRequired">true</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">LoanProducts</property>
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
-                    <property name="mustMatch">true</property>
+                    <property name="mustMatch">false</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -519,16 +520,16 @@ row["Principal"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLateness().get
 row["Interest"] = loan.getTotalInterestAmountInArrearsAndOutsideLateness().getAmount();
 row["DaysInArrears"] = loan.getDaysInArrears();
 
-if (loan.getDaysInArrears()>=1 && loan.getDaysInArrears() <=30)
+if (loan.getDaysInArrears()>=1 &amp;&amp; loan.getDaysInArrears() <=30)
 row["1-30"] = row["Balance"];
 
-if (loan.getDaysInArrears()>=31 && loan.getDaysInArrears() <=60)
+if (loan.getDaysInArrears()>=31 &amp;&amp; loan.getDaysInArrears() <=60)
 row["31-60"] = row["Balance"];
 
-if (loan.getDaysInArrears()>=61 && loan.getDaysInArrears() <=90)
+if (loan.getDaysInArrears()>=61 &amp;&amp; loan.getDaysInArrears() <=90)
 row["61-90"] = row["Balance"];
 
-if (loan.getDaysInArrears()>=91 && loan.getDaysInArrears()<=180)
+if (loan.getDaysInArrears()>=91 &amp;&amp; loan.getDaysInArrears()<=180)
 row["91-180"] =row["Balance"];
 
 if (loan.getDaysInArrears()>=181)
@@ -858,6 +859,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                     <property name="dataType">any</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">50</property>
             <column id="1391">
                 <property name="width">1.0833333333in</property>
             </column>
