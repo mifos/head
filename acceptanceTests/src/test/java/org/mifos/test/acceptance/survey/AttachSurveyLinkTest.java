@@ -69,7 +69,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
     
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachSurveyToClientLoan() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml.zip", dataSource, selenium);
@@ -81,7 +80,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         attachSurveyPage.verifyPage();
     }
     
-    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void attachSurveyToGroupLoan() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml.zip", dataSource, selenium);
