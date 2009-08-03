@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">CreateSavingsProductConfirmation</span>
+	<span id="page.id" value="CreateSavingsProductConfirmation" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width="70%" align="left" valign="top" class="paddingL15T15">

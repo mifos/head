@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">PreviewEditClientMfiInfo</span>
+	<span id="page.id" value="PreviewEditClientMfiInfo" />
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
 

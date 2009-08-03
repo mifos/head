@@ -30,10 +30,9 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
-<span style="display: none" id="page.id">CreateLoanProductPreview</span>
-
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
+        <span id="page.id" value="CreateLoanProductPreview" />
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {

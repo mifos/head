@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".detailsCustomer">
 <tiles:put name="body" type="string">
-<span style="display: none" id="page.id">previeweditcenter</span>
+<span id="page.id" value="previeweditcenter" />
 
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>

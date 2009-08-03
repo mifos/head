@@ -6,7 +6,7 @@
     <title>Date Time Update</title>
   </head>
   <body>
-      <span style="display: none" id="page.id">DateTimeUpdate</span>
+      <span id="page.id" value="DateTimeUpdate" />
       Updating to time: <div id="DateTimeUpdate.text.result">${model.updateResult}</div>
   [@mifos.footer /]
 

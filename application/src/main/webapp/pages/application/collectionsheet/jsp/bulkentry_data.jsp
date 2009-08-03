@@ -29,11 +29,9 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<span style="display: none" id="page.id">BulkEntryData</span>
-
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	
+    <span id="page.id" value="BulkEntryData"/>	
 	<script language="javascript">
 		<!--
 		function fnSubmit(form, buttonSubmit) {

@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<span style="display: none" id="page.id">edit_question</span>
+    <span id="page.id" value="edit_question" />
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			  <tr>

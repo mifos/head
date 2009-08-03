@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">viewstatuschangehistory</span>
+	<span id="page.id" value="viewstatuschangehistory" />
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
 		<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

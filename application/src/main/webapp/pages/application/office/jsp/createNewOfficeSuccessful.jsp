@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">createNewOfficeSuccessful</span>
+	<span id="page.id" value="createNewOfficeSuccessful" />
 	
 		<html-el:form action="/offAction.do?method=get" >
 

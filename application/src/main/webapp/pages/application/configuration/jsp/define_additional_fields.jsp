@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-		<span style="display: none" id="page.id">define_additional_fields</span>
+		<span id="page.id" value="define_additional_fields" />
 		<html-el:form action="/customFieldsAction.do?method=preview"
 			focus="categoryType">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

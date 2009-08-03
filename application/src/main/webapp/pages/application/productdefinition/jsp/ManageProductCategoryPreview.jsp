@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">ManageProductCategoryPreview</span>
+	<span id="page.id" value="ManageProductCategoryPreview" />
 		<script language="javascript">
 <!--
 	function fnEdit(form) {

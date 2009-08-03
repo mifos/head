@@ -45,7 +45,7 @@ function goToLookupOptionPage(method){
   </script>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">defineonelookupoption</span>
+	<span id="page.id" value="defineonelookupoption" />
 	
 
 		<html-el:form action="lookupOptionsAction.do" onsubmit="func_disableSubmitBtn('submitButton')" >

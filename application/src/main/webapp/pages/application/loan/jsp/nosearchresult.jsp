@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">LoanNoSearchResult</span>
+	<span id="page.id" value="LoanNoSearchResult" />
 
 	<script>
 

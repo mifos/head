@@ -28,8 +28,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-<span style="display: none" id="page.id">create_officeHoliday</span>
 	<tiles:put name="body" type="string">
+        <span id="page.id" value="create_officeHoliday" />
 		<SCRIPT>
 	function ViewHolidays(){
 	    //alert("ViewHolidays() have been called");

@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">ProductCategoryDetails</span>
+	<span id="page.id" value="ProductCategoryDetails" />
 		<html-el:form action="/productCategoryAction?method=manage">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />

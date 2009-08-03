@@ -36,7 +36,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
- <span style="display: none" id="page.id">GroupChooseBranch</span>
+ <span id="page.id" value="GroupChooseBranch" />
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupTransferAction.do?method=cancel" >

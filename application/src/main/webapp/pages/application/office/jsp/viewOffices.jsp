@@ -28,9 +28,9 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<span style="display: none" id="page.id">viewOffices</span>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+        <span id="page.id" value="viewOffices" />
 		<html-el:form action="/offAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

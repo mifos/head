@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">editPreviewProductsMix</span>
+	<span id="page.id" value="editPreviewProductsMix" />
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {

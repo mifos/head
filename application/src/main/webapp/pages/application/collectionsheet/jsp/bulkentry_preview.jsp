@@ -28,11 +28,10 @@ explanation of the license and how it is applied.
 <%@taglib uri="/mifos/collectionsheettags" prefix="collectionsheet"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<span style="display: none" id="page.id">BulkEntryPreview</span>
-
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
+    <span id="page.id" value="BulkEntryPreview"/>
+        		<script language="javascript">
 		<!--
 			function fnCancel(form) {
 				form.method.value="cancel";

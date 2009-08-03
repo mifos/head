@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<span style="display: none" id="page.id">EditPreviewLoanAccount</span>	
+		<span id="page.id" value="EditPreviewLoanAccount" />	
 		<SCRIPT SRC="pages/application/loan/js/PreviewLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"

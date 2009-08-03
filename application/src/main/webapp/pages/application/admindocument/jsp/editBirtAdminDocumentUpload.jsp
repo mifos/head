@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
   <tiles:put name="body" type="string">
-  <span style="display: none" id="page.id">editBirtAdminDocumentUpload</span>
+  <span id="page.id" value="editBirtAdminDocumentUpload" />
   
   	<script type="text/javascript">
 	function goToCancelPage(form){

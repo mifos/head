@@ -34,7 +34,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">PreviewClientPersonalInfo</span>
+	<span id="page.id" value="PreviewClientPersonalInfo" />
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
 

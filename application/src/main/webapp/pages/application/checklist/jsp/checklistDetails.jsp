@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">checklistDetails</span>
+	<span id="page.id" value="checklistDetails" />
 	
 
 		<script language="JavaScript" src="pages/application/checklist/js/validator.js" type="text/javascript">

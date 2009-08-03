@@ -24,11 +24,10 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/date" prefix="date"%>
 
-<span style="display: none" id="page.id">BulkEntryConfirmation</span>
-
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+    <span id="page.id" value="BulkEntryConfirmation"/>
+        		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="left" valign="top" class="paddingL15T15">
 					<table width="98%" border="0" cellspacing="0" cellpadding="3">

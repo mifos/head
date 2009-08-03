@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">createuser_preview</span>
+	<span id="page.id" value="createuser_preview" />
 	
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">

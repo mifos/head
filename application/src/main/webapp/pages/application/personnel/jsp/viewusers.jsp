@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
- <span style="display: none" id="page.id">viewusers</span>
+ <span id="page.id" value="viewusers" />
  
 <html-el:form action="PersonAction.do?method=search" focus="searchString">
 

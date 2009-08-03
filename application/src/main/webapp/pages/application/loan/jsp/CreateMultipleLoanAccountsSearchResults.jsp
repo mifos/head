@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<span style="display: none" id="page.id">CreateMultipleLoanAccountsSearchResults</span>
+		<span id="page.id" value="CreateMultipleLoanAccountsSearchResults" />
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>

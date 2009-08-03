@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">ViewEditLoanProduct</span>
+	<span id="page.id" value="ViewEditLoanProduct" />
 
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>

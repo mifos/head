@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<span style="display: none" id="page.id">LoanProductDetails</span>
+		<span id="page.id" value="LoanProductDetails" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="loanPrd" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<c:set var="loanAmountType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmountType')}" />

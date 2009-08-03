@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".noorangetab">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">edityoursettings</span>
+	<span id="page.id" value="edityoursettings" />
 	
 		<script language="javascript">
   function goToCancelPage(){

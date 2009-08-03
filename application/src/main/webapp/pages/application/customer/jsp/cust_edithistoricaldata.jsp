@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">CustEditHistoricalData</span>
+	<span id="page.id" value="CustEditHistoricalData" />
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>

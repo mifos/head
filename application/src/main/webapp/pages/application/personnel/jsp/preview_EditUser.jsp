@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
- <span style="display: none" id="page.id">preview_EditUser</span>
+ <span id="page.id" value="preview_EditUser" />
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
  <script language="javascript">
   function goToEditPage(){

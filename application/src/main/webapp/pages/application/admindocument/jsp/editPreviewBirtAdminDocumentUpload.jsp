@@ -39,7 +39,7 @@ explanation of the license and how it is applied.
   	}
 	</script>
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">editPreviewBirtAdminDocumentUpload</span>
+	<span id="page.id" value="editPreviewBirtAdminDocumentUpload" />
 		<html-el:form method="post"
 			action="/birtAdminDocumentUploadAction.do?method=editThenUpload">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

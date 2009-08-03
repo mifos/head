@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<span style="display: none" id="page.id">EditLoanProductPreview</span>
+		<span id="page.id" value="EditLoanProductPreview" />
 
 		<script language="javascript">
 		<!--

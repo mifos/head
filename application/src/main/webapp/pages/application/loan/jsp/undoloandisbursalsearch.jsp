@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<span style="display: none" id="page.id">UndoLoanDisbursalSearch</span>
+		<span id="page.id" value="UndoLoanDisbursalSearch" />
 		<html-el:form action="/reverseloandisbaction">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

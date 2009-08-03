@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">CustSearchAccount</span>
+	<span id="page.id" value="CustSearchAccount" />
     <c:choose>
             <c:when test="${requestScope.perspective == 'redoLoan'}">
                 <script>

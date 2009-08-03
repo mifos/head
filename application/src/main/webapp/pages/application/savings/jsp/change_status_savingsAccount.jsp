@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">change_status_savingsAccount</span>
+	<span id="page.id" value="change_status_savingsAccount" />
 
 		<script language="javascript">
 

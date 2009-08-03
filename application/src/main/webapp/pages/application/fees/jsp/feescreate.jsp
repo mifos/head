@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">feescreate</span>
+	<span id="page.id" value="feescreate" />
 	
 		<script src="pages/application/fees/js/Fees.js"></script>
 		<script src="pages/framework/js/conversion.js"></script>

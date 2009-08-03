@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">create_survey_success</span>
+	<span id="page.id" value="create_survey_success" />
 		<td align="left" valign="top" bgcolor="#FFFFFF" style="padding-left:8px; padding-top:10px;">
 		  <table border="0" cellpadding="0" cellspacing="0">
 				<tr>

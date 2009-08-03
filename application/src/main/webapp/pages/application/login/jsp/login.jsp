@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <link href="pages/framework/css/cssstyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<span style="display: none" id="page.id">Login</span>
+<span id="page.id" value="Login"/>	
 <html-el:form action="/loginAction.do" focus="userName">
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">

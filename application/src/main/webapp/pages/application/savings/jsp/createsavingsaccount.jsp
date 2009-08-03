@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id">createsavingsaccount</span>
+	<span id="page.id" value="createsavingsaccount" />
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
 <html-el:form  action="/savingsAction.do?method=load">
 
