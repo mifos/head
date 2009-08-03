@@ -25,7 +25,7 @@ msgstr ""
 
 #: Date
 msgid "Date"
-msgstr ""
+msgstr "تاريخ"
 
 #: Description
 msgctxt "Description"
@@ -846,9 +846,10 @@ msgid "Branch 01"
 msgstr ""
 
 #: loan.business_work_act
+#: Loan.PurposeOfLoan
 msgctxt "loan.business_work_act"
 msgid "Purpose of"
-msgstr ""
+msgstr "والغرض من"
 
 #: loan.byid
 msgid "by ID"
@@ -909,14 +910,16 @@ msgid "Collateral details"
 msgstr ""
 
 #: loan.collateral_notes
+#: Loan.CollateralNotes
 msgctxt "loan.collateral_notes"
 msgid "Collateral Notes"
-msgstr ""
+msgstr "ويلاحظ الضمان"
 
 #: loan.collateral_type
+#: Loan.CollateralType
 msgctxt "loan.collateral_type"
 msgid "Collateral type"
-msgstr ""
+msgstr "نوع الضمان"
 
 #: loan.colon
 msgctxt "loan.colon"
@@ -1036,9 +1039,10 @@ msgid "Description"
 msgstr ""
 
 #: loan.description
+#: Description
 msgctxt "loan.description"
 msgid "Description"
-msgstr ""
+msgstr "وصف"
 
 #: loan.detailssearch
 msgid "details and click Search. Click Cancel to return to"
@@ -1085,9 +1089,10 @@ msgid "Due date"
 msgstr ""
 
 #: loan.duedate
+#: DueDate
 msgctxt "loan.duedate"
 msgid "Due Date"
-msgstr ""
+msgstr "تاريخ الاستحقاق"
 
 #: loan.editTrxn
 msgctxt "loan.editTrxn"
@@ -1168,14 +1173,16 @@ msgid "Fee Type"
 msgstr ""
 
 #: loan.fees
+#: Fees
 msgctxt "loan.fees"
 msgid "Fees"
-msgstr ""
+msgstr "الرسوم"
 
 #: loan.field
+#: Field
 msgctxt "loan.field"
 msgid "Field"
-msgstr ""
+msgstr "ميدان"
 
 #: loan.folldetails
 msgid "Following are the account details for the"
@@ -1242,9 +1249,10 @@ msgid "Installment details"
 msgstr ""
 
 #: loan.installments
+#: Installment
 msgctxt "loan.installments"
 msgid "Installment"
-msgstr ""
+msgstr "التقسيط"
 
 #: loan.instanceName
 msgctxt "loan.instanceName"
@@ -1277,9 +1285,10 @@ msgid "Rate"
 msgstr ""
 
 #: loan.interest
+#: Interest
 msgctxt "loan.interest"
 msgid "Interest"
-msgstr ""
+msgstr "أسهم"
 
 #: loan.interestDisbursement
 msgid "{0} deducted at disbursement"
