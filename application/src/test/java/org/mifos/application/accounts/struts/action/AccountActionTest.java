@@ -128,12 +128,10 @@ public class AccountActionTest extends MifosMockStrutsTestCase {
                 TestObjectFactory.getMoneyForMFICurrency(0), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
         loan.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.getSessionTL().flush();
+        TestObjectFactory.flushandCloseSession();
         actionPerform();
         verifyForward("getTransactionHistory_success");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.getSessionTL().flush();
+        TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
         List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils.getAttribute(
                 SavingsConstants.TRXN_HISTORY_LIST, request);

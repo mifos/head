@@ -521,7 +521,6 @@ public class MeetingActionTest extends MifosMockStrutsTestCase {
     public void testEditForCenter() throws Exception {
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);
-        StaticHibernateUtil.closeSession();
 
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "get");

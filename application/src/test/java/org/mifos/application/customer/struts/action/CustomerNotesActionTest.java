@@ -166,34 +166,7 @@ public class CustomerNotesActionTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
-    public void testCreate_CenterNotes() {
-        createInitialObjects();
-        setRequestPathInfo("/customerNotesAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("customerId", center.getCustomerId().toString());
-        getRequest().getSession().setAttribute("security_param", "Center");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-
-        setRequestPathInfo("/customerNotesAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter("comment", "Notes created");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-
-        setRequestPathInfo("/customerNotesAction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter("comment", "Notes created");
-        getRequest().getSession().setAttribute("security_param", "Center");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyForward(ActionForwards.center_detail_page.toString());
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        center = (CenterBO) (StaticHibernateUtil.getSessionTL()
-                .get(CenterBO.class, new Integer(center.getCustomerId())));
-        assertEquals(1, center.getCustomerNotes().size());
-    }
+    
 
     public void testLoadForClient() {
         createInitialObjects();
@@ -482,6 +455,35 @@ public class CustomerNotesActionTest extends MifosMockStrutsTestCase {
         getobjects();
     }
 
+    public void testCreate_CenterNotes() {
+        createInitialObjects();
+        setRequestPathInfo("/customerNotesAction.do");
+        addRequestParameter("method", "load");
+        addRequestParameter("customerId", center.getCustomerId().toString());
+        getRequest().getSession().setAttribute("security_param", "Center");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+
+        setRequestPathInfo("/customerNotesAction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("comment", "Notes created");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+
+        setRequestPathInfo("/customerNotesAction.do");
+        addRequestParameter("method", "create");
+        addRequestParameter("comment", "Notes created");
+        getRequest().getSession().setAttribute("security_param", "Center");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyForward(ActionForwards.center_detail_page.toString());
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        center = (CenterBO) (StaticHibernateUtil.getSessionTL()
+                .get(CenterBO.class, new Integer(center.getCustomerId())));
+        assertEquals(1, center.getCustomerNotes().size());
+    }
+    
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);

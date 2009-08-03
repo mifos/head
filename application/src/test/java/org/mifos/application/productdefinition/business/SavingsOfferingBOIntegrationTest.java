@@ -44,7 +44,6 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -63,11 +62,12 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
     }
 
     @Override
     protected void tearDown() throws Exception {
+        TestObjectFactory.removeObject(savingsProduct);
+        TestObjectFactory.removeObject(savingsOffering1);
         super.tearDown();
     }
 
@@ -94,6 +94,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
 
@@ -566,6 +567,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
                 .getStartDate(), endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
                 intCalcMeeting, intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
         assertEquals(reduceCurrentDate(1), savingsProduct.getStartDate());
@@ -673,6 +675,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
                 endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
         assertEquals(newStartDate, savingsProduct.getStartDate());
@@ -700,6 +703,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money("10"), new Money("100"), new Money("1"), 10.0);
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
         assertEquals(newName, savingsProduct.getPrdOfferingName());

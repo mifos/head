@@ -109,7 +109,6 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTest {
     public void testGetCenter() throws Exception {
         String centerName = "NewCenter";
         center = TestObjectFactory.createCenter(centerName, getMeeting());
-        StaticHibernateUtil.closeSession();
         center = new CenterPersistence().getCenter(center.getCustomerId());
         assertEquals(centerName, center.getDisplayName());
     }

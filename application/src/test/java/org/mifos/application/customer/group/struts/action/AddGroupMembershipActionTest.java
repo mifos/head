@@ -47,7 +47,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -71,7 +70,6 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
@@ -179,6 +177,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase {
                 clientNameDetailView, spouseNameDetailView, clientDetailView, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);

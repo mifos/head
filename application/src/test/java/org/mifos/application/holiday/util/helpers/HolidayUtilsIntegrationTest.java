@@ -161,6 +161,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTest {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
+        StaticHibernateUtil.closeSession();
         setSavedConfig();
         super.tearDown();
     }
@@ -207,6 +208,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTest {
 
         holidayEntity.save();
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
@@ -245,6 +247,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTest {
 
         holidayEntity.save();
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
         holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
 
@@ -319,7 +322,10 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testRescheduleLoanRepaymentDates() throws Exception {
-       TestDatabase.resetMySQLDatabase();
+        // In order to make this test pass resetting database is required
+        // because some other test is leaving the database in dirty state
+        TestDatabase.resetMySQLDatabase();
+
         // Make SUNDAY (FirstDay) as Working Day.
         toggleFirstDayOnOff(Short.valueOf("1"));
         setNewWorkingDays(sundayIncludedWorkingDays);
@@ -544,6 +550,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTest {
 
         holidayEntity.save();
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
         return holidayEntity;
     }
 
@@ -563,6 +570,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTest {
         SavingsBO savings = new SavingsTestHelper().createSavingsAccount(savingsProduct, group,
                 AccountState.SAVINGS_ACTIVE, TestUtils.makeUser());
         StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
 
         accountId = savings.getAccountId();
         return TestObjectFactory.getObject(SavingsBO.class, accountId);

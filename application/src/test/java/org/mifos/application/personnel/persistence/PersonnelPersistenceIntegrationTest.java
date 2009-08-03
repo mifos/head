@@ -174,7 +174,6 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTest {
         center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "check inactive");
         center.update();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         assertTrue(!personnelPersistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
     }
@@ -185,7 +184,6 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTest {
         center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "check inactive");
         center.update();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
     }
