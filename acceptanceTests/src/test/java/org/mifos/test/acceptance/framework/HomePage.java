@@ -24,7 +24,6 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.group.CreateGroupSearchPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.framework.reports.ReportsPage;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -43,10 +42,9 @@ public class HomePage extends MifosPage {
 	public HomePage(Selenium selenium) {
 		super(selenium);
 	}
-	
 
     public HomePage verifyPage() {
-		Assert.assertTrue(selenium.isTextPresent("You can navigate your way through Mifos using:"));
+        verifyPage("Home");
 		return this;
     }
 

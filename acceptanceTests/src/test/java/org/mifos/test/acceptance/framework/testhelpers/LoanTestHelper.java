@@ -240,7 +240,9 @@ public class LoanTestHelper {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
         loginPage.verifyPage();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
+        homePage.verifyPage();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        clientsAndAccountsPage.verifyPage();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
 }
