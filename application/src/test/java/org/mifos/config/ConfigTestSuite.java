@@ -32,25 +32,25 @@ import org.mifos.config.GeneralConfigTest;
 
 public class ConfigTestSuite extends TestSuite {
 
-	public ConfigTestSuite() throws Exception {
-	}
+    public ConfigTestSuite() throws Exception {
+    }
 
-	public static void main(String[] args) throws Exception {
-		Test testSuite = suite();
-		TestRunner.run(testSuite);
-	}
+    public static void main(String[] args) throws Exception {
+        Test testSuite = suite();
+        TestRunner.run(testSuite);
+    }
 
-	public static Test suite() throws Exception
-	{
-		TestSuite suite = new ConfigTestSuite();
-		suite.addTestSuite(AccountingRulesIntegrationTest.class);
-		suite.addTestSuite(LocalizationIntegrationTest.class);
-		suite.addTestSuite(FiscalCalendarRulesTest.class);
-		suite.addTestSuite(ClientRulesIntegrationTest.class);
-		suite.addTestSuite(ProcessFlowRulesTest.class);
-		suite.addTestSuite(ChartOfAccountsConfigTest.class);
-		suite.addTestSuite(GeneralConfigTest.class);
+    public static Test suite() throws Exception
+    {
+        TestSuite suite = new ConfigTestSuite();
+        suite.addTestSuite(AccountingRulesIntegrationTest.class);
+        suite.addTestSuite(LocalizationIntegrationTest.class);
+        suite.addTestSuite(FiscalCalendarRulesTest.class);
+        suite.addTestSuite(ClientRulesIntegrationTest.class);
+        suite.addTestSuite(ProcessFlowRulesTest.class);
+        suite.addTestSuite(ChartOfAccountsConfigTest.class);
+        suite.addTestSuite(GeneralConfigTest.class);
 
-		return suite;
-	}
+        return suite;
+    }
 }
