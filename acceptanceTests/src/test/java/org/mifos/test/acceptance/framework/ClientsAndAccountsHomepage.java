@@ -54,31 +54,31 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 	}
 
 	public CollectionSheetEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
-		selenium.click("id=menu.link.enter.collection.sheet.data");
+		selenium.click("id=menu.link.label.enter.label.collectionsheet.label.data");
 		waitForPageToLoad();
 		return new CollectionSheetEntrySelectPage(selenium);
 	}
 
     public CreateLoanAccountsSearchPage navigateToCreateMultipleLoanAccountsUsingLeftMenu() {
-        selenium.click("id=menu.link.create.multiple.loan.accounts"); 
+        selenium.click("menu.link.label.createmultipleloanaccountsprefix.loan.label.createmultipleloanaccountssuffix"); 
         waitForPageToLoad();
         return new CreateLoanAccountsSearchPage(selenium);
     }
     
     public CreateLoanAccountSearchPage navigateToCreateLoanAccountUsingLeftMenu() {
-        selenium.click("id=menu.link.create.loan.account"); 
+        selenium.click("menu.link.label.createloanaccountprefix.loan.label.createloanaccountsuffix"); 
         waitForPageToLoad();
         return new CreateLoanAccountSearchPage(selenium);
     }
 
     public CreateCenterChooseOfficePage navigateToCreateNewCenterPage() {
-        selenium.click("link=Create new Center"); 
+        selenium.click("menu.link.label.createnew.center"); 
         waitForPageToLoad();
         return new CreateCenterChooseOfficePage(selenium);
     }    
     
     public GroupSearchPage navigateToCreateNewClientPage() {
-        selenium.click("menu.link.create.new.client"); 
+        selenium.click("menu.link.label.createnew.client"); 
         waitForPageToLoad();
         return new GroupSearchPage(selenium);
     }

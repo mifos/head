@@ -28,6 +28,12 @@ public class MenuItem {
      * displayName is the display name for MenuItem.
      */
     private String displayName[];
+    
+    /**
+     * linkId is the id attribute for the link tag that will
+     * be displayed by this menu item.
+     */
+    private String linkId;
 
     /**
      * linkValue is the page, which has to be shown when user clicks this
@@ -52,6 +58,25 @@ public class MenuItem {
      */
     public void setLinkValue(String linkValue) {
         this.linkValue = linkValue;
+    }
+    
+    /**
+     * Method to get the value of linkId member variable.
+     * 
+     * @return String that holds linkId.
+     */
+    public String getLinkId() {
+        return linkId;
+    }
+
+    /**
+     * Method to set the value of linkId member variable.
+     * 
+     * @param linkId
+     *            is the id for the link for this menuitem.
+     */
+    public void setLinkId(String linkId) {
+        this.linkId = linkId;
     }
 
     /**

@@ -112,7 +112,7 @@ public class MenuTag extends BaseHandlerTag {
 
     private String getLink(MenuItem menuItem) {
         String linkText = menuItem.getDisplayName()[0];
-        String linkId = "menu.link." + linkText.replace(' ', '.').toLowerCase();
+        String linkId = "menu.link." + menuItem.getLinkId()/*replace(' ', '.').toLowerCase()*/;
         String linkHref = menuItem.getLinkValue();
         return "<a href=\"" + linkHref + "\" id=\"" + linkId + "\">" + linkText + "</a><br>\n";
     }

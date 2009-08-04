@@ -25,6 +25,7 @@ import java.util.Locale;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.MenuParseException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.LabelTagUtils;
@@ -121,7 +122,9 @@ public class MenuBuilder {
         MenuItem[] localeMenuItem = new MenuItem[crudeMenuItems.length];
         for (int i = 0; i < crudeMenuItems.length; i++) {
             localeMenuItem[i] = new MenuItem();
+            
             localeMenuItem[i].setLinkValue(crudeMenuItems[i].getLinkValue());
+            localeMenuItem[i].setLinkId(parseLinkId(crudeMenuItems[i].getDisplayName()));
             localeMenuItem[i].setDisplayName(parseDisplayName(crudeMenuItems[i].getDisplayName()));
         }
         return localeMenuItem;
@@ -145,9 +148,32 @@ public class MenuBuilder {
         }
         return new String[] { displayNameValue.toString().trim() };
     }
+    
+    private static String parseLinkId(String[] displayNameParts) throws JspException {
+        // concatenate the words in the link text (example: "Create", "loan", "account"),
+        // with . and then lowercase the whole shebang to make a nice id, "create.loan.account".
+        /*StringBuffer linkIdValue = new StringBuffer();
+        for (String part : displayNameParts) {
+            String value = getLabelInEnglish(part);
+            linkIdValue.append(value);
+            linkIdValue.append(MenuConstants.SPACE);
+        }
+        
+        return linkIdValue.toString().trim().replace(' ', '.');*/
+        return StringUtils.join(displayNameParts, ".").toLowerCase();
+    }
 
     private static String getLabel(String key) throws JspException {
         return LabelTagUtils.getInstance().getLabel(pageContext, MenuConstants.MENU_RESOURCE_NAME,
                 LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext), key, null);
+    }
+    
+    /**
+     * This method is used for creating the link id's, that'll 
+     * always be in english.
+     */
+    private static String getLabelInEnglish(String key) throws JspException {
+        return LabelTagUtils.getInstance().getLabel(pageContext, MenuConstants.MENU_RESOURCE_NAME,
+                Locale.ENGLISH, key, null);
     }
 }
