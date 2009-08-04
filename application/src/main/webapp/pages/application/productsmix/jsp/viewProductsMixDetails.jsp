@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="viewProductsMixDetails" />
+	<span id="page.id" title="viewProductsMixDetails" />
 
 		<script language="javascript">
 

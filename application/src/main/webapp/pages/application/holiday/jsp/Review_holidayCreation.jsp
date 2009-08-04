@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="Review_holidayCreation" />
+	<span id="page.id" title="Review_holidayCreation" />
 	
 
 		<script>

@@ -37,7 +37,7 @@ explanation of the license and how it is applied.
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="CreateClientPersonalInfo" />	
+	<span id="page.id" title="CreateClientPersonalInfo" />	
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript" SRC="pages/framework/js/conversion.js"></script>
 		<script language="javascript" src="pages/application/client/js/client.js"></script>

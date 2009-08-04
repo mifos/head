@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<span id="page.id" value="UndoLoanDisbursalPreview" />
+		<span id="page.id" title="UndoLoanDisbursalPreview" />
 		<html-el:form action="/reverseloandisbaction">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">

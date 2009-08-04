@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="Savings_ProductDetails" />
+	<span id="page.id" title="Savings_ProductDetails" />
 
 		<script language="javascript">
 <!--

@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="CreateSavingsProduct" />
+	<span id="page.id" title="CreateSavingsProduct" />
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
 		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>

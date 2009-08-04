@@ -98,7 +98,7 @@ tr.bg0 {
 </style>
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
-<span id="page.id" value="create_ppi_instance" />
+<span id="page.id" title="create_ppi_instance" />
 <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=preview">
 <table width="95%" border="0" cellpadding="0" cellspacing="0">

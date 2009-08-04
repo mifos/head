@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
   <tiles:put name="body" type="string">
-  <span id="page.id" value="editReportsCategory" />  
+  <span id="page.id" title="editReportsCategory" />  
   
   	<script type="text/javascript">
 	function goToCancelPage(form){

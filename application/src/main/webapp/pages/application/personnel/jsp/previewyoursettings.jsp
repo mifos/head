@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".noorangetab">
  <tiles:put name="body" type="string">
- <span id="page.id" value="previewyoursettings" />
+ <span id="page.id" title="previewyoursettings" />
  
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">

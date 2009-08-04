@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<span id="page.id" value="EditLoanAccount" />	
+		<span id="page.id" title="EditLoanAccount" />	
 		<SCRIPT SRC="pages/application/loan/js/EditLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>

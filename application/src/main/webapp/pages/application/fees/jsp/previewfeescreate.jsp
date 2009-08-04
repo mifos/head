@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="previewfeescreate" />
+	<span id="page.id" title="previewfeescreate" />
 	
 		<script src="pages/framework/js/CommonUtilities.js"></script>
 		<script src="pages/application/fees/js/Fees.js"></script>

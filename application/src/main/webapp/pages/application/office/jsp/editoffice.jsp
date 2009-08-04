@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="editoffice" />
+	<span id="page.id" title="editoffice" />
 	
 <script language="javascript">
 	function goToCancelPage(){

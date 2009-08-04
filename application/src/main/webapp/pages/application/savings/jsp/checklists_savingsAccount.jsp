@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="checklist_savingsAccount" />
+	<span id="page.id" title="checklist_savingsAccount" />
 
 		<script language="javascript">
 

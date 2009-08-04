@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<span id="page.id" value="get" />
+<span id="page.id" title="get" />
 <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
     <tr>

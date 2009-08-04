@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
     
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="confirmDeleteCategory" />
+	<span id="page.id" title="confirmDeleteCategory" />
 	<script type="text/javascript">
 	function goToCancelPage(form){
 		form.action = "reportsCategoryAction.do?method=viewReportsCategory";

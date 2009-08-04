@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="review_transaction_savings" />
+	<span id="page.id" title="review_transaction_savings" />
 	<script language="javascript">
 		function funCancel(form){
 			form.action="savingsDepositWithdrawalAction.do?method=cancel";

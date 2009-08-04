@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="StatusSearchResults" />
+	<span id="page.id" title="StatusSearchResults" />
 
 		<script>
   	function submitData(form) {

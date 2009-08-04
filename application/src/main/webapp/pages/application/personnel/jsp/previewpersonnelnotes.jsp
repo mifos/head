@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="previewpersonnelnotes" />
+	<span id="page.id" title="previewpersonnelnotes" />
 	
 		<script language="javascript">
   function goToEditPage(){

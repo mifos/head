@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="editPreview_checkList" />
+	<span id="page.id" title="editPreview_checkList" />
 	
 
 		<script language="JavaScript"

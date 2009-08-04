@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <tiles:insert definition=".reportLayout">
 <tiles:put name="body" type="string">
-<span id="page.id" value="reports" />
+<span id="page.id" title="reports" />
 
 <html-el:form action="/reportsAction.do">
 

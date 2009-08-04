@@ -62,7 +62,7 @@ public class AbstractPage {
 	}
 
 	public void verifyPage(String pageName) {
-		Assert.assertEquals(selenium.getAttribute("page.id@value"), pageName);
+		Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
 	}
 
 }

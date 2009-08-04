@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
-<span id="page.id" value="report_user_params" />
+<span id="page.id" title="report_user_params" />
 <script language="JavaScript" src="<%=request.getContextPath()%>/pages/application/reports/jsp/date-picker.js"></script>
 <FORM name='data_form' method='POST' action='<%=request.getContextPath()%>/reportsUserParamsAction.do?method=processReport'>
 

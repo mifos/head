@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="viewsavingstrxnhistory" />
+	<span id="page.id" title="viewsavingstrxnhistory" />
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
 	<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

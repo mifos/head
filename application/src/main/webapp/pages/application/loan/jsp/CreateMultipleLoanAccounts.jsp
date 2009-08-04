@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<span id="page.id" value="CreateMultipleLoanAccounts" />
+		<span id="page.id" title="CreateMultipleLoanAccounts" />
 		<script language="javascript">
 		<!--
 			function fnLoadLoanOfficers(form) {

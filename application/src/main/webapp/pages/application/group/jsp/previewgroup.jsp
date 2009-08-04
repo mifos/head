@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
- <span id="page.id" value="PreviewGroup" />
+ <span id="page.id" title="PreviewGroup" />
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
 	 function setGroupStatus(statusValue){	

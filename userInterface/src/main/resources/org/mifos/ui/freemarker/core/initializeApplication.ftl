@@ -6,7 +6,7 @@
     <title>Initializer Application</title>
   </head>
   <body>
-      <span id="page.id" value="InitializeApplication" />
+      <span id="page.id" title="InitializeApplication" />
       <div id="initializeApplication.message">Application has been re-initialized.</div>
   [@mifos.footer /]
 

@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
   <tiles:put name="body" type="string">
-  <span id="page.id" value="create_survey" />
+  <span id="page.id" title="create_survey" />
     <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
     <html-el:form action="/surveysAction.do?method=preview" focus="name">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">

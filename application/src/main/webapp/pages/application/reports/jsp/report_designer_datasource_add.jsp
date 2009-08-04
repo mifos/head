@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
-<span id="page.id" value="report_designer_datasource_add" />
+<span id="page.id" title="report_designer_datasource_add" />
 
 <html-el:form action="/reportsDataSourceAction.do?method=createDataSource">
 <html-el:hidden property="datasourceId" value=''/>

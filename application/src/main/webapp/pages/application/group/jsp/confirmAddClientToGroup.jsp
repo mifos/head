@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="ConfirmAddClientToGroup" />
+	<span id="page.id" title="ConfirmAddClientToGroup" />
 
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">

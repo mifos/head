@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 </script>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="view_additional_field_categories" />
+	<span id="page.id" title="view_additional_field_categories" />
 
 		<html-el:form action="customFieldsAction.do">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

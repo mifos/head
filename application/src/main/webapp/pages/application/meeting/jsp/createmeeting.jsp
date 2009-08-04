@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="createmeeting" />
+	<span id="page.id" title="createmeeting" />
 	
 
 

@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="editLatenessDormancy" />
+	<span id="page.id" title="editLatenessDormancy" />
 	
 		<script language="javascript">
 		<!--

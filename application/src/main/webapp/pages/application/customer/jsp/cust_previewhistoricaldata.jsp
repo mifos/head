@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="CustPreviewHistoricalData" />
+	<span id="page.id" title="CustPreviewHistoricalData" />
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="javascript">
   function goToCancelPage(){

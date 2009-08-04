@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<span id="page.id" value="view_questions" />
+<span id="page.id" title="view_questions" />
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.SurveysUIResources"/>
 

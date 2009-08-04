@@ -24,7 +24,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="createfund" />
+	<span id="page.id" title="createfund" />
 	
 		<script language="javascript">
 			function fnCreateCancel(){

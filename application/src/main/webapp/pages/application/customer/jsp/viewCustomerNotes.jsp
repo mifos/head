@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
- <span id="page.id" value="ViewCustomerNotes" />
+ <span id="page.id" title="ViewCustomerNotes" />
  <tiles:put name="body" type="string">
 <html-el:form action="notesAction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

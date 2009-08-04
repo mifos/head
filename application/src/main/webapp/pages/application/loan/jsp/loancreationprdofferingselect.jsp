@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<span id="page.id" value="LoanCreationPrdOfferingSelect" />
+		<span id="page.id" title="LoanCreationPrdOfferingSelect" />
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
         <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
         <c:if test="${requestScope.perspective == 'redoLoan'}">

@@ -36,7 +36,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
- <span id="page.id" value="ViewClientActivity" />
+ <span id="page.id" title="ViewClientActivity" />
 
 	<script>
 		function fun_cancel(){

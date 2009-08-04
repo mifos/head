@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 	<tiles:put name="body" type="string">
-        <span id="page.id" value="create_officeHoliday" />
+        <span id="page.id" title="create_officeHoliday" />
 		<SCRIPT>
 	function ViewHolidays(){
 	    //alert("ViewHolidays() have been called");

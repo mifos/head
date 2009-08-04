@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-    <span id="page.id" value="BulkEntryConfirmation"/>
+    <span id="page.id" title="BulkEntryConfirmation"/>
         		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td align="left" valign="top" class="paddingL15T15">

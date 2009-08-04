@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<span id="page.id" value="editfund" />
+<span id="page.id" title="editfund" />
 
 <script language="javascript">
 	function fnCreateCancel(){

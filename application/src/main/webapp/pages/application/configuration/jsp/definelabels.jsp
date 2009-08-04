@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="definelabels" />
+	<span id="page.id" title="definelabels" />
 	
 		<html-el:form action="/labelconfigurationaction">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">

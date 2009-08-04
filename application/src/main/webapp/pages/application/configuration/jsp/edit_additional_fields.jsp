@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<span id="page.id" value="edit_additional_fields" />
+<span id="page.id" title="edit_additional_fields" />
 
 <html-el:form action="/customFieldsAction.do?method=editPreview">
 <table width="95%" border="0" cellpadding="0" cellspacing="0">

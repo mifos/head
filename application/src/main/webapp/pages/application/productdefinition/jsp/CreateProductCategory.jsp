@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="CreateProductCategory" />
+	<span id="page.id" title="CreateProductCategory" />
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {

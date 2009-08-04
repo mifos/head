@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
-<span id="page.id" value="center_search_results_transfer_group" />
+<span id="page.id" title="center_search_results_transfer_group" />
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <script language="javascript">

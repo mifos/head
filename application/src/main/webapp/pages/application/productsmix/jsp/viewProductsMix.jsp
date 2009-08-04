@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="viewProductsMix" />
+	<span id="page.id" title="viewProductsMix" />
 		<html-el:form action="/productMixAction?method=search">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductMixList')}"
 			var="mixedlist"/>

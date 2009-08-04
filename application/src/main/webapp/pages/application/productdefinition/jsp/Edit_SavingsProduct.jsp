@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="Edit_SavingsProduct" />
+	<span id="page.id" title="Edit_SavingsProduct" />
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
 		<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>

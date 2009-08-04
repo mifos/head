@@ -25,7 +25,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
 <tiles:insert definition=".create">
  <tiles:put name="body" type="string">
- <span id="page.id" value="choose_office" />
+ <span id="page.id" title="choose_office" />
  
 <script language="javascript">
   function goToCancelPage(){

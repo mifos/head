@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="previewfeesedit" />
+	<span id="page.id" title="previewfeesedit" />
 	
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script src="pages/application/fees/js/Fees.js"></script>

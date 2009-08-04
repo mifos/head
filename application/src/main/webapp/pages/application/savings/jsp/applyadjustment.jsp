@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="applyadjustment" />
+	<span id="page.id" title="applyadjustment" />
 	<script src="pages/framework/js/conversion.js"></script>
 	<script src="pages/framework/js/con_en.js"></script>
 	<script src="pages/framework/js/con_${sessionScope['UserContext'].currentLocale}.js"></script>

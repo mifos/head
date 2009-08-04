@@ -32,7 +32,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="CreateLoanPreview" />
+	<span id="page.id" title="CreateLoanPreview" />
 
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>

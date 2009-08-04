@@ -28,7 +28,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
- <span id="page.id" value="edit_user" />
+ <span id="page.id" title="edit_user" />
  
 <script language="javascript">
 

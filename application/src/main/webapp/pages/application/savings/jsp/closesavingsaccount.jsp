@@ -29,7 +29,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="closesavingsaccount" />
+	<span id="page.id" title="closesavingsaccount" />
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
 		function funCancel(form){

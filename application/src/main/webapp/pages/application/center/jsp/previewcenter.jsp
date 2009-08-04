@@ -30,7 +30,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".withoutmenu">
 <tiles:put name="body" type="string">
-<span id="page.id" value="previewcenter" />
+<span id="page.id" title="previewcenter" />
 
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>

@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivities')}"
 			   var="recentActivities" />
 	<tiles:put name="body" type="string">
-	<span id="page.id" value="ViewGroupChargesDetail" />
+	<span id="page.id" title="ViewGroupChargesDetail" />
 	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
