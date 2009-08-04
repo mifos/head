@@ -27,6 +27,10 @@ public class EditLoanAccountStatusParameters {
     public final static String PENDING_APPROVAL = "Pending for Approval";
     public final static String CANCEL = "Cancel";
     
+    public final static String CANCEL_REASON_OTHER = "Other";
+    public final static String CANCEL_REASON_WITHDRAW = "Withdraw";
+    public final static String CANCEL_REASON_REJECTED = "Rejected";
+    
     private String status;
     private String note;
     private String cancelReason;
@@ -60,6 +64,18 @@ public class EditLoanAccountStatusParameters {
         if ("Application Approved".equals(status)) { return 3; }
         if ("Cancel".equals(status)) { return 10; }
         
+        return -1;
+    }
+    
+    /**
+     * Maps the cancel reason string to a value so we can choose the right element in the select drop-down.
+     */
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    public int getCancelReasonValue() {
+        if (CANCEL_REASON_WITHDRAW.equals(cancelReason)) { return 1; }
+        if (CANCEL_REASON_REJECTED.equals(cancelReason)) { return 2; }
+        if (CANCEL_REASON_OTHER.equals(cancelReason)) { return 3; }
+
         return -1;
     }
 }

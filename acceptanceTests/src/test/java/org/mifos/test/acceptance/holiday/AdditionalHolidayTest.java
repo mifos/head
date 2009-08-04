@@ -61,10 +61,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    
-    private static final String NEXT_WORKING_DAY = "Next Working Day";
-    private static final String SAME_DAY = "Same Day";
-    private static final String NEXT_MEETING_OR_REPAYMENT = "Next Meeting/Repayment";
 
     private static final String LOAN_SCHEDULE = "LOAN_SCHEDULE";
     
@@ -106,7 +102,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateDD("5");
         params.setFromDateMM("09");
         params.setFromDateYYYY("2010");
-        params.setRepaymentRule(SAME_DAY);
+        params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
         
         CreateHolidayConfirmationPage confirmHolidayPage = createHolidayPage.submitAndNavigateToHolidayConfirmationPage(params);
         confirmHolidayPage.verifyPage();
@@ -150,7 +146,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         
         // create a holiday on 1st of july and a loan with a meeeting on 1st of july.
-        createWeeklyLoanScheduleWithMeetingOnAHoliday(SAME_DAY);
+        createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
         
         // verify against db to make sure that the schedule is correct.
         verifyLoanSchedule("AdditionalHolidayTest_004_result_dbunit.xml.zip");
@@ -162,7 +158,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
         
         // create a holiday on 1st of july and a loan with a meeeting on 1st of july.
-        createMonthlyLoanScheduleWithMeetingOnAHoliday(SAME_DAY);
+        createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
         
         verifyLoanSchedule("AdditionalHolidayTest_001_result_dbunit.xml.zip");
 
@@ -173,7 +169,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createWeeklyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextMeeting() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         
-        createWeeklyLoanScheduleWithMeetingOnAHoliday(NEXT_MEETING_OR_REPAYMENT);
+        createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
         
         verifyLoanSchedule("AdditionalHolidayTest_005_result_dbunit.xml.zip");
     }
@@ -183,7 +179,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createMonthlyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextMeeting() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
-        createMonthlyLoanScheduleWithMeetingOnAHoliday(NEXT_MEETING_OR_REPAYMENT);
+        createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
         
         verifyLoanSchedule("AdditionalHolidayTest_002_result_dbunit.xml.zip");
     }
@@ -193,7 +189,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createWeeklyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextDay() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         
-        createWeeklyLoanScheduleWithMeetingOnAHoliday(NEXT_WORKING_DAY);
+        createWeeklyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
         
         verifyLoanSchedule("AdditionalHolidayTest_006_result_dbunit.xml.zip");
     }
@@ -203,7 +199,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createMonthlyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextDay() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
         
-        createMonthlyLoanScheduleWithMeetingOnAHoliday(NEXT_WORKING_DAY);
+        createMonthlyLoanScheduleWithMeetingOnAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
         
         verifyLoanSchedule("AdditionalHolidayTest_003_result_dbunit.xml.zip");
     }
@@ -213,7 +209,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextMeeting() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
         
-        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(NEXT_MEETING_OR_REPAYMENT);
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT);
         
         verifyLoanSchedule("AdditionalHolidayTest_007_result_dbunit.xml.zip");
     } 
@@ -223,7 +219,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextDay() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
         
-        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(NEXT_WORKING_DAY);
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
         
         verifyLoanSchedule("AdditionalHolidayTest_008_result_dbunit.xml.zip");
     }
@@ -233,7 +229,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentSameDay() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
         
-        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(SAME_DAY);
+        createWeeklyLoanScheduleWithTwoMeetingsDuringAHoliday(CreateHolidaySubmitParameters.SAME_DAY);
         
         verifyLoanSchedule("AdditionalHolidayTest_009_result_dbunit.xml.zip");
     }

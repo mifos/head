@@ -36,7 +36,10 @@ public class CreateHolidayEntryPage extends MifosPage {
     
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class CreateHolidaySubmitParameters {
-
+        public static final String NEXT_WORKING_DAY = "Next Working Day";
+        public static final String SAME_DAY = "Same Day";
+        public static final String NEXT_MEETING_OR_REPAYMENT = "Next Meeting/Repayment";       
+        
         private String name;
         private String fromDateDD;
         private String fromDateMM;
@@ -110,6 +113,15 @@ public class CreateHolidayEntryPage extends MifosPage {
             this.repaymentRule = repaymentRule;
         }
 
+        @SuppressWarnings("PMD.OnlyOneReturn")
+        public int getRepaymentRuleValue() {
+            if (SAME_DAY.equals(repaymentRule)) { return 1; }
+            if (NEXT_MEETING_OR_REPAYMENT.equals(repaymentRule)) { return 2; }
+            if (NEXT_WORKING_DAY.equals(repaymentRule)) { return 3; }
+
+            return -1;
+        }
+
     }
     
     public CreateHolidayConfirmationPage submitAndNavigateToHolidayConfirmationPage(CreateHolidaySubmitParameters formParameters) {
@@ -120,7 +132,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         this.typeTextIfNotEmpty("holidayThruDateDD", formParameters.getThruDateDD());
         this.typeTextIfNotEmpty("holidayThruDateMM", formParameters.getThruDateMM());
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());
-        selenium.select("holiday.input.repaymentrule", "label=" + formParameters.getRepaymentRule());
+        selenium.select("holiday.input.repaymentrule", "value=" + formParameters.getRepaymentRuleValue());
         
         selenium.fireEvent("holidayFromDateYY", "blur");
         selenium.fireEvent("holidayThruDateYY", "blur");

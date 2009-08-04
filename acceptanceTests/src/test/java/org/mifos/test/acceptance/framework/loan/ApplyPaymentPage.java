@@ -43,7 +43,7 @@ public class ApplyPaymentPage extends MifosPage {
 
         selenium.type("applypayment.input.amount", params.getAmount());
         
-        selenium.select("applypayment.input.paymentType", params.getPaymentType());
+        selenium.select("applypayment.input.paymentType", "value=" + params.getPaymentTypeValue());
         
         this.typeTextIfNotEmpty("applypayment.input.receiptId", params.getReceiptId());
         

@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -41,7 +42,10 @@ public class EditLoanAccountStatusPage extends MifosPage {
         
         selenium.fireEvent("name=newStatusId value=10", "click");
         
-        this.selectIfNotEmpty("change_status.input.cancel_reason", params.getCancelReason());
+        // TODO: fix me, it'll never be empty.
+        if (StringUtils.isNotEmpty(params.getCancelReason())) {
+            selenium.select("change_status.input.cancel_reason", "value=" + params.getCancelReasonValue());
+        }
         selenium.type("change_status.input.note", params.getNote());
         
         selenium.click("change_status.button.submit");

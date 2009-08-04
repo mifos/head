@@ -101,7 +101,7 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         paymentParameters.setTransactionDateDD("06");
         paymentParameters.setTransactionDateMM("02");
         paymentParameters.setTransactionDateYYYY("2009");
-        paymentParameters.setPaymentType("Cash");
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
         
         loanTestHelper.applyPayment("000100000000174", paymentParameters);
         

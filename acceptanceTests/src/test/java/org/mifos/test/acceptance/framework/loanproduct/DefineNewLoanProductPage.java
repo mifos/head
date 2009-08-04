@@ -45,7 +45,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
     
    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
    public static class SubmitFormParameters {
-
+        public static final String FLAT = "Flat";
+        public static final String DECLINING_BALANCE = "Declining Balance";
+        public static final String DECLINING_BALANCE_EPI = "Declining Balance-Equal Principal Amount";
 
         private String branch;
         private String offeringName;
@@ -219,6 +221,18 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public void setPrincipalGLCode(String principalGLCode) {
             this.principalGLCode = principalGLCode;
         }
+
+        /**
+         * Maps the interest string to a value that's used to choose the right element in the drop-down box.
+         */
+        @SuppressWarnings("PMD.OnlyOneReturn")
+        public int getInterestTypesValue() {
+            if (FLAT.equals(interestTypes)) { return 1; }
+            if (DECLINING_BALANCE.equals(interestTypes)) { return 2; }
+            if (DECLINING_BALANCE_EPI.equals(interestTypes)) { return 4; }
+            
+            return -1;
+        }
  
         
     }
@@ -233,7 +247,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("minLoanAmount", parameters.getMinLoanAmount());
         selenium.type("maxLoanAmount", parameters.getMaxLoanAmount());
         selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
-        selenium.select("interestTypes", "label=" + parameters.getInterestTypes());
+        selenium.select("interestTypes", "value=" + parameters.getInterestTypesValue());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
         selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());

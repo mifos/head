@@ -54,6 +54,8 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 	}
 	
 	public static class SubmitFormParameters {
+	    public static final String CASH = "Cash"; 
+	    
         public String getBranch() {
             return this.branch;
         }
@@ -153,7 +155,13 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
         private String receiptDay;
         private String receiptMonth;
         private String receiptYear;
+        
+        @SuppressWarnings("PMD.OnlyOneReturn")
+        public int getPaymentModeValue() {
+            if (CASH.equals(paymentMode)) { return 1; }
 
+            return -1;
+        }
     }
 
     public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(
@@ -194,7 +202,7 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
         typeText("transactionDateDD", parameters.getTransactionDay(), onlyTypeIfEmpty);
         typeText("transactionDateMM", parameters.getTransactionMonth(), onlyTypeIfEmpty);
         typeText("transactionDateYY", parameters.getTransactionYear(), onlyTypeIfEmpty);
-        selenium.select("paymentId", "label=" + parameters.getPaymentMode());
+        selenium.select("paymentId", "value=" + parameters.getPaymentModeValue());
         typeText(RECEIPT_INPUT_ID, parameters.getReceiptId(), onlyTypeIfEmpty);
         typeText("receiptDateDD", parameters.getReceiptDay(), onlyTypeIfEmpty);
         typeText("receiptDateMM", parameters.getReceiptMonth(), onlyTypeIfEmpty);

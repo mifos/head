@@ -21,6 +21,9 @@
 package org.mifos.test.acceptance.framework.loan;
 
 public class PaymentParameters {
+    public static final String CASH = "Cash";
+    public static final String CHEQUE = "Cheque";
+    
     private String transactionDateDD;
     private String transactionDateMM;
     private String transactionDateYYYY;
@@ -89,4 +92,14 @@ public class PaymentParameters {
         this.receiptDateYYYY = receiptDateYYYY;
     }
 
+    /**
+     * Maps the method of payment string to a value that's used to choose the right element in the drop-down box.
+     */
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    public int getPaymentTypeValue() {
+        if (CASH.equals(paymentType)) { return 1; }
+        if (CHEQUE.equals(paymentType)) { return 3; }
+
+        return -1;
+    }
 }

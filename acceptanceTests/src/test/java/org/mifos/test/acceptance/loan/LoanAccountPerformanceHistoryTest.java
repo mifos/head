@@ -86,7 +86,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         
         // this loan is already disbursed. We repay it and make sure that the performance history is correct.
         RepayLoanParameters params = new RepayLoanParameters();
-        params.setModeOfRepayment("Cash");
+        params.setModeOfRepayment(RepayLoanParameters.CASH);
         
         RepayLoanPage repayLoanPage = loanAccountPage.navigateToRepayLoan();
         RepayLoanConfirmationPage repayLoanConfirmationPage = repayLoanPage.submitAndNavigateToRepayLoanConfirmationPage(params);

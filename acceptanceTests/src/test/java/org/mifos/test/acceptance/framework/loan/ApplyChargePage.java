@@ -36,7 +36,7 @@ public class ApplyChargePage extends MifosPage {
     
     public LoanAccountPage submitAndNavigateToApplyChargeConfirmationPage(ChargeParameters params)
     {
-        selenium.select("applyCharges.input.type", params.getType());
+        selenium.select("applyCharges.input.type", "value=" + params.getTypeValue());
         this.typeTextIfNotEmpty("applyCharges.input.amount", params.getAmount());
         selenium.click("applyCharges.button.submit");
         waitForPageToLoad();

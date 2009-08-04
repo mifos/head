@@ -39,6 +39,11 @@ public class CreateOfficeEnterDataPage extends MifosPage {
     
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
+        public static final String REGIONAL_OFFICE = "Regional Office";
+        public static final String DIVISIONAL_OFFICE = "Divisional Office";
+        public static final String AREA_OFFICE = "Area Office";
+        public static final String BRANCH_OFFICE = "Branch Office";
+        
         String officeName;
         String shortName;
         String officeType;
@@ -138,12 +143,26 @@ public class CreateOfficeEnterDataPage extends MifosPage {
         public void setPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
         }
+        
+        /**
+         * Maps the office type to a value that's used to choose the right element in the drop-down box.
+         */
+        @SuppressWarnings("PMD.OnlyOneReturn")
+        public int getOfficeTypeValue() {
+            if (REGIONAL_OFFICE.equals(officeType)) { return 2; }
+            if (DIVISIONAL_OFFICE.equals(officeType)) { return 3; }
+            if (AREA_OFFICE.equals(officeType)) { return 4; }
+            if (BRANCH_OFFICE.equals(officeType)) { return 5; }
+
+            return -1;
+        }
     }
     
     public CreateOfficePreviewDataPage submitAndGotoCreateOfficePreviewDataPage(SubmitFormParameters parameters) {
         typeTextIfNotEmpty("CreateNewOffice.input.officeName", parameters.getOfficeName());
         typeTextIfNotEmpty("CreateNewOffice.input.shortName", parameters.getShortName());
-        selectAndWaitIfNotEmpty("officeLevel", parameters.getOfficeType());
+        selenium.select("officeLevel", "value=" + parameters.getOfficeTypeValue());
+        waitForPageToLoad(); // loading the possible parent offices
         selectIfNotEmpty("parentOfficeId", parameters.getParentOffice());
         typeTextIfNotEmpty("CreateNewOffice.input.address1", parameters.getAddress1());
         typeTextIfNotEmpty("CreateNewOffice.input.address2", parameters.getAddress2());

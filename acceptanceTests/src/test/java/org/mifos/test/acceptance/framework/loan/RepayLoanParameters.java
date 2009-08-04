@@ -21,6 +21,8 @@
 package org.mifos.test.acceptance.framework.loan;
 
 public class RepayLoanParameters {
+    public static final String CASH = "Cash";
+    
     private String modeOfRepayment;
     private String receiptId;
     private String recieptDateDD;
@@ -56,5 +58,15 @@ public class RepayLoanParameters {
     }
     public void setRecieptDateYYYY(String recieptDateYYYY) {
         this.recieptDateYYYY = recieptDateYYYY;
+    }
+    
+    /**
+     * Used to select the right option.
+     */
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    public int getModeOfRepaymentValue() {
+        if (CASH.equals(modeOfRepayment)) { return 1; }
+        
+        return 0;
     }
 }

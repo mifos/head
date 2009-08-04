@@ -79,7 +79,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         params.setDisbursalDateDD("08");
         params.setDisbursalDateMM("07");
         params.setDisbursalDateYYYY("2009");
-        params.setPaymentType("Cash");
+        params.setPaymentType(DisburseLoanParameters.CASH);
         
         loanTestHelper.disburseLoan("000100000000005", params);
         

@@ -21,9 +21,13 @@
 package org.mifos.test.acceptance.framework.loan;
 
 public class ChargeParameters {
+    public static final String MISC_FEES = "Misc Fees";
+    public static final String MISC_PENALTY = "Misc Penalty";
+    
     private String type;
     private String amount;
     
+    // this method is never(?) used. Get rid of it?
     public String getType() {
         return this.type;
     }
@@ -35,5 +39,17 @@ public class ChargeParameters {
     }
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+    
+    /**
+     * Maps the type string to a value that's used to choose the correct choice in the select box.
+     * We do this to ensure that the parameters are independent of locale.
+     */
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    public int getTypeValue() {
+        if (MISC_FEES.equals(type)) { return -1; }
+        if (MISC_PENALTY.equals(type)) { return -2; }
+        
+        return 0;
     }
 }

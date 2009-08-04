@@ -89,7 +89,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
         statusParameters.setStatus(EditLoanAccountStatusParameters.CANCEL);
-        statusParameters.setCancelReason("Rejected");
+        statusParameters.setCancelReason(EditLoanAccountStatusParameters.CANCEL_REASON_REJECTED);
         statusParameters.setNote("Test");
         
         loanTestHelper.changeLoanAccountStatus("000100000000003", statusParameters);
@@ -118,7 +118,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
         statusParameters.setStatus(statusParameters.CANCEL);
-        statusParameters.setCancelReason("Rejected");
+        statusParameters.setCancelReason(EditLoanAccountStatusParameters.CANCEL_REASON_REJECTED);
         statusParameters.setNote("Test");
         
         loanTestHelper.changeLoanAccountStatus("000100000000005", statusParameters);

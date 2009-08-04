@@ -76,7 +76,7 @@ public class PenaltyTest extends UiTestCaseBase {
         // we use this loan for our test
         ChargeParameters params = new ChargeParameters();
         
-        params.setType("Misc Penalty");
+        params.setType(ChargeParameters.MISC_PENALTY);
         params.setAmount("10");
         
         loanTestHelper.applyCharge("000100000000005", params);
@@ -96,14 +96,14 @@ public class PenaltyTest extends UiTestCaseBase {
         disbursalParameters.setDisbursalDateDD("08");
         disbursalParameters.setDisbursalDateMM("07");
         disbursalParameters.setDisbursalDateYYYY("2009");
-        disbursalParameters.setPaymentType("Cash");
+        disbursalParameters.setPaymentType(DisburseLoanParameters.CASH);
         
         // we disburse the loan so that we can waive the penalty.
         loanTestHelper.disburseLoan(accountId, disbursalParameters);
         
         ChargeParameters feeParameters = new ChargeParameters();
         feeParameters.setAmount("15");
-        feeParameters.setType("Misc Penalty");
+        feeParameters.setType(ChargeParameters.MISC_PENALTY);
         
         loanTestHelper.applyCharge(accountId, feeParameters);
         

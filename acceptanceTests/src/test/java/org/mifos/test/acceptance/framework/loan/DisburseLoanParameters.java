@@ -21,6 +21,9 @@
 package org.mifos.test.acceptance.framework.loan;
 
 public class DisburseLoanParameters {
+    public static final String CASH = "Cash";
+    public static final String CHEQUE = "Cheque";
+    
     private String disbursalDateDD;
     private String disbursalDateMM;
     private String disbursalDateYYYY;
@@ -84,6 +87,18 @@ public class DisburseLoanParameters {
     }
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
+    }
+    
+    /**
+     * Maps the type string to a value that's used to choose the correct choice in the select box.
+     * We do this to ensure that the parameters are independent of locale.
+     */
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    public int getPaymentTypeValue() {
+        if (CASH.equals(paymentType)) { return 1; }
+        if (CHEQUE.equals(paymentType)) { return 3; }
+        
+        return 0;
     }
   
 }

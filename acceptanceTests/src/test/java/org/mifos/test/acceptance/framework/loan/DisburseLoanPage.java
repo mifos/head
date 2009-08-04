@@ -48,7 +48,7 @@ public class DisburseLoanPage extends MifosPage {
 
         this.typeTextIfNotEmpty("DisburseLoan.input.disbursementAmount", params.getAmount());
         
-        selenium.select("DisburseLoan.input.paymentType", params.getPaymentType());
+        selenium.select("DisburseLoan.input.paymentType", "value=" + params.getPaymentTypeValue());
         
         selenium.click("DisburseLoan.button.reviewTransaction");
         
