@@ -45,6 +45,7 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.AccountingRulesConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
@@ -136,7 +137,7 @@ public class LoanDisbursmentAction extends BaseAction {
     }
 
     private void setIsBackdatedTransactionAllowed(HttpServletRequest request) throws PageExpiredException {
-        SessionUtils.setAttribute(ConfigConstants.BACK_DATED_TRANSACTIONS_ALLOWED, AccountingRules
+        SessionUtils.setAttribute(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, AccountingRules
                 .isBackDatedTxnAllowed(), request);
     }
 

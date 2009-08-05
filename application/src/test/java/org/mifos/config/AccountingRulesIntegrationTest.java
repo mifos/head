@@ -69,18 +69,18 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         String roundingMode = "FLOOR";
         RoundingMode configRoundingMode = RoundingMode.FLOOR;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, roundingMode);
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(configRoundingMode, AccountingRules.getCurrencyRoundingMode());
         // clear the RoundingRule property from the config file so should get
         // the default value
-        configMgr.clearProperty(AccountingRules.AccountingRulesCurrencyRoundingMode);
+        configMgr.clearProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
         RoundingMode defaultValue = AccountingRules.getCurrencyRoundingMode();
         assertEquals(defaultValue, RoundingMode.HALF_UP);
         // now set a wrong rounding mode in config
         roundingMode = "UP";
-        configMgr.addProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, roundingMode);
+        configMgr.addProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, roundingMode);
         try {
             AccountingRules.getCurrencyRoundingMode();
         } catch (RuntimeException e) {
@@ -89,7 +89,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
                             + roundingMode);
         }
         // save it back
-        configMgr.setProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, configuredMode.toString());
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, configuredMode.toString());
 
     }
 
@@ -99,17 +99,17 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         String roundingMode = "FLOOR";
         RoundingMode configRoundingMode = RoundingMode.FLOOR;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, roundingMode);
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(configRoundingMode, AccountingRules.getInitialRoundingMode());
         // clear the RoundingRule property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesInitialRoundingMode);
+        configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE);
         RoundingMode defaultValue = AccountingRules.getInitialRoundingMode();
         assertEquals(defaultValue, RoundingMode.HALF_UP);
         // now set a wrong rounding mode in config
         roundingMode = "UP";
-        configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundingMode, roundingMode);
+        configMgr.addProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, roundingMode);
         try {
             AccountingRules.getInitialRoundingMode();
         } catch (RuntimeException e) {
@@ -118,7 +118,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
                             + roundingMode);
         }
         // save it back
-        configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, configuredMode.toString());
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, configuredMode.toString());
 
     }
 
@@ -128,17 +128,17 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         String roundingMode = "CEILING";
         RoundingMode configRoundingMode = RoundingMode.CEILING;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, roundingMode);
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(configRoundingMode, AccountingRules.getFinalRoundingMode());
         // clear the RoundingRule property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesFinalRoundingMode);
+        configMgr.clearProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE);
         RoundingMode defaultValue = AccountingRules.getFinalRoundingMode();
         assertEquals(defaultValue, RoundingMode.CEILING);
         // now set a wrong rounding mode in config
         roundingMode = "DOWN";
-        configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundingMode, roundingMode);
+        configMgr.addProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, roundingMode);
         try {
             AccountingRules.getFinalRoundingMode();
         } catch (RuntimeException e) {
@@ -147,7 +147,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
                             + roundingMode);
         }
         // save it back
-        configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, configuredMode.toString());
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, configuredMode.toString());
 
     }
 
@@ -156,16 +156,16 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         BigDecimal configuredRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
         String roundOffMultiple = "1";
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, roundOffMultiple);
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, roundOffMultiple);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getFinalRoundOffMultiple());
         // clear the RoundingRule property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple);
+        configMgr.clearProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
         BigDecimal defaultValue = AccountingRules.getFinalRoundOffMultiple();
         assertEquals(defaultValue, new BigDecimal("1"));
         // save it back
-        configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, configuredRoundOffMultiple
+        configMgr.addProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, configuredRoundOffMultiple
                 .toString());
 
     }
@@ -175,16 +175,16 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         BigDecimal configuredRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
         String roundOffMultiple = "1";
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, roundOffMultiple);
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, roundOffMultiple);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getInitialRoundOffMultiple());
         // clear the RoundingRule property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple);
+        configMgr.clearProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE);
         BigDecimal defaultValue = AccountingRules.getInitialRoundOffMultiple();
         assertEquals(defaultValue, new BigDecimal("1"));
         // save it back
-        configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, configuredRoundOffMultiple
+        configMgr.addProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, configuredRoundOffMultiple
                 .toString());
 
     }
@@ -193,20 +193,20 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
     public void testGetMifosCurrency() {
 
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        String currencyCode = configMgr.getString(AccountingRules.AccountingRulesCurrencyCode);
-        configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "INR");
+        String currencyCode = configMgr.getString(AccountingRulesConstants.CURRENCY_CODE);
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "INR");
         MifosCurrency currency = AccountingRules.getMifosCurrency();
         assertEquals(currency.getCurrencyCode(), "INR");
-        configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "EUR");
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "EUR");
         currency = AccountingRules.getMifosCurrency();
         assertEquals(currency.getCurrencyCode(), "EUR");
-        configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "UUU");
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "UUU");
         try {
             currency = AccountingRules.getMifosCurrency();
         } catch (Exception e) {
 
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, currencyCode);
+        configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, currencyCode);
 
     }
 
@@ -215,37 +215,37 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Short digitsAfterDecimalSaved = AccountingRules.getDigitsAfterDecimal();
         Short digitsAfterDecimal = 1;
-        configMgr.addProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimal);
+        configMgr.addProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, digitsAfterDecimal);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(digitsAfterDecimal, AccountingRules.getDigitsAfterDecimal());
         // clear the DigitsAfterDecimal property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimal);
+        configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
         // should throw exception
         try {
             AccountingRules.getDigitsAfterDecimal();
         } catch (RuntimeException e) {
             assertEquals(e.getMessage(), "The number of digits after decimal is not defined in the config file.");
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimalSaved);
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, digitsAfterDecimalSaved);
     }
 
     public void testGetDigitsBeforeDecimal() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Short digitsBeforeDecimal = 7;
-        configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal, digitsBeforeDecimal);
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL, digitsBeforeDecimal);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(digitsBeforeDecimal, AccountingRules.getDigitsBeforeDecimal());
         // clear the DigitsBeforeDecimal property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal);
+        configMgr.clearProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL);
         // should throw exception
         try {
             AccountingRules.getDigitsBeforeDecimal();
         } catch (RuntimeException e) {
             assertEquals(e.getMessage(), "The number of digits before decimal is not defined in the config file.");
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal, digitsBeforeDecimal);
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL, digitsBeforeDecimal);
 
     }
 
@@ -253,14 +253,14 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
     public void testGetDigitsBeforeDecimalForInterest() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Short digitsBeforeDecimalForInterest = 10;
-        configMgr.addProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest,
+        configMgr.addProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST,
                 digitsBeforeDecimalForInterest);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(digitsBeforeDecimalForInterest, AccountingRules.getDigitsBeforeDecimalForInterest());
         // clear the DigitsBeforeDecimalForInterest property from the config
         // file
-        configMgr.clearProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest);
+        configMgr.clearProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST);
         // should throw exception
         try {
             AccountingRules.getDigitsBeforeDecimalForInterest();
@@ -268,7 +268,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
             assertEquals(e.getMessage(),
                     "The number of digits before decimal for interest is not defined in the config file.");
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest,
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_BEFORE_DECIMAL_FOR_INTEREST,
                 digitsBeforeDecimalForInterest);
 
     }
@@ -277,14 +277,14 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
     public void testGetDigitsAfterDecimalForInterest() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Short digitsAfterDecimalForInterest = 5;
-        configMgr.addProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest,
+        configMgr.addProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST,
                 digitsAfterDecimalForInterest);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(digitsAfterDecimalForInterest, AccountingRules.getDigitsAfterDecimalForInterest());
         // clear the DigitsBeforeDecimalForInterest property from the config
         // file
-        configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimalForInterest);
+        configMgr.clearProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
         // should throw exception
         try {
             AccountingRules.getDigitsAfterDecimalForInterest();
@@ -292,7 +292,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
             assertEquals(e.getMessage(),
                     "The number of digits after decimal for interest is not defined in the config file.");
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimalForInterest,
+        configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST,
                 digitsAfterDecimalForInterest);
 
     }
@@ -302,20 +302,20 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Double minInterestSaved = AccountingRules.getMinInterest();
         Double minInterest = 0.0;
-        configMgr.addProperty(AccountingRules.AccountingRulesMinInterest, minInterest);
+        configMgr.addProperty(AccountingRulesConstants.MIN_INTEREST, minInterest);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(minInterest, AccountingRules.getMinInterest());
         // clear the DigitsBeforeDecimalForInterest property from the config
         // file
-        configMgr.clearProperty(AccountingRules.AccountingRulesMinInterest);
+        configMgr.clearProperty(AccountingRulesConstants.MIN_INTEREST);
         // should throw exception
         try {
             AccountingRules.getMinInterest();
         } catch (RuntimeException e) {
             assertEquals(e.getMessage(), "Min interest is not defined in the config file.");
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesMinInterest, minInterestSaved);
+        configMgr.setProperty(AccountingRulesConstants.MIN_INTEREST, minInterestSaved);
 
     }
 
@@ -324,20 +324,20 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Double maxInterestSaved = AccountingRules.getMaxInterest();
         Double maxInterest = 999.0;
-        configMgr.addProperty(AccountingRules.AccountingRulesMaxInterest, maxInterest);
+        configMgr.addProperty(AccountingRulesConstants.MAX_INTEREST, maxInterest);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(maxInterest, AccountingRules.getMaxInterest());
         // clear the DigitsBeforeDecimalForInterest property from the config
         // file
-        configMgr.clearProperty(AccountingRules.AccountingRulesMaxInterest);
+        configMgr.clearProperty(AccountingRulesConstants.MAX_INTEREST);
         // should throw exception
         try {
             AccountingRules.getMaxInterest();
         } catch (RuntimeException e) {
             assertEquals(e.getMessage(), "Max interest is not defined in the config file.");
         }
-        configMgr.setProperty(AccountingRules.AccountingRulesMaxInterest, maxInterestSaved);
+        configMgr.setProperty(AccountingRulesConstants.MAX_INTEREST, maxInterestSaved);
 
     }
 
@@ -346,12 +346,12 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         Float defaultValue = (float) 0.5;
         Float amountToBeRoundedTo = (float) 0.01;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.addProperty(AccountingRules.AccountingRulesAmountToBeRoundedTo, amountToBeRoundedTo);
+        configMgr.addProperty(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO, amountToBeRoundedTo);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(amountToBeRoundedTo, AccountingRules.getAmountToBeRoundedTo(defaultValue));
         // clear the AmountToBeRoundedTo property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesAmountToBeRoundedTo);
+        configMgr.clearProperty(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO);
         // now the return value from accounting rules class has to be the
         // default value (value from db)
         assertEquals(defaultValue, AccountingRules.getAmountToBeRoundedTo(defaultValue));
@@ -363,18 +363,18 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         String roundingMode = "FLOOR";
         RoundingMode configRoundingMode = RoundingMode.FLOOR;
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.addProperty(AccountingRules.AccountingRulesRoundingRule, roundingMode);
+        configMgr.addProperty(AccountingRulesConstants.ROUNDING_RULE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(configRoundingMode, AccountingRules.getRoundingRule(defaultValue));
         // clear the RoundingRule property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesRoundingRule);
+        configMgr.clearProperty(AccountingRulesConstants.ROUNDING_RULE);
         // now the return value from accounting rules class has to be the
         // default value (value from db)
         assertEquals(defaultValue, AccountingRules.getRoundingRule(defaultValue));
         // now set a wrong rounding mode in config
         roundingMode = "UP";
-        configMgr.addProperty(AccountingRules.AccountingRulesRoundingRule, roundingMode);
+        configMgr.addProperty(AccountingRulesConstants.ROUNDING_RULE, roundingMode);
         try {
             AccountingRules.getRoundingRule(defaultValue);
         } catch (RuntimeException e) {
@@ -382,7 +382,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
                     "The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
                             + roundingMode);
         }
-        configMgr.clearProperty(AccountingRules.AccountingRulesRoundingRule);
+        configMgr.clearProperty(AccountingRulesConstants.ROUNDING_RULE);
     }
 
     @Test
@@ -390,16 +390,16 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
         Short interestDaysInConfig = AccountingRules.getNumberOfInterestDays();
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         Short insertedDays = 365;
-        configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, insertedDays);
+        configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
         assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
         insertedDays = 360;
         // set new value
-        configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, insertedDays);
+        configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
         // return value from accounting rules class has to be the value defined
         // in the config file
         assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
         insertedDays = 355;
-        configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, insertedDays);
+        configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
         // throw exception because the invalid value 355
         try {
             AccountingRules.getNumberOfInterestDays();
@@ -408,7 +408,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
                     + insertedDays.shortValue());
         }
         // clear the NumberOfInterestDays property from the config file
-        configMgr.clearProperty(AccountingRules.AccountingRulesNumberOfInterestDays);
+        configMgr.clearProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
         // throw exception because no interest days defined in config file
         try {
             AccountingRules.getNumberOfInterestDays();
@@ -416,12 +416,12 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
             assertEquals(e.getMessage(), "The number of interest days is not defined in the config file ");
         }
 
-        configMgr.addProperty(AccountingRules.AccountingRulesNumberOfInterestDays, interestDaysInConfig);
+        configMgr.addProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, interestDaysInConfig);
     }
 
     private void checkDigitsAfterDecimalMultiple(int digitsAfterDecimalInt, String multiple) {
         Short digitsAfterDecimal = (short) digitsAfterDecimalInt;
-        ConfigurationManager.getInstance().setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal,
+        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL,
                 digitsAfterDecimal);
         assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple());
     }
@@ -438,7 +438,7 @@ public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
             checkDigitsAfterDecimalMultiple(-2, "100");
 
         } finally {
-            configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimalSaved);
+            configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, digitsAfterDecimalSaved);
         }
     }
 

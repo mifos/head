@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.mifos.core.MifosRuntimeException;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
@@ -180,7 +181,8 @@ public class Localization {
             configLocale = new ConfigLocale();
         // need to check if this configLocale is supported by Mifos
         if ((localeId = getConfiguredLocaleId()) == -1)
-            throw new RuntimeException("This configured locale: language code " + configLocale.getLanguageCode()
+            // FIXME: should not throw raw exception type
+            throw new MifosRuntimeException("This configured locale: language code " + configLocale.getLanguageCode()
                     + ", country code " + configLocale.getCountryCode() + " is not supported by Mifos.");
         Locale locale = new Locale(configLocale.getLanguageCode().toLowerCase(), configLocale.getCountryCode()
                 .toUpperCase());

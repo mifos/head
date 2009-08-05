@@ -47,5 +47,4 @@ public interface ConfigConstants {
     public static final String LAST_NAME = "last_name";
     public static final String JASPER_REPORT_IS_HIDDEN = "jasperReportIsHidden";
     public static final String COLLECTION_SHEET_DAYS_IN_ADVANCE = "CollectionSheet.DaysInAdvance";
-    public static final String BACK_DATED_TRANSACTIONS_ALLOWED = "BackDatedTransactionsAllowed";
 }

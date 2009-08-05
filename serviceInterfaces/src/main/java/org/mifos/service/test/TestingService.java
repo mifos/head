@@ -20,6 +20,9 @@
 
 package org.mifos.service.test;
 
+import org.mifos.core.MifosException;
+import org.mifos.framework.util.AccountingRulesParameters;
+
 /**
  * Acceptance tests control the application via the user interface and verify
  * results by looking at the user interface or the database.
@@ -36,4 +39,7 @@ public interface TestingService {
     String TEST_MODE_SYSTEM_PROPERTY = "mifos.test.mode";
     TestMode getTestMode();
     void reinitializeCaches();
+    void setLocale(String languageCode, String countryCode) throws MifosException;
+    void setAccountingRules(AccountingRulesParameters accountingRulesParameters) throws MifosException;
+    void setFiscalCalendarRules(String workingDays, String scheduleTypeForMeetingOnHoliday) throws MifosException;
 }

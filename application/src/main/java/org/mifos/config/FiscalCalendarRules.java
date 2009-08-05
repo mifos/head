@@ -146,4 +146,12 @@ public class FiscalCalendarRules {
         return days;
     }
 
+    public static void setWorkingDays(String workingDays) {
+        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesWorkingDays, workingDays);
+    }
+
+    public static void setScheduleTypeForMeetingOnHoliday(String scheduleTypeForMeetingOnHoliday) {
+        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday, scheduleTypeForMeetingOnHoliday);
+    }
+
 }

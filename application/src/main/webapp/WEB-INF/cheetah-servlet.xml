@@ -50,6 +50,7 @@
     <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <value>
+                /customPropertiesUpdate.ftl=customPropertiesUpdateController
                 /dateTimeUpdate.ftl=dateTimeUpdateController
                 /initializeApplication.ftl=initializeApplicationController
                 /accessDenied.ftl=genericController
@@ -86,4 +87,7 @@
         <property name="testingService" ref="testingService" />
     </bean>
 
+    <bean id="customPropertiesUpdateController" class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
+        <property name="testingService" ref="testingService" />
+    </bean>
 </beans>

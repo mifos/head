@@ -36,16 +36,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 public class InitializeApplicationController extends AbstractController {    
     private TestingService testingService;
 
-    public TestingService getTestingService() {
-        return testingService;
-    }
-
-    public void setTestingService(TestingService testingService) {
-        this.testingService = testingService;
-    }
-
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
-    // Reason: here we want to surface a generic exception
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes") // Reason: here we want to surface a generic exception
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView returnValue = new ModelAndView("pageNotFound");
@@ -64,6 +55,14 @@ public class InitializeApplicationController extends AbstractController {
             returnValue = modelAndView;
         }
         return returnValue;
+    }
+
+    public TestingService getTestingService() {
+        return testingService;
+    }
+
+    public void setTestingService(TestingService testingService) {
+        this.testingService = testingService;
     }
 
 }

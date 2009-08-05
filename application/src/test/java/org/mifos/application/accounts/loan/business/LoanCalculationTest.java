@@ -83,6 +83,7 @@ import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.MifosIntegrationTest;
@@ -1603,17 +1604,17 @@ public class LoanCalculationTest extends MifosIntegrationTest {
 
     private void setNumberOfInterestDays(int days) {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, new Short((short) days));
+        configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, new Short((short) days));
     }
 
     private void setInitialRoundingMode(RoundingMode mode) {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, mode.toString());
+        configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, mode.toString());
     }
 
     private void setFinalRoundingMode(RoundingMode mode) {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, mode.toString());
+        configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, mode.toString());
     }
 
     private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws MeetingException,

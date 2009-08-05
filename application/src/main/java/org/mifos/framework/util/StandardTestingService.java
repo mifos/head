@@ -29,11 +29,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.mifos.config.AccountingRules;
+import org.mifos.config.ConfigLocale;
+import org.mifos.config.ConfigurationManager;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.Localization;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.core.MifosException;
 
 /**
  * Encapsulates all logic necessary to have the application behave differently
@@ -171,4 +178,59 @@ public class StandardTestingService implements TestingService {
             }
         }
     }
+    
+    @Override
+    public void setLocale(String languageCode, String countryCode) throws MifosException {
+        try {
+        ConfigLocale configLocale = new ConfigLocale();
+        configLocale.setLanguageCode(languageCode);
+        configLocale.setCountryCode(countryCode);
+        Localization localization = Localization.getInstance();    
+        localization.setConfigLocale(configLocale);
+        localization.refresh();
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.setProperty("Localization.LanguageCode", languageCode);
+        configMgr.setProperty("Localization.CountryCode", countryCode);
+        } catch (MifosRuntimeException e) {
+            throw new MifosException("The locale " + languageCode + "_" + countryCode + " is not supported by Mifos.");
+        }
+    }
+
+    @Override
+    public void setAccountingRules(AccountingRulesParameters accountingRulesParameters) {
+        if (isSet(accountingRulesParameters.getDigitsAfterDecimal())) {
+            AccountingRules.setDigitsAfterDecimal(accountingRulesParameters.getDigitsAfterDecimal().shortValue());
+        }
+        if (isSet(accountingRulesParameters.getDigitsAfterDecimalForInterest())) {
+            AccountingRules.setDigitsAfterDecimalForInterest(accountingRulesParameters.getDigitsAfterDecimalForInterest().shortValue());
+        }
+        if (isSet(accountingRulesParameters.getNumberOfInterestDays())) {
+            AccountingRules.setNumberOfInterestDays(accountingRulesParameters.getNumberOfInterestDays());
+        }
+        if (isSet(accountingRulesParameters.getMaxInterest())) {
+            AccountingRules.setMaxInterest(accountingRulesParameters.getMaxInterest());
+        }
+        if (isSet(accountingRulesParameters.getMinInterest())) {
+            AccountingRules.setMinInterest(accountingRulesParameters.getMinInterest());
+        }
+        if (isSet(accountingRulesParameters.getBackDatedTransactionsAllowed())) {
+            AccountingRules.setBackDatedTransactionsAllowed(accountingRulesParameters.getBackDatedTransactionsAllowed());
+        }
+    }
+    
+    @Override
+    public void setFiscalCalendarRules(String workingDays, String scheduleTypeForMeetingOnHoliday)
+            throws MifosException {
+        if (isSet(workingDays)) {
+            FiscalCalendarRules.setWorkingDays(workingDays);
+        }
+        if (isSet(scheduleTypeForMeetingOnHoliday)) {
+            FiscalCalendarRules.setScheduleTypeForMeetingOnHoliday(scheduleTypeForMeetingOnHoliday);
+        }
+    }
+    
+    private boolean isSet(Object value) {
+        return value != null;
+    }
+
 }

@@ -52,7 +52,8 @@ public class MifosScheduler extends Timer {
     private ConfigurationLocator configurationLocator;
 
     public MifosScheduler() {
-        timer = new Timer("Mifos Task Scheduler Thread", true);
+        boolean isDaemonThread = true;
+        timer = new Timer("Mifos Task Scheduler Thread", isDaemonThread);
     }
 
     /**
