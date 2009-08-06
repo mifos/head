@@ -24,9 +24,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.framework.util.helpers.DateUtils;
 
+@Ignore
 public class CalendarTest {
 
     private Date createPreviousDate(int numberOfDays) {

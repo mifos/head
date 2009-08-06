@@ -23,6 +23,7 @@ package org.mifos.application.reports.struts.action;
 import java.util.List;
 
 import org.apache.struts.upload.FormFile;
+import org.junit.Ignore;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
@@ -46,6 +47,7 @@ import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
+@Ignore
 public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
     public BirtReportsUploadActionTest() throws SystemException, ApplicationException {

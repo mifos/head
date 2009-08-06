@@ -27,7 +27,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -35,7 +35,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class ProductCategoryBOIntegrationTest extends MifosIntegrationTest {
+public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductCategoryBOIntegrationTest() throws SystemException, ApplicationException {
         super();

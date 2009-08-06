@@ -41,7 +41,7 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.config.GeneralConfig;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -50,7 +50,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends MifosIntegrationTest {
+public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest() throws SystemException, ApplicationException {
         super();

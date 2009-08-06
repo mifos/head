@@ -41,12 +41,12 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.MifosInMemoryIntegrationTest;
+import org.mifos.framework.MifosInMemoryIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTest {
+public class PPIChoiceIntegrationTest extends MifosInMemoryIntegrationTestCase {
 
     public PPIChoiceIntegrationTest() {
         super();

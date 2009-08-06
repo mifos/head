@@ -82,8 +82,8 @@ public class ApplyAdjustmentActionTest extends MifosMockStrutsTestCase {
     private AccountBO getLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("ApplyAdjustmentActionTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("ApplyAdjustmentActionTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
@@ -314,8 +314,8 @@ public class ApplyAdjustmentActionTest extends MifosMockStrutsTestCase {
 
     private AccountBO createLoanAccount() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("ApplyAdjustmentActionTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("ApplyAdjustmentActionTest Group", CustomerStatus.GROUP_ACTIVE, center);
         Date startDate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,

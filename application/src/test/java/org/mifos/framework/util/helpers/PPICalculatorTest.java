@@ -27,6 +27,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.helpers.Country;
@@ -39,6 +40,7 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 
+@Ignore
 public class PPICalculatorTest extends TestCase {
 
     public void testValidLimits() {

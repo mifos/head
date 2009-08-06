@@ -33,7 +33,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -45,7 +45,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AuditInterceptorIntegrationTest extends MifosIntegrationTest {
+public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
 
     public AuditInterceptorIntegrationTest() throws SystemException, ApplicationException {
         super();

@@ -32,14 +32,14 @@ import org.mifos.application.checklist.util.helpers.CheckListStatesView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public CheckListBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();

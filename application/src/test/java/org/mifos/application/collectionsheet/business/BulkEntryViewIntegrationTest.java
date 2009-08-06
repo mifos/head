@@ -51,7 +51,7 @@ import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -59,7 +59,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class BulkEntryViewIntegrationTest extends MifosIntegrationTest {
+public class BulkEntryViewIntegrationTest extends MifosIntegrationTestCase {
 
     public BulkEntryViewIntegrationTest() throws SystemException, ApplicationException {
         super();

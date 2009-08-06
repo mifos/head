@@ -29,7 +29,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -41,7 +41,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTest {
+public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public PersonnelPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

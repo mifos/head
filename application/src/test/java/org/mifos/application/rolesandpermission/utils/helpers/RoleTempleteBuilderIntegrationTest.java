@@ -27,13 +27,13 @@ import java.util.Set;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.util.helpers.RoleTempleteBuilder;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityChangeEvent;
 import org.mifos.framework.security.util.RoleChangeEvent;
 
-public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTest {
+public class RoleTempleteBuilderIntegrationTest extends MifosIntegrationTestCase {
 
     public RoleTempleteBuilderIntegrationTest() throws SystemException, ApplicationException {
         super();

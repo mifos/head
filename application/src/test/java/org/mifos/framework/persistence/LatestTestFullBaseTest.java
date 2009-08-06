@@ -24,6 +24,8 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_N
 
 import java.sql.ResultSet;
 
+import org.junit.Ignore;
+
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
@@ -34,8 +36,12 @@ import net.sourceforge.mayfly.dump.SqlDumper;
  * that supported upgrade scripts as a starting point and will run
  * through all upgrades.  You can expect this to take a long
  * time to run.
+ * 
+ * This test is ignored because it wasn't a part of old suite arch.
+ * 
  */
-public class LatestTestFullBaseTest extends LatestBaseTest {
+@Ignore
+public class LatestTestFullBaseTest extends LatestBaseTestCase {
 
     public void testRealSchema() throws Exception {
         Database database = TestDatabase.makeDatabase();

@@ -28,9 +28,11 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.mifos.application.reports.business.validator.Errors;
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 
+@Ignore
 public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase {
 
     public void testShouldAcceptValidBranchIdAndDate() {

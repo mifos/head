@@ -37,7 +37,7 @@ import org.mifos.application.productdefinition.persistence.PrdOfferingPersistenc
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -47,7 +47,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class ProductStatusHelperIntegrationTest extends MifosIntegrationTest {
+public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductStatusHelperIntegrationTest() throws SystemException, ApplicationException {
         super();

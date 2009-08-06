@@ -26,14 +26,14 @@ import java.util.List;
 
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
-public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTest {
+public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public ConfigurationPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

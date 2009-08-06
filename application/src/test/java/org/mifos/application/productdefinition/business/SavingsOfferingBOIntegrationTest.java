@@ -37,7 +37,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -47,7 +47,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTest {
+public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     public SavingsOfferingBOIntegrationTest() throws SystemException, ApplicationException {
         super();

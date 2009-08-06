@@ -38,7 +38,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
@@ -48,7 +48,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTest {
+public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public PortfolioAtRiskHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -143,13 +143,13 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "LOAN", startDate, meeting);
+        center = TestObjectFactory.createCenter("PortfolioAtRiskHelper Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("PortfolioAtRiskHelper Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("PortfolioAtRiskHelper Client", CustomerStatus.CLIENT_ACTIVE, group);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("PortfolioAtRiskHelper Loan", "LOAN", startDate, meeting);
         account1 = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        loanOffering = TestObjectFactory.createLoanOffering("Loan123", "LOAP", ApplicableTo.CLIENTS, startDate,
+        loanOffering = TestObjectFactory.createLoanOffering("PortfolioAtRiskHelper Loan123", "LOAP", ApplicableTo.CLIENTS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting);
         account2 = TestObjectFactory.createLoanAccount("42427777341", client,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);

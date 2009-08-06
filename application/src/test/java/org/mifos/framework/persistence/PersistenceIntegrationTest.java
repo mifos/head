@@ -26,13 +26,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class PersistenceIntegrationTest extends MifosIntegrationTest {
+public class PersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public PersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

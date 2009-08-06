@@ -46,7 +46,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -57,7 +57,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest {
+public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTestCase {
     public SavingsIntPostingHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

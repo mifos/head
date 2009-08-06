@@ -23,7 +23,7 @@ package org.mifos.application.productsmix.business;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -32,7 +32,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
-public class ProductMixBOIntegrationTest extends MifosIntegrationTest {
+public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixBOIntegrationTest() throws SystemException, ApplicationException {
         super();

@@ -826,7 +826,7 @@
                     <testNGArtifactName>null</testNGArtifactName>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
-                        <include>**/ApplicationTestSuite.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
                     <systemProperties>
                         <mifos.test.mode>integration</mifos.test.mode>

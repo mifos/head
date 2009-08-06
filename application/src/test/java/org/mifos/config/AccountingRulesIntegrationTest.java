@@ -23,7 +23,7 @@ package org.mifos.config;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.apache.commons.configuration.Configuration;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -37,7 +37,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test(groups= {"integration", "configTestSuite"} )
-public class AccountingRulesIntegrationTest extends MifosIntegrationTest {
+public class AccountingRulesIntegrationTest extends MifosIntegrationTestCase {
 
     public AccountingRulesIntegrationTest() throws SystemException, ApplicationException {
         super();

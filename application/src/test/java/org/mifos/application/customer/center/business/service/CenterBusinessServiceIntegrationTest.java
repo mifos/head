@@ -32,7 +32,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -43,7 +43,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
     public CenterBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

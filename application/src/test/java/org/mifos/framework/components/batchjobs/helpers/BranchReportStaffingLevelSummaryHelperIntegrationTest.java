@@ -29,14 +29,14 @@ import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportBOFixture;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.reports.business.service.BranchReportService;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends MifosIntegrationTest {
+public class BranchReportStaffingLevelSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
     public BranchReportStaffingLevelSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

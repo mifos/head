@@ -20,6 +20,7 @@
 
 package org.mifos.application.admindocuments.struts.action;
 
+import org.junit.Ignore;
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.application.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
@@ -39,6 +40,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 
+@Ignore
 public class BirtAdminDocumentUploadActionTest extends MifosMockStrutsTestCase {
 
     public BirtAdminDocumentUploadActionTest() throws SystemException, ApplicationException {

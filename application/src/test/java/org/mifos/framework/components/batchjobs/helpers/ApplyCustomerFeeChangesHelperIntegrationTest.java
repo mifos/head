@@ -43,7 +43,7 @@ import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -53,7 +53,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrationTest {
+public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrationTestCase {
     public ApplyCustomerFeeChangesHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
@@ -68,8 +68,8 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
     protected void setUp() throws Exception {
         super.setUp();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("center1", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("ApplyCustomerFeeChangesHelper center1", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("ApplyCustomerFeeChangesHelper Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     @Override

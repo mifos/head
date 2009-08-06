@@ -30,7 +30,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -38,7 +38,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class FeePersistenceIntegrationTest extends MifosIntegrationTest {
+public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public FeePersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -99,6 +99,7 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTest {
     }
 
     public void testRetrieveFeesForCustomer() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
                 RecurrenceType.MONTHLY, Short.valueOf("2"));
         fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",

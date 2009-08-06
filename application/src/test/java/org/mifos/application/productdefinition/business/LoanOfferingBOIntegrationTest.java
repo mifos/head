@@ -55,7 +55,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -68,7 +68,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-public class LoanOfferingBOIntegrationTest extends MifosIntegrationTest {
+public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanOfferingBOIntegrationTest() throws SystemException, ApplicationException {
         super();

@@ -35,7 +35,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -52,7 +52,7 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
-public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();

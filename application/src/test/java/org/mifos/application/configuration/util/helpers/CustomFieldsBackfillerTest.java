@@ -34,14 +34,14 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CustomFieldsBackfillerTest extends MifosIntegrationTest {
+public class CustomFieldsBackfillerTest extends MifosIntegrationTestCase {
     public CustomFieldsBackfillerTest() throws SystemException, ApplicationException {
         super();
         setUpBeforeClass();

@@ -55,7 +55,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -66,7 +66,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
     public FinancialBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
@@ -163,9 +163,9 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     private LoanBO getLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
+        center = TestObjectFactory.createCenter("FinancialBusinessService Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("FinancialBusinessService Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("FinancialBusinessService","FL",startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
     }
@@ -341,8 +341,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     private void createInitialObjectsForSavings() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("FinancialBusinessService Center_Active_test", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("FinancialBusinessService Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         SavingsTestHelper helper = new SavingsTestHelper();
         savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1", (short) 31, (short) 7);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,

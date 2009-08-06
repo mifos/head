@@ -46,7 +46,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * fixes to be made to recent upgrades when necessary.
  */
 
-public class LatestTestAfterCheckpointBaseTest extends LatestBaseTest {
+public class LatestTestAfterCheckpointBaseTest extends LatestBaseTestCase {
 
     public void testSimple() throws Exception {
         Database database = TestDatabase.makeDatabase();

@@ -118,7 +118,7 @@ import org.mifos.application.productsmix.business.service.ProductMixBusinessServ
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -139,7 +139,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class LoanBOIntegrationTest extends MifosIntegrationTest {
+public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanBOIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -457,8 +457,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         // current system date
         MeetingBO meeting = TestObjectFactory.createMeeting(new MeetingBO(WeekDay.getWeekDay(cal
                 .get(Calendar.DAY_OF_WEEK)), EVERY_WEEK, meetingStartDate, CUSTOMER_MEETING, "place"));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private HolidayBO createHoliday(Date holidayDate) throws PersistenceException, ApplicationException {
@@ -1011,8 +1011,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(startDate, center.getCustomerMeeting()
                 .getMeeting());
         UserContext userContext = TestUtils.makeUser();
@@ -1107,8 +1107,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(startDate, center.getCustomerMeeting()
                 .getMeeting());
         UserContext userContext = TestUtils.makeUser();
@@ -1241,8 +1241,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(startDate, center.getCustomerMeeting()
                 .getMeeting());
         UserContext userContext = TestUtils.makeUser();
@@ -1659,8 +1659,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Date(System.currentTimeMillis()), loanOffering);
@@ -1678,8 +1678,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Date(System.currentTimeMillis()), loanOffering);
@@ -2067,8 +2067,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         // create customers with meetings on Monday
         MeetingBO customerMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING, WeekDay.MONDAY));
-        center = TestObjectFactory.createCenter("Center", customerMeeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", customerMeeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
 
         MeetingBO loanOfferingMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING, WeekDay.MONDAY));
@@ -3353,8 +3353,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
         UserContext userContext = TestUtils.makeUser();
@@ -3417,8 +3417,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
     public void testCreateNormalLoanAccountWithPricipalOnlyGrace() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "Loan".substring(0, 1),
                 ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
                 (short) 3, InterestType.FLAT, true, false, center.getCustomerMeeting().getMeeting(),
@@ -3499,8 +3499,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         meeting.setMeetingStartDate(meetingStart.getTime());
         meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(dayOfMonth);
         TestObjectFactory.createMeeting(meeting);
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         Date loanStart = new Date(sampleTime);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, loanStart,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
@@ -3595,8 +3595,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         TestObjectFactory.createMeeting(meeting);
         meeting.setMeetingStartDate(new Date());
         meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(dayOfMonth);
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
         Calendar disbursementDate = new GregorianCalendar();
@@ -3891,8 +3891,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(startDate, center.getCustomerMeeting()
                 .getMeeting());
         List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3959,8 +3959,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
         List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -4305,8 +4305,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
@@ -4369,8 +4369,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
@@ -4445,8 +4445,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
@@ -4487,8 +4487,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.DECLINING, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
@@ -4529,8 +4529,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         short graceDuration = (short) 2;
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, new Date(System
                 .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, center
                 .getCustomerMeeting().getMeeting());
@@ -4577,8 +4577,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
             short graceDuration = (short) 2;
             MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                     EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-            center = TestObjectFactory.createCenter("Center", meeting);
-            group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+            center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+            group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
             LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS,
                     new Date(System.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3,
                     InterestType.DECLINING, false, false, center.getCustomerMeeting().getMeeting(),
@@ -5029,8 +5029,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
 
     private void createInitialCustomers() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewWeeklyMeeting(EVERY_WEEK));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private void changeFirstInstallmentDateToNextDate(AccountBO accountBO) {
@@ -5098,9 +5098,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("LoanBOIntegrationTest Client", CustomerStatus.CLIENT_ACTIVE, group);
         /*
          * ((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
          * TestObjectFactory.updateObject(client);
@@ -5117,9 +5117,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
     private AccountBO getLoanAccountWithPerformanceHistory(AccountState state, Date startDate, int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("LoanBOIntegrationTest Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         // ((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
         accountBO = TestObjectFactory.createLoanAccountWithDisbursement("99999999999", client, state, startDate,
@@ -5132,9 +5132,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
     private AccountBO getLoanAccountWithGroupPerformanceHistory(AccountState state, Date startDate, int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.CLIENTS, startDate,
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("LoanBOIntegrationTest Loan", ApplicableTo.CLIENTS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting);
         accountBO = TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
@@ -5199,8 +5199,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
     private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", group, state, startDate,
                 loanOffering, disbursalType);
@@ -5344,9 +5344,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
     private void createInitialObjects() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("LoanBOIntegrationTest Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
@@ -5361,8 +5361,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBOIntegrationTest Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBOIntegrationTest Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);

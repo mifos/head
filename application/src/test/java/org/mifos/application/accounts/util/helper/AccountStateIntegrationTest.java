@@ -29,13 +29,13 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.application.master.MessageLookup;
 
-public class AccountStateIntegrationTest extends MifosIntegrationTest {
+public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
     public AccountStateIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

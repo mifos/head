@@ -40,7 +40,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * Contains common methods used to test database upgrade scripts on the test
  * classes that extend this base class.
  */
-public class LatestBaseTest extends TestCase {
+public class LatestBaseTestCase extends TestCase {
 
     protected int version(Database database) throws SQLException {
         return new DatabaseVersionPersistence(database.openConnection()).read();

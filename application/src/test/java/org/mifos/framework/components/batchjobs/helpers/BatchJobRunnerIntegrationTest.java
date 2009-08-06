@@ -20,11 +20,11 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class BatchJobRunnerIntegrationTest extends MifosIntegrationTest {
+public class BatchJobRunnerIntegrationTest extends MifosIntegrationTestCase {
     public BatchJobRunnerIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

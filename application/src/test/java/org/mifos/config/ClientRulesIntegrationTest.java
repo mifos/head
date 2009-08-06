@@ -20,7 +20,7 @@
 
 package org.mifos.config;
 
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
@@ -30,7 +30,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "configTestSuite"})
-public class ClientRulesIntegrationTest extends MifosIntegrationTest {
+public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
 
     public ClientRulesIntegrationTest() throws SystemException, ApplicationException {
         super();

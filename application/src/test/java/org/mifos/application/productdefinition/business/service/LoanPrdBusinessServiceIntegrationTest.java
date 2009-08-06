@@ -29,14 +29,15 @@ import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanPrdBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -47,6 +48,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTest 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
     }
 
     @Override

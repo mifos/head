@@ -60,7 +60,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -70,7 +70,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTest {
+public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public RegenerateScheduleHelperIntegrationTest() throws SystemException, ApplicationException {
         super();

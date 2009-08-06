@@ -29,7 +29,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.TestCase;
 
 import org.mifos.application.accounts.financial.business.GLCategoryType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -39,7 +39,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 @Test(groups={"integration", "configTestSuite"})
-public class ChartOfAccountsConfigTest extends MifosIntegrationTest {
+public class ChartOfAccountsConfigTest extends MifosIntegrationTestCase {
 
     public ChartOfAccountsConfigTest() throws SystemException, ApplicationException {
         super();

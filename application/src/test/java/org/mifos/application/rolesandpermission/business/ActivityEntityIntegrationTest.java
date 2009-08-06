@@ -20,12 +20,12 @@
 
 package org.mifos.application.rolesandpermission.business;
 
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class ActivityEntityIntegrationTest extends MifosIntegrationTest {
+public class ActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
     public ActivityEntityIntegrationTest() throws SystemException, ApplicationException {
         super();

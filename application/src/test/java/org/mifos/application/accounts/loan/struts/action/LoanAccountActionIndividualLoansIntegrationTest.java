@@ -35,11 +35,11 @@ import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionF
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegrationTest {
+public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanAccountActionIndividualLoansIntegrationTest() throws SystemException, ApplicationException {
         super();

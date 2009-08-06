@@ -22,12 +22,12 @@ package org.mifos.application.accounts.financial.util.helpers;
 
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-public class FinancialActionCacheIntegrationTest extends MifosIntegrationTest {
+public class FinancialActionCacheIntegrationTest extends MifosIntegrationTestCase {
 
     public FinancialActionCacheIntegrationTest() throws SystemException, ApplicationException {
         super();

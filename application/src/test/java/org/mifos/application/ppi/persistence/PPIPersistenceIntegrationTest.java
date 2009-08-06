@@ -44,13 +44,13 @@ import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.framework.MifosInMemoryIntegrationTest;
+import org.mifos.framework.MifosInMemoryIntegrationTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class PPIPersistenceIntegrationTest extends MifosInMemoryIntegrationTest {
+public class PPIPersistenceIntegrationTest extends MifosInMemoryIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
 

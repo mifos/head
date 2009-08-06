@@ -28,12 +28,12 @@ import java.util.List;
 
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.application.reports.ui.SelectionItem;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegrationTest {
+public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public CollectionSheetReportPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

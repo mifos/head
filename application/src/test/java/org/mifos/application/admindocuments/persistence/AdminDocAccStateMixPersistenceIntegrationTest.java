@@ -22,12 +22,12 @@ package org.mifos.application.admindocuments.persistence;
 import java.util.List;
 
 import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrationTest {
+public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public AdminDocAccStateMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

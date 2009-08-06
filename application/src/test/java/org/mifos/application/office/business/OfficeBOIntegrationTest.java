@@ -31,7 +31,7 @@ import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -41,7 +41,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class OfficeBOIntegrationTest extends MifosIntegrationTest {
+public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
     public OfficeBOIntegrationTest() throws SystemException, ApplicationException {
         super();

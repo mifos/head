@@ -86,7 +86,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.ClasspathResource;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -105,7 +105,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * expected behavior for different loan payment calculations.
  * 
  */
-public class LoanCalculationTest extends MifosIntegrationTest {
+public class LoanCalculationTest extends MifosIntegrationTestCase {
 
     public LoanCalculationTest() throws SystemException, ApplicationException {
         super();

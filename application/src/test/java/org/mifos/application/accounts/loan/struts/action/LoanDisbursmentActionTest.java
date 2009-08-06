@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.junit.Ignore;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -43,6 +44,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+@Ignore
 public class LoanDisbursmentActionTest extends MifosMockStrutsTestCase {
 
     public LoanDisbursmentActionTest() throws SystemException, ApplicationException {

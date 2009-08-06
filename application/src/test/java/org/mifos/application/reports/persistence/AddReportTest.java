@@ -25,6 +25,7 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
+import org.junit.Ignore;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
@@ -33,6 +34,7 @@ import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
+@Ignore
 public class AddReportTest extends TestCase {
 
     public void testStartFromStandardStore() throws Exception {

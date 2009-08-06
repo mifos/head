@@ -79,7 +79,7 @@ import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -93,7 +93,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
     public CustomerBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

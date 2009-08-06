@@ -45,7 +45,7 @@ import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -58,7 +58,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class SurveyIntegrationTest extends MifosIntegrationTest {
+public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     public SurveyIntegrationTest() throws SystemException, ApplicationException {
         super();

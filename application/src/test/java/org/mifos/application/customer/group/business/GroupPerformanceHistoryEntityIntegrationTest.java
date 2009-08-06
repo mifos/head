@@ -35,12 +35,12 @@ import org.mifos.application.configuration.business.service.ConfigurationBusines
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
-public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrationTest {
+public class GroupPerformanceHistoryEntityIntegrationTest extends MifosIntegrationTestCase {
 
     public GroupPerformanceHistoryEntityIntegrationTest() throws SystemException, ApplicationException {
         super();

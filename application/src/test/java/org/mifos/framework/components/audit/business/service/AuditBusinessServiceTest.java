@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
@@ -35,7 +35,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AuditBusinessServiceTest extends MifosIntegrationTest {
+public class AuditBusinessServiceTest extends MifosIntegrationTestCase {
 
     public AuditBusinessServiceTest() throws SystemException, ApplicationException {
         super();

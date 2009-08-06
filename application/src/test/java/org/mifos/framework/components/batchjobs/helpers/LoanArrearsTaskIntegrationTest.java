@@ -37,15 +37,16 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTest {
+public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanArrearsTaskIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -64,6 +65,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         loanArrearTask = new LoanArrearsTask();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);

@@ -25,8 +25,10 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
+import org.junit.Ignore;
 import org.mifos.framework.persistence.TestDatabase;
 
+@Ignore
 public class LookUpValueEntityTest extends TestCase {
 
     public void testReadFromMasterData() throws Exception {

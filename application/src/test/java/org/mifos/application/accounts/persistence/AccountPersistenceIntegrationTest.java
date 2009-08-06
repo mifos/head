@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.mifos.application.accounts.AccountIntegrationTest;
+import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -59,7 +59,7 @@ import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AccountPersistenceIntegrationTest extends AccountIntegrationTest {
+public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
 
     public AccountPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

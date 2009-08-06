@@ -23,11 +23,11 @@ package org.mifos.application.accounts.persistence;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTest {
+public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanAccountPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

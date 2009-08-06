@@ -34,7 +34,7 @@ import org.mifos.application.office.business.OfficecFixture;
 import org.mifos.application.reports.business.service.BranchReportConfigService;
 import org.mifos.application.reports.business.service.BranchReportService;
 import org.mifos.application.reports.business.service.IBranchReportService;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -42,7 +42,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.springframework.core.io.Resource;
 
-public class BranchReportClientSummaryHelperIntegrationTest extends MifosIntegrationTest {
+public class BranchReportClientSummaryHelperIntegrationTest extends MifosIntegrationTestCase {
     public BranchReportClientSummaryHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

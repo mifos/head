@@ -22,14 +22,14 @@ package org.mifos.application.rolesandpermission.business.service;
 
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public RolesPermissionsBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();

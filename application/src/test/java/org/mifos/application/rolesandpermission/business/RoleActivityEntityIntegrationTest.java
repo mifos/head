@@ -21,12 +21,12 @@
 package org.mifos.application.rolesandpermission.business;
 
 import org.hibernate.Query;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-public class RoleActivityEntityIntegrationTest extends MifosIntegrationTest {
+public class RoleActivityEntityIntegrationTest extends MifosIntegrationTestCase {
 
     public RoleActivityEntityIntegrationTest() throws SystemException, ApplicationException {
         super();

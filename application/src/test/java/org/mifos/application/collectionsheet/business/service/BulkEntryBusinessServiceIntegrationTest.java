@@ -54,7 +54,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -65,7 +65,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-public class BulkEntryBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class BulkEntryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
     public BulkEntryBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }

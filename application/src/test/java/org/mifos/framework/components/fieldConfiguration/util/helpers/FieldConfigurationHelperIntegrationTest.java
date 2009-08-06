@@ -20,28 +20,30 @@
 
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
-import org.mifos.application.ApplicationTestSuite;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.UserContext;
 
-public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTest {
+public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public FieldConfigurationHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    /**
-     * TODO: These tests only pass when run as part of
-     * {@link ApplicationTestSuite}, not when run by themselves on a fresh test
-     * database. There must be some state which is left around or set up by some
-     * other part of the test suite.
-     * 
-     * LabelConfigurationActionTest provides the "dirty" state required and must
-     * be run prior to this test.
-     */
+    private UserContext userContext = TestUtils.makeUser();
+
+    protected void setUp() throws Exception {
+        MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "Village", userContext);
+    }
+
+    protected void tearDown() throws Exception {
+        MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "NULL", userContext);
+    }
 
     public void testGetConfiguredFieldName() throws Exception {
         String fieldName = FieldConfigurationHelper.getConfiguredFieldName("Center.Address3", TestUtils

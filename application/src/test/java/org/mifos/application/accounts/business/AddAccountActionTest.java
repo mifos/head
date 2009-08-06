@@ -23,14 +23,14 @@ package org.mifos.application.accounts.business;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 
 import org.hibernate.Session;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
-public class AddAccountActionTest extends MifosIntegrationTest {
+public class AddAccountActionTest extends MifosIntegrationTestCase {
 
     public AddAccountActionTest() throws SystemException, ApplicationException {
         super();

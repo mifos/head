@@ -71,7 +71,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBOIntegratio
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -90,7 +90,7 @@ import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
-public class CustomerBOIntegrationTest extends MifosIntegrationTest {
+public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     public CustomerBOIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
@@ -262,7 +262,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
 
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
-        center = TestObjectFactory.createCenter("Center", meeting, getBranchOffice().getOfficeId(), loanOfficer
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting, getBranchOffice().getOfficeId(), loanOfficer
                 .getPersonnelId());
         center.setUserContext(TestUtils.makeUserWithLocales());
         StaticHibernateUtil.getInterceptor().createInitialValueMap(center);
@@ -518,9 +518,9 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
 
     public void testValidateStatusForClientWithCancelledGroups() throws Exception {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_CANCELLED, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_PARTIAL, group);
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("CustomerBO Group", CustomerStatus.GROUP_CANCELLED, center);
+        client = TestObjectFactory.createClient("CustomerBO Client", CustomerStatus.CLIENT_PARTIAL, group);
         try {
             client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Test");
             fail();
@@ -532,9 +532,9 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
 
     public void testValidateStatusForClientWithPartialGroups() throws Exception {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_PARTIAL, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_PARTIAL, group);
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("CustomerBO Group", CustomerStatus.GROUP_PARTIAL, center);
+        client = TestObjectFactory.createClient("CustomerBO Client", CustomerStatus.CLIENT_PARTIAL, group);
         try {
             client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Test");
             fail();
@@ -546,9 +546,9 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
 
     public void testValidateStatusForClientWithActiveAccounts() throws Exception {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("CustomerBO  Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("CustomerBO  Client", CustomerStatus.CLIENT_ACTIVE, group);
         accountBO = getLoanAccount(client, meeting);
         StaticHibernateUtil.closeSession();
         client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
@@ -712,9 +712,9 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
 
     private void createInitialObjects() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("CustomerBO Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("CustomerBO Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
@@ -767,13 +767,13 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTest {
     private void createCenter(Short officeId, Short personnelId) {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
 
-        center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting, officeId, personnelId);
     }
 
     private void createGroup() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("CustomerBO Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("CustomerBO Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     public OfficeBO getBranchOffice() {

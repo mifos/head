@@ -34,12 +34,12 @@ import org.mifos.application.configuration.business.service.ConfigurationBusines
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class ProductMixValidatorIntegrationTest extends MifosIntegrationTest {
+public class ProductMixValidatorIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixValidatorIntegrationTest() throws SystemException, ApplicationException {
         super();

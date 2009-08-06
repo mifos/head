@@ -27,11 +27,11 @@ import static org.easymock.classextension.EasyMock.verify;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrationTest {
+public class GroupPerformanceHistoryUpdaterIntegrationTest extends MifosIntegrationTestCase {
 
     public GroupPerformanceHistoryUpdaterIntegrationTest() throws SystemException, ApplicationException {
         super();

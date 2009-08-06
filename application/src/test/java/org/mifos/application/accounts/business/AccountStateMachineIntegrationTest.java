@@ -26,7 +26,7 @@ import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceUnavailableException;
@@ -35,7 +35,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AccountStateMachineIntegrationTest extends MifosIntegrationTest {
+public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase {
 
     public AccountStateMachineIntegrationTest() throws SystemException, ApplicationException {
         super();

@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.mifos.application.accounts.AccountIntegrationTest;
+import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -61,7 +61,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration"},  dependsOnGroups={"productMixTestSuite"})
-public class AccountBOIntegrationTest extends AccountIntegrationTest {
+public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
     public AccountBOIntegrationTest() throws SystemException, ApplicationException {
         super();

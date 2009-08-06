@@ -53,7 +53,7 @@ import org.mifos.application.customer.group.business.service.GroupBusinessServic
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -62,7 +62,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -131,8 +131,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTest {
     public void testGetRecentActivityView() throws SystemException, NumberFormatException, ApplicationException {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBusinessService_Center_Active", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBusinessService_Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
@@ -164,8 +164,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTest {
     public void testGetAllActivityView() throws SystemException, NumberFormatException, ApplicationException {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBusinessService_Center_Active", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBusinessService_Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
@@ -210,8 +210,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTest {
     private AccountBO getLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter("LoanBusinessService_Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("LoanBusinessService_Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);

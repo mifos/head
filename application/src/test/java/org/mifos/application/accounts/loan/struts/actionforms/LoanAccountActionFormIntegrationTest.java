@@ -47,14 +47,14 @@ import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.productdefinition.business.AmountRange;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
-public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
+public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTestCase {
 
     public LoanAccountActionFormIntegrationTest() throws SystemException, ApplicationException {
         super();

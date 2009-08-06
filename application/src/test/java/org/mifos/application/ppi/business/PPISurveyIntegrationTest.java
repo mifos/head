@@ -42,7 +42,7 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.config.GeneralConfig;
-import org.mifos.framework.MifosInMemoryIntegrationTest;
+import org.mifos.framework.MifosInMemoryIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -50,7 +50,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.core.io.ClassPathResource;
 
-public class PPISurveyIntegrationTest extends MifosInMemoryIntegrationTest {
+public class PPISurveyIntegrationTest extends MifosInMemoryIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
     private TestDatabase database;

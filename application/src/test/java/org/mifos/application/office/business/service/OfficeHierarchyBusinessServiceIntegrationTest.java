@@ -23,14 +23,14 @@ package org.mifos.application.office.business.service;
 import java.util.List;
 
 import org.mifos.application.office.business.OfficeLevelEntity;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class OfficeHierarchyBusinessServiceIntegrationTest extends MifosIntegrationTest {
+public class OfficeHierarchyBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private static final int OFFICE_LEVELS = 5;
 

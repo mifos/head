@@ -26,13 +26,13 @@ import java.util.Date;
 import org.joda.time.DateMidnight;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class HolidayBOIntegrationTest extends MifosIntegrationTest {
+public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
     public HolidayBOIntegrationTest() throws SystemException, ApplicationException {
         super();

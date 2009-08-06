@@ -31,7 +31,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * Marker superclass for integration tests that can be run using an in-memory
  * database like Mayfly.
  */
-public class MifosInMemoryIntegrationTest extends TestCase {
+public class MifosInMemoryIntegrationTestCase extends TestCase {
     protected TestDatabase database;
 
     public void setUp() {
@@ -43,7 +43,7 @@ public class MifosInMemoryIntegrationTest extends TestCase {
         StaticHibernateUtil.resetDatabase();
     }
 
-    public MifosInMemoryIntegrationTest() {
+    public MifosInMemoryIntegrationTestCase() {
         MifosLogManager.configureLogging();
         DatabaseSetup.initializeHibernate(true);
     }

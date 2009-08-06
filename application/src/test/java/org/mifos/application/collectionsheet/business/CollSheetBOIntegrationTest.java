@@ -58,7 +58,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -70,7 +70,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import static org.easymock.classextension.EasyMock.createMock;
 
-public class CollSheetBOIntegrationTest extends MifosIntegrationTest {
+public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 
     public CollSheetBOIntegrationTest() throws SystemException, ApplicationException {
         super();

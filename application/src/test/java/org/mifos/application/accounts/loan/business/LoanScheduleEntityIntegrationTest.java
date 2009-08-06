@@ -23,7 +23,7 @@ package org.mifos.application.accounts.loan.business;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.mifos.application.accounts.AccountIntegrationTest;
+import org.mifos.application.accounts.AccountIntegrationTestCase;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTest {
+public class LoanScheduleEntityIntegrationTest extends AccountIntegrationTestCase {
 
     public LoanScheduleEntityIntegrationTest() throws SystemException, ApplicationException {
         super();

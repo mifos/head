@@ -63,14 +63,14 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTest {
+public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public BulkEntryDisplayHelperIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -196,9 +196,9 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTest 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("BulkEntryDisplayHelper Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("BulkEntryDisplayHelper Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("BulkEntryDisplayHelper Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", startDate, meeting);
         groupAccount = TestObjectFactory.createLoanAccount("42423142341", group,

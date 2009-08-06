@@ -24,7 +24,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.productsmix.util.ProductMixTestHelper;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "productMixTestSuite"},  dependsOnGroups={"configTestSuite"})
-public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTest {
+public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public ProductMixPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();

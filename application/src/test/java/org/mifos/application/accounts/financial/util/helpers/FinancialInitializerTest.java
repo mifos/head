@@ -23,12 +23,12 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class FinancialInitializerTest extends MifosIntegrationTest {
+public class FinancialInitializerTest extends MifosIntegrationTestCase {
 
     public FinancialInitializerTest() throws SystemException, ApplicationException {
         super();

@@ -67,7 +67,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -80,7 +80,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AccountServiceIntegrationTest extends MifosIntegrationTest {
+public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public AccountServiceIntegrationTest() throws SystemException, ApplicationException {
         super();

@@ -23,14 +23,14 @@ package org.mifos.application.holiday.persistence;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.framework.MifosIntegrationTest;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class AddRepaymentRuleTest extends MifosIntegrationTest {
+public class AddRepaymentRuleTest extends MifosIntegrationTestCase {
 
     public AddRepaymentRuleTest() throws SystemException, ApplicationException {
         super();
