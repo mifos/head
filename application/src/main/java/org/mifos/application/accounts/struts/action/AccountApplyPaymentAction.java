@@ -43,6 +43,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -136,25 +137,29 @@ public class AccountApplyPaymentAction extends BaseAction {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
 
-        Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
+        try {
+            Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
 
-        if (!account.isTrxnDateValid(trxnDate))
-            throw new AccountException("errors.invalidTxndate");
+            if (!account.isTrxnDateValid(trxnDate))
+                throw new AccountException("errors.invalidTxndate");
 
-        account.setVersionNo(savedAccount.getVersionNo());
+            account.setVersionNo(savedAccount.getVersionNo());
 
-        Money amount;
-        if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-            amount = actionForm.getAmount();
-        } else {
-            amount = account.getTotalPaymentDue();
+            Money amount;
+            if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+                amount = actionForm.getAmount();
+            } else {
+                amount = account.getTotalPaymentDue();
+            }
+
+            Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
+            PaymentData paymentData = account.createPaymentData(uc, amount, trxnDate, actionForm.getReceiptId(),
+                    receiptDate, Short.valueOf(actionForm.getPaymentTypeId()));
+            account.applyPaymentWithPersist(paymentData);
+            return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
+        } catch (InvalidDateException ide) {
+            throw new AccountException(ide);
         }
-
-        Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
-        PaymentData paymentData = account.createPaymentData(uc, amount, trxnDate, actionForm.getReceiptId(),
-                receiptDate, Short.valueOf(actionForm.getPaymentTypeId()));
-        account.applyPaymentWithPersist(paymentData);
-        return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -163,7 +168,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
     }
 
-    private void clearActionForm(AccountApplyPaymentActionForm actionForm) {
+    private void clearActionForm(AccountApplyPaymentActionForm actionForm) throws InvalidDateException {
         actionForm.setReceiptDate(null);
         actionForm.setReceiptId(null);
         actionForm.setPaymentTypeId(null);

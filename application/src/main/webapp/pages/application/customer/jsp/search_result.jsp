@@ -40,7 +40,7 @@ explanation of the license and how it is applied.
 						<c:set
 								var="Office"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Office')}" />
-							<c:set var="isCenterHeirarchyExists"
+							<c:set var="isCenterHierarchyExists"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GrpHierExists')}" />
 
 								<c:set var="OfficesList"

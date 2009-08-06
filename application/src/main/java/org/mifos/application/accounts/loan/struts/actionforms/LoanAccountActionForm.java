@@ -46,6 +46,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHe
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
@@ -69,6 +70,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -490,11 +492,11 @@ public class LoanAccountActionForm extends BaseActionForm {
         return getShortValue(getNoOfInstallments());
     }
 
-    public Date getDisbursementDateValue(Locale locale) {
+    public Date getDisbursementDateValue(Locale locale) throws InvalidDateException {
         return DateUtils.getLocaleDate(locale, getDisbursementDate());
     }
 
-    public Date getFirstRepaymentDayValue(Locale locale) {
+    public Date getFirstRepaymentDayValue(Locale locale) throws InvalidDateException {
         return DateUtils.getLocaleDate(locale, getFirstRepaymentDay());
     }
 
@@ -748,8 +750,12 @@ public class LoanAccountActionForm extends BaseActionForm {
         performGlimSpecificValidations(errors, request);
         validateCustomFields(request, errors);
         validateRepaymentDayRequired(request, errors);
-        validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
+        try {
+            validateDisbursementDate(errors, getCustomer(request), getDisbursementDateValue(getUserContext(request)
                 .getPreferredLocale()));
+        } catch (InvalidDateException dateException) {
+            addError(errors, LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+        }
     }
 
     private void validateDisbursementDate(ActionErrors errors, CustomerBO customer, java.sql.Date disbursementDateValue)
@@ -1002,15 +1008,18 @@ public class LoanAccountActionForm extends BaseActionForm {
                     continue;
                 // Meeting date is invalid
                 if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
-                        DateUtils.getLastDayOfNextYear())) {
+                    DateUtils.getLastDayOfNextYear())) {
                     errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                            LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
                     continue;
                 }
                 // User has enter a payment for future date
                 validateTransactionDate(errors, template, getDisbursementDateValue(getUserContext(request)
                         .getPreferredLocale()));
             }
+        } catch (InvalidDateException invalidDate) {
+                errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
         } catch (MeetingException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
@@ -1026,12 +1035,17 @@ public class LoanAccountActionForm extends BaseActionForm {
     void validateTransactionDate(ActionErrors errors, PaymentDataTemplate template, java.util.Date disbursementDate) {
         if (template.getTotalAmount() == null)
             return;
-        if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(), DateUtils.currentDate())) {
+        try {
+            if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(), DateUtils.currentDate())) {
+                errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
+                    LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
+            } else if (!DateUtils.dateFallsBeforeDate(disbursementDate, template.getTransactionDate())) {
+                errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+            }
+        } catch (InvalidDateException ide) {
             errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
                     LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
-        } else if (!DateUtils.dateFallsBeforeDate(disbursementDate, template.getTransactionDate())) {
-            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
         }
     }
 

@@ -111,7 +111,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, request));
+        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
     }
 
     public void testGetLoanOfficersWithoutOffice() throws Exception {
@@ -133,7 +133,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, request));
+        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
     }
 
@@ -163,7 +163,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, request));
+        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
     }
@@ -173,7 +173,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "getPrdOfferings");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         actionPerform();
         verifyActionErrors(new String[] { LoanConstants.MANDATORY_SELECT, LoanConstants.MANDATORY_SELECT,
                 LoanConstants.MANDATORY_SELECT });
@@ -207,7 +207,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
-        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, request));
+        assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
         assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
         assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request));
@@ -227,7 +227,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         addRequestParameter("branchOfficeId", "1");
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
         assertEquals(1, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
@@ -253,7 +253,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         /*
          * Why two calls to actionPerform? Are we trying to test the case where
          * the user clicks twice or is this just a mistake?
@@ -276,7 +276,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "get");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         actionPerform();
         verifyActionErrors(new String[] { LoanConstants.LOANOFFERINGNOTSELECTEDERROR, LoanConstants.MANDATORY_SELECT,
                 LoanConstants.MANDATORY_SELECT, LoanConstants.MANDATORY_SELECT });
@@ -291,7 +291,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "get");
         addRequestParameter("branchOfficeId", center.getOffice().getOfficeId().toString());
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         addRequestParameter("loanOfficerId", center.getPersonnel().getPersonnelId().toString());
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter("prdOfferingId", loanOffering1.getPrdOfferingId().toString());
@@ -311,7 +311,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         addRequestParameter("branchOfficeId", center.getOffice().getOfficeId().toString());
         addRequestParameter("loanOfficerId", center.getPersonnel().getPersonnelId().toString());
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter("centerSearchId", center.getSearchId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -338,7 +338,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         addRequestParameter("branchOfficeId", center.getOffice().getOfficeId().toString());
         addRequestParameter("loanOfficerId", center.getPersonnel().getPersonnelId().toString());
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter("centerSearchId", center.getSearchId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -365,7 +365,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         addRequestParameter("branchOfficeId", center.getOffice().getOfficeId().toString());
         addRequestParameter("loanOfficerId", center.getPersonnel().getPersonnelId().toString());
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter("centerSearchId", center.getSearchId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -412,7 +412,7 @@ public class MultipleLoanAccountsCreationActionTest extends MifosMockStrutsTestC
         addRequestParameter("branchOfficeId", center.getOffice().getOfficeId().toString());
         addRequestParameter("loanOfficerId", center.getPersonnel().getPersonnelId().toString());
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         addRequestParameter("centerId", center.getCustomerId().toString());
         addRequestParameter("centerSearchId", center.getSearchId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

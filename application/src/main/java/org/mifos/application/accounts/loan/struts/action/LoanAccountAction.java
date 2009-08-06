@@ -154,6 +154,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -715,7 +716,7 @@ public class LoanAccountAction extends AccountAppAction {
 
     private LoanBO constructLoan(LoanAccountActionForm loanActionForm, HttpServletRequest request)
             throws AccountException, ServiceException, PageExpiredException, PersistenceException,
-            NumberFormatException, MeetingException {
+            NumberFormatException, MeetingException, InvalidDateException {
         boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
         CustomerBO customer = getCustomer(request);
         // Resolve new meeting for repayment day
@@ -779,7 +780,7 @@ public class LoanAccountAction extends AccountAppAction {
 
     private LoanBO redoLoan(LoanAccountActionForm loanActionForm, HttpServletRequest request, SaveLoan save,
             CustomerPersistence customerPersistence) throws PageExpiredException, AccountException, ServiceException,
-            PersistenceException, NumberFormatException, MeetingException {
+            PersistenceException, NumberFormatException, MeetingException, InvalidDateException {
         LoanBO loan = constructLoan(loanActionForm, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
@@ -825,6 +826,8 @@ public class LoanAccountAction extends AccountAppAction {
                     loan.applyPayment(payment, false);
                 }
             }
+        } catch (InvalidDateException ide) {
+            throw new AccountException(ide);
         } catch (MeetingException e) {
             throw new ServiceException(e);
         }
@@ -833,7 +836,7 @@ public class LoanAccountAction extends AccountAppAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws PageExpiredException, AccountException, CustomerException,
-            ServiceException, PersistenceException, NumberFormatException, MeetingException {
+            ServiceException, PersistenceException, NumberFormatException, MeetingException, InvalidDateException {
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
@@ -1347,13 +1350,14 @@ public class LoanAccountAction extends AccountAppAction {
      * 
      * Depending on the recurrence id (WEEKLY or MONTHLY) a MeetingBO will be
      * created and returned
+     * @throws InvalidDateException 
      * 
      */
     private MeetingBO createNewMeetingForRepaymentDay(HttpServletRequest request,
             LoanAccountActionForm loanAccountActionForm, CustomerBO customer) // ,
                                                                               // Short
                                                                               // recurrenceId)
-            throws PersistenceException, MeetingException {
+            throws PersistenceException, MeetingException, InvalidDateException {
         MeetingBO newMeetingForRepaymentDay = null;
         Short recurrenceId = Short.valueOf(loanAccountActionForm.getRecurrenceId());
         final Date repaymentStartDate = this.resolveRepaymentStartDate(loanAccountActionForm

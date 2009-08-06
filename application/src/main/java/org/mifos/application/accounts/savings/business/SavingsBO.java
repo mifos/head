@@ -78,6 +78,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -1802,13 +1803,15 @@ public class SavingsBO extends AccountBO {
     }
 
     public void getSavingPerformanceHistory() throws AccountException {
-        String systemDate = DateUtils.getCurrentDate();
-        java.sql.Date currentDate = DateUtils.getLocaleDate(systemDate);
         try {
+            String systemDate = DateUtils.getCurrentDate();
+            java.sql.Date currentDate = DateUtils.getLocaleDate(systemDate);
             getSavingsPerformance().addMissedDeposits(
                     (new SavingsPersistence()).getMissedDeposits(getAccountId(), currentDate));
             getSavingsPerformance().addMissedDeposits(
                     (new SavingsPersistence()).getMissedDepositsPaidAfterDueDate(getAccountId()));
+        } catch (InvalidDateException ide) {
+            throw new AccountException(ide);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }

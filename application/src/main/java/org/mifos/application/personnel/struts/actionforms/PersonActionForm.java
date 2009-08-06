@@ -166,7 +166,7 @@ public class PersonActionForm extends BaseActionForm {
 
     }
 
-    public void setDateOfJoiningMFI(String dateOfJoiningMFI) {
+    public void setDateOfJoiningMFI(String dateOfJoiningMFI) throws InvalidDateException {
         Calendar cal = new GregorianCalendar();
         java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateOfJoiningMFI);
         cal.setTime(date);
@@ -681,7 +681,7 @@ public class PersonActionForm extends BaseActionForm {
         return dobYY;
     }
 
-    public void setDob(String s) {
+    public void setDob(String s) throws InvalidDateException {
         Calendar cal = new GregorianCalendar();
         java.sql.Date dob = DateUtils.getDateAsSentFromBrowser(s);
         cal.setTime(dob);

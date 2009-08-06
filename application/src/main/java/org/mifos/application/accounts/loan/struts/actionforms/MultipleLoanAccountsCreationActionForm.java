@@ -156,7 +156,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
             if (method.equals(Methods.get.toString())) {
                 request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
                 checkValidationForLoad(errors, getUserContext(request), (Short) SessionUtils.getAttribute(
-                        CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request));
+                        CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request));
             } else if (method.equals(Methods.create.toString())) {
                 request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
                 checkValidationForCreate(errors, request);
@@ -170,7 +170,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
                 checkValidationForBranchOffice(errors, getUserContext(request));
                 checkValidationForLoanOfficer(errors);
                 checkValidationForCenter(errors, getUserContext(request), (Short) SessionUtils.getAttribute(
-                        CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request));
+                        CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request));
             }
         } catch (PageExpiredException e) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
@@ -210,11 +210,11 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         logger.debug("outside checkValidationForCreate method");
     }
 
-    private void checkValidationForLoad(ActionErrors errors, UserContext userContext, short isCenterHeirarchyExists) {
+    private void checkValidationForLoad(ActionErrors errors, UserContext userContext, short isCenterHierarchyExists) {
         logger.debug("Inside checkValidationForLoad method");
         checkValidationForBranchOffice(errors, userContext);
         checkValidationForLoanOfficer(errors);
-        checkValidationForCenter(errors, userContext, isCenterHeirarchyExists);
+        checkValidationForCenter(errors, userContext, isCenterHierarchyExists);
         checkValidationForPrdOfferingId(errors, userContext);
         logger.debug("outside checkValidationForLoad method");
     }
@@ -232,8 +232,8 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         }
     }
 
-    private void checkValidationForCenter(ActionErrors errors, UserContext userContext, short isCenterHeirarchyExists) {
-        String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
+    private void checkValidationForCenter(ActionErrors errors, UserContext userContext, short isCenterHierarchyExists) {
+        String customerLabel = isCenterHierarchyExists == Constants.YES ? ConfigurationConstants.CENTER
                 : ConfigurationConstants.GROUP;
         if (StringUtils.isNullOrEmpty(centerId)) {
             addError(errors, ConfigurationConstants.CENTER, LoanConstants.MANDATORY_SELECT, getLabel(customerLabel,

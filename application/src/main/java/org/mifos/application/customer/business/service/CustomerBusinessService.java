@@ -61,6 +61,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -155,7 +156,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent, Integer customerId)
-            throws ServiceException {
+            throws ServiceException, InvalidDateException {
         try {
             return new CustomerPersistence().numberOfMeetings(isPresent, customerId);
         } catch (PersistenceException e) {

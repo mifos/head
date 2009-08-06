@@ -408,7 +408,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
 
-    public void setDateOfBirth(String receiptDate) {
+    public void setDateOfBirth(String receiptDate) throws InvalidDateException {
         if (StringUtils.isNullOrEmpty(receiptDate)) {
             dateOfBirthDD = null;
             dateOfBirthMM = null;

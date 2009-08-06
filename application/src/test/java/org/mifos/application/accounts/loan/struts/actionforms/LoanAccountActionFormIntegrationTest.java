@@ -49,6 +49,7 @@ import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoan
 import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
@@ -65,7 +66,7 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
     private static final String INTEREST_ERROR_KEY = "interest.invalid";
     private static final String AMOUNT_ERROR_KEY = "amount.invalid";
 
-    public void testShouldAddErrorIfTransactionDateForAPaymentIsInFuture() {
+    public void testShouldAddErrorIfTransactionDateForAPaymentIsInFuture() throws InvalidDateException {
         expect(paymentMock.getTransactionDate()).andReturn(DateUtils.getDateFromToday(1));
         replay(paymentMock);
         ActionErrors errors = new ActionErrors();
@@ -74,11 +75,11 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
         assertErrorKey(errors, LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT);
     }
 
-    public void testShouldNotAddErrorIfTransactionDateForAPaymentIsToday() {
+    public void testShouldNotAddErrorIfTransactionDateForAPaymentIsToday() throws InvalidDateException {
         validateForNoErrorsOnDate(DateUtils.currentDate());
     }
 
-    public void testShouldNotAddErrorIfTransactionDateForAPaymentIsInPast() {
+    public void testShouldNotAddErrorIfTransactionDateForAPaymentIsInPast() throws InvalidDateException {
         validateForNoErrorsOnDate(DateUtils.getDateFromToday(-1));
     }
 
@@ -109,13 +110,13 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
 
     }
 
-    private void validateForNoErrorsOnDate(Date transactionDate) {
-        expect(paymentMock.getTransactionDate()).andReturn(transactionDate).anyTimes();
-        replay(paymentMock);
-        ActionErrors errors = new ActionErrors();
-        form.validateTransactionDate(errors, paymentMock, DateUtils.getDateFromToday(-3));
-        verify(paymentMock);
-        assertTrue(errors.isEmpty());
+    private void validateForNoErrorsOnDate(Date transactionDate) throws InvalidDateException {
+            expect(paymentMock.getTransactionDate()).andReturn(transactionDate).anyTimes();
+            replay(paymentMock);
+            ActionErrors errors = new ActionErrors();
+            form.validateTransactionDate(errors, paymentMock, DateUtils.getDateFromToday(-3));
+            verify(paymentMock);
+            assertTrue(errors.isEmpty());
     }
 
     private void assertErrorKey(ActionErrors errors, String expectedErrorKey) {
@@ -123,7 +124,7 @@ public class LoanAccountActionFormIntegrationTest extends MifosIntegrationTest {
         assertEquals(expectedErrorKey, ((ActionMessage) errors.get().next()).getKey());
     }
 
-    private void validateWhenTransactionDateInvalidForDisbursementDate(Date disbursementDate) {
+    private void validateWhenTransactionDateInvalidForDisbursementDate(Date disbursementDate) throws InvalidDateException {
         expect(paymentMock.getTransactionDate()).andReturn(DateUtils.currentDate()).anyTimes();
         replay(paymentMock);
         ActionErrors errors = new ActionErrors();

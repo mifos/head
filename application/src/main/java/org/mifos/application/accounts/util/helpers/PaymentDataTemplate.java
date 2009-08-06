@@ -20,6 +20,7 @@
 
 package org.mifos.application.accounts.util.helpers;
 
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.application.personnel.business.PersonnelBO;
 
@@ -32,5 +33,5 @@ public interface PaymentDataTemplate {
 
     public Short getPaymentTypeId();
 
-    public Date getTransactionDate();
+    public Date getTransactionDate() throws InvalidDateException;
 }

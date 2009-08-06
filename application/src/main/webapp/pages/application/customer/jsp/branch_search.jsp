@@ -35,8 +35,8 @@ explanation of the license and how it is applied.
 
 				<c:set var="Office"
 					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Office')}" />
-				<c:set var="isCenterHeirarchyExists"
-					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')}" />
+				<c:set var="isCenterHierarchyExists"
+					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')}" />
 				<c:set var="LoanOfficerslist"
 					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanOfficerslist')}" />
 
@@ -49,7 +49,7 @@ explanation of the license and how it is applied.
 							</span><span class="fontnormalbold"> <mifos:mifoslabel
 								name="CustomerSearch.revieweditinstruction1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}" />, <c:choose>
-								<c:when test="${isCenterHeirarchyExists eq true}">
+								<c:when test="${isCenterHierarchyExists eq true}">
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
 	                  		<mifos:mifoslabel
 										name="${ConfigurationConstants.CENTER}" />,
@@ -78,7 +78,7 @@ explanation of the license and how it is applied.
 											<td height="26" colspan="2"><span id="branch_search.label.search"><mifos:mifoslabel
 												name="CustomerSearch.searchinstruction1" />&nbsp; <mifos:mifoslabel
 												name="${ConfigurationConstants.CLIENT}" />,&nbsp; <c:choose>
-												<c:when test="${isCenterHeirarchyExists eq true}">
+												<c:when test="${isCenterHierarchyExists eq true}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
 			                  		<mifos:mifoslabel
 														name="${ConfigurationConstants.CENTER}" />,

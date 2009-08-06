@@ -26,6 +26,7 @@ import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class SurveyResponse implements Comparable<SurveyResponse> {
@@ -184,7 +185,7 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
         }
     }
 
-    public void setStringValue(String value) throws ApplicationException {
+    public void setStringValue(String value) throws ApplicationException, InvalidDateException {
         if (getQuestion() == null || getQuestion().getAnswerTypeAsEnum() == null) {
             throw new ApplicationException(SurveyExceptionConstants.NO_ANSWER_TYPE_YET);
         }

@@ -201,9 +201,9 @@ public class GroupTransferAction extends BaseAction {
         List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
 
-        boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
-        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
-                isCenterHeirarchyExists ? Constants.YES : Constants.NO, request);
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS,
+                isCenterHierarchyExists ? Constants.YES : Constants.NO, request);
 
         actionForm.setAssignedLoanOfficerId(clientInSession.getPersonnel().getPersonnelId().toString());
 

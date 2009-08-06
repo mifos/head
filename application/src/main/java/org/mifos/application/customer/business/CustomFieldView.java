@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.framework.business.View;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CustomFieldView extends View {
@@ -104,7 +105,7 @@ public class CustomFieldView extends View {
         return true;
     }
 
-    public void convertDateToUniformPattern(Locale currentLocale) {
+    public void convertDateToUniformPattern(Locale currentLocale) throws InvalidDateException {
         SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
         String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
         setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));

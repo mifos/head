@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.Money;
 
 /*
@@ -78,12 +79,12 @@ public class PaymentData {
         return new PaymentData(totalAmount, personnel, paymentId, transactionDate);
     }
 
-    public static PaymentData createRecieptPaymentData(RecieptPaymentDataTemplate template) {
+    public static PaymentData createRecieptPaymentData(RecieptPaymentDataTemplate template) throws InvalidDateException {
         return new PaymentData(template.getTotalAmount(), template.getPersonnel(), template.getPaymentTypeId(),
                 template.getTransactionDate(), template.getPaymentRecieptNumber(), template.getPaymentRecieptDate());
     }
 
-    public static PaymentData createPaymentData(PaymentDataTemplate template) {
+    public static PaymentData createPaymentData(PaymentDataTemplate template) throws InvalidDateException {
         return new PaymentData(template.getTotalAmount(), template.getPersonnel(), template.getPaymentTypeId(),
                 template.getTransactionDate());
     }

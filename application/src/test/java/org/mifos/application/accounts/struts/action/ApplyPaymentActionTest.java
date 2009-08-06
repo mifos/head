@@ -37,6 +37,7 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -115,7 +116,7 @@ public class ApplyPaymentActionTest extends MifosMockStrutsTestCase {
 
     // added for defect 1590 [end]
 
-    public void testApplyPaymentPreview() {
+    public void testApplyPaymentPreview() throws InvalidDateException {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");
         String currentDate = DateUtils.makeDateAsSentFromBrowser();
@@ -128,7 +129,7 @@ public class ApplyPaymentActionTest extends MifosMockStrutsTestCase {
         verifyForward(Constants.PREVIEW_SUCCESS);
     }
 
-    public void testNewStyleApplyPaymentPreview() {
+    public void testNewStyleApplyPaymentPreview() throws InvalidDateException {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");
         String currentDate = DateUtils.makeDateAsSentFromBrowser();
@@ -141,7 +142,7 @@ public class ApplyPaymentActionTest extends MifosMockStrutsTestCase {
         verifyForward(Constants.PREVIEW_SUCCESS);
     }
 
-    public void testApplyPaymentPreviewWithNoAmount() {
+    public void testApplyPaymentPreviewWithNoAmount() throws InvalidDateException {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");
         String currentDate = DateUtils.makeDateAsSentFromBrowser();

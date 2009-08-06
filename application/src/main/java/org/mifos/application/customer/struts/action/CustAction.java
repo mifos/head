@@ -68,6 +68,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -231,7 +232,7 @@ public class CustAction extends SearchAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, personnelList, request);
     }
 
-    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) {
+    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
         for (CustomFieldView customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
                     && StringUtils.isNullAndEmptySafe(customField.getFieldValue()))

@@ -82,6 +82,7 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -562,7 +563,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent, Integer customerId)
-            throws PersistenceException {
+            throws PersistenceException, InvalidDateException {
         Session session = null;
         Query query = null;
         CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();

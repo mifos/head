@@ -38,7 +38,7 @@ explanation of the license and how it is applied.
 							<td align="left" valign="top"><span class="headingorange"> <c:set
 								var="Office"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Office')}" />
-							<c:set var="isCenterHeirarchyExists"
+							<c:set var="isCenterHierarchyExists"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'GrpHierExists')}" />
 
 								<c:set var="OfficesList"
@@ -47,7 +47,7 @@ explanation of the license and how it is applied.
 							</span><span class="fontnormalbold"> <mifos:mifoslabel
 								name="CustomerSearch.revieweditinstruction1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}" />, <c:choose>
-								<c:when test="${isCenterHeirarchyExists==Constants.YES}">
+								<c:when test="${isCenterHierarchyExists==Constants.YES}">
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
 	                  		<mifos:mifoslabel
 										name="${ConfigurationConstants.CENTER}" />,

@@ -44,6 +44,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -216,7 +217,7 @@ public class CustHistoricalDataAction extends BaseAction {
     }
 
     private void setCustomerHistoricalDataEntity(CustomerBO customerBO,
-            CustHistoricalDataActionForm historicalActionForm, CustomerHistoricalDataEntity historicalDataEntity) {
+            CustHistoricalDataActionForm historicalActionForm, CustomerHistoricalDataEntity historicalDataEntity) throws InvalidDateException {
         historicalDataEntity.setInterestPaid(historicalActionForm.getInterestPaidValue());
         historicalDataEntity.setLoanAmount(historicalActionForm.getLoanAmountValue());
         historicalDataEntity.setLoanCycleNumber(historicalActionForm.getLoanCycleNumberValue());

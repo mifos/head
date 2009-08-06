@@ -70,7 +70,7 @@ explanation of the license and how it is applied.
 														<td class="timelineboldgray">
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -127,7 +127,7 @@ explanation of the license and how it is applied.
 													<tr>
 														<td class="fontnormalbold">
 															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" isColonRequired="Yes"/>
 																</c:when>
 																<c:otherwise>

@@ -49,6 +49,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -84,7 +85,7 @@ public class LoanPersistence extends Persistence {
         return queryResult == null ? null : (List<LoanBO>) queryResult;
     }
 
-    public List<Integer> getLoanAccountsInArrearsInGoodStanding(Short latenessDays) throws PersistenceException {
+    public List<Integer> getLoanAccountsInArrearsInGoodStanding(Short latenessDays) throws PersistenceException, InvalidDateException {
 
         /*
          * TODO: refactor to use Joda Time This code appears to be trying to

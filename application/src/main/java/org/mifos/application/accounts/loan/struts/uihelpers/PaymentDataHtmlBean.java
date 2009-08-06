@@ -27,6 +27,7 @@ import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstall
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -70,7 +71,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         return this.paymentTypeId;
     }
 
-    public Date getTransactionDate() {
+    public Date getTransactionDate() throws InvalidDateException {
         String date = getDate();
         if (date != null && !date.equals("")) {
             return DateUtils.getLocaleDate(locale, date);

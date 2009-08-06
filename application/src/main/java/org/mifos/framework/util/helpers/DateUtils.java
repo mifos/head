@@ -61,7 +61,7 @@ public class DateUtils {
         internalLocale = LocalizationConverter.getInstance().getDateLocale();
     }
 
-    public static String convertUserToDbFmt(String userDate, String userPattern) {
+    public static String convertUserToDbFmt(String userDate, String userPattern) throws InvalidDateException {
         try {
             SimpleDateFormat userFormat = new SimpleDateFormat(userPattern);
             // userFormat.setLenient(false);
@@ -76,7 +76,7 @@ public class DateUtils {
         return dateSeparator;
     }
 
-    public static String convertDbToUserFmt(String dbDate, String userPattern) {
+    public static String convertDbToUserFmt(String dbDate, String userPattern) throws InvalidDateException {
         try {
             SimpleDateFormat databaseFormat = new SimpleDateFormat(dbFormat);
             java.util.Date date = databaseFormat.parse(dbDate);
@@ -176,7 +176,7 @@ public class DateUtils {
             return null;
     }
 
-    public static String getCurrentDate() {
+    public static String getCurrentDate() throws InvalidDateException {
         Calendar currentCalendar = getCurrentDateCalendar();
         java.sql.Date currentDate = new java.sql.Date(currentCalendar.getTimeInMillis());
         SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, internalLocale);
@@ -193,7 +193,7 @@ public class DateUtils {
     }
 
     // should be removed and the setCurrentDate() should be used
-    public static String getCurrentDate(Locale locale) {
+    public static String getCurrentDate(Locale locale) throws InvalidDateException {
         // the following line is for 1.1 release and will be removed when date
         // is localized
         locale = internalLocale;
@@ -265,7 +265,7 @@ public class DateUtils {
         return parseBrowserDateFields(yearStr, monthStr, dayStr);
     }
 
-    public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr) {
+    public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr) throws InvalidDateException {
         return getDateAsSentFromBrowser(dayStr + dateSeparator + monthStr + dateSeparator + yearStr);
     }
 
@@ -273,8 +273,9 @@ public class DateUtils {
      * "as sent from browser" is a bit of a misnomer; it really is (at least in
      * many cases), as formatted by a routine on the server side like
      * {@link ClientCustActionForm#getDateOfBirth()}.
+     * @throws InvalidDateException 
      */
-    public static java.sql.Date getDateAsSentFromBrowser(String value) {
+    public static java.sql.Date getDateAsSentFromBrowser(String value) throws InvalidDateException {
         if (value == null || value == "") {
             return null;
         }
@@ -326,7 +327,7 @@ public class DateUtils {
         }
     }
 
-    public static java.sql.Date getLocaleDate(Locale locale, String value) {
+    public static java.sql.Date getLocaleDate(Locale locale, String value) throws InvalidDateException {
         // the following line is for 1.1 release and will be removed when date
         // is localized
         locale = internalLocale;
@@ -339,8 +340,6 @@ public class DateUtils {
                 return java.sql.Date.valueOf(dbDate);
             } catch (RuntimeException alreadyRuntime) {
                 throw alreadyRuntime;
-            } catch (Exception e) {
-                throw new FrameworkRuntimeException(e);
             }
         } else {
             return null;

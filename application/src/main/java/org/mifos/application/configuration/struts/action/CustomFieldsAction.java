@@ -71,6 +71,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
@@ -228,7 +229,7 @@ public class CustomFieldsAction extends BaseAction {
         return mapping.findForward(ActionForwards.viewCategory_success.toString());
     }
 
-    private String changeDefaultValueDateToDBFormat(String defaultValue, Locale locale) {
+    private String changeDefaultValueDateToDBFormat(String defaultValue, Locale locale) throws InvalidDateException {
         SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String userfmt = DateUtils.convertToCurrentDateFormat(shortFormat.toPattern());
         return DateUtils.convertUserToDbFmt(defaultValue, userfmt);

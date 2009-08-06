@@ -33,6 +33,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -85,7 +86,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         }
     }
 
-    protected void addRequestDateParameter(String param, String dateStr) {
+    protected void addRequestDateParameter(String param, String dateStr) throws InvalidDateException {
         java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateStr);
         if (date != null) {
             Calendar cal = new GregorianCalendar();

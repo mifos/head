@@ -126,7 +126,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
                 .getBranchId());
         SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, activeBranches, request);
 
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS,
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS,
                 ClientRules.getCenterHierarchyExists() ? Constants.YES : Constants.NO, request);
         request.getSession().setAttribute(LoanConstants.MULTIPLE_LOANS_ACTION_FORM, null);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
@@ -157,10 +157,10 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         Short officeId = getShortValue(loanActionForm.getBranchOfficeId());
         List<CustomerView> parentCustomerList = loadCustomers(loanOfficerId, officeId);
 
-        boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 
         SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, parentCustomerList, request);
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS, isCenterHeirarchyExists ? Constants.YES
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, isCenterHierarchyExists ? Constants.YES
                 : Constants.NO, request);
         logger.debug("Inside getCenters method");
         return mapping.findForward(ActionForwards.load_success.toString());

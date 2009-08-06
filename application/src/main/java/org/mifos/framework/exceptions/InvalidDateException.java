@@ -20,9 +20,10 @@
 
 package org.mifos.framework.exceptions;
 
+import org.mifos.core.MifosException;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
-public class InvalidDateException extends SystemException {
+public class InvalidDateException extends MifosException {
 
     private String dateString;
 

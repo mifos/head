@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 
@@ -93,7 +94,7 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
     }
 
     @Override
-    public void clear() {
+    public void clear() throws InvalidDateException {
         super.clear();
         this.loanAmount = null;
     }

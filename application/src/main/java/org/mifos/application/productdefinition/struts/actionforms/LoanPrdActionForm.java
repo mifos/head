@@ -43,6 +43,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -54,6 +55,7 @@ import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.core.MifosRuntimeException;
 
 public class LoanPrdActionForm extends BaseActionForm {
     private final MifosLogger logger;
@@ -1602,11 +1604,11 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.startDate = startDate;
     }
 
-    public Date getStartDateValue(Locale locale) {
+    public Date getStartDateValue(Locale locale) throws InvalidDateException {
         return DateUtils.getLocaleDate(locale, getStartDate());
     }
 
-    public Date getEndDateValue(Locale locale) {
+    public Date getEndDateValue(Locale locale) throws InvalidDateException {
         return DateUtils.getLocaleDate(locale, getEndDate());
     }
 
@@ -1690,7 +1692,11 @@ public class LoanPrdActionForm extends BaseActionForm {
         String method = request.getParameter(ProductDefinitionConstants.METHOD);
         logger.debug("start reset method of Savings Product Action form method :" + method);
         if (method != null && method.equals(Methods.load.toString())) {
-            startDate = DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale());
+            try {
+                startDate = DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale());
+            } catch (InvalidDateException ide) {
+                throw new MifosRuntimeException(ide);
+            }
             recurAfter = "1";
             minNoInstallments = "1";
         }
@@ -1837,12 +1843,17 @@ public class LoanPrdActionForm extends BaseActionForm {
         logger.debug("start validateStartDateForEditPreview method of Loan Product Action form method :" + startDate);
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         java.util.Date oldStartDate = null;
+        Date changedStartDate = null;
         try {
             oldStartDate = (java.util.Date) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
                     request);
         } catch (PageExpiredException e) {
         }
-        Date changedStartDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        try {
+            changedStartDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        } catch (InvalidDateException ide) {
+            addError(errors, "startdate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
+        }
         if (oldStartDate != null && changedStartDate != null) {
             if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
                     DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
@@ -1862,7 +1873,12 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateStartDate(HttpServletRequest request, ActionErrors errors) {
         logger.debug("start validateStartDate method of Loan Product Action form method :" + startDate);
-        Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        Date startingDate = null;
+        try {
+            startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        } catch (InvalidDateException ide) {
+            addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+        }
         if (startingDate != null
                 && ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime()).compareTo(
                         DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils.getDateWithoutTimeStamp(
@@ -1873,8 +1889,18 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateEndDate(HttpServletRequest request, ActionErrors errors) {
         logger.debug("start validateEndDate method of Loan Product Action form method :" + startDate + "---" + endDate);
-        Date startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
-        Date endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
+        Date startingDate = null;
+        Date endingDate = null;
+        try {
+            startingDate = getStartDateValue(getUserContext(request).getPreferredLocale());
+        } catch (InvalidDateException ide) {
+            addError(errors, "startDate", ProductDefinitionConstants.INVALIDSTARTDATE);
+        }
+        try {
+            endingDate = getEndDateValue(getUserContext(request).getPreferredLocale());
+        } catch (InvalidDateException ide) {
+            addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
+        }
         if (startingDate != null && endingDate != null && startingDate.compareTo(endingDate) >= 0)
             addError(errors, "endDate", ProductDefinitionConstants.INVALIDENDDATE);
         logger

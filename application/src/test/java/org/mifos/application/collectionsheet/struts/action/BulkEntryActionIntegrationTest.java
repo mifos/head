@@ -300,8 +300,8 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         verifyForward("load_success");
         assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.NO);
-        assertEquals("The value for isCenter Heirarchy Exists", SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request), Constants.YES);
+        assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
+                CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request), Constants.YES);
     }
 
     public void testLoadPersonnel() throws PageExpiredException {
@@ -330,8 +330,8 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERSLIST, request);
         assertEquals(1, parentCustomerList.size());
-        assertEquals("The value for isCenter Heirarchy Exists", SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request), Constants.YES);
+        assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
+                CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request), Constants.YES);
     }
 
     public void testGetLastMeetingDateForCustomer() throws Exception {
@@ -391,7 +391,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.PAYMENT_TYPES_LIST, masterService
                 .retrieveMasterEntities(PaymentTypeEntity.class, userContext.getLocaleId()), request);
-        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, Constants.YES, request);
 
         setMasterListInSession(center.getCustomerId());
         setRequestPathInfo("/collectionsheetaction.do");
@@ -422,7 +422,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry, request);
-        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, Constants.YES, request);
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, Constants.YES, request);
         setRequestPathInfo("/collectionsheetaction.do");
         addRequestParameter("method", "get");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

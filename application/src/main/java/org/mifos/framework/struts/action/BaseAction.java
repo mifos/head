@@ -53,6 +53,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -336,7 +337,7 @@ public abstract class BaseAction extends DispatchAction {
         return LocalizationConverter.getInstance().getDoubleStringForInterest(dNumber);
     }
 
-    protected Date getDateFromString(String strDate, Locale locale) {
+    protected Date getDateFromString(String strDate, Locale locale) throws InvalidDateException {
         Date date = null;
         if (StringUtils.isNullAndEmptySafe(strDate))
             date = new Date(DateUtils.getLocaleDate(locale, strDate).getTime());

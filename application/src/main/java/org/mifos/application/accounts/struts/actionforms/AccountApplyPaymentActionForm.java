@@ -139,7 +139,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
                     errors.add(AccountConstants.ERROR_FUTUREDATE, new ActionMessage(AccountConstants.ERROR_FUTUREDATE,
                             fieldName));
                 }
-            } catch (InvalidDateException e) {
+            } catch (InvalidDateException ide) {
                 errors = new ActionErrors();
                 errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
                         fieldName));
@@ -188,7 +188,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         }
     }
 
-    public void setReceiptDate(String receiptDate) {
+    public void setReceiptDate(String receiptDate) throws InvalidDateException {
         if (StringUtils.isNullOrEmpty(receiptDate)) {
             receiptDateDD = null;
             receiptDateMM = null;
@@ -230,7 +230,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         }
     }
 
-    public void setTransactionDate(String receiptDate) {
+    public void setTransactionDate(String receiptDate) throws InvalidDateException {
         if (StringUtils.isNullOrEmpty(receiptDate)) {
             transactionDateDD = null;
             transactionDateMM = null;
@@ -261,7 +261,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         this.globalAccountNum = globalAccountNum;
     }
 
-    protected void clear() {
+    protected void clear() throws InvalidDateException {
         this.amount = null;
         this.paymentTypeId = null;
         setReceiptDate(null);

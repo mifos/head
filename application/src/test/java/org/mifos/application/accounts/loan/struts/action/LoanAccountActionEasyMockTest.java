@@ -121,6 +121,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -305,7 +306,7 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
         addRequestParameter("customerId", groupForLoanRedo.getCustomerId().toString());
     }
 
-    private void goToSchedulePreviewPageForLoanRedo() {
+    private void goToSchedulePreviewPageForLoanRedo() throws InvalidDateException {
         setRequestPathInfo("/loanAccountAction.do");
         Set<Entry<String, String>> entrySet = schedulePreviewPageParams.entrySet();
         for (Entry<String, String> entry : entrySet) {
@@ -1303,7 +1304,7 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
                 loanPrdActionForm);
     }
 
-    private String offSetCurrentDate(int noOfDays, Locale locale) {
+    private String offSetCurrentDate(int noOfDays, Locale locale) throws InvalidDateException {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -1430,16 +1431,16 @@ public class LoanAccountActionEasyMockTest extends AbstractLoanActionTestCase {
 
     }
 
-    private void initPageParams() {
+    private void initPageParams() throws InvalidDateException {
         initPageParams(loanOffering);
     }
 
-    private void initPageParams(LoanOfferingBO loanOffering) {
+    private void initPageParams(LoanOfferingBO loanOffering) throws InvalidDateException {
         initPrdOfferingPageParams(loanOffering);
         initSchedulePreviewPageParams(loanOffering);
     }
 
-    private void initSchedulePreviewPageParams(LoanOfferingBO loanOffering) {
+    private void initSchedulePreviewPageParams(LoanOfferingBO loanOffering) throws InvalidDateException {
         schedulePreviewPageParams = new HashMap<String, String>();
         schedulePreviewPageParams.put("loanAmount", loanOffering.eligibleLoanAmount(
                 group.getMaxLoanAmount(loanOffering), group.getMaxLoanCycleForProduct(loanOffering))

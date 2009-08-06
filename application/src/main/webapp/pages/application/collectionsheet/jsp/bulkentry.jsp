@@ -130,7 +130,7 @@ explanation of the license and how it is applied.
 														<td class="timelineboldorange">
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -179,7 +179,7 @@ explanation of the license and how it is applied.
 												<span id="bulkentry.heading" class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" /> - </span>
 												<mifos:mifoslabel name="bulkEntry.select" />
 												<c:choose>
-													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 													</c:when>
 													<c:otherwise>
@@ -194,7 +194,7 @@ explanation of the license and how it is applied.
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.OFFICE}" /></fmt:param>
 												</fmt:message>
 												<c:choose>
-													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 													</c:when>
 													<c:otherwise>
@@ -277,7 +277,7 @@ explanation of the license and how it is applied.
 										<tr class="fontnormal">
 											<td width="27%" align="right">
 												<c:choose>
-													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" mandatory="yes" isColonRequired="Yes"/>
 													</c:when>
 													<c:otherwise>

@@ -78,6 +78,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -151,9 +152,9 @@ public class CollectionSheetEntryAction extends BaseAction {
         List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
 
-        boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
-        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
-                isCenterHeirarchyExists ? Constants.YES : Constants.NO, request);
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS,
+                isCenterHierarchyExists ? Constants.YES : Constants.NO, request);
         if (activeBranches.size() == 1) {
             List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext, activeBranches.get(0)
                     .getOfficeId());
@@ -229,9 +230,9 @@ public class CollectionSheetEntryAction extends BaseAction {
         Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
         List<CustomerView> parentCustomerList = loadCustomers(personnelId, officeId);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, parentCustomerList, request);
-        boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
-        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS,
-                isCenterHeirarchyExists ? Constants.YES : Constants.NO, request);
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS,
+                isCenterHierarchyExists ? Constants.YES : Constants.NO, request);
         return mapping.findForward(CollectionSheetEntryConstants.LOADSUCCESS);
     }
 
@@ -382,7 +383,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws PageExpiredException {
+            HttpServletResponse response) throws PageExpiredException, InvalidDateException {
         logTrackingInfo("create", request, form);
         BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(bulkEntryActionForm.getTransactionDate(),

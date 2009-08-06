@@ -94,7 +94,7 @@ public class CustSearchAction extends SearchAction {
             officeName = new OfficeBusinessService().getOffice(getUserContext(request).getBranchId()).getOfficeName();
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName, request);
 
-        SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
+        SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
                 CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
@@ -118,7 +118,7 @@ public class CustSearchAction extends SearchAction {
             officeName = new OfficeBusinessService().getOffice(getUserContext(request).getBranchId()).getOfficeName();
         SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName, request);
 
-        SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
+        SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
                 CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
 
@@ -132,7 +132,7 @@ public class CustSearchAction extends SearchAction {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         actionForm.setOfficeId("0");
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
+        SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
         loadMasterData(userContext.getId(), request, actionForm);
         return mapping.findForward(CustomerSearchConstants.LOADALLBRANCHES_SUCCESS);
@@ -147,7 +147,7 @@ public class CustSearchAction extends SearchAction {
 
         cleanUpSearch(request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
+        SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
         loadMasterData(userContext.getId(), request, actionForm);
 
         fixUpReportSecurity();
@@ -185,7 +185,7 @@ public class CustSearchAction extends SearchAction {
         actionForm.setOfficeId("0");
         cleanUpSearch(request);
         UserContext userContext = getUserContext(request);
-        SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
+        SessionUtils.setAttribute("isCenterHierarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
         forward = loadMasterData(userContext.getId(), request, actionForm);
         return mapping.findForward(forward);

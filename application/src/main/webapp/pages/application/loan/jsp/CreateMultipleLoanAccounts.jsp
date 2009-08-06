@@ -151,7 +151,7 @@ explanation of the license and how it is applied.
 													<tr class="fontnormal">
 														<td align="right">
 															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" mandatory="yes" isColonRequired="Yes"/>
 																</c:when>
 																<c:otherwise>

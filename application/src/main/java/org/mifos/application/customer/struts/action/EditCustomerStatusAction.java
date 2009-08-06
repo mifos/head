@@ -44,6 +44,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -164,7 +165,7 @@ public class EditCustomerStatusAction extends BaseAction {
     }
 
     private void setStatusDetails(ActionForm form, CustomerBO customerBO, HttpServletRequest request,
-            UserContext userContext) throws ApplicationException, SystemException {
+            UserContext userContext) throws ApplicationException, SystemException, InvalidDateException {
         EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
         statusActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
         String newStatusName = null;

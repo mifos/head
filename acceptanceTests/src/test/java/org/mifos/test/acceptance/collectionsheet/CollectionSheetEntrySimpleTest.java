@@ -82,7 +82,6 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    //@Test(groups={"workInProgress"})
     public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoTransation() throws Exception {
         SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidTransactionDay();
         SubmitFormParameters validFormParameters = getFormParameters();
@@ -91,7 +90,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters, 
-            SubmitFormParameters validFormParameters, String dateErrorText) throws Exception {
+            SubmitFormParameters validFormParameters, String dateErrorMessage) throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage = 
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -102,7 +101,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         selectPage.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(invalidFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         CollectionSheetEntrySelectPage collectionSheetEntrySelectPageWithError = new CollectionSheetEntrySelectPage(selenium);
         collectionSheetEntrySelectPageWithError.verifyPage();
-        Assert.assertTrue("Invalid date error message not found!", selenium.isTextPresent(dateErrorText));
+        Assert.assertTrue("Invalid date error message not found!", selenium.isTextPresent(dateErrorMessage));
 
         onlyTypeIfFieldIsEmpty = false;
         waitForPageToLoad = false;

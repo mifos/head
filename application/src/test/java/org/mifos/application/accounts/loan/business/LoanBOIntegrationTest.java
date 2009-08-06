@@ -125,6 +125,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -809,7 +810,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
                 ((LoanBO) accountBO).getTotalInterestAmountInArrears()), agingEntity.getOverdueBalance());
     }
 
-    public void testUpdateLoanForLogging() throws ApplicationException, SystemException {
+    public void testUpdateLoanForLogging() throws ApplicationException, SystemException, InvalidDateException {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
@@ -1768,7 +1769,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         accountBO.getAccountPayments().clear();
     }
 
-    public void testHandleArrears() throws ServiceException, AccountException {
+    public void testHandleArrears() throws ServiceException, AccountException, InvalidDateException {
         accountBO = getLoanAccount();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1780,7 +1781,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         assertEquals(statusChangeHistorySize + 1, accountBO.getAccountStatusChangeHistory().size());
     }
 
-    public void testChangedStatusOnPayment() throws AccountException, SystemException {
+    public void testChangedStatusOnPayment() throws AccountException, SystemException, InvalidDateException {
         accountBO = getLoanAccount();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -2315,7 +2316,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
         assertEquals(getLastInstallmentAccountAction(loan).getActionDate(), loanPerfHistory.getLoanMaturityDate());
     }
 
-    public void testHandleArrearsForCustomerPerfHistory() throws AccountException, SystemException {
+    public void testHandleArrearsForCustomerPerfHistory() throws AccountException, SystemException, InvalidDateException {
         accountBO = getLoanAccountWithPerformanceHistory();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -3114,7 +3115,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTest {
                 firstInstallmentDate, newActionDate);
     }
 
-    public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException {
+    public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException, InvalidDateException {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         Date oldActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1"))

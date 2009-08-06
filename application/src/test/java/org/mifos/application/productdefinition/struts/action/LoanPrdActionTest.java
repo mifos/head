@@ -57,6 +57,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -1265,7 +1266,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
                 (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
     }
 
-    private String offSetCurrentDate(int noOfDays, Locale locale) {
+    private String offSetCurrentDate(int noOfDays, Locale locale) throws InvalidDateException {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);

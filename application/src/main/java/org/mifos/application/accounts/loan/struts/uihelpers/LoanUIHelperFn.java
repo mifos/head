@@ -29,6 +29,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -45,7 +46,7 @@ public class LoanUIHelperFn {
         super();
     }
 
-    public static String getCurrrentDate(Locale locale) {
+    public static String getCurrrentDate(Locale locale) throws InvalidDateException {
         return DateUtils.getCurrentDate(locale);
     }
 

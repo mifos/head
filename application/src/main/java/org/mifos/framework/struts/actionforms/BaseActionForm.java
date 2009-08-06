@@ -40,6 +40,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.components.tabletag.TableTagConstants;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -145,7 +146,7 @@ public class BaseActionForm extends ValidatorActionForm {
         errors.add(property, new ActionMessage(key, arg));
     }
 
-    protected Date getDateFromString(String strDate, Locale locale) {
+    protected Date getDateFromString(String strDate, Locale locale) throws InvalidDateException {
         if (StringUtils.isNullAndEmptySafe(strDate)) {
             return new Date(DateUtils.getLocaleDate(locale, strDate).getTime());
         }

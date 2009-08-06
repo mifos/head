@@ -77,13 +77,13 @@ explanation of the license and how it is applied.
 									<td class="fontnormal">&nbsp;</td>
 								</tr>
 								<tr>
-								<c:set var="isCenterHeirarchyExists"
-								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')}" />
+								<c:set var="isCenterHierarchyExists"
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')}" />
 									<td class="fontnormalbold">
 										<mifos:mifoslabel name="CustomerSearch.quicklyfind"/>
 										<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>,
 										<c:choose>
-						                 	 <c:when test="${isCenterHeirarchyExists=='true'}">
+						                 	 <c:when test="${isCenterHierarchyExists=='true'}">
 						                 	 	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />,&nbsp;
 						                  		<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
 						                  	</c:when>

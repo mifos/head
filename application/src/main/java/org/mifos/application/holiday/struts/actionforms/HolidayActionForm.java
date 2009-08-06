@@ -35,6 +35,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -113,7 +114,13 @@ public class HolidayActionForm extends BaseActionForm {
                     getLocaleString(HolidayConstants.HOLIDAYNAME, userContext)));
 
         if (holidayFromDateString != null && !holidayFromDateString.equals("")) {
-            fromDate = DateUtils.getLocaleDate(userLocale, getHolidayFromDate());
+            try {
+                fromDate = DateUtils.getLocaleDate(userLocale, getHolidayFromDate());
+            } catch (InvalidDateException dateException) {
+                actionErrors.add(HolidayConstants.HOLIDAY_FROM_DATE, new ActionMessage(
+                        HolidayConstants.ERRORMANDATORYFIELD,
+                        getLocaleString(HolidayConstants.HOLIDAYFROMDATE, userContext)));
+            }
         } else {
             actionErrors.add(HolidayConstants.HOLIDAY_FROM_DATE, new ActionMessage(
                     HolidayConstants.ERRORMANDATORYFIELD,
@@ -121,7 +128,12 @@ public class HolidayActionForm extends BaseActionForm {
         }
 
         if (holidayThruDateString != null && !holidayThruDateString.equals("")) {
-            thruDate = DateUtils.getLocaleDate(userLocale, getHolidayThruDate());
+            try {
+                thruDate = DateUtils.getLocaleDate(userLocale, getHolidayThruDate());
+            } catch(InvalidDateException dateException) {
+                actionErrors.add(HolidayConstants.HOLIDAY_THRU_DATE, new ActionMessage(
+                        HolidayConstants.HOLIDAY_THRU_DATE, userContext));
+            }
         } else {
             thruDate = null;
         }

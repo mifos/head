@@ -222,7 +222,7 @@ public class CustSearchActionTest extends MifosMockStrutsTestCase {
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 
         assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
-        assertEquals(true, SessionUtils.getAttribute("isCenterHeirarchyExists", request));
+        assertEquals(true, SessionUtils.getAttribute("isCenterHierarchyExists", request));
         assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, SessionUtils.getAttribute(
                 CustomerSearchConstants.LOADFORWARD, request));
 
@@ -240,7 +240,7 @@ public class CustSearchActionTest extends MifosMockStrutsTestCase {
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 
         assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
-        assertEquals(true, SessionUtils.getAttribute("isCenterHeirarchyExists", request));
+        assertEquals(true, SessionUtils.getAttribute("isCenterHierarchyExists", request));
         assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, SessionUtils.getAttribute(
                 CustomerSearchConstants.LOADFORWARD, request));
 

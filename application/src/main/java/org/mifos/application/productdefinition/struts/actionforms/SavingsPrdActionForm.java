@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
@@ -41,6 +42,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -51,6 +53,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.core.MifosRuntimeException;
 
 public class SavingsPrdActionForm extends BaseActionForm {
     private MifosLogger prdDefLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
@@ -280,12 +283,20 @@ public class SavingsPrdActionForm extends BaseActionForm {
         return getDoubleValue(getInterestRate());
     }
 
-    public Date getStartDateValue(Locale locale) {
-        return DateUtils.getLocaleDate(locale, getStartDate());
+    public Date getStartDateValue(Locale locale) throws ApplicationException {
+        try {
+            return DateUtils.getLocaleDate(locale, getStartDate());
+        } catch (InvalidDateException ide) {
+            throw new ApplicationException(ProductDefinitionConstants.INVALIDSTARTDATE);
+        }
     }
 
-    public Date getEndDateValue(Locale locale) {
-        return DateUtils.getLocaleDate(locale, getEndDate());
+    public Date getEndDateValue(Locale locale) throws ApplicationException {
+        try {
+            return DateUtils.getLocaleDate(locale, getEndDate());
+        } catch (InvalidDateException ide) {
+            throw new ApplicationException(ProductDefinitionConstants.INVALIDENDDATE);
+        }
     }
 
     public Short getPrdCategoryValue() {
@@ -350,7 +361,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
         super.reset(mapping, request);
         String method = request.getParameter(ProductDefinitionConstants.METHOD);
         if (method != null && method.equals(Methods.load.toString())) {
-            startDate = DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale());
+            try {
+                startDate = DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale());
+            } catch (InvalidDateException ide) {
+                throw new MifosRuntimeException(ide);
+            }
         }
         if (method != null && method.equals(Methods.preview.toString())) {
             recommendedAmntUnit = null;

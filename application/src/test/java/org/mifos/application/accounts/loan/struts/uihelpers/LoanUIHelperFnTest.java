@@ -33,6 +33,7 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -70,7 +71,7 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
         createFlow(request, LoanAccountAction.class);
     }
 
-    public void testGetCurrrentDate() {
+    public void testGetCurrrentDate() throws InvalidDateException {
         Locale locale = new Locale("EN");
         assertEquals(DateUtils.getCurrentDate(locale), LoanUIHelperFn.getCurrrentDate(locale));
     }

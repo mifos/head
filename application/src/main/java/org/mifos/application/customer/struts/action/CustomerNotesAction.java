@@ -46,6 +46,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -191,7 +192,7 @@ public class CustomerNotesAction extends SearchAction {
     }
 
     private void setFormAttributes(UserContext userContext, ActionForm form, CustomerBO customerBO)
-            throws ApplicationException {
+            throws ApplicationException, InvalidDateException {
         CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
         notesActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
         notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());

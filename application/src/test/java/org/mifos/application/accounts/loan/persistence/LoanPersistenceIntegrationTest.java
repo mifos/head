@@ -48,6 +48,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosIntegrationTest;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -157,7 +158,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTest {
         assertEquals(30.0, loanPersistence.getFeeAmountAtDisbursement(loanAccountForDisbursement.getAccountId()), DELTA);
     }
 
-    public void testGetLoanAccountsInArrearsInGoodStanding() throws PersistenceException {
+    public void testGetLoanAccountsInArrearsInGoodStanding() throws PersistenceException, InvalidDateException {
         Short latenessDays = 1;
         Calendar actionDate = new GregorianCalendar();
         int year = actionDate.get(Calendar.YEAR);

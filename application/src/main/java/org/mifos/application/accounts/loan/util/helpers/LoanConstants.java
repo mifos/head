@@ -157,7 +157,7 @@ public interface LoanConstants {
     public final String MULTIPLE_LOANS_ACTION_FORM = "multipleloansactionform";
     public final String MULTIPLE_LOANS_OFFICES_LIST = "multipleloansofficeslist";
     public final String MULTIPLE_LOANS_LOAN_OFFICERS_LIST = "multipleloansloanofficerslist";
-    public String IS_CENTER_HEIRARCHY_EXISTS = "isCenterHeirarchyExists";
+    public String IS_CENTER_HIERARCHY_EXISTS = "isCenterHierarchyExists";
     public String MULTIPLE_LOANS_CENTERS_LIST = "multipleloanscenterslist";
     public String LOANOFFICERS = "Loan officer";
     public String LOAN_AMOUNT_FOR = "Loan Amount for ";

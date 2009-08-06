@@ -33,8 +33,8 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<c:set var="Office"
 					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Office')}" />
-				<c:set var="isCenterHeirarchyExists"
-					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')}" />
+				<c:set var="isCenterHierarchyExists"
+					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')}" />
 				<c:set var="LoanOfficerslist"
 					value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanOfficerslist')}" />
 				<c:set var="customerList"
@@ -49,7 +49,7 @@ explanation of the license and how it is applied.
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="CustomerSearch.revieweditinstruction1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}" />, <c:choose>
-								<c:when test="${isCenterHeirarchyExists=='true'}">
+								<c:when test="${isCenterHierarchyExists=='true'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
 	                  		<mifos:mifoslabel
 										name="${ConfigurationConstants.CENTER}" />,
@@ -78,7 +78,7 @@ explanation of the license and how it is applied.
 											<td height="26" colspan="2"><span id="branch_search_loanofficer.label.search"><mifos:mifoslabel
 												name="CustomerSearch.searchinstruction1" />&nbsp; <mifos:mifoslabel
 												name="${ConfigurationConstants.CLIENT}" />,&nbsp; <c:choose>
-												<c:when test="${isCenterHeirarchyExists=='true'}">
+												<c:when test="${isCenterHierarchyExists=='true'}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
 			                  		<mifos:mifoslabel
 														name="${ConfigurationConstants.CENTER}" />,
@@ -114,7 +114,7 @@ explanation of the license and how it is applied.
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"><mifos:mifoslabel
 												name="CustomerSearch.select" />&nbsp; <c:choose>
-												<c:when test='${isCenterHeirarchyExists eq true}'>
+												<c:when test='${isCenterHierarchyExists eq true}'>
 													<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 												</c:when>
 
@@ -132,7 +132,7 @@ explanation of the license and how it is applied.
 											<c:forEach items="${customerList}"
 												var="customer">
 												<c:choose>
-													<c:when test='${isCenterHeirarchyExists eq true}'>
+													<c:when test='${isCenterHierarchyExists eq true}'>
 														<html-el:link styleId="branch_search_loanofficer.link.selectCenter"
 															href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 															<c:out value="${customer.displayName}" />
@@ -152,7 +152,7 @@ explanation of the license and how it is applied.
 										<c:otherwise>
 										    <mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
 											<c:choose>
-												<c:when test='${isCenterHeirarchyExists eq true}'>
+												<c:when test='${isCenterHierarchyExists eq true}'>
 												<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 												</c:when>
 												<c:otherwise>
@@ -225,7 +225,7 @@ explanation of the license and how it is applied.
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"><mifos:mifoslabel
 												name="CustomerSearch.select" />&nbsp; <c:choose>
-												<c:when test='${isCenterHeirarchyExists eq true}'>
+												<c:when test='${isCenterHierarchyExists eq true}'>
 													<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 												</c:when>
 
@@ -244,7 +244,7 @@ explanation of the license and how it is applied.
 									 <c:forEach items="${customerList}"
 										var="customer">
 										<c:choose>
-											<c:when test='${isCenterHeirarchyExists eq true}'>
+											<c:when test='${isCenterHierarchyExists eq true}'>
 												<html-el:link styleId="branch_search_loanofficer.link.selectCenter"
 													href='centerCustAction.do?method=get&customerId=${customer.customerId}&searchId=${customer.searchId}&globalCustNum=${customer.globalCustNum}&recordLoanOfficerId=${recordLoanOfficerId}&recordOfficeId=${recordOfficeId}'>
 													<c:out value="${customer.displayName}" />
@@ -264,7 +264,7 @@ explanation of the license and how it is applied.
 									<c:otherwise>
 									<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
 									<c:choose>
-											<c:when test='${isCenterHeirarchyExists eq true}'>
+											<c:when test='${isCenterHierarchyExists eq true}'>
 											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 											</c:when>
 											<c:otherwise>

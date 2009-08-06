@@ -287,9 +287,9 @@ public class BulkEntryActionForm extends BaseActionForm {
                 throw new RuntimeException(e);
             }
             try {
-                short isCenterHeirarchyExists = (Short) SessionUtils.getAttribute(
-                        CollectionSheetEntryConstants.ISCENTERHEIRARCHYEXISTS, request);
-                return mandatoryCheck(meetingDate, getUserContext(request), isCenterHeirarchyExists);
+                short isCenterHierarchyExists = (Short) SessionUtils.getAttribute(
+                        CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request);
+                return mandatoryCheck(meetingDate, getUserContext(request), isCenterHierarchyExists);
             } catch (PageExpiredException e) {
                 errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
                         ExceptionConstants.PAGEEXPIREDEXCEPTION));
@@ -394,17 +394,22 @@ public class BulkEntryActionForm extends BaseActionForm {
         return errors;
     }
 
-    private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext, short isCenterHeirarchyExists) {
+    private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext, short isCenterHierarchyExists) {
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
         String loanOfficer = resources.getString(CollectionSheetEntryConstants.LOANOFFICERS);
         String modeOfPayment = resources.getString(CollectionSheetEntryConstants.MODE_OF_PAYMENT);
         String dateOfTransaction = resources.getString(CollectionSheetEntryConstants.DATEOFTRXN);
         ActionErrors errors = receiptDateValidate(new ActionErrors(), locale);
-        java.sql.Date currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils
-                .getCurrentDate(userContext.getPreferredLocale()));
+        java.sql.Date currentDate = null;
+        try {
+            currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils
+                    .getCurrentDate(userContext.getPreferredLocale()));
+        } catch (InvalidDateException ide) {
+            errors.add(CollectionSheetEntryConstants.INVALIDDATE, new ActionMessage(CollectionSheetEntryConstants.INVALIDDATE));
+        }
         java.sql.Date trxnDate = null;
-        String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
+        String customerLabel = isCenterHierarchyExists == Constants.YES ? ConfigurationConstants.CENTER
                 : ConfigurationConstants.GROUP;
         if (officeId == null || "".equals(officeId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
@@ -426,7 +431,7 @@ public class BulkEntryActionForm extends BaseActionForm {
         if (getTransactionDate() != null && !getTransactionDate().equals("")) {
             try {
                 trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
-            } catch(InvalidDateException e) {
+            } catch(InvalidDateException ide) {
                 errors.add(AccountConstants.ERROR_INVALID_TRXN, new ActionMessage(
                         AccountConstants.ERROR_INVALID_TRXN));
             }

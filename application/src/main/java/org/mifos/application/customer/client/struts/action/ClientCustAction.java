@@ -84,6 +84,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -213,7 +214,7 @@ public class ClientCustAction extends CustAction {
     }
 
     private void checkForGovtIdAndDisplayNameDobDuplicacy(HttpServletRequest request, ClientCustActionForm actionForm)
-            throws PersistenceException, PageExpiredException {
+            throws PersistenceException, PageExpiredException, InvalidDateException {
         ClientPersistence clientPersistence = new ClientPersistence();
         String governmentId = actionForm.getGovernmentId();
         /*
@@ -580,7 +581,7 @@ public class ClientCustAction extends CustAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws ApplicationException {
+            HttpServletResponse response) throws ApplicationException, InvalidDateException {
 
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());

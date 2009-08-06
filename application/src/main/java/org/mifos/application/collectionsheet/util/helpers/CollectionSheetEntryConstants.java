@@ -70,6 +70,7 @@ public interface CollectionSheetEntryConstants {
     public String MANDATORYFIELDS = "errors.mandatoryselect";
     public String MANDATORYENTER = "errors.mandatoryenter";
     public String INVALIDENDDATE = "errors.invaliddate";
+    public String INVALIDDATE = "errors.invaliddate";
     public String MEETINGDATEEXCEPTION = "errors.meetingdate";
     public String ERRORSUPDATE = "errors.update";
     public String REFRESH = "refresh";
@@ -82,7 +83,7 @@ public interface CollectionSheetEntryConstants {
     public Short SAVINGSWITHDRAWAL = 4;
 
     public String ISBACKDATEDTRXNALLOWED = "isBackDatedTrxnAllowed";
-    public String ISCENTERHEIRARCHYEXISTS = "isCenterHeirarchyExists";
+    public String ISCENTERHIERARCHYEXISTS = "isCenterHierarchyExists";
     public String LOANS = "loans";
     public String SAVINGS = "savings";
     public String CLIENTS = "clients";

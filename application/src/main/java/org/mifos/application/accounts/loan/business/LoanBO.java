@@ -104,6 +104,7 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -1028,9 +1029,13 @@ public class LoanBO extends AccountBO {
         // Date currrentDate =
         // DateUtils.getLocaleDate(Configuration.getInstance()
         // .getSystemConfig().getMFILocale(), systemDate);
-        String systemDate = DateUtils.getCurrentDate();
-        Date currrentDate = DateUtils.getLocaleDate(systemDate);
-        this.setUpdatedDate(currrentDate);
+        try {
+            String systemDate = DateUtils.getCurrentDate();
+            Date currrentDate = DateUtils.getLocaleDate(systemDate);
+            this.setUpdatedDate(currrentDate);
+        } catch (InvalidDateException ide) {
+            throw new AccountException(ide);
+        }
 
         try {
             new LoanPersistence().createOrUpdate(this);
@@ -1254,7 +1259,11 @@ public class LoanBO extends AccountBO {
                 throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
             regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         }
-        updateCustomFields(customFields);
+        try {
+            updateCustomFields(customFields);
+        } catch (InvalidDateException ide) {
+            throw new AccountException(ide);
+        }
         loanSummary.setOriginalPrincipal(loanAmount);
         update();
     }

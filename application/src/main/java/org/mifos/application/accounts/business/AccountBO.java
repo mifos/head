@@ -71,6 +71,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -1429,7 +1430,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    protected void updateCustomFields(List<CustomFieldView> customFields) {
+    protected void updateCustomFields(List<CustomFieldView> customFields) throws InvalidDateException {
         if (customFields == null)
             return;
         for (CustomFieldView fieldView : customFields) {

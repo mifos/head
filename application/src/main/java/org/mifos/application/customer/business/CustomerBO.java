@@ -66,6 +66,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
@@ -459,7 +460,7 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     public void update(UserContext userContext, String externalId, Address address, List<CustomFieldView> customFields,
-            List<CustomerPositionView> customerPositions) throws CustomerException {
+            List<CustomerPositionView> customerPositions) throws CustomerException, InvalidDateException {
         this.setUserContext(userContext);
         this.setExternalId(externalId);
         updateAddress(address);
@@ -942,7 +943,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.office.getOfficeId().equals(officeObj.getOfficeId());
     }
 
-    protected void updateCustomFields(List<CustomFieldView> customFields) {
+    protected void updateCustomFields(List<CustomFieldView> customFields) throws InvalidDateException {
         if (customFields != null) {
             for (CustomFieldView fieldView : customFields) {
                 if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE

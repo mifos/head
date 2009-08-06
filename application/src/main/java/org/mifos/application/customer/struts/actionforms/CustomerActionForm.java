@@ -46,6 +46,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -536,7 +537,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
         return StringUtils.isNullAndEmptySafe(trained) && Short.valueOf(trained).equals(YesNoFlag.YES.getValue());
     }
 
-    public Date getTrainedDateValue(Locale locale) {
+    public Date getTrainedDateValue(Locale locale) throws InvalidDateException {
         return getDateFromString(getTrainedDate(), locale);
     }
 

@@ -46,6 +46,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -194,7 +195,7 @@ public class AccountAppAction extends BaseAction {
         return accountBusinessService;
     }
 
-    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) {
+    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
         for (CustomFieldView customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
                     && StringUtils.isNullAndEmptySafe(customField.getFieldValue()))

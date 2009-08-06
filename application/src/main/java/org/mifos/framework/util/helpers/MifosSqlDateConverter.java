@@ -23,6 +23,8 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 
 import org.apache.commons.beanutils.Converter;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.exceptions.InvalidDateException;
 
 public class MifosSqlDateConverter implements Converter {
 
@@ -42,6 +44,8 @@ public class MifosSqlDateConverter implements Converter {
     public Object convert(Class type, Object value) {
         java.sql.Date date = null;
         /*
+         * TODO: Get rid of this comment
+         * 
          * if(locale!=null && value!=null && type!=null && !value.equals("")){
          * try{
          * 
@@ -63,7 +67,11 @@ public class MifosSqlDateConverter implements Converter {
          * } } return date;
          */
         if (locale != null && value != null && type != null && !value.equals("")) {
-            date = DateUtils.getLocaleDate(locale, ((String) value));
+            try {
+                date = DateUtils.getLocaleDate(locale, ((String) value));
+            } catch (InvalidDateException ide) {
+                throw new MifosRuntimeException(ide);
+            }
         }
         return date;
     }
