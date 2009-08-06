@@ -211,7 +211,9 @@ public class DbUnitDataImportExport {
             
             if (exitVal != 0) {
                 System.err.println("ERROR: Wrong username, password and/or database name!");
-            }
+            } else {
+                System.out.println("done!");
+            }     
         } catch (IOException ioe) {
             System.err.println("ERROR: " + ioe.getMessage());
             
@@ -219,8 +221,6 @@ public class DbUnitDataImportExport {
         } catch (InterruptedException ie) {
             System.err.println("ERROR (interruption): " + ie.getLocalizedMessage());
         }
-        
-        System.out.println("done!");
     }
 
     public void dumpData(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
