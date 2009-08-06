@@ -80,7 +80,6 @@ public class ViewFundsTest extends UiTestCaseBase {
         ViewFundsPage viewFundsPage = adminPage.navigateToViewFundsPage();
         
         String[] expectedFundNames = new String[]{
-                "Name",
                 "Non Donor",
                 "Funding Org A",
                 "Funding Org B",
@@ -89,7 +88,6 @@ public class ViewFundsTest extends UiTestCaseBase {
         };
 
         String[] expectedFundCodes = new String[]{
-                "Fund code",
                 "00",
                 "00",
                 "00",

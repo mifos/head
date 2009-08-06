@@ -54,6 +54,18 @@ public class MifosPage extends AbstractPage {
         if (!isEmpty(value)) {
             selenium.select(locator, "label=" + value);
         }
+    }
+    
+    /**
+     * This is the equivalent of seleftIfNotEmpty for integers.
+     * @see #selectIfNotEmpty(String, String)
+     * @param locator 
+     * @param value
+     */
+    protected void selectValueIfNotZero(String locator, int value) {
+        if (value != 0) {
+            selenium.select(locator, "value=" + value);
+        }
     } 
     
     protected void checkIfNotEmpty(String locator, String value) {

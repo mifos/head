@@ -38,7 +38,7 @@ public class ViewFundsPage extends MifosPage{
        
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
-            String actualCellData = selenium.getTable("fundDisplayTable."+i+".0");
+            String actualCellData = selenium.getTable("fundDisplayTable."+(i+1)+".0");
             Assert.assertEquals(actualCellData, expectedCellData);
         }
     }
@@ -47,7 +47,7 @@ public class ViewFundsPage extends MifosPage{
         
         for (int i = 0; i < expectedData.length; i++) {
             String expectedCellData = expectedData[i];
-            String actualCellData = selenium.getTable("fundDisplayTable."+i+".1");
+            String actualCellData = selenium.getTable("fundDisplayTable."+(i+1)+".1");
             Assert.assertEquals(actualCellData, expectedCellData);
         }
     }

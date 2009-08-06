@@ -49,6 +49,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public static final String DECLINING_BALANCE = "Declining Balance";
         public static final String DECLINING_BALANCE_EPI = "Declining Balance-Equal Principal Amount";
 
+        public static final String NONE = "None";
+        
         private String branch;
         private String offeringName;
         private String offeringShortName;
@@ -234,6 +236,12 @@ public class DefineNewLoanProductPage extends AbstractPage {
             return -1;
         }
  
+        @SuppressWarnings("PMD.OnlyOneReturn")
+        public int getGracePeriodTypeValue() {
+            if (NONE.equals(gracePeriodType)) { return 1; }
+
+            return -1;
+        }
         
     }
         
@@ -254,7 +262,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.click("createLoanProduct.radio.freqOfInstallments" + parameters.getFreqOfInstallments()); 
         selenium.type("maxNoInstallments", parameters.getMaxInstallments());
         selenium.type("defNoInstallments", parameters.getDefInstallments());
-        selenium.select("gracePeriodType", "label=" + parameters.getGracePeriodType());
+        selenium.select("gracePeriodType", "value=" + parameters.getGracePeriodTypeValue());
         selenium.select("interestGLCode", "label=" + parameters.getInterestGLCode());
         selenium.select("principalGLCode", "label=" + parameters.getPrincipalGLCode());
         selenium.click("createLoanProduct.button.preview");

@@ -20,6 +20,7 @@
  
 package org.mifos.test.acceptance.framework.admin;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -38,7 +39,14 @@ public class DefineAdditionalFieldsPage extends MifosPage {
     public DefineAdditionalFieldPreviewPage defineAdditionalField(AdminPage adminPage, String category, String label, String dataType) {
         selectIfNotEmpty("categoryType", category);
         typeTextIfNotEmpty("define_additional_fields.input.labelName", label);
-        selectIfNotEmpty("dataType", dataType);
+        if (! StringUtils.isEmpty(dataType)) {
+            if ("Text".equals(dataType)) {
+                selenium.select("dataType", "value=2");
+            } else if ("Numeric".equals(dataType)) {
+                selenium.select("dataType", "value=1");
+            }
+        }
+        
         selenium.click("define_additional_fields.button.preview");
         waitForPageToLoad();
         return new DefineAdditionalFieldPreviewPage(selenium);       

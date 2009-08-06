@@ -79,7 +79,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setFreqOfInstallments("Weeks"); //This parameter expects Weeks or Months
         formParameters.setMaxInstallments("52");
         formParameters.setDefInstallments("52");
-        formParameters.setGracePeriodType("None");
+        formParameters.setGracePeriodType(SubmitFormParameters.NONE);
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
         return formParameters;
@@ -111,7 +111,7 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setFreqOfInstallments("Months"); //This parameter expects Weeks or Months
         formParameters.setMaxInstallments("72");
         formParameters.setDefInstallments("60");
-        formParameters.setGracePeriodType("None");
+        formParameters.setGracePeriodType(SubmitFormParameters.NONE);
         formParameters.setInterestGLCode("31102");
         formParameters.setPrincipalGLCode("1506");
         return formParameters;

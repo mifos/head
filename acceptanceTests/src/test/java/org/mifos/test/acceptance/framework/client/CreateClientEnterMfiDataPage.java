@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -42,7 +43,7 @@ public class CreateClientEnterMfiDataPage extends MifosPage {
     public static class SubmitFormParameters {
  
         String loanOfficerId;
-        CreateMeetingPage.SubmitFormParameters meeting;
+        MeetingParameters meeting;
         
         public String getLoanOfficerId() {
             return this.loanOfficerId;
@@ -52,11 +53,11 @@ public class CreateClientEnterMfiDataPage extends MifosPage {
             this.loanOfficerId = loanOfficerId;
         }
         
-        public CreateMeetingPage.SubmitFormParameters getMeeting() {
+        public MeetingParameters getMeeting() {
             return this.meeting;
         }
         
-        public void setMeeting(CreateMeetingPage.SubmitFormParameters meeting) {
+        public void setMeeting(MeetingParameters meeting) {
             this.meeting = meeting;
         }
     }

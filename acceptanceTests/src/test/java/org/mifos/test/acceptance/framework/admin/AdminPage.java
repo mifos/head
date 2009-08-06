@@ -37,6 +37,7 @@ import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
 import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
 import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -147,36 +148,37 @@ public class AdminPage extends MifosPage {
         OfficeViewDetailsPage detailsPage = confirmationPage.navigateToOfficeViewDetailsPage();
         Assert.assertEquals(detailsPage.getOfficeName(), formParameters.getOfficeName());
         Assert.assertEquals(detailsPage.getShortName(), formParameters.getShortName());
-        Assert.assertEquals(detailsPage.getOfficeType(), formParameters.getOfficeType());
+        //Assert.assertEquals(detailsPage.getOfficeType(), formParameters.getOfficeType());
+        // we can't have this since "Branch Office" won't be "Branch Office" in every translation.
         
         return detailsPage.navigateToAdminPage();
     }
   
-    public UserViewDetailsPage createUser(AdminPage adminPage, CreateUserEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+    public UserViewDetailsPage createUser(AdminPage adminPage, CreateUserParameters formParameters, String officeName) {
         ChooseOfficePage chooseOfficePage = adminPage.navigateToCreateUserPage();
         CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
 
         CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(formParameters);
         CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
-
-        Assert.assertTrue(userConfirmationPage.getConfirmation().contains(formParameters.getFirstName() + " " + formParameters.getLastName() + " has been assigned the system ID number:"));
+        userConfirmationPage.verifyPage();
         
         UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
+        userDetailsPage.verifyPage();
         Assert.assertTrue(userDetailsPage.getFullName().contains(formParameters.getFirstName() + " " + formParameters.getLastName()));
-        Assert.assertEquals(userDetailsPage.getStatus(), "Active");
+        //Assert.assertEquals(userDetailsPage.getStatus(), "Active");
         return userDetailsPage;
     }
     
-    public CreateUserEnterDataPage.SubmitFormParameters getAdminUserParameters() {
-        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+    public CreateUserParameters getAdminUserParameters() {
+        CreateUserParameters formParameters = new CreateUserParameters();
         formParameters.setFirstName("New");
         formParameters.setLastName("User" + StringUtil.getRandomString(8));
         formParameters.setDateOfBirthDD("21");
         formParameters.setDateOfBirthMM("11");
         formParameters.setDateOfBirthYYYY("1980");
-        formParameters.setGender("Male");
-        formParameters.setPreferredLanguage("English");
-        formParameters.setUserLevel("Loan Officer");
+        formParameters.setGender(CreateUserParameters.MALE);
+        formParameters.setPreferredLanguage(CreateUserParameters.ENGLISH);
+        formParameters.setUserLevel(CreateUserParameters.LOAN_OFFICER);
         formParameters.setRole("Admin");
         formParameters.setUserName("loanofficer_blore" + StringUtil.getRandomString(3));
         formParameters.setPassword("password");
@@ -184,15 +186,15 @@ public class AdminPage extends MifosPage {
         return formParameters;
     }
 
-    public CreateUserEnterDataPage.SubmitFormParameters getNonAdminUserParameters() {
-        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+    public CreateUserParameters getNonAdminUserParameters() {
+        CreateUserParameters formParameters = new CreateUserParameters();
         formParameters.setFirstName("NonAdmin");
         formParameters.setLastName("User" + StringUtil.getRandomString(8));
         formParameters.setDateOfBirthDD("04");
         formParameters.setDateOfBirthMM("04");
         formParameters.setDateOfBirthYYYY("1986");
-        formParameters.setGender("Male");
-        formParameters.setUserLevel("Non Loan Officer");
+        formParameters.setGender(CreateUserParameters.MALE);
+        formParameters.setUserLevel(CreateUserParameters.NON_LOAN_OFFICER);
         formParameters.setUserName("test" + StringUtil.getRandomString(5));
         formParameters.setPassword("tester");
         formParameters.setPasswordRepeat("tester");

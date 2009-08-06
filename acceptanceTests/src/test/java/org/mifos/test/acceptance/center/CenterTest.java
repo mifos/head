@@ -31,8 +31,8 @@ import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
 import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
-import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
-import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
+import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -70,7 +70,7 @@ public class CenterTest extends UiTestCaseBase {
         
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
 
-        CreateUserEnterDataPage.SubmitFormParameters userFormParameters = adminPage2.getAdminUserParameters();
+        CreateUserParameters userFormParameters = adminPage2.getAdminUserParameters();
                 
         UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, userFormParameters, officeName);
         
@@ -100,9 +100,9 @@ public class CenterTest extends UiTestCaseBase {
         formParameters.setCenterName(centerName);
         formParameters.setLoanOfficer(loanOfficer);
         
-        CreateMeetingPage.SubmitFormParameters meetingFormParameters = new CreateMeetingPage.SubmitFormParameters();
+        MeetingParameters meetingFormParameters = new MeetingParameters();
         meetingFormParameters.setWeekFrequency("1");
-        meetingFormParameters.setWeekDay("Wednesday");
+        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Bangalore");
         
         formParameters.setMeeting(meetingFormParameters);

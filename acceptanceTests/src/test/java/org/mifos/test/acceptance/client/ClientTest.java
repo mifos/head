@@ -32,7 +32,7 @@ import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
-import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
@@ -77,7 +77,7 @@ public class ClientTest extends UiTestCaseBase {
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
 
-        CreateUserEnterDataPage.SubmitFormParameters userParameters = adminPage2.getAdminUserParameters();
+        CreateUserParameters userParameters = adminPage2.getAdminUserParameters();
         UserViewDetailsPage userDetailsPage = adminPage.createUser(adminPage2, userParameters, officeName);
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = userDetailsPage.navigateToClientsAndAccountsHomepage();
@@ -113,7 +113,7 @@ public class ClientTest extends UiTestCaseBase {
         ClientEditMFIPreviewPage mfiPreviewPage = editMFIPage.submitAndNavigateToClientEditMFIPreviewPage(params);
         mfiPreviewPage.verifyPage();
         clientDetailsPage = mfiPreviewPage.submit();
-        assertTextFoundOnPage("External Id: extID123");
-        assertTextFoundOnPage("Trained On: 15/12/2008");
+        assertTextFoundOnPage("extID123");
+        assertTextFoundOnPage("15/12/2008");
     }
 }

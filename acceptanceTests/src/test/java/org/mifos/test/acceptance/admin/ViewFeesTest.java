@@ -79,17 +79,17 @@ public class ViewFeesTest extends UiTestCaseBase {
         ViewFeesPage viewFeesPage = adminPage.navigateToViewFeesPage();
         
         String[] expectedProductFees = new String[]{
-                "OneTimeDisburse9 ( Loans )",
-                "OneTimeFirstRepay90 ( Loans )",
-                "OneTimeUpFront900 ( Loans )",
-                "PeriodicMonthlyLoanFee89 ( Loans )",
-                "PeriodicWeeklyLoanFee8 ( Loans )"
+                "OneTimeDisburse9",
+                "OneTimeFirstRepay90",
+                "OneTimeUpFront900",
+                "PeriodicMonthlyLoanFee89",
+                "PeriodicWeeklyLoanFee8"
         };
 
         String[] expectedClientFees = new String[]{
-                "Weekly Center Fee ( Center )",
-                "Weekly Client Fee ( Client )",
-                "Weekly Group Fee ( Group )"
+                "Weekly Center Fee",
+                "Weekly Client Fee",
+                "Weekly Group Fee"
         };
         viewFeesPage.verifyProductFees( expectedProductFees );
         viewFeesPage.verifyClientFees( expectedClientFees );

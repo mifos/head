@@ -21,7 +21,7 @@
 package org.mifos.test.acceptance.framework;
 
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
-import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
@@ -106,9 +106,9 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
         CreateClientEnterMfiDataPage.SubmitFormParameters mfiFormParameters = new CreateClientEnterMfiDataPage.SubmitFormParameters();
         mfiFormParameters.setLoanOfficerId(loanOfficer);
 
-        CreateMeetingPage.SubmitFormParameters meetingFormParameters = new CreateMeetingPage.SubmitFormParameters();
+        MeetingParameters meetingFormParameters = new MeetingParameters();
         meetingFormParameters.setWeekFrequency("1");
-        meetingFormParameters.setWeekDay("Wednesday");
+        meetingFormParameters.setWeekDay(MeetingParameters.WEDNESDAY);
         meetingFormParameters.setMeetingPlace("Bangalore");
         
         mfiFormParameters.setMeeting(meetingFormParameters);

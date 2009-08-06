@@ -27,7 +27,7 @@ import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
-import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
@@ -76,7 +76,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
-        CreateUserEnterDataPage.SubmitFormParameters formParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+        CreateUserParameters formParameters = new CreateUserParameters();
         formParameters.setFirstName("Update");
         formParameters.setLastName("User" + StringUtil.getRandomString(8));
         formParameters.setEmail("xxx.yyy@xxx.zzz");
@@ -101,11 +101,11 @@ public class PersonnelTest extends UiTestCaseBase {
         String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
         AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
         
-        CreateUserEnterDataPage.SubmitFormParameters userParameters = adminPage2.getAdminUserParameters();
+        CreateUserParameters userParameters = adminPage2.getAdminUserParameters();
         UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, userParameters, officeName);        
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
-        CreateUserEnterDataPage.SubmitFormParameters passwordParameters = new CreateUserEnterDataPage.SubmitFormParameters();
+        CreateUserParameters passwordParameters = new CreateUserParameters();
         passwordParameters.setPassword("tester1");
         passwordParameters.setPasswordRepeat("tester1");
 

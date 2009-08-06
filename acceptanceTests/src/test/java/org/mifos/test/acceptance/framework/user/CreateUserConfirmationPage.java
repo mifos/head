@@ -33,6 +33,11 @@ public class CreateUserConfirmationPage extends MifosPage {
         super(selenium);
     }
     
+
+    public void verifyPage() {
+        verifyPage("createuser_confirmation");
+    }
+    
     public String getConfirmation() {
         return selenium.getText("createuser_confirmation.text.confirmation");
     }    
@@ -42,5 +47,6 @@ public class CreateUserConfirmationPage extends MifosPage {
         waitForPageToLoad();
         return new UserViewDetailsPage(selenium);
     }
+
 
 }

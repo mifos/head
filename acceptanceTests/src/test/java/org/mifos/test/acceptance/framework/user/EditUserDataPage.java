@@ -37,7 +37,7 @@ public class EditUserDataPage extends MifosPage {
 		super(selenium);
 	}
 
-    public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserEnterDataPage.SubmitFormParameters parameters) {
+    public EditUserPreviewDataPage submitAndGotoEditUserPreviewDataPage(CreateUserParameters parameters) {
         typeTextIfNotEmpty("edit_user.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("edit_user.input.lastName", parameters.getLastName());
         typeTextIfNotEmpty("edit_user.input.email", parameters.getEmail());
@@ -45,9 +45,9 @@ public class EditUserDataPage extends MifosPage {
         typeTextIfNotEmpty("dobMM", parameters.getDateOfBirthMM());
         typeTextIfNotEmpty("dobYY", parameters.getDateOfBirthYYYY());        
         selectIfNotEmpty("maritalStatus", parameters.getMaritalStatus());
-        selectIfNotEmpty("gender", parameters.getGender());
-        selectIfNotEmpty("preferredLocale", parameters.getPreferredLanguage());
-        selectIfNotEmpty("level", parameters.getUserLevel());
+        selectValueIfNotZero("gender", parameters.getGender());
+        selectValueIfNotZero("preferredLocale", parameters.getPreferredLanguage());
+        selectValueIfNotZero("level", parameters.getUserLevel());
         typeTextIfNotEmpty("edit_user.input.userPassword", parameters.getPassword());
         typeTextIfNotEmpty("edit_user.input.passwordRepeat", parameters.getPasswordRepeat());
         selenium.click("edit_user.button.preview");

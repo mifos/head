@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.framework.user;
 
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage.SubmitFormParameters;
 import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
@@ -31,6 +30,10 @@ public class UserViewDetailsPage extends MifosPage {
 
     public UserViewDetailsPage(Selenium selenium) {
         super(selenium);
+    }
+
+    public void verifyPage() {
+        verifyPage("personneldetails");
     }
 
     public EditUserDataPage navigateToEditUserDataPage() {
@@ -57,9 +60,10 @@ public class UserViewDetailsPage extends MifosPage {
         return selenium.getText("personneldetails.text.status");
     }
     
-    public void verifyModifiedNameAndEmail(SubmitFormParameters formParameters) {
+    public void verifyModifiedNameAndEmail(CreateUserParameters formParameters) {
         Assert.assertTrue(getFullName().contains(
                 formParameters.getFirstName() + " " + formParameters.getLastName()));
         Assert.assertEquals(getEmail(), formParameters.getEmail());
     }
+
 }

@@ -6,7 +6,7 @@ package org.mifos.test.acceptance.framework.group;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
 import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
-import org.mifos.test.acceptance.framework.center.CreateMeetingPage.SubmitFormParameters;
+import org.mifos.test.acceptance.framework.center.MeetingParameters;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -27,7 +27,7 @@ public class CreateGroupEnterDataPage extends MifosPage {
     public static class SubmitFormParameters {
         String centerName;
         String loanOfficer;
-        CreateMeetingPage.SubmitFormParameters meeting;
+        MeetingParameters meeting;
         
         public String getCenterName() {
             return this.centerName;
@@ -47,11 +47,11 @@ public class CreateGroupEnterDataPage extends MifosPage {
             this.loanOfficer = loanOfficer;
         }
         
-        public CreateMeetingPage.SubmitFormParameters getMeeting() {
+        public MeetingParameters getMeeting() {
             return this.meeting;
         }
 
-        public void setMeeting(CreateMeetingPage.SubmitFormParameters meeting) {
+        public void setMeeting(MeetingParameters meeting) {
             this.meeting = meeting;
         }        
     }

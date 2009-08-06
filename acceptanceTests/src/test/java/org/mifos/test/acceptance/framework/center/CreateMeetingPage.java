@@ -36,40 +36,8 @@ public class CreateMeetingPage extends MifosPage {
 		super(selenium);
 	}
     
-    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
-    public static class SubmitFormParameters {
-
-        String weekDay;
-        String weekFrequency;
-        String meetingPlace;
-        
-        public String getWeekDay() {
-            return this.weekDay;
-        }
-        
-        public void setWeekDay(String weekDay) {
-            this.weekDay = weekDay;
-        }
-        
-        public String getWeekFrequency() {
-            return this.weekFrequency;
-        }
-        
-        public void setWeekFrequency(String weekFrequency) {
-            this.weekFrequency = weekFrequency;
-        }
-        
-        public String getMeetingPlace() {
-            return this.meetingPlace;
-        }
-        
-        public void setMeetingPlace(String meetingPlace) {
-            this.meetingPlace = meetingPlace;
-        }
-    }
-    
-    public CreateCenterEnterDataPage submitAndGotoCreateCenterEnterDataPage(SubmitFormParameters parameters) {
-        selectIfNotEmpty("weekDay", parameters.getWeekDay());
+    public CreateCenterEnterDataPage submitAndGotoCreateCenterEnterDataPage(MeetingParameters parameters) {
+        selectValueIfNotZero("weekDay", parameters.getWeekDay());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
         typeTextIfNotEmpty("createmeeting.input.meetingPlace", parameters.getMeetingPlace());
         selenium.click("createmeeting.button.save");
@@ -77,8 +45,8 @@ public class CreateMeetingPage extends MifosPage {
         return new CreateCenterEnterDataPage(selenium);
     }
     
-    public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(SubmitFormParameters parameters) {
-        selectIfNotEmpty("weekDay", parameters.getWeekDay());
+    public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(MeetingParameters parameters) {
+        selectValueIfNotZero("weekDay", parameters.getWeekDay());
         typeTextIfNotEmpty("createmeeting.input.weekFrequency", parameters.getWeekFrequency());
         typeTextIfNotEmpty("createmeeting.input.meetingPlace", parameters.getMeetingPlace());
         selenium.click("createmeeting.button.save");
