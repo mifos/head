@@ -209,10 +209,10 @@ public class DbUnitDataImportExport {
                                             " " + databaseName );
             int exitVal = proc.waitFor();
             
-            if (exitVal != 0) {
-                System.err.println("ERROR: Wrong username, password and/or database name!");
-            } else {
+            if (exitVal == 0) {
                 System.out.println("done!");
+            } else {
+                System.err.println("ERROR: Wrong username, password and/or database name!");
             }     
         } catch (IOException ioe) {
             System.err.println("ERROR: " + ioe.getMessage());
