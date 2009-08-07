@@ -32,10 +32,6 @@ import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
-/**
- * @author hjon
- *
- */
 public class NavigationHelper {
     private final Selenium selenium;
 
@@ -43,59 +39,59 @@ public class NavigationHelper {
         this.selenium = selenium;
     }
     
-    public AdminPage navigateToAdminPage() {
+    public HomePage navigateToHomePage() {
         LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
         loginPage.verifyPage();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
-        return homePage.navigateToAdminPage();
+        return homePage;
+    }
+    
+    public AdminPage navigateToAdminPage() {
+        HomePage homePage = navigateToHomePage();
+        AdminPage adminPage = homePage.navigateToAdminPage();
+        adminPage.verifyPage();
+        
+        return adminPage;
     }
     
     public LoanAccountPage navigateToLoanAccountPage(String loanAccountID) {        
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
-        loginPage.verifyPage();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
+        HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(loanAccountID);
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(loanAccountID);
         loanAccountPage.verifyPage();
+        
         return loanAccountPage;
     }
     
     public ClientViewDetailsPage navigateToClientViewDetailsPage(String clientName) {
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
-        loginPage.verifyPage();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
+        HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(clientName);
         searchResultsPage.verifyPage();
         ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=" + clientName + "*");
         clientDetailsPage.verifyPage();
+        
         return clientDetailsPage;
     }
     
     public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
-        loginPage.verifyPage();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
+        HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(centerName);
         searchResultsPage.verifyPage();
         CenterViewDetailsPage centerDetailsPage = searchResultsPage.navigateToCenterViewDetailsPage("link=" + centerName + "*");
         centerDetailsPage.verifyPage();
+        
         return centerDetailsPage;
     }
     
     public GroupViewDetailsPage navigateToGroupViewDetailsPage(String groupName) {
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
-        loginPage.verifyPage();
-        HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
+        HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(groupName);
         searchResultsPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=" + groupName + "*");
         groupDetailsPage.verifyPage();
+        
         return groupDetailsPage;
     }
 }
