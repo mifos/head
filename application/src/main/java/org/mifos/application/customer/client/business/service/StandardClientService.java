@@ -27,9 +27,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.application.accounts.loan.persistance.ClientDao;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
-import org.mifos.application.accounts.loan.persistance.StandardClientDao;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -43,20 +41,20 @@ import org.mifos.framework.exceptions.ServiceException;
  */
 public class StandardClientService implements ClientService {
 
-    private ClientDao clientDao;
     private ClientAttendanceDao clientAttendanceDao;
 
+    /**
+     * favour constructor injected use.
+     */
+    @Deprecated
     public StandardClientService() {
-        this.clientDao = new StandardClientDao();
         this.clientAttendanceDao = new StandardClientAttendanceDao();
     }
 
-    public StandardClientService(ClientDao clientDao, ClientAttendanceDao clientAttendanceDao) {
-        this.clientDao = clientDao;
+    public StandardClientService(ClientAttendanceDao clientAttendanceDao) {
         this.clientAttendanceDao = clientAttendanceDao;
     }
 
-    @Override
     public HashMap<Integer, ClientAttendanceDto> getClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos)
             throws ServiceException {
         HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
@@ -118,14 +116,6 @@ public class StandardClientService implements ClientService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
-    }
-
-    public ClientDao getClientDao() {
-        return this.clientDao;
-    }
-
-    public void setClientDao(ClientDao clientDao) {
-        this.clientDao = clientDao;
     }
 
     public ClientAttendanceDao getClientAttendanceDao() {

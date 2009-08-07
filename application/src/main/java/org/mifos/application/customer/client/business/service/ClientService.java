@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.application.accounts.loan.persistance.ClientDao;
 import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.ServiceException;
 
@@ -42,10 +41,6 @@ public interface ClientService extends Service {
     public void setClientAttendance(List<ClientAttendanceDto> clientAttendanceDtos) throws ServiceException;
 
     public void setClientAttendance(ClientAttendanceDto clientAttendanceDto) throws ServiceException;
-
-    public ClientDao getClientDao();
-
-    public void setClientDao(ClientDao clientDao);
 
     public ClientAttendanceDao getClientAttendanceDao();
 

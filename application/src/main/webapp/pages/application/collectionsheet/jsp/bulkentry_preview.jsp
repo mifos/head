@@ -168,7 +168,7 @@ explanation of the license and how it is applied.
 														<td width="383" class="fontnormal">
 															<mifos:mifoslabel name="bulkEntry.pmnttype" isColonRequired="Yes"/>
 															
-															<c:out value="${BulkEntry.paymentType.paymentTypeValue}" />
+															<c:out value="${BulkEntry.paymentType.displayValue}" />
 															<table>
 																<tr id="BulkEntry.ReceiptId">
 																	<td class="fontnormal">

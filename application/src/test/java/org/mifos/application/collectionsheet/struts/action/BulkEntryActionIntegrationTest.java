@@ -25,6 +25,7 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,7 +44,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryBO;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
@@ -57,8 +58,6 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -67,7 +66,6 @@ import org.mifos.application.office.util.helpers.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
@@ -75,6 +73,9 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
+import org.mifos.application.servicefacade.ListItem;
+import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -110,13 +111,13 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
      * by the first one.
      */
     private static final boolean SUPPLY_ENTERED_AMOUNT_PARAMETERS = false;
-    UserContext userContext;
-    CustomerBO center;
-    CustomerBO group;
-    ClientBO client;
-    AccountBO account;
-    LoanBO groupAccount;
-    LoanBO clientAccount;
+    private UserContext userContext;
+    private CustomerBO center;
+    private CustomerBO group;
+    private ClientBO client;
+    private AccountBO account;
+    private LoanBO groupAccount;
+    private LoanBO clientAccount;
     private SavingsBO centerSavingsAccount;
     private SavingsBO groupSavingsAccount;
     private SavingsBO clientSavingsAccount;
@@ -143,7 +144,6 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         super.tearDown();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -159,7 +159,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
 
     public void testSuccessfulCreate() throws Exception {
         TestDatabase.resetMySQLDatabase();
-        CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         Calendar meetingDateCalendar = new GregorianCalendar();
         int year = meetingDateCalendar.get(Calendar.YEAR);
         int month = meetingDateCalendar.get(Calendar.MONTH);
@@ -241,7 +241,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulPreview() throws Exception {
-        CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         Calendar meetinDateCalendar = new GregorianCalendar();
         int year = meetinDateCalendar.get(Calendar.YEAR);
         int month = meetinDateCalendar.get(Calendar.MONTH);
@@ -278,7 +278,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailurePreview() throws Exception {
-        CollectionSheetEntryBO bulkEntry = getFailureBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = getFailureBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry, request);
         setRequestPathInfo("/collectionsheetaction.do");
@@ -309,6 +309,10 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "loadLoanOfficers");
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
+                createDefaultCollectionSheetDto(), request);
+        
         actionPerform();
         verifyForward("load_success");
         List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils.getAttribute(
@@ -320,15 +324,22 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("Center_Active", meeting);
+        
         setRequestPathInfo("/collectionsheetaction.do");
         addRequestParameter("method", "loadCustomerList");
         addRequestParameter("officeId", "3");
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
+                createDefaultCollectionSheetDto(), request);
+        
         actionPerform();
         verifyForward("load_success");
         List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERSLIST, request);
+        
         assertEquals(1, parentCustomerList.size());
         assertEquals("The value for isCenter Hierarchy Exists", SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request), Constants.YES);
@@ -344,10 +355,17 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter("customerId", String.valueOf(center.getCustomerId().intValue()));
+        
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
+                createDefaultCollectionSheetDto(), request);
+        
+        
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward("load_success");
+        
         if (AccountingRules.isBackDatedTxnAllowed()) {
             assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                     CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.YES);
@@ -389,8 +407,20 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.PAYMENT_TYPES_LIST, masterService
-                .retrieveMasterEntities(PaymentTypeEntity.class, userContext.getLocaleId()), request);
+        CustomerView customerView = new CustomerView();
+        customerView.setCustomerId(center.getCustomerId());
+        customerView.setCustomerSearchId(center.getSearchId());
+        customerView.setCustomerLevelId(center.getCustomerLevel().getId());
+
+        OfficeView officeView = new OfficeView(Short.valueOf("3"), "", Integer.valueOf(-1));
+        PersonnelView personnelView = new PersonnelView(Short.valueOf("3"), "");
+        
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
+                createCollectionSheetDto(customerView, officeView, personnelView), request);
+        
+        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.PAYMENT_TYPES_LIST,
+                Arrays
+                .asList(getPaymentTypeView()), request);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, Constants.YES, request);
 
         setMasterListInSession(center.getCustomerId());
@@ -419,7 +449,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailureGet() throws Exception {
-        CollectionSheetEntryBO bulkEntry = getSuccessfulBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry, request);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, Constants.YES, request);
@@ -432,7 +462,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailurePreviewForEmptyAmount() throws Exception {
-        CollectionSheetEntryBO bulkEntry = getFailureBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = getFailureBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry, request);
         setRequestPathInfo("/collectionsheetaction.do");
@@ -445,7 +475,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailurePreviewForCharAmount() throws Exception {
-        CollectionSheetEntryBO bulkEntry = getFailureBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = getFailureBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.BULKENTRY, bulkEntry, request);
         setRequestPathInfo("/collectionsheetaction.do");
@@ -499,7 +529,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
 
     }
 
-    private CollectionSheetEntryBO getSuccessfulBulkEntry() throws Exception {
+    private CollectionSheetEntryGridDto getSuccessfulBulkEntry() throws Exception {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -525,7 +555,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
+        CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto();
 
         CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
         SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
@@ -563,15 +593,26 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         LoanAccountsProductView subchildView = bulkEntrySubChild.getLoanAccountDetails().get(0);
         subchildView.setDisBursementAmountEntered(clientAccount.getLoanAmount().toString());
         subchildView.setPrdOfferingId(clientLoanAccountView.getPrdOfferingId());
-        List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
-        loanProducts.add(loanOffering1);
-        loanProducts.add(loanOffering2);
-        List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
-        savingsProducts.add(savingsOffering1);
-        savingsProducts.add(savingsOffering2);
-        savingsProducts.add(savingsOffering3);
+        
+        
+        ProductDto loanOfferingDto = new ProductDto(loanOffering1.getPrdOfferingId(), loanOffering1
+                .getPrdOfferingShortName());
+        ProductDto loanOfferingDto2 = new ProductDto(loanOffering2.getPrdOfferingId(), loanOffering2
+                .getPrdOfferingShortName());
+
+        List<ProductDto> loanProducts = Arrays.asList(loanOfferingDto, loanOfferingDto2);
+
+        ProductDto savingsOfferingDto = new ProductDto(savingsOffering1.getPrdOfferingId(), savingsOffering1
+                .getPrdOfferingShortName());
+        ProductDto savingsOfferingDto2 = new ProductDto(savingsOffering2.getPrdOfferingId(), savingsOffering2
+                .getPrdOfferingShortName());
+        ProductDto savingsOfferingDto3 = new ProductDto(savingsOffering3.getPrdOfferingId(), savingsOffering3
+                .getPrdOfferingShortName());
+        List<ProductDto> savingsProducts = Arrays.asList(savingsOfferingDto, savingsOfferingDto2, savingsOfferingDto3);
+        
         bulkEntry.setLoanProducts(loanProducts);
-        bulkEntry.setSavingsProducts(savingsProducts);
+        bulkEntry.setSavingProducts(savingsProducts);
+        
         bulkEntry.setTotalCustomers(3);
         bulkEntry.setBulkEntryParent(bulkEntryParent);
         bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
@@ -583,7 +624,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         return bulkEntry;
     }
 
-    private CollectionSheetEntryBO getFailureBulkEntry() throws Exception {
+    private CollectionSheetEntryGridDto getFailureBulkEntry() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -614,7 +655,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434", client, Short.valueOf("16"), startDate,
                 savingsOffering1);
 
-        CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
+        CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto();
 
         CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
         bulkEntryParent.addSavingsAccountDetail(getSavingsAccountView(centerSavingsAccount));
@@ -636,13 +677,21 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         bulkEntryChild.getLoanAccountDetails().get(0).setPrdOfferingId(groupLoanAccountView.getPrdOfferingId());
         bulkEntrySubChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
         bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(clientLoanAccountView.getPrdOfferingId());
-        List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
-        loanProducts.add(loanOffering1);
-        loanProducts.add(loanOffering2);
-        List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
-        savingsProducts.add(savingsOffering);
+        
+        ProductDto loanOfferingDto = new ProductDto(loanOffering1.getPrdOfferingId(), loanOffering1
+                .getPrdOfferingShortName());
+        ProductDto loanOfferingDto2 = new ProductDto(loanOffering2.getPrdOfferingId(), loanOffering2
+                .getPrdOfferingShortName());
+        
+        List<ProductDto> loanProducts = Arrays.asList(loanOfferingDto, loanOfferingDto2);
+        
+        ProductDto savingsOfferingDto = new ProductDto(savingsOffering.getPrdOfferingId(), savingsOffering
+                .getPrdOfferingShortName());
+        List<ProductDto> savingsProducts = Arrays.asList(savingsOfferingDto);
+        
         bulkEntry.setLoanProducts(loanProducts);
-        bulkEntry.setSavingsProducts(savingsProducts);
+        bulkEntry.setSavingProducts(savingsProducts);
+        
         bulkEntry.setTotalCustomers(3);
         bulkEntry.setBulkEntryParent(bulkEntryParent);
         bulkEntry.setReceiptDate(new java.sql.Date(startDate.getTime()));
@@ -652,6 +701,38 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         bulkEntry.setTransactionDate(new java.sql.Date(startDate.getTime()));
 
         return bulkEntry;
+    }
+    
+    private CollectionSheetEntryFormDto createCollectionSheetDto(CustomerView customerView, OfficeView officeView,
+            PersonnelView personnelView) {
+        
+        List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
+
+        List<OfficeView> activeBranches = Arrays.asList(officeView);
+        List<CustomerView> customerList = Arrays.asList(customerView);
+        List<PersonnelView> loanOfficerList = Arrays.asList(personnelView);
+        final Short reloadFormAutomatically = Constants.YES;
+        final Short backDatedTransactionAllowed = Constants.NO;
+        final Short centerHierarchyExists = Constants.YES;
+        final Date meetingDate = new Date();
+        
+        return new CollectionSheetEntryFormDto(activeBranches, paymentTypesDtoList, loanOfficerList, customerList,
+                reloadFormAutomatically, centerHierarchyExists, backDatedTransactionAllowed, meetingDate);
+    }
+    
+    private CollectionSheetEntryFormDto createDefaultCollectionSheetDto() {
+
+        List<OfficeView> activeBranches = new ArrayList<OfficeView>();
+        List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
+        List<CustomerView> customerList = new ArrayList<CustomerView>();
+        List<PersonnelView> loanOfficerList = new ArrayList<PersonnelView>();
+        final Short reloadFormAutomatically = Constants.YES;
+        final Short backDatedTransactionAllowed = Constants.NO;
+        final Short centerHierarchyExists = Constants.YES;
+        final Date meetingDate = new Date();
+
+        return new CollectionSheetEntryFormDto(activeBranches, paymentTypesDtoList, loanOfficerList, customerList,
+                reloadFormAutomatically, centerHierarchyExists, backDatedTransactionAllowed, meetingDate);
     }
 
     private LoanAccountView getLoanAccountView(LoanBO account) {
@@ -680,8 +761,9 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         customerView.setDisplayName(customer.getDisplayName());
         customerView.setGlobalCustNum(customer.getGlobalCustNum());
         customerView.setOfficeId(customer.getOffice().getOfficeId());
-        if (null != customer.getParentCustomer())
+        if (null != customer.getParentCustomer()) {
             customerView.setParentCustomerId(customer.getParentCustomer().getCustomerId());
+        }
         customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
         customerView.setStatusId(customer.getCustomerStatus().getId());
         return customerView;
@@ -692,9 +774,8 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         return personnelView;
     }
 
-    private PaymentTypeView getPaymentTypeView() {
-        PaymentTypeView paymentTypeView = new PaymentTypeView();
-        paymentTypeView.setPaymentTypeId(Short.valueOf("1"));
+    private ListItem<Short> getPaymentTypeView() {
+        ListItem<Short> paymentTypeView = new ListItem<Short>(Short.valueOf("1"), "displayValue");
         return paymentTypeView;
     }
 

@@ -213,6 +213,11 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
+    /*
+     * TODO - keithw - why is java.sql.date being used/returned throughout the
+     * system? refactor away from this in favour of java.util.Date (use this in
+     * hibernate type info)
+     */
     public Date getLastMeetingDateForCustomer(Integer customerId) throws PersistenceException {
         Date meetingDate = null;
         Date actionDate = new DateTimeService().getCurrentJavaSqlDate();
@@ -221,8 +226,9 @@ public class CustomerPersistence extends Persistence {
         queryParameters.put("ACTION_DATE", actionDate);
         List<AccountActionDateEntity> queryResult = executeNamedQuery(
                 NamedQueryConstants.GET_LAST_MEETINGDATE_FOR_CUSTOMER, queryParameters);
-        if (queryResult != null && queryResult.size() != 0)
+        if (queryResult != null && queryResult.size() != 0) {
             meetingDate = queryResult.get(0).getActionDate();
+        }
         return meetingDate;
 
     }
@@ -426,8 +432,9 @@ public class CustomerPersistence extends Persistence {
 
     private QueryResult idSearch(String searchString, Short officeId, Short userId) throws HibernateSearchException,
             SystemException, PersistenceException {
-        if (!isCustomerExist(searchString))
+        if (!isCustomerExist(searchString)) {
             return null;
+        }
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
         QueryInputs queryInputs = new QueryInputs();
@@ -544,14 +551,18 @@ public class CustomerPersistence extends Persistence {
 
     public List<CustomerBO> getChildren(String parentSearchId, Short parentOfficeId, CustomerLevel childrenLevel,
             ChildrenStateType childrenStateType) throws PersistenceException {
-        if (childrenStateType.equals(ChildrenStateType.OTHER_THAN_CLOSED))
+        if (childrenStateType.equals(ChildrenStateType.OTHER_THAN_CLOSED)) {
             return getChildrenOtherThanClosed(parentSearchId, parentOfficeId, childrenLevel);
-        if (childrenStateType.equals(ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED))
+        }
+        if (childrenStateType.equals(ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)) {
             return getChildrenOtherThanClosedAndCancelled(parentSearchId, parentOfficeId, childrenLevel);
-        if (childrenStateType.equals(ChildrenStateType.ALL))
+        }
+        if (childrenStateType.equals(ChildrenStateType.ALL)) {
             return getAllChildren(parentSearchId, parentOfficeId, childrenLevel);
-        if (childrenStateType.equals(ChildrenStateType.ACTIVE_AND_ONHOLD))
+        }
+        if (childrenStateType.equals(ChildrenStateType.ACTIVE_AND_ONHOLD)) {
             return getActiveAndOnHoldChildren(parentSearchId, parentOfficeId, childrenLevel);
+        }
         return null;
     }
 
@@ -802,8 +813,9 @@ public class CustomerPersistence extends Persistence {
     public void updateLOsForAllChildrenAccounts(Short parentLO, String parentSearchId, Short parentOfficeId)
             throws Exception {
 
-        if ((parentLO == null) || (parentSearchId == null) || (parentOfficeId == null))
+        if ((parentLO == null) || (parentSearchId == null) || (parentOfficeId == null)) {
             return;
+        }
 
         ResultSet customerIds = null;
         Statement statement = null;

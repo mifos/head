@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -39,7 +38,6 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
@@ -118,8 +116,8 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    private List<CustomValueListElement> getCustomValueListElements(String entityName, Short localeId,
-            String entityClass, String column, Session session) {
+    private List<CustomValueListElement> getCustomValueListElements(final String entityName, final Short localeId,
+            final String entityClass, final String column, final Session session) {
         Query queryEntity = session
                 .createQuery("select new org.mifos.application.master.business.CustomValueListElement(" + "mainTable."
                         + column + " ,lookup.lookUpId,lookupvalue.lookUpValue,lookup.lookUpName) "
@@ -137,20 +135,6 @@ public class MasterPersistence extends Persistence {
         List<CustomValueListElement> entityList = queryEntity.list();
 
         return entityList;
-    }
-
-    public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId) throws PersistenceException {
-        try {
-            Session session = getSession();
-            List<PaymentTypeEntity> paymentTypes = session.createQuery(
-                    "from org.mifos.application.master.business.PaymentTypeEntity").list();
-            for (PaymentTypeEntity paymentType : paymentTypes) {
-                paymentType.setLocaleId(localeId);
-            }
-            return paymentTypes;
-        } catch (HibernateException he) {
-            throw new PersistenceException(he);
-        }
     }
 
     public List<MasterDataEntity> retrieveMasterEntities(Class clazz, Short localeId) throws PersistenceException {
@@ -253,13 +237,14 @@ public class MasterPersistence extends Persistence {
                 lookupValueEntityId);
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
         if (lookUpValueLocales != null) {
-            for (LookUpValueLocaleEntity entity : lookUpValueLocales)
+            for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
                 if (entity.getLookUpId().equals(lookupValueEntityId)) {
                     entity.setLookUpValue(newValue);
                     createOrUpdate(entity);
                     MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
                     break;
                 }
+            }
         }
 
     }

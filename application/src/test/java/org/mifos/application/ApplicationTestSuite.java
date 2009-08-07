@@ -49,6 +49,7 @@ import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
 import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
+import org.mifos.application.servicefacade.CollectionSheetServiceFacadeWebTierTest;
 import org.mifos.application.surveys.SurveysTestSuite;
 import org.mifos.config.ConfigTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
@@ -61,7 +62,7 @@ import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { ConfigTestSuite.class,
+@Suite.SuiteClasses( { CollectionSheetServiceFacadeWebTierTest.class, ConfigTestSuite.class,
                        ProductMixTestSuite.class,
                        FastTests.class,
                        SecurityTestSuite.class,

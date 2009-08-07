@@ -37,7 +37,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryBO;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.persistance.service.BulkEntryPersistenceService;
@@ -70,10 +70,10 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class BulkEntryBusinessService implements BusinessService {
-    private MifosLogger logger = MifosLogManager.getLogger(BulkEntryBusinessService.class.getName());
+    private final MifosLogger logger = MifosLogManager.getLogger(BulkEntryBusinessService.class.getName());
 
-    private BulkEntryPersistenceService bulkEntryPersistanceService;
-    private CustomerPersistence customerPersistence;
+    private final BulkEntryPersistenceService bulkEntryPersistanceService;
+    private final CustomerPersistence customerPersistence;
     private ClientService clientService;
 
     public BulkEntryBusinessService() {
@@ -83,7 +83,7 @@ public class BulkEntryBusinessService implements BusinessService {
 
     @Override
     public BusinessObject getBusinessObject(UserContext userContext) {
-        return new CollectionSheetEntryBO(userContext);
+        return new CollectionSheetEntryGridDto(userContext);
     }
 
     public Date getLastMeetingDateForCustomer(Integer customerId) throws ServiceException {
@@ -95,16 +95,21 @@ public class BulkEntryBusinessService implements BusinessService {
     }
 
     public void setData(List<CollectionSheetEntryView> customerViews, Map<Integer, BulkEntrySavingsCache> savingsCache,
-            List<ClientBO> clients, List<String> savingsDepNames, List<String> savingsWithNames,
-            List<String> customerNames, Short personnelId, String receiptId, Short paymentId, Date receiptDate,
-            Date transactionDate, Date meetingDate) {
+            List<String> savingsDepNames, List<String> savingsWithNames,
+            Short personnelId, String receiptId,
+            Short paymentId, Date receiptDate,
+            Date transactionDate) {
+        
         for (CollectionSheetEntryView parent : customerViews) {
+            
             setSavingsDepositDetails(parent.getSavingsAccountDetails(), personnelId, receiptId, paymentId, receiptDate,
                     transactionDate, savingsDepNames, parent.getCustomerDetail().getCustomerLevelId(), parent
                             .getCustomerDetail().getCustomerId(), savingsCache);
+            
             setSavingsWithdrawalsDetails(parent.getSavingsAccountDetails(), personnelId, receiptId, paymentId,
                     receiptDate, transactionDate, savingsWithNames, parent.getCustomerDetail().getCustomerId(),
                     savingsCache);
+            
         }
     }
 
@@ -124,13 +129,15 @@ public class BulkEntryBusinessService implements BusinessService {
                         setSavingsWithdrawalAccountDetails(accountView, personnelId, receiptId, paymentId, receiptDate,
                                 transactionDate, customerId, savings);
                     } catch (ServiceException be) {
-                        if (savings.containsKey(accountView.getAccountId()))
+                        if (savings.containsKey(accountView.getAccountId())) {
                             savings.get(accountView.getAccountId()).setYesNoFlag(YesNoFlag.NO);
+                        }
                         accountNums.add((String) (be.getValues()[0]));
 
                     } catch (Exception e) {
-                        if (savings.containsKey(accountView.getAccountId()))
+                        if (savings.containsKey(accountView.getAccountId())) {
                             savings.get(accountView.getAccountId()).setYesNoFlag(YesNoFlag.NO);
+                        }
                         accountNums.add(accountView.getAccountId().toString());
                     } finally {
                         StaticHibernateUtil.closeSession();
@@ -143,14 +150,17 @@ public class BulkEntryBusinessService implements BusinessService {
     private void setSavingsDepositDetails(List<SavingsAccountView> accountViews, Short personnelId, String receiptId,
             Short paymentId, Date receiptDate, Date transactionDate, List<String> accountNums, Short levelId,
             Integer customerId, Map<Integer, BulkEntrySavingsCache> savings) {
+        
         if (null != accountViews) {
+            
             for (SavingsAccountView accountView : accountViews) {
                 String amount = accountView.getDepositAmountEntered();
                 if (null != amount && !getDoubleValue(amount).equals(0.0)) {
                     if ((!savings.containsKey(accountView.getAccountId()))
                             || (savings.containsKey(accountView.getAccountId()) && (!savings.get(
-                                    accountView.getAccountId()).getYesNoFlag().equals(YesNoFlag.NO))))
+                                    accountView.getAccountId()).getYesNoFlag().equals(YesNoFlag.NO)))) {
                         try {
+                            
                             boolean isCenterGroupIndvAccount = false;
                             if (levelId.equals(CustomerLevel.CENTER.getValue())
                                     || (levelId.equals(CustomerLevel.GROUP.getValue()) && accountView
@@ -158,21 +168,26 @@ public class BulkEntryBusinessService implements BusinessService {
                                                     RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
                                 isCenterGroupIndvAccount = true;
                             }
+                            
                             setSavingsDepositAccountDetails(accountView, personnelId, receiptId, paymentId,
                                     receiptDate, transactionDate, isCenterGroupIndvAccount, customerId, savings);
+                            
                         } catch (ServiceException be) {
-                            if (savings.containsKey(accountView.getAccountId()))
+                            if (savings.containsKey(accountView.getAccountId())) {
                                 savings.get(accountView.getAccountId()).setYesNoFlag(YesNoFlag.NO);
+                            }
                             accountNums.add((String) (be.getValues()[0]));
 
                         } catch (Exception e) {
-                            if (savings.containsKey(accountView.getAccountId()))
+                            if (savings.containsKey(accountView.getAccountId())) {
                                 savings.get(accountView.getAccountId()).setYesNoFlag(YesNoFlag.NO);
+                            }
                             accountNums.add(accountView.getAccountId().toString());
 
                         } finally {
                             StaticHibernateUtil.closeSession();
                         }
+                    }
                 }
             }
         }
@@ -242,9 +257,12 @@ public class BulkEntryBusinessService implements BusinessService {
     public void setSavingsDepositAccountDetails(SavingsAccountView accountView, Short personnelId, String receiptId,
             Short paymentId, Date receiptDate, Date transactionDate, boolean isCenterGroupIndvAccount,
             Integer customerId, Map<Integer, BulkEntrySavingsCache> savings) throws ServiceException {
-        Integer accountId = accountView.getAccountId();
-        PaymentData accountPaymentDataView = getSavingsAccountPaymentData(accountView, customerId, personnelId,
+        
+        final Integer accountId = accountView.getAccountId();
+
+        final PaymentData accountPaymentDataView = getSavingsAccountPaymentData(accountView, customerId, personnelId,
                 receiptId, paymentId, receiptDate, transactionDate, isCenterGroupIndvAccount);
+        
         saveSavingsAccountPayment(accountId, accountPaymentDataView, savings);
     }
 
@@ -365,12 +383,13 @@ public class BulkEntryBusinessService implements BusinessService {
         Double amount = getDoubleValue(loanAccountsProductView.getEnteredAmount());
         if ((amount != null) && (amount > 0.0)) {
             Money enteredAmount;
-            if (loanAccountsProductView.getLoanAccountViews().size() > 1)
+            if (loanAccountsProductView.getLoanAccountViews().size() > 1) {
                 enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), String
                         .valueOf(loanAccountView.getTotalAmountDue()));
-            else
+            } else {
                 enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
                         loanAccountsProductView.getEnteredAmount());
+            }
             PaymentData paymentData = getLoanAccountPaymentData(loanAccountView.getAccountTrxnDetails(), enteredAmount,
                     personnelId, receiptId, paymentId, receiptDate, transactionDate);
             AccountBO account = null;
@@ -397,16 +416,18 @@ public class BulkEntryBusinessService implements BusinessService {
             Map<Integer, BulkEntrySavingsCache> savings) throws ServiceException {
         AccountBO account = null;
         try {
-            if (savings.containsKey(accountId))
+            if (savings.containsKey(accountId)) {
                 account = savings.get(accountId).getAccount();
-            else
+            } else {
                 account = getAccount(accountId, AccountTypes.SAVINGS_ACCOUNT);
+            }
             boolean persist = false;
             account.applyPayment(accountPaymentDataView, persist);
             savings.put(account.getAccountId(), new BulkEntrySavingsCache((SavingsBO) account, YesNoFlag.YES));
         } catch (Exception ae) {
-            if (savings.containsKey(accountId))
+            if (savings.containsKey(accountId)) {
                 savings.get(accountId).setYesNoFlag(YesNoFlag.NO);
+            }
             throw new ServiceException("errors.update", ae, new String[] { account.getGlobalAccountNum() });
         }
     }
@@ -414,12 +435,18 @@ public class BulkEntryBusinessService implements BusinessService {
     private PaymentData getSavingsAccountPaymentData(SavingsAccountView savingsAccountView, Integer customerId,
             Short personnelId, String receiptNum, Short paymentId, Date receiptDate, Date transactionDate,
             boolean isCenterGroupIndvAccount) throws ServiceException {
-        Money enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), savingsAccountView
+        
+        final Money enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
+                savingsAccountView
                 .getDepositAmountEntered());
-        PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, getPersonnel(personnelId), paymentId,
+        final PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, getPersonnel(personnelId),
+                paymentId,
                 transactionDate);
-        if (!isCenterGroupIndvAccount && savingsAccountView.getAccountTrxnDetails().size() > 0)
+        
+        if (!isCenterGroupIndvAccount && savingsAccountView.getAccountTrxnDetails().size() > 0) {
             buildIndividualAccountSavingsPayments(paymentData, savingsAccountView, enteredAmount);
+        }
+        
         paymentData.setCustomer(getCustomer(customerId));
         paymentData.setRecieptDate(receiptDate);
         paymentData.setRecieptNum(receiptNum);
@@ -438,16 +465,18 @@ public class BulkEntryBusinessService implements BusinessService {
             Map<Integer, BulkEntrySavingsCache> savings) throws ServiceException {
         SavingsBO account = null;
         try {
-            if (savings.containsKey(accountId))
+            if (savings.containsKey(accountId)) {
                 account = savings.get(accountId).getAccount();
-            else
+            } else {
                 account = (SavingsBO) getAccount(accountId, AccountTypes.SAVINGS_ACCOUNT);
+            }
             boolean persist = false;
             account.withdraw(accountPaymentDataView, persist);
             savings.put(account.getAccountId(), new BulkEntrySavingsCache(account, YesNoFlag.YES));
         } catch (Exception ae) {
-            if (savings.containsKey(accountId))
+            if (savings.containsKey(accountId)) {
                 savings.get(accountId).setYesNoFlag(YesNoFlag.NO);
+            }
             throw new ServiceException("errors.update", ae, new String[] { account.getGlobalAccountNum() });
         }
     }

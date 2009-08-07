@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-    <span id="page.id" title="BulkEntryData"/>	
+	<span style="display: none" id="page.id" title="BulkEntryData" />
 	<script language="javascript">
 		<!--
 		function fnSubmit(form, buttonSubmit) {
@@ -70,7 +70,7 @@ explanation of the license and how it is applied.
 														<td class="timelineboldgray">
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 																</c:when>
 																<c:otherwise>
@@ -127,7 +127,7 @@ explanation of the license and how it is applied.
 													<tr>
 														<td class="fontnormalbold">
 															<c:choose>
-																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHierarchyExists')==Constants.YES}">
+																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" isColonRequired="Yes"/>
 																</c:when>
 																<c:otherwise>
@@ -163,7 +163,7 @@ explanation of the license and how it is applied.
 															<mifos:mifoslabel name="bulkEntry.pmnttype" isColonRequired="Yes"/>
 															
 
-															<c:out value="${BulkEntry.paymentType.paymentTypeValue}" />
+															<c:out value="${BulkEntry.paymentType.displayValue}" />
 															<table>
 																<tr id="BulkEntry.ReceiptId">
 																	<td class="fontnormal">

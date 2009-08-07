@@ -24,6 +24,7 @@ public interface CollectionSheetEntryConstants {
 
     public String BULKENTRY = "BulkEntry";
     public String BULKENTRYACTIONFORM = "collectionsheetactionform";
+    public String COLLECTION_SHEET_ENTRY_FORM_DTO = "CollectionSheetEntryFormDto";
 
     public String LOADLOANOFFICERS = "loadLoanOfficers";
     public String LOADCUSTOMERS = "loadCustomers";
@@ -117,5 +118,4 @@ public interface CollectionSheetEntryConstants {
     public String DATEOFTRXN = "bulkEntry.dateoftrxn";
     public String LOANOFFICERS = "bulkEntry.loanofficer";
     public String RECEIPTDATE = "bulkEntry.rcptdate";
-
 }

@@ -20,16 +20,12 @@
 
 package org.mifos.application.master.persistence;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
@@ -90,34 +86,6 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         assertEquals(2, genderValues.size());
 
     }
-
-    public void testRetrievePaymentTypes() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        List<PaymentTypeEntity> paymentTypeList = masterPersistence.retrievePaymentTypes(Short.valueOf("1"));
-        assertEquals(3, paymentTypeList.size());
-    }
-
-    public void testRetrievePaymentTypesForInvalidConnection() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            masterPersistence.retrievePaymentTypes(Short.valueOf("1"));
-            fail();
-        } catch (Exception e) {
-            assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    /*
-     * public void testGetSupportedPaymentModes() throws Exception {
-     * MasterPersistence masterPersistence = new MasterPersistence();
-     * List<PaymentTypeEntity> paymentTypeList = masterPersistence
-     * .getSupportedPaymentModes(Short.valueOf("1"), Short .valueOf("1"));
-     * assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentTypeList.size());
-     * }
-     */
 
     public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();

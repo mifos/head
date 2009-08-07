@@ -41,7 +41,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryBO;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -50,18 +50,18 @@ import org.mifos.application.customer.client.business.service.ClientAttendanceDt
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.CustomValueListElement;
-import org.mifos.application.master.business.PaymentTypeView;
-import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.servicefacade.ListItem;
+import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -76,17 +76,17 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         super();
     }
 
-    CustomerBO center;
+    private CustomerBO center;
 
-    CustomerBO group;
+    private CustomerBO group;
 
-    ClientBO client;
+    private ClientBO client;
 
-    AccountBO account;
+    private AccountBO account;
 
-    LoanBO groupAccount;
+    private LoanBO groupAccount;
 
-    LoanBO clientAccount;
+    private LoanBO clientAccount;
 
     private SavingsBO centerSavingsAccount;
 
@@ -119,10 +119,15 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
         SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP",
                 currentDate);
-        List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
-        List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
-        loanProducts.add(loanOffering);
-        savingsProducts.add(savingsOffering);
+        
+        ProductDto loanOfferingDto = new ProductDto(loanOffering.getPrdOfferingId(), loanOffering
+                .getPrdOfferingShortName());
+        ProductDto savingOfferingDto = new ProductDto(savingsOffering.getPrdOfferingId(), savingsOffering
+                .getPrdOfferingShortName());
+        
+        List<ProductDto> loanProducts = Arrays.asList(loanOfferingDto);
+        List<ProductDto> savingsProducts = Arrays.asList(savingOfferingDto);
+        
         UserContext userContext = TestObjectFactory.getContext();
         String result = new BulkEntryDisplayHelper().buildTableHeadings(loanProducts, savingsProducts,
                 userContext.getPreferredLocale()).toString();
@@ -149,15 +154,16 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
     }
 
     public void testBuildForCenterForGetMethod() throws Exception {
-        CollectionSheetEntryBO bulkEntry = createBulkEntry();
+        CollectionSheetEntryGridDto bulkEntry = createBulkEntry();
         StringBuilder builder = new StringBuilder();
 
         // Assert that the extracted attendance types are the ones expected
         final String[] EXPECTED_ATTENDANCE_TYPES = { "P", "A", "AA", "L" };
-        List<CustomValueListElement> attendanceTypesCustomValueList = new MasterDataService().getMasterData(
+        List<CustomValueListElement> attendanceTypesCustomValueList = new MasterPersistence().getCustomValueList(
                 MasterConstants.ATTENDENCETYPES, (short) 1,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements();
+        
         List<String> attendanceTypesLookupValueList = new ArrayList<String>();
         for (CustomValueListElement attendanceTypeCustomValueListElement : attendanceTypesCustomValueList) {
             attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
@@ -167,7 +173,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
 
         new BulkEntryDisplayHelper().buildForCenter(bulkEntry.getBulkEntryParent(), bulkEntry.getLoanProducts(),
-                bulkEntry.getSavingsProducts(), clientAttendance, attendanceTypesCustomValueList, builder, Methods.get
+                bulkEntry.getSavingProducts(), clientAttendance, attendanceTypesCustomValueList, builder, Methods.get
                         .toString(), TestObjectFactory.getContext(), (short) 1);
         String result = builder.toString();
 
@@ -192,7 +198,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, frequency);
     }
 
-    private CollectionSheetEntryBO createBulkEntry() throws Exception {
+    private CollectionSheetEntryGridDto createBulkEntry() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
@@ -216,7 +222,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryBO bulkEntry = new CollectionSheetEntryBO();
+        CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto();
 
         CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
         SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
@@ -253,15 +259,27 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         bulkEntrySubChild.getLoanAccountDetails().get(0).setDisBursementAmountEntered(
                 clientAccount.getLoanAmount().toString());
         bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(clientLoanAccountView.getPrdOfferingId());
-        List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
-        loanProducts.add(loanOffering1);
-        loanProducts.add(loanOffering2);
-        List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
-        savingsProducts.add(savingsOffering1);
-        savingsProducts.add(savingsOffering2);
-        savingsProducts.add(savingsOffering3);
+        
+        
+        ProductDto loanOfferingDto = new ProductDto(loanOffering1.getPrdOfferingId(), loanOffering1
+                .getPrdOfferingShortName());
+        ProductDto loanOfferingDto2 = new ProductDto(loanOffering2.getPrdOfferingId(), loanOffering2
+                .getPrdOfferingShortName());
+
+        List<ProductDto> loanProducts = Arrays.asList(loanOfferingDto, loanOfferingDto2);
+
+        ProductDto savingOfferingDto = new ProductDto(savingsOffering1.getPrdOfferingId(), savingsOffering1
+                .getPrdOfferingShortName());
+        ProductDto savingOfferingDto2 = new ProductDto(savingsOffering2.getPrdOfferingId(), savingsOffering2
+                .getPrdOfferingShortName());
+        ProductDto savingOfferingDto3 = new ProductDto(savingsOffering3.getPrdOfferingId(), savingsOffering3
+                .getPrdOfferingShortName());
+        
+        List<ProductDto> savingsProducts = Arrays.asList(savingOfferingDto, savingOfferingDto2, savingOfferingDto3);
+        
+        
         bulkEntry.setLoanProducts(loanProducts);
-        bulkEntry.setSavingsProducts(savingsProducts);
+        bulkEntry.setSavingProducts(savingsProducts);
         bulkEntry.setTotalCustomers(3);
         bulkEntry.setBulkEntryParent(bulkEntryParent);
         bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
@@ -306,8 +324,9 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         customerView.setDisplayName(customer.getDisplayName());
         customerView.setGlobalCustNum(customer.getGlobalCustNum());
         customerView.setOfficeId(customer.getOffice().getOfficeId());
-        if (null != customer.getParentCustomer())
+        if (null != customer.getParentCustomer()) {
             customerView.setParentCustomerId(customer.getParentCustomer().getCustomerId());
+        }
         customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
         customerView.setStatusId(customer.getCustomerStatus().getId());
         return customerView;
@@ -318,9 +337,8 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return personnelView;
     }
 
-    private PaymentTypeView getPaymentTypeView() {
-        PaymentTypeView paymentTypeView = new PaymentTypeView();
-        paymentTypeView.setPaymentTypeId(Short.valueOf("1"));
+    private ListItem<Short> getPaymentTypeView() {
+        ListItem<Short> paymentTypeView = new ListItem<Short>(Short.valueOf("1"), "displayValue");
         return paymentTypeView;
     }
 

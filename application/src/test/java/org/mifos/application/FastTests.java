@@ -23,7 +23,6 @@ package org.mifos.application;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.accounts.business.AccountBOIntegrationTest;
 import org.mifos.application.collectionsheet.business.BulkEntryAccountFeeActionViewTest;
 import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionFormTest;
@@ -63,7 +62,6 @@ import org.mifos.framework.util.helpers.DateUtilsTest;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 import org.mifos.framework.util.helpers.StringUtilsTest;
-import org.mifos.application.CreateReportTest;
 
 /**
  * Tests which run quickly (say, <10ms per test, or some such, so that the whole

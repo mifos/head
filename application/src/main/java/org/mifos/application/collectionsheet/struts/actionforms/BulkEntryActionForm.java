@@ -22,7 +22,6 @@ package org.mifos.application.collectionsheet.struts.actionforms;
 
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -31,15 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryBO;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.util.helpers.BulkEntryDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -54,10 +47,12 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
+/**
+ *
+ */
 public class BulkEntryActionForm extends BaseActionForm {
 
-    private static final long serialVersionUID = 5558673873893675965L;
-    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
     private String customerId;
     private String loanOfficerId;
     private String paymentId;
@@ -104,14 +99,16 @@ public class BulkEntryActionForm extends BaseActionForm {
 
     public String getReceiptDate() {
         if (StringUtils.isNullOrEmpty(getReceiptDateDD()) || StringUtils.isNullOrEmpty(getReceiptDateMM())
-                || StringUtils.isNullOrEmpty(getReceiptDateYY()))
+                || StringUtils.isNullOrEmpty(getReceiptDateYY())) {
             return null;
+        }
         return getReceiptDateDD() + "/" + getReceiptDateMM() + "/" + getReceiptDateYY();
     }
 
     public void setReceiptDate(String s) {
-        if (!StringUtils.isNullOrEmpty(s))
+        if (!StringUtils.isNullOrEmpty(s)) {
             setReceiptDate(DateUtils.getDate(s));
+        }
     }
 
     public void setReceiptDate(java.util.Date date) {
@@ -160,8 +157,9 @@ public class BulkEntryActionForm extends BaseActionForm {
 
     public String getTransactionDate() {
         if (StringUtils.isNullOrEmpty(transactionDateDD) || StringUtils.isNullOrEmpty(transactionDateMM)
-                || StringUtils.isNullOrEmpty(transactionDateYY))
+                || StringUtils.isNullOrEmpty(transactionDateYY)) {
             return null;
+        }
         return transactionDateDD + "/" + transactionDateMM + "/" + transactionDateYY;
     }
 
@@ -206,78 +204,12 @@ public class BulkEntryActionForm extends BaseActionForm {
     }
 
     @Override
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
-        logger.debug("BulkEntryActionForm.reset");
-        if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(
-                CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
-            try {
-                CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(
-                        CollectionSheetEntryConstants.BULKENTRY, request);
-
-                int customers = bulkEntry.getTotalCustomers();
-                int loanProductsSize = bulkEntry.getLoanProducts().size();
-                int savingsProductSize = bulkEntry.getSavingsProducts().size();
-                BulkEntryDataView bulkEntryDataView = new BulkEntryDataView();
-                String enteredAmount[][] = new String[customers + 1][loanProductsSize];
-                String disbursalAmount[][] = new String[customers + 1][loanProductsSize];
-                String depositAmountEntered[][] = new String[customers + 1][savingsProductSize];
-                String withdrawalAmountEntered[][] = new String[customers + 1][savingsProductSize];
-                String attendance[] = new String[customers + 1];
-                String customerAccountAmountEntered[] = new String[customers + 1];
-
-                for (int rowIndex = 0; rowIndex <= customers; rowIndex++) {
-                    attendance[rowIndex] = request.getParameter("attendanceSelected[" + rowIndex + "]");
-                    for (int columnIndex = 0; columnIndex < loanProductsSize; columnIndex++) {
-                        enteredAmount[rowIndex][columnIndex] = request.getParameter("enteredAmount[" + rowIndex + "]["
-                                + columnIndex + "]");
-                        disbursalAmount[rowIndex][columnIndex] = request.getParameter("enteredAmount[" + rowIndex
-                                + "][" + (loanProductsSize + savingsProductSize + columnIndex) + "]");
-
-                    }
-                    for (int columnIndex = 0; columnIndex < savingsProductSize; columnIndex++) {
-                        depositAmountEntered[rowIndex][columnIndex] = request.getParameter("depositAmountEntered["
-                                + rowIndex + "][" + (loanProductsSize + columnIndex) + "]");
-                        withdrawalAmountEntered[rowIndex][columnIndex] = request
-                                .getParameter("withDrawalAmountEntered[" + rowIndex + "]["
-                                        + ((2 * loanProductsSize) + savingsProductSize + columnIndex) + "]");
-                    }
-                    customerAccountAmountEntered[rowIndex] = request.getParameter("customerAccountAmountEntered["
-                            + rowIndex + "][" + (2 * (loanProductsSize + savingsProductSize)) + "]");
-                }
-                bulkEntryDataView.setDisbursementAmountEntered(disbursalAmount);
-                bulkEntryDataView.setLoanAmountEntered(enteredAmount);
-
-                bulkEntryDataView.setWithDrawalAmountEntered(withdrawalAmountEntered);
-                bulkEntryDataView.setDepositAmountEntered(depositAmountEntered);
-                bulkEntryDataView.setCustomerAccountAmountEntered(customerAccountAmountEntered);
-                bulkEntryDataView.setAttendance(attendance);
-                bulkEntry.setBulkEntryDataView(bulkEntryDataView);
-            } catch (PageExpiredException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         logger.debug("BulkEntryActionForm.validate");
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         ActionErrors errors = new ActionErrors();
-        UserContext userContext = getUserContext(request);
-        Locale locale = userContext.getPreferredLocale();
+        
         if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(
-                CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            try {
-                CollectionSheetEntryBO bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(
-                        CollectionSheetEntryConstants.BULKENTRY, request);
-                return validatePopulatedData(bulkEntry.getBulkEntryParent(), errors, locale);
-            } catch (PageExpiredException e) {
-                errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
-                        ExceptionConstants.PAGEEXPIREDEXCEPTION));
-            }
-
-        } else if (request.getParameter(CollectionSheetEntryConstants.METHOD).equalsIgnoreCase(
                 CollectionSheetEntryConstants.GETMETHOD)) {
             java.sql.Date meetingDate = null;
             try {
@@ -294,92 +226,6 @@ public class BulkEntryActionForm extends BaseActionForm {
                 errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
                         ExceptionConstants.PAGEEXPIREDEXCEPTION));
             }
-        }
-        return errors;
-    }
-
-    private ActionErrors validatePopulatedData(CollectionSheetEntryView parent, ActionErrors errors, Locale locale) {
-        logger.debug("validatePopulatedData");
-        List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
-
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
-        String acCollections = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
-        if (null != children) {
-            for (CollectionSheetEntryView collectionSheetEntryView : children) {
-                validatePopulatedData(collectionSheetEntryView, errors, locale);
-            }
-        }
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
-            if (accountView.isDisburseLoanAccountPresent() || accountView.getLoanAccountViews().size() > 1) {
-                Double enteredAmount = 0.0;
-                if (null != accountView.getEnteredAmount() && accountView.isValidAmountEntered())
-                    enteredAmount = getDoubleValue(accountView.getEnteredAmount());
-                Double enteredDisbursalAmount = 0.0;
-                if (null != accountView.getDisBursementAmountEntered() && accountView.isValidDisbursementAmount())
-                    enteredDisbursalAmount = getDoubleValue(accountView.getDisBursementAmountEntered());
-                Double totalDueAmount = accountView.getTotalAmountDue();
-                Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
-                if (totalDueAmount.doubleValue() <= 0.0 && totalDisburtialAmount > 0.0) {
-                    if (!accountView.isValidDisbursementAmount()
-                            || (!enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredDisbursalAmount
-                                    .equals(0.0)))
-                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
-                                        .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-                }
-                if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
-                    if (!accountView.isValidAmountEntered()
-                            || (!enteredAmount.equals(totalDueAmount) && !enteredAmount.equals(0.0)))
-                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
-                                        .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-                }
-                if (totalDueAmount.doubleValue() > 0.0 && totalDisburtialAmount > 0.0) {
-                    if (!accountView.isValidAmountEntered()
-                            || !accountView.isValidDisbursementAmount()
-                            || (accountView.getEnteredAmount() == null)
-                            || (accountView.getDisBursementAmountEntered() == null)
-                            || (enteredAmount.equals(0.0) && !enteredDisbursalAmount.equals(0.0))
-                            || (enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0))
-                            || (enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredAmount
-                                    .equals(totalDueAmount))
-                            || (enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
-                                    .equals(totalDisburtialAmount))
-                            || (!enteredAmount.equals(totalDueAmount)
-                                    && !enteredDisbursalAmount.equals(totalDisburtialAmount)
-                                    && !enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)))
-                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
-                                        .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-                }
-                if (totalDisburtialAmount <= 0.0 && totalDueAmount <= 0.0) {
-                    if (!accountView.isValidAmountEntered() || !accountView.isValidDisbursementAmount()
-                            || !enteredDisbursalAmount.equals(0.0) || !enteredAmount.equals(0.0))
-                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
-                                        .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-                }
-            }
-        }
-        for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
-            if (!savingsAccountView.isValidDepositAmountEntered()
-                    || !savingsAccountView.isValidWithDrawalAmountEntered()) {
-                errors.add(CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
-                        CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView.getSavingsOffering()
-                                .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-            }
-        }
-        CustomerAccountView customerAccountView = parent.getCustomerAccountDetails();
-        Double customerAccountAmountEntered = 0.0;
-        if (null != customerAccountView.getCustomerAccountAmountEntered()
-                && customerAccountView.isValidCustomerAccountAmountEntered())
-            customerAccountAmountEntered = getDoubleValue(customerAccountView.getCustomerAccountAmountEntered());
-        if (!customerAccountView.isValidCustomerAccountAmountEntered()
-                || ((!customerAccountAmountEntered.equals(customerAccountView.getTotalAmountDue()
-                        .getAmountDoubleValue())) && (!customerAccountAmountEntered.equals(0.0)))) {
-            errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                    CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, acCollections, parent.getCustomerDetail()
-                            .getDisplayName()));
         }
         return errors;
     }
@@ -450,5 +296,4 @@ public class BulkEntryActionForm extends BaseActionForm {
 
         return errors;
     }
-
 }

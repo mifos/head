@@ -24,7 +24,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.application.collectionsheet.business.BulkEntryViewIntegrationTest;
 import org.mifos.application.collectionsheet.business.CollSheetBOIntegrationTest;
 import org.mifos.application.collectionsheet.business.CollSheetCustBOIntegrationTest;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntityIntegrationTest;
@@ -52,7 +51,6 @@ public class CollectionSheetTestSuite extends TestSuite {
         testSuite.addTestSuite(BulkEntryPersistenceServiceIntegrationTest.class);
         testSuite.addTestSuite(BulkEntryBusinessServiceIntegrationTest.class);
         testSuite.addTestSuite(BulkEntryActionIntegrationTest.class);
-        testSuite.addTestSuite(BulkEntryViewIntegrationTest.class);
         testSuite.addTestSuite(BulkEntryDisplayHelperIntegrationTest.class);
 
         return testSuite;

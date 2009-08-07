@@ -29,13 +29,13 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryBO;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.master.business.CustomValueListElement;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -58,16 +58,16 @@ public class BulkEntryTag extends BodyTagSupport {
         JspWriter out = pageContext.getOut();
 
         StringBuilder builder = new StringBuilder();
-        CollectionSheetEntryBO bulkEntry = null;
+        CollectionSheetEntryGridDto bulkEntry = null;
         try {
-            bulkEntry = (CollectionSheetEntryBO) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY,
+            bulkEntry = (CollectionSheetEntryGridDto) SessionUtils.getAttribute(CollectionSheetEntryConstants.BULKENTRY,
                     request);
         } catch (PageExpiredException e) {
             logger.error("Page expired getting BulkEntryBO.");
         }
         if (null != bulkEntry) {
-            List<PrdOfferingBO> loanProducts = bulkEntry.getLoanProducts();
-            List<PrdOfferingBO> savingsProducts = bulkEntry.getSavingsProducts();
+            List<ProductDto> loanProducts = bulkEntry.getLoanProducts();
+            List<ProductDto> savingsProducts = bulkEntry.getSavingProducts();
             try {
                 List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils.getAttribute(
                         CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, request);
@@ -90,12 +90,13 @@ public class BulkEntryTag extends BodyTagSupport {
         return SKIP_BODY;
     }
 
-    private void generateTagData(CollectionSheetEntryBO bulkEntry, List<PrdOfferingBO> loanProducts,
-            List<PrdOfferingBO> savingsProducts, HashMap<Integer, ClientAttendanceDto> clientAttendance,
+    private void generateTagData(CollectionSheetEntryGridDto bulkEntry, List<ProductDto> loanProducts,
+            List<ProductDto> savingsProducts, HashMap<Integer, ClientAttendanceDto> clientAttendance,
             List<CustomValueListElement> custAttTypes, String method, StringBuilder builder)
             throws ApplicationException, SystemException, JspException {
         UserContext userContext = ((UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT));
         BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
+        
         builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts, savingsProducts, userContext
                 .getPreferredLocale()));
         CollectionSheetEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
