@@ -29,6 +29,10 @@ public class CreateOfficeEnterDataPage extends MifosPage {
 	public CreateOfficeEnterDataPage() {
 		super();
 	}
+	
+    public void verifyPage() {
+        verifyPage("CreateNewOffice");
+    }
 
 	/**
 	 * @param selenium
@@ -37,131 +41,10 @@ public class CreateOfficeEnterDataPage extends MifosPage {
 		super(selenium);
 	}
     
-    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
-    public static class SubmitFormParameters {
-        public static final String REGIONAL_OFFICE = "Regional Office";
-        public static final String DIVISIONAL_OFFICE = "Divisional Office";
-        public static final String AREA_OFFICE = "Area Office";
-        public static final String BRANCH_OFFICE = "Branch Office";
-        
-        String officeName;
-        String shortName;
-        String officeType;
-        String parentOffice;
-        String address1;
-        String address2;
-        String address3;
-        String state;
-        String country;
-        String postalCode;
-        String phoneNumber;        
-        
-        public String getOfficeName() {
-            return this.officeName;
-        }
-        
-        public void setOfficeName(String officeName) {
-            this.officeName = officeName;
-        }
-        
-        public String getShortName() {
-            return this.shortName;
-        }
-        
-        public void setShortName(String shortName) {
-            this.shortName = shortName;
-        }
-        
-        public String getOfficeType() {
-            return this.officeType;
-        }
-        
-        public void setOfficeType(String officeType) {
-            this.officeType = officeType;
-        }
-        
-        public String getParentOffice() {
-            return this.parentOffice;
-        }
-        
-        public void setParentOffice(String parentOffice) {
-            this.parentOffice = parentOffice;
-        }
-        
-        public String getAddress1() {
-            return this.address1;
-        }
-        
-        public void setAddress1(String address1) {
-            this.address1 = address1;
-        }
-        
-        public String getAddress2() {
-            return this.address2;
-        }
-        
-        public void setAddress2(String address2) {
-            this.address2 = address2;
-        }
-        
-        public String getAddress3() {
-            return this.address3;
-        }
-        
-        public void setAddress3(String address3) {
-            this.address3 = address3;
-        }
-        
-        public String getState() {
-            return this.state;
-        }
-        
-        public void setState(String state) {
-            this.state = state;
-        }
-        
-        public String getCountry() {
-            return this.country;
-        }
-        
-        public void setCountry(String country) {
-            this.country = country;
-        }
-        
-        public String getPostalCode() {
-            return this.postalCode;
-        }
-        
-        public void setPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-        }
-        
-        public String getPhoneNumber() {
-            return this.phoneNumber;
-        }
-        
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
-        
-        /**
-         * Maps the office type to a value that's used to choose the right element in the drop-down box.
-         */
-        @SuppressWarnings("PMD.OnlyOneReturn")
-        public int getOfficeTypeValue() {
-            if (REGIONAL_OFFICE.equals(officeType)) { return 2; }
-            if (DIVISIONAL_OFFICE.equals(officeType)) { return 3; }
-            if (AREA_OFFICE.equals(officeType)) { return 4; }
-            if (BRANCH_OFFICE.equals(officeType)) { return 5; }
-
-            return -1;
-        }
-    }
-    
-    public CreateOfficePreviewDataPage submitAndGotoCreateOfficePreviewDataPage(SubmitFormParameters parameters) {
+    public CreateOfficePreviewDataPage submitAndGotoCreateOfficePreviewDataPage(OfficeParameters parameters) {
         typeTextIfNotEmpty("CreateNewOffice.input.officeName", parameters.getOfficeName());
         typeTextIfNotEmpty("CreateNewOffice.input.shortName", parameters.getShortName());
-        selenium.select("officeLevel", "value=" + parameters.getOfficeTypeValue());
+        selectValueIfNotZero("officeLevel", parameters.getOfficeTypeValue());
         waitForPageToLoad(); // loading the possible parent offices
         selectIfNotEmpty("parentOfficeId", parameters.getParentOffice());
         typeTextIfNotEmpty("CreateNewOffice.input.address1", parameters.getAddress1());
@@ -174,5 +57,5 @@ public class CreateOfficeEnterDataPage extends MifosPage {
         selenium.click("CreateNewOffice.button.preview");
         waitForPageToLoad();
         return new CreateOfficePreviewDataPage(selenium);
-    }    
+    }
 }

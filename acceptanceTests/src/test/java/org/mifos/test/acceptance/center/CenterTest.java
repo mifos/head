@@ -20,22 +20,21 @@
  
 package org.mifos.test.acceptance.center;
 
-import org.mifos.test.acceptance.framework.AppLauncher;
+
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
-import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterChooseOfficePage;
 import org.mifos.test.acceptance.framework.center.CreateCenterConfirmationPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterEnterDataPage;
 import org.mifos.test.acceptance.framework.center.CreateCenterPreviewDataPage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
-import org.mifos.test.acceptance.framework.user.CreateUserParameters;
-import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.mifos.test.acceptance.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -44,14 +43,20 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"smoke","center","acceptance","ui"})
 public class CenterTest extends UiTestCaseBase {
-
-	private AppLauncher appLauncher; 
+    @Autowired
+    private DriverManagerDataSource dataSource;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
+    
+	private NavigationHelper navigationHelper; 
 	
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
 	@BeforeMethod
 	public void setUp() throws Exception {
 		super.setUp();
-		appLauncher = new AppLauncher(selenium);
+		navigationHelper = new NavigationHelper(selenium);
 		new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
 	}
 
@@ -60,30 +65,16 @@ public class CenterTest extends UiTestCaseBase {
 		(new MifosPage(selenium)).logout();
 	}
 	
-	public void createCenterTest() {   
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        homePage.verifyPage();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        adminPage.verifyPage();
-	    
-        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
-        
-        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-
-        CreateUserParameters userFormParameters = adminPage2.getAdminUserParameters();
-                
-        UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, userFormParameters, officeName);
-        
-	    ClientsAndAccountsHomepage clientsAccountsPage = userDetailsPage.navigateToClientsAndAccountsHomepage();
-	    
-	    String centerName = "Bangalore_Center" + StringUtil.getRandomString(4);
-	    String loanOfficer = userFormParameters.getFirstName() + " " + userFormParameters.getLastName();
-        
-        createCenter(clientsAccountsPage, getCenterParameters(centerName, loanOfficer), officeName);
-
+	@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+	public void createCenterTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+    
+        createCenter(getCenterParameters("Fantastico", "Joe1233171679953 Guy1233171679953"), "MyOffice1233171674227");
 	}
 	
-	public CenterViewDetailsPage createCenter(ClientsAndAccountsHomepage clientsAccountsPage, CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+	public CenterViewDetailsPage createCenter(CreateCenterEnterDataPage.SubmitFormParameters formParameters, String officeName) {
+	    ClientsAndAccountsHomepage clientsAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
+	    
         CreateCenterChooseOfficePage chooseOfficePage = clientsAccountsPage.navigateToCreateNewCenterPage();
         CreateCenterEnterDataPage enterDataPage = chooseOfficePage.selectOffice(officeName);
 	    CreateCenterPreviewDataPage centerPreviewDataPage = enterDataPage.submitAndGotoCreateCenterPreviewDataPage(formParameters);

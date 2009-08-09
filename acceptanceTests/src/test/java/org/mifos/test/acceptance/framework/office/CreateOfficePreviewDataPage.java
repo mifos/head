@@ -30,6 +30,10 @@ public class CreateOfficePreviewDataPage extends MifosPage {
 		super();
 	}
 
+    public void verifyPage() {
+        verifyPage("preview_new_office");
+    }
+
 	/**
 	 * @param selenium
 	 */

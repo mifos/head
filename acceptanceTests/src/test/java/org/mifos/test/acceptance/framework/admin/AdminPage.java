@@ -31,10 +31,7 @@ import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPrevi
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
-import org.mifos.test.acceptance.framework.office.CreateOfficeConfirmationPage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
-import org.mifos.test.acceptance.framework.office.CreateOfficePreviewDataPage;
-import org.mifos.test.acceptance.framework.office.OfficeViewDetailsPage;
 import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
 import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
@@ -125,37 +122,9 @@ public class AdminPage extends MifosPage {
         verifyPage("admin");
         return this;
     }
-    
-    public AdminPage createOffice(AdminPage adminPage, String officeName) {
-        CreateOfficeEnterDataPage officeEnterDataPage = adminPage.navigateToCreateOfficeEnterDataPage();
-        
-        CreateOfficeEnterDataPage.SubmitFormParameters formParameters = new CreateOfficeEnterDataPage.SubmitFormParameters();
-        formParameters.setOfficeName(officeName);
-        formParameters.setShortName(StringUtil.getRandomString(4));
-        formParameters.setOfficeType("Branch Office");
-        formParameters.setParentOffice("regexp:Mifos\\s+HO");
-        formParameters.setAddress1("Bangalore");
-        formParameters.setAddress3("EGL");
-        formParameters.setState("karnataka");
-        formParameters.setCountry("India");
-        formParameters.setPostalCode("560071");
-        formParameters.setPhoneNumber("918025003632");
-        
-        CreateOfficePreviewDataPage previewDataPage = officeEnterDataPage.submitAndGotoCreateOfficePreviewDataPage(formParameters);
-        CreateOfficeConfirmationPage confirmationPage = previewDataPage.submit();
-
-        confirmationPage.verifyPage();
-        OfficeViewDetailsPage detailsPage = confirmationPage.navigateToOfficeViewDetailsPage();
-        Assert.assertEquals(detailsPage.getOfficeName(), formParameters.getOfficeName());
-        Assert.assertEquals(detailsPage.getShortName(), formParameters.getShortName());
-        //Assert.assertEquals(detailsPage.getOfficeType(), formParameters.getOfficeType());
-        // we can't have this since "Branch Office" won't be "Branch Office" in every translation.
-        
-        return detailsPage.navigateToAdminPage();
-    }
   
-    public UserViewDetailsPage createUser(AdminPage adminPage, CreateUserParameters formParameters, String officeName) {
-        ChooseOfficePage chooseOfficePage = adminPage.navigateToCreateUserPage();
+    public UserViewDetailsPage createUser(CreateUserParameters formParameters, String officeName) {
+        ChooseOfficePage chooseOfficePage = this.navigateToCreateUserPage();
         CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
 
         CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(formParameters);

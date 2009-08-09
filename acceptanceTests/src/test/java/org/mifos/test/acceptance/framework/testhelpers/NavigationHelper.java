@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.testhelpers;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.center.CenterViewDetailsPage;
@@ -93,5 +94,13 @@ public class NavigationHelper {
         groupDetailsPage.verifyPage();
         
         return groupDetailsPage;
+    }
+
+    public ClientsAndAccountsHomepage navigateToClientsAndAccountsPage() {
+        HomePage homePage = navigateToHomePage();
+        ClientsAndAccountsHomepage clientsAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        clientsAccountsPage.verifyPage();
+        
+        return clientsAccountsPage;
     }
 }

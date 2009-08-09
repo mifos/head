@@ -31,6 +31,10 @@ public class OfficeViewDetailsPage extends MifosPage {
         super(selenium);
     }
     
+    public void verifyPage() {
+        verifyPage("viewOfficeDetails");
+    }
+    
     public String getOfficeName() {
         return selenium.getText("viewOfficeDetails.text.officeName");
     }

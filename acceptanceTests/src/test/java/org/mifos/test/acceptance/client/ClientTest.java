@@ -20,22 +20,17 @@
  
 package org.mifos.test.acceptance.client;
 
-import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.DbUnitUtilities;
-import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPage;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIParameters;
 import org.mifos.test.acceptance.framework.client.ClientEditMFIPreviewPage;
 import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
 import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
-import org.mifos.test.acceptance.framework.user.CreateUserParameters;
-import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
-import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -48,7 +43,7 @@ import org.testng.annotations.Test;
 
 public class ClientTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
+    private NavigationHelper navigationHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -62,27 +57,23 @@ public class ClientTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
+        navigationHelper = new NavigationHelper(selenium);
     }
 
     @AfterMethod
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createClientAndChangeStatusTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, 
+                "acceptance_small_003_dbunit.xml.zip",
+                dataSource, selenium);   
+        
+        ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
 
-    public void createClientAndChangeStatusTest() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-
-        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
-        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-
-        CreateUserParameters userParameters = adminPage2.getAdminUserParameters();
-        UserViewDetailsPage userDetailsPage = adminPage.createUser(adminPage2, userParameters, officeName);
-
-        ClientsAndAccountsHomepage clientsAndAccountsPage = userDetailsPage.navigateToClientsAndAccountsHomepage();
-        String loanOfficer = userParameters.getFirstName() + " " + userParameters.getLastName();
-        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClient(loanOfficer, officeName);
+        ClientViewDetailsPage clientDetailsPage = clientsAndAccountsPage.createClient("Joe1233171679953 Guy1233171679953", "MyOffice1233171674227");
         
         clientsAndAccountsPage.changeCustomerStatus(clientDetailsPage);
     }
@@ -93,8 +84,7 @@ public class ClientTest extends UiTestCaseBase {
                 "acceptance_small_003_dbunit.xml.zip",
                 dataSource, selenium);        
 
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        ClientsAndAccountsHomepage clientsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
+        ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
 
         ClientSearchResultsPage searchResultsPage = clientsPage.searchForClient("Stu1232993852651");
         searchResultsPage.verifyPage();

@@ -20,18 +20,22 @@
  
 package org.mifos.test.acceptance.personnel;
 
-import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
 import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.mifos.test.acceptance.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -42,14 +46,21 @@ import org.testng.Assert;
 @Test(sequential = true, groups = {"smoke","personnel","acceptance","ui"})
 public class PersonnelTest extends UiTestCaseBase {
 
-    private AppLauncher appLauncher;
+    private NavigationHelper navigationHelper;
 
+    @Autowired
+    private DriverManagerDataSource dataSource;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
+    
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        appLauncher = new AppLauncher(selenium);
+        navigationHelper = new NavigationHelper(selenium);
     }
 
     @AfterMethod
@@ -57,22 +68,21 @@ public class PersonnelTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    public void createUserTest() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
-        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-        adminPage2.createUser(adminPage2, adminPage2.getAdminUserParameters(), officeName);
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createUserTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        adminPage.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void editUserTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
-    public void editUserTest() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        AdminPage adminPage = homePage.navigateToAdminPage();
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
 
-        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
-        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-
-        UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, adminPage2.getAdminUserParameters(), officeName);
+        UserViewDetailsPage userDetailsPage = adminPage.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
 
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
@@ -85,24 +95,22 @@ public class PersonnelTest extends UiTestCaseBase {
         UserViewDetailsPage userDetailsPage2 = editPreviewDataPage.submit();
         userDetailsPage2.verifyModifiedNameAndEmail(formParameters);
     }
+    
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createUserWithNonAdminRoleTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
-    public void createUserWithNonAdminRoleTest() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
-        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
-        adminPage.createUser(adminPage2, adminPage.getNonAdminUserParameters(), officeName);
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        adminPage.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
     }
     
-    public void changePasswordTest() {
-        HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
-        AdminPage adminPage = homePage.navigateToAdminPage();
-
-        String officeName = "Bangalore Branch " + StringUtil.getRandomString(8);
-        AdminPage adminPage2 = adminPage.createOffice(adminPage, officeName);
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void changePasswordTest() throws Exception {
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         
-        CreateUserParameters userParameters = adminPage2.getAdminUserParameters();
-        UserViewDetailsPage userDetailsPage = adminPage2.createUser(adminPage2, userParameters, officeName);        
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        CreateUserParameters userParameters = adminPage.getAdminUserParameters();
+        UserViewDetailsPage userDetailsPage = adminPage.createUser(userParameters, "MyOffice1233171674227");        
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
         CreateUserParameters passwordParameters = new CreateUserParameters();
