@@ -54,7 +54,7 @@ explanation of the license and how it is applied.
 								</fmt:message>:</span>
 								<c:out value="${requestScope.savingsprdglobalofferingnum}" />
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
-								<html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${requestScope.savingsId}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${requestScope.savingsId}&randomNUm=${sessionScope.randomNUm}" styleId="CreateSavingsProductConfirmation.link.viewSavingsDetails">
 									<fmt:message key="product.viewSavingsDetails">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>

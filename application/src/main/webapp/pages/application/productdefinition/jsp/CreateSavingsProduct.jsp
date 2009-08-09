@@ -150,7 +150,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.prodinstname" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="prdOfferingName" />
+									<mifos:mifosalphanumtext property="prdOfferingName" styleId="CreateSavingsProduct.input.prdOfferingName" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -158,7 +158,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.shortname" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="prdOfferingShortName" maxlength="4" size="4" />
+									<mifos:mifosalphanumtext property="prdOfferingShortName" maxlength="4" size="4" styleId="CreateSavingsProduct.input.prdOfferingShortName" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -176,7 +176,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.prodcat" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:select property="prdCategory">
+									<mifos:select property="prdCategory" styleId="CreateSavingsProduct.input.prdCategory">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
 											<html-el:option value="${category.productCategoryID}">${category.productCategoryName}</html-el:option>
 										</c:forEach>
@@ -205,7 +205,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel mandatory="yes" name="product.applfor" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:select property="prdApplicableMaster" onchange="fnCheckAppliesTo();">
+									<mifos:select property="prdApplicableMaster" onchange="fnCheckAppliesTo();" styleId="CreateSavingsProduct.input.applfor">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsApplForList')}" var="prdAppl">
 											<html-el:option value="${prdAppl.id}">${prdAppl.name}</html-el:option>
 										</c:forEach>
@@ -227,7 +227,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="product.typeofdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
-									<mifos:select property="savingsType" onchange="fnCheckRecMand();">
+									<mifos:select property="savingsType" onchange="fnCheckRecMand();" styleId="CreateSavingsProduct.input.typeofdep">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsTypesList')}" var="type">
 											<html-el:option value="${type.id}">${type.name}</html-el:option>
 										</c:forEach>
@@ -240,7 +240,7 @@ explanation of the license and how it is applied.
                                                                     <div id="mandamnt"><mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/></div>
 								</td>
 								<td align="left">
-									<mifos:mifosdecimalinput property="recommendedAmount" />
+									<mifos:mifosdecimalinput property="recommendedAmount" styleId="CreateSavingsProduct.input.recommendedAmount"/>
 								</td>
 							</tr>
 							<script type="text/javascript">
@@ -290,7 +290,7 @@ explanation of the license and how it is applied.
 									</fmt:message>:
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosdecimalinput property="interestRate" max="100" min="0" decimalFmt="10.5" />
+									<mifos:mifosdecimalinput property="interestRate" max="100" min="0" decimalFmt="10.5" styleId="CreateSavingsProduct.input.interestRate"/>
 									<mifos:mifoslabel name="product.savingsintrateperc" bundle="ProductDefUIResources" />
 								</td>
 							</tr>
@@ -303,7 +303,7 @@ explanation of the license and how it is applied.
 										</fmt:message>:
 								</td>
 								<td valign="top">
-									<mifos:select property="interestCalcType">
+									<mifos:select property="interestCalcType" styleId="CreateSavingsProduct.input.balUsedForCalc">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="intCalc">
 											<html-el:option value="${intCalc.id}">${intCalc.name}</html-el:option>
 										</c:forEach>
@@ -318,8 +318,8 @@ explanation of the license and how it is applied.
 									</fmt:message>:
 								</td>
 								<td valign="top">
-									<mifos:mifosnumbertext property="timeForInterestCacl" size="3" maxlength="3" />
-									<html-el:select property="recurTypeFortimeForInterestCacl">
+									<mifos:mifosnumbertext property="timeForInterestCacl" size="3" maxlength="3" styleId="CreateSavingsProduct.input.timeForInterestCalc" />
+									<html-el:select property="recurTypeFortimeForInterestCacl" styleId="CreateSavingsProduct.input.typeOfTimeForInterestCalc">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}" var="recType">
 											<html-el:option value="${recType.recurrenceId}">${recType.recurrenceName}</html-el:option>
 										</c:forEach>
@@ -334,7 +334,7 @@ explanation of the license and how it is applied.
 									</fmt:message>:
 								</td>
 								<td valign="top">
-									<mifos:mifosnumbertext property="freqOfInterest" size="3" maxlength="3" />
+									<mifos:mifosnumbertext property="freqOfInterest" size="3" maxlength="3" styleId="CreateSavingsProduct.input.freqOfInterest"/>
 									<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
 								</td>
 							</tr>
@@ -363,7 +363,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel mandatory="yes" name="product.glcodedep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
-									<mifos:select property="depositGLCode">
+									<mifos:select property="depositGLCode" styleId="CreateSavingsProduct.input.depositGLCode">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'depositGLCodes')}" var="glCodes">
 											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
 										</c:forEach>
@@ -373,13 +373,10 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" valign="top" style="padding-top:8px;">
-									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-									<fmt:message key="product.glCodeFor">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources"/></fmt:param>
-									</fmt:message>:
+									<mifos:mifoslabel mandatory="yes" name="product.glcodeint" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:select property="interestGLCode">
+									<mifos:select property="interestGLCode" styleId="CreateSavingsProduct.input.interestGLCode">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}" var="glCodes">
 											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
 										</c:forEach>
@@ -398,7 +395,7 @@ explanation of the license and how it is applied.
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn">
+									<html-el:submit styleClass="buttn" styleId="CreateSavingsProduct.button.preview">
 										<mifos:mifoslabel name="product.preview" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;

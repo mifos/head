@@ -265,7 +265,7 @@ explanation of the license and how it is applied.
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn" property="submitBut">
+									<html-el:submit styleClass="buttn" property="submitBut" styleId="CreateSavingsProductPreview.button.submit">
 										<mifos:mifoslabel name="product.butsubmit" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;
