@@ -32,6 +32,7 @@ import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
+//import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
 import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
@@ -48,6 +49,7 @@ import com.thoughtworks.selenium.Selenium;
  * that will be navigated to.
  *
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class AdminPage extends MifosPage {
 
 	public AdminPage() {
@@ -209,8 +211,12 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new ViewFundsPage(selenium);
     }
-           
-
+    
+//    public DefineNewSavingsProductPage navigateToDefineSavingsProduct() {
+//        selenium.click("admin.link.defineNewSavingsProduct");
+//        waitForPageToLoad();
+//        return new DefineNewSavingsProductPage(selenium);
+//    }
     public CreateHolidayEntryPage navigateToDefineHolidayPage() {
         selenium.click("admin.link.defineNewHoliday");
         waitForPageToLoad();
