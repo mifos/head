@@ -31,7 +31,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-	<span style="display: none" id="page.id" title="BulkEntryData" />
+	<span id="page.id" title="BulkEntryData"></span>
 	<script language="javascript">
 		<!--
 		function fnSubmit(form, buttonSubmit) {
