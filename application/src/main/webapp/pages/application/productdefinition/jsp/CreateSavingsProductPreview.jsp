@@ -235,9 +235,7 @@ explanation of the license and how it is applied.
 											</c:if>
 										</c:forEach> </span>
 									<br>
-									<fmt:message key="product.glCodeFor">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources"/></fmt:param>
-									</fmt:message>:
+									<mifos:mifoslabel name="product.glcodeint" bundle="ProductDefUIResources" isColonRequired="yes"/>
 									<span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
 											<c:if test="${glCode.glcodeId == sessionScope.savingsproductactionform.interestGLCode}">
 												<c:out value="${glCode.glcode}" />
