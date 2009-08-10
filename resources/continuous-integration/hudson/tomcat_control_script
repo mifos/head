@@ -32,6 +32,7 @@ status)
         ;;
 restart)
         su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/shutdown.sh"
+        sleep 1
         su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/startup.sh"
         ;;
 *)
