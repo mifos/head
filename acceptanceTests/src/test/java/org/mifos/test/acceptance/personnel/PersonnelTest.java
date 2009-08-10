@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.login.ChangePasswordPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.framework.testhelpers.UserHelper;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
 import org.mifos.test.acceptance.framework.user.EditUserDataPage;
 import org.mifos.test.acceptance.framework.user.EditUserPreviewDataPage;
@@ -47,6 +48,7 @@ import org.testng.Assert;
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
+    private UserHelper userHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -61,6 +63,7 @@ public class PersonnelTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         navigationHelper = new NavigationHelper(selenium);
+        userHelper = new UserHelper(selenium);
     }
 
     @AfterMethod
@@ -73,7 +76,7 @@ public class PersonnelTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        adminPage.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
+        userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -82,7 +85,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
 
-        UserViewDetailsPage userDetailsPage = adminPage.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
+        UserViewDetailsPage userDetailsPage = userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
 
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
@@ -101,7 +104,7 @@ public class PersonnelTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        adminPage.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
+        userHelper.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -110,7 +113,7 @@ public class PersonnelTest extends UiTestCaseBase {
         
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateUserParameters userParameters = adminPage.getAdminUserParameters();
-        UserViewDetailsPage userDetailsPage = adminPage.createUser(userParameters, "MyOffice1233171674227");        
+        UserViewDetailsPage userDetailsPage = userHelper.createUser(userParameters, "MyOffice1233171674227");        
         EditUserDataPage editUserPage = userDetailsPage.navigateToEditUserDataPage();
 
         CreateUserParameters passwordParameters = new CreateUserParameters();

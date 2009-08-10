@@ -32,14 +32,9 @@ import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
-//import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
-import org.mifos.test.acceptance.framework.user.CreateUserConfirmationPage;
-import org.mifos.test.acceptance.framework.user.CreateUserEnterDataPage;
+import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
-import org.mifos.test.acceptance.framework.user.CreateUserPreviewDataPage;
-import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
 import org.mifos.test.acceptance.util.StringUtil;
-import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -49,7 +44,7 @@ import com.thoughtworks.selenium.Selenium;
  * that will be navigated to.
  *
  */
-@SuppressWarnings("PMD.CouplingBetweenObjects")
+@SuppressWarnings({"PMD", "PMD.CouplingBetweenObjects", "all"})
 public class AdminPage extends MifosPage {
 
 	public AdminPage() {
@@ -124,21 +119,6 @@ public class AdminPage extends MifosPage {
         verifyPage("admin");
         return this;
     }
-  
-    public UserViewDetailsPage createUser(CreateUserParameters formParameters, String officeName) {
-        ChooseOfficePage chooseOfficePage = this.navigateToCreateUserPage();
-        CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
-
-        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(formParameters);
-        CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
-        userConfirmationPage.verifyPage();
-        
-        UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
-        userDetailsPage.verifyPage();
-        Assert.assertTrue(userDetailsPage.getFullName().contains(formParameters.getFirstName() + " " + formParameters.getLastName()));
-        //Assert.assertEquals(userDetailsPage.getStatus(), "Active");
-        return userDetailsPage;
-    }
     
     public CreateUserParameters getAdminUserParameters() {
         CreateUserParameters formParameters = new CreateUserParameters();
@@ -212,11 +192,11 @@ public class AdminPage extends MifosPage {
         return new ViewFundsPage(selenium);
     }
     
-//    public DefineNewSavingsProductPage navigateToDefineSavingsProduct() {
-//        selenium.click("admin.link.defineNewSavingsProduct");
-//        waitForPageToLoad();
-//        return new DefineNewSavingsProductPage(selenium);
-//    }
+    public DefineNewSavingsProductPage navigateToDefineSavingsProduct() {
+        selenium.click("admin.link.defineNewSavingsProduct");
+        waitForPageToLoad();
+        return new DefineNewSavingsProductPage(selenium);
+    }
     public CreateHolidayEntryPage navigateToDefineHolidayPage() {
         selenium.click("admin.link.defineNewHoliday");
         waitForPageToLoad();

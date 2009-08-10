@@ -30,6 +30,10 @@ public class ChooseOfficePage extends MifosPage {
     public ChooseOfficePage(Selenium selenium) {
         super(selenium);
     }
+    
+    public void verifyPage() {
+        verifyPage("choose_office");
+    }
 
     public OfficeViewDetailsPage navigateToOfficeViewDetailsPage() {
         selenium.click("createNewOfficeSuccessful.link.viewOfficeDetails");
@@ -42,5 +46,4 @@ public class ChooseOfficePage extends MifosPage {
         waitForPageToLoad();
         return new CreateUserEnterDataPage(selenium);
     }
-
 }

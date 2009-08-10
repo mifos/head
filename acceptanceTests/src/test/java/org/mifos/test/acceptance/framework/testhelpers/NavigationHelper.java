@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -102,5 +103,13 @@ public class NavigationHelper {
         clientsAccountsPage.verifyPage();
         
         return clientsAccountsPage;
+    }
+
+    public ChooseOfficePage navigateToCreateUserPage() {
+        AdminPage adminPage = navigateToAdminPage();
+        ChooseOfficePage createUserPage = adminPage.navigateToCreateUserPage();
+        createUserPage.verifyPage();
+        
+        return createUserPage;
     }
 }
