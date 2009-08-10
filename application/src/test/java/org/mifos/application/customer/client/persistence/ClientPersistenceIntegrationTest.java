@@ -69,7 +69,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private static final Integer UNKNOWN_CUSTOMER_ID = Integer.valueOf(0);
 
-    private static final String DEFAULT_CLIENT_NAME = "ClientPersistence Active Client";
+    private static final String DEFAULT_CLIENT_NAME = "Active Client";
 
     private static final Date DEFAULT_DOB = DateUtils.getDate(1983, Calendar.JANUARY, 1);
 
@@ -202,17 +202,17 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private void setUpClients() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("ClientPersistence_Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("ClientPersistence_Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("ClientPersistence_Client", CustomerStatus.CLIENT_ACTIVE, group);
-        client1 = TestObjectFactory.createClient("ClientPersistence_Client Two", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + "_Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + "_Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + "_Client", CustomerStatus.CLIENT_ACTIVE, group);
+        client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + "_Client Two", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     public void testShouldThrowExceptionWhenTryingToCreateACustomerWithSameGovtId() throws Exception {
         setUpClients();
         localTestClient = createActiveClientWithGovtId();
         try {
-            TestObjectFactory.createClient("ClientPersistence Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group, null, GOVT_ID,
+            TestObjectFactory.createClient(this.getClass().getSimpleName() + " Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group, null, GOVT_ID,
                     new Date(1222333444000L));
             fail("Should have thrown exception on creating a duplicate client with same government id");
         } catch (RuntimeException e) {
@@ -225,7 +225,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         setUpClients();
         localTestClient = createClosedClientWithGovtId();
         try {
-            clientWithSameGovtId = TestObjectFactory.createClient("ClientPersistence Duplicate Client", CustomerStatus.CLIENT_ACTIVE,
+            clientWithSameGovtId = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Duplicate Client", CustomerStatus.CLIENT_ACTIVE,
                     group, null, GOVT_ID, new Date(1222333444000L));
         } catch (RuntimeException e) {
             fail("Should not have thrown exception on creating a duplicate client with same government id when old is closed");
@@ -235,9 +235,9 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testShouldNotThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAClosedClient() throws Exception {
         setUpClients();
         localTestClient = createClosedClientWithGovtId();
-        clientWithSameGovtId = TestObjectFactory.createClient("ClientPersistence Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
+        clientWithSameGovtId = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
         try {
-            clientWithSameGovtId.updatePersonalInfo("ClientPersistence Duplicate Client", GOVT_ID, DateUtils.getDate(1980,
+            clientWithSameGovtId.updatePersonalInfo(this.getClass().getSimpleName() + " Duplicate Client", GOVT_ID, DateUtils.getDate(1980,
                     Calendar.JANUARY, 1));
             StaticHibernateUtil.commitTransaction();
         } catch (RuntimeException e) {
@@ -248,9 +248,9 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testShouldThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAnActiveClient() throws Exception {
         setUpClients();
         localTestClient = createActiveClientWithGovtId();
-        clientWithSameGovtId = TestObjectFactory.createClient("ClientPersistence Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
+        clientWithSameGovtId = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Duplicate Client", CustomerStatus.CLIENT_ACTIVE, group);
         try {
-            clientWithSameGovtId.updatePersonalInfo("ClientPersistence Duplicate Client", GOVT_ID, DateUtils.getDate(1980,
+            clientWithSameGovtId.updatePersonalInfo(this.getClass().getSimpleName() + " Duplicate Client", GOVT_ID, DateUtils.getDate(1980,
                     Calendar.JANUARY, 1));
             StaticHibernateUtil.commitTransaction();
             fail("Should throw error when updating to a government id of active client");
@@ -273,20 +273,20 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testShouldReturnFalseForDuplicacyCheckOnGovtIdIfClientWithNullGovtIdInClosedState() throws Exception {
         setUpClients();
-        localTestClient = createClosedClient("ClientPersistence Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), null);
+        localTestClient = createClosedClient(this.getClass().getSimpleName() + " Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), null);
         assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(null));
     }
 
     public void testShouldReturnFalseForDuplicacyCheckOnGovtIdIfClientWithEmptyGovtIdInClosedState() throws Exception {
         setUpClients();
-        localTestClient = createClosedClient("ClientPersistence Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1),
+        localTestClient = createClosedClient(this.getClass().getSimpleName() + " Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1),
                 StringUtils.EMPTY);
         assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(StringUtils.EMPTY));
     }
 
     public void testShouldReturnFalseForDuplicacyCheckOnGovtIdForNonClosedClientIfGovtIdIsNull() throws Exception {
         setUpClients();
-        localTestClient = createActiveClient(DEFAULT_CLIENT_NAME, new Date(1222333444000L), null);
+        localTestClient = createActiveClient(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, new Date(1222333444000L), null);
         assertFalse(clientPersistence.checkForDuplicacyOnGovtIdForNonClosedClients(null, localTestClient
                 .getCustomerId()));
     }
@@ -300,22 +300,22 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testShouldReturnTrueForDuplicacyCheckOnNameIfPrevClientInNonClosedState() throws Exception {
         setUpClients();
-        localTestClient = createActiveClientWithNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB);
-        assertTrue(clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB,
+        localTestClient = createActiveClientWithNameAndDob(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, DEFAULT_DOB);
+        assertTrue(clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, DEFAULT_DOB,
                 UNKNOWN_CUSTOMER_ID));
     }
 
     public void testShouldReturnFalseForDuplicacyCheckOnNameIfPrevClientInClosedState() throws Exception {
         setUpClients();
-        localTestClient = createCloseClientWithNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB);
-        assertFalse(clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(DEFAULT_CLIENT_NAME,
+        localTestClient = createCloseClientWithNameAndDob(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, DEFAULT_DOB);
+        assertFalse(clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME,
                 DEFAULT_DOB, UNKNOWN_CUSTOMER_ID));
     }
 
     public void testShouldReturnTrueIfClientWithSameNameAndDobInClosedState() throws Exception {
         setUpClients();
-        localTestClient = createCloseClientWithNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB);
-        assertTrue(clientPersistence.checkForDuplicacyForClosedClientsOnNameAndDob(DEFAULT_CLIENT_NAME, DEFAULT_DOB));
+        localTestClient = createCloseClientWithNameAndDob(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, DEFAULT_DOB);
+        assertTrue(clientPersistence.checkForDuplicacyForClosedClientsOnNameAndDob(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, DEFAULT_DOB));
     }
 
     private ClientBO createCloseClientWithNameAndDob(String clientName, Date dob) {
@@ -327,7 +327,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private ClientBO createActiveClientWithGovtId() {
-        return createActiveClient(DEFAULT_CLIENT_NAME, DEFAULT_DOB, GOVT_ID);
+        return createActiveClient(this.getClass().getSimpleName() + DEFAULT_CLIENT_NAME, DEFAULT_DOB, GOVT_ID);
     }
 
     private ClientBO createActiveClient(String displayName, Date dateOfBirth, String governmentId) {
@@ -336,7 +336,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private ClientBO createClosedClientWithGovtId() {
-        return createClosedClient("ClientPersistence Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), GOVT_ID);
+        return createClosedClient(this.getClass().getSimpleName() + " Closed Client", DateUtils.getDate(1983, Calendar.JANUARY, 1), GOVT_ID);
     }
 
     private ClientBO createClosedClient(String displayName, Date dateOfBirth, String governmentId) {

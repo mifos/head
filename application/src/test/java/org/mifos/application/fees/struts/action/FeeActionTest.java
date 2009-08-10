@@ -632,6 +632,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulViewAllFees() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         StaticHibernateUtil.startTransaction();
         fee = TestObjectFactory.createOneTimeRateFee("Group_Fee", FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT);

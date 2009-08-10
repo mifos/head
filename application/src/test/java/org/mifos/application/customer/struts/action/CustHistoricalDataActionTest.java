@@ -263,9 +263,9 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 
     private void createInitialObjects() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("CustHistoricalDataAction Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("CustHistoricalDataAction Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("CustHistoricalDataAction Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private java.sql.Date offSetCurrentDate(int noOfDays) {

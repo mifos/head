@@ -143,13 +143,13 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("PortfolioAtRiskHelper Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("PortfolioAtRiskHelper Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("PortfolioAtRiskHelper Client", CustomerStatus.CLIENT_ACTIVE, group);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("PortfolioAtRiskHelper Loan", "LOAN", startDate, meeting);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "LOAN", startDate, meeting);
         account1 = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-        loanOffering = TestObjectFactory.createLoanOffering("PortfolioAtRiskHelper Loan123", "LOAP", ApplicableTo.CLIENTS, startDate,
+        loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan123", "LOAP", ApplicableTo.CLIENTS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting);
         account2 = TestObjectFactory.createLoanAccount("42427777341", client,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);

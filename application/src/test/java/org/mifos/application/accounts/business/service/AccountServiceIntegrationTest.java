@@ -250,6 +250,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetAppllicableFeesForMeetingStartingOnCurrentDate() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();
         TestObjectFactory.flushandCloseSession();

@@ -79,8 +79,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loanArrearsAgingHelper = (LoanArrearsAgingHelper) loanArrearsAgingTask.getTaskHelper();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, recurAfter,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("LoanArrearsAgingHelper Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("LoanArrearsAgingHelper Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     @Override

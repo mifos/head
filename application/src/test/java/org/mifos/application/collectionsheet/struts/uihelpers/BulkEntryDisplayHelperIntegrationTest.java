@@ -202,9 +202,9 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         Date startDate = new Date(System.currentTimeMillis());
-        center = TestObjectFactory.createCenter("BulkEntryDisplayHelper Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("BulkEntryDisplayHelper Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("BulkEntryDisplayHelper Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
         LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering("Loan2345", "313f", startDate, meeting);
         groupAccount = TestObjectFactory.createLoanAccount("42423142341", group,

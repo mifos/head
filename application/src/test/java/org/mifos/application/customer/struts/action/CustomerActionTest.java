@@ -140,9 +140,9 @@ public class CustomerActionTest extends MifosMockStrutsTestCase {
 
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("CustomerActionTest Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("CustomerActionTest Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("CustomerActionTest Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
 }

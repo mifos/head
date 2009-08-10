@@ -68,8 +68,8 @@ public class ApplyCustomerFeeChangesHelperIntegrationTest extends MifosIntegrati
     protected void setUp() throws Exception {
         super.setUp();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("ApplyCustomerFeeChangesHelper center1", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("ApplyCustomerFeeChangesHelper Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " center1", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
     @Override
