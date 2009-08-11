@@ -37,17 +37,23 @@ public class UserHelper {
         navigationHelper = new NavigationHelper(selenium);
     }
     
-    public UserViewDetailsPage createUser(CreateUserParameters formParameters, String officeName) {
+    /**
+     * Creates a user.
+     * @param userParameters Parameters for the user that is created. 
+     * @param officeName The name of the office that this user will belong to.
+     * @return The user details page for the newly created user.
+     */
+    public UserViewDetailsPage createUser(CreateUserParameters userParameters, String officeName) {
         ChooseOfficePage chooseOfficePage = navigationHelper.navigateToCreateUserPage();
         CreateUserEnterDataPage userEnterDataPage = chooseOfficePage.selectOffice(officeName);
 
-        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(formParameters);
+        CreateUserPreviewDataPage userPreviewDataPage = userEnterDataPage.submitAndGotoCreateUserPreviewDataPage(userParameters);
         CreateUserConfirmationPage userConfirmationPage = userPreviewDataPage.submit();
         userConfirmationPage.verifyPage();
         
         UserViewDetailsPage userDetailsPage = userConfirmationPage.navigateToUserViewDetailsPage();
         userDetailsPage.verifyPage();
-        Assert.assertTrue(userDetailsPage.getFullName().contains(formParameters.getFirstName() + " " + formParameters.getLastName()));
+        Assert.assertTrue(userDetailsPage.getFullName().contains(userParameters.getFirstName() + " " + userParameters.getLastName()));
 
         return userDetailsPage;
     }

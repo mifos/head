@@ -78,19 +78,19 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoReceipt() throws Exception {
         SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidReceiptDay();
         SubmitFormParameters validFormParameters = getFormParameters();
-        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters, "Please specify a valid date");
+        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters);
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoTransation() throws Exception {
         SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidTransactionDay();
         SubmitFormParameters validFormParameters = getFormParameters();
-        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters, "Date of transaction is invalid");
+        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters);
     }
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters, 
-            SubmitFormParameters validFormParameters, String dateErrorMessage) throws Exception {
+            SubmitFormParameters validFormParameters) throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage = 
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -101,8 +101,8 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
         selectPage.submitAndGotoCollectionSheetEntryEnterDataPageWithoutVerifyingPage(invalidFormParameters, onlyTypeIfFieldIsEmpty, waitForPageToLoad);
         CollectionSheetEntrySelectPage collectionSheetEntrySelectPageWithError = new CollectionSheetEntrySelectPage(selenium);
         collectionSheetEntrySelectPageWithError.verifyPage();
-        Assert.assertTrue("Invalid date error message not found!", selenium.isTextPresent(dateErrorMessage));
-
+        Assert.assertTrue(collectionSheetEntrySelectPageWithError.isErrorMessageDisplayed());
+        
         onlyTypeIfFieldIsEmpty = false;
         waitForPageToLoad = false;
         CollectionSheetEntryEnterDataPage enterDataPage = 

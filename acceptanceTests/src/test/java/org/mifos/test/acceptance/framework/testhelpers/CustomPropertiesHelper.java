@@ -31,10 +31,21 @@ public class CustomPropertiesHelper {
         this.selenium = selenium;
     }
     
+    /**
+     * Sets the language and country code.
+     * See application\src\main\resources\org\mifos\config\resources\applicationConfiguration.default.properties
+     * for more details about these two settings.
+     * @param languageCode The language code.
+     * @param countryCode The country code.
+     */
     public void setLocale(String languageCode, String countryCode) {
         selenium.open(UPDATE_PAGE + "?Localization.LanguageCode="+languageCode+"&Localization.CountryCode=" + countryCode);
     }
     
+    /**
+     * Sets the number of digits after the decimal sign to <tt>digits</tt>.
+     * @param digits Number of digits after the decimal.
+     */
     public void setDigitsAfterDecimal(int digits) {
         selenium.open(UPDATE_PAGE + "?AccountingRules.DigitsAfterDecimal=" + digits);
     }

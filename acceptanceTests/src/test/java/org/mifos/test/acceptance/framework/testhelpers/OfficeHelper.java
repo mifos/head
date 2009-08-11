@@ -36,23 +36,16 @@ public class OfficeHelper {
         navigationHelper = new NavigationHelper(selenium);
     }
     
+    /**
+     * Creates an office.
+     * @param officeParameters The office parameters.
+     * @return The admin page.
+     */
     public AdminPage createOffice(OfficeParameters officeParameters) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         
         CreateOfficeEnterDataPage officeEnterDataPage = adminPage.navigateToCreateOfficeEnterDataPage();
         officeEnterDataPage.verifyPage();
-        
-//        OfficeParameters formParameters = new OfficeParameters();
-//        formParameters.setOfficeName(officeName);
-//        formParameters.setShortName(StringUtil.getRandomString(4));
-//        formParameters.setOfficeType(OfficeParameters.BRANCH_OFFICE);
-//        formParameters.setParentOffice("regexp:Mifos\\s+HO");
-//        formParameters.setAddress1("Bangalore");
-//        formParameters.setAddress3("EGL");
-//        formParameters.setState("karnataka");
-//        formParameters.setCountry("India");
-//        formParameters.setPostalCode("560071");
-//        formParameters.setPhoneNumber("918025003632");
         
         CreateOfficePreviewDataPage previewDataPage = officeEnterDataPage.submitAndGotoCreateOfficePreviewDataPage(officeParameters);
         previewDataPage.verifyPage();

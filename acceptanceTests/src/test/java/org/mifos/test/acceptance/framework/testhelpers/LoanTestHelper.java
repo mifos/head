@@ -75,8 +75,8 @@ public class LoanTestHelper {
     
     /**
      * Creates a loan account.
-     * @param searchParameters
-     * @param submitAccountParameters
+     * @param searchParameters Parameters to find the client/group that will be the owner of the account.
+     * @param submitAccountParameters The parameters for the loan account.
      */
     public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
@@ -113,17 +113,19 @@ public class LoanTestHelper {
     }
     
     /**
-     * Disburses the loan account with id loanId.
-     * @
+     * Disburses the loan with id <tt>loanId</tt>. 
+     * @param loanId The system/global id of the loan that'll be disbursed.
+     * @param disburseParameters The disbursal parameters.
+     * @return The loan account page of the loan account with id loanId.
      */
-    public LoanAccountPage disburseLoan(String loanId, DisburseLoanParameters params) {
+    public LoanAccountPage disburseLoan(String loanId, DisburseLoanParameters disburseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
         disburseLoanPage.verifyPage();
         
-        DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(params);
+        DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters);
         disburseLoanConfirmationPage.verifyPage();
         
         loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
@@ -151,14 +153,20 @@ public class LoanTestHelper {
         return loanAccountPage;
     }
     
-    public LoanAccountPage applyPayment(String loanId, PaymentParameters params) {
+    /**
+     * Applies a payment to the loan account with id <tt>loanId</tt>.
+     * @param loanId The account id.
+     * @param paymentParams The payment parameters. 
+     * @return The loan accout page for the loan account.
+     */
+    public LoanAccountPage applyPayment(String loanId, PaymentParameters paymentParams) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
         loanAccountPage.verifyPage();
         
         ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
         applyPaymentPage.verifyPage();
         
-        ApplyPaymentConfirmationPage applyPaymentConfirmationPage = applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(params);
+        ApplyPaymentConfirmationPage applyPaymentConfirmationPage = applyPaymentPage.submitAndNavigateToApplyPaymentConfirmationPage(paymentParams);
         applyPaymentConfirmationPage.verifyPage();
         
         loanAccountPage = applyPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
@@ -195,6 +203,12 @@ public class LoanTestHelper {
         installmentDetailsPage.waivePenalty();
     }
     
+    /**
+     * Redoes the loan disbursal.
+     * @param clientName The name of the client.
+     * @param loanProduct The name of the loan product.
+     * @param params The parameters for the loan disbursal.
+     */
     public void redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters params) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         adminPage.verifyPage();

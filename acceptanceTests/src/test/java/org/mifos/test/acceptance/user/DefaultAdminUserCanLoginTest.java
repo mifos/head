@@ -23,7 +23,9 @@ package org.mifos.test.acceptance.user;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -64,24 +66,19 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 	}
 
 	public void userLoginFailureBadPasswordTest() {
-		appLauncher
-			.launchMifos()
-				.loginFailedAs("mifos", "mifos3")
-					.verifyFailedLoginBadPassword();
+		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "mifos3");
+		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when bad password was used to login.");
 	}
 
 
 	public void userLoginFailureNoPasswordTest() {
-		appLauncher
-			.launchMifos()
-				.loginFailedAs("mifos", "")
-					.verifyFailedLoginNoPassword();
+		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("mifos", "");
+		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no password was used to login.");
+					
 	}
 
 	public void userLoginFailureNoUsernameTest() {
-		appLauncher
-			.launchMifos()
-				.loginFailedAs("", "abc")
-					.verifyFailedLoginNoUsername();
+		LoginPage loginPage = appLauncher.launchMifos().loginFailedAs("", "abc");
+		Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "No error message was displayed when no username was used to login.");
 	}
 }

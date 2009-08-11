@@ -189,7 +189,7 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 										<tr>
-											<td class="fontnormal"
+											<td class="fontnormal">
 												<fmt:message key="bulkEntry.selectOfficeFromList">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.OFFICE}" /></fmt:param>
 												</fmt:message>
@@ -210,7 +210,7 @@ explanation of the license and how it is applied.
 										</tr>
 									</table>
 									<logic:messagesPresent>
-										<font class="fontnormalRedBold"> <html-el:errors bundle="bulkEntryUIResources" /> </font>
+										<font class="fontnormalRedBold"><span id="BulkEntry.error.message"> <html-el:errors bundle="bulkEntryUIResources" /> </span> </font>
 										<br>
 									</logic:messagesPresent>
 									<br>

@@ -40,11 +40,6 @@ public class SearchAccountTest extends SearchTestBase {
      */
     private static final String ACCT_SEARCH_STRING = "000100000000066";
 
-    /**
-     * Expected text on search results page
-     */
-    private static final String EXPECTED_ACCT_NUMBER = "Loan: Account # " + ACCT_SEARCH_STRING;
-
     private AppLauncher appLauncher;
 
     @Autowired
@@ -72,7 +67,7 @@ public class SearchAccountTest extends SearchTestBase {
     
     /**
      * Enters an account number ({@link #ACCT_SEARCH_STRING}) in the search box
-     * and verifies that the expected text with that account number ({@link #EXPECTED_ACCT_NUMBER})
+     * and verifies that the expected text with that account number
      * is present on the results page
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -87,6 +82,6 @@ public class SearchAccountTest extends SearchTestBase {
         Assert.assertEquals( count, 1 );
         
         //Check the displayed text
-        Assert.assertTrue(selenium.isTextPresent(EXPECTED_ACCT_NUMBER));
+        Assert.assertTrue(selenium.isTextPresent(ACCT_SEARCH_STRING));
     }
 }

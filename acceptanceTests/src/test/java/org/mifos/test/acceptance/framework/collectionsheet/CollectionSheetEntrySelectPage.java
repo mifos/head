@@ -21,13 +21,13 @@
 package org.mifos.test.acceptance.framework.collectionsheet;
 
 
-import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
 
 
-public class CollectionSheetEntrySelectPage extends AbstractPage {
+public class CollectionSheetEntrySelectPage extends MifosPage {
 
 	private static final String RECEIPT_INPUT_ID	= "bulkentry.input.receiptId";
 	private static final String CONTINUE_BUTTON_ID = "bulkentry.button.continue";

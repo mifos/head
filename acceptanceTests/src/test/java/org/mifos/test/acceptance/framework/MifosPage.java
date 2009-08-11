@@ -88,4 +88,19 @@ public class MifosPage extends AbstractPage {
         }
         return empty;
     }
+    
+    @SuppressWarnings("PMD.OnlyOneReturn")
+    public boolean isErrorMessageDisplayed() {
+        // the error message span id is always <page_id>.error.message so
+        // using a wildcard we check to see if that span has text or not.
+        // wildcards are not supported in id tags so we use a css selector.
+        
+        String errorMessage = selenium.getText("css=span[id*=\"error.message\"]"); 
+        
+        if (isEmpty(errorMessage)) {
+            return false;
+        }
+
+        return true;
+    }
 }

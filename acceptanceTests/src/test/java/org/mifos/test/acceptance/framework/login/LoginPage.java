@@ -24,8 +24,8 @@ import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 
 /**
  * Encapsulates the GUI based actions that can
@@ -33,7 +33,7 @@ import org.mifos.test.acceptance.framework.HomePage;
  * that will be navigated to.
  *
  */
-public class LoginPage extends AbstractPage {
+public class LoginPage extends MifosPage {
 	
 	private static final String DEFAULT_PASSWORD = "testmifos";
     private static final String DEFAULT_USERNAME = "mifos";
