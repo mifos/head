@@ -200,15 +200,23 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
             List<CollectionSheetEntryView> collectionSheetEntryViews) {
         logger.debug("Running non-threaded saveData");
 
-        StaticHibernateUtil.startTransaction();
-        saveAttendance(collectionSheetEntryViews, transactionDate);
-        StaticHibernateUtil.commitTransaction();
+        try {
+            StaticHibernateUtil.startTransaction();
+            saveAttendance(collectionSheetEntryViews, transactionDate);
+            saveMultipleLoanAccounts(accountViews, customerAccountNums, personnelId, receiptId, paymentId, receiptDate,
+                    transactionDate);
+            StaticHibernateUtil.commitTransaction();
 
-        saveMultipleLoanAccounts(accountViews, customerAccountNums, personnelId, receiptId, paymentId, receiptDate,
-                transactionDate);
-        saveMultipleCustomerAccountCollections(customerAccounts, customerAccountNums, personnelId, receiptId,
-                paymentId, receiptDate, transactionDate);
-        saveSavingsAccount(savings, savingsNames);
+            saveMultipleCustomerAccountCollections(customerAccounts, customerAccountNums, personnelId, receiptId,
+                    paymentId, receiptDate, transactionDate);
+            saveSavingsAccount(savings, savingsNames);
+        } catch (ServiceException be) {
+            accountNums.add((String) (be.getValues()[0]));
+            StaticHibernateUtil.rollbackTransaction();
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
     }
 
     private void saveAttendance(List<CollectionSheetEntryView> collectionSheetEntryViews, Date transactionDate) {
@@ -490,19 +498,11 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
         return paymentData;
     }
 
-    public void saveMultipleLoanAccounts(List<LoanAccountsProductView> accountViews, List<String> accountNums,
-            Short personnelId, String receiptId, Short paymentId, Date receiptDate, Date transactionDate) {
+    private void saveMultipleLoanAccounts(List<LoanAccountsProductView> accountViews, List<String> accountNums,
+            Short personnelId, String receiptId, Short paymentId, Date receiptDate, Date transactionDate) throws ServiceException {
         for (LoanAccountsProductView loanAccountsProductView : accountViews) {
-            try {
-                saveLoanAccount(loanAccountsProductView, personnelId, receiptId, paymentId, receiptDate,
+             saveLoanAccount(loanAccountsProductView, personnelId, receiptId, paymentId, receiptDate,
                         transactionDate);
-                StaticHibernateUtil.commitTransaction();
-            } catch (ServiceException be) {
-                accountNums.add((String) (be.getValues()[0]));
-                StaticHibernateUtil.rollbackTransaction();
-            } finally {
-                StaticHibernateUtil.closeSession();
-            }
         }
     }
 
