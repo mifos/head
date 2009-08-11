@@ -89,39 +89,6 @@ public class StandardClientServiceIntegrationTest extends AbstractJUnit38SpringC
     public void tearDown() throws Exception {
     }
 
-    public void testGetClientAttendanceTwoIds() throws Exception {
-        initializeData();
-        List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-        clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, null));
-        clientAttendanceDtos.add(getClientAttendanceDto(client2Id, meetingDate, null));
-        HashMap<Integer, ClientAttendanceDto> clientAttendance = clientService
-                .getClientAttendance(clientAttendanceDtos);
-        Assert.assertEquals(2, clientAttendance.size());
-        Assert.assertEquals(client1Id, (int) clientAttendance.get(client1Id).getClientId());
-        Assert.assertEquals(client1Attendance, clientAttendance.get(client1Id).getAttendance());
-        Assert.assertEquals(client2Id, (int) clientAttendance.get(client2Id).getClientId());
-        Assert.assertEquals(client2Attendance, clientAttendance.get(client2Id).getAttendance());
-    }
-
-    public void testSetClientAttendanceTwoIds() throws Exception {
-        List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-        clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, AttendanceType.PRESENT));
-        clientAttendanceDtos.add(getClientAttendanceDto(client2Id, meetingDate, AttendanceType.ABSENT));
-        clientService.setClientAttendance(clientAttendanceDtos);
-        databaseTestUtils.verifyTable(getAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
-    }
-
-    public void testSetClientAttendanceReplaceOneId() throws Exception {
-        initializeData();
-        List<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-        AttendanceType expectedAttendance = AttendanceType.APPROVED_LEAVE;
-        clientAttendanceDtos.add(getClientAttendanceDto(client1Id, meetingDate, expectedAttendance));
-        clientService.setClientAttendance(clientAttendanceDtos);
-        Map<Integer, ClientAttendanceDto> actualClientAttendanceDtos = clientService
-                .getClientAttendance(clientAttendanceDtos);
-        Assert.assertEquals(expectedAttendance, actualClientAttendanceDtos.get(client1Id).getAttendance());
-        databaseTestUtils.verifyTable(getReplacedAttendanceDataSet().toString(), CUSTOMER_ATTENDANCE, dataSource);
-    }
 
     public void testGetBulkEntryClientAttendance() throws SystemException, ApplicationException {
 

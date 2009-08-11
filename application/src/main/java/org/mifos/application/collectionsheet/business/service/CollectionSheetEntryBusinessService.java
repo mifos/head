@@ -69,14 +69,14 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class BulkEntryBusinessService implements BusinessService {
-    private final MifosLogger logger = MifosLogManager.getLogger(BulkEntryBusinessService.class.getName());
+public class CollectionSheetEntryBusinessService implements BusinessService {
+    private final MifosLogger logger = MifosLogManager.getLogger(CollectionSheetEntryBusinessService.class.getName());
 
     private final BulkEntryPersistenceService bulkEntryPersistanceService;
     private final CustomerPersistence customerPersistence;
     private ClientService clientService;
 
-    public BulkEntryBusinessService() {
+    public CollectionSheetEntryBusinessService() {
         bulkEntryPersistanceService = new BulkEntryPersistenceService();
         customerPersistence = new CustomerPersistence();
     }
@@ -99,17 +99,17 @@ public class BulkEntryBusinessService implements BusinessService {
             Short personnelId, String receiptId,
             Short paymentId, Date receiptDate,
             Date transactionDate) {
-        
+
         for (CollectionSheetEntryView parent : customerViews) {
-            
+
             setSavingsDepositDetails(parent.getSavingsAccountDetails(), personnelId, receiptId, paymentId, receiptDate,
                     transactionDate, savingsDepNames, parent.getCustomerDetail().getCustomerLevelId(), parent
                             .getCustomerDetail().getCustomerId(), savingsCache);
-            
+
             setSavingsWithdrawalsDetails(parent.getSavingsAccountDetails(), personnelId, receiptId, paymentId,
                     receiptDate, transactionDate, savingsWithNames, parent.getCustomerDetail().getCustomerId(),
                     savingsCache);
-            
+
         }
     }
 
@@ -150,9 +150,9 @@ public class BulkEntryBusinessService implements BusinessService {
     private void setSavingsDepositDetails(List<SavingsAccountView> accountViews, Short personnelId, String receiptId,
             Short paymentId, Date receiptDate, Date transactionDate, List<String> accountNums, Short levelId,
             Integer customerId, Map<Integer, BulkEntrySavingsCache> savings) {
-        
+
         if (null != accountViews) {
-            
+
             for (SavingsAccountView accountView : accountViews) {
                 String amount = accountView.getDepositAmountEntered();
                 if (null != amount && !getDoubleValue(amount).equals(0.0)) {
@@ -160,7 +160,7 @@ public class BulkEntryBusinessService implements BusinessService {
                             || (savings.containsKey(accountView.getAccountId()) && (!savings.get(
                                     accountView.getAccountId()).getYesNoFlag().equals(YesNoFlag.NO)))) {
                         try {
-                            
+
                             boolean isCenterGroupIndvAccount = false;
                             if (levelId.equals(CustomerLevel.CENTER.getValue())
                                     || (levelId.equals(CustomerLevel.GROUP.getValue()) && accountView
@@ -168,10 +168,10 @@ public class BulkEntryBusinessService implements BusinessService {
                                                     RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
                                 isCenterGroupIndvAccount = true;
                             }
-                            
+
                             setSavingsDepositAccountDetails(accountView, personnelId, receiptId, paymentId,
                                     receiptDate, transactionDate, isCenterGroupIndvAccount, customerId, savings);
-                            
+
                         } catch (ServiceException be) {
                             if (savings.containsKey(accountView.getAccountId())) {
                                 savings.get(accountView.getAccountId()).setYesNoFlag(YesNoFlag.NO);
@@ -200,7 +200,10 @@ public class BulkEntryBusinessService implements BusinessService {
             List<CollectionSheetEntryView> collectionSheetEntryViews) {
         logger.debug("Running non-threaded saveData");
 
+        StaticHibernateUtil.startTransaction();
         saveAttendance(collectionSheetEntryViews, transactionDate);
+        StaticHibernateUtil.commitTransaction();
+
         saveMultipleLoanAccounts(accountViews, customerAccountNums, personnelId, receiptId, paymentId, receiptDate,
                 transactionDate);
         saveMultipleCustomerAccountCollections(customerAccounts, customerAccountNums, personnelId, receiptId,
@@ -223,7 +226,6 @@ public class BulkEntryBusinessService implements BusinessService {
                 }
             }
         }
-        StaticHibernateUtil.commitTransaction();
     }
 
     private void saveSavingsAccount(List<SavingsBO> savings, List<String> customerNames) {
@@ -257,12 +259,12 @@ public class BulkEntryBusinessService implements BusinessService {
     public void setSavingsDepositAccountDetails(SavingsAccountView accountView, Short personnelId, String receiptId,
             Short paymentId, Date receiptDate, Date transactionDate, boolean isCenterGroupIndvAccount,
             Integer customerId, Map<Integer, BulkEntrySavingsCache> savings) throws ServiceException {
-        
+
         final Integer accountId = accountView.getAccountId();
 
         final PaymentData accountPaymentDataView = getSavingsAccountPaymentData(accountView, customerId, personnelId,
                 receiptId, paymentId, receiptDate, transactionDate, isCenterGroupIndvAccount);
-        
+
         saveSavingsAccountPayment(accountId, accountPaymentDataView, savings);
     }
 
@@ -294,29 +296,9 @@ public class BulkEntryBusinessService implements BusinessService {
         }
     }
 
-    public void setClientAttendance(Integer customerId, Date meetingDate, Short attendance, List<ClientBO> clients)
-            throws ServiceException {
-        try {
-            ClientBO client = (ClientBO) getCustomer(customerId);
-            boolean persist = false; // this is for Preview so no persistence
-            client.handleAttendance(meetingDate, attendance, persist);
-            clients.add(client);
-        } catch (Exception e) {
-            throw new ServiceException("errors.update", e, new String[] { customerId.toString() });
-        }
-    }
-
-    public void saveLoanAccount(LoanBO loan) throws ServiceException {
+   public void saveLoanAccount(LoanBO loan) throws ServiceException {
         try {
             new BulkEntryPersistence().createOrUpdate(loan);
-        } catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public void saveClientAttendance(ClientBO client) throws ServiceException {
-        try {
-            new BulkEntryPersistence().createOrUpdate(client);
         } catch (Exception e) {
             throw new ServiceException(e);
         }
@@ -435,18 +417,18 @@ public class BulkEntryBusinessService implements BusinessService {
     private PaymentData getSavingsAccountPaymentData(SavingsAccountView savingsAccountView, Integer customerId,
             Short personnelId, String receiptNum, Short paymentId, Date receiptDate, Date transactionDate,
             boolean isCenterGroupIndvAccount) throws ServiceException {
-        
+
         final Money enteredAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
                 savingsAccountView
                 .getDepositAmountEntered());
         final PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, getPersonnel(personnelId),
                 paymentId,
                 transactionDate);
-        
+
         if (!isCenterGroupIndvAccount && savingsAccountView.getAccountTrxnDetails().size() > 0) {
             buildIndividualAccountSavingsPayments(paymentData, savingsAccountView, enteredAmount);
         }
-        
+
         paymentData.setCustomer(getCustomer(customerId));
         paymentData.setRecieptDate(receiptDate);
         paymentData.setRecieptNum(receiptNum);

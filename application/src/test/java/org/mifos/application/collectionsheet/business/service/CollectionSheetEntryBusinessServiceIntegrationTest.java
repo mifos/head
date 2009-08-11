@@ -20,6 +20,10 @@
 
 package org.mifos.application.collectionsheet.business.service;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +32,7 @@ import java.util.Map;
 
 import junitx.framework.ObjectAssert;
 import junitx.framework.StringAssert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
@@ -41,12 +46,9 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -63,14 +65,13 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-public class BulkEntryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
-    public BulkEntryBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
+public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
+    public CollectionSheetEntryBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
 
-    private BulkEntryBusinessService bulkEntryBusinessService;
+    private CollectionSheetEntryBusinessService bulkEntryBusinessService;
 
     private CustomerBO center;
 
@@ -93,7 +94,7 @@ public class BulkEntryBusinessServiceIntegrationTest extends MifosIntegrationTes
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        bulkEntryBusinessService = new BulkEntryBusinessService();
+        bulkEntryBusinessService = new CollectionSheetEntryBusinessService();
         accountPersistence = new AccountPersistence();
         currentDate = new Date(System.currentTimeMillis());
     }
@@ -116,39 +117,7 @@ public class BulkEntryBusinessServiceIntegrationTest extends MifosIntegrationTes
         super.tearDown();
     }
 
-    public void testSuccessfulSaveAttendance() throws Exception {
-        createInitialObjects();
-        List<ClientBO> clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), currentDate, (short) 1, clients);
-        StaticHibernateUtil.closeSession();
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getCustomer(client.getCustomerId());
-        assertEquals("The size of attendance ", ((ClientBO) client).getClientAttendances().size(), 1);
-    }
-
-    public void testSaveAttendanceForNoMeetingDate() throws Exception {
-        createInitialObjects();
-        List<ClientBO> clients = new ArrayList<ClientBO>();
-        try {
-            bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), null, (short) 1, clients);
-            StaticHibernateUtil.closeSession();
-            bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-            StaticHibernateUtil.commitTransaction();
-            fail("The attendance has been update for meeting date null");
-        } catch (ServiceException e) {
-            // What should we report to the user? errors.updatefailed?
-            // The exception here is a null in a NOT NULL column
-            ObjectAssert.assertInstanceOf(PersistenceException.class, e.getCause());
-        }
-
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getCustomer(client.getCustomerId());
-    }
-
-    public void testSuccessfulSaveLoanAccount() throws Exception {
+   public void testSuccessfulSaveLoanAccount() throws Exception {
         createLoanAccount();
 
         bulkEntryBusinessService.saveLoanAccount(getAccountView(account), (short) 1, "324423", (short) 1, null,
@@ -293,25 +262,6 @@ public class BulkEntryBusinessServiceIntegrationTest extends MifosIntegrationTes
         } catch (ServiceException e) {
             // What should we report to the user here?
             ObjectAssert.assertInstanceOf(PersistenceException.class, e.getCause());
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    public void testSaveAttendanceForInvalidConnection() throws Exception {
-        createInitialObjects();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), currentDate, (short) 1,
-                    new ArrayList<ClientBO>());
-            fail();
-        } catch (ServiceException e) {
-            // errors.update doesn't seem right,
-            // rather than errors.updatefailed or something like that.
-            assertEquals("errors.update", e.getKey());
-            assertEquals(1, e.getValues().length);
-            String accountNumber = (String) e.getValues()[0];
-            assertEquals("" + client.getCustomerId(), accountNumber);
         } finally {
             StaticHibernateUtil.closeSession();
         }

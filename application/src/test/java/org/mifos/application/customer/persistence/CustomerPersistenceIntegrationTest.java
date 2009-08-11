@@ -44,7 +44,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
-import org.mifos.application.collectionsheet.business.service.BulkEntryBusinessService;
+import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
@@ -54,6 +54,7 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.BasicGroupInfo;
@@ -95,7 +96,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     private CustomerBO center;
 
-    private CustomerBO client;
+    private ClientBO client;
 
     private CustomerBO group2;
 
@@ -420,29 +421,20 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testNumberOfMeetingsAttended() throws Exception {
 
-        BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
+        CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService();
 
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
 
-        List<ClientBO> clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(System.currentTimeMillis()),
-                Short.valueOf("2"), clients);
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
+        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.ABSENT);
 
-        clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(System.currentTimeMillis()),
-                Short.valueOf("1"), clients);
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
+        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.PRESENT);
 
         Calendar currentDate = new GregorianCalendar();
         currentDate.roll(Calendar.DATE, 1);
 
-        clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(currentDate.getTimeInMillis()),
-                Short.valueOf("4"), clients);
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
+        client.handleAttendance(new Date(currentDate.getTimeInMillis()), AttendanceType.LATE);
 
         StaticHibernateUtil.commitTransaction();
 
@@ -452,33 +444,23 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended().intValue());
 
         StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getCustomer(client.getCustomerId());
     }
 
     public void testNumberOfMeetingsMissed() throws Exception {
-        BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
+        CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService();
 
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
 
-        List<ClientBO> clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(System.currentTimeMillis()),
-                Short.valueOf("1"), clients);
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-
-        clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(System.currentTimeMillis()),
-                Short.valueOf("2"), clients);
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
+        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.PRESENT);
+        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.ABSENT);
 
         Calendar currentDate = new GregorianCalendar();
         currentDate.roll(Calendar.DATE, 1);
-        clients = new ArrayList<ClientBO>();
-        bulkEntryBusinessService.setClientAttendance(client.getCustomerId(), new Date(currentDate.getTimeInMillis()),
-                Short.valueOf("3"), clients);
-        bulkEntryBusinessService.saveClientAttendance(clients.get(0));
+
+        client.handleAttendance(new Date(currentDate.getTimeInMillis()), AttendanceType.APPROVED_LEAVE);
+
         StaticHibernateUtil.commitTransaction();
 
         CustomerPersistence customerPersistence = new CustomerPersistence();
@@ -486,7 +468,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 client.getCustomerId());
         assertEquals(2, customerPerformanceHistoryView.getMeetingsMissed().intValue());
         StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getCustomer(client.getCustomerId());
     }
 
     public void testLastLoanAmount() throws PersistenceException, AccountException {

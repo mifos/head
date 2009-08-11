@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.business.service.BulkEntryBusinessService;
+import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
@@ -93,7 +93,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private CollectionSheetEntryViewTranslator collectionSheetEntryViewTranslator;
 
     @Mock
-    private BulkEntryBusinessService collectionSheetEntryBusinessService;
+    private CollectionSheetEntryBusinessService collectionSheetEntryBusinessService;
 
     @Mock
     private MasterDataEntity masterDataEntity;

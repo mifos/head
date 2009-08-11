@@ -65,7 +65,6 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         }
         clientAttendance.setAttendance(attendance);
         getCustomerPersistence().createOrUpdate(clientAttendance);
-        getHibernateUtil().commitTransaction();
     }
 
     @SuppressWarnings("unchecked")

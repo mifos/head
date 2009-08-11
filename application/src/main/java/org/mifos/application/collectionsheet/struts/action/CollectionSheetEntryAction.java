@@ -43,7 +43,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.business.service.BulkEntryBusinessService;
+import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
@@ -95,7 +95,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
-    private final BulkEntryBusinessService collectionSheetEntryService;
+    private final CollectionSheetEntryBusinessService collectionSheetEntryService;
     private final CollectionSheetServiceFacade collectionSheetServiceFacade;
     
     // TODO - dependency inject persistence/dao classes into facade using
@@ -110,7 +110,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     
     public CollectionSheetEntryAction() {
         
-        collectionSheetEntryService = new BulkEntryBusinessService();
+        collectionSheetEntryService = new CollectionSheetEntryBusinessService();
         
         // TODO - none of below code is need when DI used with spring
         officePersistence = new OfficePersistence();
@@ -323,7 +323,7 @@ public class CollectionSheetEntryAction extends BaseAction {
                 "dd/MM/yyyy"));
 
         // To enable cache
-        BulkEntryBusinessService bulkEntryService = new BulkEntryBusinessService();
+        CollectionSheetEntryBusinessService bulkEntryService = new CollectionSheetEntryBusinessService();
         List<String> loanAccountNums = new ArrayList<String>();
         List<String> customerAccountNums = new ArrayList<String>();
         List<String> savingsDepositAccountNums = (List<String>) SessionUtils.getAttribute(

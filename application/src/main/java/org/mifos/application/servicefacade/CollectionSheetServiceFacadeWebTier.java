@@ -28,7 +28,7 @@ import java.util.Map;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.business.service.BulkEntryBusinessService;
+import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
@@ -62,7 +62,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final CustomerPersistence customerPersistence;
     private final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler;
     private final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler;
-    private final BulkEntryBusinessService collectionSheetEntryService;
+    private final CollectionSheetEntryBusinessService collectionSheetEntryService;
     private final CollectionSheetEntryViewTranslator collectionSheetEntryViewTranslator;
 
     public CollectionSheetServiceFacadeWebTier(OfficePersistence officePersistence,
@@ -70,7 +70,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             CustomerPersistence customerPersistence,
             CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler,
             CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
-            BulkEntryBusinessService collectionSheetEntryService,
+            CollectionSheetEntryBusinessService collectionSheetEntryService,
             CollectionSheetEntryViewTranslator collectionSheetEntryViewTranslator) {
         this.officePersistence = officePersistence;
         this.masterPersistence = masterPersistence;
