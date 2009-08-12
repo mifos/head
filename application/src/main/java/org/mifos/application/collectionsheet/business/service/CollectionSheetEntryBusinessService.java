@@ -205,13 +205,13 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
             saveAttendance(collectionSheetEntryViews, transactionDate);
             saveMultipleLoanAccounts(accountViews, customerAccountNums, personnelId, receiptId, paymentId, receiptDate,
                     transactionDate);
-            StaticHibernateUtil.commitTransaction();
-
             saveMultipleCustomerAccountCollections(customerAccounts, customerAccountNums, personnelId, receiptId,
                     paymentId, receiptDate, transactionDate);
             saveSavingsAccount(savings, savingsNames);
-        } catch (ServiceException be) {
-            accountNums.add((String) (be.getValues()[0]));
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (Exception e) {
+            logger.error("Rolling back transaction after catching exception.");
             StaticHibernateUtil.rollbackTransaction();
         } finally {
             StaticHibernateUtil.closeSession();
@@ -230,6 +230,7 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
                             .fromShort(collectionSheetEntryView.getAttendence()));
                     clientService.setClientAttendance(clientAttendanceDto);
                 } catch (ServiceException e) {
+                    logger.error("Caught service exception:" + e);
                     throw new MifosRuntimeException("Unrecoverable service error trying to save client attendance: ", e);
                 }
             }
@@ -240,12 +241,9 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
         for (SavingsBO saving : savings) {
             try {
                 saveSavingsAccount(saving);
-                StaticHibernateUtil.commitTransaction();
             } catch (ServiceException e) {
-                StaticHibernateUtil.rollbackTransaction();
-                customerNames.add(saving.getGlobalAccountNum());
-            } finally {
-                StaticHibernateUtil.closeSession();
+                logger.error("Caught service exception:" + e);
+                throw new MifosRuntimeException("Unrecoverable service error trying to save client attendance: ", e);
             }
         }
     }
@@ -499,14 +497,19 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
     }
 
     private void saveMultipleLoanAccounts(List<LoanAccountsProductView> accountViews, List<String> accountNums,
-            Short personnelId, String receiptId, Short paymentId, Date receiptDate, Date transactionDate) throws ServiceException {
-        for (LoanAccountsProductView loanAccountsProductView : accountViews) {
-             saveLoanAccount(loanAccountsProductView, personnelId, receiptId, paymentId, receiptDate,
-                        transactionDate);
+            Short personnelId, String receiptId, Short paymentId, Date receiptDate, Date transactionDate) {
+        try {
+            for (LoanAccountsProductView loanAccountsProductView : accountViews) {
+                 saveLoanAccount(loanAccountsProductView, personnelId, receiptId, paymentId, receiptDate,
+                            transactionDate);
+            }
+        } catch (ServiceException e) {
+            logger.error("Caught service exception:" + e);
+            throw new MifosRuntimeException("Unrecoverable service error trying to save loan data: ", e);
         }
     }
 
-    public void saveMultipleCustomerAccountCollections(List<CustomerAccountView> customerAccounts,
+    private void saveMultipleCustomerAccountCollections(List<CustomerAccountView> customerAccounts,
             List<String> accountNums, Short personnelId, String receiptId, Short paymentId, Date receiptDate,
             Date transactionDate) {
         for (CustomerAccountView customerAccountView : customerAccounts) {
@@ -517,15 +520,9 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
                     try {
                         saveCustomerAccountCollections(customerAccountView, personnelId, receiptId, paymentId,
                                 receiptDate, transactionDate);
-                        StaticHibernateUtil.commitTransaction();
-                    } catch (ServiceException be) {
-                        accountNums.add((String) (be.getValues()[0]));
-                        StaticHibernateUtil.rollbackTransaction();
-                    } catch (Exception e) {
-                        accountNums.add(customerAccountView.getAccountId().toString());
-                        StaticHibernateUtil.rollbackTransaction();
-                    } finally {
-                        StaticHibernateUtil.closeSession();
+                    } catch (ServiceException e) {
+                        logger.error("Caught service exception:" + e);
+                        throw new MifosRuntimeException("Unrecoverable service error trying to save account data: ", e);
                     }
                 }
             }
