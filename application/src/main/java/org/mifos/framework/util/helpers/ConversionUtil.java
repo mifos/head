@@ -40,22 +40,17 @@ public class ConversionUtil {
         try {
 
             if (null != object) {
-                // converter from String to sql Date
                 ConvertUtilsBean conBean = new ConvertUtilsBean();
                 MifosSqlDateConverter converter = new MifosSqlDateConverter();
                 MifosDoubleConverter mifosDoubleConverter = new MifosDoubleConverter();
+                MifosStringToJavaUtilDateConverter stringToJavaDateConverter = new MifosStringToJavaUtilDateConverter();
                 converter.setLocale(locale);
+                conBean.register(stringToJavaDateConverter, java.util.Date.class);
                 conBean.register(converter, java.sql.Date.class);
                 conBean.register(mifosDoubleConverter, Double.class);
-                // register for FormFile to BLOB conversion
-                // MifosInputFileConverter fileConverter = new
-                // MifosInputFileConverter();
-                // conBean.register(fileConverter, FormFile.class);
+                
                 BeanUtilsBean bean = new BeanUtilsBean(conBean, BeanUtilsBean.getInstance().getPropertyUtils());
                 bean.copyProperties(object, actionForm);
-
-                // MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Convertion
-                // valueObject to action form using bean utils", false, null);
             } else {
                 throw new IllegalArgumentException("business object was null");
             }

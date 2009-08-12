@@ -23,6 +23,10 @@ package org.mifos.application.collectionsheet.util.helpers;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 
+/**
+ * @deprecated keithw - marked for delete after collection sheet entry refactor
+ */
+@Deprecated
 public class BulkEntrySavingsCache {
 
     private SavingsBO account;

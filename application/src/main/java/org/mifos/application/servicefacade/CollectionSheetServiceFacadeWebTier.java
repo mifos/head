@@ -21,18 +21,20 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
-import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -40,16 +42,18 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * Default implementation of CollectionSheetServiceFacade.
@@ -60,6 +64,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final MasterPersistence masterPersistence;
     private final PersonnelPersistence personnelPersistence;
     private final CustomerPersistence customerPersistence;
+    private final SavingsPersistence savingsPersistence;
     private final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler;
     private final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler;
     private final CollectionSheetEntryBusinessService collectionSheetEntryService;
@@ -68,6 +73,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetServiceFacadeWebTier(OfficePersistence officePersistence,
             MasterPersistence masterPersistence, PersonnelPersistence personnelPersistence,
             CustomerPersistence customerPersistence,
+            SavingsPersistence savingsPersistence,
             CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler,
             CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
             CollectionSheetEntryBusinessService collectionSheetEntryService,
@@ -76,6 +82,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         this.masterPersistence = masterPersistence;
         this.personnelPersistence = personnelPersistence;
         this.customerPersistence = customerPersistence;
+        this.savingsPersistence = savingsPersistence;
         this.collectionSheetEntryViewAssembler = collectionSheetEntryViewAssembler;
         this.collectionSheetEntryGridViewAssembler = collectionSheetEntryGridViewAssembler;
         this.collectionSheetEntryService = collectionSheetEntryService;
@@ -116,6 +123,10 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                     customerList = customerPersistence.getActiveParentList(loanOfficerList.get(0).getPersonnelId(),
                             customerLevel, branchId);
 
+                    if (customerList.size() == 1) {
+                        reloadFormAutomatically = Constants.YES;
+                    }
+                    
                     reloadFormAutomatically = Constants.NO;
                 }
             }
@@ -168,12 +179,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             final CollectionSheetEntryFormDto formDto) {
 
         Short backDatedTransactionAllowed = Constants.NO;
-        Date meetingDate = null;
+        java.util.Date meetingDate = null;
         try {
             meetingDate = customerPersistence.getLastMeetingDateForCustomer(customerId);
 
             final boolean isBackDatedTrxnAllowed = AccountingRules.isBackDatedTxnAllowed();
-            if (meetingDate == null && !isBackDatedTrxnAllowed) {
+            if (meetingDate == null) {
                 meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
             }
             backDatedTransactionAllowed = isBackDatedTrxnAllowed ? Constants.YES : Constants.NO;
@@ -190,13 +201,10 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             final CollectionSheetFormEnteredDataDto formEnteredDataDto,
             final UserContext userContext) {
         
-        final CollectionSheetEntryView bulkEntryParent = collectionSheetEntryViewAssembler.toDto(formEnteredDataDto);
+        final CollectionSheetEntryView collectionSheetParent = collectionSheetEntryViewAssembler.toDto(formEnteredDataDto);
         final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler
                 .toDto(
-                formEnteredDataDto, userContext.getLocaleId());
-        
-        collectionSheetGridView.setTotalCustomers(bulkEntryParent.getCountOfCustomers());
-        collectionSheetGridView.setBulkEntryParent(bulkEntryParent);
+                formEnteredDataDto, userContext.getLocaleId(), collectionSheetParent);
         
         return collectionSheetGridView;
     }
@@ -204,45 +212,153 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetEntryGridDto previewCollectionSheetEntry(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final CollectionSheetDataView dataView) {
 
-        // TODO - keithw - pull out this and refactor from
-        // CollectionSheetEntryBO
-        previousCollectionSheetEntryDto.setcollectionSheetDataView(dataView);
+        CollectionSheetEntryGridDto newCollectionSheetEntryGridDto = null;
 
-        return previousCollectionSheetEntryDto;
+        final CollectionSheetEntryView bulkEntryParent = previousCollectionSheetEntryDto.getBulkEntryParent();
+        switch (CustomerLevel.getLevel(bulkEntryParent.getCustomerDetail().getCustomerLevelId())) {
+        case CENTER:
+            newCollectionSheetEntryGridDto = new CollectionSheetEntryGridDtoTranslator().translateAsCenter(
+                    previousCollectionSheetEntryDto, dataView);
+            break;
+        case GROUP:
+        case CLIENT:
+            newCollectionSheetEntryGridDto = new CollectionSheetEntryGridDtoTranslator().translateAsGroup(
+                    previousCollectionSheetEntryDto, dataView);
+            break;
+        }
+
+        return newCollectionSheetEntryGridDto;
     }
-
-    public ErrorAndCollectionSheetDataDto prepareDataForCollectionSheetEntrySave(
+    
+    public ErrorAndCollectionSheetDataDto prepareSavingAccountsForCollectionSheetEntrySave(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
             final Short userId) {
 
         final CollectionSheetEntryDecomposedView decomposedViews = collectionSheetEntryViewTranslator
                 .toDecomposedView(previousCollectionSheetEntryDto.getBulkEntryParent());
 
-        final List<ClientBO> clients = new ArrayList<ClientBO>();
         final List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
-        final List<String> customerNames = new ArrayList<String>();
-        final List<String> savingsDepNames = new ArrayList<String>();
-        final List<String> savingsWithNames = new ArrayList<String>();
+        final List<String> failedSavingsDepositAccountNums = new ArrayList<String>();
+        final List<String> failedSavingsWithdrawalNums = new ArrayList<String>();
 
-        final Map<Integer, BulkEntrySavingsCache> savingsCache = new HashMap<Integer, BulkEntrySavingsCache>();
+        for (CollectionSheetEntryView parent : decomposedViews.getParentCollectionSheetEntryViews()) {
 
-        collectionSheetEntryService.setData(decomposedViews.getParentCollectionSheetEntryViews(), savingsCache,
-                savingsDepNames, savingsWithNames, userId, previousCollectionSheetEntryDto
-                        .getReceiptId(), previousCollectionSheetEntryDto.getPaymentType().getId(),
-                previousCollectionSheetEntryDto
-                        .getReceiptDate(), previousCollectionSheetEntryDto.getTransactionDate());
+            for (SavingsAccountView savingAccount : parent.getSavingsAccountDetails()) {
+                
+                // create set of SavingAccountView's to ensure no duplicate's
+                final Money amountToDeposit = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
+                        savingAccount.getDepositAmountEntered());
+                final Money amountToWithdraw = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
+                        savingAccount.getWithDrawalAmountEntered());
 
-        for (Integer accountId : savingsCache.keySet()) {
-            final BulkEntrySavingsCache bulkEntrySavingsCache = savingsCache.get(accountId);
-            if (bulkEntrySavingsCache.getYesNoFlag().equals(YesNoFlag.YES)) {
-                savingsAccounts.add(bulkEntrySavingsCache.getAccount());
+                final String receiptNumber = previousCollectionSheetEntryDto.getReceiptId();
+                final Date receiptDate = previousCollectionSheetEntryDto.getReceiptDate();
+                final PaymentTypeEntity paymentType = new PaymentTypeEntity(previousCollectionSheetEntryDto
+                        .getPaymentType().getId());
+                final Date paymentDate = previousCollectionSheetEntryDto.getTransactionDate();
+                
+                final Integer accountId = savingAccount.getAccountId();
+                boolean storeAccountForSavingLater = false;
+                try {
+                    final SavingsBO account = savingsPersistence.findById(accountId);
+                    final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
+                    
+                    final List<SavingsScheduleEntity> scheduledDeposits = new ArrayList<SavingsScheduleEntity>();
+                    final List<CollectionSheetEntryInstallmentView> scheduledSavingInstallments = savingAccount
+                            .getAccountTrxnDetails();
+                    
+                    for (CollectionSheetEntryInstallmentView installment : scheduledSavingInstallments) {
+                        SavingsScheduleEntity savingsScheduledInstallment = (SavingsScheduleEntity) account
+                                .getAccountActionDate(installment.getInstallmentId());
+                        scheduledDeposits.add(savingsScheduledInstallment);
+                    }
+                    
+                    if (amountToDeposit.getAmount() != null
+                            && amountToDeposit.getAmountDoubleValue() > Double.valueOf("0.0")) {
+
+                        final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, amountToDeposit,
+                                receiptNumber, receiptDate, paymentType, paymentDate);
+                        accountDeposit.setCreatedByUser(user);
+
+                        try {
+                            account.deposit(accountDeposit, scheduledDeposits);
+                            storeAccountForSavingLater = true;
+                        } catch (AccountException e) {
+                            failedSavingsDepositAccountNums.add(account.getGlobalAccountNum());
+                        }
+                    }
+                    
+                    if (amountToWithdraw.getAmount() != null
+                            && amountToWithdraw.getAmountDoubleValue() > Double.valueOf("0.0")) {
+                        final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account,
+                                amountToWithdraw, receiptNumber, receiptDate, paymentType, paymentDate);
+                        accountWithdrawal.setCreatedByUser(user);
+
+                        try {
+                            account.withdraw(accountWithdrawal);
+                            storeAccountForSavingLater = true;
+                        } catch (AccountException e) {
+                            failedSavingsWithdrawalNums.add(account.getGlobalAccountNum());
+                        }
+                    }
+                    
+                    if (storeAccountForSavingLater) {
+                        savingsAccounts.add(account);
+                    }
+                    
+                } catch (PersistenceException pe) {
+                    throw new RuntimeException(pe);
+                }
             }
         }
 
-        final CollectionSheetErrorsView errors = new CollectionSheetErrorsView(customerNames, savingsDepNames,
-                savingsWithNames);
+        final CollectionSheetErrorsView errors = new CollectionSheetErrorsView(failedSavingsDepositAccountNums,
+                failedSavingsWithdrawalNums,
+                new ArrayList<String>());
 
-        return new ErrorAndCollectionSheetDataDto(decomposedViews, errors, savingsAccounts, clients);
+        return new ErrorAndCollectionSheetDataDto(decomposedViews, errors, savingsAccounts);
+    }
+    
+    public CollectionSheetErrorsView saveCollectionSheet(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
+            ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto, final Short userId) {
+
+        // TODO - keithw - completely refactor how the collectionSheet entries
+        // are saved
+        // NOTE: CollectionSheetEntry is not a concept in our Domain model.
+        // As far as i understand its a batch save of accounts (loanAccounts and
+        // savingAccounts) and other info such as transactions/meetings etc
+        // on loan accounts: a loan is disbursed (money given out to
+        // clients(customer))
+        // on saving accounts: money is saved or withdrawn?
+
+        java.sql.Date receiptDate = null;
+        if (previousCollectionSheetEntryDto.getReceiptDate() != null) {
+            receiptDate = new java.sql.Date(previousCollectionSheetEntryDto.getReceiptDate().getTime());
+        }
+        
+        collectionSheetEntryService.saveData(errorAndCollectionSheetDataDto.getDecomposedViews().getLoanAccountViews(),
+                userId, previousCollectionSheetEntryDto.getReceiptId(),
+                previousCollectionSheetEntryDto
+                        .getPaymentType().getId(), receiptDate, new java.sql.Date(previousCollectionSheetEntryDto
+                        .getTransactionDate().getTime()),
+                errorAndCollectionSheetDataDto.getSavingsAccounts(), errorAndCollectionSheetDataDto.getErrors()
+                        .getSavingsDepNames(),
+                errorAndCollectionSheetDataDto.getDecomposedViews().getCustomerAccountViews(),
+                errorAndCollectionSheetDataDto.getErrors().getCustomerAccountNumbers(),
+                errorAndCollectionSheetDataDto.getDecomposedViews().getParentCollectionSheetEntryViews());
+
+        // // TODO - keithw - implement the following service for saving
+        // collection sheets.
+        // CollectionSheetService collectionSheetServiceToBeImplemented = new
+        // CollectionSheetServiceImpl();
+        //
+        // // 1. build up model correctly from DTO information
+        // // fetch account/client information
+        // // make disbursals/withdrawals per account
+        // List<AccountBO> accounts = new ArrayList<AccountBO>();
+        // collectionSheetServiceToBeImplemented.saveCollectionSheet(accounts);
+        
+        return errorAndCollectionSheetDataDto.getErrors();
     }
 
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(List<MasterDataEntity> paymentTypesList) {

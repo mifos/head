@@ -20,8 +20,6 @@
 
 package org.mifos.application.collectionsheet.struts.action;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -30,7 +28,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -39,25 +36,18 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
-import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
+import org.mifos.application.collectionsheet.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.client.business.AttendanceType;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientService;
 import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -69,6 +59,7 @@ import org.mifos.application.servicefacade.CollectionSheetEntryFormDtoDecorator;
 import org.mifos.application.servicefacade.CollectionSheetEntryGridViewAssembler;
 import org.mifos.application.servicefacade.CollectionSheetEntryViewAssembler;
 import org.mifos.application.servicefacade.CollectionSheetEntryViewTranslator;
+import org.mifos.application.servicefacade.CollectionSheetErrorsView;
 import org.mifos.application.servicefacade.CollectionSheetFormEnteredDataDto;
 import org.mifos.application.servicefacade.CollectionSheetServiceFacade;
 import org.mifos.application.servicefacade.CollectionSheetServiceFacadeWebTier;
@@ -86,7 +77,6 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -105,12 +95,11 @@ public class CollectionSheetEntryAction extends BaseAction {
     private final PersonnelPersistence personnelPersistence;
     private final CustomerPersistence customerPersistence;
     private final BulkEntryPersistence bulkEntryPersistence;
+    private final SavingsPersistence savingsPersistence;
     private final ClientAttendanceDao clientAttendanceDao;
     private final ClientService clientService;
     
     public CollectionSheetEntryAction() {
-        
-        collectionSheetEntryService = new CollectionSheetEntryBusinessService();
         
         // TODO - none of below code is need when DI used with spring
         officePersistence = new OfficePersistence();
@@ -118,6 +107,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         personnelPersistence = new PersonnelPersistence();
         customerPersistence = new CustomerPersistence();
         bulkEntryPersistence = new BulkEntryPersistence();
+        savingsPersistence = new SavingsPersistence();
         clientAttendanceDao = new StandardClientAttendanceDao();
         clientService = new StandardClientService(clientAttendanceDao);
         
@@ -129,8 +119,13 @@ public class CollectionSheetEntryAction extends BaseAction {
         
         final CollectionSheetEntryViewTranslator collectionSheetEntryViewTranslator = new CollectionSheetEntryViewTranslator();
         
+        // only for collectionSheetService
+        final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
+        collectionSheetEntryService = new CollectionSheetEntryBusinessService(clientService, customerPersistence,
+                savingsPersistence, bulkEntryPersistanceService);
+        
         collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence, masterPersistence,
-                personnelPersistence, customerPersistence, collectionSheetEntryViewAssembler,
+                personnelPersistence, customerPersistence, savingsPersistence, collectionSheetEntryViewAssembler,
                 collectionSheetEntryGridViewAssembler, collectionSheetEntryService, collectionSheetEntryViewTranslator);
     }
 
@@ -304,12 +299,6 @@ public class CollectionSheetEntryAction extends BaseAction {
              this.addErrors(request, errorsFromValidation);
         }
         
-        final ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto = collectionSheetServiceFacade
-                .prepareDataForCollectionSheetEntrySave(previousCollectionSheetEntryDto, getUserContext(request)
-                        .getId());
-        
-        storeOnRequestErrorAndCollectionSheetData(request, errorAndCollectionSheetDataDto);
-
         return mapping.findForward(CollectionSheetEntryConstants.PREVIEWSUCCESS);
     }
     
@@ -318,96 +307,29 @@ public class CollectionSheetEntryAction extends BaseAction {
             HttpServletResponse response) throws PageExpiredException, InvalidDateException {
         
         logTrackingInfo("create", request, form);
-        BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
-        Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(bulkEntryActionForm.getTransactionDate(),
-                "dd/MM/yyyy"));
+        final BulkEntryActionForm collectionSheetActionForm = (BulkEntryActionForm) form;
+        
+        final CollectionSheetEntryGridDto previousCollectionSheetEntryDto = retrieveFromRequestCollectionSheetEntryDto(request);
 
-        // To enable cache
-        CollectionSheetEntryBusinessService bulkEntryService = new CollectionSheetEntryBusinessService();
-        List<String> loanAccountNums = new ArrayList<String>();
-        List<String> customerAccountNums = new ArrayList<String>();
-        List<String> savingsDepositAccountNums = (List<String>) SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.ERRORSAVINGSDEPOSIT, request);
-        List<String> savingsWithdrawalsAccountNums = (List<String>) SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.ERRORSAVINGSWITHDRAW, request);
-        List<String> customerNames = (List<String>) SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.ERRORCLIENTS, request);
-        StringBuilder builder = new StringBuilder();
-        ActionErrors actionErrors = new ActionErrors();
+        final ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto = collectionSheetServiceFacade
+                .prepareSavingAccountsForCollectionSheetEntrySave(previousCollectionSheetEntryDto, getUserContext(
+                        request).getId());
 
-        CollectionSheetEntryGridDto bulkEntry = (CollectionSheetEntryGridDto) SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.BULKENTRY, request);
-        logger.debug("transactionDate " + ((BulkEntryActionForm) form).getTransactionDate());
-        Short personnelId = getUserContext(request).getId();
-        List<ClientBO> clients = (List<ClientBO>) SessionUtils.getAttribute(CollectionSheetEntryConstants.CLIENTS,
-                request);
-        List<SavingsBO> savings = (List<SavingsBO>) SessionUtils.getAttribute(CollectionSheetEntryConstants.SAVINGS,
-                request);
-        List<LoanAccountsProductView> loans = (List<LoanAccountsProductView>) SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.LOANS, request);
-        List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils.getAttribute(
-                CollectionSheetEntryConstants.CUSTOMERACCOUNTS, request);
-        List<CollectionSheetEntryView> collectionSheetEntryViews = (List<CollectionSheetEntryView>) SessionUtils
-                .getAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY, request);
-
-        String logMsg = "before saveData().";
-        logMsg += " session id:" + request.getSession().getId();
-        logMsg += ", date:" + bulkEntry.getTransactionDate();
-        logMsg += ", office id:" + bulkEntryActionForm.getOfficeId();
-
-        OfficeView officeView = bulkEntry.getOffice();
-        if (null != officeView) {
-            logMsg += ", office name:" + officeView.getOfficeName();
-        }
-        logMsg += ", center id:" + bulkEntryActionForm.getCustomerId();
-        String attendanceSummary = getAttendanceSummary(clients, bulkEntry.getTransactionDate());
-        if (null != attendanceSummary) {
-            logMsg += ", attendance:" + attendanceSummary;
-        }
-        logMsg += ".";
-        logger.info(logMsg);
-
-        long beforeSaveData = System.currentTimeMillis();
-
-        bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(), bulkEntry.getPaymentType()
-                .getId(),
-                bulkEntry.getReceiptDate(), bulkEntry.getTransactionDate(), loanAccountNums,
-                savings, savingsDepositAccountNums, clients, customerNames, customerAccounts, customerAccountNums,
-                collectionSheetEntryViews);
-
-        logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
-                + getUpdateTotalsString(clients, savings, loans, customerAccounts)
-                + ". Saving bulk entry data ran for approximately "
-                + ((System.currentTimeMillis() - beforeSaveData) / 1000.0) + " seconds.");
-
-        request.setAttribute(CollectionSheetEntryConstants.CENTER, bulkEntry.getBulkEntryParent().getCustomerDetail()
+        storeOnRequestErrorAndCollectionSheetData(request, errorAndCollectionSheetDataDto);
+        
+        logBeforeSave(request, collectionSheetActionForm, previousCollectionSheetEntryDto);
+        final long beforeSaveData = System.currentTimeMillis();
+        final CollectionSheetErrorsView collectionSheetErrors = this.collectionSheetServiceFacade.saveCollectionSheet(
+                previousCollectionSheetEntryDto, errorAndCollectionSheetDataDto, getUserContext(request).getId());
+        
+        logAfterSave(request, errorAndCollectionSheetDataDto,
+                beforeSaveData);
+        
+        request.setAttribute(CollectionSheetEntryConstants.CENTER, previousCollectionSheetEntryDto.getBulkEntryParent().getCustomerDetail()
                 .getDisplayName());
         
+        setErrorMessagesIfErrorsExist(request, collectionSheetErrors);
         
-        UserContext userContext = getUserContext(request);
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
-                .getPreferredLocale());
-        String loan = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.LOAN, userContext);
-        String attendance = resources.getString(CollectionSheetEntryConstants.ATTENDANCE);
-        String savingsWithdrawal = resources.getString(CollectionSheetEntryConstants.SAVING_WITHDRAWAL);
-        String savingsDeposit = resources.getString(CollectionSheetEntryConstants.SAVING_DEPOSITE);
-        String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
-        
-        if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
-                || savingsWithdrawalsAccountNums.size() > 0 || customerAccountNums.size() > 0
-                || customerNames.size() > 0) {
-            getErrorString(builder, loanAccountNums, loan);
-            getErrorString(builder, savingsDepositAccountNums, savingsDeposit);
-            getErrorString(builder, savingsWithdrawalsAccountNums, savingsWithdrawal);
-            getErrorString(builder, customerAccountNums, acCollection);
-            getErrorString(builder, customerNames, attendance);
-            builder.append("<br><br>");
-            actionErrors.add(CollectionSheetEntryConstants.ERRORSUPDATE, new ActionMessage(
-                    CollectionSheetEntryConstants.ERRORSUPDATE, builder.toString()));
-            request.setAttribute(Globals.ERROR_KEY, actionErrors);
-        }
-        // TO clear bulk entry cache in persistence service
-        bulkEntryService = null;
         return mapping.findForward(CollectionSheetEntryConstants.CREATESUCCESS);
     }
 
@@ -443,9 +365,61 @@ public class CollectionSheetEntryAction extends BaseAction {
         }
         return null;
     }
+    
+    private void setErrorMessagesIfErrorsExist(HttpServletRequest request,
+            CollectionSheetErrorsView collectionSheetErrors) {
+        final UserContext userContext = getUserContext(request);
+        final ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
+                .getPreferredLocale());
+        final String savingsWithdrawal = resources.getString(CollectionSheetEntryConstants.SAVING_WITHDRAWAL);
+        final String savingsDeposit = resources.getString(CollectionSheetEntryConstants.SAVING_DEPOSITE);
+        final String acCollection = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
+
+        final StringBuilder builder = new StringBuilder();
+        final ActionErrors actionErrors = new ActionErrors();
+        if (collectionSheetErrors.getSavingsDepNames().size() > 0
+                || collectionSheetErrors.getSavingsWithNames().size() > 0
+                || collectionSheetErrors.getCustomerAccountNumbers().size() > 0) {
+            getErrorString(builder, collectionSheetErrors.getSavingsDepNames(), savingsDeposit);
+            getErrorString(builder, collectionSheetErrors.getSavingsWithNames(), savingsWithdrawal);
+            getErrorString(builder, collectionSheetErrors.getCustomerAccountNumbers(), acCollection);
+            builder.append("<br><br>");
+            actionErrors.add(CollectionSheetEntryConstants.ERRORSUPDATE, new ActionMessage(
+                    CollectionSheetEntryConstants.ERRORSUPDATE, builder.toString()));
+            request.setAttribute(Globals.ERROR_KEY, actionErrors);
+        }
+    }
+    
+    private void logAfterSave(HttpServletRequest request,
+            final ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto, final long beforeSaveData) {
+        logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
+                + getUpdateTotalsString(errorAndCollectionSheetDataDto)
+                + ". Saving bulk entry data ran for approximately "
+                + ((System.currentTimeMillis() - beforeSaveData) / 1000.0) + " seconds.");
+    }
+
+    private void logBeforeSave(HttpServletRequest request, final BulkEntryActionForm bulkEntryActionForm,
+            final CollectionSheetEntryGridDto bulkEntry) {
+        String logMsg = "before saveData().";
+        logMsg += " session id:" + request.getSession().getId();
+        logMsg += ", date:" + bulkEntry.getTransactionDate();
+        logMsg += ", office id:" + bulkEntryActionForm.getOfficeId();
+
+        final OfficeView officeView = bulkEntry.getOffice();
+        if (null != officeView) {
+            logMsg += ", office name:" + officeView.getOfficeName();
+        }
+        logMsg += ", center id:" + bulkEntryActionForm.getCustomerId();
+        logMsg += ".";
+        logger.info(logMsg);
+    }
 
     private void storeOnRequestErrorAndCollectionSheetData(HttpServletRequest request,
             final ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto) throws PageExpiredException {
+        
+        SessionUtils.setAttribute("ErrorAndCollectionSheetData", errorAndCollectionSheetDataDto, request);
+
+        // support old way for now.
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY,
                 errorAndCollectionSheetDataDto.getDecomposedViews().getParentCollectionSheetEntryViews(), request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.LOANS, errorAndCollectionSheetDataDto
@@ -453,13 +427,9 @@ public class CollectionSheetEntryAction extends BaseAction {
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERACCOUNTS,
                 errorAndCollectionSheetDataDto.getDecomposedViews().getCustomerAccountViews(), request);
 
-        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CLIENTS, errorAndCollectionSheetDataDto
-                .getClients(), request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.SAVINGS, errorAndCollectionSheetDataDto
                 .getSavingsAccounts(), request);
 
-        SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORCLIENTS, errorAndCollectionSheetDataDto
-                .getErrors().getCustomerNames(), request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSDEPOSIT,
                 errorAndCollectionSheetDataDto.getErrors().getSavingsDepNames(), request);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.ERRORSAVINGSWITHDRAW,
@@ -514,41 +484,12 @@ public class CollectionSheetEntryAction extends BaseAction {
                 .getAttendanceTypesList(), request);
     }
 
-    private String getAttendanceSummary(List<ClientBO> clients, Date meetingDate) {
-        List<String> attendanceCodes = new ArrayList<String>();
-        for (ClientBO client : clients) {
-            if (null != client.getClientAttendanceForMeeting(meetingDate)) {
-                ClientAttendanceBO clientAttendanceBO = client.getClientAttendanceForMeeting(meetingDate);
-                AttendanceType attendanceType = clientAttendanceBO.getAttendanceAsEnum();
-                switch (attendanceType) {
-                case PRESENT:
-                    attendanceCodes.add("P");
-                    break;
-                case ABSENT:
-                    attendanceCodes.add("A");
-                    break;
-                case APPROVED_LEAVE:
-                    attendanceCodes.add("AA");
-                    break;
-                case LATE:
-                    attendanceCodes.add("L");
-                    break;
-                default:
-                    attendanceCodes.add("x");
-                    break;
-                }
-            }
-        }
-        return StringUtils.join(attendanceCodes, "_");
-    }
-
-    private String getUpdateTotalsString(List<ClientBO> clients, List<SavingsBO> savings,
-            List<LoanAccountsProductView> loans, List<CustomerAccountView> customerAccounts) {
+    private String getUpdateTotalsString(final ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto) {
         String totals = "";
-        totals += " clients:" + clients.size();
-        totals += ", savings:" + savings.size();
-        totals += ", loans:" + loans.size();
-        totals += ", collections:" + customerAccounts.size();
+        totals += ", savings:" + errorAndCollectionSheetDataDto.getSavingsAccounts().size();
+        totals += ", loans:" + errorAndCollectionSheetDataDto.getDecomposedViews().getLoanAccountViews().size();
+        totals += ", collections:"
+                + errorAndCollectionSheetDataDto.getDecomposedViews().getCustomerAccountViews().size();
         return totals;
     }
 

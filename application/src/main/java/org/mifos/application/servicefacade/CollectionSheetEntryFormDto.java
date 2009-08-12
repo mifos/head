@@ -20,7 +20,6 @@
 package org.mifos.application.servicefacade;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerView;
@@ -39,7 +38,7 @@ public class CollectionSheetEntryFormDto implements Serializable {
     private final Short reloadFormAutomatically;
     private final Short centerHierarchyExists;
     private final Short backDatedTransactionAllowed;
-    private final Date meetingDate;
+    private final java.util.Date meetingDate;
 
     public CollectionSheetEntryFormDto(List<OfficeView> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
             List<PersonnelView> loanOfficerList, List<CustomerView> customerList, Short reloadFormAutomatically,
@@ -56,7 +55,7 @@ public class CollectionSheetEntryFormDto implements Serializable {
 
     public CollectionSheetEntryFormDto(List<OfficeView> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
             List<PersonnelView> loanOfficerList, List<CustomerView> customerList, Short reloadFormAutomatically,
-            Short centerHierarchyExists, Short backDatedTransactionAllowed, Date meetingDate) {
+            Short centerHierarchyExists, Short backDatedTransactionAllowed, java.util.Date meetingDate) {
         this.activeBranchesList = activeBranches;
         this.paymentTypesList = paymentTypesDtoList;
         this.loanOfficerList = loanOfficerList;
@@ -95,7 +94,7 @@ public class CollectionSheetEntryFormDto implements Serializable {
         return this.backDatedTransactionAllowed;
     }
 
-    public Date getMeetingDate() {
+    public java.util.Date getMeetingDate() {
         return this.meetingDate;
     }
 }

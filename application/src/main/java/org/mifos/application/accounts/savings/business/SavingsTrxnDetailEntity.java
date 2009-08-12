@@ -56,22 +56,6 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         this.balance = balance;
     }
 
-    public Money getDepositAmount() {
-        return depositAmount;
-    }
-
-    public Money getWithdrawlAmount() {
-        return withdrawlAmount;
-    }
-
-    public Money getBalance() {
-        return balance;
-    }
-
-    public Money getInterestAmount() {
-        return interestAmount;
-    }
-
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
             AccountActionEntity accountActionEntity, Money amount, Money balance, PersonnelBO createdBy,
             java.util.Date dueDate, java.util.Date transactionDate, Short installmentId, String comment) {
@@ -156,5 +140,21 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
+    }
+    
+    public Money getDepositAmount() {
+        return depositAmount;
+    }
+
+    public Money getWithdrawlAmount() {
+        return withdrawlAmount;
+    }
+
+    public Money getBalance() {
+        return balance;
+    }
+
+    public Money getInterestAmount() {
+        return interestAmount;
     }
 }

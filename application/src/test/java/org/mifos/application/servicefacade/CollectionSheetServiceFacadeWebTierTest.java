@@ -22,12 +22,12 @@ package org.mifos.application.servicefacade;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -36,15 +36,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -82,6 +85,9 @@ public class CollectionSheetServiceFacadeWebTierTest {
     
     @Mock
     private CustomerPersistence customerPersistence;
+    
+    @Mock
+    private SavingsPersistence savingsPersistence;
     
     @Mock
     private CollectionSheetEntryViewAssembler collectionSheetViewAssembler;
@@ -133,7 +139,8 @@ public class CollectionSheetServiceFacadeWebTierTest {
         collectionSheetForm.setPaymentId("2");
         
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
-                masterPersistence, personnelPersistence, customerPersistence, collectionSheetViewAssembler,
+                masterPersistence, personnelPersistence, customerPersistence, savingsPersistence,
+                collectionSheetViewAssembler,
                 collectionSheetGridViewAssembler, collectionSheetEntryBusinessService,
                 collectionSheetEntryViewTranslator);
     }
@@ -392,12 +399,27 @@ public class CollectionSheetServiceFacadeWebTierTest {
     public void shouldUseAssemblersToCreateCollectionSheetEntryGridDtoAndSetParentNodeInView() {
 
         // setup
-        final CollectionSheetEntryGridDto gridDto = new CollectionSheetEntryGridDto();
+        final PersonnelView loanOfficer = null;
+        final OfficeView office = null;
+        final ListItem<Short> paymentType = null;
+        final Date meetingDate = new DateTime().toDate();
+        final String receiptId = "test";
+        final Date receiptDate = new DateTime().toDate();
+        final List<ProductDto> loanProductDtos = new ArrayList<ProductDto>();
+        final List<ProductDto> savingProductDtos = new ArrayList<ProductDto>();
+        final HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
+
+        final CollectionSheetEntryGridDto gridDto = new CollectionSheetEntryGridDto(collectionSheetEntryView,
+                loanOfficer, office, paymentType, meetingDate, receiptId, receiptDate, loanProductDtos,
+                savingProductDtos, clientAttendance, attendanceTypesList);
         
         // stub
         when(collectionSheetViewAssembler.toDto(collectionSheetFormEnteredDataDto))
                 .thenReturn(collectionSheetEntryView);
-        when(collectionSheetGridViewAssembler.toDto(collectionSheetFormEnteredDataDto, userContext.getLocaleId()))
+        when(
+                collectionSheetGridViewAssembler.toDto(collectionSheetFormEnteredDataDto, userContext.getLocaleId(),
+                        collectionSheetEntryView))
                 .thenReturn(gridDto);
         
         when(collectionSheetEntryView.getCollectionSheetEntryChildren()).thenReturn(
@@ -410,17 +432,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // state verification
         assertThat(gridDto.getTotalCustomers(), is(0));
         assertThat(gridDto.getBulkEntryParent(), is(collectionSheetEntryView));
-    }
-
-    @Test
-    public void shouldSetCollectionSheetDataViewWhenPreviewingCollectionSheet() {
-
-        // exercise test
-        collectionSheetServiceFacadeWebTier
-                .previewCollectionSheetEntry(collectionSheetEntryGridDto, collectionSheetDataView);
-
-        // behaviour verification
-        verify(collectionSheetEntryGridDto).setcollectionSheetDataView(collectionSheetDataView);
     }
     
     @Test
@@ -449,7 +460,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         
         // exercise test
         ErrorAndCollectionSheetDataDto result = collectionSheetServiceFacadeWebTier
-                .prepareDataForCollectionSheetEntrySave(collectionSheetEntryGridDto, userId);
+                .prepareSavingAccountsForCollectionSheetEntrySave(collectionSheetEntryGridDto, userId);
 
         // state verification
         assertThat(result.getDecomposedViews(), is(decomposedView));

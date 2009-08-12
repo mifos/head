@@ -21,32 +21,21 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountBO;
+
 /**
  *
  */
-public class CollectionSheetErrorsView {
+public class CollectionSheetServiceImpl implements CollectionSheetService {
 
-    private final List<String> savingsDepNames;
-    private final List<String> savingsWithNames;
-    private final List<String> customerAccountNumbers;
+    public void saveCollectionSheet(List<AccountBO> accounts) {
+        // TODO - keithw - implement
 
-    public CollectionSheetErrorsView(List<String> savingsDepNames,
-            List<String> savingsWithNames,
-            final List<String> customerAccountNumbers) {
-        this.savingsDepNames = savingsDepNames;
-        this.savingsWithNames = savingsWithNames;
-        this.customerAccountNumbers = customerAccountNumbers;
+        // 1. begin transaction
+
+        // 2. batch save all accounts
+
+        // 3. end transaction
     }
 
-    public List<String> getSavingsDepNames() {
-        return this.savingsDepNames;
-    }
-
-    public List<String> getSavingsWithNames() {
-        return this.savingsWithNames;
-    }
-
-    public List<String> getCustomerAccountNumbers() {
-        return this.customerAccountNumbers;
-    }
 }

@@ -21,7 +21,6 @@
 package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -35,9 +34,9 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public abstract class BaseFinancialActivity {
-    private AccountTrxnEntity accountTrxn;
+    private final AccountTrxnEntity accountTrxn;
 
-    private List<FinancialTransactionBO> financialTransactions = new ArrayList<FinancialTransactionBO>();
+    private final List<FinancialTransactionBO> financialTransactions = new ArrayList<FinancialTransactionBO>();
 
     public BaseFinancialActivity(AccountTrxnEntity accountTrxn) {
         this.accountTrxn = accountTrxn;
@@ -48,19 +47,15 @@ public abstract class BaseFinancialActivity {
     }
 
     public void buildAccountEntries() throws FinancialException {
-        List<BaseAccountingEntry> financialActionEntryList = getFinancialActionEntry();
-        Iterator<BaseAccountingEntry> iterFinancialActionEntry = financialActionEntryList.iterator();
-        while (iterFinancialActionEntry.hasNext()) {
-            BaseAccountingEntry financialActionEntry = iterFinancialActionEntry.next();
+        final List<BaseAccountingEntry> financialActionEntryList = getFinancialActionEntry();
+
+        for (BaseAccountingEntry financialActionEntry : financialActionEntryList) {
             financialActionEntry.buildAccountEntryForAction(this);
         }
 
-        Iterator<FinancialTransactionBO> iterFinancialTransactions = financialTransactions.iterator();
-        while (iterFinancialTransactions.hasNext()) {
-            FinancialTransactionBO financialTransaction = iterFinancialTransactions.next();
+        for (FinancialTransactionBO financialTransaction : financialTransactions) {
             accountTrxn.addFinancialTransction(financialTransaction);
         }
-
     }
 
     public void addFinancialTransaction(FinancialTransactionBO financialTransaction) {

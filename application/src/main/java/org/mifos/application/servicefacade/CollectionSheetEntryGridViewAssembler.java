@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.client.business.service.ClientService;
@@ -52,21 +53,14 @@ public class CollectionSheetEntryGridViewAssembler {
         this.clientService = clientService;
     }
 
-    public CollectionSheetEntryGridDto toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto, final Short localeId) {
+    public CollectionSheetEntryGridDto toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto,
+            final Short localeId, final CollectionSheetEntryView collectionSheetParent) {
 
         final java.sql.Date meetingDate = formEnteredDataDto.getMeetingDate();
         final String selectedCustomerSearchId = formEnteredDataDto.getCustomer().getCustomerSearchId();
         final Short loanOfficerId = formEnteredDataDto.getLoanOfficer().getPersonnelId();
         final Short officeId = formEnteredDataDto.getOffice().getOfficeId();
         
-        final CollectionSheetEntryGridDto collectionSheetGridView = new CollectionSheetEntryGridDto();
-        collectionSheetGridView.setOffice(formEnteredDataDto.getOffice());
-        collectionSheetGridView.setLoanOfficer(formEnteredDataDto.getLoanOfficer());
-        collectionSheetGridView.setPaymentType(formEnteredDataDto.getPaymentType());
-        collectionSheetGridView.setTransactionDate(formEnteredDataDto.getMeetingDate());
-        collectionSheetGridView.setReceiptDate(formEnteredDataDto.getReceiptDate());
-        collectionSheetGridView.setReceiptId(formEnteredDataDto.getReceiptId());
-
         List<ProductDto> loanProductDtos = new ArrayList<ProductDto>();
         List<ProductDto> savingProductDtos = new ArrayList<ProductDto>();
 
@@ -107,16 +101,22 @@ public class CollectionSheetEntryGridViewAssembler {
                 }
             }
 
-            collectionSheetGridView.setClientAttendance(result);
-
             List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, localeId,
                     "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                     .getCustomValueListElements();
-
-            collectionSheetGridView.setAttendanceTypesList(attendanceTypesList);
-            collectionSheetGridView.setLoanProducts(loanProductDtos);
-            collectionSheetGridView.setSavingProducts(savingProductDtos);
+            
+            final CollectionSheetEntryGridDto collectionSheetGridView = new CollectionSheetEntryGridDto(
+                    collectionSheetParent,
+                    formEnteredDataDto.getLoanOfficer(),
+                    formEnteredDataDto.getOffice(),
+                    formEnteredDataDto.getPaymentType(),
+                    formEnteredDataDto.getMeetingDate(),
+                    formEnteredDataDto.getReceiptId(),
+                    formEnteredDataDto.getReceiptDate(),
+                    loanProductDtos, savingProductDtos, result,
+                    attendanceTypesList
+                    );
 
             return collectionSheetGridView;
         } catch (PersistenceException e) {

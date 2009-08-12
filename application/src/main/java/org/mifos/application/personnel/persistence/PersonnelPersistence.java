@@ -52,18 +52,19 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
 
 public class PersonnelPersistence extends Persistence {
 
     // TODO : Move to PersonnelRoleEntity
-    private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+    private final RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
+    @SuppressWarnings("unchecked")
     public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId, Short officeId, Short userId,
             Short userLevelId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -196,7 +197,7 @@ public class PersonnelPersistence extends Persistence {
         return personnelBO;
     }
 
-    public PersonnelBO getPersonnelById(Short id) throws PersistenceException {
+    public PersonnelBO findPersonnelById(final Short id) {
         return (PersonnelBO) getSession().get(PersonnelBO.class, id);
     }
 
@@ -229,6 +230,76 @@ public class PersonnelPersistence extends Persistence {
         return getQueryResults(paramList, namedQuery);
     }
 
+    @SuppressWarnings("unchecked")
+    public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);
+        queryParameters.put(CustomerSearchConstants.PERSONNELLEVELID, PersonnelLevel.LOAN_OFFICER.getValue());
+        queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE, PersonnelStatus.ACTIVE.getValue());
+        return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER, queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<SupportedLocalesEntity> getSupportedLocales() throws PersistenceException {
+        return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST, null);
+    }
+
+    public PersonnelBO createPersonnel(UserContext userContext, PersonnelTemplate template)
+            throws PersistenceException, ValidationException, PersonnelException {
+        OfficeBO office = new OfficePersistence().getOffice(template.getOfficeId());
+        if (office == null) {
+            throw new ValidationException(PersonnelConstants.OFFICE);
+        }
+        int numberOfRoles = template.getRoleIds().size();
+        ArrayList<RoleBO> roles = new ArrayList<RoleBO>(numberOfRoles);
+        RoleBO role;
+        for (int i = 0; i < numberOfRoles; i++) {
+            role = rolesPermissionsPersistence.getRole(template.getRoleIds().get(i));
+            if (role == null) {
+                throw new ValidationException(PersonnelConstants.ROLES_LIST);
+            }
+            roles.add(role);
+        }
+
+        PersonnelBO personnelBO = new PersonnelBO(template.getPersonnelLevel(), office, template.getTitleId(), template
+                .getPreferredLocale(), template.getPassword(), template.getUserName(), template.getEmailId(), roles,
+                template.getCustomFields(), template.getName(), template.getGovernmentIdNumber(), template
+                        .getDateOfBirth(), template.getMaritalStatusId(), template.getGenderId(), template
+                        .getDateOfJoiningMFI(), template.getDateOfJoiningBranch(), template.getAddress(), userContext
+                        .getId());
+        personnelBO.save();
+        return personnelBO;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<PersonnelBO> getAllPersonnel() throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List<PersonnelBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_PERSONNEL, queryParameters);
+        return queryResult;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId, final RoleBO role)
+            throws PersistenceException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(CustomerSearchConstants.OFFICEID, officeId);
+        params.put(CustomerSearchConstants.PERSONNELSTATUSID, PersonnelStatus.ACTIVE.getValue());
+        List activeBranchManagers = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_BRANCH_MANAGER_UNDER_OFFICE,
+                params);
+        return (List<PersonnelBO>) CollectionUtils.select(activeBranchManagers, new Predicate() {
+            public boolean evaluate(Object object) {
+                Set<PersonnelRoleEntity> applicableRoles = ((PersonnelBO) object).getPersonnelRoles();
+                return CollectionUtils.exists(applicableRoles, new Predicate() {
+                    public boolean evaluate(Object object) {
+                        return ((PersonnelRoleEntity) object).getRole().equals(role);
+                    }
+                });
+            }
+        });
+    }
+    
     private List<Param> getParamList(PersonnelBO personnel) {
         List<Param> paramList = new ArrayList<Param>();
         paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
@@ -261,75 +332,5 @@ public class PersonnelPersistence extends Persistence {
         String[] aliasNames = { "officeId", "officeName", "personnelId", "globalPersonnelNum", "personnelName" };
         return aliasNames;
 
-    }
-
-    public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);
-        queryParameters.put(CustomerSearchConstants.PERSONNELLEVELID, PersonnelLevel.LOAN_OFFICER.getValue());
-        queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE, PersonnelStatus.ACTIVE.getValue());
-        return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER, queryParameters);
-    }
-
-    public List<SupportedLocalesEntity> getSupportedLocales() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST, null);
-    }
-
-    public PersonnelBO createPersonnel(UserContext userContext, PersonnelTemplate template)
-            throws PersistenceException, ValidationException, PersonnelException {
-        OfficeBO office = new OfficePersistence().getOffice(template.getOfficeId());
-        if (office == null) {
-            throw new ValidationException(PersonnelConstants.OFFICE);
-        }
-        int numberOfRoles = template.getRoleIds().size();
-        ArrayList<RoleBO> roles = new ArrayList(numberOfRoles);
-        RoleBO role;
-        for (int i = 0; i < numberOfRoles; i++) {
-            role = rolesPermissionsPersistence.getRole(template.getRoleIds().get(i));
-            if (role == null) {
-                throw new ValidationException(PersonnelConstants.ROLES_LIST);
-            }
-            roles.add(role);
-        }
-
-        PersonnelBO personnelBO = new PersonnelBO(template.getPersonnelLevel(), office, template.getTitleId(), template
-                .getPreferredLocale(), template.getPassword(), template.getUserName(), template.getEmailId(), roles,
-                template.getCustomFields(), template.getName(), template.getGovernmentIdNumber(), template
-                        .getDateOfBirth(), template.getMaritalStatusId(), template.getGenderId(), template
-                        .getDateOfJoiningMFI(), template.getDateOfJoiningBranch(), template.getAddress(), userContext
-                        .getId());
-        personnelBO.save();
-        return personnelBO;
-    }
-
-    public List<PersonnelBO> getAllPersonnel() throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-
-        List<PersonnelBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_PERSONNEL, queryParameters);
-        return queryResult;
-
-    }
-
-    private RolesPermissionsPersistence getRolesPermissionsPersistence() {
-        return rolesPermissionsPersistence;
-    }
-
-    public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId, final RoleBO role)
-            throws PersistenceException {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(CustomerSearchConstants.OFFICEID, officeId);
-        params.put(CustomerSearchConstants.PERSONNELSTATUSID, PersonnelStatus.ACTIVE.getValue());
-        List activeBranchManagers = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_BRANCH_MANAGER_UNDER_OFFICE,
-                params);
-        return (List<PersonnelBO>) CollectionUtils.select(activeBranchManagers, new Predicate() {
-            public boolean evaluate(Object object) {
-                Set<PersonnelRoleEntity> applicableRoles = ((PersonnelBO) object).getPersonnelRoles();
-                return CollectionUtils.exists(applicableRoles, new Predicate() {
-                    public boolean evaluate(Object object) {
-                        return ((PersonnelRoleEntity) object).getRole().equals(role);
-                    }
-                });
-            }
-        });
     }
 }

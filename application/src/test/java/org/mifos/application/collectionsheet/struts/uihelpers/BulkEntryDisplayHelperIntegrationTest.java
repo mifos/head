@@ -53,6 +53,7 @@ import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -222,8 +223,6 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto();
-
         CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center));
         SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
         centerSavingsAccountView.setDepositAmountEntered("100");
@@ -277,16 +276,14 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         
         List<ProductDto> savingsProducts = Arrays.asList(savingOfferingDto, savingOfferingDto2, savingOfferingDto3);
         
+        final PersonnelView loanOfficer = getPersonnelView(center.getPersonnel());
+        final OfficeView officeView = null;
+        final HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
+        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
         
-        bulkEntry.setLoanProducts(loanProducts);
-        bulkEntry.setSavingProducts(savingsProducts);
-        bulkEntry.setTotalCustomers(3);
-        bulkEntry.setBulkEntryParent(bulkEntryParent);
-        bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
-        bulkEntry.setReceiptId("324343242");
-        bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
-        bulkEntry.setPaymentType(getPaymentTypeView());
-        bulkEntry.setTransactionDate(new java.sql.Date(System.currentTimeMillis()));
+        CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto(bulkEntryParent, loanOfficer,
+                officeView, getPaymentTypeView(), new java.util.Date(), "324343242", new java.util.Date(),
+                loanProducts, savingsProducts, clientAttendance, attendanceTypesList);
 
         return bulkEntry;
 

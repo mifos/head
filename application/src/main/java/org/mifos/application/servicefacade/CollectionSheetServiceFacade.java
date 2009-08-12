@@ -45,6 +45,9 @@ public interface CollectionSheetServiceFacade {
     CollectionSheetEntryGridDto previewCollectionSheetEntry(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
             CollectionSheetDataView dataView);
 
-    ErrorAndCollectionSheetDataDto prepareDataForCollectionSheetEntrySave(
+    ErrorAndCollectionSheetDataDto prepareSavingAccountsForCollectionSheetEntrySave(
             CollectionSheetEntryGridDto previousCollectionSheetEntryDto, Short userId);
+
+    CollectionSheetErrorsView saveCollectionSheet(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
+            ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto, Short userId);
 }

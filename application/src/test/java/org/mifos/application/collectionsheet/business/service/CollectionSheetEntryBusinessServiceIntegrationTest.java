@@ -35,17 +35,25 @@ import junitx.framework.StringAssert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientService;
+import org.mifos.application.customer.client.business.service.StandardClientService;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -89,12 +97,19 @@ public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosInt
 
     private AccountPersistence accountPersistence;
 
-    Date currentDate;
+    private Date currentDate;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        bulkEntryBusinessService = new CollectionSheetEntryBusinessService();
+        
+        final ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao();
+        final ClientService clientService = new StandardClientService(clientAttendanceDao);
+        final CustomerPersistence customerPersistence = new CustomerPersistence();
+        final SavingsPersistence savingsPersistence = new SavingsPersistence();
+        final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
+        bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService, customerPersistence, savingsPersistence,
+                bulkEntryPersistanceService);
         accountPersistence = new AccountPersistence();
         currentDate = new Date(System.currentTimeMillis());
     }
@@ -117,7 +132,7 @@ public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosInt
         super.tearDown();
     }
 
-   public void testSuccessfulSaveLoanAccount() throws Exception {
+    public void testSuccessfulSaveLoanAccount() throws Exception {
         createLoanAccount();
 
         bulkEntryBusinessService.saveLoanAccount(getAccountView(account), (short) 1, "324423", (short) 1, null,

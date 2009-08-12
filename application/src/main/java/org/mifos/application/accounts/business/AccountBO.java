@@ -39,6 +39,7 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
@@ -75,10 +76,10 @@ import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.DateTimeService;
 
 public class AccountBO extends BusinessObject {
 
@@ -100,15 +101,15 @@ public class AccountBO extends BusinessObject {
 
     private AccountStateEntity accountState;
 
-    private Set<AccountFlagMapping> accountFlags;
+    private final Set<AccountFlagMapping> accountFlags;
 
-    private Set<AccountFeesEntity> accountFees;
+    private final Set<AccountFeesEntity> accountFees;
 
-    private Set<AccountActionDateEntity> accountActionDates;
+    private final Set<AccountActionDateEntity> accountActionDates;
 
     private Set<AccountPaymentEntity> accountPayments;
 
-    private Set<AccountCustomFieldEntity> accountCustomFields;
+    private final Set<AccountCustomFieldEntity> accountCustomFields;
 
     private Date closedDate;
 
@@ -364,7 +365,7 @@ public class AccountBO extends BusinessObject {
         accountActionDates.add(accountAction);
     }
 
-    protected void addAccountPayment(AccountPaymentEntity payment) {
+    protected void addAccountPayment(final AccountPaymentEntity payment) {
         if (accountPayments == null) {
             accountPayments = new LinkedHashSet<AccountPaymentEntity>();
         }
@@ -396,16 +397,23 @@ public class AccountBO extends BusinessObject {
     }
 
     protected void addcustomFields(List<CustomFieldView> customFields) {
-        if (customFields != null)
+        if (customFields != null) {
             for (CustomFieldView view : customFields) {
                 this.getAccountCustomFields().add(
                         new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
             }
+        }
     }
 
     /*
      * Take raw PaymentData (usually from a web page) and enter it into Mifos.
      */
+    /**
+     * @deprecated this should be purely a model enriching method to take of
+     *             making a payment. Use {@link AccountBO#applyPayment(Money)}
+     *             instead and use a dao to persist/save changes.
+     */
+    @Deprecated
     public final void applyPayment(PaymentData paymentData, boolean persistChanges) throws AccountException {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
@@ -419,6 +427,13 @@ public class AccountBO extends BusinessObject {
         }
     }
 
+    /**
+     * @deprecated this should be purely a model enriching method to take of
+     *             making a payment.
+     * @see method {@link SavingsBO#deposit(AccountPaymentEntity)}
+     * @see method {@link SavingsBO#withdraw(AccountPaymentEntity)}
+     */
+    @Deprecated
     public final void applyPaymentWithPersist(PaymentData paymentData) throws AccountException {
         applyPayment(paymentData, true);
     }
@@ -464,8 +479,9 @@ public class AccountBO extends BusinessObject {
             } catch (PersistenceException e) {
                 throw new AccountException(AccountExceptionConstants.CANNOTADJUST, e);
             }
-        } else
+        } else {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
+        }
     }
 
     public final void adjustLastPayment(String adjustmentComment) throws AccountException {
@@ -479,8 +495,9 @@ public class AccountBO extends BusinessObject {
             } catch (PersistenceException e) {
                 throw new AccountException(AccountExceptionConstants.CANNOTADJUST, e);
             }
-        } else
+        } else {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
+        }
 
     }
 
@@ -545,8 +562,9 @@ public class AccountBO extends BusinessObject {
             if (newStatusId.equals(AccountState.LOAN_CANCELLED.getValue())
                     || newStatusId.equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
                     || newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
-                    || newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue()))
+                    || newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue())) {
                 this.setClosedDate(getDateTimeService().getCurrentJavaDateTime());
+            }
             if (newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
                 writeOff();
             }
@@ -590,8 +608,9 @@ public class AccountBO extends BusinessObject {
 
     public FeeBO getAccountFeesObject(Short feeId) {
         AccountFeesEntity accountFees = getAccountFees(feeId);
-        if (accountFees != null)
+        if (accountFees != null) {
             return accountFees.getFees();
+        }
         return null;
     }
 
@@ -601,10 +620,11 @@ public class AccountBO extends BusinessObject {
     }
 
     protected Money removeSign(Money amount) {
-        if (amount != null && amount.getAmountDoubleValue() < 0)
+        if (amount != null && amount.getAmountDoubleValue() < 0) {
             return amount.negate();
-        else
+        } else {
             return amount;
+        }
     }
 
     public double getLastPmntAmnt() {
@@ -679,8 +699,9 @@ public class AccountBO extends BusinessObject {
         if (nextInstallment != null) {
             for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
                 if (!accountActionDate.isPaid()) {
-                    if (accountActionDate.getInstallmentId() > nextInstallment.getInstallmentId())
+                    if (accountActionDate.getInstallmentId() > nextInstallment.getInstallmentId()) {
                         futureActionDateList.add(accountActionDate);
+                    }
                 }
             }
         }
@@ -692,8 +713,9 @@ public class AccountBO extends BusinessObject {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
         if (nextInstallment == null || !nextInstallment.isPaid()) {
             dueActionDateList.addAll(getDetailsOfInstallmentsInArrears());
-            if (nextInstallment != null)
+            if (nextInstallment != null) {
                 dueActionDateList.add(nextInstallment);
+            }
         }
         return dueActionDateList;
     }
@@ -734,8 +756,9 @@ public class AccountBO extends BusinessObject {
 
     public Date getNextMeetingDate() {
         AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
-        if (nextAccountAction != null)
+        if (nextAccountAction != null) {
             return nextAccountAction.getActionDate();
+        }
         // calculate the next date based on the customer's meeting object
         CustomerMeetingEntity customerMeeting = customer.getCustomerMeeting();
         if (customerMeeting != null) {
@@ -751,8 +774,9 @@ public class AccountBO extends BusinessObject {
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
         if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
             for (AccountActionDateEntity accountAction : getAccountActionDates()) {
-                if (accountAction.getActionDate().compareTo(currentDate) < 0 && !accountAction.isPaid())
+                if (accountAction.getActionDate().compareTo(currentDate) < 0 && !accountAction.isPaid()) {
                     installmentsInArrears.add(accountAction);
+                }
             }
         }
         return installmentsInArrears;
@@ -766,10 +790,12 @@ public class AccountBO extends BusinessObject {
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
         if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
             for (AccountActionDateEntity accountAction : getAccountActionDates()) {
-                if (accountAction.getActionDate().compareTo(currentDate) >= 0)
+                if (accountAction.getActionDate().compareTo(currentDate) >= 0) {
                     if (null == nextAccountAction
-                            || nextAccountAction.getInstallmentId() > accountAction.getInstallmentId())
+                            || nextAccountAction.getInstallmentId() > accountAction.getInstallmentId()) {
                         nextAccountAction = accountAction;
+                    }
+                }
             }
         }
         return nextAccountAction;
@@ -778,8 +804,9 @@ public class AccountBO extends BusinessObject {
     public Money getTotalAmountDue() {
         Money totalAmt = getTotalAmountInArrears();
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-        if (nextInstallment != null && !nextInstallment.isPaid())
+        if (nextInstallment != null && !nextInstallment.isPaid()) {
             totalAmt = totalAmt.add(getDueAmount(nextInstallment));
+        }
         return totalAmt;
     }
 
@@ -789,17 +816,20 @@ public class AccountBO extends BusinessObject {
         if (nextInstallment != null
                 && !nextInstallment.isPaid()
                 && DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(
-                        DateUtils.getCurrentDateWithoutTimeStamp()))
+                        DateUtils.getCurrentDateWithoutTimeStamp())) {
             totalAmt = totalAmt.add(getDueAmount(nextInstallment));
+        }
         return totalAmt;
     }
 
     public Money getTotalAmountInArrears() {
         List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
         Money totalAmount = new Money();
-        if (installmentsInArrears != null && installmentsInArrears.size() > 0)
-            for (AccountActionDateEntity accountAction : installmentsInArrears)
+        if (installmentsInArrears != null && installmentsInArrears.size() > 0) {
+            for (AccountActionDateEntity accountAction : installmentsInArrears) {
                 totalAmount = totalAmount.add(getDueAmount(accountAction));
+            }
+        }
         return totalAmount;
     }
 
@@ -809,8 +839,9 @@ public class AccountBO extends BusinessObject {
         if (nextInstallment != null
                 && !nextInstallment.isPaid()
                 && DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(
-                        DateUtils.getCurrentDateWithoutTimeStamp()))
+                        DateUtils.getCurrentDateWithoutTimeStamp())) {
             dueInstallments.add(nextInstallment);
+        }
         return dueInstallments;
     }
 
@@ -850,8 +881,9 @@ public class AccountBO extends BusinessObject {
                 // must be >= creation date for other accounts
                 return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;
             } else {
-                if (meetingDate != null)
+                if (meetingDate != null) {
                     return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+                }
                 return false;
             }
         } catch (PersistenceException e) {
@@ -874,8 +906,9 @@ public class AccountBO extends BusinessObject {
         List<AccountNotesEntity> notes = new ArrayList<AccountNotesEntity>();
         int count = 0;
         for (AccountNotesEntity accountNotesEntity : getAccountNotes()) {
-            if (count > 2)
+            if (count > 2) {
                 break;
+            }
             notes.add(accountNotesEntity);
             count++;
         }
@@ -908,8 +941,9 @@ public class AccountBO extends BusinessObject {
     public Boolean isCurrentDateGreaterThanFirstInstallment() {
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
             if (DateUtils.getCurrentDateWithoutTimeStamp().compareTo(
-                    DateUtils.getDateWithoutTimeStamp(accountActionDateEntity.getActionDate().getTime())) >= 0)
+                    DateUtils.getDateWithoutTimeStamp(accountActionDateEntity.getActionDate().getTime())) >= 0) {
                 return true;
+            }
         }
         return false;
     }
@@ -928,8 +962,9 @@ public class AccountBO extends BusinessObject {
     public boolean isUpcomingInstallmentUnpaid() {
         AccountActionDateEntity accountActionDateEntity = getDetailsOfUpcomigInstallment();
         if (accountActionDateEntity != null) {
-            if (!accountActionDateEntity.isPaid())
+            if (!accountActionDateEntity.isPaid()) {
                 return true;
+            }
         }
         return false;
     }
@@ -939,11 +974,13 @@ public class AccountBO extends BusinessObject {
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
         if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
             for (AccountActionDateEntity accountAction : getAccountActionDates()) {
-                if (accountAction.getActionDate().compareTo(currentDate) > 0)
-                    if (null == nextAccountAction)
+                if (accountAction.getActionDate().compareTo(currentDate) > 0) {
+                    if (null == nextAccountAction) {
                         nextAccountAction = accountAction;
-                    else if (nextAccountAction.getInstallmentId() > accountAction.getInstallmentId())
+                    } else if (nextAccountAction.getInstallmentId() > accountAction.getInstallmentId()) {
                         nextAccountAction = accountAction;
+                    }
+                }
             }
         }
         return nextAccountAction;
@@ -1030,11 +1067,12 @@ public class AccountBO extends BusinessObject {
         if (noOfInstallments > 0) {
             try {
                 List<Date> dueDates;
-                if (isRepaymentIndepOfMeetingEnabled)
+                if (isRepaymentIndepOfMeetingEnabled) {
                     dueDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments
                             + installmentToSkip, adjustForHolidays);
-                else
+                } else {
                     dueDates = meeting.getAllDates(noOfInstallments + installmentToSkip, adjustForHolidays);
+                }
 
                 return createInstallmentDates(installmentToSkip, dueDates);
             } catch (MeetingException e) {
@@ -1127,8 +1165,9 @@ public class AccountBO extends BusinessObject {
     protected final Short getMatchingInstallmentId(List<InstallmentDate> installmentDates, Date feeDate) {
         for (InstallmentDate installmentDate : installmentDates) {
             if (DateUtils.getDateWithoutTimeStamp(installmentDate.getInstallmentDueDate().getTime()).compareTo(
-                    DateUtils.getDateWithoutTimeStamp(feeDate.getTime())) >= 0)
+                    DateUtils.getDateWithoutTimeStamp(feeDate.getTime())) >= 0) {
                 return installmentDate.getInstallmentId();
+            }
         }
         return null;
     }
@@ -1200,11 +1239,12 @@ public class AccountBO extends BusinessObject {
         Short lastInstallmentId = null;
         for (AccountActionDateEntity date : this.getAccountActionDates()) {
 
-            if (lastInstallmentId == null)
+            if (lastInstallmentId == null) {
                 lastInstallmentId = date.getInstallmentId();
-            else {
-                if (lastInstallmentId < date.getInstallmentId())
+            } else {
+                if (lastInstallmentId < date.getInstallmentId()) {
                     lastInstallmentId = date.getInstallmentId();
+                }
             }
         }
         return lastInstallmentId;
@@ -1236,10 +1276,11 @@ public class AccountBO extends BusinessObject {
 
         Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
             public int compare(AccountTrxnEntity trx1, AccountTrxnEntity trx2) {
-                if (trx1.getCreatedDate().equals(trx2.getCreatedDate()))
+                if (trx1.getCreatedDate().equals(trx2.getCreatedDate())) {
                     return trx1.getAccountTrxnId().compareTo(trx2.getAccountTrxnId());
-                else
+                } else {
                     return trx1.getCreatedDate().compareTo(trx2.getCreatedDate());
+                }
             }
         });
         return accountTrxnList;
@@ -1253,10 +1294,11 @@ public class AccountBO extends BusinessObject {
 
         Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
             public int compare(AccountTrxnEntity trx1, AccountTrxnEntity trx2) {
-                if (trx1.getActionDate().equals(trx2.getActionDate()))
+                if (trx1.getActionDate().equals(trx2.getActionDate())) {
                     return trx1.getAccountTrxnId().compareTo(trx2.getAccountTrxnId());
-                else
+                } else {
                     return trx1.getActionDate().compareTo(trx2.getActionDate());
+                }
             }
         });
         return accountTrxnList;
@@ -1293,13 +1335,16 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
+    // FIXME - keithw - null implementation so should be abstract (account is an abstract concept?)
     protected AccountPaymentEntity makePayment(PaymentData accountPaymentData) throws AccountException {
         return null;
     }
-
+    
+    // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
     protected void updateTotalFeeAmount(Money totalFeeAmount) {
     }
-
+ 
+    // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
     protected void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
     }
 
@@ -1373,8 +1418,9 @@ public class AccountBO extends BusinessObject {
     private AccountCustomFieldEntity getAccountCustomField(Short fieldId) {
         if (null != this.accountCustomFields && this.accountCustomFields.size() > 0) {
             for (AccountCustomFieldEntity obj : this.accountCustomFields) {
-                if (obj.getFieldId().equals(fieldId))
+                if (obj.getFieldId().equals(fieldId)) {
                     return obj;
+                }
             }
         }
         return null;
@@ -1393,8 +1439,9 @@ public class AccountBO extends BusinessObject {
     private void removeInstallmentsNeedNotPay(Short installmentSkipToStartRepayment,
             List<InstallmentDate> installmentDates) {
         int removeCounter = 0;
-        for (int i = 0; i < installmentSkipToStartRepayment; i++)
+        for (int i = 0; i < installmentSkipToStartRepayment; i++) {
             installmentDates.remove(removeCounter);
+        }
         // re-adjust the installment ids
         if (installmentSkipToStartRepayment > 0) {
             int count = installmentDates.size();
@@ -1407,8 +1454,9 @@ public class AccountBO extends BusinessObject {
 
     private void validate(UserContext userContext, CustomerBO customer, AccountTypes accountType,
             AccountState accountState) throws AccountException {
-        if (userContext == null || customer == null || accountType == null || accountState == null)
+        if (userContext == null || customer == null || accountType == null || accountState == null) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
+        }
     }
 
     private void setFlag(AccountStateFlagEntity accountStateFlagEntity) {
@@ -1416,8 +1464,9 @@ public class AccountBO extends BusinessObject {
         Iterator iter = this.getAccountFlags().iterator();
         while (iter.hasNext()) {
             AccountFlagMapping currentFlag = (AccountFlagMapping) iter.next();
-            if (!currentFlag.getFlag().isFlagRetained())
+            if (!currentFlag.getFlag().isFlagRetained()) {
                 iter.remove();
+            }
         }
         this.addAccountFlag(accountStateFlagEntity);
     }
@@ -1431,16 +1480,20 @@ public class AccountBO extends BusinessObject {
     }
 
     protected void updateCustomFields(List<CustomFieldView> customFields) throws InvalidDateException {
-        if (customFields == null)
+        if (customFields == null) {
             return;
+        }
         for (CustomFieldView fieldView : customFields) {
             if (fieldView.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNullAndEmptySafe(fieldView.getFieldValue()))
+                    && StringUtils.isNullAndEmptySafe(fieldView.getFieldValue())) {
                 fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+            }
             if (getAccountCustomFields().size() > 0) {
-                for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields())
-                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+                for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields()) {
+                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
+                    }
+                }
             } else {
                 for (CustomFieldView view : customFields) {
                     this.getAccountCustomFields().add(

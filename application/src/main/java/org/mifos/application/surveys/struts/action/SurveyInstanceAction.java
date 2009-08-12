@@ -610,7 +610,7 @@ public class SurveyInstanceAction extends BaseAction {
         instance.setOfficer(officer);
 
         UserContext userContext = getUserContext(request);
-        PersonnelBO currentUser = personnelPersistence.getPersonnelById(userContext.getId());
+        PersonnelBO currentUser = personnelPersistence.findPersonnelById(userContext.getId());
         instance.setCreator(currentUser);
 
         if (businessObject instanceof CustomerBO) {

@@ -21,12 +21,12 @@
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -34,8 +34,6 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /*
@@ -45,6 +43,8 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class AccountPaymentEntity extends PersistentObject {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    
     private final Integer paymentId = null;
 
     private final AccountBO account;
@@ -66,11 +66,11 @@ public class AccountPaymentEntity extends PersistentObject {
     private Money amount;
 
     private Set<AccountTrxnEntity> accountTrxns;
-
-    private MifosLogger logger;
+    
+    private PersonnelBO createdByUser;
 
     protected AccountPaymentEntity() {
-        this(null, null, null, null, null, new DateTimeService().getCurrentJavaDateTime());
+        this(null, null, null, null, null, new DateTime().toDate());
     }
 
     public AccountPaymentEntity(AccountBO account, Money amount, String receiptNumber, Date receiptDate,
@@ -85,7 +85,6 @@ public class AccountPaymentEntity extends PersistentObject {
         this.bankName = null;
         this.voucherNumber = null;
         this.checkNumber = null;
-        this.logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
     }
 
     public Integer getPaymentId() {
@@ -108,9 +107,7 @@ public class AccountPaymentEntity extends PersistentObject {
         return accountTrxns;
     }
 
-    @SuppressWarnings("unused")
-    // see .hbm.xml file
-    private void setAccountTrxns(Set<AccountTrxnEntity> accountTrxns) {
+    public void setAccountTrxns(Set<AccountTrxnEntity> accountTrxns) {
         this.accountTrxns = accountTrxns;
     }
 
@@ -142,8 +139,16 @@ public class AccountPaymentEntity extends PersistentObject {
         this.amount = amount;
     }
 
-    public void addAccountTrxn(AccountTrxnEntity accountTrxn) {
+    public void addAccountTrxn(final AccountTrxnEntity accountTrxn) {
         accountTrxns.add(accountTrxn);
+    }
+    
+    public PersonnelBO getCreatedByUser() {
+        return this.createdByUser;
+    }
+
+    public void setCreatedByUser(PersonnelBO createdByUser) {
+        this.createdByUser = createdByUser;
     }
 
     /**

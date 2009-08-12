@@ -87,11 +87,9 @@ public interface CollectionSheetEntryConstants {
     public String ISCENTERHIERARCHYEXISTS = "isCenterHierarchyExists";
     public String LOANS = "loans";
     public String SAVINGS = "savings";
-    public String CLIENTS = "clients";
     public String CLIENT_ATTENDANCE = "clientAttendance";
     public String COLLECTION_SHEET_ENTRY = "collectionSheetEntry";
     public String CUSTOMERACCOUNTS = "customeraccounts";
-    public String ERRORCLIENTS = "errorclients";
     public String ERRORLOANS = "errorloans";
     public String ERRORSAVINGSDEPOSIT = "errorsavingsdeposit";
     public String ERRORSAVINGSWITHDRAW = "errorsavingswithdraw";
@@ -113,7 +111,6 @@ public interface CollectionSheetEntryConstants {
     public String MODE_OF_PAYMENT = "bulkEntry.pmnttype";
     public String SAVING_DEPOSITE = "bulkEntry.savingsDeposit";
     public String SAVING_WITHDRAWAL = "bulkEntry.savingsWithdrawal";
-    public String ATTENDANCE = "bulkEntry.attendance";
     public String CLIENT_NAME = "bulkEntry.clientName";
     public String DATEOFTRXN = "bulkEntry.dateoftrxn";
     public String LOANOFFICERS = "bulkEntry.loanofficer";

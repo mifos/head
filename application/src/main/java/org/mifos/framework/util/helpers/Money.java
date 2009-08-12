@@ -27,11 +27,10 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.config.AccountingRules;
-import java.util.Locale;
 
 /**
  * This class represents Money objects in the system, it should be used for all
@@ -48,8 +47,9 @@ public final class Money implements Serializable {
     // otherwise delegates to BigDecimal.compareTo for comparision
     public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
         public int compare(Money m1, Money m2) {
-            if (m1.isCurrencyDifferent(m2))
+            if (m1.isCurrencyDifferent(m2)) {
                 throw new RuntimeException("Cannot compare money in differenct currencies");
+            }
             return m1.amount.compareTo(m2.amount);
         }
     };
@@ -148,8 +148,9 @@ public final class Money implements Serializable {
      */
     public Money add(Money money) {
         if (null != money) {
-            if (isCurrencyDifferent(money))
+            if (isCurrencyDifferent(money)) {
                 throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+            }
         }
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
@@ -166,15 +167,17 @@ public final class Money implements Serializable {
      */
     public Money subtract(Money money) {
         if (null != money) {
-            if (isCurrencyDifferent(money))
+            if (isCurrencyDifferent(money)) {
                 throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+            }
         }
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
             return this;
-        } else {
-            return new Money(currency, amount.subtract(money.getAmount()));
         }
+
+        return new Money(currency, amount.subtract(money.getAmount()));
+        
     }
 
     /**
@@ -184,8 +187,9 @@ public final class Money implements Serializable {
      */
     public Money multiply(Money money) {
         if (null != money) {
-            if (isCurrencyDifferent(money))
+            if (isCurrencyDifferent(money)) {
                 throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+            }
         }
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
@@ -218,8 +222,9 @@ public final class Money implements Serializable {
      */
     public Money divide(Money money) {
         if (null != money) {
-            if (isCurrencyDifferent(money))
+            if (isCurrencyDifferent(money)) {
                 throw new IllegalArgumentException(ExceptionConstants.ILLEGALMONEYOPERATION);
+            }
         }
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
@@ -322,18 +327,21 @@ public final class Money implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Money))
+        if (!(obj instanceof Money)) {
             return false;
-        if (obj == this)
+        }
+        if (obj == this) {
             return true;
+        }
         Money money = (Money) obj;
         return this.currency.equals(money.getCurrency()) && (this.amount.compareTo(money.getAmount()) == 0);
     }
 
     @Override
     public int hashCode() {
-        if (amount == null || currency == null)
+        if (amount == null || currency == null) {
             return System.identityHashCode(null);
+        }
         return this.currency.getCurrencyId() * 100 + this.amount.intValue();
     }
 
@@ -349,8 +357,9 @@ public final class Money implements Serializable {
                 decimalFormat = ((DecimalFormat) numberFormat);
                 decimalFormat.applyPattern(formatStr);
                 return decimalFormat.format(doubleValue);
-            } else
+            } else {
                 return numberFormat.format(doubleValue);
+            }
 
         }
         return "0";

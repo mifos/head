@@ -213,7 +213,9 @@ public class BulkEntryActionForm extends BaseActionForm {
                 CollectionSheetEntryConstants.GETMETHOD)) {
             java.sql.Date meetingDate = null;
             try {
-                meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate", request);
+                meetingDate = new java.sql.Date(
+                        ((java.util.Date) SessionUtils.getAttribute("LastMeetingDate", request))
+                        .getTime());
 
             } catch (PageExpiredException e) {
                 throw new RuntimeException(e);

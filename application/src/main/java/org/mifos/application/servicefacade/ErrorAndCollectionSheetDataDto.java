@@ -19,27 +19,25 @@
  */
 package org.mifos.application.servicefacade;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.customer.client.business.ClientBO;
 
 /**
  *
  */
-public class ErrorAndCollectionSheetDataDto {
+public class ErrorAndCollectionSheetDataDto implements Serializable {
 
     private final CollectionSheetEntryDecomposedView decomposedViews;
     private final CollectionSheetErrorsView errors;
     private final List<SavingsBO> savingsAccounts;
-    private final List<ClientBO> clients;
 
     public ErrorAndCollectionSheetDataDto(CollectionSheetEntryDecomposedView decomposedViews,
-            CollectionSheetErrorsView errors, List<SavingsBO> savingsAccounts, List<ClientBO> clients) {
+            CollectionSheetErrorsView errors, List<SavingsBO> savingsAccounts) {
                 this.decomposedViews = decomposedViews;
         this.errors = errors;
         this.savingsAccounts = savingsAccounts;
-        this.clients = clients;
     }
 
     public CollectionSheetEntryDecomposedView getDecomposedViews() {
@@ -52,9 +50,5 @@ public class ErrorAndCollectionSheetDataDto {
 
     public List<SavingsBO> getSavingsAccounts() {
         return this.savingsAccounts;
-    }
-
-    public List<ClientBO> getClients() {
-        return this.clients;
     }
 }

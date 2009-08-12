@@ -33,11 +33,14 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -45,17 +48,20 @@ import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
+import org.mifos.application.collectionsheet.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientService;
+import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.BasicGroupInfo;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -80,8 +86,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -116,7 +122,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     private SavingsOfferingBO savingsOffering;
 
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
+    private final CustomerPersistence customerPersistence = new CustomerPersistence();
 
     @Override
     protected void setUp() throws Exception {
@@ -324,8 +330,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         assertEquals(new Integer("3").intValue(), customerList.size());
 
         for (CustomerBO customer : customerList) {
-            if (customer.getCustomerId().intValue() == client3.getCustomerId().intValue())
+            if (customer.getCustomerId().intValue() == client3.getCustomerId().intValue()) {
                 assertTrue(true);
+            }
         }
         TestObjectFactory.cleanUp(client2);
         TestObjectFactory.cleanUp(client3);
@@ -346,10 +353,12 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         assertEquals(new Integer("2").intValue(), customerList.size());
 
         for (CustomerBO customer : customerList) {
-            if (customer.getCustomerId().intValue() == client.getCustomerId().intValue())
+            if (customer.getCustomerId().intValue() == client.getCustomerId().intValue()) {
                 assertTrue(true);
-            if (customer.getCustomerId().intValue() == client4.getCustomerId().intValue())
+            }
+            if (customer.getCustomerId().intValue() == client4.getCustomerId().intValue()) {
                 assertTrue(true);
+            }
         }
         TestObjectFactory.cleanUp(client2);
         TestObjectFactory.cleanUp(client3);
@@ -370,8 +379,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         assertEquals(new Integer("2").intValue(), customerList.size());
 
         for (CustomerBO customer : customerList) {
-            if (customer.getCustomerId().equals(client4.getCustomerId()))
+            if (customer.getCustomerId().equals(client4.getCustomerId())) {
                 assertTrue(true);
+            }
         }
         TestObjectFactory.cleanUp(client2);
         TestObjectFactory.cleanUp(client3);
@@ -392,8 +402,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         assertEquals(new Integer("4").intValue(), customerList.size());
 
         for (CustomerBO customer : customerList) {
-            if (customer.getCustomerId().equals(client2.getCustomerId()))
+            if (customer.getCustomerId().equals(client2.getCustomerId())) {
                 assertTrue(true);
+            }
         }
         TestObjectFactory.cleanUp(client2);
         TestObjectFactory.cleanUp(client3);
@@ -421,7 +432,13 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testNumberOfMeetingsAttended() throws Exception {
 
-        CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService();
+        final ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao();
+        final ClientService clientService = new StandardClientService(clientAttendanceDao);
+        final CustomerPersistence customerPersistence = new CustomerPersistence();
+        final SavingsPersistence savingsPersistence = new SavingsPersistence();
+        final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
+        final CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService,
+                customerPersistence, savingsPersistence, bulkEntryPersistanceService);
 
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -438,7 +455,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
         StaticHibernateUtil.commitTransaction();
 
-        CustomerPersistence customerPersistence = new CustomerPersistence();
         CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.numberOfMeetings(true,
                 client.getCustomerId());
         assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended().intValue());
@@ -447,8 +463,14 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     }
 
     public void testNumberOfMeetingsMissed() throws Exception {
-        CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService();
-
+        final ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao();
+        final ClientService clientService = new StandardClientService(clientAttendanceDao);
+        final CustomerPersistence customerPersistence = new CustomerPersistence();
+        final SavingsPersistence savingsPersistence = new SavingsPersistence();
+        final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
+        final CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService,
+                customerPersistence, savingsPersistence, bulkEntryPersistanceService);
+        
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
@@ -463,7 +485,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
         StaticHibernateUtil.commitTransaction();
 
-        CustomerPersistence customerPersistence = new CustomerPersistence();
         CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.numberOfMeetings(false,
                 client.getCustomerId());
         assertEquals(2, customerPerformanceHistoryView.getMeetingsMissed().intValue());

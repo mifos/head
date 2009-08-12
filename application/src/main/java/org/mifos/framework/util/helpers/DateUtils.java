@@ -31,8 +31,6 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.joda.time.DateMidnight;
-import org.joda.time.DateTime;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
@@ -172,8 +170,9 @@ public class DateUtils {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-        } else
+        } else {
             return null;
+        }
     }
 
     public static String getCurrentDate() throws InvalidDateException {
@@ -406,8 +405,9 @@ public class DateUtils {
                 dt.append(day + separator);
             } else if (token.equals("M")) {
                 dt.append(month + separator);
-            } else
+            } else {
                 dt.append(year + separator);
+            }
         }
 
         return dt.deleteCharAt((dt.length() - 1)).toString();
@@ -487,7 +487,7 @@ public class DateUtils {
         return format.format(date);
     }
 
-    public static Date getCurrentDateWithoutTimeStamp() {
+    public static java.util.Date getCurrentDateWithoutTimeStamp() {
         return getDateWithoutTimeStamp(getCurrentTime());
     }
 

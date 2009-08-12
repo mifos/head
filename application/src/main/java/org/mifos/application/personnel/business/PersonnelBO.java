@@ -138,10 +138,11 @@ public class PersonnelBO extends BusinessObject {
         this.personnelNotes = new HashSet<PersonnelNotesEntity>();
         this.personnelId = null;
         this.globalPersonnelNum = new Long(new DateTimeService().getCurrentDateTime().getMillis()).toString();
-        if (customFields != null)
+        if (customFields != null) {
             for (CustomFieldView view : customFields) {
                 this.customFields.add(new PersonnelCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
             }
+        }
 
         this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
         this.passwordChanged = Constants.NO;
@@ -171,8 +172,9 @@ public class PersonnelBO extends BusinessObject {
                 && !this.personnelDetails.getDob().equals("")) {
             return String.valueOf(DateUtils
                     .DateDiffInYears(new java.sql.Date(this.personnelDetails.getDob().getTime())));
-        } else
-            return "";
+        }
+
+        return "";
     }
 
     public Set<PersonnelCustomFieldEntity> getCustomFields() {
@@ -345,10 +347,13 @@ public class PersonnelBO extends BusinessObject {
 
     private void updateCustomFields(List<CustomFieldView> customfields) {
         if (this.customFields != null && customfields != null) {
-            for (CustomFieldView fieldView : customfields)
-                for (PersonnelCustomFieldEntity fieldEntity : this.customFields)
-                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+            for (CustomFieldView fieldView : customfields) {
+                for (PersonnelCustomFieldEntity fieldEntity : this.customFields) {
+                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
+                    }
+                }
+            }
         }
     }
 
@@ -420,19 +425,22 @@ public class PersonnelBO extends BusinessObject {
             PersistenceException {
 
         PersonnelPersistence persistence = new PersonnelPersistence();
-        if (StringUtils.isNullOrEmpty(userName))
+        if (StringUtils.isNullOrEmpty(userName)) {
             throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
+        }
         if (persistence.isUserExist(userName)) {
             throw new ValidationException(PersonnelConstants.DUPLICATE_USER, new Object[] { userName });
 
         }
         if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
-            if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
+            if (persistence.isUserExistWithGovernmentId(governmentIdNumber)) {
                 throw new ValidationException(PersonnelConstants.DUPLICATE_GOVT_ID, new Object[] { governmentIdNumber });
+            }
         } else {
-            if (persistence.isUserExist(displayName, dob))
+            if (persistence.isUserExist(displayName, dob)) {
                 throw new ValidationException(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
                         new Object[] { displayName });
+            }
         }
     }
 
@@ -473,8 +481,9 @@ public class PersonnelBO extends BusinessObject {
         this.emailId = emailId;
         if (title != null && title.intValue() == 0) {
             this.title = null;
-        } else
+        } else {
             this.title = title;
+        }
         updatePersonnelRoles(roles);
         updatePersonnelDetails(name, maritalStatus, gender, address, dateOfJoiningBranch);
         updateCustomFields(customFields);
@@ -525,8 +534,9 @@ public class PersonnelBO extends BusinessObject {
         List<PersonnelNotesEntity> notes = new ArrayList<PersonnelNotesEntity>();
         int count = 0;
         for (PersonnelNotesEntity personnelNotes : getPersonnelNotes()) {
-            if (count > 2)
+            if (count > 2) {
                 break;
+            }
             notes.add(personnelNotes);
             count++;
         }
@@ -651,8 +661,9 @@ public class PersonnelBO extends BusinessObject {
         if (!isActive()) {
             throw new PersonnelException(LoginConstants.KEYUSERINACTIVE);
         }
-        if (isLocked())
+        if (isLocked()) {
             throw new PersonnelException(LoginConstants.KEYUSERLOCKED);
+        }
         if (!isPasswordValid(password)) {
             updateNoOfTries();
             throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
@@ -712,8 +723,9 @@ public class PersonnelBO extends BusinessObject {
         if (!isLocked()) {
             Short newNoOfTries = (short) (getNoOfTries() + 1);
             try {
-                if (newNoOfTries.equals(LoginConstants.MAXTRIES))
+                if (newNoOfTries.equals(LoginConstants.MAXTRIES)) {
                     lock();
+                }
                 this.noOfTries = newNoOfTries;
                 new PersonnelPersistence().updateWithCommit(this);
                 logger.debug("No of tries updated successfully");

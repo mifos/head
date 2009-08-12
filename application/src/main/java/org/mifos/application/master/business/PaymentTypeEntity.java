@@ -20,9 +20,7 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.PaymentTypes;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public class PaymentTypeEntity extends MasterDataEntity {
 
@@ -34,9 +32,8 @@ public class PaymentTypeEntity extends MasterDataEntity {
         super(id);
     }
 
-    public void update(String name) throws PersistenceException {
+    public void update(String name) {
         setName(name);
-        // new MasterPersistence().createOrUpdate(this);
     }
 
     @Override
