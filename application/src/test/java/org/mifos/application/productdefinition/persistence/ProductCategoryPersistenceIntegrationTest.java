@@ -65,10 +65,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         assertEquals(Integer.valueOf("0"), productCategoryPersistence.getProductCategory("product"));
     }
 
-    /**
-     * TODO: this test depends on data ("Savings"->"Margin Money") which is set
-     * up in ConfigurationTestSuite, so it won't pass if run on its own.
-     */
+
     public void testGetProductTypes() throws Exception {
         List<ProductTypeEntity> productTypeList = productCategoryPersistence.getProductTypes();
         assertEquals(2, productTypeList.size());

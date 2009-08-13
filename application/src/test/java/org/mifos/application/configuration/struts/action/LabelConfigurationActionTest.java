@@ -276,7 +276,7 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
      * failing with the surefire *Test semantic.
      * 
      */
-    public void ignoreTestLoad() throws Exception {
+    public void xtestLoad() throws Exception {
         setRequestPathInfo("/labelconfigurationaction.do");
         addRequestParameter("method", "load");
         performNoErrors();

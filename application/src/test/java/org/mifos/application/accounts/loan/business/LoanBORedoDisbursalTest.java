@@ -110,10 +110,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanBORedoDisbursalTest {
 
-    public static junit.framework.Test testSuite() {
-        return new JUnit4TestAdapter(LoanBORedoDisbursalTest.class);
-    }
-
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
     private GroupPersistence groupPersistence;

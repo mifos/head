@@ -60,10 +60,7 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         super.tearDown();
     }
 
-    /**
-     * TODO: this test depends on data ("Savings"->"Margin Money") which is set
-     * up in ConfigurationTestSuite, so it won't pass if run on its own.
-     */
+
     public void testGetProductTypes() throws Exception {
         UserContext context = TestUtils.makeUser();
 
