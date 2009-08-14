@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-07-08 16:42-0700\n"
+"PO-Revision-Date: 2009-07-22 07:09-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -133,7 +133,7 @@ msgstr "Fecha del recibo"
 #: accounts.receiptid
 msgctxt "accounts.receiptid"
 msgid "Receipt ID"
-msgstr "ID del recibo"
+msgstr "Identificación del recibo"
 
 #: error.activity.not.allowed
 msgid ""
@@ -633,7 +633,7 @@ msgstr "Por favor, especifique un valor mayor que cero para {0}."
 #: exceptions.application.loan.invalidloanfield
 msgctxt "exceptions.application.loan.invalidloanfield"
 msgid "Please specify {0}."
-msgstr "Pro favor, especifique {0}."
+msgstr "Por favor, especifique {0}."
 
 #: exceptions.application.loan.loanUpdationException
 msgid "There was some problem updating the account, please try again."
@@ -934,7 +934,7 @@ msgstr "Está seguro que quiere ajustar el  "
 
 #: loan.arrear
 msgid "Amount in arrears"
-msgstr "Cantidad con retraso"
+msgstr "Cantidad atrasada"
 
 #: loan.asterisk
 msgctxt "loan.asterisk"
@@ -1330,8 +1330,9 @@ msgid "Generate report"
 msgstr "Generar reporte"
 
 #: loan.gl_cod
+#, fuzzy
 msgid "GL Cod"
-msgstr ""
+msgstr "Código del Libro Mayor General "
 
 #: loan.gracePeriodForRepayments
 msgid "Grace period for repayments {0}"
@@ -1397,85 +1398,87 @@ msgstr "Información de la instancia"
 
 #: loan.instance_name
 msgid "Loan instance name"
-msgstr ""
+msgstr "Nombre del préstamo de la instancia"
 
 #: loan.instancename
 msgctxt "loan.instancename"
 msgid "instance name"
-msgstr ""
+msgstr "Nombre de la instancia"
 
 #: loan.instt_due
 msgid "Installments due"
-msgstr ""
+msgstr "Vencimiento de los plazos"
 
 #: loan.instt_paid
 msgid "Installments paid"
-msgstr ""
+msgstr "Plazos pagados"
 
 #: loan.int_rate
 msgid "Rate"
-msgstr ""
+msgstr "Tasa"
 
 #: loan.interest
 msgctxt "loan.interest"
 msgid "Interest"
-msgstr ""
+msgstr "Interés"
 
 #: loan.interestDisbursement
 msgid "{0} deducted at disbursement"
-msgstr ""
+msgstr "{0} deducido durante el desembolso"
 
 #: loan.interestRate
 msgid "Interest rate"
-msgstr ""
+msgstr "Tasa de interés"
 
 #: loan.interestRateType
 msgid "{0} Rate Type"
-msgstr ""
+msgstr "{0} tipo de tasa"
 
 #: loan.interestRules
 msgid "{0} rules"
-msgstr ""
+msgstr "{0} reglas"
 
 #: loan.interest_amount
 msgid "rate amount"
-msgstr ""
+msgstr "Cantidad de la tasa"
 
 #: loan.interest_cal_payments
 msgid "Interest Calculation Rule For Early/Late Payments"
-msgstr ""
+msgstr "Regla de cálculo del interés para pagos tempranos/tardes"
 
 #: loan.interest_disb
 msgid "deducted at disbursement"
-msgstr ""
+msgstr "deducido durante el desembolso"
 
 #: loan.interest_rate
 msgid "rate"
-msgstr ""
+msgstr "tasa"
 
 #: loan.interest_type
 msgid "Rate Type"
-msgstr ""
+msgstr "Tipo de Tasa"
 
+# Need more information
 #: loan.intr_rec
+#, fuzzy
 msgid "Intr Rec"
-msgstr ""
+msgstr "Intr rec"
 
 #: loan.intratetype
 msgid "Interest rate type"
-msgstr ""
+msgstr "Tipo de tasa de interés"
 
 #: loan.is_redo_loan
 msgid "Loan has been redone"
-msgstr ""
+msgstr "El préstamo ha sido rehecho"
 
 #: loan.kanakpura_center
 msgid "Kanakpura Center"
-msgstr ""
+msgstr "Centro Kanakpura"
 
 #: loan.lastpaymentamount
 msgid "Last payment made"
-msgstr ""
+msgstr "El último pago fue hecho"
 
 #: loan.lastpaymentdescription
 msgid ""
@@ -1483,478 +1486,487 @@ msgid ""
 "will make a reverse transaction entry and the account balance will be "
 "updated."
 msgstr ""
+"Si es requerido, el último pago puede ser revertido. Si el ajuste es hecho, "
+"el sistema hará una transacción para revertir la entrada y el balance de la "
+"cuenta se actualizará."
 
 #: loan.loanAccountDetails
 msgid "{0} Account Details"
-msgstr ""
+msgstr "{0} Detalles de la Cuenta"
 
 #: loan.loanAmount
 msgid "{0} Amount"
-msgstr ""
+msgstr "{0} Cantidad"
 
 #: loan.loanAmountFor
+#, fuzzy
 msgid "Loan Amount for"
-msgstr ""
+msgstr "La cantidad del préstamo para "
 
 #: loan.loanBalance
 msgid "{0} balance"
-msgstr ""
+msgstr "{0} balance"
 
 #: loan.loanInstanceName
 msgid "{0} instance name"
-msgstr ""
+msgstr "{0} nombre de la instancia"
 
 #: loan.loanOfficer
 msgid "Loan Officer"
-msgstr ""
+msgstr "Oficial de Préstamo"
 
 #: loan.loanProductSummary
 msgid "{0} Product Summary"
-msgstr ""
+msgstr "Sumario del producto {0}"
 
 #: loan.loan_acc_details
 msgid "Account Details"
-msgstr ""
+msgstr "Detalles de la Cuenta"
 
 #: loan.loan_amount
 msgctxt "loan.loan_amount"
 msgid "Loan amount"
-msgstr ""
+msgstr "Cantidad del préstamo"
 
 #: loan.loan_balance
 msgid "balance"
-msgstr ""
+msgstr "balance"
 
 #: loan.loanamount
 msgctxt "loan.loanamount"
 msgid "Loan amount"
-msgstr ""
+msgstr "Cantidad del préstamo"
 
 #: loan.maintenance_fee
 msgid "Maintenance fee"
-msgstr ""
+msgstr "Cuota de mantenimiento"
 
 #: loan.mariev
+#, fuzzy
 msgid "mariev"
-msgstr ""
+msgstr "mariev"
 
 #: loan.maturity_date
 msgid "Loan maturity date\\:"
-msgstr ""
+msgstr "Fecha de vencimiento del préstamo\\:"
 
 #: loan.maxinst
 msgid "max number of installments"
-msgstr ""
+msgstr "Número máximo de plazos"
 
 #: loan.maxintrate
 msgid "Max interest rate"
-msgstr ""
+msgstr "Tasa de interés máximo"
 
 #: loan.maxloanamt
 msgid "Max loan amount"
-msgstr ""
+msgstr "Cantidad máxima del préstamo"
 
 #: loan.meeting_charges
 msgid "Meeting charges"
-msgstr ""
+msgstr "Cargos por reuniones"
 
 #: loan.member_fee_amt
 msgid "Membership fee amount\\:"
-msgstr ""
+msgstr "Cantidad de la cuota de membresía\\:"
 
 #: loan.membership_fee
 msgid "Membership fee"
-msgstr ""
+msgstr "Cuota de membresía"
 
 #: loan.mininst
 msgid "min number of installments"
-msgstr ""
+msgstr "Número mínimo de plazos"
 
 #: loan.minintrate
 msgid "Min interest rate"
-msgstr ""
+msgstr "Tasa de interés mínima"
 
 #: loan.minloanamt
 msgid "Min loan amount"
-msgstr ""
+msgstr "Cantidad mínima del préstamo"
 
 #: loan.missed_payments
 msgid "\\# of missed payments\\:"
-msgstr ""
+msgstr "\\# de pagos no hechos\\:"
 
 #: loan.mode_of_payment
 msgid "Mode of payment"
-msgstr ""
+msgstr "Modo de pago"
 
 #: loan.mon
 msgid "(Monthly)"
-msgstr ""
+msgstr "(Mensualmente)"
 
 #: loan.month(s)
 msgid "Month(s)"
-msgstr ""
+msgstr "Mes(es)"
 
 #: loan.more_details
 msgid "More account and transaction details"
-msgstr ""
+msgstr "Más detalles de la cuenta y las transacciones"
 
 #: loan.multiple
 msgid "multiple"
-msgstr ""
+msgstr "múltiple"
 
 #: loan.new
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #: loan.new_status
 msgctxt "loan.new_status"
 msgid "New Status"
-msgstr ""
+msgstr "Estado nuevo"
 
 #: loan.new_val
 msgctxt "loan.new_val"
 msgid "New Value"
-msgstr ""
+msgstr "Valor nuevo"
 
 #: loan.next_inst
 msgid "Next installment"
-msgstr ""
+msgstr "Próximo plazo"
 
 #: loan.next_inst_due
 msgid "Next installment due"
-msgstr ""
+msgstr "Vencimiento del próximo plazo"
 
 #: loan.next_install_details
 msgid "Next installment details"
-msgstr ""
+msgstr "Detalles del próximo plazo"
 
 #: loan.no
 msgid "No"
-msgstr ""
+msgstr "Núm"
 
 #: loan.noOfInstallments
 msgctxt "loan.noOfInstallments"
 msgid "No. of installments"
-msgstr ""
+msgstr "Núm. de plazos"
 
 #: loan.no_of_inst
 msgctxt "loan.no_of_inst"
 msgid "No. of installments"
-msgstr ""
+msgstr "Núm. de plazos"
 
 #: loan.nopaymentsmade
 msgid "No. of payments made"
-msgstr ""
+msgstr "Núm. de pagos hechos"
 
 #: loan.note
 msgid "note"
-msgstr ""
+msgstr "nota"
 
 #: loan.notes
 msgid "notes"
-msgstr ""
+msgstr "notas"
 
 #: loan.of_payments
 msgid "\\# of payments\\:"
-msgstr ""
+msgstr "\\# de pagos\\:"
 
 #: loan.old_status
 msgctxt "loan.old_status"
 msgid "Old Status"
-msgstr ""
+msgstr "Estado pasado"
 
 #: loan.old_val
 msgctxt "loan.old_val"
 msgid "Old Value"
-msgstr ""
+msgstr "Valor anterior"
 
 #: loan.once_20days
 msgid "Once in 20 days)"
-msgstr ""
+msgstr "Una vez cada 20 días)"
 
 #: loan.openNewAccountFor
 msgid "Open another account for {0}"
-msgstr ""
+msgstr "Abrir otra cuenta para {0}"
 
 #: loan.openNewLoanAccount
 msgctxt "loan.openNewLoanAccount"
 msgid "Open a new {0} account."
-msgstr ""
+msgstr "Abrir una nueva cuenta de {0}."
 
 #: loan.openNewSavingsAccount
 msgctxt "loan.openNewSavingsAccount"
 msgid "Open a new {0} account."
-msgstr ""
+msgstr "Abrir una nueva cuenta de {0}."
 
 #: loan.open_new
 msgid "Open a new"
-msgstr ""
+msgstr "Abrir una nueva"
 
 #: loan.open_new_acc
 msgid "Open another account for"
-msgstr ""
+msgstr "Abrir otra cuenta para"
 
 #: loan.open_new_insur_acc
 msgid "Open a new insurance account"
-msgstr ""
+msgstr "Abrir una nueva cuenta de seguro"
 
 #: loan.open_new_loan_acc
 msgid "Open a new loan account"
-msgstr ""
+msgstr "Abrir una nueva cuenta de préstamo"
 
 #: loan.open_new_sav_acc
 msgid "Open a new savings account"
-msgstr ""
+msgstr "Abrir una nueva cuenta de ahorros"
 
 #: loan.originalLoan
 msgid "Original {0}"
-msgstr ""
+msgstr "{0} original"
 
 #: loan.original_loan
 msgid "Original"
-msgstr ""
+msgstr "Original"
 
 #: loan.outstandingbalance
 msgid "Outstanding balance"
-msgstr ""
+msgstr "Balance pendiente"
 
 #: loan.overdueamount
 msgid "Overdue amount"
-msgstr ""
+msgstr "Cantidad morosa"
 
 #: loan.paid
 msgid "paid"
-msgstr ""
+msgstr "pagado"
 
 #: loan.past_due
 msgid "Past due\\:"
-msgstr ""
+msgstr "Pago vencido\\:"
 
 #: loan.past_due_details
 msgid "Past due details"
-msgstr ""
+msgstr "Detalles del pago vencido"
 
 #: loan.pastdue
 msgid "Total past due"
-msgstr ""
+msgstr "Cantidad total del pago vencido"
 
 #: loan.payment
 msgid "Payment"
-msgstr ""
+msgstr "Pago"
 
 #: loan.paymentDate
 msgid "Payment Date"
-msgstr ""
+msgstr "Fecha de pago"
 
 #: loan.paymentType
 msgid "Payment type"
-msgstr ""
+msgstr "Tipo de pago"
 
 #: loan.payment_id
 msgid "Payment ID\\#"
-msgstr ""
+msgstr "ID de pago\\#"
 
 #: loan.paymentdate
 msgid "Date of payment"
-msgstr ""
+msgstr "Fecha de pago"
 
 #: loan.paymentdetails
 msgid "Payment details"
-msgstr ""
+msgstr "Detalles del pago"
 
 #: loan.paymentid
 msgid "Mode of payment in Payment Details"
-msgstr ""
+msgstr "Método de pago en Detalles de Pago"
 
 #: loan.payments
 msgid "Payments"
-msgstr ""
+msgstr "Pagos"
 
 #: loan.paymentsmade
 msgid "Payments Made"
-msgstr ""
+msgstr "Pagos hechos"
 
 #: loan.penalty
 msgid "Penalty"
-msgstr ""
+msgstr "Multa"
 
 #: loan.penalty_01
 msgid "Penalty for Installment \\#1"
-msgstr ""
+msgstr "Multa por el plazo \\#1"
 
 #: loan.penalty_02
 msgid "Penalty for Installment \\#2"
-msgstr ""
+msgstr "Multa por el plazo \\#2"
 
 #: loan.penalty_type
 msgid "Penalty Type"
-msgstr ""
+msgstr "Tipo de multa"
 
 #: loan.performance_history
 msgid "Performance history"
-msgstr ""
+msgstr "Historia del rendimiento"
 
 #: loan.periodicity
 msgid "Periodicity"
-msgstr ""
+msgstr "Periodicidad"
 
 #: loan.periodicityTypeFlat
 msgid "one time"
-msgstr ""
+msgstr "una vez"
 
 #: loan.periodicityTypeRate
 msgid "Recur every"
-msgstr ""
+msgstr "Ocurre cada"
 
 #: loan.periodicity_annual_fee
 msgid "Periodicity\\: annual fee"
-msgstr ""
+msgstr "Periodicidad\\: cuota anual"
 
 #: loan.periodicity_one_time_fee
 msgid "Periodicity\\: one time fee"
-msgstr ""
+msgstr "Periodicidad\\: cuota única"
 
 #: loan.phonenumber
 msgid "Phone Number\\:"
-msgstr ""
+msgstr "Número de teléfono\\:"
 
 #: loan.plz_note
 msgid "Please Note\\:"
-msgstr ""
+msgstr "Por favor note\\:"
 
 #: loan.posted_by
 msgid "Posted By"
-msgstr ""
+msgstr "Publicado por"
 
 #: loan.pr_pd
+#, fuzzy
 msgid "Pr Pd"
-msgstr ""
+msgstr "Pr Pd"
 
 #: loan.preview
 msgid "Preview"
-msgstr ""
+msgstr "Vista preliminar"
 
 #: loan.preview_accinfo
 msgid "Preview loan account information"
-msgstr ""
+msgstr "Vista preliminar de la información del préstamo"
 
 #: loan.principal
 msgctxt "loan.principal"
 msgid "Principal"
-msgstr ""
+msgstr "Principal"
 
 #: loan.principle_due
 msgid "Principal due on last installment"
-msgstr ""
+msgstr "Cantidad de principal en el último plazo"
 
 #: loan.product_summary
 msgid "Product Summary"
-msgstr ""
+msgstr "Resumen del Producto"
 
 #: loan.proposed_date
 msgid "Disbursal date"
-msgstr ""
+msgstr "Fecha de desembolso"
 
 #: loan.purposeOfLoan
 msgid "Purpose of {0}"
-msgstr ""
+msgstr "El propósito de {0}"
 
 #: loan.purposeofloan
 msgid "Purpose of loan"
-msgstr ""
+msgstr "Propósito del préstamo"
 
 #: loan.rec_creation_date
 msgid "Record Creation Date"
-msgstr ""
+msgstr "Fecha de la creación del archivo"
 
 #: loan.receiptId
 msgctxt "loan.receiptId"
 msgid "Receipt ID"
-msgstr ""
+msgstr "Identificación del recibo"
 
 #: loan.receiptNumber
 msgid "Receipt Number"
-msgstr ""
+msgstr "Número del recibo"
 
 #: loan.receiptdate
 msgid "Receipt Date"
-msgstr ""
+msgstr "Fecha del recibo"
 
 #: loan.recentActivity
 msgid "Recent activity"
-msgstr ""
+msgstr "Actividad reciente"
 
 #: loan.recent_notes
 msgid "Recent notes"
-msgstr ""
+msgstr "Notas recientes"
 
 #: loan.recurring_acc_fees
 msgid "Recurring account fees"
-msgstr ""
+msgstr "Cuotas recurrentes de la cuenta"
 
 #: loan.redoAccount
 msgid "Redo {0} account"
-msgstr ""
+msgstr "Rehacer {0} de la cuenta"
 
 #: loan.redo_loan_note
 msgid "Note\\: You are redoing a loan account."
-msgstr ""
+msgstr "Nota\\: Usted está rehaciendo una cuenta de préstamo."
 
 #: loan.remove
 msgid "Remove"
-msgstr ""
+msgstr "Remover"
 
 #: loan.repay
 msgid "Repay"
-msgstr ""
+msgstr "Repagar"
 
 #: loan.repayLoan
 msgid "Repay {0}"
-msgstr ""
+msgstr "Repagar {0}"
 
 #: loan.repayloan
 msgid "Repay Loan"
-msgstr ""
+msgstr "Repagar el préstamo"
 
 #: loan.repaymentRules
 msgid "Repayment rules"
-msgstr ""
+msgstr "Reglas de pago"
 
 #: loan.repayment_date
 msgid "Repayment day"
-msgstr ""
+msgstr "Día de pago"
 
 #: loan.repayment_sched
 msgid "Repayment Schedule as of"
-msgstr ""
+msgstr "Horario de pago a partir de"
 
 #: loan.returnToAccountDetails
 msgid "Return to account details"
-msgstr ""
+msgstr "Regrese al detalle de la cuenta"
 
 #: loan.reverse
 msgid "Reverse"
-msgstr ""
+msgstr "Revierta"
 
 #: loan.review&edit
 msgctxt "loan.review&edit"
 msgid "Review installments"
-msgstr ""
+msgstr "Revisión de los plazos"
 
 #: loan.review&submit
 msgid "Review & submit"
-msgstr ""
+msgstr "Revise y envie"
 
 #: loan.review/edit_ins
 msgctxt "loan.review/edit_ins"
 msgid "Review installments"
-msgstr ""
+msgstr "Revisión de los plazos"
 
 #: loan.review_payment_schedule
 msgid ""
 "Review the payment schedule below. Click Preview to continue. Click Cancel "
 "to return to Clients & Accounts without submitting information."
 msgstr ""
+"Revise el horario de pago de abajo. Haga clic en Vista Preliminar para "
+"continuar. Haga clic en Cancelar para regresar a Clientes & Cuentas sin "
+"enviar su información."
 
 #: loan.reviewaccontinfo
 msgid ""
@@ -1962,251 +1974,264 @@ msgid ""
 "Edit to make changes. Click Cancel to return to Clients & Accounts without "
 "submitting information."
 msgstr ""
+"Revise la información de abajo. Haga clic en Enviar si usted está satisfecho "
+"o haga clic en Editar para hacer cambios. Haga clic en Cancelar para "
+"regresar a Clientes & Cuentas sin enviar su información."
 
 #: loan.reviewaccountinformation1
 msgid ""
 "Review the information below. Click Submit if you are satisfied or click "
 "'Edit"
 msgstr ""
+"Revise la informacion de abajo. Haga clic en Enviar si usted está satisfecho "
+"o haga clic en 'Editar"
 
 #: loan.reviewaccountinformation2
 msgid "account information' to make changes. Click Cancel to return to"
 msgstr ""
+"la información de la cuenta' para hacer cambios. Haga clic en Cancelar para "
+"regresar a "
 
 #: loan.reviewaccountinformation3
 msgid "Account Details without submitting information."
-msgstr ""
+msgstr "Detalles de la Cuenta sin enviar la información."
 
 #: loan.reviewtransaction
 msgid "Review Transaction"
-msgstr ""
+msgstr "Revise la Transacción"
 
 #: loan.running_bal
 msgid "Running balance"
-msgstr ""
+msgstr "Balance corriente"
 
 #: loan.s
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #: loan.saveForLater
 msgid "Save for later"
-msgstr ""
+msgstr "Guardar para más adelante"
 
 #: loan.search
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #: loan.seeallnotes
 msgid "See all notes"
-msgstr ""
+msgstr "Fijarse en todas las notas"
 
 #: loan.sel_charge_type
 msgid "Select charge type\\:"
-msgstr ""
+msgstr "Escoja el tipo de cargo\\:"
 
 #: loan.select
 msgid "select"
-msgstr ""
+msgstr "escoja"
 
 #: loan.selectLoanInstance
 msgid ""
 "Select a {0} instance. Then click Continue. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
+"Seleccione la instancia {0}. Entonces, haga clic en Continuar. Haga clic en "
+"Cancelar para regresar a Clientes & Cuentas sin enviar la información."
 
 #: loan.select_client
 msgid "Select client"
-msgstr ""
+msgstr "Seleccione el cliente"
 
 #: loan.select_client/group
 msgid "Select Client/Group"
-msgstr ""
+msgstr "Seleccione el Cliente/Grupo"
 
 #: loan.select_loan_inst
 msgid ""
 "instance. Then click Continue. Click Cancel to return to Clients & Accounts "
 "without submitting information."
 msgstr ""
+"instancia. Entonces, haga clic en Continuar. Haga clic en Cancelar para "
+"regresar sin enviar la información."
 
 #: loan.selection
 msgid "Select {0}/{1}"
-msgstr ""
+msgstr "Seleccione {0}/{1}"
 
 #: loan.source_fund
 msgid "Source of fund"
-msgstr ""
+msgstr "Fuente de los fondos"
 
 #: loan.specifynote
 msgid "Specify the note and click Preview if you want to reverse the"
 msgstr ""
+"Especifique la nota y haga clic en Vista Preliminar si usted quiere revertir "
+"el"
 
 #: loan.status
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: loan.status_active
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: loan.status_history
 msgid "Status history"
-msgstr ""
+msgstr "Estado de la historia"
 
 #: loan.statuschanged
 msgid "status will be changed to cancelled."
-msgstr ""
+msgstr "el estado será cambiado para cancelar."
 
 #: loan.subTotal
 msgid "subTotal"
-msgstr ""
+msgstr "subtotal"
 
 #: loan.submit
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #: loan.submitForApproval
 msgid "Submit for approval"
-msgstr ""
+msgstr "Enviar para ser aprobado"
 
 #: loan.succcreatenew
 msgid "You have successfully created new"
-msgstr ""
+msgstr "Usted ha creado exitosamente un nuevo "
 
 #: loan.successfulCreation
 msgid "You have successfully created a new {0} account."
-msgstr ""
+msgstr "Usted ha creado exitosamente una nueva cuenta {0}."
 
 #: loan.successfulRecreation
 msgid "You have successfully recreated a new {0} account."
-msgstr ""
+msgstr "Usted ha recreado exitosamente una nueva cuenta {0}."
 
 #: loan.successful_creation
 msgid "You have successfully created a new"
-msgstr ""
+msgstr "Usted ha creado exitosamente una nueva "
 
 #: loan.successful_recreation
 msgid "You have successfully recreated a new"
-msgstr ""
+msgstr "Usted ha recreado exitosamente una nueva "
 
 #: loan.suggested_steps
 msgid "Suggested next steps"
-msgstr ""
+msgstr "Pasos siguientes sugeridos"
 
 #: loan.total
 msgctxt "loan.total"
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: loan.totalAmtDue
 msgctxt "loan.totalAmtDue"
 msgid "Total amount due on"
-msgstr ""
+msgstr "Cantidad total adeudada en "
 
 #: loan.totalDueOn
 msgctxt "loan.totalDueOn"
 msgid "Total amount due on"
-msgstr ""
+msgstr "Cantidad total adeudada en"
 
 #: loan.total_due_install
 msgid "Total due this installment"
-msgstr ""
+msgstr "Cantidad todal adeudada en este plazo"
 
 #: loan.totalamount
 msgid "Total amount"
-msgstr ""
+msgstr "Cantidad total"
 
 #: loan.training_fee
 msgid "Training fee\\:"
-msgstr ""
+msgstr "Cuota de entrenamiento\\:"
 
 #: loan.transaction_id
 msgid "Transaction ID\\#"
-msgstr ""
+msgstr "Identificación de la transacción\\#"
 
 #: loan.transc_history
 msgid "Transaction history"
-msgstr ""
+msgstr "Historia de la transacción"
 
 #: loan.trxn
 msgid "Transactions"
-msgstr ""
+msgstr "Transacciones"
 
 #: loan.type
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: loan.type_1
 msgid "Type 1"
-msgstr ""
+msgstr "Tipo 1"
 
 #: loan.type_2
 msgid "Type 2"
-msgstr ""
+msgstr "Tipo 2"
 
 #: loan.user
 msgctxt "loan.user"
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #: loan.viewLoanDetails
 msgid "View {0} account details now"
-msgstr ""
+msgstr "Ver los detalles de la cuenta {0} ahora"
 
 #: loan.view_acc_activity
 msgid "View all account activity"
-msgstr ""
+msgstr "Ver toda la actividad de la cuenta"
 
 #: loan.view_change_log
 msgid "View change log"
-msgstr ""
+msgstr "Ver el cambio del registro"
 
 #: loan.view_inst_details
 msgctxt "loan.view_inst_details"
 msgid "View installment details"
-msgstr ""
+msgstr "Ver los detalles del plazo"
 
 #: loan.view_installment_details
 msgctxt "loan.view_installment_details"
 msgid "View installment details"
-msgstr ""
+msgstr "Ver los detalles del plazo"
 
 #: loan.view_loan_acc1
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #: loan.view_loan_acc2
 msgid "account details now"
-msgstr ""
+msgstr "detalles de la cuenta ahora"
 
 #: loan.view_schd
 msgid "View repayment schedule"
-msgstr ""
+msgstr "Ver el plan de pago"
 
 #: loan.view_status_history
 msgid "View status history"
-msgstr ""
+msgstr "Ver la historia del estado"
 
 #: loan.view_transc_history
 msgid "View transaction history"
-msgstr ""
+msgstr "Ver la historia de la transacción"
 
 #: loan.voucherNumber
 msgid "Voucher Number"
-msgstr ""
+msgstr "Número de cupón"
 
 #: loan.waive
 msgid "Waive"
-msgstr ""
+msgstr "Eliminar"
 
 #: loan.week(s)
 msgid "Week(s)"
-msgstr ""
+msgstr "Semana(s)"
 
 #: loan.withfollid
 msgid "with the following IDs have been created"
-msgstr ""
+msgstr "con los siguientes DNI han sido creados"
 
 #: loan.yes
 msgid "Yes"
-msgstr ""
+msgstr "Sí"

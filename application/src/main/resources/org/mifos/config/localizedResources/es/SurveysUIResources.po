@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-06-04 16:59-0700\n"
+"PO-Revision-Date: 2009-08-08 07:06-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -114,359 +114,369 @@ msgstr "Edite la pregunta"
 
 #: Surveys.EditQuestionInfo
 msgid "Edit Question Information"
-msgstr ""
+msgstr "Edite la Pregunta de Información"
 
 #: Surveys.EditSurvey
 msgid "Edit Survey"
-msgstr ""
+msgstr "Edite la Encuesta"
 
 #: Surveys.Freetext
 msgid "Free text"
-msgstr ""
+msgstr "Texto libre"
 
 #: Surveys.Grouplabel
 msgctxt "Surveys.Grouplabel"
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: Surveys.Inactive
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #: Surveys.Loanlabel
 msgctxt "Surveys.Loanlabel"
 msgid "Loan account"
-msgstr ""
+msgstr "Cuenta de préstamo"
 
 #: Surveys.Loans
 msgid "Loans"
-msgstr ""
+msgstr "Préstamos"
 
 #: Surveys.Mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Mandatorio"
 
 #: Surveys.Multiselect
 msgid "Multi Select"
-msgstr ""
+msgstr "Selección Múltiple"
 
 #: Surveys.No
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: Surveys.Number
 msgid "Number"
-msgstr ""
+msgstr "Número"
 
 #: Surveys.PagedQuestions
 msgid "Questions {0}-{1} of {2}"
-msgstr ""
+msgstr "Preguntas {0}-{1} de {2}"
 
 #: Surveys.PreviewEditQuestion
 msgid "preview edit question"
-msgstr ""
+msgstr "Vista Preliminar de la pregunta por editar"
 
 #: Surveys.Printerversion
 msgid "Printer version"
-msgstr ""
+msgstr "Versión para imprimir"
 
 #: Surveys.Question
 msgid "Question"
-msgstr ""
+msgstr "Pregunta"
 
 #: Surveys.QuestionName
 msgid "Question Name"
-msgstr ""
+msgstr "Nombre de la pregunta"
 
 #: Surveys.Questions
 msgid "Questions"
-msgstr ""
+msgstr "Preguntas"
 
 #: Surveys.Questiontitle
 msgid "Question title"
-msgstr ""
+msgstr "Título de la Pregunta"
 
 #: Surveys.Remove
 msgid "Remove"
-msgstr ""
+msgstr "Remover"
 
 #: Surveys.Savingslabel
 msgctxt "Surveys.Savingslabel"
 msgid "Savings account"
-msgstr ""
+msgstr "Cuenta de Ahorro"
 
 #: Surveys.Singleselect
 msgid "Single select"
-msgstr ""
+msgstr "Selección única"
 
 #: Surveys.Status
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: Surveys.Surveys
 msgid "Surveys"
-msgstr ""
+msgstr "Encuestas"
 
 #: Surveys.Yes
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: Surveys.accounts_type
 msgid "Accounts"
-msgstr ""
+msgstr "Cuentas"
 
 #: Surveys.addquestions
 msgctxt "Surveys.addquestions"
 msgid "Add Questions"
-msgstr ""
+msgstr "Añada preguntas"
 
 #: Surveys.all_type
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: Surveys.and
 msgid "and"
-msgstr ""
+msgstr "y"
 
 #: Surveys.appliesToField
 msgid "who survey applies to"
-msgstr ""
+msgstr "encuesta que se aplica a"
 
 #: Surveys.attach_survey
 msgid "Attach survey"
-msgstr ""
+msgstr "Adjuntar encuesta"
 
 #: Surveys.attachasurvey
 msgid "Attach a survey"
-msgstr ""
+msgstr "Adjuntar una encuesta"
 
 #: Surveys.between
 msgid "Between"
-msgstr ""
+msgstr "entre"
 
 #: Surveys.both_type
 msgid "Customers and accounts"
-msgstr ""
+msgstr "Clientes y cuentas"
 
 #: Surveys.button.backtodetailspage
 msgid "Back to details page"
-msgstr ""
+msgstr "Regrese a la página de detalles"
 
 #: Surveys.button.cancel
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: Surveys.button.clearall
 msgid "Clear All"
-msgstr ""
+msgstr "Borrar Todos"
 
 #: Surveys.button.continue
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #: Surveys.button.delete
 msgctxt "Surveys.button.delete"
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #: Surveys.button.edit
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: Surveys.button.editsurvey
 msgid "Edit survey information"
-msgstr ""
+msgstr "Edite la información de la encuesta"
 
 #: Surveys.button.preview
 msgid "Preview"
-msgstr ""
+msgstr "Vista previa"
 
 #: Surveys.button.print
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #: Surveys.button.submit
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #: Surveys.center
 msgctxt "Surveys.center"
 msgid "Center"
-msgstr ""
+msgstr "Centro"
 
 #: Surveys.center_type
 msgid "Centers"
-msgstr ""
+msgstr "Centros"
 
 #: Surveys.choose_page_instructions
 msgid ""
 "Select a survey from the list below. Then click Continue. Click Cancel to "
 "return to client details without submitting information"
 msgstr ""
+"Seleccione una encuesta de la lista de abajo. Haga clic en Continuar. Haga "
+"clic en Cancelar para regresar al detalle del cliente sin enviar la "
+"información"
 
 #: Surveys.chooseofficer
 msgid "Choose loan officer"
-msgstr ""
+msgstr "Escoja el Oficial de Crédito"
 
 #: Surveys.client
 msgctxt "Surveys.client"
 msgid "Client"
-msgstr ""
+msgstr "Cliente"
 
 #: Surveys.client_type
 msgid "Clients"
-msgstr ""
+msgstr "Clientes"
 
 #: Surveys.create_page_instructions
 msgid ""
 "Complete the fields below. To add questions click Add Questions. Click "
 "Cancel to return to Admin without submitting information."
 msgstr ""
+"Complete los campos abajo. Para agregar preguntas haga clic en Agregar "
+"preguntas. Haga clic en Cancelar para volver al administrador sin enviar la "
+"información."
 
 #: Surveys.createsurveyheader
 msgid "You have successfully defined a new survey"
-msgstr ""
+msgstr "Ha definido exitosamente una nueva encuesta"
 
 #: Surveys.createsurveymsg
 msgid "Please note that surveys cannot be edited once created."
-msgstr ""
+msgstr "Tenga en cuenta que las encuestas no se pueden editar una vez creadas."
 
 #: Surveys.customers_type
 msgctxt "Surveys.customers_type"
 msgid "Customers"
-msgstr ""
+msgstr "Clientes"
 
 #: Surveys.definenewsurvey
 msgid "Define new survey"
-msgstr ""
+msgstr "Defina una nueva encuesta"
 
 #: Surveys.definequestion
 msgid "define a new question"
-msgstr ""
+msgstr "Defina una nueva pregunta"
 
 #: Surveys.definesurvey
 msgid "define a new survey"
-msgstr ""
+msgstr "defina una nueva encuesta"
 
 #: Surveys.editsurvey
 msgid "Edit survey"
-msgstr ""
+msgstr "Edite la encuesta"
 
 #: Surveys.enter_survey
 msgid "Enter survey information"
-msgstr ""
+msgstr "Introduzca la información de la encuesta"
 
 #: Surveys.enteredintosystemby
 msgid "Entered into system by"
-msgstr ""
+msgstr "Ingresado en el sistema por"
 
 #: Surveys.enterinstanceinformation
 msgid "Enter survey instance information"
-msgstr ""
+msgstr "Introduzca la información de la instancia de la encuesta "
 
 #: Surveys.group
 msgctxt "Surveys.group"
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: Surveys.group_type
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #: Surveys.instance.dateofsurvey
 msgid "Date of survey"
-msgstr ""
+msgstr "Fecha de la encuesta"
 
 #: Surveys.instance.entersurveydata
 msgid "Enter survey data"
-msgstr ""
+msgstr "Introduzca la información de la encuesta"
 
 #: Surveys.instance.instructions
 msgid ""
 "Enter survey data and click Preview. Click Clear All to clear selections. "
 "Click Cancel to return to client details without submitting information."
 msgstr ""
+"Introduzca la información de la encuesta y haga clic en Vista Previa. Haga "
+"clic en Borrar Todo para borrar la selección. Haga clic en Cancelar para "
+"regresar al detalle del cliente sin enviar la información."
 
 #: Surveys.instance.surveyedby
 msgid "Surveyed by"
-msgstr ""
+msgstr "Encuestado por"
 
 #: Surveys.instance.systemid
 msgid "System ID"
-msgstr ""
+msgstr "Identificación del sistema"
 
 #: Surveys.instanceInformation
 msgid "Survey instance information"
-msgstr ""
+msgstr "Información de instancia de la encuesta"
 
 #: Surveys.linkAdmin
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #: Surveys.loan
 msgctxt "Surveys.loan"
 msgid "Loan account"
-msgstr ""
+msgstr "Cuenta de préstamo "
 
 #: Surveys.loan_type
 msgid "Loan accounts"
-msgstr ""
+msgstr "Cuentas de préstamo "
 
 #: Surveys.mainpage_instructions
 msgid "Click on a survey below to view details and make changes or"
 msgstr ""
+"Haga clic en una encuesta abajo para ver los detalles y hacer los cambios o"
 
 #: Surveys.manageQuestions
 msgid "Manage questions"
-msgstr ""
+msgstr "Administración de las preguntas"
 
 #: Surveys.nameField
 msgid "survey name"
-msgstr ""
+msgstr "Nombre de la encuesta"
 
 #: Surveys.newquestionsmsgprefix
 msgid "You just added"
-msgstr ""
+msgstr "Usted acaba de agregar"
 
 #: Surveys.newquestionsmsgsuffix
 msgid "new questions."
-msgstr ""
+msgstr "preguntas nuevas."
 
 #: Surveys.noquestionsadded
 msgid "No questions added to this survey yet"
-msgstr ""
+msgstr "Ninguna pregunta ha sido añadida a esta encuesta aún"
 
 #: Surveys.nosurveysmessage
 msgid "No surveys of that type have been created"
-msgstr ""
+msgstr "Ninguna encuesta de ese tipo ha sido creada"
 
 #: Surveys.notapplicable
 msgid "Not applicable"
-msgstr ""
+msgstr "No se aplica"
 
 #: Surveys.officer
 msgid "Loan officer"
-msgstr ""
+msgstr "Oficial de Crédito"
 
 #: Surveys.previewsurveydata
 msgid "Preview survey data"
-msgstr ""
+msgstr "Vista Previa de la información de la encuesta"
 
 #: Surveys.printer.multiSelectDescription
 msgid "Indicates that you can select more than one option"
-msgstr ""
+msgstr "Indica que usted puede seleccionar más de una opción"
 
 #: Surveys.printer.singleSelectDescription
 msgid "Indicates that you can select only one option"
-msgstr ""
+msgstr "Indica que usted sólo puede seleccionar una opción"
 
 #: Surveys.removelink
 msgid "remove"
-msgstr ""
+msgstr "remover"
 
 #: Surveys.review
 msgid "Review & submit"
-msgstr ""
+msgstr "Revise y envie"
 
 #: Surveys.reviewInstructions
 msgid ""
@@ -474,136 +484,143 @@ msgid ""
 "Edit to make changes. Click Cancel to return to Admin page without "
 "submitting information."
 msgstr ""
+"Revise la información de abajo. Haga clic en Enviar si usted está satisfecho "
+"o haga clic en Editar para hacer cambios. Haga clic en Cancelar para "
+"regresar a la página de la Administración sin enviar la información."
 
 #: Surveys.savings
 msgctxt "Surveys.savings"
 msgid "Savings account"
-msgstr ""
+msgstr "Cuenta de Ahorro"
 
 #: Surveys.savings_type
 msgid "Savings accounts"
-msgstr ""
+msgstr "Cuentas de Ahorro"
 
 #: Surveys.select_questions
 msgid "Select questions"
-msgstr ""
+msgstr "Seleccione las preguntas"
 
 #: Surveys.select_survey
 msgid "Select survey"
-msgstr ""
+msgstr "Seleccione la encuesta"
 
 #: Surveys.surveyInformation
 msgid "Survey information"
-msgstr ""
+msgstr "Información de la encuesta"
 
 #: Surveys.survey_details
 msgid "Survey details"
-msgstr ""
+msgstr "Detalles de la Encuesta "
 
 #: Surveys.survey_name
 msgid "Survey name"
-msgstr ""
+msgstr "Nombre de la Encuesta"
 
 #: Surveys.viewQuestions_instructions
 msgid "Click on a question below to view details and make changes or"
 msgstr ""
+"Haga clic en la pregunta de abajo para ver los detalles y hacer cambios o "
 
 #: Surveys.viewQuestions_ppi_note
 msgid "Note\\: questions flagged as PPI may not be attached to general surveys."
 msgstr ""
+"Nota\\: preguntas marcadas como PPI no pueden estar anexadas a las encuestas."
 
 #: Surveys.viewallsurveys
 msgid "View all surveys"
-msgstr ""
+msgstr "Ver todas las encuestas"
 
 #: Surveys.viewquestions
 msgid "View Questions"
-msgstr ""
+msgstr "Ver Preguntas"
 
 #: Surveys.viewsurveydetails
 msgid "View survey details now"
-msgstr ""
+msgstr "Ver el detalle de la encuesta ahora"
 
 #: Surveys.viewsurveys
 msgid "View surveys"
-msgstr ""
+msgstr "Ver las encuestas"
 
 #: errors.BaseValidator.missing
 msgctxt "errors.BaseValidator.missing"
 msgid "Please specify {0}"
-msgstr ""
+msgstr "Por especifique {0}"
 
 #: errors.DateValidator.DATE_FORMAT
 msgid "Question {0}\\: response was not a valid date."
-msgstr ""
+msgstr "Pregunta {0}\\: la respuesta no tiene una fecha válida."
 
 #: errors.DateValidator.dateformat
 msgid "Invalid Date"
-msgstr ""
+msgstr "Fecha no válida"
 
 #: errors.DateValidator.invalidpersonnel
 msgid "Specify a valid officer username or ID"
 msgstr ""
+"Especifique el nombre de usuario del oficial que sea válido o la "
+"identificación"
 
 #: errors.EnumValidator.INVALID_ENUM
 msgctxt "errors.EnumValidator.INVALID_ENUM"
 msgid "Please choose a valid '{0}' value"
-msgstr ""
+msgstr "Por favor escoja una valor válido '{0}'"
 
 #: errors.EnumValidator.invalidenum
 msgctxt "errors.EnumValidator.invalidenum"
 msgid "Please choose a valid '{0}' value"
-msgstr ""
+msgstr "Por favor escoja una valor válido '{0}'"
 
 #: errors.MaxLengthValidator.toolong
 msgid "Your survey name was too long"
-msgstr ""
+msgstr "El nombre de su encuesta es demasiado largo"
 
 #: errors.NotNullEmptyValidator.MISSING
 msgid "Please fill out all mandatory fields"
-msgstr ""
+msgstr "Por favor, complete todos los campos obligatorios"
 
 #: errors.NotNullEmptyValidator.MISSING_FIELD
 msgctxt "errors.NotNullEmptyValidator.MISSING_FIELD"
 msgid "Please specify {0}"
-msgstr ""
+msgstr "Por favor especifique {0}"
 
 #: errors.NumberValidator.INVALID_NUMBER
 msgid "Question {0}\\: response was not a number."
-msgstr ""
+msgstr "Pregunta {0}\\: la respuesta no fue un número."
 
 #: errors.OneOfValidator.NOT_A_CHOICE
 msgid "Question {0}\\: choose one of the provided options."
-msgstr ""
+msgstr "Pregunta {0}\\: escoja una de las opciones provistas."
 
 #: errors.SurveyValidator.MISSING
 msgid "Question {0}\\: provide a response."
-msgstr ""
+msgstr "Pregunta {0}\\: de una respuesta."
 
 #: errors.dateSurveyed.DATE_FORMAT
 msgid "The date surveyed you entered was invalid."
-msgstr ""
+msgstr "La fecha de la encuesta que ha introducido no es válida."
 
 #: errors.invalidofficer
 msgid "The name of the officer that conducted the survey was invalid."
-msgstr ""
+msgstr "El nombre del oficial que realizó la encuesta no es válido."
 
 #: errors.nameexists
 msgid "The name specified already exists."
-msgstr ""
+msgstr "El nombre especificado ya existe."
 
 #: errors.prefix
 msgid "<li>"
-msgstr ""
+msgstr "<li>"
 
 #: errors.readonly
 msgid "{0} cannot be edited"
-msgstr ""
+msgstr "{0} no puede ser editado"
 
 #: errors.suffix
 msgid "</li>"
-msgstr ""
+msgstr "</li>"
 
 #: erros.invalidnumberofchoices
 msgid "Please specify at least 2 choices for this type of answer."
-msgstr ""
+msgstr "Por especifique por lo menos 2 selecciones para este tipo de respuesta."

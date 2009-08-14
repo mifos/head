@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-07-20 16:22-0700\n"
+"PO-Revision-Date: 2009-08-08 22:03-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,9 +29,8 @@ msgid "Back dated transactions allowed"
 msgstr "Transacciones retroactivas permitidas"
 
 #: VOS.centerHierarchyExists
-#, fuzzy
 msgid "Center hierarchy exists"
-msgstr "Existe jerarquía del Centro"
+msgstr "La Jerarquía del Centro existe"
 
 #: VOS.clientPendingState
 msgid "Client pending approval state enabled"
@@ -79,9 +78,8 @@ msgid "Group pending approval state enabled"
 msgstr "Aprobación pendiente del grupo - permitido"
 
 #: VOS.holidayMeeting
-#, fuzzy
 msgid "Meeting in case of a holiday"
-msgstr "Reunión en el evento de que haya un día festivo"
+msgstr "Reunión en caso de que haya un día festivo"
 
 #: VOS.intDigitsAfterDecimal
 msgid "Number of digits after decimal for interest"
@@ -107,13 +105,17 @@ msgstr "Modo inicial de redondeo"
 msgid "Final Rounding Mode"
 msgstr "Modo final de redondeo"
 
+# Need context
 #: VOS.finalRoundOffMultiple
+#, fuzzy
 msgid "Final Round Off Multiple"
-msgstr ""
+msgstr "Final Round Off Multiple"
 
+# Need context
 #: VOS.initialRoundOffMultiple
+#, fuzzy
 msgid "Initial Round Off Multiple"
-msgstr ""
+msgstr "Initial Round Off Multiple"
 
 #: VOS.labelLinkAdmin
 msgid "Admin"

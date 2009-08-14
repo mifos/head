@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-07-16 06:52-0700\n"
+"PO-Revision-Date: 2009-08-08 22:07-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -69,9 +69,8 @@ msgid "Amount"
 msgstr "Cantidad"
 
 #: BulkEntry.Label
-#, fuzzy
 msgid "Bulk entry"
-msgstr "Partida multiple"
+msgstr "Lotes de entrada"
 
 #: BusinessActivities.Label
 msgid "Occupation"
@@ -137,85 +136,89 @@ msgstr "Fecha"
 
 #: DayRank.Label
 msgid "Days Rank"
-msgstr ""
+msgstr "Rango de los días"
 
 #: Description.Label
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
+# What is a BO?
 #: DistanceFromBoToCenter.Label
+#, fuzzy
 msgid "Distance from BO to Center"
-msgstr ""
+msgstr "Distancia desde el BO al Centro"
 
+# What is a HO?
 #: DistanceFromHoToBO.Label
+#, fuzzy
 msgid "Distance from HO to BO for office"
-msgstr ""
+msgstr "Distancia del HO al BO para la oficina"
 
 #: EducationLevel.Label
 msgid "EducationLevel"
-msgstr ""
+msgstr "Nivel Educativo"
 
 #: Ethinicity.Label
 msgid "Ethnicity"
-msgstr ""
+msgstr "Etnicidad"
 
 #: ExternalId.Label
 msgid "External Id"
-msgstr ""
+msgstr "Identificación externa"
 
 #: ExternalLoanId.Label
 msgid "External Loan Id"
-msgstr ""
+msgstr "Identificación externa del préstamo "
 
 #: ExternalSavingsId
 msgctxt "ExternalSavingsId"
 msgid "External Savings Id"
-msgstr ""
+msgstr "Identificación externa de los ahorros"
 
 #: ExternalSavingsId.Label
 msgctxt "ExternalSavingsId.Label"
 msgid "External Savings Id"
-msgstr ""
+msgstr "Identificación externa de los ahorros"
 
 #: FeeFormulaMaster.Label
 msgid "Fee Formula Master"
-msgstr ""
+msgstr "Fórmula maestra de las cuotas"
 
 #: FeePayment.Label
 msgid "Fee Payment"
-msgstr ""
+msgstr "Pago de la cuota"
 
 #: FeeStatus.Label
 msgid "Fee Status"
-msgstr ""
+msgstr "Estado de la cuota"
 
 #: FeeType.Label
 msgid "Fee Type"
-msgstr ""
+msgstr "Tipo de cuota"
 
 #: Field.Label
 msgid "Field"
-msgstr ""
+msgstr "Campo"
 
 #: FinancialAction.Label
 msgid "Financial Action"
-msgstr ""
+msgstr "Acción Financiera"
 
 #: GRTStaffId.Label
 msgid "GRT Staff Id"
-msgstr ""
+msgstr "Identificación del personal GRT"
 
 #: Gender.Label
 msgid "Gender"
-msgstr ""
+msgstr "Género"
 
 #: GovernmentId.Label
 msgid "Government ID"
-msgstr ""
+msgstr "Identificación del gobierno"
 
 #: GracePeriodTypes.Label
 msgid "GracePeriodTypes"
-msgstr ""
+msgstr "Tipos de períodos de gracia"
 
 #: Group.Label
 msgid "Group"
@@ -223,230 +226,236 @@ msgstr "Grupo"
 
 #: GroupFlag.Label
 msgid "Group Flag"
-msgstr ""
+msgstr "Identificador de Grupo"
 
 #: GroupStatus.Label
 msgid "Group Status"
-msgstr ""
+msgstr "Estado del Grupo"
 
 #: Handicapped.Label
 msgid "Handicapped"
-msgstr ""
+msgstr "Discapacitado"
 
+# what is INT CAL?
 #: IntCalTypes.Label
 msgid "INT CALC TYPES"
-msgstr ""
+msgstr "Tipos de INT CAL"
 
 #: Interest.Label
 msgctxt "Interest.Label"
 msgid "Interest"
-msgstr ""
+msgstr "Interés"
 
 #: InterestCalcRule.Label
 msgid "InterestCalcRule"
-msgstr ""
+msgstr "ReglaCálculoInterés"
 
 #: InterestTypes.Label
 msgid "InterestTypes"
-msgstr ""
+msgstr "TiposInterés"
 
 #: Language.Label
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #: Loan.Label
 msgid "Loan"
-msgstr ""
+msgstr "Préstamo"
 
 #: LoanPurposes.Label
 msgid "Loan Purposes"
-msgstr ""
+msgstr "Propósito del préstamo"
 
+# The original should read MaritalStatus
 #: MaritalStatus.Label
 msgid "MartialStatus"
-msgstr ""
+msgstr "EstadoCivil"
 
 #: MeetingTime.Label
 msgid "Meeting Time"
-msgstr ""
+msgstr "Hora de la reunión"
 
 #: NewValue.Label
 msgid "New Value"
-msgstr ""
+msgstr "Nuevo valor"
 
 #: NoOfClientsPerCenter.Label
 msgid "Number of Clients per Center"
-msgstr ""
+msgstr "Número de Clientes por Centro"
 
 #: NoOfClientsPerGroup.Label
 msgid "Number of Clients per Group"
-msgstr ""
+msgstr "Número de Clientes por Grupo"
 
 #: Office.Label
 msgid "Office"
-msgstr ""
+msgstr "Oficina"
 
 #: OfficeCode.Label
 msgid "Office Code"
-msgstr ""
+msgstr "Código de la Oficina"
 
 #: OfficeLevels.Label
 msgid "OfficeLevel"
-msgstr ""
+msgstr "Nivel de la Oficina"
 
 #: OfficeStatus.Label
 msgid "Office Status"
-msgstr ""
+msgstr "Estado de la Oficina"
 
 #: OldValue.Label
 msgid "Old Value"
-msgstr ""
+msgstr "Valor anterior"
 
 #: PaymentType.Label
 msgid "PaymentType"
-msgstr ""
+msgstr "TipoPago"
 
 #: PaymentTypes.CASH
 msgid "Cash"
-msgstr ""
+msgstr "Efectivo"
 
 #: PaymentTypes.CHEQUE
 msgid "Check"
-msgstr ""
+msgstr "Cheque"
 
 #: PaymentTypes.VOUCHER
 msgid "Voucher"
-msgstr ""
+msgstr "Cupón"
 
 #: Permissions.Label
 msgid "Permissions"
-msgstr ""
+msgstr "Permisos"
 
 #: Personnel.Label
 msgid "Personnel"
-msgstr ""
+msgstr "Personal"
 
 #: PersonnelLevels.Label
 msgid "User Hierarchy"
-msgstr ""
+msgstr "Jerarquía del Usuario"
 
 #: PersonnelStatus.Label
 msgid "Personnel Status"
-msgstr ""
+msgstr "Estado del Personal"
 
 #: PersonnelTitles.Label
 msgid "User Title"
-msgstr ""
+msgstr "Título del Usuario"
 
 #: PostalCode.Label
 msgid "Postal Code"
-msgstr ""
+msgstr "Código Postal"
 
 #: PovertyStatus.Label
 msgid "Poverty Status"
-msgstr ""
+msgstr "Estado de Pobreza"
 
+# Need better definition
 #: PrdApplicableMaster.Label
+#, fuzzy
 msgid "PrdApplicableMaster"
-msgstr ""
+msgstr "PrdApplicableMaster"
 
 #: ProductCategoryStatus.Label
 msgid "Product Category Status"
-msgstr ""
+msgstr "Estado de la categoría de productos"
 
 #: ProductState.Label
 msgid "Product State"
-msgstr ""
+msgstr "Estado del Producto"
 
 #: ProductStatus.Label
 msgid "Product Status"
-msgstr ""
+msgstr "Estado del Producto"
 
+# Need better context 
 #: RecommendedAmtUnit.Label
+#, fuzzy
 msgid "REC AMNT UNIT"
-msgstr ""
+msgstr "REC AMNT UNIT"
 
 #: ReplacementStatus.Label
 msgid "Replacement Status"
-msgstr ""
+msgstr "Estado del reemplazo"
 
 #: Salutation.Label
 msgid "Salutation"
-msgstr ""
+msgstr "Saludo"
 
 #: Savings.Label
 msgid "Savings"
-msgstr ""
+msgstr "Ahorros"
 
 #: SavingsStatus.Label
 msgid "Savings Status"
-msgstr ""
+msgstr "Estado del Ahorro"
 
 #: SavingsType.Label
 msgid "SAVINGS TYPE"
-msgstr ""
+msgstr "TIPO DE AHORRO"
 
 #: ServiceCharge.Label
 msgctxt "ServiceCharge.Label"
 msgid "Interest"
-msgstr ""
+msgstr "Interés"
 
 #: SpouseFather.Label
 msgid "Spouse/Father"
-msgstr ""
+msgstr "Esposo/Padre"
 
 #: State.Label
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #: Titles.Label
 msgid "Titles"
-msgstr ""
+msgstr "Títulos"
 
 #: User.Label
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #: WeekDay.FRIDAY
 msgid "Friday"
-msgstr ""
+msgstr "Viernes"
 
 #: WeekDay.MONDAY
 msgid "Monday"
-msgstr "lunes"
+msgstr "Lunes"
 
 #: WeekDay.SATURDAY
 msgid "Saturday"
-msgstr "sábado"
+msgstr "Sábado"
 
 #: WeekDay.SUNDAY
 msgid "Sunday"
-msgstr "domingo"
+msgstr "Domingo"
 
 #: WeekDay.THURSDAY
 msgid "Thursday"
-msgstr "jueves"
+msgstr "Jueves"
 
 #: WeekDay.TUESDAY
 msgid "Tuesday"
-msgstr "martes"
+msgstr "Martes"
 
 #: WeekDay.WEDNESDAY
 msgid "Wednesday"
-msgstr "miércoles"
+msgstr "Miércoles"
 
 #: WeekDays.Label
 msgid "Week Days"
-msgstr ""
+msgstr "Días de la Semana"
 
 #: YESNO.Label
 msgid "YES/NO"
-msgstr ""
+msgstr "Sí/No"
 
 #: YesNoFlag.NO
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: YesNoFlag.YES
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
