@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-09 15:53-0700\n"
-"PO-Revision-Date: 2009-06-25 18:48-0700\n"
+"PO-Revision-Date: 2009-08-04 00:27-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgstr "លេខសំគាល់រដ្ឋាភិបាល"
 
 #: Client.Handicapped
 msgid "Handicaped"
-msgstr ""
+msgstr "ពិការភាព"
 
 #: Client.MiddleName
 msgctxt "Client.MiddleName"
@@ -217,11 +217,11 @@ msgstr "វគ្គសិក្សាលើ"
 
 #: Loan.CollateralNotes
 msgid "Collateral Notes"
-msgstr ""
+msgstr "កំនត់ចំនាំនៃការបញ្ជាំ"
 
 #: Loan.CollateralType
 msgid "Collateral Type"
-msgstr ""
+msgstr "ប្រភេទនៃការបញ្ជាំ"
 
 #: Loan.PurposeOfLoan
 msgid "Purpose of loan"

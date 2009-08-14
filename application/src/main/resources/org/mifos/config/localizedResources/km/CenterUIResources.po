@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:46-0700\n"
-"PO-Revision-Date: 2009-06-15 19:55-0700\n"
+"PO-Revision-Date: 2009-08-04 19:34-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -59,24 +59,24 @@ msgstr "ព័ត៌មានបន្ថែម"
 #: Center.Address
 msgctxt "Center.Address"
 msgid "Address"
-msgstr "អាស្រយដ្ឋាន"
+msgstr "អាស័យដ្ឋាន"
 
 #: Center.Address1
 msgid "Address 1\\:"
-msgstr "អាស្រយដ្ឋាន១\\៖"
+msgstr "អាស័យដ្ឋាន១\\៖"
 
 #: Center.Address2
 msgid "Address 2\\:"
-msgstr "អាស្រយដ្ឋាន២\\៖"
+msgstr "អាស័យដ្ឋាន២\\៖"
 
 #: Center.Address3
 msgid "Address 3\\:"
-msgstr "អាស្រយដ្ឋាន៣\\៖"
+msgstr "អាស័យដ្ឋាន៣\\៖"
 
 #: Center.AddressHeading
 msgctxt "Center.AddressHeading"
 msgid "Address"
-msgstr "អាស្រយដ្ឋាន"
+msgstr "អាស័យដ្ឋាន"
 
 #: Center.AdministrativeFeesHeading
 msgid "Administrative set fees"
@@ -633,7 +633,7 @@ msgstr "សរុប"
 
 #: Center.TotalLoanPortfolio
 msgid "Total loan portfolio\\:"
-msgstr ""
+msgstr "កំចីយសរុប"
 
 #: Center.TotalSavings
 msgid "Total Savings\\:"
@@ -760,7 +760,7 @@ msgstr "ឈ្មោះនៃការផ្លាស់ប្តូរ"
 
 #: Center.portfolio
 msgid "portfolio"
-msgstr ""
+msgstr "តំនែងរដ្ទមន្ត្រី"
 
 #: Center.postedby
 msgid "Posted By"
@@ -966,6 +966,8 @@ msgid ""
 "<li>Meeting frequency and fee recurrence do not match. Please select only "
 "valid fee types.</li>"
 msgstr ""
+"ភាពញឹកញាប់នៃប្រជុំនឹងចំនាយជារឿយៗគឺមិនសមគ្នា។សូមជ្រើសរើសតែប្រភេទសេវាដែលយកជាកា"
+"របាន"
 
 #: errors.Customer.specifyCustomFieldValue
 msgctxt "errors.Customer.specifyCustomFieldValue"
