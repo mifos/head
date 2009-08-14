@@ -82,6 +82,7 @@ public class DbUnitDataImportExport {
         exporter.importExport();
     }
 
+    @SuppressWarnings("static-access")
     private void defineOptions() {
         outputFile = OptionBuilder.withArgName( "file name" )
         .withLongOpt("fileName")
