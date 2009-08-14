@@ -43,15 +43,19 @@ public class CustomerChangeStatusPage extends MifosPage {
 	
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
- 
-        String status;
-        String notes;
+        // statuses 
+        public final static int APPROVED = 3;
+        public final static int PARTIAL_APPLICATION = 1;
+        public final static int PENDING_APPROVAL = 2; 
         
-        public String getStatus() {
+        private int status;
+        private String notes;
+        
+        public int getStatus() {
             return this.status;
         }
 
-        public void setStatus(String status) {
+        public void setStatus(int status) {
             this.status = status;
         }
 
@@ -65,7 +69,7 @@ public class CustomerChangeStatusPage extends MifosPage {
     }	
     
     public CustomerChangeStatusPreviewDataPage submitAndGotoCustomerChangeStatusPreviewDataPage(SubmitFormParameters parameters) {
-        checkIfNotEmpty("customerchangeStatus.input.status", parameters.getStatus());
+        selenium.check("name=newStatusId value="+ parameters.getStatus());
         typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
         selenium.click("customerchangeStatus.button.preview");
         waitForPageToLoad();
@@ -73,8 +77,8 @@ public class CustomerChangeStatusPage extends MifosPage {
     }  
     
     public ClientViewDetailsPage cancelAndGotoClientViewDetailsPage(SubmitFormParameters parameters) {
-        checkIfNotEmpty("customerchangeStatus.input.status", parameters.getStatus());
-        typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
+        //checkIfNotEmpty("customerchangeStatus.input.status", parameters.getStatus());
+        //typeTextIfNotEmpty("customerchangeStatus.input.notes", parameters.getNotes());
         selenium.click("customerchangeStatus.button.cancel");
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);

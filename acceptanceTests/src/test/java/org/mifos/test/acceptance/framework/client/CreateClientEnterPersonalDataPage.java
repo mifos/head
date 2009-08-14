@@ -43,24 +43,42 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
 	
     @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
     public static class SubmitFormParameters {
-        String salutation;
+        // gender
+        public static final int MALE = 49;
+        public static final int FEMALE = 50;
+        
+        // salutation
+        public static final int MR = 47;
+        public static final int MRS = 48;
+        public static final int MS = 228;
+        
+        // poverty level
+        public static final int VERY_POOR = 41;
+        public static final int POOR = 42;
+        public static final int NOT_POOR = 43;
+        
+        // father/spouse relationship
+        public static final int SPOUSE = 1;
+        public static final int FATHER = 2;
+        
+        int salutation;
         String firstName;
         String lastName;
         String dateOfBirthDD;
         String dateOfBirthMM;
         String dateOfBirthYYYY;
-        String povertyStatus;
-        String gender;
+        int povertyStatus;
+        int gender;
         String handicapped;
-        String spouseNameType;
         String spouseFirstName;
         String spouseLastName;
+        private int spouseNameType;
         
-        public String getSalutation() {
+        public int getSalutation() {
             return this.salutation;
         }
         
-        public void setSalutation(String salutation) {
+        public void setSalutation(int salutation) {
             this.salutation = salutation;
         }
         
@@ -104,19 +122,19 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
             this.dateOfBirthYYYY = dateOfBirthYYYY;
         }
         
-        public String getPovertyStatus() {
+        public int getPovertyStatus() {
             return this.povertyStatus;
         }
         
-        public void setPovertyStatus(String povertyStatus) {
+        public void setPovertyStatus(int povertyStatus) {
             this.povertyStatus = povertyStatus;
         }
 
-        public String getGender() {
+        public int getGender() {
             return this.gender;
         }
         
-        public void setGender(String gender) {
+        public void setGender(int gender) {
             this.gender = gender;
         }
         
@@ -128,11 +146,11 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
             this.handicapped = handicapped;
         }
         
-        public String getSpouseNameType() {
+        public int getSpouseNameType() {
             return this.spouseNameType;
         }
         
-        public void setSpouseNameType(String spouseNameType) {
+        public void setSpouseNameType(int spouseNameType) {
             this.spouseNameType = spouseNameType;
         }
         
@@ -155,7 +173,7 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
     }
  
     public CreateClientEnterMfiDataPage submitAndGotoCreateClientEnterMfiDataPage(SubmitFormParameters parameters) {
-        selectIfNotEmpty("clientName.salutation", parameters.getSalutation());
+        selectValueIfNotZero("clientName.salutation", parameters.getSalutation());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.firstName", parameters.getFirstName());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.lastName", parameters.getLastName());
         
@@ -163,11 +181,11 @@ public class CreateClientEnterPersonalDataPage extends MifosPage {
         typeTextIfNotEmpty("dateOfBirthMM", parameters.getDateOfBirthMM());
         typeTextIfNotEmpty("dateOfBirthYY", parameters.getDateOfBirthYYYY());     
         
-        selectIfNotEmpty("clientDetailView.gender", parameters.getGender());
-        selectIfNotEmpty("clientDetailView.povertyStatus", parameters.getPovertyStatus());
+        selectValueIfNotZero("clientDetailView.gender", parameters.getGender());
+        selectValueIfNotZero("clientDetailView.povertyStatus", parameters.getPovertyStatus());
         selectIfNotEmpty("clientDetailView.handicapped", parameters.getHandicapped());   
         
-        selectIfNotEmpty("spouseName.nameType", parameters.getSpouseNameType());
+        selectValueIfNotZero("spouseName.nameType", parameters.getSpouseNameType());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.spouseFirstName", parameters.getSpouseFirstName());
         typeTextIfNotEmpty("create_ClientPersonalInfo.input.spouseLastName", parameters.getSpouseLastName());
         

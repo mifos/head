@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.framework.client;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
 
 public class CreateClientConfirmationPage extends MifosPage {
 
@@ -34,15 +33,11 @@ public class CreateClientConfirmationPage extends MifosPage {
     }
     
     public void verifyPage() {
-        this.verifyPage("client_creationConfirmation");
+        this.verifyPage("ClientCreationConfirmation");
     }    
     
     public String getConfirmation() {
         return selenium.getText("client_creationConfirmation.text.confirmation");
-    }
-    
-    public void verifyConfirmation(String fullName) {
-      Assert.assertTrue(getConfirmation().contains(fullName + " has been assigned the system ID number:"));
     }
 
     public ClientViewDetailsPage navigateToClientViewDetailsPage() {
