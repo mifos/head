@@ -95,6 +95,8 @@ public class DbUnitUtilities {
         columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_NOTES", new String[] { "comment_date", "account_notes_id" });
         columnsToIgnoreWhenVerifyingTables.put("CLIENT_PERF_HISTORY", new String[] { "id" });
         columnsToIgnoreWhenVerifyingTables.put("LOAN_ACCOUNT", new String[] { "account_id", "meeting_id"});
+        columnsToIgnoreWhenVerifyingTables.put("PRD_OFFERING", new String[] { "prd_offering_id", "global_prd_offering_num", "prd_offering_name", "prd_offering_short_name", "created_date", "start_date"});
+        columnsToIgnoreWhenVerifyingTables.put("SAVINGS_OFFERING", new String[] { "prd_offering_id" });
         
     }
 

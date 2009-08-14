@@ -31,6 +31,7 @@ public class SavingsProductParameters {
     private int applicableFor;
     private int typeOfDeposits;
     private String mandatoryAmount;
+    private int amountAppliesTo;
     private String interestRate;
     private int balanceUsedForInterestCalculation;
     private int daysOrMonthsForInterestCalculation;
@@ -59,6 +60,10 @@ public class SavingsProductParameters {
     // days or months for interest calculation
     public static final int MONTHS = 2;
     public static final int DAYS = 3;
+    
+    // the amount applies to either the whole group or per individual
+    public static final int PER_INDIVIDUAL = 1;
+    public static final int WHOLE_GROUP = 2;
     
     public String getProductInstanceName() {
         return this.productInstanceName;
@@ -155,5 +160,11 @@ public class SavingsProductParameters {
     }
     public void setGlCodeForInterest(String glCodeForInterest) {
         this.glCodeForInterest = glCodeForInterest;
+    }
+    public void setAmountAppliesTo(int amountAppliesTo) {
+        this.amountAppliesTo = amountAppliesTo;
+    }
+    public int getAmountAppliesTo() {
+        return amountAppliesTo;
     }
 }

@@ -44,6 +44,7 @@ public class DefineNewSavingsProductPage extends MifosPage {
         selectValueIfNotZero("CreateSavingsProduct.input.applfor", productParameters.getApplicableFor());
         selectValueIfNotZero("CreateSavingsProduct.input.typeofdep", productParameters.getTypeOfDeposits());
         typeTextIfNotEmpty("CreateSavingsProduct.input.recommendedAmount", productParameters.getMandatoryAmount());
+        selectValueIfNotZero("recommendedAmntUnit", productParameters.getAmountAppliesTo());
         selenium.type("CreateSavingsProduct.input.interestRate", productParameters.getInterestRate());
         
         selectValueIfNotZero("CreateSavingsProduct.input.balUsedForCalc", productParameters.getBalanceUsedForInterestCalculation());
