@@ -49,10 +49,16 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 /**
  * This class's reponsibility is to handle the {@link BulkEntryCache}.
+ * 
+ * FIXME - keithw - remove class.
+ * 
+ * @deprecated - do not use - keithw. marked for delete post collection sheet
+ *             refactor.
  */
+@Deprecated
 public class BulkEntryPersistenceService {
 
-    private BulkEntryCache bulkEntryCache = new BulkEntryCache();
+    private final BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
     public List<CollectionSheetEntryInstallmentView> getBulkEntryActionView(Date meetingDate, String searchString,
             Short officeId, AccountTypes accountType) throws PersistenceException {

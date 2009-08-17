@@ -24,11 +24,11 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataVie
 import org.mifos.framework.security.util.UserContext;
 
 /**
- * Service facade for CollectionSheetEntry functionality.
+ * Service facade for Collection Sheet functionality.
  */
 public interface CollectionSheetServiceFacade {
 
-    CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfPossible(UserContext userContext);
+    CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfApplicable(UserContext userContext);
 
     CollectionSheetEntryFormDto loadLoanOfficersForBranch(Short officeId, UserContext userContext,
             CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto);
@@ -45,9 +45,6 @@ public interface CollectionSheetServiceFacade {
     CollectionSheetEntryGridDto previewCollectionSheetEntry(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
             CollectionSheetDataView dataView);
 
-    ErrorAndCollectionSheetDataDto prepareSavingAccountsForCollectionSheetEntrySave(
-            CollectionSheetEntryGridDto previousCollectionSheetEntryDto, Short userId);
-
     CollectionSheetErrorsView saveCollectionSheet(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
-            ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto, Short userId);
+            CollectionSheetEntryDecomposedView decomposedViews, Short userId);
 }

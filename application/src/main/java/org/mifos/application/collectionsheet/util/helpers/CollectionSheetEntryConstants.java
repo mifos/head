@@ -109,7 +109,7 @@ public interface CollectionSheetEntryConstants {
     public String WITHDRAWAL = "bulkEntry.withdrawals";
     public String OTHER_COLLECTION = "bulkEntry.otherCollections";
     public String MODE_OF_PAYMENT = "bulkEntry.pmnttype";
-    public String SAVING_DEPOSITE = "bulkEntry.savingsDeposit";
+    public String SAVING_DEPOSIT = "bulkEntry.savingsDeposit";
     public String SAVING_WITHDRAWAL = "bulkEntry.savingsWithdrawal";
     public String CLIENT_NAME = "bulkEntry.clientName";
     public String DATEOFTRXN = "bulkEntry.dateoftrxn";

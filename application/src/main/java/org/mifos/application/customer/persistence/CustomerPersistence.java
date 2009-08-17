@@ -49,6 +49,7 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
@@ -864,12 +865,13 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_ACCOUNTS_FOR_FEE, queryParameters);
     }
 
-    public AccountBO getCustomerAccountWithAccountActionsInitialized(Integer accountId) throws PersistenceException {
+    public CustomerAccountBO getCustomerAccountWithAccountActionsInitialized(Integer accountId)
+            throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("accountId", accountId);
         List obj = executeNamedQuery("accounts.retrieveCustomerAccountWithAccountActions", queryParameters);
         Object[] obj1 = (Object[]) obj.get(0);
-        return (AccountBO) obj1[0];
+        return (CustomerAccountBO) obj1[0];
     }
 
     public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(Integer accountId, Date transactionDate)

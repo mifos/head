@@ -36,6 +36,7 @@ import junitx.framework.StringAssert;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
@@ -50,7 +51,6 @@ import org.mifos.application.collectionsheet.persistance.service.BulkEntryPersis
 import org.mifos.application.collectionsheet.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientService;
 import org.mifos.application.customer.client.business.service.StandardClientService;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -74,6 +74,10 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+/**
+ * FIXME - keithw - marke for delete along with the class its tests
+ * {@link CollectionSheetEntryBusinessService}.
+ */
 public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
     public CollectionSheetEntryBusinessServiceIntegrationTest() throws SystemException, ApplicationException {
         super();
@@ -106,9 +110,11 @@ public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosInt
         final ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao();
         final ClientService clientService = new StandardClientService(clientAttendanceDao);
         final CustomerPersistence customerPersistence = new CustomerPersistence();
+        final LoanPersistence loanPersistence = new LoanPersistence();
         final SavingsPersistence savingsPersistence = new SavingsPersistence();
         final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
-        bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService, customerPersistence, savingsPersistence,
+        bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService, customerPersistence,
+                loanPersistence,
                 bulkEntryPersistanceService);
         accountPersistence = new AccountPersistence();
         currentDate = new Date(System.currentTimeMillis());
@@ -282,7 +288,8 @@ public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosInt
         }
     }
 
-    public void testDisburseLoanWithFeeAtDisbursement() throws Exception {
+    // FIXME - keithw - rewrite test for collection sheet service etc.
+    public void ignore_and_repeat_testDisburseLoanWithFeeAtDisbursement() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         account = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);

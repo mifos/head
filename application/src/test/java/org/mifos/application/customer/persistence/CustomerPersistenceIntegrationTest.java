@@ -38,6 +38,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -435,10 +436,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         final ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao();
         final ClientService clientService = new StandardClientService(clientAttendanceDao);
         final CustomerPersistence customerPersistence = new CustomerPersistence();
+        final LoanPersistence loanPersistence = new LoanPersistence();
         final SavingsPersistence savingsPersistence = new SavingsPersistence();
         final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
         final CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService,
-                customerPersistence, savingsPersistence, bulkEntryPersistanceService);
+                customerPersistence, loanPersistence, bulkEntryPersistanceService);
 
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -466,10 +468,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         final ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao();
         final ClientService clientService = new StandardClientService(clientAttendanceDao);
         final CustomerPersistence customerPersistence = new CustomerPersistence();
+        final LoanPersistence loanPersistence = new LoanPersistence();
         final SavingsPersistence savingsPersistence = new SavingsPersistence();
         final BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
         final CollectionSheetEntryBusinessService bulkEntryBusinessService = new CollectionSheetEntryBusinessService(clientService,
-                customerPersistence, savingsPersistence, bulkEntryPersistanceService);
+                customerPersistence, loanPersistence, bulkEntryPersistanceService);
         
         center = createCenter();
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

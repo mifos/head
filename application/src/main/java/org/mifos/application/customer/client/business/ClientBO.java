@@ -76,9 +76,9 @@ public class ClientBO extends CustomerBO {
 
     private CustomerPictureEntity customerPicture;
 
-    private Set<ClientNameDetailEntity> nameDetailSet;
+    private final Set<ClientNameDetailEntity> nameDetailSet;
 
-    private Set<ClientAttendanceBO> clientAttendances;
+    private final Set<ClientAttendanceBO> clientAttendances;
 
     private Date dateOfBirth;
 
@@ -98,7 +98,7 @@ public class ClientBO extends CustomerBO {
 
     private final Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
+    private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
 
     /*
      * Injected Persistence classes
@@ -297,12 +297,13 @@ public class ClientBO extends CustomerBO {
     }
 
     public void setClientPerformanceHistory(ClientPerformanceHistoryEntity clientPerformanceHistory) {
-        if (clientPerformanceHistory != null)
+        if (clientPerformanceHistory != null) {
             clientPerformanceHistory.setClient(this);
+        }
         this.clientPerformanceHistory = clientPerformanceHistory;
     }
 
-    public void addClientAttendance(ClientAttendanceBO clientAttendance) {
+    public void addClientAttendance(final ClientAttendanceBO clientAttendance) {
         clientAttendance.setCustomer(this);
         clientAttendances.add(clientAttendance);
     }
@@ -327,8 +328,9 @@ public class ClientBO extends CustomerBO {
     public ClientAttendanceBO getClientAttendanceForMeeting(Date meetingDate) {
         for (ClientAttendanceBO clientAttendance : getClientAttendances()) {
             if (DateUtils.getDateWithoutTimeStamp(clientAttendance.getMeetingDate().getTime()).compareTo(
-                    DateUtils.getDateWithoutTimeStamp(meetingDate.getTime())) == 0)
+                    DateUtils.getDateWithoutTimeStamp(meetingDate.getTime())) == 0) {
                 return clientAttendance;
+            }
         }
         return null;
     }
@@ -379,10 +381,11 @@ public class ClientBO extends CustomerBO {
 
     @Override
     public void updateMeeting(MeetingBO meeting) throws CustomerException {
-        if (getCustomerMeeting() == null)
+        if (getCustomerMeeting() == null) {
             this.setCustomerMeeting(createCustomerMeeting(meeting));
-        else
+        } else {
             saveUpdatedMeeting(meeting);
+        }
         this.update();
     }
 
@@ -390,8 +393,9 @@ public class ClientBO extends CustomerBO {
     protected void saveUpdatedMeeting(MeetingBO meeting) throws CustomerException {
         MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
         super.saveUpdatedMeeting(meeting);
-        if (getParentCustomer() == null)
+        if (getParentCustomer() == null) {
             deleteMeeting(newMeeting);
+        }
     }
 
     @Override
@@ -451,8 +455,9 @@ public class ClientBO extends CustomerBO {
         validateBranchTransfer(officeToTransfer);
         logger.debug("In ClientBO::transferToBranch(), transfering customerId: " + getCustomerId() + "to branch : "
                 + officeToTransfer.getOfficeId());
-        if (isActive())
+        if (isActive()) {
             setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
+        }
 
         makeCustomerMovementEntries(officeToTransfer);
         this.setPersonnel(null);
@@ -466,8 +471,9 @@ public class ClientBO extends CustomerBO {
         logger.debug("In ClientBO::transferToGroup(), transfering customerId: " + getCustomerId() + "to Group Id : "
                 + newParent.getCustomerId());
 
-        if (!isSameBranch(newParent.getOffice()))
+        if (!isSameBranch(newParent.getOffice())) {
             makeCustomerMovementEntries(newParent.getOffice());
+        }
 
         CustomerBO oldParent = getParentCustomer();
         changeParentCustomer(newParent);
@@ -486,8 +492,9 @@ public class ClientBO extends CustomerBO {
     public void handleGroupTransfer() throws CustomerException {
         if (!isSameBranch(getParentCustomer().getOffice())) {
             makeCustomerMovementEntries(getParentCustomer().getOffice());
-            if (isActive())
+            if (isActive()) {
                 setCustomerStatus(new CustomerStatusEntity(CustomerStatus.CLIENT_HOLD));
+            }
             this.setPersonnel(null);
         }
         setSearchId(getParentCustomer().getSearchId() + getSearchId().substring(getSearchId().lastIndexOf(".")));
@@ -522,29 +529,31 @@ public class ClientBO extends CustomerBO {
     }
 
     public void updatePicture(InputStream picture) throws CustomerException {
-        if (customerPicture != null)
+        if (customerPicture != null) {
             try {
                 customerPicture.setPicture(getClientPersistence().createBlob(picture));
             } catch (PersistenceException e) {
                 throw new CustomerException(e);
             }
-        else
+        } else {
             try {
                 this.customerPicture = new CustomerPictureEntity(this, getClientPersistence().createBlob(picture));
             } catch (PersistenceException e) {
                 throw new CustomerException(e);
             }
+        }
 
     }
 
     private void createPicture(InputStream picture) throws CustomerException {
         try {
-            if (picture != null && picture.available() > 0)
+            if (picture != null && picture.available() > 0) {
                 try {
                     this.customerPicture = new CustomerPictureEntity(this, getClientPersistence().createBlob(picture));
                 } catch (PersistenceException e) {
                     throw new CustomerException(e);
                 }
+            }
 
         } catch (IOException e) {
             throw new CustomerException(e);
@@ -553,8 +562,9 @@ public class ClientBO extends CustomerBO {
 
     private void createAssociatedOfferings(List<SavingsOfferingBO> offeringsSelected) {
         if (offeringsSelected != null) {
-            for (SavingsOfferingBO offering : offeringsSelected)
+            for (SavingsOfferingBO offering : offeringsSelected) {
                 offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(this, offering));
+            }
         }
     }
 
@@ -566,14 +576,17 @@ public class ClientBO extends CustomerBO {
     }
 
     private void validateBranchTransfer(OfficeBO officeToTransfer) throws CustomerException {
-        if (officeToTransfer == null)
+        if (officeToTransfer == null) {
             throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+        }
 
-        if (isSameBranch(officeToTransfer))
+        if (isSameBranch(officeToTransfer)) {
             throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+        }
 
-        if (!officeToTransfer.isActive())
+        if (!officeToTransfer.isActive()) {
             throw new CustomerException(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE);
+        }
     }
 
     private boolean isSameGroup(GroupBO group) {
@@ -581,17 +594,20 @@ public class ClientBO extends CustomerBO {
     }
 
     private void validateGroupTransfer(GroupBO toGroup) throws CustomerException {
-        if (toGroup == null)
+        if (toGroup == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
 
-        if (isSameGroup(toGroup))
+        if (isSameGroup(toGroup)) {
             throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+        }
 
         validateForGroupStatus(toGroup.getStatus());
         validateForActiveAccounts();
-        if (getCustomerMeeting() != null && toGroup.getCustomerMeeting() != null)
+        if (getCustomerMeeting() != null && toGroup.getCustomerMeeting() != null) {
             validateMeetingRecurrenceForTransfer(getCustomerMeeting().getMeeting(), toGroup.getCustomerMeeting()
                     .getMeeting());
+        }
     }
 
     private void validateForGroupStatus(CustomerStatus groupStatus) throws CustomerException {
@@ -601,8 +617,9 @@ public class ClientBO extends CustomerBO {
                     MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, userContext),
                     MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, userContext) });
         }
-        if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED) || groupStatus.equals(CustomerStatus.GROUP_CLOSED))
+        if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED) || groupStatus.equals(CustomerStatus.GROUP_CLOSED)) {
             throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);
+        }
 
     }
 
@@ -666,8 +683,9 @@ public class ClientBO extends CustomerBO {
 
     private boolean isGroupStatusLower(CustomerStatus clientStatus, CustomerStatus groupStatus) {
         if (clientStatus.equals(CustomerStatus.CLIENT_PENDING)) {
-            if (groupStatus.equals(CustomerStatus.GROUP_PARTIAL))
+            if (groupStatus.equals(CustomerStatus.GROUP_PARTIAL)) {
                 return true;
+            }
         } else if (clientStatus.equals(CustomerStatus.CLIENT_ACTIVE) || clientStatus.equals(CustomerStatus.CLIENT_HOLD)) {
             if (groupStatus.equals(CustomerStatus.GROUP_PARTIAL) || groupStatus.equals(CustomerStatus.GROUP_PENDING)) {
                 return true;
@@ -686,9 +704,10 @@ public class ClientBO extends CustomerBO {
         if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))
                 && this.isClientUnderGroup()) {
-            if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue()))
+            if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
                 throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] { MessageLookup
                         .getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()) });
+            }
 
             if (isGroupStatusLower(clientStatusId, groupStatus)) {
 
@@ -759,9 +778,10 @@ public class ClientBO extends CustomerBO {
     private List<CustomFieldView> createCustomFieldViewsForClientSavingsAccount(
             List<CustomFieldDefinitionEntity> customFieldDefs) {
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs)
+        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
             customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
                     customFieldDef.getFieldType()));
+        }
         return customFields;
     }
 
@@ -771,10 +791,13 @@ public class ClientBO extends CustomerBO {
 
     private void validateOfferings(List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
         if (offeringsSelected != null) {
-            for (int i = 0; i < offeringsSelected.size() - 1; i++)
-                for (int j = i + 1; j < offeringsSelected.size(); j++)
-                    if (offeringsSelected.get(i).getPrdOfferingId().equals(offeringsSelected.get(j).getPrdOfferingId()))
+            for (int i = 0; i < offeringsSelected.size() - 1; i++) {
+                for (int j = i + 1; j < offeringsSelected.size(); j++) {
+                    if (offeringsSelected.get(i).getPrdOfferingId().equals(offeringsSelected.get(j).getPrdOfferingId())) {
                         throw new CustomerException(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED);
+                    }
+                }
+            }
         }
     }
 
@@ -783,9 +806,10 @@ public class ClientBO extends CustomerBO {
             if (getParentCustomer() != null) {
                 List<SavingsBO> savingsList = getCustomerPersistence().retrieveSavingsAccountForCustomer(
                         getParentCustomer().getCustomerId());
-                if (getParentCustomer().getParentCustomer() != null)
+                if (getParentCustomer().getParentCustomer() != null) {
                     savingsList.addAll(getCustomerPersistence().retrieveSavingsAccountForCustomer(
                             getParentCustomer().getParentCustomer().getCustomerId()));
+                }
                 for (SavingsBO savings : savingsList) {
                     savings.setUserContext(getUserContext());
                     savings.generateAndUpdateDepositActionsForClient(this);
@@ -821,8 +845,9 @@ public class ClientBO extends CustomerBO {
     public void addClientToGroup(GroupBO newParent) throws CustomerException {
         validateAddClientToGroup(newParent);
 
-        if (!isSameBranch(newParent.getOffice()))
+        if (!isSameBranch(newParent.getOffice())) {
             makeCustomerMovementEntries(newParent.getOffice());
+        }
 
         setParentCustomer(newParent);
         addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
@@ -838,8 +863,9 @@ public class ClientBO extends CustomerBO {
 
     private void validateAddClientToGroup(GroupBO toGroup) throws CustomerException {
 
-        if (toGroup == null)
+        if (toGroup == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
         validateForGroupStatus(toGroup.getStatus());
 
     }

@@ -32,21 +32,21 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanAccountView extends View {
 
-    private Integer accountId;
+    private final Integer accountId;
 
-    private Money loanAmount;
+    private final Money loanAmount;
 
-    private String prdOfferingShortName;
+    private final String prdOfferingShortName;
 
-    private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
+    private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
 
-    private Short accountType;
+    private final Short accountType;
 
-    private Short prdOfferingId;
+    private final Short prdOfferingId;
 
-    private Short accountSate;
+    private final Short accountSate;
 
-    private Short interestDeductedAtDisbursement;
+    private final Short interestDeductedAtDisbursement;
 
     private Double amountPaidAtDisbursement;
 
@@ -84,23 +84,24 @@ public class LoanAccountView extends View {
     }
 
     public void addTrxnDetails(List<CollectionSheetEntryInstallmentView> accountTrxnDetails) {
-        if (null != accountTrxnDetails && accountTrxnDetails.size() > 0)
+        if (null != accountTrxnDetails && accountTrxnDetails.size() > 0) {
             this.accountTrxnDetails.addAll(accountTrxnDetails);
+        }
     }
 
     public Double getTotalAmountDue() {
         Money totalAmount = new Money();
         if (isDisbursalAccount()) {
             return amountPaidAtDisbursement;
-        } else {
-            if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-                for (CollectionSheetEntryInstallmentView accountAction : accountTrxnDetails) {
-                    totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentView) accountAction)
-                            .getTotalDueWithFees());
-                }
-            }
-            return totalAmount.getAmountDoubleValue();
         }
+
+        if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
+            for (CollectionSheetEntryInstallmentView accountAction : accountTrxnDetails) {
+                totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentView) accountAction)
+                        .getTotalDueWithFees());
+            }
+        }
+        return totalAmount.getAmountDoubleValue();
     }
 
     public Short getAccountSate() {

@@ -22,12 +22,16 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
 
 /**
  *
  */
 public interface CollectionSheetService {
 
-    void saveCollectionSheet(List<AccountBO> accounts);
+    void saveCollectionSheet(List<ClientAttendanceBO> clientAttendances, List<LoanBO> loanAccounts,
+            List<AccountBO> customerAccounts, List<SavingsBO> savingAccounts);
 
 }

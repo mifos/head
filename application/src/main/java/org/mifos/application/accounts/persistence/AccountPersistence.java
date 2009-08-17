@@ -31,7 +31,6 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -44,12 +43,10 @@ import org.mifos.application.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
@@ -67,9 +64,9 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -200,8 +197,9 @@ public class AccountPersistence extends Persistence {
 
         AccountBO accountBO = findBySystemId(queryString);
 
-        if (accountBO == null)
+        if (accountBO == null) {
             return null;
+        }
         if (accountBO.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
             return null;
         }
@@ -290,8 +288,9 @@ public class AccountPersistence extends Persistence {
         // Even though this check is only required for Mayfly, it is
         // good practice anyway to *not* execute a query that will never
         // have any results.
-        if (null == glCode)
+        if (null == glCode) {
             return null;
+        }
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(AccountConstants.GL_CODE, glCode);
@@ -439,5 +438,14 @@ public class AccountPersistence extends Persistence {
             clients.add(loanBO.getCustomer());
         }
         return clients;
+    }
+
+    public void save(List<AccountBO> customerAccounts) {
+
+        Session session = getHibernateUtil().getSessionTL();
+        for (AccountBO account : customerAccounts) {
+            session.save(account);
+        }
+        session.flush();
     }
 }

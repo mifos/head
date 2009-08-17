@@ -39,7 +39,6 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
@@ -409,11 +408,9 @@ public class AccountBO extends BusinessObject {
      * Take raw PaymentData (usually from a web page) and enter it into Mifos.
      */
     /**
-     * @deprecated this should be purely a model enriching method to take of
-     *             making a payment. Use {@link AccountBO#applyPayment(Money)}
-     *             instead and use a dao to persist/save changes.
+     * FIXME: - keithw - this should use model concept
+     * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
-    @Deprecated
     public final void applyPayment(PaymentData paymentData, boolean persistChanges) throws AccountException {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
@@ -428,12 +425,9 @@ public class AccountBO extends BusinessObject {
     }
 
     /**
-     * @deprecated this should be purely a model enriching method to take of
-     *             making a payment.
-     * @see method {@link SavingsBO#deposit(AccountPaymentEntity)}
-     * @see method {@link SavingsBO#withdraw(AccountPaymentEntity)}
+     * FIXME: - keithw - this should use model concept
+     * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
-    @Deprecated
     public final void applyPaymentWithPersist(PaymentData paymentData) throws AccountException {
         applyPayment(paymentData, true);
     }
@@ -1335,7 +1329,10 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    // FIXME - keithw - null implementation so should be abstract (account is an abstract concept?)
+    /**
+     * FIXME: - keithw - this should use model concept
+     * {@link AccountPaymentEntity} and not {@link PaymentData} dto
+     */
     protected AccountPaymentEntity makePayment(PaymentData accountPaymentData) throws AccountException {
         return null;
     }

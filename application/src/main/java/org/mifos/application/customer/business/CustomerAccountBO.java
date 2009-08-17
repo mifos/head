@@ -71,10 +71,10 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.
@@ -85,6 +85,7 @@ public class CustomerAccountBO extends AccountBO {
     
     private FeePersistence feePersistence;
 
+    @Override
     public FeePersistence getFeePersistence() {
         if(feePersistence == null){
             feePersistence = new FeePersistence();
@@ -92,6 +93,7 @@ public class CustomerAccountBO extends AccountBO {
         return feePersistence;
     }
 
+    @Override
     public void setFeePersistence(FeePersistence feePersistence) {
         this.feePersistence = feePersistence;
     }
@@ -160,8 +162,9 @@ public class CustomerAccountBO extends AccountBO {
         for (AccountPaymentData accountPaymentData : paymentData.getAccountPayments()) {
             CustomerScheduleEntity accountAction = (CustomerScheduleEntity) getAccountActionDate(accountPaymentData
                     .getInstallmentId());
-            if (accountAction.isPaid())
+            if (accountAction.isPaid()) {
                 throw new AccountException("errors.update", new String[] { getGlobalAccountNum() });
+            }
             CustomerAccountPaymentData customerAccountPaymentData = (CustomerAccountPaymentData) accountPaymentData;
             accountAction.setPaymentDetails(customerAccountPaymentData, new java.sql.Date(paymentData
                     .getTransactionDate().getTime()));
@@ -198,8 +201,9 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         for (AccountTrxnEntity accntTrxn : getLastPmnt().getAccountTrxns()) {
-            if (accntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue()))
+            if (accntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue())) {
                 return false;
+            }
         }
 
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Adjustment is not possible ");
@@ -450,13 +454,15 @@ public class CustomerAccountBO extends AccountBO {
             if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
                     || feeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
                 dueInstallments = getTotalDueInstallments();
-                if (dueInstallments.isEmpty())
+                if (dueInstallments.isEmpty()) {
                     throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
+                }
                 applyMiscCharge(feeId, chargeAmount, dueInstallments.get(0));
             } else {
                 dueInstallments = getTotalDueInstallments();
-                if (dueInstallments.isEmpty())
+                if (dueInstallments.isEmpty()) {
                     throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
+                }
                 FeeBO fee = getFeePersistence().getFee(feeId);
                 if (fee.getFeeFrequency().getFeePayment() != null) {
                     applyOneTimeFee(fee, chargeAmount, dueInstallments.get(0));
@@ -486,8 +492,9 @@ public class CustomerAccountBO extends AccountBO {
 
     public AccountActionDateEntity getUpcomingInstallment() {
         List<AccountActionDateEntity> dueActionDateList = getTotalDueInstallments();
-        if (dueActionDateList.size() > 0)
+        if (dueActionDateList.size() > 0) {
             return dueActionDateList.get(0);
+        }
         return null;
     }
 
@@ -511,9 +518,10 @@ public class CustomerAccountBO extends AccountBO {
         AccountFeesEntity accountFee = getAccountFee(fee, charge.getAmountDoubleValue());
         accountFee.setAccountFeeAmount(charge);
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
-        for (AccountActionDateEntity accountActionDateEntity : dueInstallments)
+        for (AccountActionDateEntity accountActionDateEntity : dueInstallments) {
             installmentDates.add(new InstallmentDate(accountActionDateEntity.getInstallmentId(),
                     accountActionDateEntity.getActionDate()));
+        }
         List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(handlePeriodic(accountFee, installmentDates));
         Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList, dueInstallments);
         updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
@@ -548,15 +556,16 @@ public class CustomerAccountBO extends AccountBO {
         try {
             PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
             CustomerActivityEntity customerActivityEntity = null;
-            if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+            if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
                 customerActivityEntity = new CustomerActivityEntity(this, personnel, charge,
                         AccountConstants.MISC_PENALTY_APPLIED, new DateTimeService().getCurrentJavaDateTime());
-            else if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+            } else if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES))) {
                 customerActivityEntity = new CustomerActivityEntity(this, personnel, charge,
                         AccountConstants.MISC_FEES_APPLIED, new DateTimeService().getCurrentJavaDateTime());
-            else
+            } else {
                 customerActivityEntity = new CustomerActivityEntity(this, personnel, charge, comments,
                         new DateTimeService().getCurrentJavaDateTime());
+            }
             addCustomerActivity(customerActivityEntity);
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -570,7 +579,7 @@ public class CustomerAccountBO extends AccountBO {
         AccountFeesEntity accountFeesEntity = null;
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
             CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
-            for (FeeInstallment feeInstallment : feeInstallmentList)
+            for (FeeInstallment feeInstallment : feeInstallmentList) {
                 if (feeInstallment.getInstallmentId().equals(customerScheduleEntity.getInstallmentId())) {
                     lastAppliedDate = customerScheduleEntity.getActionDate();
                     totalFeeAmountApplied = totalFeeAmountApplied.add(feeInstallment.getAccountFee());
@@ -580,6 +589,7 @@ public class CustomerAccountBO extends AccountBO {
                     customerScheduleEntity.addAccountFeesAction(accountFeesActionDetailEntity);
                     accountFeesEntity = feeInstallment.getAccountFeesEntity();
                 }
+            }
         }
         accountFeesEntity.setLastAppliedDate(lastAppliedDate);
         addAccountFees(accountFeesEntity);
@@ -591,8 +601,9 @@ public class CustomerAccountBO extends AccountBO {
                 || getCustomer().getCustomerStatus().getId().equals(CustomerConstants.GROUP_ACTIVE_STATE)
                 || getCustomer().getCustomerStatus().getId().equals(GroupConstants.HOLD)
                 || getCustomer().getCustomerStatus().getId().equals(CustomerConstants.CLIENT_APPROVED)
-                || getCustomer().getCustomerStatus().getId().equals(CustomerConstants.CLIENT_ONHOLD))
+                || getCustomer().getCustomerStatus().getId().equals(CustomerConstants.CLIENT_ONHOLD)) {
             return true;
+        }
         return false;
     }
 
@@ -601,11 +612,12 @@ public class CustomerAccountBO extends AccountBO {
         for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
             if (!accountActionDate.isPaid()) {
                 if (accountActionDate.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) >= 0) {
-                    if (accountAction == null)
+                    if (accountAction == null) {
                         accountAction = accountActionDate;
-                    else {
-                        if (accountAction.getInstallmentId() > accountActionDate.getInstallmentId())
+                    } else {
+                        if (accountAction.getInstallmentId() > accountActionDate.getInstallmentId()) {
                             accountAction = accountActionDate;
+                        }
                     }
                 }
             }
@@ -615,10 +627,11 @@ public class CustomerAccountBO extends AccountBO {
 
     public Money getNextDueAmount() {
         AccountActionDateEntity accountAction = getNextUnpaidDueInstallment();
-        if (accountAction != null)
+        if (accountAction != null) {
             return getDueAmount(accountAction);
-        else
+        } else {
             return new Money("0.0");
+        }
     }
 
     public void generateCustomerAccountSystemId(String officeGlobalNum) throws CustomerException {

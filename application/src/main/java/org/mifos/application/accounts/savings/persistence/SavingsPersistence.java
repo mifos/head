@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -52,7 +53,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPersistence extends Persistence {
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+    private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     public List<PrdOfferingView> getSavingsProducts(OfficeBO branch, CustomerLevelEntity customerLevel,
             short savingsTypeId) throws PersistenceException {
@@ -150,8 +151,9 @@ public class SavingsPersistence extends Persistence {
 
         if (null != queryResult && queryResult.size() > 0) {
             Object obj = queryResult.get(0);
-            if (obj != null)
+            if (obj != null) {
                 count = ((Number) obj).intValue();
+            }
         }
         return count.intValue();
     }
@@ -169,8 +171,9 @@ public class SavingsPersistence extends Persistence {
 
         if (null != queryResult && queryResult.size() > 0) {
             Object obj = queryResult.get(0);
-            if (obj != null)
+            if (obj != null) {
                 count = (Long) obj;
+            }
         }
         return count.intValue();
     }
@@ -201,5 +204,13 @@ public class SavingsPersistence extends Persistence {
                 }
             }
         }
+    }
+
+    public void save(List<SavingsBO> savingsAccounts) {
+        final Session session = getSession();
+        for (SavingsBO savingsBO : savingsAccounts) {
+            session.saveOrUpdate(savingsBO);
+        }
+        session.flush();
     }
 }

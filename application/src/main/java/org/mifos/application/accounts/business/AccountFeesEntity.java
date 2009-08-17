@@ -20,9 +20,7 @@
 
 package org.mifos.application.accounts.business;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,6 +33,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ *
+ */
 public class AccountFeesEntity extends PersistentObject {
 
     private final Integer accountFeeId;
@@ -163,8 +164,9 @@ public class AccountFeesEntity extends PersistentObject {
     }
 
     public boolean isActive() {
-        if (feeStatus == null || feeStatus.equals(FeeStatus.ACTIVE.getValue()))
+        if (feeStatus == null || feeStatus.equals(FeeStatus.ACTIVE.getValue())) {
             return true;
+        }
         return false;
     }
 

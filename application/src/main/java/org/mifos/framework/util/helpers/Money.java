@@ -155,9 +155,8 @@ public final class Money implements Serializable {
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
             return this;
-        } else {
-            return new Money(currency, amount.add(money.getAmount()));
         }
+        return new Money(currency, amount.add(money.getAmount()));
     }
 
     /**
@@ -194,10 +193,10 @@ public final class Money implements Serializable {
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
             return this;
-        } else {
-            return new Money(currency, amount.multiply(money.getAmount()).setScale(
+        } 
+
+        return new Money(currency, amount.multiply(money.getAmount()).setScale(
                     internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode()));
-        }
     }
 
     public Money multiply(Double factor) {
@@ -229,9 +228,9 @@ public final class Money implements Serializable {
         // why not disallow null amounts and currencies?
         if (money == null || money.getAmount() == null || money.getCurrency() == null) {
             return this;
-        } else {
-            return new Money(currency, amount.divide(money.getAmount(), internalPrecisionAndRounding));
         }
+
+        return new Money(currency, amount.divide(money.getAmount(), internalPrecisionAndRounding));
     }
 
     public Money divide(BigDecimal factor) {
@@ -357,10 +356,9 @@ public final class Money implements Serializable {
                 decimalFormat = ((DecimalFormat) numberFormat);
                 decimalFormat.applyPattern(formatStr);
                 return decimalFormat.format(doubleValue);
-            } else {
-                return numberFormat.format(doubleValue);
             }
 
+            return numberFormat.format(doubleValue);
         }
         return "0";
     }

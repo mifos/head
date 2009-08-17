@@ -55,7 +55,7 @@ public class CollectionSheetEntryViewAssembler {
 
     public CollectionSheetEntryView toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto) {
 
-        final java.sql.Date meetingDate = formEnteredDataDto.getMeetingDate();
+        final java.sql.Date meetingDate = new java.sql.Date(formEnteredDataDto.getMeetingDate().getTime());
         final String selectedCustomerSearchId = formEnteredDataDto.getCustomer().getCustomerSearchId();
         final Short officeId = formEnteredDataDto.getOffice().getOfficeId();
 

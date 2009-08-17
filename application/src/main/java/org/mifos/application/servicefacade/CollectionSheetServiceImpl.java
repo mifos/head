@@ -22,20 +22,55 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
  *
  */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
 
-    public void saveCollectionSheet(List<AccountBO> accounts) {
-        // TODO - keithw - implement
+    private final ClientAttendanceDao clientAttendanceDao;
+    private final LoanPersistence loanPersistence;
+    private final AccountPersistence accountPersistence;
+    private final SavingsPersistence savingsPersistence;
 
-        // 1. begin transaction
-
-        // 2. batch save all accounts
-
-        // 3. end transaction
+    public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
+            final LoanPersistence loanPersistence, final AccountPersistence accountPersistence,
+            final SavingsPersistence savingsPersistence) {
+        this.clientAttendanceDao = clientAttendanceDao;
+        this.loanPersistence = loanPersistence;
+        this.accountPersistence = accountPersistence;
+        this.savingsPersistence = savingsPersistence;
     }
 
+    public void saveCollectionSheet(final List<ClientAttendanceBO> clientAttendances, final List<LoanBO> loanAccounts,
+            final List<AccountBO> customerAccountList, final List<SavingsBO> savingAccounts) {
+
+        try {
+            StaticHibernateUtil.startTransaction();
+
+            clientAttendanceDao.save(clientAttendances);
+
+            loanPersistence.save(loanAccounts);
+
+            accountPersistence.save(customerAccountList);
+
+            savingsPersistence.save(savingAccounts);
+
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
 }

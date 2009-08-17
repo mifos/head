@@ -20,6 +20,7 @@
 package org.mifos.application.servicefacade;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.office.business.OfficeView;
@@ -34,12 +35,12 @@ public class CollectionSheetFormEnteredDataDto implements Serializable {
     private final PersonnelView loanOfficer;
     private final CustomerView customer;
     private final ListItem<Short> paymentType;
-    private final java.sql.Date meetingDate;
-    private final java.sql.Date receiptDate;
+    private final Date meetingDate;
+    private final Date receiptDate;
     private final String receiptId;
 
     public CollectionSheetFormEnteredDataDto(OfficeView office, PersonnelView loanOfficer, CustomerView customer,
-            ListItem<Short> paymentType, java.sql.Date meetingDate, java.sql.Date receiptDate, String receiptId) {
+            ListItem<Short> paymentType, Date meetingDate, Date receiptDate, String receiptId) {
         this.office = office;
         this.loanOfficer = loanOfficer;
         this.customer = customer;
@@ -61,11 +62,11 @@ public class CollectionSheetFormEnteredDataDto implements Serializable {
         return this.customer;
     }
 
-    public java.sql.Date getMeetingDate() {
+    public Date getMeetingDate() {
         return this.meetingDate;
     }
 
-    public java.sql.Date getReceiptDate() {
+    public Date getReceiptDate() {
         return this.receiptDate;
     }
 

@@ -37,7 +37,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
@@ -58,6 +57,18 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanPersistence extends Persistence {
+    
+    public Money retrieveFeeAmountAtDisbursement(final Integer loanId) throws PersistenceException {
+        Money amount = new Money();
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ACCOUNT_ID", loanId);
+        List<AccountFeesEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_FEE_AMOUNT_AT_DISBURSEMENT,
+                queryParameters);
+        for (AccountFeesEntity entity : queryResult) {
+            amount = amount.add(entity.getAccountFeeAmount());
+        }
+        return amount;
+    }
 
     public Double getFeeAmountAtDisbursement(Integer accountId) throws PersistenceException {
         Money amount = new Money();
@@ -65,8 +76,9 @@ public class LoanPersistence extends Persistence {
         queryParameters.put("ACCOUNT_ID", accountId);
         List<AccountFeesEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_FEE_AMOUNT_AT_DISBURSEMENT,
                 queryParameters);
-        for (AccountFeesEntity entity : queryResult)
+        for (AccountFeesEntity entity : queryResult) {
             amount = amount.add(entity.getAccountFeeAmount());
+        }
         return amount.getAmountDoubleValue();
     }
 
@@ -161,11 +173,12 @@ public class LoanPersistence extends Persistence {
 
     public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId) throws PersistenceException {
         LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, loanOfferingId);
-        if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0)
+        if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0) {
             for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
                 loanOfferingFund.getFund().getFundId();
                 loanOfferingFund.getFund().getFundName();
             }
+        }
         loanOffering.getInterestTypes().setLocaleId(localeId);
         loanOffering.getGracePeriodType().setLocaleId(localeId);
         return loanOffering;
@@ -191,12 +204,12 @@ public class LoanPersistence extends Persistence {
         }
     }
 
-    public AccountBO getLoanAccountWithAccountActionsInitialized(Integer accountId) throws PersistenceException {
+    public LoanBO getLoanAccountWithAccountActionsInitialized(Integer accountId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("accountId", accountId);
         List obj = executeNamedQuery("accounts.retrieveLoanAccountWithAccountActions", queryParameters);
         Object[] obj1 = (Object[]) obj.get(0);
-        return (AccountBO) obj1[0];
+        return (LoanBO) obj1[0];
     }
 
     public Money getLastLoanAmountForCustomer(Integer customerId, Integer excludeAccountId) throws PersistenceException {
@@ -276,7 +289,23 @@ public class LoanPersistence extends Persistence {
         }
 
     }
+    
+    public void save(List<LoanBO> loans) {
+        Session session = getHibernateUtil().getSessionTL();
+        for (LoanBO loan : loans) {
+            session.save(loan);
+        }
+        session.flush();
+    }
 
+    public List<LoanBO> getAllLoanAccounts() throws PersistenceException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List<LoanBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS, queryParameters);
+        return queryResult;
+
+    }
+    
     private StringBuilder loanQueryString(Short branchId, Short loanOfficerId, Short loanProductId,
             String goodAccountIdQueryString) {
 
@@ -290,13 +319,4 @@ public class LoanPersistence extends Persistence {
         queryString.append(" and loan.office.officeId = " + branchId);
         return queryString;
     }
-
-    public List<LoanBO> getAllLoanAccounts() throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-
-        List<LoanBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS, queryParameters);
-        return queryResult;
-
-    }
-
 }

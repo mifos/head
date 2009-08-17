@@ -145,6 +145,7 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -213,7 +214,6 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
         assertEquals(1, client.getClientAttendances().size());
         assertEquals(AttendanceType.ABSENT, client.getClientAttendanceForMeeting(
                 new java.sql.Date(meetingDateCalendar.getTimeInMillis())).getAttendanceAsEnum());
-        TestDatabase.resetMySQLDatabase();
     }
 
     public void testSuccessfulPreview() throws Exception {

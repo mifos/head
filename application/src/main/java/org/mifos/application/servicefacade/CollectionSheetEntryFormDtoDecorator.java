@@ -36,7 +36,7 @@ public class CollectionSheetEntryFormDtoDecorator {
         this.collectionSheetEntryFormDto = CollectionSheetEntryFormDto;
     }
 
-    public CustomerView getSelectedCustomer(final Integer selectedCustomerId) {
+    public CustomerView findSelectedCustomerById(final Integer selectedCustomerId) {
         
         for (CustomerView customer : collectionSheetEntryFormDto.getCustomerList()) {
             if (selectedCustomerId.intValue() == customer.getCustomerId().intValue()) {
@@ -46,7 +46,7 @@ public class CollectionSheetEntryFormDtoDecorator {
         return null;
     }
 
-    public PersonnelView getSelectedLoanOfficer(final Short loanOfficerId) {
+    public PersonnelView findSelectedLoanOfficerById(final Short loanOfficerId) {
 
         for (PersonnelView loanOfficer : collectionSheetEntryFormDto.getLoanOfficerList()) {
             if (loanOfficerId.shortValue() == loanOfficer.getPersonnelId().shortValue()) {
@@ -56,7 +56,7 @@ public class CollectionSheetEntryFormDtoDecorator {
         return null;
     }
 
-    public OfficeView getSelectedBranchOffice(final Short branchId) {
+    public OfficeView findSelectedBranchOfficeById(final Short branchId) {
         for (OfficeView branch : collectionSheetEntryFormDto.getActiveBranchesList()) {
             if (branchId.shortValue() == branch.getOfficeId().shortValue()) {
                 return branch;
@@ -65,7 +65,7 @@ public class CollectionSheetEntryFormDtoDecorator {
         return null;
     }
 
-    public ListItem<Short> getSelectedPaymentType(Short paymentId) {
+    public ListItem<Short> findSelectedPaymentTypeById(final Short paymentId) {
         
         for (ListItem<Short> paymentType : collectionSheetEntryFormDto.getPaymentTypesList()) {
             if (paymentId.shortValue() == paymentType.getId().shortValue()) {

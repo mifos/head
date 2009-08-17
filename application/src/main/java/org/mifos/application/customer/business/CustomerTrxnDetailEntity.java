@@ -69,8 +69,10 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
         CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) customerAccountPaymentDataView
                 .getAccountActionDate();
+        
         for (AccountFeesActionDetailEntity accountFeesActionDetail : customerScheduleEntity
                 .getAccountFeesActionDetails()) {
+            
             if (customerAccountPaymentDataView.getFeesPaid().containsKey(accountFeesActionDetail.getFee().getFeeId())) {
                 ((CustomerFeeScheduleEntity) accountFeesActionDetail).makePayment(customerAccountPaymentDataView
                         .getFeesPaid().get(accountFeesActionDetail.getFee().getFeeId()));
@@ -108,7 +110,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         return feesTrxnDetails;
     }
 
-    void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
+    public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
         feesTrxnDetails.add(feesTrxn);
     }
 
@@ -131,10 +133,11 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                 "Inside generate reverse transaction method of loan trxn detail");
         String comment = null;
-        if (null == adjustmentComment)
+        if (null == adjustmentComment) {
             comment = getComments();
-        else
+        } else {
             comment = adjustmentComment;
+        }
 
         CustomerTrxnDetailEntity reverseAccntTrxn;
         try {

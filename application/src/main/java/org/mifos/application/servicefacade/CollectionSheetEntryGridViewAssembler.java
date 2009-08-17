@@ -33,6 +33,7 @@ import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -46,8 +47,8 @@ public class CollectionSheetEntryGridViewAssembler {
     private final MasterPersistence masterPersistence;
     private final ClientService clientService;
 
-    public CollectionSheetEntryGridViewAssembler(CustomerPersistence customerPersistence,
-            MasterPersistence masterPersistence, ClientService clientService) {
+    public CollectionSheetEntryGridViewAssembler(final CustomerPersistence customerPersistence,
+            final MasterPersistence masterPersistence, final ClientService clientService) {
                 this.customerPersistence = customerPersistence;
         this.masterPersistence = masterPersistence;
         this.clientService = clientService;
@@ -56,7 +57,7 @@ public class CollectionSheetEntryGridViewAssembler {
     public CollectionSheetEntryGridDto toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto,
             final Short localeId, final CollectionSheetEntryView collectionSheetParent) {
 
-        final java.sql.Date meetingDate = formEnteredDataDto.getMeetingDate();
+        final java.sql.Date meetingDate = new java.sql.Date(formEnteredDataDto.getMeetingDate().getTime());
         final String selectedCustomerSearchId = formEnteredDataDto.getCustomer().getCustomerSearchId();
         final Short loanOfficerId = formEnteredDataDto.getLoanOfficer().getPersonnelId();
         final Short officeId = formEnteredDataDto.getOffice().getOfficeId();
@@ -66,7 +67,8 @@ public class CollectionSheetEntryGridViewAssembler {
 
         try {
 
-            // TODO - use DAO method that puts into DTO from hibernate query
+            // TODO - keithw - use DAO method that puts into DTO from hibernate
+            // query
             List<PrdOfferingBO> loanProducts = customerPersistence.getLoanProducts(meetingDate,
                     selectedCustomerSearchId, loanOfficerId);
             for (PrdOfferingBO prdOffering : loanProducts) {
@@ -74,7 +76,8 @@ public class CollectionSheetEntryGridViewAssembler {
                         .getPrdOfferingShortName()));
             }
 
-            // TODO - use DAO method that puts into DTO from hibernate query
+            // TODO - keithw - use DAO method that puts into DTO from hibernate
+            // query
             List<PrdOfferingBO> savingProducts = customerPersistence.getSavingsProducts(meetingDate,
                     selectedCustomerSearchId, loanOfficerId);
             for (PrdOfferingBO prdOffering : savingProducts) {
@@ -120,9 +123,9 @@ public class CollectionSheetEntryGridViewAssembler {
 
             return collectionSheetGridView;
         } catch (PersistenceException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         } catch (ApplicationException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
     }
 }

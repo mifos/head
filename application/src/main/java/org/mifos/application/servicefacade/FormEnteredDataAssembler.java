@@ -42,16 +42,16 @@ public class FormEnteredDataAssembler {
     }
 
     public CollectionSheetFormEnteredDataDto toDto() {
-        final OfficeView office = collectionSheetFormDtoDecorator.getSelectedBranchOffice(Short
+        final OfficeView office = collectionSheetFormDtoDecorator.findSelectedBranchOfficeById(Short
                 .valueOf(collectionSheetForm
                 .getOfficeId()));
-        final PersonnelView loanOfficer = collectionSheetFormDtoDecorator.getSelectedLoanOfficer(Short
+        final PersonnelView loanOfficer = collectionSheetFormDtoDecorator.findSelectedLoanOfficerById(Short
                 .valueOf(collectionSheetForm
                 .getLoanOfficerId()));
-        final CustomerView selectedCustomer = collectionSheetFormDtoDecorator.getSelectedCustomer(Integer
+        final CustomerView selectedCustomer = collectionSheetFormDtoDecorator.findSelectedCustomerById(Integer
                 .valueOf(collectionSheetForm
                 .getCustomerId()));
-        final ListItem<Short> selectedPaymentType = collectionSheetFormDtoDecorator.getSelectedPaymentType(Short
+        final ListItem<Short> selectedPaymentType = collectionSheetFormDtoDecorator.findSelectedPaymentTypeById(Short
                 .valueOf(collectionSheetForm.getPaymentId()));
         final java.sql.Date meetingDate = collectionSheetFormDtoDecorator.getMeetingDateAsSqlDate();
         

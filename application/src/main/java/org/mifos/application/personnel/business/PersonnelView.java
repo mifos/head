@@ -22,13 +22,16 @@ package org.mifos.application.personnel.business;
 
 import org.mifos.framework.business.View;
 
+/**
+ * I am an immutable DTO for PersonnelBO
+ */
 public class PersonnelView extends View {
 
-    private Short personnelId;
+    private final Short personnelId;
 
-    private String displayName;
+    private final String displayName;
 
-    public PersonnelView(Short personnelId, String displayName) {
+    public PersonnelView(final Short personnelId, final String displayName) {
         this.personnelId = personnelId;
         this.displayName = displayName;
     }
@@ -40,5 +43,4 @@ public class PersonnelView extends View {
     public Short getPersonnelId() {
         return personnelId;
     }
-
 }

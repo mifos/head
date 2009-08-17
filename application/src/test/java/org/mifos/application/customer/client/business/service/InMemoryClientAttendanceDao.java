@@ -33,16 +33,14 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
 
-    private HashMap<String, AttendanceType> attendance = new HashMap<String, AttendanceType>();
-    private HashMap<String, LocalDate> meetingDate = new HashMap<String, LocalDate>();
-    private List<ClientAttendanceBO> attendanceByOfficeIdAndMeetingDate = new ArrayList<ClientAttendanceBO>();
+    private final HashMap<String, AttendanceType> attendance = new HashMap<String, AttendanceType>();
+    private final HashMap<String, LocalDate> meetingDate = new HashMap<String, LocalDate>();
+    private final List<ClientAttendanceBO> attendanceByOfficeIdAndMeetingDate = new ArrayList<ClientAttendanceBO>();
 
-    @Override
     public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) {
         return attendance.get(getKey(clientId, meetingDate));
     }
 
-    @Override
     public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance) {
         String key = getKey(clientId, meetingDate);
         this.attendance.put(key, attendance);
@@ -57,7 +55,6 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
         attendanceByOfficeIdAndMeetingDate.add(clientAttendanceBO);
     }
 
-    @Override
     public List<ClientAttendanceBO> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
         return attendanceByOfficeIdAndMeetingDate;
     }
@@ -68,6 +65,13 @@ public class InMemoryClientAttendanceDao implements ClientAttendanceDao {
 
     public int getNumberOfRecords() {
         return attendance.size();
+    }
+
+    public ClientAttendanceBO findClientAttendance(Integer clientId, LocalDate meetingDate) {
+        return null;
+    }
+
+    public void save(List<ClientAttendanceBO> clientAttendances) {
     }
 
 }

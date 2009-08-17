@@ -20,43 +20,39 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
-import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
-import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 
 /**
- * Default implementation of CollectionSheetServiceFacade.
+ * Default implementation of {@link CollectionSheetServiceFacade}.
  */
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
 
@@ -64,32 +60,38 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final MasterPersistence masterPersistence;
     private final PersonnelPersistence personnelPersistence;
     private final CustomerPersistence customerPersistence;
-    private final SavingsPersistence savingsPersistence;
+    private final CollectionSheetService collectionSheetService;
     private final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler;
     private final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler;
-    private final CollectionSheetEntryBusinessService collectionSheetEntryService;
-    private final CollectionSheetEntryViewTranslator collectionSheetEntryViewTranslator;
+    private final ClientAttendanceAssembler clientAttendanceAssembler;
+    private final LoanAccountAssembler loanAccountAssembler;
+    private final CustomerAccountAssembler customerAccountAssembler;
+    private final SavingsAccountAssembler savingsAccountAssembler;
+    private final AccountPaymentAssembler accountPaymentAssembler;
 
-    public CollectionSheetServiceFacadeWebTier(OfficePersistence officePersistence,
-            MasterPersistence masterPersistence, PersonnelPersistence personnelPersistence,
-            CustomerPersistence customerPersistence,
-            SavingsPersistence savingsPersistence,
-            CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler,
-            CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
-            CollectionSheetEntryBusinessService collectionSheetEntryService,
-            CollectionSheetEntryViewTranslator collectionSheetEntryViewTranslator) {
+    public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
+            final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
+            final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
+            final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler,
+            final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
+            final ClientAttendanceAssembler clientAttendanceAssembler, final LoanAccountAssembler loanAccountAssembler,
+            final CustomerAccountAssembler customerAccountAssember,
+            final SavingsAccountAssembler savingsAccountAssembler, final AccountPaymentAssembler accountPaymentAssembler) {
         this.officePersistence = officePersistence;
         this.masterPersistence = masterPersistence;
         this.personnelPersistence = personnelPersistence;
         this.customerPersistence = customerPersistence;
-        this.savingsPersistence = savingsPersistence;
+        this.collectionSheetService = collectionSheetService;
         this.collectionSheetEntryViewAssembler = collectionSheetEntryViewAssembler;
         this.collectionSheetEntryGridViewAssembler = collectionSheetEntryGridViewAssembler;
-        this.collectionSheetEntryService = collectionSheetEntryService;
-        this.collectionSheetEntryViewTranslator = collectionSheetEntryViewTranslator;
+        this.clientAttendanceAssembler = clientAttendanceAssembler;
+        this.loanAccountAssembler = loanAccountAssembler;
+        this.customerAccountAssembler = customerAccountAssember;
+        this.savingsAccountAssembler = savingsAccountAssembler;
+        this.accountPaymentAssembler = accountPaymentAssembler;
     }
 
-    public CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfPossible(final UserContext userContext) {
+    public CollectionSheetEntryFormDto loadAllActiveBranchesAndSubsequentDataIfApplicable(final UserContext userContext) {
 
         final Short branchId = userContext.getBranchId();
         final Short centerHierarchyExists = ClientRules.getCenterHierarchyExists() ? Constants.YES : Constants.NO;
@@ -126,12 +128,12 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                     if (customerList.size() == 1) {
                         reloadFormAutomatically = Constants.YES;
                     }
-                    
+
                     reloadFormAutomatically = Constants.NO;
                 }
             }
         } catch (PersistenceException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
 
         return new CollectionSheetEntryFormDto(activeBranches, paymentTypesDtoList, loanOfficerList, customerList,
@@ -146,16 +148,16 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             loanOfficerList = personnelPersistence.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
                     branchId, userContext.getId(), userContext.getLevelId());
         } catch (PersistenceException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
-        
+
         return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(),
                 loanOfficerList, formDto.getCustomerList(), formDto.getReloadFormAutomatically(), formDto
                         .getCenterHierarchyExists(), formDto.getBackDatedTransactionAllowed());
     }
 
-    public CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(Short personnelId, Short officeId,
-            CollectionSheetEntryFormDto formDto) {
+    public CollectionSheetEntryFormDto loadCustomersForBranchAndLoanOfficer(final Short personnelId,
+            final Short officeId, final CollectionSheetEntryFormDto formDto) {
 
         Short customerLevel;
         if (formDto.getCenterHierarchyExists().equals(Constants.YES)) {
@@ -168,7 +170,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         try {
             customerList = customerPersistence.getActiveParentList(personnelId, customerLevel, officeId);
         } catch (PersistenceException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
         return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
                 .getLoanOfficerList(), customerList, formDto.getReloadFormAutomatically(), formDto
@@ -189,7 +191,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             }
             backDatedTransactionAllowed = isBackDatedTrxnAllowed ? Constants.YES : Constants.NO;
         } catch (PersistenceException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
 
         return new CollectionSheetEntryFormDto(formDto.getActiveBranchesList(), formDto.getPaymentTypesList(), formDto
@@ -198,17 +200,16 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     }
 
     public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
-            final CollectionSheetFormEnteredDataDto formEnteredDataDto,
-            final UserContext userContext) {
-        
-        final CollectionSheetEntryView collectionSheetParent = collectionSheetEntryViewAssembler.toDto(formEnteredDataDto);
-        final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler
-                .toDto(
+            final CollectionSheetFormEnteredDataDto formEnteredDataDto, final UserContext userContext) {
+
+        final CollectionSheetEntryView collectionSheetParent = collectionSheetEntryViewAssembler
+                .toDto(formEnteredDataDto);
+        final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler.toDto(
                 formEnteredDataDto, userContext.getLocaleId(), collectionSheetParent);
-        
+
         return collectionSheetGridView;
     }
-    
+
     public CollectionSheetEntryGridDto previewCollectionSheetEntry(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final CollectionSheetDataView dataView) {
 
@@ -229,136 +230,39 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
         return newCollectionSheetEntryGridDto;
     }
-    
-    public ErrorAndCollectionSheetDataDto prepareSavingAccountsForCollectionSheetEntrySave(
+
+    public CollectionSheetErrorsView saveCollectionSheet(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
-            final Short userId) {
+            final CollectionSheetEntryDecomposedView decomposedViews, final Short userId) {
 
-        final CollectionSheetEntryDecomposedView decomposedViews = collectionSheetEntryViewTranslator
-                .toDecomposedView(previousCollectionSheetEntryDto.getBulkEntryParent());
-
-        final List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
+        final AccountPaymentEntity payment = accountPaymentAssembler.fromDto(userId,
+                previousCollectionSheetEntryDto);
+        
         final List<String> failedSavingsDepositAccountNums = new ArrayList<String>();
         final List<String> failedSavingsWithdrawalNums = new ArrayList<String>();
+        final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
 
-        for (CollectionSheetEntryView parent : decomposedViews.getParentCollectionSheetEntryViews()) {
-
-            for (SavingsAccountView savingAccount : parent.getSavingsAccountDetails()) {
-                
-                // create set of SavingAccountView's to ensure no duplicate's
-                final Money amountToDeposit = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
-                        savingAccount.getDepositAmountEntered());
-                final Money amountToWithdraw = new Money(Configuration.getInstance().getSystemConfig().getCurrency(),
-                        savingAccount.getWithDrawalAmountEntered());
-
-                final String receiptNumber = previousCollectionSheetEntryDto.getReceiptId();
-                final Date receiptDate = previousCollectionSheetEntryDto.getReceiptDate();
-                final PaymentTypeEntity paymentType = new PaymentTypeEntity(previousCollectionSheetEntryDto
-                        .getPaymentType().getId());
-                final Date paymentDate = previousCollectionSheetEntryDto.getTransactionDate();
-                
-                final Integer accountId = savingAccount.getAccountId();
-                boolean storeAccountForSavingLater = false;
-                try {
-                    final SavingsBO account = savingsPersistence.findById(accountId);
-                    final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
-                    
-                    final List<SavingsScheduleEntity> scheduledDeposits = new ArrayList<SavingsScheduleEntity>();
-                    final List<CollectionSheetEntryInstallmentView> scheduledSavingInstallments = savingAccount
-                            .getAccountTrxnDetails();
-                    
-                    for (CollectionSheetEntryInstallmentView installment : scheduledSavingInstallments) {
-                        SavingsScheduleEntity savingsScheduledInstallment = (SavingsScheduleEntity) account
-                                .getAccountActionDate(installment.getInstallmentId());
-                        scheduledDeposits.add(savingsScheduledInstallment);
-                    }
-                    
-                    if (amountToDeposit.getAmount() != null
-                            && amountToDeposit.getAmountDoubleValue() > Double.valueOf("0.0")) {
-
-                        final AccountPaymentEntity accountDeposit = new AccountPaymentEntity(account, amountToDeposit,
-                                receiptNumber, receiptDate, paymentType, paymentDate);
-                        accountDeposit.setCreatedByUser(user);
-
-                        try {
-                            account.deposit(accountDeposit, scheduledDeposits);
-                            storeAccountForSavingLater = true;
-                        } catch (AccountException e) {
-                            failedSavingsDepositAccountNums.add(account.getGlobalAccountNum());
-                        }
-                    }
-                    
-                    if (amountToWithdraw.getAmount() != null
-                            && amountToWithdraw.getAmountDoubleValue() > Double.valueOf("0.0")) {
-                        final AccountPaymentEntity accountWithdrawal = new AccountPaymentEntity(account,
-                                amountToWithdraw, receiptNumber, receiptDate, paymentType, paymentDate);
-                        accountWithdrawal.setCreatedByUser(user);
-
-                        try {
-                            account.withdraw(accountWithdrawal);
-                            storeAccountForSavingLater = true;
-                        } catch (AccountException e) {
-                            failedSavingsWithdrawalNums.add(account.getGlobalAccountNum());
-                        }
-                    }
-                    
-                    if (storeAccountForSavingLater) {
-                        savingsAccounts.add(account);
-                    }
-                    
-                } catch (PersistenceException pe) {
-                    throw new RuntimeException(pe);
-                }
-            }
-        }
-
-        final CollectionSheetErrorsView errors = new CollectionSheetErrorsView(failedSavingsDepositAccountNums,
-                failedSavingsWithdrawalNums,
-                new ArrayList<String>());
-
-        return new ErrorAndCollectionSheetDataDto(decomposedViews, errors, savingsAccounts);
-    }
-    
-    public CollectionSheetErrorsView saveCollectionSheet(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
-            ErrorAndCollectionSheetDataDto errorAndCollectionSheetDataDto, final Short userId) {
-
-        // TODO - keithw - completely refactor how the collectionSheet entries
-        // are saved
-        // NOTE: CollectionSheetEntry is not a concept in our Domain model.
-        // As far as i understand its a batch save of accounts (loanAccounts and
-        // savingAccounts) and other info such as transactions/meetings etc
-        // on loan accounts: a loan is disbursed (money given out to
-        // clients(customer))
-        // on saving accounts: money is saved or withdrawn?
-
-        java.sql.Date receiptDate = null;
-        if (previousCollectionSheetEntryDto.getReceiptDate() != null) {
-            receiptDate = new java.sql.Date(previousCollectionSheetEntryDto.getReceiptDate().getTime());
-        }
+        final List<CollectionSheetEntryView> collectionSheeetEntryViews = decomposedViews
+                .getParentCollectionSheetEntryViews();
+        final List<SavingsBO> savingsAccounts = savingsAccountAssembler.fromDto(collectionSheeetEntryViews,
+                previousCollectionSheetEntryDto, userId, failedSavingsDepositAccountNums, failedSavingsWithdrawalNums);
         
-        collectionSheetEntryService.saveData(errorAndCollectionSheetDataDto.getDecomposedViews().getLoanAccountViews(),
-                userId, previousCollectionSheetEntryDto.getReceiptId(),
-                previousCollectionSheetEntryDto
-                        .getPaymentType().getId(), receiptDate, new java.sql.Date(previousCollectionSheetEntryDto
-                        .getTransactionDate().getTime()),
-                errorAndCollectionSheetDataDto.getSavingsAccounts(), errorAndCollectionSheetDataDto.getErrors()
-                        .getSavingsDepNames(),
-                errorAndCollectionSheetDataDto.getDecomposedViews().getCustomerAccountViews(),
-                errorAndCollectionSheetDataDto.getErrors().getCustomerAccountNumbers(),
-                errorAndCollectionSheetDataDto.getDecomposedViews().getParentCollectionSheetEntryViews());
+        final List<CollectionSheetEntryView> collectionSheetEntryViews = decomposedViews
+                .getParentCollectionSheetEntryViews();
+        final List<ClientAttendanceBO> clientAttendances = clientAttendanceAssembler.fromDto(collectionSheetEntryViews,
+                payment.getPaymentDate());
 
-        // // TODO - keithw - implement the following service for saving
-        // collection sheets.
-        // CollectionSheetService collectionSheetServiceToBeImplemented = new
-        // CollectionSheetServiceImpl();
-        //
-        // // 1. build up model correctly from DTO information
-        // // fetch account/client information
-        // // make disbursals/withdrawals per account
-        // List<AccountBO> accounts = new ArrayList<AccountBO>();
-        // collectionSheetServiceToBeImplemented.saveCollectionSheet(accounts);
-        
-        return errorAndCollectionSheetDataDto.getErrors();
+        final List<LoanAccountsProductView> loanAccountProductViews = decomposedViews.getLoanAccountViews();
+        final List<LoanBO> loanAccounts = loanAccountAssembler.fromDto(loanAccountProductViews, payment);
+
+        final List<CustomerAccountView> customerAccountViews = decomposedViews.getCustomerAccountViews();
+        final List<AccountBO> customerAccounts = customerAccountAssembler.fromDto(customerAccountViews, payment,
+                failedCustomerAccountPaymentNums);
+
+        collectionSheetService.saveCollectionSheet(clientAttendances, loanAccounts, customerAccounts, savingsAccounts);
+
+        return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
+                failedCustomerAccountPaymentNums);
     }
 
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(List<MasterDataEntity> paymentTypesList) {
