@@ -52,14 +52,14 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListConstants;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
-import org.mifos.application.customer.business.CustomerBOIntegrationTest;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -70,12 +70,10 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
-import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficecFixture;
-import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -86,8 +84,8 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
@@ -120,13 +118,13 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
 
     private MeetingBO meeting;
 
-    private SavingsTestHelper helper = new SavingsTestHelper();
+    private final SavingsTestHelper helper = new SavingsTestHelper();
 
     private SavingsOfferingBO savingsOffering;
 
     private SavingsBO savingsBO;
 
-    private MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
+    private final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
 
     private LoanOfferingBO loanOffering = null;
 
@@ -165,6 +163,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         }
         super.tearDown();
     }
+
 
     public void testSearchGropAndClient() throws Exception {
         createInitialCustomers();
@@ -218,7 +217,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         TestObjectFactory.simulateInvalidConnection();
         try {
             ((CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer))
-                    .fetchLoanCycleCounter((CustomerBO) group);
+            .fetchLoanCycleCounter(group);
             assertTrue(false);
         } catch (ServiceException e) {
             assertTrue(true);
@@ -286,7 +285,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
             CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
-                        .getAccountFeesActionDetails();
+                .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                     CustomerAccountBOIntegrationTest.setFeeAmount(
                             (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("100"));
@@ -303,7 +302,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
             CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
-                        .getAccountFeesActionDetails();
+                .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                     CustomerAccountBOIntegrationTest.setFeeAmount(
                             (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("100"));
@@ -320,7 +319,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
             CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
                 Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
-                        .getAccountFeesActionDetails();
+                .getAccountFeesActionDetails();
                 for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
                     CustomerAccountBOIntegrationTest.setFeeAmount(
                             (CustomerFeeScheduleEntity) accountFeesActionDetailEntity, new Money("20"));
@@ -444,16 +443,16 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         AccountBO account6 = getSavingsAccountWithBalance(center1, meeting, "savings prd1236", "xyz7");
 
         AccountBO account7 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "fdbdhgsgh",
-                "54hg");
+        "54hg");
         changeFirstInstallmentDateToPastDate(account7);
         AccountBO account8 = getLoanAccount(client2, AccountState.LOAN_ACTIVE_IN_BAD_STANDING, meeting, "dsafasdf",
-                "32fs");
+        "32fs");
         changeFirstInstallmentDateToPastDate(account8);
         AccountBO account9 = getLoanAccount(client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afvasfgfdg",
-                "a12w");
+        "a12w");
         changeFirstInstallmentDateToPastDate(account9);
         AccountBO account10 = getLoanAccount(group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afadsff",
-                "23e");
+        "23e");
         CustomerBOIntegrationTest.setCustomerStatus(client2, new CustomerStatusEntity(CustomerStatus.CLIENT_CLOSED));
 
         TestObjectFactory.updateObject(client2);
@@ -526,6 +525,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         assertEquals(new Money("400.0"), totalSavings);
         assertEquals(new Money("0.25"), totalPortfolioAtRisk);
     }
+
 
     public void testGetCustomerChecklist() throws Exception {
 
@@ -701,7 +701,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
 
         center = createCenter("MyCenter");
         QueryResult queryResult = service
-                .search("MyCenter", Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"));
+        .search("MyCenter", Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"));
         assertNotNull(queryResult);
         assertEquals(1, queryResult.getSize());
     }
@@ -709,7 +709,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     public void testGetAllClosedAccounts() throws Exception {
         getCustomer();
         groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "WITHDRAW LOAN ACCOUNT");
+        "WITHDRAW LOAN ACCOUNT");
         clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(), null, "WITHDRAW LOAN ACCOUNT");
         clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), AccountStateFlag.SAVINGS_REJECTED
                 .getValue(), "WITHDRAW LOAN ACCOUNT");
@@ -726,7 +726,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     public void testFailureGetAllClosedAccounts() throws Exception {
         getCustomer();
         groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "WITHDRAW LOAN ACCOUNT");
+        "WITHDRAW LOAN ACCOUNT");
         clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(), null, "WITHDRAW LOAN ACCOUNT");
         clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), AccountStateFlag.SAVINGS_REJECTED
                 .getValue(), "WITHDRAW LOAN ACCOUNT");
@@ -928,7 +928,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         expect(customerPersistenceMock.getVeryPoorActiveOrHoldClientCountForOffice(OFFICE)).andReturn(THREE);
         replay(customerPersistenceMock);
         BigDecimal veryPoorClientDropoutRateForOffice = customerBusinessServiceWithMock
-                .getVeryPoorClientDropoutRateForOffice(OFFICE);
+        .getVeryPoorClientDropoutRateForOffice(OFFICE);
         assertEquals(25d, veryPoorClientDropoutRateForOffice.doubleValue(), 0.001);
         verify(customerPersistenceMock);
     }

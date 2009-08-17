@@ -114,7 +114,7 @@ public class CustomerPersistence extends Persistence {
                 public boolean evaluate(Object arg0) {
                     AccountBO account = ((AccountBO) arg0);
                     return AccountTypes.SAVINGS_ACCOUNT.getValue().equals(account.getAccountType().getAccountTypeId())
-                            && new AccountStateEntity(AccountState.SAVINGS_ACTIVE).sameId(account.getAccountState());
+                    && new AccountStateEntity(AccountState.SAVINGS_ACTIVE).sameId(account.getAccountState());
                 }
             });
         }
@@ -134,7 +134,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<CustomerView> getChildrenForParent(Integer customerId, String searchId, Short officeId)
-            throws PersistenceException {
+    throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
@@ -179,7 +179,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<CustomerView> getActiveParentList(Short personnelId, Short customerLevelId, Short officeId)
-            throws PersistenceException {
+    throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("personnelId", personnelId);
         queryParameters.put("customerLevelId", customerLevelId);
@@ -192,7 +192,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<PrdOfferingBO> getLoanProducts(Date meetingDate, String searchId, Short personnelId)
-            throws PersistenceException {
+    throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("meetingDate", meetingDate);
         queryParameters.put("searchId", searchId + "%");
@@ -203,7 +203,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<PrdOfferingBO> getSavingsProducts(Date meetingDate, String searchId, Short personnelId)
-            throws PersistenceException {
+    throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("meetingDate", meetingDate);
         queryParameters.put("searchId", searchId + "%");
@@ -278,7 +278,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public QueryResult search(String searchString, Short officeId, Short userId, Short userOfficeId)
-            throws PersistenceException {
+    throws PersistenceException {
 
         QueryResult queryResult = null;
 
@@ -302,7 +302,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public QueryResult searchGroupClient(String searchString, Short userId) throws ConfigurationException,
-            PersistenceException {
+    PersistenceException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
         QueryInputs queryInputs = new QueryInputs();
@@ -370,7 +370,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     private QueryResult mainSearch(String searchString, Short officeId, Short userId, Short userOfficeId)
-            throws PersistenceException, HibernateSearchException {
+    throws PersistenceException, HibernateSearchException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
         QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
@@ -431,7 +431,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     private QueryResult idSearch(String searchString, Short officeId, Short userId) throws HibernateSearchException,
-            SystemException, PersistenceException {
+    SystemException, PersistenceException {
         if (!isCustomerExist(searchString)) {
             return null;
         }
@@ -528,7 +528,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     protected List<CustomerBO> getAllChildren(String parentSearchId, Short parentOfficeId, CustomerLevel childrenLevel)
-            throws PersistenceException {
+    throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
         queryParameters.put("OFFICE_ID", parentOfficeId);
@@ -574,7 +574,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent, Integer customerId)
-            throws PersistenceException, InvalidDateException {
+    throws PersistenceException, InvalidDateException {
         Session session = null;
         Query query = null;
         CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
@@ -632,7 +632,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<AccountBO> retrieveAccountsUnderCustomer(String searchId, Short officeId, Short accountTypeId)
-            throws PersistenceException {
+    throws PersistenceException {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING1", searchId);
@@ -643,7 +643,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<CustomerBO> getAllChildrenForParent(String searchId, Short officeId, Short customerLevelId)
-            throws PersistenceException {
+    throws PersistenceException {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
@@ -661,7 +661,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId)
-            throws PersistenceException {
+    throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CHECKLIST_STATUS", CheckListConstants.STATUS_ACTIVE);
         queryParameters.put("STATUS_ID", statusId);
@@ -689,7 +689,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     private List<LoanCycleCounter> runLoanCycleQuery(String queryName, CustomerBO customerBO)
-            throws PersistenceException {
+    throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("customerId", customerBO.getCustomerId());
         List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
@@ -771,7 +771,7 @@ public class CustomerPersistence extends Persistence {
 
     public void updateLOsForAllChildren(Short parentLO, String parentSearchId, Short parentOfficeId) {
         String hql = "update CustomerBO customer " + " set customer.personnel.personnelId = :parentLoanOfficer "
-                + " where customer.searchId like :parentSearchId" + " and customer.office.officeId = :parentOfficeId";
+        + " where customer.searchId like :parentSearchId" + " and customer.office.officeId = :parentOfficeId";
         Session session = getHibernateUtil().getSessionTL();
         getHibernateUtil().startTransaction();
         Query update = session.createQuery(hql);
@@ -782,11 +782,11 @@ public class CustomerPersistence extends Persistence {
     }
 
     private void updateAccountsForOneCustomer(Integer customerId, Short parentLO, Connection connection)
-            throws Exception {
+    throws Exception {
 
         Statement statement = connection.createStatement();
         String sql = "update account " + " set personnel_id = " + parentLO.shortValue()
-                + " where account.customer_id = " + customerId.intValue();
+        + " where account.customer_id = " + customerId.intValue();
         statement.executeUpdate(sql);
         statement.close();
     }
@@ -811,7 +811,7 @@ public class CustomerPersistence extends Persistence {
      */
 
     public void updateLOsForAllChildrenAccounts(Short parentLO, String parentSearchId, Short parentOfficeId)
-            throws Exception {
+    throws Exception {
 
         if ((parentLO == null) || (parentSearchId == null) || (parentOfficeId == null)) {
             return;
@@ -825,7 +825,7 @@ public class CustomerPersistence extends Persistence {
             Connection connection = getHibernateUtil().getSessionTL().connection();
             statement = connection.createStatement();
             String sql = " select customer_id from customer where " + " customer.search_id like '" + parentSearchId
-                    + "' and customer.branch_id = " + parentOfficeId.shortValue();
+            + "' and customer.branch_id = " + parentOfficeId.shortValue();
             customerIds = statement.executeQuery(sql);
             if (customerIds != null) {
                 while (customerIds.next()) {
@@ -873,7 +873,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(Integer accountId, Date transactionDate)
-            throws PersistenceException {
+    throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("ACCOUNT_ID", accountId);
         queryParameters.put("ACTION_DATE", transactionDate);
@@ -955,7 +955,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public Integer getCustomerReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue)
-            throws PersistenceException {
+    throws PersistenceException {
         List<ClientBO> clients = runQueryForOffice(NamedQueryConstants.GET_CUSTOMER_REPLACEMENTS_COUNT_UNDER_OFFICE,
                 office);
         CollectionUtils.filter(clients, new FieldStatePredicate(fieldId, fieldValue));
@@ -963,7 +963,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public Integer getVeryPoorReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue)
-            throws PersistenceException {
+    throws PersistenceException {
         List<ClientBO> veryPoorClients = runQueryForOffice(NamedQueryConstants.GET_VERY_POOR_CLIENTS_UNDER_OFFICE,
                 office);
         CollectionUtils.filter(veryPoorClients, new FieldStatePredicate(fieldId, fieldValue));
@@ -971,28 +971,28 @@ public class CustomerPersistence extends Persistence {
     }
 
     public Integer getDormantClientsCountByLoanAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-            throws PersistenceException {
+    throws PersistenceException {
         return getCountFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_DORMANT_CLIENTS_COUNT_BY_LOAN_ACCOUNT_FOR_OFFICE, populateDormantQueryParams(
                         office, loanCyclePeriod)));
     }
 
     public Integer getVeryPoorDormantClientsCountByLoanAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-            throws PersistenceException {
+    throws PersistenceException {
         return getCountFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_LOAN_ACCOUNT_FOR_OFFICE,
                 populateDormantQueryParams(office, loanCyclePeriod)));
     }
 
     public Integer getDormantClientsCountBySavingAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-            throws PersistenceException {
+    throws PersistenceException {
         return getCountFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE, populateDormantQueryParams(
                         office, loanCyclePeriod)));
     }
 
     public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(OfficeBO office, Integer loanCyclePeriod)
-            throws PersistenceException {
+    throws PersistenceException {
         return getCountFromQueryResult(executeNamedQuery(
                 NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE,
                 populateDormantQueryParams(office, loanCyclePeriod)));
@@ -1014,7 +1014,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     public Money getTotalAmountForAllClientsOfGroup(Short officeId, AccountState accountState, String searchIdString)
-            throws PersistenceException {
+    throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("officeId", officeId);
         params.put("accountState", accountState.getValue());
@@ -1085,6 +1085,47 @@ public class CustomerPersistence extends Persistence {
                 }
             });
         }
-    };
+    }
+
+    public Integer getActiveAndOnHoldChildrenCount(String parentSearchId, Short parentOfficeId,
+            CustomerLevel childrenLevel) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
+        queryParameters.put("OFFICE_ID", parentOfficeId);
+        queryParameters.put("LEVEL_ID", childrenLevel.getValue());
+        Integer count = ((Long) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT,
+                queryParameters)).intValue();
+        return count;
+    }
+
+    public Money retrieveTotalSavings(String searchId, Short officeId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING1", searchId);
+        queryParameters.put("SEARCH_STRING2", searchId + ".%");
+        queryParameters.put("OFFICE_ID", officeId);
+        Object[] queryResult = (Object[]) execUniqueResultNamedQuery(
+                NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, queryParameters);
+
+        BigDecimal totalSavings = new BigDecimal("0.0");
+        if (queryResult != null) {
+            totalSavings = (BigDecimal) queryResult[1];
+        }
+        return new Money(totalSavings);
+    }
+
+    public Money retrieveTotalLoan(String searchId, Short officeId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING1", searchId);
+        queryParameters.put("SEARCH_STRING2", searchId + ".%");
+        queryParameters.put("OFFICE_ID", officeId);
+        Object[] queryResult = (Object[]) execUniqueResultNamedQuery(
+                NamedQueryConstants.RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER, queryParameters);
+
+        BigDecimal totalLoan = new BigDecimal("0.0");
+        if (queryResult != null) {
+            totalLoan = (BigDecimal) queryResult[1];
+        }
+        return new Money(totalLoan);
+    }
 
 }

@@ -217,6 +217,14 @@
 		customer.customerLevel.id = :LEVEL_ID and 
 		customer.customerStatus.id in (3,4,9,10)]]>
 	</query>
+	<query name="Customer.getActiveAndOnHoldChildrenCount">
+		<![CDATA[
+		select count(*) from org.mifos.application.customer.business.CustomerBO as customer 
+		where customer.searchId like :SEARCH_STRING and 
+		customer.office.officeId = :OFFICE_ID and 
+		customer.customerLevel.id = :LEVEL_ID and 
+		customer.customerStatus.id in (3,4,9,10)]]>
+	</query>
 	<query name="Customer.getActiveLoanAccounts">
 		<![CDATA[
 		from org.mifos.application.accounts.loan.business.LoanBO as loan 

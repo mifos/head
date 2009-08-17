@@ -202,6 +202,12 @@ public interface NamedQueryConstants {
 
     // for Loan accounts
     public String GET_COSIGNING_CLIENTS_FOR_GLIM = "loan.getCosigningLoansOfClientsForGlim";
+    public String RETRIEVE_TOTAL_LOAN_FOR_CUSTOMER = "loan.retrieveTotalLoanForCustomer";
+
+    // for Savings accounts
+    public String RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER = "savings.retrieveTotalSavingsForCustomer";
+
+
 
     // for account status
     public String ACCOUNT_FLAGS = "masterdata.accountstatusflag";
@@ -360,6 +366,7 @@ public interface NamedQueryConstants {
     public String GET_ALL_CHILDREN = "Customer.getAllChildren";
     public String GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL = "Customer.getAllChildrenForCustomerLevel";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN = "Customer.getActiveAndOnHoldChildren";
+    public String GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT = "Customer.getActiveAndOnHoldChildrenCount";
     public String GET_CHILDREN_FOR_PARENT = "Customer.getChildrenForParent";
     public String GET_ALL_CUSTOMERS = "Customer.getAllCustomers";
     public String GET_CUSTOMER_COUNT_FOR_OFFICE = "Customer.getCustomerCountForOffice";

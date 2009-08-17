@@ -398,6 +398,33 @@
 			like :SEARCH_STRING1 or account.customer.searchId like :SEARCH_STRING2) and 
 			account.customer.office.officeId = :OFFICE_ID)]]>
 	</query>
+
+	<sql-query name="savings.retrieveTotalSavingsForCustomer">
+		<return-scalar column="total_balance_currency_id" type="integer" />
+		<return-scalar column="total_balance" type="big_decimal" />
+	    <![CDATA[select s.savings_balance_currency_id as total_balance_currency_id, sum(s.savings_balance) as total_balance
+				from customer c
+				join account a on a.customer_id = c.customer_id
+				join savings_account s on s.account_id = a.account_id
+				where (c.search_id like :SEARCH_STRING1 or c.search_id like :SEARCH_STRING2)
+				and c.branch_id = :OFFICE_ID
+				group by s.savings_balance_currency_id
+			]]>
+	</sql-query>
+	<sql-query name="loan.retrieveTotalLoanForCustomer">
+		<return-scalar column="currency_id" type="integer" />
+		<return-scalar column="total_loan" type="big_decimal" />
+	    <![CDATA[select ls.principal_currency_id as currency_id, sum(ls.principal) as total_loan
+				from customer c
+				join account a on a.customer_id = c.customer_id
+				join loan_schedule ls on ls.account_id = a.account_id
+				where (c.search_id like :SEARCH_STRING1 or c.search_id like :SEARCH_STRING2)
+				and c.branch_id = :OFFICE_ID
+				and a.account_state_id in (5,9)
+				group by ls.principal_currency_id
+			]]>
+	</sql-query>
+	
 	<query name="accounts.countOfMissedDeposits">
 		<![CDATA[select count(*) from 
 			org.mifos.application.accounts.savings.business.SavingsScheduleEntity  actionDate

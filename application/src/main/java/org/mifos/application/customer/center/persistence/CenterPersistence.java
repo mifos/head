@@ -47,8 +47,8 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
 
 public class CenterPersistence extends Persistence {
-    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-    private OfficePersistence officePersistence = new OfficePersistence();
+    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private final OfficePersistence officePersistence = new OfficePersistence();
 
     public CenterPersistence() {
         super();
@@ -107,11 +107,11 @@ public class CenterPersistence extends Persistence {
     }
 
     public CenterBO createCenter(UserContext userContext, CenterTemplate template) throws CustomerException,
-            PersistenceException {
+    PersistenceException {
         CenterBO center = new CenterBO(userContext, template.getDisplayName(), template.getAddress(), template
                 .getCustomFieldViews(), template.getFees(), template.getExternalId(), template.getMfiJoiningDate(),
                 officePersistence.getOffice(template.getOfficeId()), template.getMeeting(), personnelPersistence
-                        .getPersonnel(template.getLoanOfficerId()), new CustomerPersistence());
+                .getPersonnel(template.getLoanOfficerId()), new CustomerPersistence());
         saveCenter(center);
         return center;
     }

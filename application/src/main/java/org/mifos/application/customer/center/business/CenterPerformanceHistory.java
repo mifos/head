@@ -25,67 +25,43 @@ import java.io.Serializable;
 import org.mifos.framework.util.helpers.Money;
 
 public class CenterPerformanceHistory implements Serializable {
-    private Integer numberOfGroups;
 
-    private Integer numberOfClients;
+    private final Integer numberOfGroups;
 
-    private Money totalOutstandingPortfolio;
+    private final Integer numberOfClients;
 
-    private Money totalSavings;
+    private final Money totalOutstandingPortfolio;
 
-    private Money portfolioAtRisk;
+    private final Money totalSavings;
 
-    public CenterPerformanceHistory() {
+    private final Money portfolioAtRisk;
+
+    public CenterPerformanceHistory(Integer numberOfGroups, Integer numberOfClients, Money totalOutstandingPortfolio,
+            Money totalSavings, Money portfolioAtRisk) {
+        this.numberOfGroups = numberOfGroups;
+        this.numberOfClients = numberOfClients;
+        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
+        this.totalSavings = totalSavings;
+        this.portfolioAtRisk = portfolioAtRisk;
     }
 
     public Integer getNumberOfClients() {
         return numberOfClients;
     }
 
-    void setNumberOfClients(Integer numberOfClients) {
-        this.numberOfClients = numberOfClients;
-    }
-
     public Integer getNumberOfGroups() {
         return numberOfGroups;
-    }
-
-    void setNumberOfGroups(Integer numberOfGroups) {
-        this.numberOfGroups = numberOfGroups;
     }
 
     public Money getTotalOutstandingPortfolio() {
         return totalOutstandingPortfolio;
     }
 
-    void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
-        this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-    }
-
     public Money getTotalSavings() {
         return totalSavings;
-    }
-
-    void setTotalSavings(Money totalSavings) {
-        this.totalSavings = totalSavings;
     }
 
     public Money getPortfolioAtRisk() {
         return portfolioAtRisk;
     }
-
-    void setPortfolioAtRisk(Money portfolioAtRisk) {
-        this.portfolioAtRisk = portfolioAtRisk;
-    }
-
-    public void setPerformanceHistoryDetails(Integer numberOfGroups, Integer numberOfClients,
-            Money totalOutstandingPortfolio, Money totalSavings, Money portfolioAtRisk) {
-        setNumberOfGroups(numberOfGroups);
-        setNumberOfClients(numberOfClients);
-        setTotalOutstandingPortfolio(totalOutstandingPortfolio);
-        setTotalSavings(totalSavings);
-        setPortfolioAtRisk(portfolioAtRisk);
-
-    }
-
 }

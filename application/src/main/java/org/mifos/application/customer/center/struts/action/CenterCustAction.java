@@ -171,8 +171,8 @@ public class CenterCustAction extends CustAction {
         CenterBO center = new CenterBO(userContext, actionForm.getDisplayName(), actionForm.getAddress(), customFields,
                 actionForm.getFeesToApply(), actionForm.getExternalId(), getDateFromString(actionForm
                         .getMfiJoiningDate(), userContext.getPreferredLocale()), new OfficePersistence()
-                        .getOffice(actionForm.getOfficeIdValue()), meeting, new PersonnelPersistence()
-                        .getPersonnel(actionForm.getLoanOfficerIdValue()), new CustomerPersistence());
+        .getOffice(actionForm.getOfficeIdValue()), meeting, new PersonnelPersistence()
+        .getPersonnel(actionForm.getLoanOfficerIdValue()), new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
         actionForm.setCustomerId(center.getCustomerId().toString());
         actionForm.setGlobalCustNum(center.getGlobalCustNum());
@@ -246,7 +246,7 @@ public class CenterCustAction extends CustAction {
         setInitialObjectForAuditLogging(centerBO);
         centerBO.update(getUserContext(request), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),
                 mfiJoiningDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm
-                        .getCustomerPositions());
+                .getCustomerPositions());
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
@@ -286,7 +286,7 @@ public class CenterCustAction extends CustAction {
         loadCustomFieldDefinitions(request);
         // Set Default values for custom fields
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
         List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
@@ -306,7 +306,7 @@ public class CenterCustAction extends CustAction {
         MasterDataService masterDataService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
         List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
-                .retrieveCustomFieldsDefinition(EntityType.CENTER);
+        .retrieveCustomFieldsDefinition(EntityType.CENTER);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
     }
 
@@ -341,7 +341,7 @@ public class CenterCustAction extends CustAction {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByCustomer(centerBO);
         boolean activeSurveys = surveysPersistence.retrieveSurveysByTypeAndState(SurveyType.CENTER, SurveyState.ACTIVE)
-                .size() > 0;
+        .size() > 0;
         request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
         request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -362,7 +362,7 @@ public class CenterCustAction extends CustAction {
     }
 
     private void cleanSearchResults(HttpServletRequest request, CenterCustActionForm actionForm)
-            throws PageExpiredException {
+    throws PageExpiredException {
         actionForm.setSearchString(null);
         cleanUpSearch(request);
 
@@ -402,7 +402,7 @@ public class CenterCustAction extends CustAction {
     }
 
     private void loadMasterDataForDetailsPage(HttpServletRequest request, CenterBO centerBO, Short localeId)
-            throws Exception {
+    throws Exception {
         List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();
         setLocaleIdToSavingsStatus(savingsAccounts, localeId);
         SessionUtils.setCollectionAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, savingsAccounts, request);

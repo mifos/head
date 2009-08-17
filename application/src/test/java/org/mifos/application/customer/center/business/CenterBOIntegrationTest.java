@@ -64,7 +64,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
@@ -79,15 +78,15 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     private ClientBO client;
 
-    private Short officeId = 1;
+    private final Short officeId = 1;
     private OfficeBO officeBo;
 
-    private Short personnelId = 3;
+    private final Short personnelId = 3;
     private PersonnelBO personnelBo;
 
     private MeetingBO meeting;
 
-    private OfficePersistence officePersistence = new OfficePersistence();
+    private final OfficePersistence officePersistence = new OfficePersistence();
 
     @Override
     protected void setUp() throws Exception {
@@ -100,13 +99,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-    }
-
-    public static void setPerformanceHistoryDetails(CenterPerformanceHistory centerPerformanceHistory,
-            Integer numberOfGroups, Integer numberOfClients, Money totalOutstandingPortfolio, Money totalSavings,
-            Money portfolioAtRisk) {
-        centerPerformanceHistory.setPerformanceHistoryDetails(numberOfGroups, numberOfClients,
-                totalOutstandingPortfolio, totalSavings, portfolioAtRisk);
     }
 
     public void testSuccessfulUpdateForLogging() throws Exception {
