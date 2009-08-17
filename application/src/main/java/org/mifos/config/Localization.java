@@ -60,7 +60,6 @@ public class Localization {
     public void init() {
         initializeLocaleCache();
         loadMembers();
-        setDefaultLocaleToConfigLocale();
     }
 
     public Locale getMainLocale() {
@@ -83,11 +82,6 @@ public class Localization {
             return mainLocale.getCountry();
         }
 
-    }
-
-    // default locale is the machine locale
-    private void setDefaultLocaleToConfigLocale() {
-        Locale.setDefault(mainLocale);
     }
 
     // for the testing purpose

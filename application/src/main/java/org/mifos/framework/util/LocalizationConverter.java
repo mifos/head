@@ -343,7 +343,7 @@ public class LocalizationConverter {
     public DateFormat getDateFormatWithFullYear() {
         DateFormat dateFormat = getDateFormat();
         if (SimpleDateFormat.class.equals(dateFormat.getClass()))
-            return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"));
+            return new SimpleDateFormat(((SimpleDateFormat) dateFormat).toPattern().replace("yy", "yyyy"), dateLocale);
         return dateFormat;
     }
 }

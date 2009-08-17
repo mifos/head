@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,7 +39,7 @@ import org.mifos.framework.util.helpers.ServletUtils;
 
 public abstract class AbstractReportParameterForm implements ReportParameterForm {
 
-    public static final SimpleDateFormat REPORT_DATE_PARAM_FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+    public static final SimpleDateFormat REPORT_DATE_PARAM_FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a",new Locale("en", "GB"));
 
     public abstract String[] getAllFormParameterNames();
 

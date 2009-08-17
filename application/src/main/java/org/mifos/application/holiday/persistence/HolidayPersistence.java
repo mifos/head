@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
@@ -48,10 +49,12 @@ public class HolidayPersistence extends MasterPersistence {
      * we need a way to make this worx because our PK is the HolidayPK public
      * HolidayBO getHoliday(HolidayPK holidayPK) throws PersistenceException {
      * return (HolidayBO) getPersistentObject(HolidayBO.class, holidayPK); }
+     * 
+     * Force a locale that works with pattern parsing.
      */
 
     public List<HolidayBO> getHolidays(int year) throws PersistenceException {
-        SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd",new Locale("en","GB"));
         isoDateFormat.setLenient(false);
         Map<String, Object> parameters = new HashMap<String, Object>();
         try {

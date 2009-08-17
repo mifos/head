@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -51,10 +52,12 @@ public class SavingsHelper {
      * I assume the hardcoding of 1 Jan 2006 is trying to say that the default
      * fiscal year is January 1 to December 31. Do we use the year? What does
      * this control, versus {@link SavingsConstants#POSTING_DAY}?
+     * 
+     * Force a locale that works with pattern parsing.
      */
     public Date getFiscalStartDate() {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",new Locale("en","GB"));
             return format.parse("01/01/2006");
         } catch (ParseException pe) {
             throw new RuntimeException(pe);
