@@ -31,7 +31,7 @@ public class ViewAdditionalFieldCategoriesPage extends MifosPage {
     }
     
     public ViewAdditionalFieldCategoriesPage verifyPage() {
-        verifyPage("view_organizational_holidays");
+        verifyPage("view_additional_field_categories");
         return this;
     }
 

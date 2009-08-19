@@ -37,7 +37,12 @@ public class DefineAdditionalFieldsPage extends MifosPage {
     }
 
     public DefineAdditionalFieldPreviewPage defineAdditionalField(AdminPage adminPage, String category, String label, String dataType) {
-        selectIfNotEmpty("categoryType", category);
+        if ("Client".equals(category)) {
+            selenium.select("categoryType", "value=1");
+        } else if ("Group".equals(category)) {
+            selenium.select("categoryType", "value=2");
+        }
+        
         typeTextIfNotEmpty("define_additional_fields.input.labelName", label);
         if (! StringUtils.isEmpty(dataType)) {
             if ("Text".equals(dataType)) {

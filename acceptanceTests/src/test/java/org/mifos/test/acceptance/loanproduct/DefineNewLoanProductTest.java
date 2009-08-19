@@ -68,15 +68,15 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setOfferingShortName("pw" + StringUtil.getRandomString(2));
         formParameters.setDescription("descriptionForWeekly1");
         formParameters.setCategory("Other");
-        formParameters.setApplicableFor("Clients");
+        formParameters.setApplicableFor(SubmitFormParameters.CLIENTS);
         formParameters.setMinLoanAmount("100");
         formParameters.setMaxLoanAmount("190000");
         formParameters.setDefaultLoanAmount("2500");
-        formParameters.setInterestTypes("Flat");
+        formParameters.setInterestTypes(SubmitFormParameters.FLAT);
         formParameters.setMaxInterestRate("30");
         formParameters.setMinInterestRate("10");
         formParameters.setDefaultInterestRate("19");
-        formParameters.setFreqOfInstallments("Weeks"); //This parameter expects Weeks or Months
+        formParameters.setFreqOfInstallments(SubmitFormParameters.WEEKS); //This parameter expects Weeks or Months
         formParameters.setMaxInstallments("52");
         formParameters.setDefInstallments("52");
         formParameters.setGracePeriodType(SubmitFormParameters.NONE);
@@ -100,15 +100,15 @@ public class DefineNewLoanProductTest extends UiTestCaseBase {
         formParameters.setOfferingShortName("pm" + StringUtil.getRandomString(2));
         formParameters.setDescription("descriptionForMonthly1");
         formParameters.setCategory("Other");
-        formParameters.setApplicableFor("Clients");
+        formParameters.setApplicableFor(SubmitFormParameters.CLIENTS);
         formParameters.setMinLoanAmount("1007");
         formParameters.setMaxLoanAmount("190000");
         formParameters.setDefaultLoanAmount("60000");
-        formParameters.setInterestTypes("Flat");
+        formParameters.setInterestTypes(SubmitFormParameters.FLAT);
         formParameters.setMaxInterestRate("30");
         formParameters.setMinInterestRate("10");
         formParameters.setDefaultInterestRate("12");
-        formParameters.setFreqOfInstallments("Months"); //This parameter expects Weeks or Months
+        formParameters.setFreqOfInstallments(SubmitFormParameters.MONTHS); //This parameter expects Weeks or Months
         formParameters.setMaxInstallments("72");
         formParameters.setDefInstallments("60");
         formParameters.setGracePeriodType(SubmitFormParameters.NONE);
