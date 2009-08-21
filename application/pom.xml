@@ -931,7 +931,7 @@
                 <executions>
                     <execution>
                         <id>create_props</id>
-                        <phase>process-resources</phase>
+                        <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
