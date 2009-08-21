@@ -142,7 +142,7 @@ msgstr ""
 
 #: label.createnew
 msgid "Create new"
-msgstr ""
+msgstr "جديدة "
 
 #: label.data
 msgid "Data"
@@ -154,7 +154,7 @@ msgstr ""
 
 #: label.enter
 msgid "Enter"
-msgstr ""
+msgstr "دخل"
 
 #: label.group
 msgid "group"
@@ -170,7 +170,7 @@ msgstr ""
 
 #: label.loanaccount
 msgid "Loan Account"
-msgstr ""
+msgstr "حساب القرض"
 
 #: label.loanofficer
 msgid "Loan officer"
@@ -186,7 +186,7 @@ msgstr ""
 
 #: label.opennew
 msgid "Open new"
-msgstr ""
+msgstr "وفتح"
 
 #: label.portfolio
 msgid "Portfolio"
@@ -211,7 +211,7 @@ msgstr ""
 
 #: label.savingsaccount
 msgid "Savings Account"
-msgstr ""
+msgstr "حساب التوفير"
 
 #: label.seealso
 msgid "See also"

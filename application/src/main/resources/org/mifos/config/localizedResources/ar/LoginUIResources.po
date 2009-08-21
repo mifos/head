@@ -53,7 +53,7 @@ msgstr ""
 msgid ""
 "You have successfully logged out of the application. Please close the "
 "browser window."
-msgstr ""
+msgstr "لديك وحقق النجاح في تقديم الطلب. الرجاءيغلق نافذة المتصفح "
 
 #: errors.mandatory
 msgid "Please specify the value for {0}."
@@ -116,7 +116,7 @@ msgstr ""
 
 #: login.login
 msgid "Login"
-msgstr ""
+msgstr "أ.  دخول"
 
 #: login.logout
 msgid "Logout"
@@ -132,16 +132,16 @@ msgstr ""
 
 #: login.password
 msgid "Password"
-msgstr ""
+msgstr "أ.  كلمة السر, كلمة التعارف, كلمة المرور"
 
 #: login.submit
 msgid "Submit"
-msgstr ""
+msgstr "أ.  دخول"
 
 #: login.username
 msgid "Username"
-msgstr ""
+msgstr "يتم"
 
 #: login.welcome
 msgid "Welcome to mifos"
-msgstr ""
+msgstr "مرحبا Mifos"

@@ -56,7 +56,7 @@ msgstr ""
 
 #: CustomerSearch.linksleft
 msgid "the links to the left"
-msgstr ""
+msgstr "الروابط إلى اليسار"
 
 #: CustomerSearch.loanOfficer
 msgid "loan officer"
@@ -68,7 +68,7 @@ msgstr ""
 
 #: CustomerSearch.navigate
 msgid "You can navigate your way through Mifos using"
-msgstr ""
+msgstr "يمكنك التنقل في طريقك من خلال استخدام Mifos"
 
 #: CustomerSearch.no
 msgctxt "CustomerSearch.no"
