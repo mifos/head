@@ -22,11 +22,15 @@ package org.mifos.config;
 
 public class ConfigLocale {
 
+    public static final String DEFAULT_DIRECTION = "auto";
+
     private static final String LocalizationCountryCode = "Localization.CountryCode";
     private static final String LocalizationLanguageCode = "Localization.LanguageCode";
+    private static final String LocalizationDirection = "Localization.Direction";
 
     private String countryCode;
     private String languageCode;
+    private String direction;
 
     public ConfigLocale(String languageCode, String countryCode) {
         this.countryCode = countryCode;
@@ -37,43 +41,34 @@ public class ConfigLocale {
         load();
     }
 
-    // for testing purpose
     public void clearCountryCode() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         configMgr.clearProperty(LocalizationCountryCode);
     }
 
-    // for testing purpose
     public void clearLanguageCode() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         configMgr.clearProperty(LocalizationLanguageCode);
     }
 
-    // for testing purpose
+    public void clearDirection() {
+        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        configMgr.clearProperty(LocalizationDirection);
+    }
+
     public void setCountryCodeToConfigFile() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         configMgr.addProperty(LocalizationCountryCode, countryCode);
     }
 
-    // for testing purpose
     public void setLanguageCodeToConfigFile() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
         configMgr.addProperty(LocalizationLanguageCode, languageCode);
     }
 
-    // save to the configuration object in memory, not write to file
-    public void save() {
+    public void setDirectionToConfigFile() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(LocalizationLanguageCode, languageCode);
-        configMgr.setProperty(LocalizationCountryCode, countryCode);
-    }
-
-    public void save(String countryCode, String languageCode) {
-        this.languageCode = languageCode;
-        this.countryCode = countryCode;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty(LocalizationLanguageCode, languageCode);
-        configMgr.setProperty(LocalizationCountryCode, countryCode);
+        configMgr.addProperty(LocalizationDirection, direction);
     }
 
     private void load() {
@@ -86,6 +81,7 @@ public class ConfigLocale {
             languageCode = configMgr.getString(LocalizationLanguageCode);
         else
             throw new RuntimeException("The language code is not defined in the config file.");
+        direction = configMgr.getString(LocalizationDirection, DEFAULT_DIRECTION);
     }
 
     public String getCountryCode() {
@@ -102,6 +98,14 @@ public class ConfigLocale {
 
     public void setLanguageCode(String languageCode) {
         this.languageCode = languageCode;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    public String getDirection() {
+        return direction;
     }
 
 }

@@ -2155,4 +2155,27 @@
         </attribute>
     </tag>  
 	
+    <!-- MifosInternationalizedHtmlTag -->
+    <tag>
+        <name>html</name>
+        <tagclass>
+            org.mifos.framework.struts.tags.MifosInternationalizedHtmlTag
+        </tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>locale</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>lang</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>xhtml</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>  
 </taglib>

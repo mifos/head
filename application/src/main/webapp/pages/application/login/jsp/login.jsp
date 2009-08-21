@@ -23,7 +23,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html-el:html locale="true">
+<mifos:html>
 <head>
 <title>Mifos</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -120,4 +120,4 @@ explanation of the license and how it is applied.
 	</table>
 </html-el:form>
 </body>
-</html-el:html>
+</mifos:html>

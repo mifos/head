@@ -21,8 +21,9 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/userlocaledate" prefix="userlocalefn"%>
+<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 
-<html-el:html locale="true">
+<mifos:html>
 <head>
 <title><tiles:getAsString name="title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -50,4 +51,4 @@ explanation of the license and how it is applied.
 </table>
 
 </body>
-</html-el:html>
+</mifos:html>

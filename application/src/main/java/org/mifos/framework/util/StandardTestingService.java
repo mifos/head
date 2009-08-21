@@ -182,15 +182,15 @@ public class StandardTestingService implements TestingService {
     @Override
     public void setLocale(String languageCode, String countryCode) throws MifosException {
         try {
-        ConfigLocale configLocale = new ConfigLocale();
-        configLocale.setLanguageCode(languageCode);
-        configLocale.setCountryCode(countryCode);
-        Localization localization = Localization.getInstance();    
-        localization.setConfigLocale(configLocale);
-        localization.refresh();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        configMgr.setProperty("Localization.LanguageCode", languageCode);
-        configMgr.setProperty("Localization.CountryCode", countryCode);
+            ConfigLocale configLocale = new ConfigLocale();
+            configLocale.setLanguageCode(languageCode);
+            configLocale.setCountryCode(countryCode);
+            Localization localization = Localization.getInstance();    
+            localization.setConfigLocale(configLocale);
+            localization.refresh();
+            ConfigurationManager configMgr = ConfigurationManager.getInstance();
+            configMgr.setProperty("Localization.LanguageCode", languageCode);
+            configMgr.setProperty("Localization.CountryCode", countryCode);
         } catch (MifosRuntimeException e) {
             throw new MifosException("The locale " + languageCode + "_" + countryCode + " is not supported by Mifos.");
         }
