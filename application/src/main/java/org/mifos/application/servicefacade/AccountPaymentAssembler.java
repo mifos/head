@@ -40,17 +40,12 @@ public class AccountPaymentAssembler {
     }
 
     public AccountPaymentEntity fromDto(final Short userId,
-            final CollectionSheetEntryGridDto previousCollectionSheetEntryDto) {
+            final CollectionSheetEntryGridDto collectionSheetEntryGridDto) {
         
-        final String receiptNumber = previousCollectionSheetEntryDto.getReceiptId();
-        final PaymentTypeEntity paymentType = new PaymentTypeEntity(previousCollectionSheetEntryDto.getPaymentType()
-                .getId());
-        final Date paymentDate = previousCollectionSheetEntryDto.getTransactionDate();
-
-        java.sql.Date receiptDate = null;
-        if (previousCollectionSheetEntryDto.getReceiptDate() != null) {
-            receiptDate = new java.sql.Date(previousCollectionSheetEntryDto.getReceiptDate().getTime());
-        }
+        final String receiptNumber = collectionSheetEntryGridDto.getReceiptId();
+        final PaymentTypeEntity paymentType = new PaymentTypeEntity(collectionSheetEntryGridDto.getPaymentTypeId());
+        final Date paymentDate = collectionSheetEntryGridDto.getTransactionDate();
+        final Date receiptDate = collectionSheetEntryGridDto.getReceiptDate();
 
         final PersonnelBO user = personnelPersistence.findPersonnelById(userId);
         final AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(), receiptNumber, receiptDate,

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
 import org.mifos.framework.business.View;
@@ -33,33 +32,24 @@ import org.mifos.framework.util.helpers.Money;
 public class LoanAccountView extends View {
 
     private final Integer accountId;
-
-    private final Money loanAmount;
-
+    private final Integer customerId;
     private final String prdOfferingShortName;
-
-    private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
-
-    private final Short accountType;
-
     private final Short prdOfferingId;
-
     private final Short accountSate;
-
     private final Short interestDeductedAtDisbursement;
-
+    private final Money loanAmount;
     private Double amountPaidAtDisbursement;
+    
+    private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
 
-    public LoanAccountView(Integer accountId, String prdOfferingShortName, AccountTypes accountType,
-            Short prdOfferingId, AccountState state, boolean interestDeductedAtDisbursement, Money loanAmount) {
+    public LoanAccountView(Integer accountId, Integer customerId, String prdOfferingShortName,
+            Short prdOfferingId, Short state, Short interestDeductedAtDisbursement, Money loanAmount) {
         this.accountId = accountId;
+        this.customerId = customerId;
         this.prdOfferingShortName = prdOfferingShortName;
-        this.accountType = accountType.getValue();
         this.prdOfferingId = prdOfferingId;
-        accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
-        this.accountSate = state.getValue();
-        this.interestDeductedAtDisbursement = interestDeductedAtDisbursement ? LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT
-                : 0;
+        this.accountSate = state;
+        this.interestDeductedAtDisbursement = interestDeductedAtDisbursement;
         this.loanAmount = loanAmount;
     }
 
@@ -67,16 +57,20 @@ public class LoanAccountView extends View {
         return accountId;
     }
 
+    public Integer getCustomerId() {
+        return this.customerId;
+    }
+
     public String getPrdOfferingShortName() {
         return prdOfferingShortName;
     }
 
-    public Short getAccountType() {
-        return accountType;
-    }
-
     public Short getPrdOfferingId() {
         return prdOfferingId;
+    }
+    
+    public Short getAccountSate() {
+        return accountSate;
     }
 
     public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
@@ -104,16 +98,8 @@ public class LoanAccountView extends View {
         return totalAmount.getAmountDoubleValue();
     }
 
-    public Short getAccountSate() {
-        return accountSate;
-    }
-
-    private Short getInterestDeductedAtDisbursement() {
-        return interestDeductedAtDisbursement;
-    }
-
     public boolean isInterestDeductedAtDisbursement() {
-        return getInterestDeductedAtDisbursement() > 0 ? true : false;
+        return this.interestDeductedAtDisbursement > 0 ? true : false;
     }
 
     public Double getAmountPaidAtDisbursement() {
@@ -121,11 +107,6 @@ public class LoanAccountView extends View {
     }
 
     public void setAmountPaidAtDisbursement(Double amountPaidAtDisbursement) {
-        /*
-         * Would this check be a good idea? If not, what does null mean? if
-         * (amountPaidAtDisbursement == null) { throw new NullPointerException(
-         * "amount paid at disbursement is required"); }
-         */
         this.amountPaidAtDisbursement = amountPaidAtDisbursement;
     }
 

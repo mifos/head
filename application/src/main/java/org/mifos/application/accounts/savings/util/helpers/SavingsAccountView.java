@@ -23,58 +23,55 @@ package org.mifos.application.accounts.savings.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsAccountView extends View {
 
-    private Integer accountId;
+    private final Integer accountId;
+    private final Integer customerId;
+    private final String savingsOfferingShortName;
+    private final Short savingsOfferingId;
+    private final Short savingsTypeId;
+    private final Short recommendedAmntUnitId;
+    private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
+
+    
+    private boolean isValidDepositAmountEntered = true;
+    private boolean isValidWithDrawalAmountEntered = true;
 
     private String depositAmountEntered;
-
     private String withDrawalAmountEntered;
 
-    private List<CollectionSheetEntryInstallmentView> accountTrxnDetails;
-
-    private Short accountType;
-
-    private SavingsOfferingBO savingsOffering;
-
-    private boolean isValidDepositAmountEntered;
-
-    private boolean isValidWithDrawalAmountEntered;
-
-    public SavingsAccountView(Integer accountId, AccountTypes accountType, SavingsOfferingBO savingsOffering) {
+    
+    public SavingsAccountView(Integer accountId, Integer customerId, String savingsOfferingShortName,
+            Short savingsOfferingId, Short savingsTypeId, Short recommendedAmntUnitId) {
         this.accountId = accountId;
-        this.accountType = accountType.getValue();
-        this.savingsOffering = savingsOffering;
-        accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
-        isValidDepositAmountEntered = true;
-        isValidWithDrawalAmountEntered = true;
+        this.customerId = customerId;
+        this.savingsOfferingShortName = savingsOfferingShortName;
+        this.savingsOfferingId = savingsOfferingId;
+        this.savingsTypeId = savingsTypeId;
+        this.recommendedAmntUnitId = recommendedAmntUnitId;
+
+        // this.savingsOffering = new SavingsOfferingBO(savingsOfferingId, null,
+        // null, null);
+        // this.savingsOffering.setPrdOfferingShortName(savingsOfferingShortName);
+        // this.savingsOffering.setSavingsType(new
+        // SavingsTypeEntity(SavingsType.fromInt(savingsTypeId)));
+        //        
+        // if (recommendedAmntUnitId != null) {
+        // this.savingsOffering.setRecommendedAmntUnit(RecommendedAmountUnit.fromInt(recommendedAmntUnitId));
+        // }
     }
 
     public Integer getAccountId() {
         return accountId;
     }
 
-    public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
-        return accountTrxnDetails;
-    }
-
-    public void addAccountTrxnDetail(CollectionSheetEntryInstallmentView accountTrxnDetail) {
-        this.accountTrxnDetails.add(accountTrxnDetail);
-    }
-
-    public Short getAccountType() {
-        return accountType;
-    }
-
-    public AccountTypes getType() {
-        return AccountTypes.getAccountType(accountType);
+    public Integer getCustomerId() {
+        return this.customerId;
     }
 
     public String getDepositAmountEntered() {
@@ -85,16 +82,20 @@ public class SavingsAccountView extends View {
         this.depositAmountEntered = depositAmountEntered;
     }
 
-    public SavingsOfferingBO getSavingsOffering() {
-        return savingsOffering;
-    }
-
     public String getWithDrawalAmountEntered() {
         return withDrawalAmountEntered;
     }
 
     public void setWithDrawalAmountEntered(String withDrawalAmountEntered) {
         this.withDrawalAmountEntered = withDrawalAmountEntered;
+    }
+    
+    public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
+        return accountTrxnDetails;
+    }
+
+    public void addAccountTrxnDetail(CollectionSheetEntryInstallmentView accountTrxnDetail) {
+        this.accountTrxnDetails.add(accountTrxnDetail);
     }
 
     public boolean isValidDepositAmountEntered() {
@@ -124,4 +125,19 @@ public class SavingsAccountView extends View {
         return totalDepositDue.getAmountDoubleValue();
     }
 
+    public String getSavingsOfferingShortName() {
+        return this.savingsOfferingShortName;
+    }
+
+    public Short getSavingsOfferingId() {
+        return this.savingsOfferingId;
+    }
+
+    public Short getSavingsTypeId() {
+        return this.savingsTypeId;
+    }
+
+    public Short getRecommendedAmntUnitId() {
+        return this.recommendedAmntUnitId;
+    }
 }

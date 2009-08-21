@@ -506,11 +506,9 @@ public interface NamedQueryConstants {
 
     public String GET_LASTINSTALLMENT = "getLastInstallment";
 
-    public String ACTIVE_CUSTOMERS_UNDER_PARENT = "Customer.getActiveCustomerUnderParent";
     public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE = "retrieveCustomerFeesByCategoryType";
     public String RETRIEVE_CUSTOMER_FEES = "retrieveCustomerFees";
     public String RETRIEVE_PRODUCT_FEES = "retrieveProductFees";
-    public String ACTIVE_CUSTOMERS_WITH_SEARCH_ID = "Customer.getActiveCustomerWithSearchId";
 
     public String ALL_LOAN_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllLoanAcounts";
     public String ALL_SAVINGS_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllSavingsAccounts";

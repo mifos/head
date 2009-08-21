@@ -38,8 +38,19 @@ public class CustomerAccountView extends View {
 
     private boolean isValidCustomerAccountAmountEntered;
 
+    private final Integer customerId;
+
     public CustomerAccountView(Integer accountId) {
         this.accountId = accountId;
+        this.customerId = null;
+        customerAccountAmountEntered = "0.0";
+        accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
+        isValidCustomerAccountAmountEntered = true;
+    }
+    
+    public CustomerAccountView(final Integer accountId, final Integer customerId) {
+        this.accountId = accountId;
+        this.customerId = customerId;
         customerAccountAmountEntered = "0.0";
         accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
         isValidCustomerAccountAmountEntered = true;
@@ -79,11 +90,17 @@ public class CustomerAccountView extends View {
 
     public Money getTotalAmountDue() {
         Money totalAmount = new Money();
-        if (accountActionDates != null && accountActionDates.size() > 0)
-            for (CollectionSheetEntryInstallmentView accountAction : accountActionDates)
+        if (accountActionDates != null && accountActionDates.size() > 0) {
+            for (CollectionSheetEntryInstallmentView accountAction : accountActionDates) {
                 totalAmount = totalAmount.add(((CollectionSheetEntryCustomerAccountInstallmentView) accountAction)
                         .getTotalDueWithFees());
+            }
+        }
         return totalAmount;
+    }
+
+    public Integer getCustomerId() {
+        return this.customerId;
     }
 
 }

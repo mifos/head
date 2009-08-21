@@ -20,20 +20,24 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntryNodeBuilder;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**
@@ -58,8 +62,17 @@ public class CollectionSheetEntryViewAssembler {
         final java.sql.Date meetingDate = new java.sql.Date(formEnteredDataDto.getMeetingDate().getTime());
         final String selectedCustomerSearchId = formEnteredDataDto.getCustomer().getCustomerSearchId();
         final Short officeId = formEnteredDataDto.getOffice().getOfficeId();
-
+        final Date transactionDate = formEnteredDataDto.getMeetingDate();
         try {
+            List<LoanAccountView> loanAccountViewList = customerPersistence.findAllActiveLoansForHierarchy(officeId,
+                    selectedCustomerSearchId, transactionDate);
+            
+            List<SavingsAccountView> savingsAccountViewList = customerPersistence.findAllActiveSavingsUnderCenter(
+                    officeId, selectedCustomerSearchId);
+            
+            List<CustomerAccountView> customerAccountViewList = customerPersistence.findAllCustomerAccountsForHierarchy(
+                    officeId, selectedCustomerSearchId);
+            
             List<CollectionSheetEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistence
                     .getBulkEntryActionView(meetingDate, selectedCustomerSearchId, officeId, AccountTypes.LOAN_ACCOUNT);
             List<CollectionSheetEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistence
@@ -75,12 +88,9 @@ public class CollectionSheetEntryViewAssembler {
                     .getBulkEntryFeeActionView(meetingDate, selectedCustomerSearchId, officeId,
                             AccountTypes.CUSTOMER_ACCOUNT);
 
-            // TODO - use DAO method that puts into DTO from hibernate query
-            List<CustomerBO> allChildNodes = customerPersistence.getCustomersUnderParent(selectedCustomerSearchId,
-                    officeId);
+            final List<CustomerView> allChildNodes = customerPersistence.findCustomerHierarchyForOfficeBySearchId(
+                    officeId, selectedCustomerSearchId);
             final int countOfCustomers = allChildNodes.size();
-
-            Collections.sort(allChildNodes, CustomerBO.searchIdComparator());
 
             List<ClientAttendanceBO> clientAttendanceBOs = clientAttendanceDao.getClientAttendance(meetingDate,
                     officeId);
@@ -93,7 +103,7 @@ public class CollectionSheetEntryViewAssembler {
             final CollectionSheetEntryView bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
                     formEnteredDataDto.getCustomer(), meetingDate, bulkEntryLoanScheduleViews,
                     bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews, bulkEntryCustomerFeeScheduleViews,
-                    clientAttendance);
+                    clientAttendance, customerAccountViewList, loanAccountViewList, savingsAccountViewList);
 
             BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent, meetingDate,
                     bulkEntrySavingsScheduleViews);
@@ -103,7 +113,7 @@ public class CollectionSheetEntryViewAssembler {
 
             return bulkEntryParent;
         } catch (PersistenceException e) {
-            throw new RuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
     }
 }

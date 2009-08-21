@@ -99,6 +99,7 @@ public abstract class Persistence {
     public List executeNamedQuery(String queryName, Map queryParameters) throws PersistenceException {
         try {
             Query query = createdNamedQuery(queryName);
+            
             setParametersInQuery(query, queryName, queryParameters);
             return runQuery(query);
         } catch (Exception e) {
@@ -139,6 +140,20 @@ public abstract class Persistence {
             throw new PersistenceException(e);
         }
     }
+    
+    public Object executeUniqueHqlQuery(final String hqlQuery) {
+
+        Session session = getHibernateUtil().getSessionTL();
+        final Query query = session.createQuery(hqlQuery);
+        return query.uniqueResult();
+    }
+    
+    public List executeNonUniqueHqlQuery(final String hqlQuery) {
+
+        Session session = getHibernateUtil().getSessionTL();
+        final Query query = session.createQuery(hqlQuery);
+        return query.list();
+    }
 
     public static void setParametersInQuery(Query query, String queryName, Map queryParameters)
             throws PersistenceException {
@@ -177,8 +192,9 @@ public abstract class Persistence {
         // IllegalArgumentException (thrown if get() is given a null ID, below)
         // TODO: get rid of this. The default handling for null IDs of
         // get() (throwing that IllegalArgumentException) should be fine.
-        if (null == persistentObjectId)
+        if (null == persistentObjectId) {
             throw new PersistenceException("persistentObjectId is required for fetch");
+        }
 
         // TODO: it is probably cleaner to NOT catch the HibernateException
         // since it is a RuntimeException. Let's eventually make this method
@@ -207,8 +223,9 @@ public abstract class Persistence {
 
     protected Integer getCountFromQueryResult(List queryResult) {
         int count = 0;
-        if (queryResult.size() > 0 && queryResult.get(0) != null)
+        if (queryResult.size() > 0 && queryResult.get(0) != null) {
             count = ((Number) queryResult.get(0)).intValue();
+        }
         return count;
     }
 

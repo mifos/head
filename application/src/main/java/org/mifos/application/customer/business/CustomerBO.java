@@ -109,7 +109,7 @@ public abstract class CustomerBO extends BusinessObject {
     private CustomerHistoricalDataEntity historicalData;
     private Short blackListed;
     private Set<CustomerNoteEntity> customerNotes;
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
+    private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
     private Set<CustomerBO> children;
 
     /*
@@ -470,12 +470,20 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     public void updateAddress(Address address) throws CustomerException {
-        if (getCustomerAddressDetail() == null)
+        if (getCustomerAddressDetail() == null) {
             setCustomerAddressDetail(new CustomerAddressDetailEntity(this, address));
-        else
+        } else {
             getCustomerAddressDetail().setAddress(address);
+        }
     }
 
+    /**
+     * FIXME - find {@link CustomerAccountBO} using DAO/Persistence rather than
+     * looping over all accounts
+     * 
+     * @deprecated
+     */
+    @Deprecated
     public CustomerAccountBO getCustomerAccount() {
         CustomerAccountBO customerAccount = null;
         for (AccountBO account : accounts) {
@@ -486,6 +494,12 @@ public abstract class CustomerBO extends BusinessObject {
         return customerAccount;
     }
 
+    /**
+     * TODO - keithw - delete me.
+     * 
+     * @deprecated
+     */
+    @Deprecated
     public List<LoanBO> getActiveAndApprovedLoanAccounts(Date transactionDate) {
         List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
         for (AccountBO account : accounts) {
@@ -496,14 +510,21 @@ public abstract class CustomerBO extends BusinessObject {
                         || state == AccountState.LOAN_ACTIVE_IN_BAD_STANDING) {
                     loanAccounts.add(loan);
                 } else if (state == AccountState.LOAN_APPROVED || state == AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) {
-                    if (transactionDate.compareTo(loan.getDisbursementDate()) >= 0)
+                    if (transactionDate.compareTo(loan.getDisbursementDate()) >= 0) {
                         loanAccounts.add(loan);
+                    }
                 }
             }
         }
         return loanAccounts;
     }
 
+    /**
+     * TODO - keithw - delete me.
+     * 
+     * @deprecated
+     */
+    @Deprecated
     public List<SavingsBO> getActiveSavingsAccounts() {
         List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
         for (AccountBO account : accounts) {
@@ -518,8 +539,9 @@ public abstract class CustomerBO extends BusinessObject {
         List<CustomerNoteEntity> notes = new ArrayList<CustomerNoteEntity>();
         int count = 0;
         for (CustomerNoteEntity customerNote : getCustomerNotes()) {
-            if (count > 2)
+            if (count > 2) {
                 break;
+            }
             notes.add(customerNote);
             count++;
         }
@@ -549,14 +571,16 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     public void updateHistoricalData(CustomerHistoricalDataEntity historicalData) {
-        if (historicalData != null)
+        if (historicalData != null) {
             mfiJoiningDate = historicalData.getMfiJoiningDate();
+        }
         this.historicalData = historicalData;
     }
 
     public CustomerHistoricalDataEntity getHistoricalData() {
-        if (historicalData != null)
+        if (historicalData != null) {
             historicalData.setMfiJoiningDate(mfiJoiningDate);
+        }
         return historicalData;
     }
 
@@ -593,8 +617,9 @@ public abstract class CustomerBO extends BusinessObject {
         for (AccountBO account : getAccounts()) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
                 LoanBO loan = (LoanBO) account;
-                if (loan.hasPortfolioAtRisk())
+                if (loan.hasPortfolioAtRisk()) {
                     amount = amount.add(loan.getRemainingPrincipalAmount());
+                }
             }
         }
         return amount;
@@ -605,8 +630,9 @@ public abstract class CustomerBO extends BusinessObject {
         for (AccountBO account : getAccounts()) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT && ((LoanBO) account).isAccountActive()) {
                 LoanBO loan = (LoanBO) account;
-                if (loan.getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()))
+                if (loan.getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
                     amount = amount.add(loan.getRemainingPrincipalAmount());
+                }
             }
         }
         return amount;
@@ -649,9 +675,10 @@ public abstract class CustomerBO extends BusinessObject {
                         .getOriginalPrincipal());
             }
         }
-        if (totalOutStandingAmount.getAmountDoubleValue() != 0.0)
+        if (totalOutStandingAmount.getAmountDoubleValue() != 0.0) {
             return new Money(String.valueOf(amountOverDue.getAmountDoubleValue()
                     / totalOutStandingAmount.getAmountDoubleValue()));
+        }
         return new Money();
     }
 
@@ -691,11 +718,13 @@ public abstract class CustomerBO extends BusinessObject {
     public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException {
         Short oldStatusId = getCustomerStatus().getId();
         validateStatusChange(newStatusId);
-        if (getPersonnel() != null)
+        if (getPersonnel() != null) {
             validateLoanOfficerAssigned();
+        }
         if (checkStatusChangeCancelToPartial(CustomerStatus.fromInt(oldStatusId), CustomerStatus.fromInt(newStatusId))) {
-            if (!isBlackListed())
+            if (!isBlackListed()) {
                 getCustomerFlags().clear();
+            }
         }
         CustomerStatusEntity customerStatus;
         try {
@@ -720,8 +749,9 @@ public abstract class CustomerBO extends BusinessObject {
         if (customerStatusFlagEntity != null) {
             customerStatusFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
             this.addCustomerFlag(customerStatusFlagEntity);
-            if (customerStatusFlagEntity.isBlackListed())
+            if (customerStatusFlagEntity.isBlackListed()) {
                 blackListed = YesNoFlag.YES.getValue();
+            }
         }
 
         handleActiveForFirstTime(oldStatusId, newStatusId);
@@ -769,15 +799,17 @@ public abstract class CustomerBO extends BusinessObject {
                         + getCustomerId());
                 updateMeeting(oldMeeting, newMeeting);
                 resetUpdatedMeetingForChildren(oldMeeting);
-                if (getParentCustomer() == null)
+                if (getParentCustomer() == null) {
                     deleteMeeting(newMeeting);
+                }
             } else {
                 logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
                         + getCustomerId());
                 getCustomerMeeting().setMeeting(newMeeting);
                 resetUpdatedMeetingForChildren(newMeeting);
-                if (getParentCustomer() == null)
+                if (getParentCustomer() == null) {
                     deleteMeeting(oldMeeting);
+                }
             }
             getCustomerMeeting().setUpdatedMeeting(null);
         }
@@ -812,13 +844,14 @@ public abstract class CustomerBO extends BusinessObject {
 
     protected void updateMeeting(MeetingBO oldMeeting, MeetingBO newMeeting) throws CustomerException {
         try {
-            if (oldMeeting.isWeekly())
+            if (oldMeeting.isWeekly()) {
                 oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingPlace());
-            else if (oldMeeting.isMonthlyOnDate())
+            } else if (oldMeeting.isMonthlyOnDate()) {
                 oldMeeting.update(newMeeting.getMeetingDetails().getDayNumber(), newMeeting.getMeetingPlace());
-            else if (oldMeeting.isMonthly())
+            } else if (oldMeeting.isMonthly()) {
                 oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingDetails()
                         .getWeekRank(), newMeeting.getMeetingPlace());
+            }
 
         } catch (MeetingException me) {
             throw new CustomerException(me);
@@ -834,16 +867,18 @@ public abstract class CustomerBO extends BusinessObject {
     private void validateLoanOfficerAssigned() throws CustomerException {
         logger.debug("In CustomerBO::validateLoanOfficerAssigned()");
         if (!(personnel.isActive())
-                || !(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) || !(personnel.isLoanOfficer())))
+                || !(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) || !(personnel.isLoanOfficer()))) {
             throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+        }
         logger.debug("In CustomerBO::validateLoanOfficerAssigned(), completed");
     }
 
     public List<LoanBO> getOpenLoanAccounts() {
         List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
         for (AccountBO account : getAccounts()) {
-            if (account.isLoanAccount() && account.isOpen())
+            if (account.isLoanAccount() && account.isOpen()) {
                 loanAccounts.add((LoanBO) account);
+            }
         }
         return loanAccounts;
     }
@@ -851,8 +886,9 @@ public abstract class CustomerBO extends BusinessObject {
     public List<LoanBO> getOpenIndividualLoanAccounts() {
         List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
         for (AccountBO account : getAccounts()) {
-            if (account.isOfType(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT) && account.isOpen())
+            if (account.isOfType(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT) && account.isOpen()) {
                 loanAccounts.add((LoanBO) account);
+            }
         }
         return loanAccounts;
     }
@@ -860,33 +896,38 @@ public abstract class CustomerBO extends BusinessObject {
     public List<SavingsBO> getOpenSavingAccounts() {
         List<SavingsBO> savingAccounts = new ArrayList<SavingsBO>();
         for (AccountBO account : getAccounts()) {
-            if (account.isSavingsAccount() && account.isOpen())
+            if (account.isSavingsAccount() && account.isOpen()) {
                 savingAccounts.add((SavingsBO) account);
+            }
         }
         return savingAccounts;
     }
 
     public boolean isAnyLoanAccountOpen() {
         for (AccountBO account : getAccounts()) {
-            if (account.isLoanAccount() && account.isOpen())
+            if (account.isLoanAccount() && account.isOpen()) {
                 return true;
+            }
         }
         return false;
     }
 
     public boolean isAnySavingsAccountOpen() {
         for (AccountBO account : getAccounts()) {
-            if (account.isSavingsAccount() && account.isOpen())
+            if (account.isSavingsAccount() && account.isOpen()) {
                 return true;
+            }
         }
         return false;
     }
 
     void resetPositionsAssignedToClient(Integer clientId) {
         if (getCustomerPositions() != null) {
-            for (CustomerPositionEntity position : getCustomerPositions())
-                if (position.getCustomer() != null && position.getCustomer().getCustomerId().equals(clientId))
+            for (CustomerPositionEntity position : getCustomerPositions()) {
+                if (position.getCustomer() != null && position.getCustomer().getCustomerId().equals(clientId)) {
                     position.setCustomer(null);
+                }
+            }
         }
     }
 
@@ -903,13 +944,15 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     protected void validateMeeting(MeetingBO meeting) throws CustomerException {
-        if (meeting == null)
+        if (meeting == null) {
             throw new CustomerException(CustomerConstants.INVALID_MEETING);
+        }
     }
 
     protected void validateOffice(OfficeBO office) throws CustomerException {
-        if (office == null)
+        if (office == null) {
             throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+        }
     }
 
     protected void validateLO(PersonnelBO loanOfficer) throws CustomerException {
@@ -919,8 +962,9 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     protected void validateLO(Short loanOfficerId) throws CustomerException {
-        if (loanOfficerId == null)
+        if (loanOfficerId == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+        }
     }
 
     protected CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
@@ -951,9 +995,11 @@ public abstract class CustomerBO extends BusinessObject {
                     fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
                 }
 
-                for (CustomerCustomFieldEntity fieldEntity : getCustomFields())
-                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+                for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {
+                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
+                    }
+                }
             }
         }
     }
@@ -979,12 +1025,14 @@ public abstract class CustomerBO extends BusinessObject {
 
     public void checkIfClientIsATitleHolder() throws CustomerException {
         if (getParentCustomer() != null) {
-            for (CustomerPositionEntity position : getParentCustomer().getCustomerPositions())
+            for (CustomerPositionEntity position : getParentCustomer().getCustomerPositions()) {
                 if (position.getCustomer() != null
-                        && position.getCustomer().getCustomerId().intValue() == this.getCustomerId().intValue())// &&
-                                                                                                                // position.getPosition().getId().shortValue()==new
+                        && position.getCustomer().getCustomerId().intValue() == this.getCustomerId().intValue()) {
+                    // position.getPosition().getId().shortValue()==new
                                                                                                                 // Short("1").shortValue())
                     throw new CustomerException(CustomerConstants.CLIENT_IS_A_TITLE_HOLDER_EXCEPTION);
+                }
+            }
 
         }
     }
@@ -1000,10 +1048,11 @@ public abstract class CustomerBO extends BusinessObject {
                         getOffice().getOfficeId());
                 getCustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, getSearchId(),
                         getOffice().getOfficeId());
-                if (loanOfficerId != null)
+                if (loanOfficerId != null) {
                     this.personnel = getPersonnelPersistence().getPersonnel(loanOfficerId);
-                else
+                } else {
                     this.personnel = null;
+                }
             }
         } catch (PersistenceException e) {
             throw new CustomerException(e);
@@ -1035,8 +1084,9 @@ public abstract class CustomerBO extends BusinessObject {
         setParentCustomer(newParent);
 
         CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-        if (null != currentHierarchy)
+        if (null != currentHierarchy) {
             currentHierarchy.makeInactive(userContext.getId());
+        }
         addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
         handleParentTransfer();
         childRemovedForParent(oldParent);
@@ -1053,8 +1103,9 @@ public abstract class CustomerBO extends BusinessObject {
         String systemId = "";
         int numberOfZeros = CustomerConstants.SYSTEM_ID_LENGTH - String.valueOf(getCustomerId()).length();
 
-        for (int i = 0; i < numberOfZeros; i++)
+        for (int i = 0; i < numberOfZeros; i++) {
             systemId = systemId + "0";
+        }
 
         return getOffice().getGlobalOfficeNum() + "-" + systemId + getCustomerId();
     }
@@ -1106,10 +1157,12 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     private void createCustomFields(List<CustomFieldView> customFields) {
-        if (customFields != null)
-            for (CustomFieldView customField : customFields)
+        if (customFields != null) {
+            for (CustomFieldView customField : customFields) {
                 addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
                         this));
+            }
+        }
     }
 
     private void inheritDetailsFromParent(CustomerBO parentCustomer) throws CustomerException {
@@ -1136,10 +1189,12 @@ public abstract class CustomerBO extends BusinessObject {
 
     private void validateFields(String displayName, CustomerStatus customerStatus, CustomerBO parentCustomer)
             throws CustomerException {
-        if (StringUtils.isNullOrEmpty(displayName))
+        if (StringUtils.isNullOrEmpty(displayName)) {
             throw new CustomerException(CustomerConstants.INVALID_NAME);
-        if (customerStatus == null)
+        }
+        if (customerStatus == null) {
             throw new CustomerException(CustomerConstants.INVALID_STATUS);
+        }
     }
 
     private CustomerBO getCustomer(Integer customerId) throws CustomerException {
@@ -1171,14 +1226,16 @@ public abstract class CustomerBO extends BusinessObject {
 
     protected void validateMeetingRecurrenceForTransfer(MeetingBO meetingFrom, MeetingBO meetingTo)
             throws CustomerException {
-        if ((meetingFrom.isWeekly() && meetingTo.isMonthly()) || (meetingFrom.isMonthly() && meetingTo.isWeekly()))
+        if ((meetingFrom.isWeekly() && meetingTo.isMonthly()) || (meetingFrom.isMonthly() && meetingTo.isWeekly())) {
             throw new CustomerException(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH);
+        }
     }
 
     public boolean hasActiveLoanAccounts() {
         for (AccountBO account : getAccounts()) {
-            if (account.isActiveLoanAccount())
+            if (account.isActiveLoanAccount()) {
                 return true;
+            }
         }
         return false;
     }
@@ -1260,11 +1317,13 @@ public abstract class CustomerBO extends BusinessObject {
         for (AccountBO accountBO : accounts) {
             // If account not in loan obligations met, continue to next loan
             // account
-            if (!accountBO.isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET))
+            if (!accountBO.isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)) {
                 continue;
+            }
 
-            if (accountBO.isLoanAccount() && ((LoanBO) accountBO).isOfProductOffering(loanOffering))
+            if (accountBO.isLoanAccount() && ((LoanBO) accountBO).isOfProductOffering(loanOffering)) {
                 loanAmounts.add(((LoanBO) accountBO).getLoanAmount());
+            }
         }
         if (loanAmounts.isEmpty()) {
             loanAmounts.add(MoneyFactory.ZERO);
@@ -1276,9 +1335,9 @@ public abstract class CustomerBO extends BusinessObject {
         // implement strategy and delegate logic to PerformanceHistory instead
         // of being here
         // only checking for clients
-        if (getPerformanceHistory() instanceof ClientPerformanceHistoryEntity)
+        if (getPerformanceHistory() instanceof ClientPerformanceHistoryEntity) {
             return ((ClientPerformanceHistoryEntity) getPerformanceHistory()).getMaxLoanCycleForProduct(prdOffering);
-        else if (getPerformanceHistory() instanceof GroupPerformanceHistoryEntity) {
+        } else if (getPerformanceHistory() instanceof GroupPerformanceHistoryEntity) {
             return ((GroupPerformanceHistoryEntity) getPerformanceHistory()).getMaxLoanCycleForProduct(prdOffering);
         }
         return SHORT_ZERO;

@@ -81,7 +81,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class CustomerAccountBO extends AccountBO {
 
-    Set<CustomerActivityEntity> customerActivitDetails = null;
+    private Set<CustomerActivityEntity> customerActivitDetails = null;
     
     private FeePersistence feePersistence;
 

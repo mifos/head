@@ -346,8 +346,19 @@ public class CollectionSheetEntryBusinessServiceIntegrationTest extends MifosInt
     }
 
     private SavingsAccountView getSavingsAccountView(SavingsBO account, String depAmount, String withAmount) {
-        SavingsAccountView accountView = new SavingsAccountView(account.getAccountId(), account.getType(), account
-                .getSavingsOffering());
+        
+        final Integer customerId = null;
+        final String savingOfferingShortName = account.getSavingsOffering().getPrdOfferingShortName();
+        final Short savingOfferingId = account.getSavingsOffering().getPrdOfferingId();
+        final Short savingsTypeId = account.getSavingsOffering().getSavingsType().getId();
+        Short reccomendedAmountUnitId = null;
+        if (account.getSavingsOffering().getRecommendedAmntUnit() != null) {
+            reccomendedAmountUnitId = account.getSavingsOffering().getRecommendedAmntUnit().getId();
+        }
+
+        SavingsAccountView accountView = new SavingsAccountView(account.getAccountId(), customerId,
+                savingOfferingShortName, savingOfferingId, savingsTypeId, reccomendedAmountUnitId);
+        
         accountView.setDepositAmountEntered(depAmount);
         accountView.setWithDrawalAmountEntered(withAmount);
         accountView.addAccountTrxnDetail(TestObjectFactory.getBulkEntryAccountActionView(account

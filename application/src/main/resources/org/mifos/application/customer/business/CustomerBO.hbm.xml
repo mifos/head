@@ -278,9 +278,6 @@
 	<query name="Customer.getAllCustomers">
 		<![CDATA[select customer.customerId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID ]]>
 	</query>
-	<query name="Customer.getActiveCustomerUnderParent">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10,13) order by customer.customerActivationDate]]>
-	</query>
 	<query name="Customer.getCustomerCountForOffice">
 	    <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
     </query>
@@ -344,9 +341,6 @@
     <query name="Customer.getAllCustomersForLO">
 	        	   <![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO as customer where customer.personnel.personnelId=:userId and customer.office.officeId=:officeId ]]>
     </query> 
-    <query name="Customer.getActiveCustomerWithSearchId">
-		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId=:SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10,13) order by customer.customerActivationDate]]>
-	</query>
 	<query name="Customer.fetchProductNamesWithLoanCounterEnabled">
 	        	   <![CDATA[select lo.loanOffering.prdOfferingName from org.mifos.application.accounts.loan.business.LoanBO as lo where lo.customer.customerId=:customerId and lo.loanOffering.loanCounter=1 and lo.accountState.id in (3,4,5,6,9) order by lo.loanOffering.prdOfferingName asc]]>
     </query> 
@@ -1233,5 +1227,23 @@
 		<![CDATA[select new org.mifos.application.customer.group.BasicGroupInfo(customer.customerId, customer.office.officeId, customer.searchId, customer.displayName)
 		 from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
 	</query>
-			
+
+    <query name="findCenterForOfficeBySearchId">
+		<![CDATA[select new org.mifos.application.customer.business.CustomerView(customer.customerId, customer.displayName, customer.parentCustomer.customerId, customer.customerLevel.id)
+		from org.mifos.application.customer.business.CustomerBO as customer 
+		where customer.searchId = :SEARCH_STRING 
+		and customer.office.officeId = :OFFICE_ID 
+		and customer.customerStatus.id in (3,4,9,10,13)
+		]]>
+	</query>
+	
+	<query name="findOrderedCustomerHierarchyForOfficeBySearchId">
+		<![CDATA[select new org.mifos.application.customer.business.CustomerView(customer.customerId, customer.displayName, customer.parentCustomer.customerId, customer.customerLevel.id)
+		from org.mifos.application.customer.business.CustomerBO as customer 
+		where customer.searchId like :SEARCH_STRING 
+		and customer.office.officeId = :OFFICE_ID 
+		and customer.customerStatus.id in (3,4,9,10,13)
+		order by customer.searchId
+		]]>
+	</query>
 </hibernate-mapping>

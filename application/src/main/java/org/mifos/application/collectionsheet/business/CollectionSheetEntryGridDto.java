@@ -120,4 +120,8 @@ public class CollectionSheetEntryGridDto implements Serializable {
     public List<CustomValueListElement> getAttendanceTypesList() {
         return this.attendanceTypesList;
     }
+
+    public Short getPaymentTypeId() {
+        return this.paymentType.getId();
+    }
 }

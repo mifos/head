@@ -118,8 +118,8 @@ public class CollectionSheetEntryViewPostPreviewValidator {
             if (!savingsAccountView.isValidDepositAmountEntered()
                     || !savingsAccountView.isValidWithDrawalAmountEntered()) {
                 errors.add(CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
-                        CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView.getSavingsOffering()
-                                .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
+                        CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView
+                                .getSavingsOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
             }
         }
         CustomerAccountView customerAccountView = parent.getCustomerAccountDetails();

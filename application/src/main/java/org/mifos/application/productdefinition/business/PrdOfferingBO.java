@@ -82,7 +82,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     private Short prdMixFlag; // Tagging products for which mixes were defined
 
-    private MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
     protected PrdOfferingBO() {
         this(null, null, null, null);
@@ -206,7 +206,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
         this.prdOfferingName = prdOfferingName;
     }
 
-    void setPrdOfferingShortName(String prdOfferingShortName) {
+    public void setPrdOfferingShortName(String prdOfferingShortName) {
         this.prdOfferingShortName = prdOfferingShortName;
     }
 
@@ -312,10 +312,11 @@ public abstract class PrdOfferingBO extends BusinessObject {
         prdLogger.debug("getting the Product status for prdouct offering with start date :" + startDate
                 + " and product Type :" + prdType.getProductTypeID());
         PrdStatus prdStatus = null;
-        if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0)
+        if (startDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
             prdStatus = getActivePrdStatus(prdType);
-        else
+        } else {
             prdStatus = getInActivePrdStatus(prdType);
+        }
         try {
             prdLogger.debug("getting the Product status for product status :" + prdStatus);
             return new PrdOfferingPersistence().getPrdStatus(prdStatus);
@@ -326,26 +327,29 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     private PrdStatus getActivePrdStatus(ProductTypeEntity prdType) {
         prdLogger.debug("getting the Active Product status for product Type :" + prdType.getProductTypeID());
-        if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+        if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_ACTIVE;
-        else
+        } else {
             return PrdStatus.SAVINGS_ACTIVE;
+        }
     }
 
     private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
         prdLogger.debug("getting the In Active Product status for product Type :" + prdType.getProductTypeID());
-        if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
+        if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_INACTIVE;
-        else
+        } else {
             return PrdStatus.SAVINGS_INACTIVE;
+        }
     }
 
     private void validateDuplicateProductOfferingName(String productOfferingName) throws ProductDefinitionException {
         prdLogger.debug("Checking for duplicate product offering name");
         try {
             if (!new PrdOfferingPersistence().getProductOfferingNameCount(productOfferingName).equals(
-                    Integer.valueOf("0")))
+                    Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLPRDINSTNAME);
+            }
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -356,8 +360,9 @@ public abstract class PrdOfferingBO extends BusinessObject {
         prdLogger.debug("Checking for duplicate product offering short name");
         try {
             if (!new PrdOfferingPersistence().getProductOfferingShortNameCount(productOfferingShortName).equals(
-                    Integer.valueOf("0")))
+                    Integer.valueOf("0"))) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME);
+            }
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -369,10 +374,12 @@ public abstract class PrdOfferingBO extends BusinessObject {
         vaildate(prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate);
         validateStartDateForUpdate(startDate);
         validateEndDateAgainstCurrentDate(startDate, endDate);
-        if (!prdOfferingName.equals(this.prdOfferingName))
+        if (!prdOfferingName.equals(this.prdOfferingName)) {
             validateDuplicateProductOfferingName(prdOfferingName);
-        if (!prdOfferingShortName.equals(this.prdOfferingShortName))
+        }
+        if (!prdOfferingShortName.equals(this.prdOfferingShortName)) {
             validateDuplicateProductOfferingShortName(prdOfferingShortName);
+        }
         this.prdOfferingName = prdOfferingName;
         this.prdOfferingShortName = prdOfferingShortName;
         this.prdCategory = prdCategory;
@@ -417,22 +424,27 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final PrdOfferingBO other = (PrdOfferingBO) obj;
         return isOfSameOffering(other);
     }
 
     public boolean isOfSameOffering(final PrdOfferingBO other) {
         if (prdOfferingId == null) {
-            if (other.prdOfferingId != null)
+            if (other.prdOfferingId != null) {
                 return false;
-        } else if (!prdOfferingId.equals(other.getPrdOfferingId()))
+            }
+        } else if (!prdOfferingId.equals(other.getPrdOfferingId())) {
             return false;
+        }
         return true;
     }
 }

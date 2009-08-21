@@ -217,8 +217,8 @@ public class CollectionSheetEntryBusinessService implements BusinessService {
 
     private boolean isCenterOrGroupOrPerIndividual(Short levelId, SavingsAccountView accountView) {
         return levelId.equals(CustomerLevel.CENTER.getValue())
-                || (levelId.equals(CustomerLevel.GROUP.getValue()) && accountView.getSavingsOffering()
-                        .getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue()));
+                || (levelId.equals(CustomerLevel.GROUP.getValue()) && accountView.getRecommendedAmntUnitId().equals(
+                        RecommendedAmountUnit.PER_INDIVIDUAL.getValue()));
     }
 
     /**

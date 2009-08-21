@@ -62,7 +62,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
     private final GLCodeEntity interestGLCode;
 
-    private MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+    private final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
     public SavingsOfferingBO() {
         this(null, null, null, new HashSet<PrdOfferingMeetingEntity>());
@@ -107,7 +107,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         prdLogger.debug("creating savings product offering done :" + getGlobalPrdOfferingNum());
     }
 
-    protected SavingsOfferingBO(Short prdOfferingId, GLCodeEntity depositGLCode, GLCodeEntity interestGLCode,
+    public SavingsOfferingBO(Short prdOfferingId, GLCodeEntity depositGLCode, GLCodeEntity interestGLCode,
             HashSet<PrdOfferingMeetingEntity> savingsOfferingMeetings) {
         super(prdOfferingId);
         this.depositGLCode = depositGLCode;
@@ -195,7 +195,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return SavingsType.fromInt(savingsType.getId());
     }
 
-    void setSavingsType(SavingsTypeEntity savingsType) {
+    public void setSavingsType(SavingsTypeEntity savingsType) {
         this.savingsType = savingsType;
     }
 
@@ -256,10 +256,13 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
     private PrdOfferingMeetingEntity getPrdOfferingMeeting(MeetingType meetingType) throws ProductDefinitionException {
         prdLogger.debug("getting product offering meeting for :" + meetingType);
-        if (getSavingsOfferingMeetings() != null && getSavingsOfferingMeetings().size() > 0)
-            for (PrdOfferingMeetingEntity prdOfferingMeeting : getSavingsOfferingMeetings())
-                if (prdOfferingMeeting.getprdOfferingMeetingType().equals(meetingType))
+        if (getSavingsOfferingMeetings() != null && getSavingsOfferingMeetings().size() > 0) {
+            for (PrdOfferingMeetingEntity prdOfferingMeeting : getSavingsOfferingMeetings()) {
+                if (prdOfferingMeeting.getprdOfferingMeetingType().equals(meetingType)) {
                     return prdOfferingMeeting;
+                }
+            }
+        }
         throw new ProductDefinitionException("errors.getmeeting");
     }
 

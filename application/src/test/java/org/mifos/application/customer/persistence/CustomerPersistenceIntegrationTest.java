@@ -20,6 +20,9 @@
 
 package org.mifos.application.customer.persistence;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
@@ -30,6 +33,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -94,7 +98,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase {
-
+    
     public CustomerPersistenceIntegrationTest() throws SystemException, ApplicationException {
         super();
     }
@@ -1059,7 +1063,71 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         assertNotNull(center);
         assertEquals(1, center.size());
     }
+    
+    public void testShouldRetrieveCustomerHierarchy() throws Exception {
+        
+        // setup
+        createCustomers(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        final String customerSearchId = center.getSearchId();
+        final Short branchId = center.getOffice().getOfficeId();
+        
+        // exercise test
+        final List<CustomerView> customerHierarchy = new CustomerPersistence()
+                .findCustomerHierarchyForOfficeBySearchId(branchId, customerSearchId);
+        
+        // verification
+        assertThat(customerHierarchy.size(), is(3));
+        // verify order
+        assertThat(customerHierarchy.get(0).getCustomerId(), is(center.getCustomerId()));
+        assertThat(customerHierarchy.get(1).getCustomerId(), is(group.getCustomerId()));
+        assertThat(customerHierarchy.get(2).getCustomerId(), is(client.getCustomerId()));
+        
+        // verify parentId is loaded
+        assertThat(customerHierarchy.get(0).getParentCustomerId(), is(nullValue()));
+        assertThat(customerHierarchy.get(1).getParentCustomerId(), is(center.getCustomerId()));
+        assertThat(customerHierarchy.get(2).getParentCustomerId(), is(group.getCustomerId()));
+    }
+    
+    public void testShouldFindAllActiveLoansUnderCenter() throws Exception {
 
+        // setup
+        createCustomers(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        final String customerSearchId = center.getSearchId();
+        final Short branchId = center.getOffice().getOfficeId();
+        final java.util.Date transactionDate = new DateTime().minusDays(2).toDate();
+
+        // exercise test
+        new CustomerPersistence().findAllActiveLoansForHierarchy(branchId, customerSearchId, transactionDate);
+
+        // verification
+    }
+
+    public void testShouldFindAllActiveSavingsUnderCenter() throws Exception {
+
+        // setup
+        createCustomers(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        final String customerSearchId = center.getSearchId();
+        final Short branchId = center.getOffice().getOfficeId();
+
+        // exercise test
+        new CustomerPersistence().findAllActiveSavingsUnderCenter(branchId, customerSearchId);
+
+        // verification
+    }
+
+    public void testShouldFindAllCustomerAccountsUnderCenter() throws Exception {
+
+        // setup
+        createCustomers(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+        final String customerSearchId = center.getSearchId();
+        final Short branchId = center.getOffice().getOfficeId();
+
+        // exercise test
+        new CustomerPersistence().findAllCustomerAccountsForHierarchy(branchId, customerSearchId);
+
+        // verification
+    }
+    
     private void getCustomer() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 

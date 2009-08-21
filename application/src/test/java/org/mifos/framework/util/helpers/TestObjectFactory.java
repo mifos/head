@@ -36,6 +36,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -43,19 +44,19 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanBOIntegrationTest;
+import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBOIntegrationTest;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -75,13 +76,13 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustom
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
+import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.business.CustomerAccountBOIntegrationTest;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
@@ -491,7 +492,7 @@ public class TestObjectFactory {
 
             // Add a way to create parentless clients; like clients outside
             // groups
-            if (null == parentCustomer)
+            if (null == parentCustomer) {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), // UserContext
                         clientNameDetailView.getDisplayName(), // String
                         // displayName
@@ -517,11 +518,12 @@ public class TestObjectFactory {
                         spouseNameDetailView, // ClientNameDetailView
                         clientDetailView, // ClientDetailView
                         null); // InputStream picture
-            else
+            } else {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(), status,
                         null, null, null, null, getFees(), null, new PersonnelPersistence().getPersonnel(personnel),
                         parentCustomer.getOffice(), parentCustomer, null, null, null, null, YesNoFlag.YES.getValue(),
                         clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+            }
 
             new ClientPersistence().saveClient(client);
             StaticHibernateUtil.commitTransaction();
@@ -860,21 +862,23 @@ public class TestObjectFactory {
             Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
 
             if (recurrenceType.equals(RecurrenceType.MONTHLY)) {
-                if (customerMeeting.isMonthlyOnDate())
+                if (customerMeeting.isMonthlyOnDate()) {
                     meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getMeetingRecurrence()
                             .getDayNumber(), recurAfter, customerMeeting.getMeetingStartDate(), meetingType,
                             "meetingPlace");
-                else
+                } else {
                     meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getWeekDay(), customerMeeting
                             .getMeetingDetails().getWeekRank(), recurAfter, customerMeeting.getMeetingStartDate(),
                             meetingType, "meetingPlace");
-            } else if (recurrenceType.equals(RecurrenceType.WEEKLY))
+                }
+            } else if (recurrenceType.equals(RecurrenceType.WEEKLY)) {
                 meetingToReturn = new MeetingBO(WeekDay.getWeekDay(customerMeeting.getMeetingDetails()
                         .getMeetingRecurrence().getWeekDayValue().getValue()), recurAfter, customerMeeting
                         .getMeetingStartDate(), meetingType, "meetingPlace");
-            else
+            } else {
                 meetingToReturn = new MeetingBO(recurrenceType, recurAfter, customerMeeting.getMeetingStartDate(),
                         meetingType);
+            }
 
             meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
         } catch (MeetingException e) {
@@ -1337,8 +1341,9 @@ public class TestObjectFactory {
             session.lock(customer, LockMode.UPGRADE);
             for (AccountBO account : customer.getAccounts()) {
                 for (AccountFeesEntity accountFees : account.getAccountFees()) {
-                    if (!feeList.contains(accountFees.getFees()))
+                    if (!feeList.contains(accountFees.getFees())) {
                         feeList.add(accountFees.getFees());
+                    }
                 }
             }
             Transaction transaction = StaticHibernateUtil.startTransaction();
@@ -1374,9 +1379,11 @@ public class TestObjectFactory {
         List<FeeBO> feeList = new ArrayList<FeeBO>();
         for (AccountBO account : customer.getAccounts()) {
             if (null != account) {
-                for (AccountFeesEntity accountFee : account.getAccountFees())
-                    if (!feeList.contains(accountFee.getFees()))
+                for (AccountFeesEntity accountFee : account.getAccountFees()) {
+                    if (!feeList.contains(accountFee.getFees())) {
                         feeList.add(accountFee.getFees());
+                    }
+                }
                 deleteAccountWithoutFee(account);
             }
         }
@@ -1391,8 +1398,9 @@ public class TestObjectFactory {
             Set<ClientInitialSavingsOfferingEntity> clientOfferings = ((ClientBO) customer)
                     .getOfferingsAssociatedInCreate();
             if (clientOfferings != null) {
-                for (ClientInitialSavingsOfferingEntity clientOffering : clientOfferings)
+                for (ClientInitialSavingsOfferingEntity clientOffering : clientOfferings) {
                     session.delete(clientOffering);
+                }
             }
         }
     }
@@ -1419,11 +1427,12 @@ public class TestObjectFactory {
         Session session = StaticHibernateUtil.getSessionTL();
         if (customer instanceof ClientBO) {
             Set<ClientAttendanceBO> attendance = ((ClientBO) customer).getClientAttendances();
-            if (attendance != null && attendance.size() > 0)
+            if (attendance != null && attendance.size() > 0) {
                 for (ClientAttendanceBO custAttendance : attendance) {
                     // custAttendance.setCustomer(null);
                     session.delete(custAttendance);
                 }
+            }
         }
     }
 
@@ -1718,8 +1727,9 @@ public class TestObjectFactory {
 
         List<FeeBO> feeList = new ArrayList<FeeBO>();
         for (AccountFeesEntity accountFees : account.getAccountFees()) {
-            if (!feeList.contains(accountFees.getFees()))
+            if (!feeList.contains(accountFees.getFees())) {
                 feeList.add(accountFees.getFees());
+            }
         }
 
         for (AccountFeesEntity accountFees : account.getAccountFees()) {
@@ -1860,8 +1870,9 @@ public class TestObjectFactory {
     }
 
     public static LoanAccountView getLoanAccountView(LoanBO loan) {
-        return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering().getPrdOfferingName(), loan.getType(),
-                loan.getLoanOffering().getPrdOfferingId(), loan.getState(), loan.isInterestDeductedAtDisbursement(),
+        final Integer customerId = null;
+        return new LoanAccountView(loan.getAccountId(), customerId, loan.getLoanOffering().getPrdOfferingName(), loan
+                .getLoanOffering().getPrdOfferingId(), loan.getState().getValue(), loan.getIntrestAtDisbursement(),
                 loan.getLoanBalance());
     }
 
@@ -1966,8 +1977,9 @@ public class TestObjectFactory {
 
     public static void removeCustomerFromPosition(CustomerBO customer) throws CustomerException {
         if (customer != null) {
-            for (CustomerPositionEntity customerPositionEntity : customer.getCustomerPositions())
+            for (CustomerPositionEntity customerPositionEntity : customer.getCustomerPositions()) {
                 customerPositionEntity.setCustomer(null);
+            }
             customer.update();
             StaticHibernateUtil.commitTransaction();
         }

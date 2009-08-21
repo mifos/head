@@ -3951,4 +3951,12 @@ public class LoanBO extends AccountBO {
     public void setRawAmountTotal(Money rawAmountTotal) {
         this.rawAmountTotal = rawAmountTotal;
     }
+
+    public Short getIntrestAtDisbursement() {
+        return this.intrestAtDisbursement;
+    }
+
+    public void setIntrestAtDisbursement(Short intrestAtDisbursement) {
+        this.intrestAtDisbursement = intrestAtDisbursement;
+    }
 }

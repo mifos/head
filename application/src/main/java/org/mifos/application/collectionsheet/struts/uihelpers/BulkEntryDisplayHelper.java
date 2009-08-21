@@ -296,13 +296,13 @@ public class BulkEntryDisplayHelper {
             for (SavingsAccountView accountView : bulkEntryAccountList) {
                 if (levelId == 1) {
                     isIdMatched = prdOffering.getId().equals(
-                            accountView.getSavingsOffering().getPrdOfferingId())
-                            && (null == accountView.getSavingsOffering().getRecommendedAmntUnit() || accountView
-                                    .getSavingsOffering().getRecommendedAmntUnit().getId().equals(
+                            accountView.getSavingsOfferingId())
+                            && (null == accountView.getRecommendedAmntUnitId() || accountView
+                                    .getRecommendedAmntUnitId().equals(
                                             RecommendedAmountUnit.PER_INDIVIDUAL.getValue()));
                 } else {
                     isIdMatched = prdOffering.getId().equals(
-                            accountView.getSavingsOffering().getPrdOfferingId());
+                            accountView.getSavingsOfferingId());
                 }
                 if (isIdMatched) {
                     generateSavingsValues(builder, rows, columnIndex, accountView, groupTotals, centerTotals, size,
@@ -329,7 +329,7 @@ public class BulkEntryDisplayHelper {
             builder.append("<td class=\"drawtablerow\">");
             for (SavingsAccountView accountView : bulkEntryAccountList) {
                 isIdMatched = prdOffering.getId()
-                        .equals(accountView.getSavingsOffering().getPrdOfferingId());
+                        .equals(accountView.getSavingsOfferingId());
                 if (isIdMatched) {
                     generateSavingsValues(builder, rows, columnIndex, accountView, groupTotals, centerTotals, size,
                             initialAccNo, method, false, columnIndex, loanProductsSize, savingsProducts.size(),
@@ -561,7 +561,7 @@ public class BulkEntryDisplayHelper {
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             if (isDeposit
                     && totalAmount.doubleValue() < accountView.getTotalDepositDue().doubleValue()
-                    && accountView.getSavingsOffering().getSavingsType().getId().equals(
+                    && accountView.getSavingsTypeId().equals(
                             SavingsType.MANDATORY.getValue())) {
                 builder.append("<font color=\"#FF0000\">" + amount + "</font>");
             } else if ("".equals(amount)) {

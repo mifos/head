@@ -20,20 +20,15 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.customer.business.CustomerAccountBO;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
@@ -101,8 +96,7 @@ public class CollectionSheetEntryView extends View {
 
     public void addSavingsAccountDetail(SavingsAccountView savingsAccount) {
         for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-            if (savingsAccount.getSavingsOffering().getPrdOfferingId().equals(
-                    savingsAccountView.getSavingsOffering().getPrdOfferingId())) {
+            if (savingsAccount.getSavingsOfferingId().equals(savingsAccountView.getSavingsOfferingId())) {
                 return;
             }
         }
@@ -146,39 +140,59 @@ public class CollectionSheetEntryView extends View {
         this.customerAccountDetails = customerAccountDetails;
     }
 
-    public void populateLoanAccountsInformation(CustomerBO customer, Date transactionDate,
+    public void populateLoanAccountsInformation(List<LoanAccountView> loanAccountViewList,
             List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
             List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
         
         Integer customerId = customerDetail.getCustomerId();
-        List<LoanBO> customerLoanAccounts = customer.getActiveAndApprovedLoanAccounts(transactionDate);
-        if (customerLoanAccounts != null && customerLoanAccounts.size() > 0) {
-            for (LoanBO loan : customerLoanAccounts) {
-                LoanAccountView loanAccountView = getLoanAccountView(loan);
+        
+        List<LoanAccountView> loanAccountsForThisCustomer = new ArrayList<LoanAccountView>();
+        for (LoanAccountView loanAccountView : loanAccountViewList) {
+            if (customerId.equals(loanAccountView.getCustomerId())) {
+                loanAccountsForThisCustomer.add(loanAccountView);
+            }
+        }
+        
+            for (LoanAccountView loanAccountView : loanAccountsForThisCustomer) {
                 addLoanAccountDetails(loanAccountView);
                 if (loanAccountView.isDisbursalAccount()) {
                     loanAccountView.setAmountPaidAtDisbursement(getAmountPaidAtDisb(loanAccountView, customerId,
-                            collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews, loan));
+                            collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
                 } else {
                     loanAccountView.addTrxnDetails(retrieveLoanSchedule(loanAccountView.getAccountId(), customerId,
                             collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
                 }
             }
-        }
     }
 
-    public void populateCustomerAccountInformation(CustomerBO customer,
+    public void populateCustomerAccountInformation(List<CustomerAccountView> customerAccountList,
             List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
             List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
-        CustomerAccountBO customerAccount = customer.getCustomerAccount();
-        CustomerAccountView customerAccountView = new CustomerAccountView(customerAccount.getAccountId());
-        customerAccountView.setAccountActionDates(retrieveCustomerSchedule(customerAccount.getAccountId(), customer
-                .getCustomerId(), collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
-        setCustomerAccountDetails(customerAccountView);
+        
+        Integer accountId = Integer.valueOf(0);
+        for (CustomerAccountView customerAccountView : customerAccountList) {
+            if (customerDetail.getCustomerId().equals(customerAccountView.getCustomerId())) {
+
+                accountId = customerAccountView.getAccountId();
+                customerAccountView.setAccountActionDates(retrieveCustomerSchedule(accountId, customerAccountView
+                        .getCustomerId(), collectionSheetEntryAccountActionViews,
+                        collectionSheetEntryAccountFeeActionViews));
+                setCustomerAccountDetails(customerAccountView);
+
+            }
+        }
+        
     }
 
-    public void populateSavingsAccountsInformation(CustomerBO customer) {
-        List<SavingsAccountView> savingsAccounts = getSavingsAccountViews(customer);
+    public void populateSavingsAccountsInformation(List<SavingsAccountView> savingsAccountViewList) {
+
+        final List<SavingsAccountView> savingsAccounts = new ArrayList<SavingsAccountView>();
+        for (SavingsAccountView savingsAccountView : savingsAccountViewList) {
+            if (savingsAccountView.getCustomerId().equals(customerDetail.getCustomerId())) {
+                savingsAccounts.add(savingsAccountView);
+            }
+        }
+        
         if (customerDetail.isCustomerCenter()) {
             for (CollectionSheetEntryView child : collectionSheetEntryChildren) {
                 addSavingsAccountViewToClients(child.getCollectionSheetEntryChildren(), savingsAccounts);
@@ -186,26 +200,26 @@ public class CollectionSheetEntryView extends View {
         } else if (customerDetail.isCustomerGroup()) {
             addSavingsAccountViewToClients(collectionSheetEntryChildren, savingsAccounts);
         }
+        
         for (SavingsAccountView savingsAccountView : savingsAccounts) {
             addSavingsAccountDetail(savingsAccountView);
         }
     }
 
-    public void populateSavingsAccountActions(Integer customerId, Date transactionDate,
+    public void populateSavingsAccountActions(Integer customerId,
             List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews) {
         if (customerDetail.isCustomerCenter()) {
             return;
         }
         for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-            if (!(customerDetail.isCustomerGroup() && savingsAccountView.getSavingsOffering().getRecommendedAmntUnit()
-                    .getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
-                addAccountActionToSavingsView(savingsAccountView, customerId, transactionDate,
-                        collectionSheetEntryAccountActionViews);
+            if (!(customerDetail.isCustomerGroup() && savingsAccountView.getRecommendedAmntUnitId().equals(
+                    RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
+                addAccountActionToSavingsView(savingsAccountView, customerId, collectionSheetEntryAccountActionViews);
             }
         }
     }
 
-    public void populateClientAttendance(Integer customerId, Date transactionDate,
+    public void populateClientAttendance(Integer customerId,
             List<ClientAttendanceDto> collectionSheetEntryClientAttendanceViews) {
         if (customerDetail.isCustomerCenter()) {
             return;
@@ -225,7 +239,7 @@ public class CollectionSheetEntryView extends View {
     public void setSavinsgAmountsEntered(Short prdOfferingId, String depositAmountEnteredValue,
             String withDrawalAmountEnteredValue) {
         for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
-            if (prdOfferingId.equals(savingsAccountView.getSavingsOffering().getPrdOfferingId())) {
+            if (prdOfferingId.equals(savingsAccountView.getSavingsOfferingId())) {
                 savingsAccountView.setDepositAmountEntered(depositAmountEnteredValue);
                 savingsAccountView.setWithDrawalAmountEntered(withDrawalAmountEnteredValue);
                 try {
@@ -303,9 +317,9 @@ public class CollectionSheetEntryView extends View {
     }
 
     private void addAccountActionToSavingsView(SavingsAccountView savingsAccountView, Integer customerId,
-            Date transactionDate, List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews) {
+            List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews) {
         boolean isMandatory = false;
-        if (savingsAccountView.getSavingsOffering().getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
+        if (savingsAccountView.getSavingsTypeId().equals(SavingsType.MANDATORY.getValue())) {
             isMandatory = true;
         }
         List<CollectionSheetEntryInstallmentView> accountActionDetails = retrieveSavingsAccountActions(
@@ -333,57 +347,33 @@ public class CollectionSheetEntryView extends View {
         return null;
     }
 
-    private List<SavingsAccountView> getSavingsAccountViews(CustomerBO customer) {
-        List<SavingsBO> customerSavingsAccounts = customer.getActiveSavingsAccounts();
-        List<SavingsAccountView> savingsAccounts = new ArrayList<SavingsAccountView>();
-        if (customerSavingsAccounts != null && customerSavingsAccounts.size() > 0) {
-            for (SavingsBO savingsAccount : customerSavingsAccounts) {
-                // kim, check if account is active
-                if (savingsAccount.getAccountState().getId().equals(AccountState.SAVINGS_ACTIVE.getValue())) {
-                    SavingsAccountView savingsAccountView = getSavingsAccountView(savingsAccount);
-                    savingsAccounts.add(savingsAccountView);
-                }
-            }
-        }
-        return savingsAccounts;
-    }
-
-    private SavingsAccountView getSavingsAccountView(SavingsBO savingsAccount) {
-        return new SavingsAccountView(savingsAccount.getAccountId(), savingsAccount.getType(), savingsAccount
-                .getSavingsOffering());
-
-    }
-
-    private SavingsAccountView getSavingsAccountView(SavingsAccountView savingsAccountView) {
-        return new SavingsAccountView(savingsAccountView.getAccountId(), savingsAccountView.getType(),
-                savingsAccountView.getSavingsOffering());
-
+    private SavingsAccountView createSavingsAccountViewFromExisting(SavingsAccountView savingsAccountView) {
+        return new SavingsAccountView(savingsAccountView.getAccountId(), savingsAccountView.getCustomerId(),
+                savingsAccountView.getSavingsOfferingShortName(), savingsAccountView.getSavingsOfferingId(),
+                savingsAccountView.getSavingsTypeId(), savingsAccountView.getRecommendedAmntUnitId());
     }
 
     private void addSavingsAccountViewToClients(List<CollectionSheetEntryView> clientCollectionSheetEntryViews,
             List<SavingsAccountView> savingsAccountViews) {
         for (CollectionSheetEntryView collectionSheetEntryView : clientCollectionSheetEntryViews) {
             for (SavingsAccountView savingsAccountView : savingsAccountViews) {
-                collectionSheetEntryView.addSavingsAccountDetail(getSavingsAccountView(savingsAccountView));
+                collectionSheetEntryView.addSavingsAccountDetail(createSavingsAccountViewFromExisting(savingsAccountView));
             }
         }
     }
 
-    private LoanAccountView getLoanAccountView(LoanBO loan) {
-        return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering().getPrdOfferingShortName(), loan
-                .getType(), loan.getLoanOffering().getPrdOfferingId(), loan.getState(), loan
-                .isInterestDeductedAtDisbursement(), loan.getLoanAmount());
-    }
-
     private Double getAmountPaidAtDisb(LoanAccountView loanAccountView, Integer customerId,
             List<CollectionSheetEntryInstallmentView> collectionSheetEntryAccountActionViews,
-            List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews, LoanBO loan) {
+            List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews) {
+        
         if (loanAccountView.isInterestDeductedAtDisbursement()) {
             return getInterestAmountDedAtDisb(retrieveLoanSchedule(loanAccountView.getAccountId(), customerId,
                     collectionSheetEntryAccountActionViews, collectionSheetEntryAccountFeeActionViews));
-        } else {
-            return getFeeAmountAtDisb(loan.getAccountFees());
         }
+        
+        // FIXME - query database
+        Set<AccountFeesEntity> blankAccountFees = new HashSet<AccountFeesEntity>();
+        return getFeeAmountAtDisb(blankAccountFees);
     }
 
     private Double getInterestAmountDedAtDisb(List<CollectionSheetEntryInstallmentView> installments) {
