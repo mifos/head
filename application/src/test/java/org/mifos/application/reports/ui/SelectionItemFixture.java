@@ -20,7 +20,7 @@
 
 package org.mifos.application.reports.ui;
 
-import static org.mifos.framework.util.helpers.NumberUtils.*;
+import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 
 public class SelectionItemFixture {
     public static SelectionItem createSelectionItem(Integer id) {

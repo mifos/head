@@ -27,7 +27,6 @@ import org.mifos.framework.hibernate.HibernateIntegrationTest;
 import org.mifos.framework.hibernate.helper.HibernateHelperIntegrationTest;
 import org.mifos.framework.persistence.LatestTestAfterCheckpointBaseTest;
 import org.mifos.framework.persistence.PersistenceIntegrationTest;
-import org.mifos.application.MayflyMiscTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {

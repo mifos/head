@@ -44,7 +44,6 @@ import org.mifos.framework.util.AssertionUtils;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
-import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
 
 public class BranchCashConfirmationReportPersistenceIntegrationTest extends BranchReportIntegrationTestCase {
     public BranchCashConfirmationReportPersistenceIntegrationTest() throws SystemException, ApplicationException {

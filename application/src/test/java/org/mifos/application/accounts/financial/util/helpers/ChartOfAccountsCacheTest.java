@@ -20,10 +20,11 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
+import junit.framework.TestCase;
+
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;

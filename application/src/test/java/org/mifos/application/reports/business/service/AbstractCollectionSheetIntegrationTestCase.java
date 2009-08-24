@@ -22,7 +22,8 @@ package org.mifos.application.reports.business.service;
 
 import static org.mifos.application.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
-import static org.mifos.framework.util.helpers.NumberUtils.*;
+import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
+import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 
 import java.sql.Date;
 import java.util.ArrayList;

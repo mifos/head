@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.testng.annotations.Test;
-
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
+
+import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class CompositeUpgradeTest extends TestCase {

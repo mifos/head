@@ -20,6 +20,11 @@
 
 package org.mifos.application.reports.business.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +44,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
-import static org.easymock.classextension.EasyMock.*;
 
 public class CollectionSheetServiceIntegrationTest extends AbstractCollectionSheetIntegrationTestCase {
     public CollectionSheetServiceIntegrationTest() throws SystemException, ApplicationException {

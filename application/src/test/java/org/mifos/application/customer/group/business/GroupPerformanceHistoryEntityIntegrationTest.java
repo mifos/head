@@ -21,10 +21,10 @@
 package org.mifos.application.customer.group.business;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import static org.easymock.classextension.EasyMock.expectLastCall;
 
 import java.util.Arrays;
 

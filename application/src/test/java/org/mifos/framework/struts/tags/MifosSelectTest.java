@@ -23,9 +23,9 @@ package org.mifos.framework.struts.tags;
 import java.util.Collections;
 import java.util.Map;
 
-import org.testng.annotations.Test;
-
 import junit.framework.TestCase;
+
+import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MifosSelectTest extends TestCase {

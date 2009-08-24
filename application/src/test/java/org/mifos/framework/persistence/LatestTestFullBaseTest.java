@@ -24,11 +24,11 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_N
 
 import java.sql.ResultSet;
 
-import org.junit.Ignore;
-
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
+
+import org.junit.Ignore;
 
 /*
  * This class runs tests on database upgrade scripts (both SQL

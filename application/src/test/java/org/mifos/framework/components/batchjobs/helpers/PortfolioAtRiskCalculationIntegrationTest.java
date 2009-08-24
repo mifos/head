@@ -29,7 +29,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.application.accounts.loan.business.LoanCalculationTest;
+import org.mifos.application.accounts.loan.business.LoanCalculationIntegrationTest;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -127,7 +127,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
 
     private void createPayment(LoanBO loan, Money amountPaid) throws Exception {
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = LoanCalculationTest
+        LoanScheduleEntity[] paymentsArray = LoanCalculationIntegrationTest
                 .getSortedAccountActionDateEntity(actionDateEntities, 6);
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
         LoanScheduleEntity loanSchedule = paymentsArray[0];

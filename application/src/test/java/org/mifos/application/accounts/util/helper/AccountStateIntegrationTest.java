@@ -28,12 +28,12 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.application.master.MessageLookup;
 
 public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
     public AccountStateIntegrationTest() throws SystemException, ApplicationException {

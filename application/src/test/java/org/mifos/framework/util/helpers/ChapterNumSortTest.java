@@ -21,10 +21,9 @@
 package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertArrayEquals;
+import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
-
-import junit.framework.TestCase;
 
 /**
  * Demonstrate sorting number-like strings such as 1.4.2 and 1.4.10, where 1.4.2

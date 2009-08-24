@@ -20,9 +20,10 @@
 
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
+import static junitx.framework.StringAssert.assertContains;
+
 import java.util.Date;
 
-import static junitx.framework.StringAssert.assertContains;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;

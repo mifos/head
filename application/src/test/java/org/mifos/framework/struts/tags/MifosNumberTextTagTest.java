@@ -20,11 +20,10 @@
 
 package org.mifos.framework.struts.tags;
 
+import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 import junit.framework.TestCase;
 
 import org.dom4j.DocumentException;
-
-import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 public class MifosNumberTextTagTest extends TestCase {
 

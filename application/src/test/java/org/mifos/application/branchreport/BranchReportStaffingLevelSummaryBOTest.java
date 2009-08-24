@@ -20,8 +20,8 @@
 
 package org.mifos.application.branchreport;
 
-import static org.mifos.application.branchreport.BranchReportBOFixture.*;
-import static org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO.*;
+import static org.mifos.application.branchreport.BranchReportBOFixture.createStaffingLevelBO;
+import static org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_ID;
 
 import java.util.ArrayList;
 import java.util.Collections;

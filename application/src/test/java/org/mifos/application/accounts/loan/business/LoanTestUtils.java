@@ -22,10 +22,11 @@ package org.mifos.application.accounts.loan.business;
 
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.framework.util.helpers.Money;
-import junit.framework.Assert;
 
 public class LoanTestUtils {
 

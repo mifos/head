@@ -42,11 +42,11 @@ import org.hibernate.classic.Session;
 import org.junit.Assert;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class TestDatabase implements SessionOpener {
 

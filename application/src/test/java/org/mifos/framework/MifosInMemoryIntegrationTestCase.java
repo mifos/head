@@ -34,11 +34,13 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 public class MifosInMemoryIntegrationTestCase extends TestCase {
     protected TestDatabase database;
 
+    @Override
     public void setUp() {
         database = TestDatabase.makeStandard();
         database.installInThreadLocal();
     }
 
+    @Override
     public void tearDown() {
         StaticHibernateUtil.resetDatabase();
     }

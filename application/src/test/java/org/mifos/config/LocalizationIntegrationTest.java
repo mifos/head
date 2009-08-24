@@ -20,16 +20,15 @@
 
 package org.mifos.config;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
-import java.util.ArrayList;
-import java.util.Locale;
-
-import org.mifos.config.Localization;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;

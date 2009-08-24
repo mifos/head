@@ -20,6 +20,8 @@
 
 package org.mifos.framework;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,10 +29,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
-
 import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 /**
  * Try to programmatically find a particular problem with JUnit 4 tests. If they

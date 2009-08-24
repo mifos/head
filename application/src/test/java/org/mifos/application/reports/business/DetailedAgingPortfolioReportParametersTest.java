@@ -20,14 +20,13 @@
 
 package org.mifos.application.reports.business;
 
-import org.mifos.application.reports.business.validator.Errors;
-import org.mifos.application.reports.util.helpers.ReportValidationConstants;
-
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-
 import junit.framework.TestCase;
+
+import org.mifos.application.reports.business.validator.Errors;
+import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 
 public class DetailedAgingPortfolioReportParametersTest extends TestCase {
 

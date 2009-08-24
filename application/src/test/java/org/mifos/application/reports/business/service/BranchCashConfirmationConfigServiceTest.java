@@ -20,14 +20,14 @@
 
 package org.mifos.application.reports.business.service;
 
+import junit.framework.TestCase;
+
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import junit.framework.TestCase;
 
 public class BranchCashConfirmationConfigServiceTest extends TestCase {
 

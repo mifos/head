@@ -22,9 +22,9 @@ package org.mifos.application.master.business;
 
 import java.math.RoundingMode;
 
-import org.testng.annotations.Test;
-
 import junit.framework.TestCase;
+
+import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class MifosCurrencyTest extends TestCase {

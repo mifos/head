@@ -20,6 +20,11 @@
 
 package org.mifos.application.customer.business;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,10 +86,6 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 
 public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     public CustomerBOIntegrationTest() throws SystemException, ApplicationException {

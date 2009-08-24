@@ -20,14 +20,17 @@
 
 package org.mifos.framework.struts.tags;
 
+import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+
+import java.util.Locale;
+
+import javax.servlet.jsp.JspException;
+
 import junit.framework.TestCase;
+
 import org.dom4j.DocumentException;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
-import static org.mifos.framework.TestUtils.assertWellFormedFragment;
-
-import javax.servlet.jsp.JspException;
-import java.util.Locale;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class DateTagTest extends TestCase {

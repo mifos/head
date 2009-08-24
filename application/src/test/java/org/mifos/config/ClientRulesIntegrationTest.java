@@ -21,12 +21,11 @@
 package org.mifos.config;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.helpers.Constants;
 import org.testng.annotations.Test;
 
 @Test(groups={"integration", "configTestSuite"})
