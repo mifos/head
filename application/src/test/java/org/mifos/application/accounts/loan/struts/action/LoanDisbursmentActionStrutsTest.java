@@ -127,7 +127,7 @@ public class LoanDisbursmentActionStrutsTest extends MifosMockStrutsTestCase {
         assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) request.getSession().getAttribute(
                 "loanDisbursmentActionForm");
-        assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail(new Date(System.currentTimeMillis())));
+        assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail());
         assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
     }
 
