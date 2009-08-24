@@ -171,21 +171,24 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createCustomers() {
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private LoanBO getLoanAccount(CustomerBO customerBO, String offeringName, String shortName) {
         Date startDate = new Date(System.currentTimeMillis());
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName()
+                + offeringName, shortName, startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", customerBO, AccountState.LOAN_APPROVED, startDate,
                 loanOffering);
     }
 
     private SavingsBO getSavingsAccount(CustomerBO customerBO, String offeringName, String shortName) throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
-        savingsOffering = helper.createSavingsOffering(offeringName, shortName);
+        savingsOffering = helper.createSavingsOffering(this.getClass().getSimpleName() + offeringName, shortName);
         return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
                 AccountState.SAVINGS_PARTIAL_APPLICATION.getValue(), startDate, savingsOffering);
     }

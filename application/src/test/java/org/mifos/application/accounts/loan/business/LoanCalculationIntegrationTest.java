@@ -570,12 +570,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
@@ -948,12 +948,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
@@ -1013,12 +1013,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
@@ -1638,12 +1638,12 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     .getPaymentFrequency(), EVERY_MONTH, CUSTOMER_MEETING));
         }
 
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");

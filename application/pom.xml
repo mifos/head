@@ -828,6 +828,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                <skip>false</skip>
                     <testNGArtifactName>null</testNGArtifactName>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
@@ -845,7 +846,7 @@
                                       
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
-                        <exclude>**/*ActionTest.java</exclude>
+                        <exclude>**/*StrutsTest.java</exclude>
                     </excludes>
                     
                     -->

@@ -150,7 +150,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         StaticHibernateUtil.closeSession();
     }
 
-    public void testPreviewWithoutNotes() throws AccountException, PageExpiredException {
+    public void testPreviewWithoutNotes() throws AccountException {
         createLoanAccount();
         disburseLoan();
 
@@ -169,7 +169,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         verifyInputForward();
     }
 
-    public void testPreviewWithNoteGretaerThanMax() throws AccountException, PageExpiredException {
+    public void testPreviewWithNoteGretaerThanMax() throws AccountException {
         createLoanAccount();
         disburseLoan();
 
@@ -197,7 +197,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
 
     }
 
-    public void testPreview() throws AccountException, PageExpiredException {
+    public void testPreview() throws AccountException {
         createLoanAccount();
         disburseLoan();
 
@@ -215,7 +215,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         verifyForward(ActionForwards.preview_success.toString());
     }
 
-    public void testUpdate() throws AccountException, PageExpiredException {
+    public void testUpdate() throws AccountException {
         createLoanAccount();
         disburseLoan();
 
@@ -280,15 +280,16 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
     private void createInitialCustomers() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        center = TestObjectFactory.createCenter("Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
     }
 
     private void createLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         createInitialCustomers();
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, center.getCustomerMeeting()
-                .getMeeting());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " LOAN",
+                "L", startDate, center.getCustomerMeeting().getMeeting());
         loan = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_APPROVED, startDate,
                 loanOffering);
     }

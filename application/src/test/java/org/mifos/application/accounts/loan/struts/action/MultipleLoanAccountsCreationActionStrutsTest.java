@@ -52,8 +52,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.SecurityConstants;
@@ -65,7 +63,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public MultipleLoanAccountsCreationActionStrutsTest() throws SystemException, ApplicationException {
+    public MultipleLoanAccountsCreationActionStrutsTest() throws Exception {
         super();
     }
 
@@ -84,6 +82,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");

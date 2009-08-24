@@ -34,6 +34,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -85,6 +86,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testLoad() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "load");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
