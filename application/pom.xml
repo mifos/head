@@ -828,22 +828,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                <skip>false</skip>
                     <testNGArtifactName>null</testNGArtifactName>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
                     <!--
-                    Uncomment to exclude the Integration tests 
-                    Do not uncomment unless required, Integration tests
-                    are must to confirm that the build is not broken.
+                    Uncomment <excludes> elements below to exclude the
+                    Integration tests (those that hit the database).
+
+                    Do not uncomment except during development (to reduce
+                    turnaround time by excluding tests that hit the database
+                    and/or use Struts).
                     
                     *IntegrationTest extends MifosIntegrationTestCase 
-                    *ActionTest extends MifosMockStrutsTestCase
+                    *StrutsTest extends MifosMockStrutsTestCase
                     
-                    Useful only for tests development
-                                      
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
                         <exclude>**/*StrutsTest.java</exclude>
