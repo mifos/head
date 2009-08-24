@@ -1,0 +1,192 @@
+/*
+ * Copyright (c) 2005-2009 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
+package org.mifos.application.master.persistence;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import net.sourceforge.mayfly.MayflySqlException;
+import net.sourceforge.mayfly.UnimplementedException;
+
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.persistence.SqlUpgrade;
+import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.SqlUpgradeScriptFinder;
+import org.mifos.framework.util.StandardTestingService;
+
+/**
+ * Upgrade213 is a conditional upgrade that creates 5 indexes
+ * (CUSTOMER_ATTENDANCE_MEETING_DATE_IDX ON CUSTOMER_ATTENDANCE,
+ * LOAN_COUNTER_CLIENT_PERF_IDX ON LOAN_COUNTER, CUSTOMER_BRANCH_SEARCH_IDX ON
+ * CUSTOMER, CUSTOMER_DOB_STATUS_IDX ON CUSTOMER, LOOKUP_ENTITYNAME_IDX ON
+ * LOOKUP_ENTITY)
+ */
+public class Upgrade213 extends Upgrade {
+
+    public Upgrade213() {
+        super(213);
+    }
+
+    @Override
+    public void upgrade(Connection connection) throws IOException, SQLException {
+
+        if (!hasIndex(connection, "CUSTOMER", "CUSTOMER_BRANCH_SEARCH_IDX")) {
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+                    "upgrade_to_213_part1.sql");
+
+            upgrade.runScript(connection);
+        }
+
+        if (!hasIndex(connection, "CUSTOMER", "CUSTOMER_DOB_STATUS_IDX")) {
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+                    "upgrade_to_213_part2.sql");
+
+            upgrade.runScript(connection);
+        }
+
+        if (!hasIndex(connection, "CUSTOMER_ATTENDANCE", "CUSTOMER_ATTENDANCE_MEETING_DATE_IDX")) {
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+                    "upgrade_to_213_part3.sql");
+
+            upgrade.runScript(connection);
+        }
+
+        if (!hasIndex(connection, "LOAN_COUNTER", "LOAN_COUNTER_CLIENT_PERF_IDX")) {
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+                    "upgrade_to_213_part4.sql");
+
+            upgrade.runScript(connection);
+        }
+
+        if (!hasIndex(connection, "LOOKUP_ENTITY", "LOOKUP_ENTITYNAME_IDX")) {
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+                    "upgrade_to_213_part5.sql");
+
+            upgrade.runScript(connection);
+        }
+
+        upgradeVersion(connection);
+    }
+
+    /**
+     * Returns whether the particular index exists in the given table
+     */
+    protected boolean hasIndex(Connection connection, String tableName, String indexName) throws SQLException {
+
+        boolean indexFound = false;
+
+        final String tableSchema = getMySqlSchemaName(connection);
+
+        int numFields = 0;
+        String sql = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA=? AND TABLE_NAME LIKE ? AND INDEX_NAME=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, tableSchema);
+        statement.setString(2, tableName);
+        statement.setString(3, indexName);
+
+        try {
+            ResultSet results = statement.executeQuery();
+            if (!results.next()) {
+                throw new SystemException(SystemException.DEFAULT_KEY, "Query failed for SQL " + sql);
+            }
+            numFields = results.getInt(1);
+
+        } catch (MayflySqlException e) {
+            if (e.getMessage().contains("no table STATISTICS")) {
+                getLogger().info(
+                        "Ignoring MayflySqlException. Mayfly doesn't have an INFORMATION_SCHEMA database,"
+                                + " so that table cannot be used to check extant indexes.");
+            } else {
+                throw e;
+            }
+        } finally {
+            statement.close();
+        }
+
+        if (numFields == 0) {
+            getLogger().info("The index =>" + indexName + " on table " + tableName + " does not exisit");
+            indexFound = false;
+        } else {
+            getLogger().info(
+                    "The index =>" + indexName + " on table " + tableName
+                            + " has already beean created in the database");
+            indexFound = true;
+        }
+
+        return indexFound;
+    }
+
+    private String getMySqlSchemaName(Connection connection) throws SQLException {
+        String databaseName;
+        final URI infoURL;
+        try {
+            URI mysqlOnly;
+            try {
+                /*
+                 * TODO: Very similar to code in SystemInfo. Consider
+                 * refactoring.
+                 */
+                mysqlOnly = new URI(connection.getMetaData().getURL());
+            } catch (UnimplementedException mayflyUnimplementedException) {
+                getLogger().info(
+                        "Mayfly doesnt' support DatabaseMetaData.getURL(). Will try fetching this"
+                                + " information from database configuraion files.");
+                String dbUrl = new StandardTestingService().getDatabaseConnectionSettings().getProperty(
+                        "hibernate.connection.url");
+                mysqlOnly = new URI(dbUrl);
+            }
+            infoURL = new URI(mysqlOnly.getSchemeSpecificPart());
+            databaseName = infoURL.getPath();
+
+            if (databaseName != null) {
+                databaseName = databaseName.replaceFirst("/", "");
+            } else {
+                throw new SQLException("Cannot obtain database name");
+            }
+
+        } catch (IOException e) {
+            throw new SQLException(e);
+        } catch (URISyntaxException e) {
+            throw new SQLException(e);
+        }
+        return databaseName;
+    }
+
+    /*
+     * FIXME: Temporary. Will be improved by moving logger into superclass
+     * ("Upgrade") once LoggerConstants is moved into the "common" module.
+     */
+    private Logger logger = null;
+
+    private Logger getLogger() {
+        if (null == logger) {
+            logger = Logger.getLogger("org.mifos.framework");
+        }
+        return logger;
+    }
+
+}
