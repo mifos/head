@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 /*

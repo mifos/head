@@ -23,7 +23,6 @@ package org.mifos.application.customer.business;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.persistence.Persistence;
 
 /**
  * This class encpsulate the custom field for the customer

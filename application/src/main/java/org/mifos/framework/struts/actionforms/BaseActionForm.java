@@ -31,8 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
@@ -53,7 +51,6 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.config.AccountingRules;
-import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class BaseActionForm extends ValidatorActionForm {

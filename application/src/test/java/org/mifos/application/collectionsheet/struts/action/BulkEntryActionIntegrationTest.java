@@ -511,7 +511,6 @@ public class BulkEntryActionIntegrationTest extends MifosMockStrutsTestCase {
     private ClientAttendanceDto getClientAttendanceDto(Integer clientId, Date meetingDate) {
         ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(clientId, meetingDate, AttendanceType.ABSENT
                 .getValue());
-        clientAttendanceDto.setRow(0);
         return clientAttendanceDto;
     }
 

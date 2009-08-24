@@ -19,7 +19,6 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +32,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.util.helpers.BulkEntryNodeBuilder;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
@@ -49,65 +47,64 @@ public class CollectionSheetEntryViewAssembler {
     private final CustomerPersistence customerPersistence;
     private final ClientAttendanceDao clientAttendanceDao;
 
-    public CollectionSheetEntryViewAssembler(BulkEntryPersistence bulkEntryPersistence,
-            CustomerPersistence customerPersistence,
-            ClientAttendanceDao clientAttendanceDao) {
+    public CollectionSheetEntryViewAssembler(final BulkEntryPersistence bulkEntryPersistence,
+            final CustomerPersistence customerPersistence,
+            final ClientAttendanceDao clientAttendanceDao) {
         this.bulkEntryPersistence = bulkEntryPersistence;
         this.customerPersistence = customerPersistence;
         this.clientAttendanceDao = clientAttendanceDao;
     }
 
-    public CollectionSheetEntryView toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto) {
+    public CollectionSheetEntryView toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto,
+            final List<CustomerView> customerHierarchy, final int countOfCustomers) {
 
         final java.sql.Date meetingDate = new java.sql.Date(formEnteredDataDto.getMeetingDate().getTime());
         final String selectedCustomerSearchId = formEnteredDataDto.getCustomer().getCustomerSearchId();
         final Short officeId = formEnteredDataDto.getOffice().getOfficeId();
         final Date transactionDate = formEnteredDataDto.getMeetingDate();
+        
         try {
-            List<LoanAccountView> loanAccountViewList = customerPersistence.findAllActiveLoansForHierarchy(officeId,
+            final List<LoanAccountView> loanAccountViewList = customerPersistence.findAllActiveLoansForHierarchy(
+                    officeId,
                     selectedCustomerSearchId, transactionDate);
             
-            List<SavingsAccountView> savingsAccountViewList = customerPersistence.findAllActiveSavingsUnderCenter(
+            final List<SavingsAccountView> savingsAccountViewList = customerPersistence
+                    .findAllActiveSavingsUnderCenter(
                     officeId, selectedCustomerSearchId);
             
-            List<CustomerAccountView> customerAccountViewList = customerPersistence.findAllCustomerAccountsForHierarchy(
+            final List<CustomerAccountView> customerAccountViewList = customerPersistence
+                    .findAllCustomerAccountsForHierarchy(
                     officeId, selectedCustomerSearchId);
             
-            List<CollectionSheetEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistence
-                    .getBulkEntryActionView(meetingDate, selectedCustomerSearchId, officeId, AccountTypes.LOAN_ACCOUNT);
-            List<CollectionSheetEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistence
-                    .getBulkEntryActionView(meetingDate, selectedCustomerSearchId, officeId,
+            final List<CollectionSheetEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistence
+                    .findAccountSchedulesForCollectionSheetEntryGridView(meetingDate, selectedCustomerSearchId, officeId, AccountTypes.LOAN_ACCOUNT);
+            
+            final List<CollectionSheetEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistence
+                    .findAccountSchedulesForCollectionSheetEntryGridView(meetingDate, selectedCustomerSearchId, officeId,
                             AccountTypes.SAVINGS_ACCOUNT);
-            List<CollectionSheetEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistence
-                    .getBulkEntryActionView(meetingDate, selectedCustomerSearchId, officeId,
+            final List<CollectionSheetEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistence
+                    .findAccountSchedulesForCollectionSheetEntryGridView(meetingDate, selectedCustomerSearchId, officeId,
                             AccountTypes.CUSTOMER_ACCOUNT);
+            
             List<CollectionSheetEntryAccountFeeActionView> bulkEntryLoanFeeScheduleViews = bulkEntryPersistence
                     .getBulkEntryFeeActionView(meetingDate, selectedCustomerSearchId, officeId,
                             AccountTypes.LOAN_ACCOUNT);
+            
             List<CollectionSheetEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistence
                     .getBulkEntryFeeActionView(meetingDate, selectedCustomerSearchId, officeId,
                             AccountTypes.CUSTOMER_ACCOUNT);
-
-            final List<CustomerView> allChildNodes = customerPersistence.findCustomerHierarchyForOfficeBySearchId(
-                    officeId, selectedCustomerSearchId);
-            final int countOfCustomers = allChildNodes.size();
-
-            List<ClientAttendanceBO> clientAttendanceBOs = clientAttendanceDao.getClientAttendance(meetingDate,
+            
+            List<ClientAttendanceDto> clientAttendanceDtoList = clientAttendanceDao.findClientAttendanceForOffice(meetingDate,
                     officeId);
-            ArrayList<ClientAttendanceDto> clientAttendance = new ArrayList<ClientAttendanceDto>();
-            for (ClientAttendanceBO clientAttendanceBo : clientAttendanceBOs) {
-                clientAttendance.add(new ClientAttendanceDto(clientAttendanceBo.getId(), clientAttendanceBo
-                        .getMeetingDate(), clientAttendanceBo.getAttendance()));
-            }
 
-            final CollectionSheetEntryView bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
+            final CollectionSheetEntryView bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(customerHierarchy,
                     formEnteredDataDto.getCustomer(), meetingDate, bulkEntryLoanScheduleViews,
                     bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews, bulkEntryCustomerFeeScheduleViews,
-                    clientAttendance, customerAccountViewList, loanAccountViewList, savingsAccountViewList);
+                    clientAttendanceDtoList, customerAccountViewList, loanAccountViewList, savingsAccountViewList);
 
             BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent, meetingDate,
                     bulkEntrySavingsScheduleViews);
-            BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent, meetingDate, clientAttendance);
+            BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent, meetingDate, clientAttendanceDtoList);
             
             bulkEntryParent.setCountOfCustomers(countOfCustomers);
 

@@ -28,7 +28,6 @@ import java.sql.SQLException;
 
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddFinancialAction extends Upgrade {

@@ -29,7 +29,6 @@ import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.persistence.ReportsPersistence;
-import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.util.helpers.ActionForwards;

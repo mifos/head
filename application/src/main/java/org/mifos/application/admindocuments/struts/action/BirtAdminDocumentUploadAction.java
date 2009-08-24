@@ -40,7 +40,6 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.application.admindocuments.business.AdminDocumentBO;

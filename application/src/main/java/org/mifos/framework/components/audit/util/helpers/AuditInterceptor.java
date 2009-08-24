@@ -20,7 +20,6 @@
 
 package org.mifos.framework.components.audit.util.helpers;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;

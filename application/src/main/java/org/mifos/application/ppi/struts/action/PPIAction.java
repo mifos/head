@@ -20,16 +20,11 @@
 
 package org.mifos.application.ppi.struts.action;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -54,7 +49,6 @@ import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.PPICalculator;
-import org.xml.sax.SAXException;
 
 public class PPIAction extends PersistenceAction {
 

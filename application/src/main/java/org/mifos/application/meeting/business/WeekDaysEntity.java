@@ -23,10 +23,8 @@ package org.mifos.application.meeting.business;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * This class encapsulate the weekDay
@@ -37,7 +35,7 @@ public class WeekDaysEntity extends MasterDataEntity {
 
     private Short startOfWeek;
 
-    public WeekDaysEntity(WeekDay weekDay) {
+    public WeekDaysEntity(final WeekDay weekDay) {
         super(weekDay.getValue());
         this.workDay = null;
     }
@@ -57,7 +55,7 @@ public class WeekDaysEntity extends MasterDataEntity {
         return startOfWeek;
     }
 
-    public void setStartOfWeek(Short startOfWeek) {
+    public void setStartOfWeek(final Short startOfWeek) {
         this.startOfWeek = startOfWeek;
     }
 
@@ -65,7 +63,7 @@ public class WeekDaysEntity extends MasterDataEntity {
         return workDay;
     }
 
-    public void setWorkDay(Short workDay) {
+    public void setWorkDay(final Short workDay) {
         this.workDay = workDay;
     }
 
@@ -73,12 +71,11 @@ public class WeekDaysEntity extends MasterDataEntity {
         try {
             new MasterPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
-            // TODO Auto-generated catch block
             throw new RuntimeException(e);
         }
     }
 
-    public void update(Short startOfWeek, Short workDay) throws RuntimeException {
+    public void update(final Short startOfWeek, final Short workDay) throws RuntimeException {
         this.startOfWeek = startOfWeek;
         this.workDay = workDay;
         // this block should not be here

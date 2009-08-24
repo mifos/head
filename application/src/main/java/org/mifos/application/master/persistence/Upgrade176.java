@@ -28,7 +28,6 @@ import java.sql.Statement;
 
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.SqlUpgradeScriptFinder;

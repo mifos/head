@@ -28,18 +28,17 @@ public class OfficeChangeEvent implements SecurityEvent {
     /**
      * This would hold kind of operation we are performing
      */
-    private String eventType;
+    private final String eventType;
     /**
      * This would hold the actual object with latest values
      */
-    private Object object;
+    private final Object object;
 
     /**
      * @param eventType
      * @param object
      */
-    public OfficeChangeEvent(String eventType, Object object) {
-        // TODO Auto-generated constructor stub
+    public OfficeChangeEvent(final String eventType, final Object object) {
         this.eventType = eventType;
         this.object = object;
     }

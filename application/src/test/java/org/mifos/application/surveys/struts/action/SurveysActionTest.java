@@ -20,16 +20,11 @@
 
 package org.mifos.application.surveys.struts.action;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
-import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -42,7 +37,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysActionTest extends MifosMockStrutsTestCase {

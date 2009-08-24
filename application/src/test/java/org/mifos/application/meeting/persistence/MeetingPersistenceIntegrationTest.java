@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTestCase;

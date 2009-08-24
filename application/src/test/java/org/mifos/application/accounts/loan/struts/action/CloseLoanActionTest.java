@@ -21,14 +21,10 @@
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.TransactionHistoryView;
-import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;

@@ -29,7 +29,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.util.helpers.Methods;

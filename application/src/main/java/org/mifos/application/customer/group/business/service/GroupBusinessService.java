@@ -22,7 +22,6 @@ package org.mifos.application.customer.group.business.service;
 
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

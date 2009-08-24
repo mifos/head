@@ -21,14 +21,12 @@
 package org.mifos.framework.struts.tags;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

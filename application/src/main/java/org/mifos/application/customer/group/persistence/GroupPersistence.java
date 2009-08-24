@@ -21,14 +21,11 @@
 package org.mifos.application.customer.group.persistence;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -55,10 +52,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
-
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 public class GroupPersistence extends Persistence {

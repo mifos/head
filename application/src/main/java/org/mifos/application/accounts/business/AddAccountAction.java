@@ -23,12 +23,10 @@ package org.mifos.application.accounts.business;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountAction extends Upgrade {

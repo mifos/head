@@ -20,10 +20,11 @@
 
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
+import static junitx.framework.StringAssert.assertContains;
+
 import java.util.Date;
 import java.util.List;
 
-import static junitx.framework.StringAssert.assertContains;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
@@ -74,7 +75,7 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         List<LoanActivityView> activityViews = new LoanBusinessService().getAllActivityView(accountBO
-                .getGlobalAccountNum(), userContext.getLocaleId());
+                .getGlobalAccountNum());
         assertContains("100", new LoanActivityTag().buildLeftHeaderRows(activityViews.get(0)).toString());
 
     }
@@ -83,12 +84,12 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         List<LoanActivityView> activityViews = new LoanBusinessService().getAllActivityView(accountBO
-                .getGlobalAccountNum(), userContext.getLocaleId());
+                .getGlobalAccountNum());
         assertContains("100", new LoanActivityTag().buildRightHeaderRows(activityViews.get(0)).toString());
 
     }
 
-    private AccountBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
+    private AccountBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

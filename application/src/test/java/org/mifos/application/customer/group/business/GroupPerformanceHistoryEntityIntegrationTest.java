@@ -26,7 +26,6 @@ import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import static org.easymock.classextension.EasyMock.expectLastCall;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.mifos.application.accounts.business.service.AccountBusinessService;

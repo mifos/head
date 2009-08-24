@@ -470,7 +470,8 @@
 
 	<query name="accounts.getFeeAmountAtDisbursement">
 		<![CDATA[  from org.mifos.application.accounts.business.AccountFeesEntity afe 
-			where afe.account.accountId = :ACCOUNT_ID and  afe.fees.feeFrequency.feePayment.id = 2]]>
+			where afe.account.accountId = :ACCOUNT_ID 
+			and afe.fees.feeFrequency.feePayment.id = 2]]>
 	</query>
 
 	<query name="account.getSearchResults">

@@ -33,7 +33,6 @@ import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort
 import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerBO;

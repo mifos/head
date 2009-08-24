@@ -61,7 +61,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final PersonnelPersistence personnelPersistence;
     private final CustomerPersistence customerPersistence;
     private final CollectionSheetService collectionSheetService;
-    private final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler;
     private final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler;
     private final ClientAttendanceAssembler clientAttendanceAssembler;
     private final LoanAccountAssembler loanAccountAssembler;
@@ -72,7 +71,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
-            final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler,
             final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler,
             final ClientAttendanceAssembler clientAttendanceAssembler, final LoanAccountAssembler loanAccountAssembler,
             final CustomerAccountAssembler customerAccountAssember,
@@ -82,7 +80,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         this.personnelPersistence = personnelPersistence;
         this.customerPersistence = customerPersistence;
         this.collectionSheetService = collectionSheetService;
-        this.collectionSheetEntryViewAssembler = collectionSheetEntryViewAssembler;
         this.collectionSheetEntryGridViewAssembler = collectionSheetEntryGridViewAssembler;
         this.clientAttendanceAssembler = clientAttendanceAssembler;
         this.loanAccountAssembler = loanAccountAssembler;
@@ -202,10 +199,8 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetEntryGridDto generateCollectionSheetEntryGridView(
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final UserContext userContext) {
 
-        final CollectionSheetEntryView collectionSheetParent = collectionSheetEntryViewAssembler
-                .toDto(formEnteredDataDto);
         final CollectionSheetEntryGridDto collectionSheetGridView = collectionSheetEntryGridViewAssembler.toDto(
-                formEnteredDataDto, userContext.getLocaleId(), collectionSheetParent);
+                formEnteredDataDto, userContext.getLocaleId());
 
         return collectionSheetGridView;
     }

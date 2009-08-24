@@ -26,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;

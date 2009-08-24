@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -47,37 +46,37 @@ public class MifosImageTag extends TagSupport {
 
     public MifosImageTag() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /** Used to set the id given in the JSP file */
 
     @Override
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
     @Override
     public String getId() {
-        return (this.id);
+        return this.id;
     }
 
     /** Used to set the moduleName given in the JSP file */
 
-    public void setModuleName(String name) {
+    public void setModuleName(final String name) {
         this.moduleName = name;
     }
 
     public String getModuleName() {
-        return (this.moduleName);
+        return this.moduleName;
     }
 
     /** Used to get the corresponding properties fileName using moduleName */
 
     public String getPropertiesFileName() {
         String moduleName = getModuleName();
-        if (moduleName.contains("."))
+        if (moduleName.contains(".")) {
             moduleName = moduleName.substring(moduleName.indexOf(".") + 1, moduleName.length());
+        }
         return moduleName + "Images";
     }
 
@@ -98,11 +97,10 @@ public class MifosImageTag extends TagSupport {
             out.println(render());
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        return (SKIP_BODY);
+        return SKIP_BODY;
 
     }
 

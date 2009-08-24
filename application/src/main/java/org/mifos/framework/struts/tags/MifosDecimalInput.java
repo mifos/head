@@ -25,7 +25,6 @@ import javax.servlet.jsp.JspException;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.strutsel.taglib.html.ELTextTag;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
  * MifosDecimalInput is custom input tag which takes only the decimal character

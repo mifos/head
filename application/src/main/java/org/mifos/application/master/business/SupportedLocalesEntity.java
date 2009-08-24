@@ -21,7 +21,6 @@
 package org.mifos.application.master.business;
 
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.config.Localization;
 
 public class SupportedLocalesEntity extends PersistentObject {
 

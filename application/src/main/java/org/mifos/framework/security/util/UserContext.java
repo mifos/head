@@ -28,10 +28,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.config.Localization;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.framework.util.LocalizationConverter;
 
 /**
  * Information about a user, including ID's of their roles.

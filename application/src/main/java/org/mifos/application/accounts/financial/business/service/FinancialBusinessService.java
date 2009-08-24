@@ -42,7 +42,6 @@ import org.mifos.application.accounts.financial.business.service.activity.Saving
 import org.mifos.application.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsWithdrawalFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.WriteOffFinancialActivity;
-import org.mifos.application.accounts.financial.business.service.activity.accountingentry.RescheduleAccountingEntry;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;

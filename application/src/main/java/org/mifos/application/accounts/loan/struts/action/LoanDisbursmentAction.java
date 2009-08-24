@@ -48,7 +48,6 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -68,7 +67,7 @@ public class LoanDisbursmentAction extends BaseAction {
     private LoanBusinessService loanBusinessService = null;
     private final ProductMixValidator productMixValidator;
 
-    LoanDisbursmentAction(LoanBusinessService service, ProductMixValidator validator) {
+    LoanDisbursmentAction(final LoanBusinessService service, final ProductMixValidator validator) {
         this.loanBusinessService = service;
         this.productMixValidator = validator;
     }
@@ -87,8 +86,8 @@ public class LoanDisbursmentAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         setIsRepaymentScheduleEnabled(request);
 
         setIsBackdatedTransactionAllowed(request);
@@ -109,25 +108,25 @@ public class LoanDisbursmentAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, getAcceptedPaymentTypes(uc.getLocaleId()),
                 request);
-        loanDisbursmentActionForm.setAmount(loan.getAmountTobePaidAtdisburtail(currentDate));
+        loanDisbursmentActionForm.setAmount(loan.getAmountTobePaidAtdisburtail());
         loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
-    private LoanBO getLoan(LoanDisbursmentActionForm loanDisbursmentActionForm) throws ServiceException {
+    private LoanBO getLoan(final LoanDisbursmentActionForm loanDisbursmentActionForm) throws ServiceException {
         return ((LoanBusinessService) getService()).getAccount(Integer
                 .valueOf(loanDisbursmentActionForm.getAccountId()));
     }
 
-    private static List<PaymentTypeEntity> getAcceptedPaymentTypes(Short localeId) throws Exception {
+    private static List<PaymentTypeEntity> getAcceptedPaymentTypes(final Short localeId) throws Exception {
         return AcceptedPaymentTypeService.getAcceptedPaymentTypes(localeId);
     }
 
-    private String getProposedDisbursementDateFromSession(HttpServletRequest request) throws PageExpiredException {
+    private String getProposedDisbursementDateFromSession(final HttpServletRequest request) throws PageExpiredException {
         return SessionUtils.getAttribute(LoanConstants.PROPOSEDDISBDATE, request).toString();
     }
 
-    private void setProposedDisbursementDate(HttpServletRequest request, Date currentDate, LoanBO loan)
+    private void setProposedDisbursementDate(final HttpServletRequest request, final Date currentDate, final LoanBO loan)
             throws PageExpiredException {
         if (AccountingRules.isBackDatedTxnAllowed()) {
             SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loan.getDisbursementDate(), request);
@@ -136,34 +135,34 @@ public class LoanDisbursmentAction extends BaseAction {
         }
     }
 
-    private void setIsBackdatedTransactionAllowed(HttpServletRequest request) throws PageExpiredException {
+    private void setIsBackdatedTransactionAllowed(final HttpServletRequest request) throws PageExpiredException {
         SessionUtils.setAttribute(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, AccountingRules
                 .isBackDatedTxnAllowed(), request);
     }
 
-    private void setIsRepaymentScheduleEnabled(HttpServletRequest request) throws PageExpiredException,
+    private void setIsRepaymentScheduleEnabled(final HttpServletRequest request) throws PageExpiredException,
             PersistenceException {
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
                 new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
 
         return mapping.findForward(Constants.PREVIEW_SUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         return mapping.findForward(Constants.PREVIOUS_SUCCESS);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward update(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
 
         LoanBO savedloan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) form;
@@ -206,8 +205,8 @@ public class LoanDisbursmentAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
         if (method != null) {
@@ -222,12 +221,12 @@ public class LoanDisbursmentAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(final String method) {
         return true;
     }
 
     @Override
-    protected boolean isNewBizRequired(HttpServletRequest request) throws ServiceException {
+    protected boolean isNewBizRequired(final HttpServletRequest request) throws ServiceException {
         return false;
     }
 

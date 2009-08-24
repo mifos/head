@@ -27,11 +27,11 @@ public class RoleChangeEvent implements SecurityEvent {
     /**
      * This would hold kind of operation we are performing
      */
-    private String eventType;
+    private final String eventType;
     /**
      * This would hold the actual object with latest values
      */
-    private Object object;
+    private final Object object;
 
     /**
      * This Function returns the object
@@ -48,7 +48,6 @@ public class RoleChangeEvent implements SecurityEvent {
      * @see org.mifos.framework.security.Util.SecurityEvent#getEventType()
      */
     public String getEventType() {
-        // TODO Auto-generated method stub
         return eventType;
     }
 
@@ -56,8 +55,7 @@ public class RoleChangeEvent implements SecurityEvent {
      * @param eventType
      * @param object
      */
-    public RoleChangeEvent(String eventType, Object object) {
-        // TODO Auto-generated constructor stub
+    public RoleChangeEvent(final String eventType, final Object object) {
         this.eventType = eventType;
         this.object = object;
     }

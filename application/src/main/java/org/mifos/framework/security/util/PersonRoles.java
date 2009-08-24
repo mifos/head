@@ -92,7 +92,7 @@ public class PersonRoles {
      * @param locked
      *            The locked to set.
      */
-    public void setLocked(Short locked) {
+    public void setLocked(final Short locked) {
         this.locked = locked;
     }
 
@@ -111,7 +111,7 @@ public class PersonRoles {
      * @param personnelStatus
      *            The personnelStatus to set.
      */
-    public void setPersonnelStatus(Short personnelStatus) {
+    public void setPersonnelStatus(final Short personnelStatus) {
         this.personnelStatus = personnelStatus;
     }
 
@@ -130,7 +130,7 @@ public class PersonRoles {
      * @param officeid
      *            The officeid to set.
      */
-    public void setOfficeid(Short officeid) {
+    public void setOfficeid(final Short officeid) {
         this.officeid = officeid;
     }
 
@@ -139,7 +139,6 @@ public class PersonRoles {
 	 */
     public PersonRoles() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -157,7 +156,7 @@ public class PersonRoles {
      * @param displayName
      *            The displayName to set.
      */
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(final String displayName) {
         this.displayName = displayName;
     }
 
@@ -176,7 +175,7 @@ public class PersonRoles {
      * @param id
      *            The id to set.
      */
-    public void setId(Short id) {
+    public void setId(final Short id) {
         this.id = id;
     }
 
@@ -195,7 +194,7 @@ public class PersonRoles {
      * @param loginName
      *            The loginName to set.
      */
-    public void setLoginName(String loginName) {
+    public void setLoginName(final String loginName) {
         this.loginName = loginName;
     }
 
@@ -214,7 +213,7 @@ public class PersonRoles {
      * @param noOfTries
      *            The noOfTries to set.
      */
-    public void setNoOfTries(Short noOfTries) {
+    public void setNoOfTries(final Short noOfTries) {
         this.noOfTries = noOfTries;
     }
 
@@ -233,7 +232,7 @@ public class PersonRoles {
      * @param password
      *            The password to set.
      */
-    public void setPassword(byte[] password) {
+    public void setPassword(final byte[] password) {
         this.password = password;
     }
 
@@ -252,7 +251,7 @@ public class PersonRoles {
      * @param passwordChanged
      *            The passwordChanged to set.
      */
-    public void setPasswordChanged(Short passwordChanged) {
+    public void setPasswordChanged(final Short passwordChanged) {
         this.passwordChanged = passwordChanged;
     }
 
@@ -271,7 +270,7 @@ public class PersonRoles {
      * @param preferedLocale
      *            The preferedLocale to set.
      */
-    public void setPreferedLocale(Short preferedLocale) {
+    public void setPreferedLocale(final Short preferedLocale) {
         this.preferedLocale = preferedLocale;
     }
 
@@ -290,7 +289,7 @@ public class PersonRoles {
      * @param roles
      *            The roles to set.
      */
-    public void setRoles(Set roles) {
+    public void setRoles(final Set roles) {
         this.roles = roles;
     }
 
@@ -309,7 +308,7 @@ public class PersonRoles {
      * @param levelId
      *            The levelId to set.
      */
-    public void setLevelId(Short levelId) {
+    public void setLevelId(final Short levelId) {
         this.levelId = levelId;
     }
 
@@ -328,7 +327,7 @@ public class PersonRoles {
      * @param lastLogin
      *            The lastLogin to set.
      */
-    public void setLastLogin(Date lastLogin) {
+    public void setLastLogin(final Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 }

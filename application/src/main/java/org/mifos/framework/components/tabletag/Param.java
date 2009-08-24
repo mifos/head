@@ -24,7 +24,6 @@ public class Param {
 
     public Param() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /** Used to set the value of parameterName */
@@ -47,7 +46,7 @@ public class Param {
      * @param parameterName
      *            The parameterName to set.
      */
-    public void setParameterName(String parameterName) {
+    public void setParameterName(final String parameterName) {
         this.parameterName = parameterName;
     }
 
@@ -62,7 +61,7 @@ public class Param {
      * @param parameterValue
      *            The parameterValue to set.
      */
-    public void setParameterValue(String parameterValue) {
+    public void setParameterValue(final String parameterValue) {
         this.parameterValue = parameterValue;
     }
 
@@ -77,7 +76,7 @@ public class Param {
      * @param parameterValueType
      *            The parameterValueType to set.
      */
-    public void setParameterValueType(String parameterValueType) {
+    public void setParameterValueType(final String parameterValueType) {
         this.parameterValueType = parameterValueType;
     }
 

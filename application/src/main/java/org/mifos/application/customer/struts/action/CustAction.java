@@ -43,7 +43,6 @@ import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.struts.actionforms.CustActionForm;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;

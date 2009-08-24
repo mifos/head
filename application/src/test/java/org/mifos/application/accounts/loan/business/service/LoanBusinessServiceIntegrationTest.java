@@ -26,9 +26,7 @@ import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -46,10 +44,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -142,7 +138,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
         accountBO = accountPersistence.getAccount(accountBO.getAccountId());
         List<LoanActivityView> loanRecentActivityView = loanBusinessService.getRecentActivityView(accountBO
-                .getGlobalAccountNum(), Short.valueOf("1"));
+                .getGlobalAccountNum());
 
         assertEquals(3, loanRecentActivityView.size());
         assertNotNull(loanRecentActivityView);
@@ -175,7 +171,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
         accountBO = accountPersistence.getAccount(accountBO.getAccountId());
         List<LoanActivityView> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
-                .getGlobalAccountNum(), Short.valueOf("1"));
+                .getGlobalAccountNum());
 
         assertNotNull(loanAllActivityView);
         assertEquals(6, loanAllActivityView.size());
@@ -217,7 +213,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
                 startDate, loanOffering);
     }
 
-    private PaymentData createPaymentViewObject(AccountBO accountBO) {
+    private PaymentData createPaymentViewObject(final AccountBO accountBO) {
         PaymentData paymentData = PaymentData.createPaymentData(new Money(TestObjectFactory.getMFICurrency(), "212.0"),
                 accountBO.getPersonnel(), Short.valueOf("1"), new Date(System.currentTimeMillis()));
         paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
@@ -242,7 +238,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         expect(loanMock2.isActiveLoanAccount()).andReturn(false);
         expect(groupLoanMock.getAccountId()).andReturn(groupLoanAccountId);
 
-        expect(clientMock.getAccounts()).andReturn(new HashSet(asList(loanMock1, loanMock2)));
+        expect(clientMock.getAccounts()).andReturn(new HashSet<AccountBO>(asList(loanMock1, loanMock2)));
 
         replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);

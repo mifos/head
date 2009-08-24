@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.SqlUpgradeScriptFinder;

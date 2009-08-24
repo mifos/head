@@ -23,8 +23,6 @@ package org.mifos.application.accounts.loan.struts.uihelpers;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.regex.Pattern;
-
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;

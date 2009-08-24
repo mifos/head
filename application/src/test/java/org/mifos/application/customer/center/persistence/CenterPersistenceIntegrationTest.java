@@ -21,8 +21,6 @@
 package org.mifos.application.customer.center.persistence;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
-
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.CenterTemplateImpl;

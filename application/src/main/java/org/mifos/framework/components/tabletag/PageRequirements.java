@@ -24,7 +24,6 @@ public class PageRequirements {
 
     public PageRequirements() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     private String numbersRequired;
@@ -47,7 +46,7 @@ public class PageRequirements {
      * @param bluelineRequired
      *            The bluelineRequired to set.
      */
-    public void setBluelineRequired(String bluelineRequired) {
+    public void setBluelineRequired(final String bluelineRequired) {
         this.bluelineRequired = bluelineRequired;
     }
 
@@ -62,7 +61,7 @@ public class PageRequirements {
      * @param headingRequired
      *            The headingRequired to set.
      */
-    public void setHeadingRequired(String headingRequired) {
+    public void setHeadingRequired(final String headingRequired) {
         this.headingRequired = headingRequired;
     }
 
@@ -77,7 +76,7 @@ public class PageRequirements {
      * @param numbersRequired
      *            The numbersRequired to set.
      */
-    public void setNumbersRequired(String numbersRequired) {
+    public void setNumbersRequired(final String numbersRequired) {
         this.numbersRequired = numbersRequired;
     }
 
@@ -92,7 +91,7 @@ public class PageRequirements {
      * @param valignnumbers
      *            The valignnumbers to set.
      */
-    public void setValignnumbers(String valignnumbers) {
+    public void setValignnumbers(final String valignnumbers) {
         this.valignnumbers = valignnumbers;
     }
 
@@ -107,7 +106,7 @@ public class PageRequirements {
      * @param blanklinerequired
      *            The blanklinerequired to set.
      */
-    public void setBlanklinerequired(String blanklinerequired) {
+    public void setBlanklinerequired(final String blanklinerequired) {
         this.blanklinerequired = blanklinerequired;
     }
 
@@ -122,7 +121,7 @@ public class PageRequirements {
      * @param topbluelineRequired
      *            The topbluelineRequired to set.
      */
-    public void setTopbluelineRequired(String topbluelineRequired) {
+    public void setTopbluelineRequired(final String topbluelineRequired) {
         this.topbluelineRequired = topbluelineRequired;
     }
 
@@ -137,7 +136,7 @@ public class PageRequirements {
      * @param bottombluelineRequired
      *            The bottombluelineRequired to set.
      */
-    public void setBottombluelineRequired(String bottombluelineRequired) {
+    public void setBottombluelineRequired(final String bottombluelineRequired) {
         this.bottombluelineRequired = bottombluelineRequired;
     }
 
@@ -145,7 +144,7 @@ public class PageRequirements {
         return flowRequired;
     }
 
-    public void setFlowRequired(String flowRequired) {
+    public void setFlowRequired(final String flowRequired) {
         this.flowRequired = flowRequired;
     }
 

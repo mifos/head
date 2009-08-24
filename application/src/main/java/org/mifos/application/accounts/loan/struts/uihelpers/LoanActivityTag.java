@@ -30,7 +30,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.security.util.UserContext;

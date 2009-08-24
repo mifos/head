@@ -136,7 +136,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.customerPersistence;
     }
 
-    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
+    public void setCustomerPersistence(final CustomerPersistence customerPersistence) {
         this.customerPersistence = customerPersistence;
     }
 
@@ -147,7 +147,7 @@ public abstract class CustomerBO extends BusinessObject {
         return personnelPersistence;
     }
 
-    public void setPersonnelPersistence(PersonnelPersistence personnelPersistence) {
+    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
         this.personnelPersistence = personnelPersistence;
     }
 
@@ -158,7 +158,7 @@ public abstract class CustomerBO extends BusinessObject {
         return masterPersistence;
     }
 
-    public void setMasterPersistence(MasterPersistence masterPersistence) {
+    public void setMasterPersistence(final MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
     }
 
@@ -167,8 +167,8 @@ public abstract class CustomerBO extends BusinessObject {
         this.globalCustNum = null;
     }
 
-    protected CustomerBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel,
-            PersonnelBO personnel, String displayName) {
+    protected CustomerBO(final Integer customerId, final CustomerLevelEntity customerLevel, final PersonnelBO formedByPersonnel,
+            final PersonnelBO personnel, final String displayName) {
         super();
         this.customerId = customerId;
         this.customerLevel = customerLevel;
@@ -177,10 +177,10 @@ public abstract class CustomerBO extends BusinessObject {
         this.displayName = displayName;
     }
 
-    protected CustomerBO(UserContext userContext, String displayName, CustomerLevel customerLevel,
-            CustomerStatus customerStatus, String externalId, Date mfiJoiningDate, Address address,
-            List<CustomFieldView> customFields, List<FeeView> fees, PersonnelBO formedBy, OfficeBO office,
-            CustomerBO parentCustomer, MeetingBO meeting, PersonnelBO loanOfficer) throws CustomerException {
+    protected CustomerBO(final UserContext userContext, final String displayName, final CustomerLevel customerLevel,
+            final CustomerStatus customerStatus, final String externalId, final Date mfiJoiningDate, final Address address,
+            final List<CustomFieldView> customFields, final List<FeeView> fees, final PersonnelBO formedBy, final OfficeBO office,
+            final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer) throws CustomerException {
 
         super(userContext);
 
@@ -245,7 +245,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.personnel;
     }
 
-    protected void setPersonnel(PersonnelBO personnel) {
+    protected void setPersonnel(final PersonnelBO personnel) {
         this.personnel = personnel;
     }
 
@@ -253,7 +253,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.displayName;
     }
 
-    protected void setDisplayName(String displayName) {
+    protected void setDisplayName(final String displayName) {
         this.displayName = displayName;
     }
 
@@ -265,7 +265,7 @@ public abstract class CustomerBO extends BusinessObject {
         return customerStatus;
     }
 
-    protected void setCustomerStatus(CustomerStatusEntity customerStatus) {
+    protected void setCustomerStatus(final CustomerStatusEntity customerStatus) {
         this.customerStatus = customerStatus;
     }
 
@@ -273,7 +273,7 @@ public abstract class CustomerBO extends BusinessObject {
         return displayAddress;
     }
 
-    public void setDisplayAddress(String displayAddress) {
+    public void setDisplayAddress(final String displayAddress) {
         this.displayAddress = displayAddress;
     }
 
@@ -281,11 +281,11 @@ public abstract class CustomerBO extends BusinessObject {
         return this.externalId;
     }
 
-    public void setExternalId(String externalId) {
+    public void setExternalId(final String externalId) {
         this.externalId = externalId;
     }
 
-    protected void setTrained(Short trained) {
+    protected void setTrained(final Short trained) {
         this.trained = trained;
     }
 
@@ -293,7 +293,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.trainedDate;
     }
 
-    public void setTrainedDate(Date trainedDate) {
+    public void setTrainedDate(final Date trainedDate) {
         this.trainedDate = trainedDate;
     }
 
@@ -301,7 +301,7 @@ public abstract class CustomerBO extends BusinessObject {
         return this.searchId;
     }
 
-    protected void setSearchId(String searchId) {
+    protected void setSearchId(final String searchId) {
         this.searchId = searchId;
     }
 
@@ -313,7 +313,7 @@ public abstract class CustomerBO extends BusinessObject {
         return mfiJoiningDate;
     }
 
-    public void setMfiJoiningDate(Date mfiJoiningDate) {
+    public void setMfiJoiningDate(final Date mfiJoiningDate) {
         this.mfiJoiningDate = mfiJoiningDate;
     }
 
@@ -321,11 +321,11 @@ public abstract class CustomerBO extends BusinessObject {
         return customerActivationDate;
     }
 
-    public void setCustomerActivationDate(Date customerActivationDate) {
+    public void setCustomerActivationDate(final Date customerActivationDate) {
         this.customerActivationDate = customerActivationDate;
     }
 
-    protected void setParentCustomer(CustomerBO parentCustomer) {
+    protected void setParentCustomer(final CustomerBO parentCustomer) {
         this.parentCustomer = parentCustomer;
     }
 
@@ -341,7 +341,7 @@ public abstract class CustomerBO extends BusinessObject {
         return customerAddressDetail;
     }
 
-    public void setCustomerAddressDetail(CustomerAddressDetailEntity customerAddressDetail) {
+    public void setCustomerAddressDetail(final CustomerAddressDetailEntity customerAddressDetail) {
         this.customerAddressDetail = customerAddressDetail;
     }
 
@@ -349,7 +349,7 @@ public abstract class CustomerBO extends BusinessObject {
         return office;
     }
 
-    protected void setOffice(OfficeBO office) {
+    protected void setOffice(final OfficeBO office) {
         this.office = office;
     }
 
@@ -357,7 +357,7 @@ public abstract class CustomerBO extends BusinessObject {
         return customerMeeting;
     }
 
-    protected void setCustomerMeeting(CustomerMeetingEntity customerMeeting) {
+    protected void setCustomerMeeting(final CustomerMeetingEntity customerMeeting) {
         this.customerMeeting = customerMeeting;
     }
 
@@ -385,37 +385,37 @@ public abstract class CustomerBO extends BusinessObject {
         return formedByPersonnel;
     }
 
-    public void setTrained(boolean trained) {
+    public void setTrained(final boolean trained) {
         this.trained = (short) (trained ? 1 : 0);
     }
 
-    public void addCustomerHierarchy(CustomerHierarchyEntity hierarchy) {
+    public void addCustomerHierarchy(final CustomerHierarchyEntity hierarchy) {
         if (hierarchy != null) {
             this.customerHierarchies.add(hierarchy);
         }
     }
 
-    public void addCustomerPosition(CustomerPositionEntity customerPosition) {
+    public void addCustomerPosition(final CustomerPositionEntity customerPosition) {
         this.customerPositions.add(customerPosition);
     }
 
-    protected void addCustomerMovement(CustomerMovementEntity customerMovement) {
+    protected void addCustomerMovement(final CustomerMovementEntity customerMovement) {
         if (customerMovement != null) {
             this.customerMovements.add(customerMovement);
         }
     }
 
-    public void addCustomField(CustomerCustomFieldEntity customField) {
+    public void addCustomField(final CustomerCustomFieldEntity customField) {
         if (customField != null) {
             this.customFields.add(customField);
         }
     }
 
-    public void addCustomerNotes(CustomerNoteEntity customerNote) {
+    public void addCustomerNotes(final CustomerNoteEntity customerNote) {
         this.customerNotes.add(customerNote);
     }
 
-    protected void addCustomerFlag(CustomerStatusFlagEntity customerStatusFlagEntity) {
+    protected void addCustomerFlag(final CustomerStatusFlagEntity customerStatusFlagEntity) {
         CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(this, customerStatusFlagEntity, this
                 .getUserContext().getId(), new DateTimeService().getCurrentJavaDateTime());
         this.customerFlags.add(customerFlag);
@@ -426,7 +426,7 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     public boolean isBlackListed() {
-        return (blackListed != null && blackListed.equals(YesNoFlag.YES.getValue()));
+        return blackListed != null && blackListed.equals(YesNoFlag.YES.getValue());
     }
 
     public Address getAddress() {
@@ -459,8 +459,8 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public void update(UserContext userContext, String externalId, Address address, List<CustomFieldView> customFields,
-            List<CustomerPositionView> customerPositions) throws CustomerException, InvalidDateException {
+    public void update(final UserContext userContext, final String externalId, final Address address, final List<CustomFieldView> customFields,
+            final List<CustomerPositionView> customerPositions) throws CustomerException, InvalidDateException {
         this.setUserContext(userContext);
         this.setExternalId(externalId);
         updateAddress(address);
@@ -469,7 +469,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.update();
     }
 
-    public void updateAddress(Address address) throws CustomerException {
+    public void updateAddress(final Address address) throws CustomerException {
         if (getCustomerAddressDetail() == null) {
             setCustomerAddressDetail(new CustomerAddressDetailEntity(this, address));
         } else {
@@ -478,8 +478,8 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     /**
-     * FIXME - find {@link CustomerAccountBO} using DAO/Persistence rather than
-     * looping over all accounts
+     * FIXME - keithw - find {@link CustomerAccountBO} using DAO/Persistence
+     * rather than looping over all accounts
      * 
      * @deprecated
      */
@@ -500,7 +500,7 @@ public abstract class CustomerBO extends BusinessObject {
      * @deprecated
      */
     @Deprecated
-    public List<LoanBO> getActiveAndApprovedLoanAccounts(Date transactionDate) {
+    public List<LoanBO> getActiveAndApprovedLoanAccounts(final Date transactionDate) {
         List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
         for (AccountBO account : accounts) {
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
@@ -570,7 +570,7 @@ public abstract class CustomerBO extends BusinessObject {
         return movement;
     }
 
-    public void updateHistoricalData(CustomerHistoricalDataEntity historicalData) {
+    public void updateHistoricalData(final CustomerHistoricalDataEntity historicalData) {
         if (historicalData != null) {
             mfiJoiningDate = historicalData.getMfiJoiningDate();
         }
@@ -584,7 +584,7 @@ public abstract class CustomerBO extends BusinessObject {
         return historicalData;
     }
 
-    public List<CustomerBO> getChildren(CustomerLevel customerLevel, ChildrenStateType stateType)
+    public List<CustomerBO> getChildren(final CustomerLevel customerLevel, final ChildrenStateType stateType)
             throws CustomerException {
         try {
             return getCustomerPersistence().getChildren(getSearchId(), getOffice().getOfficeId(), customerLevel,
@@ -594,7 +594,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public void adjustPmnt(String adjustmentComment) throws ApplicationException, SystemException {
+    public void adjustPmnt(final String adjustmentComment) throws ApplicationException, SystemException {
         getCustomerAccount().adjustPmnt(adjustmentComment);
     }
 
@@ -606,10 +606,10 @@ public abstract class CustomerBO extends BusinessObject {
      * {@link #isActive()}? I suspect not, but I'm not sure).
      */
     public boolean isActiveViaLevel() {
-        return (getCustomerLevel().isGroup() && getStatus() == CustomerStatus.GROUP_ACTIVE
+        return getCustomerLevel().isGroup() && getStatus() == CustomerStatus.GROUP_ACTIVE
                 || getCustomerLevel().isClient() && getStatus() == CustomerStatus.CLIENT_ACTIVE || getCustomerLevel()
                 .isCenter()
-                && getStatus() == CustomerStatus.CENTER_ACTIVE);
+                && getStatus() == CustomerStatus.CENTER_ACTIVE;
     }
 
     public Money getBalanceForAccountsAtRisk() {
@@ -705,7 +705,7 @@ public abstract class CustomerBO extends BusinessObject {
         return amount;
     }
 
-    public void changeStatus(CustomerStatus newStatus, CustomerStatusFlag flag, String comment)
+    public void changeStatus(final CustomerStatus newStatus, final CustomerStatusFlag flag, final String comment)
             throws CustomerException {
         changeStatus(newStatus.getValue(), flag == null ? null : flag.getValue(), comment);
     }
@@ -715,7 +715,7 @@ public abstract class CustomerBO extends BusinessObject {
      * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)}
      * instead.
      */
-    public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException {
+    public void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws CustomerException {
         Short oldStatusId = getCustomerStatus().getId();
         validateStatusChange(newStatusId);
         if (getPersonnel() != null) {
@@ -758,7 +758,7 @@ public abstract class CustomerBO extends BusinessObject {
         update();
     }
 
-    protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException {
+    protected void handleActiveForFirstTime(final Short oldStatusId, final Short newStatusId) throws CustomerException {
         if (isActiveForFirstTime(oldStatusId, newStatusId)) {
             try {
                 this.getCustomerAccount().generateCustomerFeeSchedule();
@@ -770,7 +770,7 @@ public abstract class CustomerBO extends BusinessObject {
 
     public abstract void updateMeeting(MeetingBO meeting) throws CustomerException;
 
-    protected void saveUpdatedMeeting(MeetingBO meeting) throws CustomerException {
+    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: " + getCustomerId());
         getCustomerMeeting().setUpdatedMeeting(meeting);
         setUpdatedMeetingForChildren(meeting);
@@ -778,7 +778,7 @@ public abstract class CustomerBO extends BusinessObject {
         persist();
     }
 
-    private void setUpdatedMeetingForChildren(MeetingBO meeting) throws CustomerException {
+    private void setUpdatedMeetingForChildren(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CustomerBO::setUpdatedMeetingForChildren(), customerId: " + getCustomerId());
         Set<CustomerBO> childList = getChildren();
         if (childList != null) {
@@ -816,7 +816,7 @@ public abstract class CustomerBO extends BusinessObject {
         persist();
     }
 
-    protected void resetUpdatedMeetingForChildren(MeetingBO currentMeeting) throws CustomerException {
+    protected void resetUpdatedMeetingForChildren(final MeetingBO currentMeeting) throws CustomerException {
         logger.debug("In CustomerBO::resetUpdatedMeetingForChildren(), customerId: " + getCustomerId());
         Set<CustomerBO> childList = getChildren();
         if (childList != null) {
@@ -829,7 +829,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void deleteMeeting(MeetingBO meeting) throws CustomerException {
+    protected void deleteMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CustomerBO::deleteMeeting(), customerId: " + getCustomerId());
         try {
             if (meeting != null) {
@@ -842,7 +842,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void updateMeeting(MeetingBO oldMeeting, MeetingBO newMeeting) throws CustomerException {
+    protected void updateMeeting(final MeetingBO oldMeeting, final MeetingBO newMeeting) throws CustomerException {
         try {
             if (oldMeeting.isWeekly()) {
                 oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingPlace());
@@ -858,16 +858,16 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private boolean sameRecurrence(MeetingBO oldMeeting, MeetingBO newMeeting) {
-        return ((oldMeeting.isWeekly() && newMeeting.isWeekly())
-                || (oldMeeting.isMonthlyOnDate() && newMeeting.isMonthlyOnDate()) || (oldMeeting.isMonthly()
-                && !oldMeeting.isMonthlyOnDate() && newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate()));
+    private boolean sameRecurrence(final MeetingBO oldMeeting, final MeetingBO newMeeting) {
+        return oldMeeting.isWeekly() && newMeeting.isWeekly()
+                || oldMeeting.isMonthlyOnDate() && newMeeting.isMonthlyOnDate() || oldMeeting.isMonthly()
+                && !oldMeeting.isMonthlyOnDate() && newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate();
     }
 
     private void validateLoanOfficerAssigned() throws CustomerException {
         logger.debug("In CustomerBO::validateLoanOfficerAssigned()");
-        if (!(personnel.isActive())
-                || !(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) || !(personnel.isLoanOfficer()))) {
+        if (!personnel.isActive()
+                || !(personnel.getOffice().getOfficeId().equals(office.getOfficeId()) || !personnel.isLoanOfficer())) {
             throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
         }
         logger.debug("In CustomerBO::validateLoanOfficerAssigned(), completed");
@@ -921,7 +921,7 @@ public abstract class CustomerBO extends BusinessObject {
         return false;
     }
 
-    void resetPositionsAssignedToClient(Integer clientId) {
+    void resetPositionsAssignedToClient(final Integer clientId) {
         if (getCustomerPositions() != null) {
             for (CustomerPositionEntity position : getCustomerPositions()) {
                 if (position.getCustomer() != null && position.getCustomer().getCustomerId().equals(clientId)) {
@@ -943,37 +943,37 @@ public abstract class CustomerBO extends BusinessObject {
         return CustomerLevel.getLevel(getCustomerLevel().getId());
     }
 
-    protected void validateMeeting(MeetingBO meeting) throws CustomerException {
+    protected void validateMeeting(final MeetingBO meeting) throws CustomerException {
         if (meeting == null) {
             throw new CustomerException(CustomerConstants.INVALID_MEETING);
         }
     }
 
-    protected void validateOffice(OfficeBO office) throws CustomerException {
+    protected void validateOffice(final OfficeBO office) throws CustomerException {
         if (office == null) {
             throw new CustomerException(CustomerConstants.INVALID_OFFICE);
         }
     }
 
-    protected void validateLO(PersonnelBO loanOfficer) throws CustomerException {
+    protected void validateLO(final PersonnelBO loanOfficer) throws CustomerException {
         if (loanOfficer == null || loanOfficer.getPersonnelId() == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
         }
     }
 
-    protected void validateLO(Short loanOfficerId) throws CustomerException {
+    protected void validateLO(final Short loanOfficerId) throws CustomerException {
         if (loanOfficerId == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
         }
     }
 
-    protected CustomerMeetingEntity createCustomerMeeting(MeetingBO meeting) {
+    protected CustomerMeetingEntity createCustomerMeeting(final MeetingBO meeting) {
         return meeting != null ? new CustomerMeetingEntity(this, meeting) : null;
     }
 
     protected abstract boolean isActiveForFirstTime(Short oldStatus, Short newStatusId);
 
-    private boolean checkStatusChangeCancelToPartial(CustomerStatus oldStatus, CustomerStatus newStatus) {
+    private boolean checkStatusChangeCancelToPartial(final CustomerStatus oldStatus, final CustomerStatus newStatus) {
         if ((oldStatus.equals(CustomerStatus.GROUP_CANCELLED) || oldStatus.equals(CustomerStatus.CLIENT_CANCELLED))
                 && (newStatus.equals(CustomerStatus.GROUP_PARTIAL) || newStatus.equals(CustomerStatus.CLIENT_PARTIAL))) {
             return true;
@@ -983,11 +983,11 @@ public abstract class CustomerBO extends BusinessObject {
 
     protected abstract void validateStatusChange(Short newStatusId) throws CustomerException;
 
-    protected boolean isSameBranch(OfficeBO officeObj) {
+    protected boolean isSameBranch(final OfficeBO officeObj) {
         return this.office.getOfficeId().equals(officeObj.getOfficeId());
     }
 
-    protected void updateCustomFields(List<CustomFieldView> customFields) throws InvalidDateException {
+    protected void updateCustomFields(final List<CustomFieldView> customFields) throws InvalidDateException {
         if (customFields != null) {
             for (CustomFieldView fieldView : customFields) {
                 if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
@@ -1004,7 +1004,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void updateCustomerPositions(List<CustomerPositionView> customerPositions) throws CustomerException {
+    protected void updateCustomerPositions(final List<CustomerPositionView> customerPositions) throws CustomerException {
         if (customerPositions != null) {
             for (CustomerPositionView positionView : customerPositions) {
                 boolean isPositionFound = false;
@@ -1037,7 +1037,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void updateLoanOfficer(Short loanOfficerId) throws Exception {
+    protected void updateLoanOfficer(final Short loanOfficerId) throws Exception {
 
         try {
             if (isLOChanged(loanOfficerId)) {
@@ -1059,13 +1059,13 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private boolean isLOChanged(Short loanOfficerId) {
-        return ((getPersonnel() == null && loanOfficerId != null) || (getPersonnel() != null && loanOfficerId == null) || (getPersonnel() != null
-                && loanOfficerId != null && !getPersonnel().getPersonnelId().equals(loanOfficerId)));
+    private boolean isLOChanged(final Short loanOfficerId) {
+        return getPersonnel() == null && loanOfficerId != null || getPersonnel() != null && loanOfficerId == null || getPersonnel() != null
+                && loanOfficerId != null && !getPersonnel().getPersonnelId().equals(loanOfficerId);
 
     }
 
-    protected void makeCustomerMovementEntries(OfficeBO officeToTransfer) {
+    protected void makeCustomerMovementEntries(final OfficeBO officeToTransfer) {
         CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
         if (currentCustomerMovement == null) {
             currentCustomerMovement = new CustomerMovementEntity(this, getCreatedDate());
@@ -1079,7 +1079,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.addCustomerMovement(newCustomerMovement);
     }
 
-    protected void changeParentCustomer(CustomerBO newParent) throws CustomerException {
+    protected void changeParentCustomer(final CustomerBO newParent) throws CustomerException {
         CustomerBO oldParent = getParentCustomer();
         setParentCustomer(newParent);
 
@@ -1126,7 +1126,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void setUpdatedMeeting(MeetingBO meeting) {
+    protected void setUpdatedMeeting(final MeetingBO meeting) {
         getCustomerMeeting().setUpdatedMeeting(meeting);
         getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
     }
@@ -1141,14 +1141,14 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private void createAddress(Address address) {
+    private void createAddress(final Address address) {
         if (address != null) {
             this.customerAddressDetail = new CustomerAddressDetailEntity(this, address);
             this.displayAddress = this.customerAddressDetail.getDisplayAddress();
         }
     }
 
-    private CustomerAccountBO createCustomerAccount(List<FeeView> fees) throws CustomerException {
+    private CustomerAccountBO createCustomerAccount(final List<FeeView> fees) throws CustomerException {
         try {
             return new CustomerAccountBO(userContext, this, fees);
         } catch (AccountException ae) {
@@ -1156,7 +1156,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private void createCustomFields(List<CustomFieldView> customFields) {
+    private void createCustomFields(final List<CustomFieldView> customFields) {
         if (customFields != null) {
             for (CustomFieldView customField : customFields) {
                 addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
@@ -1165,7 +1165,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private void inheritDetailsFromParent(CustomerBO parentCustomer) throws CustomerException {
+    private void inheritDetailsFromParent(final CustomerBO parentCustomer) throws CustomerException {
         personnel = parentCustomer.getPersonnel();
         office = parentCustomer.getOffice();
         if (parentCustomer.getCustomerMeeting() != null) {
@@ -1174,7 +1174,7 @@ public abstract class CustomerBO extends BusinessObject {
         this.addCustomerHierarchy(new CustomerHierarchyEntity(this, parentCustomer));
     }
 
-    private CustomerNoteEntity createCustomerNotes(String comment) throws CustomerException {
+    private CustomerNoteEntity createCustomerNotes(final String comment) throws CustomerException {
         try {
             return new CustomerNoteEntity(comment, new DateTimeService().getCurrentJavaSqlDate(),
                     getPersonnelPersistence().getPersonnel(getUserContext().getId()), this);
@@ -1183,11 +1183,11 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void addAccount(AccountBO account) {
+    protected void addAccount(final AccountBO account) {
         this.accounts.add(account);
     }
 
-    private void validateFields(String displayName, CustomerStatus customerStatus, CustomerBO parentCustomer)
+    private void validateFields(final String displayName, final CustomerStatus customerStatus, final CustomerBO parentCustomer)
             throws CustomerException {
         if (StringUtils.isNullOrEmpty(displayName)) {
             throw new CustomerException(CustomerConstants.INVALID_NAME);
@@ -1197,7 +1197,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    private CustomerBO getCustomer(Integer customerId) throws CustomerException {
+    private CustomerBO getCustomer(final Integer customerId) throws CustomerException {
         try {
             return customerId != null ? getCustomerPersistence().getCustomer(customerId) : null;
         } catch (PersistenceException pe) {
@@ -1205,28 +1205,28 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    protected void childAddedForParent(CustomerBO parent) {
+    protected void childAddedForParent(final CustomerBO parent) {
         parent.incrementChildCount();
     }
 
-    protected void childRemovedForParent(CustomerBO parent) {
+    protected void childRemovedForParent(final CustomerBO parent) {
         parent.decrementChildCount();
     }
 
-    protected void makeInactive(CustomerBO newParent) {
+    protected void makeInactive(final CustomerBO newParent) {
         CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
         currentHierarchy.makeInactive(userContext.getId());
         this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
 
     }
 
-    protected void resetPositions(CustomerBO newParent) {
+    protected void resetPositions(final CustomerBO newParent) {
         newParent.resetPositionsAssignedToClient(this.getCustomerId());
     }
 
-    protected void validateMeetingRecurrenceForTransfer(MeetingBO meetingFrom, MeetingBO meetingTo)
+    protected void validateMeetingRecurrenceForTransfer(final MeetingBO meetingFrom, final MeetingBO meetingTo)
             throws CustomerException {
-        if ((meetingFrom.isWeekly() && meetingTo.isMonthly()) || (meetingFrom.isMonthly() && meetingTo.isWeekly())) {
+        if (meetingFrom.isWeekly() && meetingTo.isMonthly() || meetingFrom.isMonthly() && meetingTo.isWeekly()) {
             throw new CustomerException(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH);
         }
     }
@@ -1240,7 +1240,7 @@ public abstract class CustomerBO extends BusinessObject {
         return false;
     }
 
-    public boolean hasActiveLoanAccountsForProduct(LoanOfferingBO loanOffering) {
+    public boolean hasActiveLoanAccountsForProduct(final LoanOfferingBO loanOffering) {
         for (AccountBO account : getAccounts()) {
             if (account.isActiveLoanAccount() && ((LoanBO) account).getLoanOffering().isOfSameOffering(loanOffering)) {
                 return true;
@@ -1266,7 +1266,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public void removeGroupMemberShip(PersonnelBO personnel, String comment) throws PersistenceException,
+    public void removeGroupMemberShip(final PersonnelBO personnel, final String comment) throws PersistenceException,
             CustomerException {
         PersonnelBO user = getPersonnelPersistence().getPersonnel(getUserContext().getId());
         CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment, new DateTimeService()
@@ -1311,7 +1311,7 @@ public abstract class CustomerBO extends BusinessObject {
      * Returns the amount which this customer
      * 
      **/
-    public Money getMaxLoanAmount(LoanOfferingBO loanOffering) {
+    public Money getMaxLoanAmount(final LoanOfferingBO loanOffering) {
         ArrayList<Money> loanAmounts = new ArrayList<Money>();
         Set<AccountBO> accounts = getAccounts();
         for (AccountBO accountBO : accounts) {
@@ -1354,24 +1354,24 @@ public abstract class CustomerBO extends BusinessObject {
      */
     public static Comparator<CustomerBO> searchIdComparator() {
         return new Comparator<CustomerBO>() {
-            public int compare(CustomerBO o1, CustomerBO o2) {
+            public int compare(final CustomerBO o1, final CustomerBO o2) {
                 return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
             }
         };
     }
 
-    public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnDisbursement(final LoanBO loan, final Money disburseAmount) throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnWriteOff(LoanBO loan) throws CustomerException {
+    public void updatePerformanceHistoryOnWriteOff(final LoanBO loan) throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnReversal(final LoanBO loan, final Money lastLoanAmount) throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnRepayment(LoanBO loan, Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnRepayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
     }
 
-    public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
     }
 }

@@ -100,6 +100,7 @@ import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.config.AccountingRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
@@ -201,8 +202,8 @@ public class LoanBO extends AccountBO {
 
     // FIXME used by test, test should try to use other constructors or factory
     // methods
-    private LoanBO(LoanOfferingBO loanOffering, LoanSummaryEntity loanSummary, MaxMinLoanAmount maxMinLoanAmount,
-            MaxMinNoOfInstall maxMinNoOfInstall, LoanPerformanceHistoryEntity performanceHistory) {
+    private LoanBO(final LoanOfferingBO loanOffering, final LoanSummaryEntity loanSummary, final MaxMinLoanAmount maxMinLoanAmount,
+            final MaxMinNoOfInstall maxMinNoOfInstall, final LoanPerformanceHistoryEntity performanceHistory) {
         this.loanOffering = loanOffering;
         this.loanSummary = loanSummary;
         this.maxMinLoanAmount = maxMinLoanAmount;
@@ -210,22 +211,22 @@ public class LoanBO extends AccountBO {
         this.performanceHistory = performanceHistory;
     }
 
-    private LoanBO(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeView> feeViews, List<CustomFieldView> customFields, Boolean isRedone,
-            boolean isRepaymentIndepOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay) throws AccountException {
+    private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
+            final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date disbursementDate,
+            final boolean interestDeductedAtDisbursement, final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
+            final List<FeeView> feeViews, final List<CustomFieldView> customFields, final Boolean isRedone,
+            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
                 interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews, customFields,
                 isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
-    public LoanBO(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer, AccountState accountState,
-            Money loanAmount, Short noOfinstallments, Date disbursementDate, boolean interestDeductedAtDisbursement,
-            Double interestRate, Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-            List<CustomFieldView> customFields, Boolean isRedone, Double maxLoanAmount, Double minLoanAmount,
-            Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled,
-            MeetingBO newMeetingForRepaymentDay) throws AccountException {
+    public LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer, final AccountState accountState,
+            final Money loanAmount, final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
+            final Double interestRate, final Short gracePeriodDuration, final FundBO fund, final List<FeeView> feeViews,
+            final List<CustomFieldView> customFields, final Boolean isRedone, final Double maxLoanAmount, final Double minLoanAmount,
+            final Short maxNoOfInstall, final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled,
+            final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
                 interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews, customFields,
                 isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
@@ -233,11 +234,11 @@ public class LoanBO extends AccountBO {
         this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxNoOfInstall, minNoOfInstall, this);
     }
 
-    private LoanBO(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeView> feeViews, List<CustomFieldView> customFields, Boolean isRedone, AccountTypes accountType,
-            boolean isRepaymentIndepOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay) throws AccountException {
+    private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
+            final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date disbursementDate,
+            final boolean interestDeductedAtDisbursement, final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
+            final List<FeeView> feeViews, final List<CustomFieldView> customFields, final Boolean isRedone, final AccountTypes accountType,
+            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         super(userContext, customer, accountType, accountState);
         setCreateDetails();
         this.redone = isRedone;
@@ -264,12 +265,12 @@ public class LoanBO extends AccountBO {
         addcustomFields(customFields);
     }
 
-    public static LoanBO redoLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeView> feeViews, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
-            Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled,
-            MeetingBO newMeetingForRepaymentDay) throws AccountException {
+    public static LoanBO redoLoan(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
+            final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date disbursementDate,
+            final boolean interestDeductedAtDisbursement, final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
+            final List<FeeView> feeViews, final List<CustomFieldView> customFields, final Double maxLoanAmount, final Double minLoanAmount,
+            final Short maxNoOfInstall, final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled,
+            final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         if (loanOffering == null || loanAmount == null || noOfinstallments == null || disbursementDate == null
                 || interestRate == null) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
@@ -306,11 +307,11 @@ public class LoanBO extends AccountBO {
                 isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
-    public static LoanBO createIndividualLoan(UserContext userContext, LoanOfferingBO loanOffering,
-            CustomerBO customer, AccountState accountState, Money loanAmount, Short noOfinstallments,
-            Date disbursementDate, boolean interestDeductedAtDisbursement, boolean isRepaymentIndepOfMeetingEnabled,
-            Double interestRate, Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-            List<CustomFieldView> customFields) throws AccountException {
+    public static LoanBO createIndividualLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
+            final CustomerBO customer, final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
+            final Date disbursementDate, final boolean interestDeductedAtDisbursement, final boolean isRepaymentIndepOfMeetingEnabled,
+            final Double interestRate, final Short gracePeriodDuration, final FundBO fund, final List<FeeView> feeViews,
+            final List<CustomFieldView> customFields) throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
                 disbursementDate, interestRate, isRepaymentIndepOfMeetingEnabled, interestDeductedAtDisbursement);
@@ -324,10 +325,10 @@ public class LoanBO extends AccountBO {
                 customFields, false, AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
     }
 
-    public static LoanBO redoIndividualLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, boolean isRepaymentIndepOfMeetingEnabled, Double interestRate,
-            Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews, List<CustomFieldView> customFields)
+    public static LoanBO redoIndividualLoan(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
+            final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date disbursementDate,
+            final boolean interestDeductedAtDisbursement, final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate,
+            final Short gracePeriodDuration, final FundBO fund, final List<FeeView> feeViews, final List<CustomFieldView> customFields)
             throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
@@ -342,9 +343,9 @@ public class LoanBO extends AccountBO {
                 customFields, false, AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
     }
 
-    private static void commonValidationsForCreateAndRedoIndividualLoans(LoanOfferingBO loanOffering,
-            CustomerBO customer, Money loanAmount, Short noOfinstallments, Date disbursementDate, Double interestRate,
-            boolean isRepaymentIndepOfMeetingEnabled, boolean interestDeductedAtDisbursement) throws AccountException {
+    private static void commonValidationsForCreateAndRedoIndividualLoans(final LoanOfferingBO loanOffering,
+            final CustomerBO customer, final Money loanAmount, final Short noOfinstallments, final Date disbursementDate, final Double interestRate,
+            final boolean isRepaymentIndepOfMeetingEnabled, final boolean interestDeductedAtDisbursement) throws AccountException {
         if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
         }
@@ -366,16 +367,16 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private static boolean isAnyLoanParamsNull(Object... args) {
+    private static boolean isAnyLoanParamsNull(final Object... args) {
         return Arrays.asList(args).contains(null);
     }
 
-    public static LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeView> feeViews, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
-            Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled,
-            MeetingBO newMeetingForRepaymentDay) throws AccountException {
+    public static LoanBO createLoan(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
+            final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date disbursementDate,
+            final boolean interestDeductedAtDisbursement, final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
+            final List<FeeView> feeViews, final List<CustomFieldView> customFields, final Double maxLoanAmount, final Double minLoanAmount,
+            final Short maxNoOfInstall, final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled,
+            final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
         }
@@ -409,7 +410,7 @@ public class LoanBO extends AccountBO {
                 isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
-    public static LoanBO createInstanceForTest(LoanOfferingBO loanOffering) {
+    public static LoanBO createInstanceForTest(final LoanOfferingBO loanOffering) {
         return new LoanBO(loanOffering, null, null, null, null);
     }
 
@@ -417,7 +418,7 @@ public class LoanBO extends AccountBO {
         return businessActivityId;
     }
 
-    public void setBusinessActivityId(Integer businessActivityId) {
+    public void setBusinessActivityId(final Integer businessActivityId) {
         this.businessActivityId = businessActivityId;
     }
 
@@ -425,7 +426,7 @@ public class LoanBO extends AccountBO {
         return collateralNote;
     }
 
-    public void setCollateralNote(String collateralNote) {
+    public void setCollateralNote(final String collateralNote) {
         this.collateralNote = collateralNote;
     }
 
@@ -433,7 +434,7 @@ public class LoanBO extends AccountBO {
         return collateralTypeId;
     }
 
-    public void setCollateralTypeId(Integer collateralTypeId) {
+    public void setCollateralTypeId(final Integer collateralTypeId) {
         this.collateralTypeId = collateralTypeId;
     }
 
@@ -445,11 +446,11 @@ public class LoanBO extends AccountBO {
         return gracePeriodType.asEnum();
     }
 
-    void setGracePeriodType(GracePeriodTypeEntity gracePeriodType) {
+    void setGracePeriodType(final GracePeriodTypeEntity gracePeriodType) {
         this.gracePeriodType = gracePeriodType;
     }
 
-    void setGracePeriodType(GraceType type) {
+    void setGracePeriodType(final GraceType type) {
         setGracePeriodType(new GracePeriodTypeEntity(type));
     }
 
@@ -457,7 +458,7 @@ public class LoanBO extends AccountBO {
         return disbursementDate;
     }
 
-    void setDisbursementDate(Date disbursementDate) {
+    void setDisbursementDate(final Date disbursementDate) {
         this.disbursementDate = disbursementDate;
     }
 
@@ -465,7 +466,7 @@ public class LoanBO extends AccountBO {
         return fund;
     }
 
-    public void setFund(FundBO fund) {
+    public void setFund(final FundBO fund) {
         this.fund = fund;
     }
 
@@ -473,7 +474,7 @@ public class LoanBO extends AccountBO {
         return gracePeriodDuration;
     }
 
-    void setGracePeriodDuration(Short gracePeriodDuration) {
+    void setGracePeriodDuration(final Short gracePeriodDuration) {
         this.gracePeriodDuration = gracePeriodDuration;
     }
 
@@ -481,7 +482,7 @@ public class LoanBO extends AccountBO {
         return gracePeriodPenalty;
     }
 
-    void setGracePeriodPenalty(Short gracePeriodPenalty) {
+    void setGracePeriodPenalty(final Short gracePeriodPenalty) {
         this.gracePeriodPenalty = gracePeriodPenalty;
     }
 
@@ -489,7 +490,7 @@ public class LoanBO extends AccountBO {
         return groupFlag;
     }
 
-    public void setGroupFlag(Short groupFlag) {
+    public void setGroupFlag(final Short groupFlag) {
         this.groupFlag = groupFlag;
     }
 
@@ -497,7 +498,7 @@ public class LoanBO extends AccountBO {
         return interestRate;
     }
 
-    void setInterestRate(Double interestRate) {
+    void setInterestRate(final Double interestRate) {
         this.interestRate = interestRate;
     }
 
@@ -505,7 +506,7 @@ public class LoanBO extends AccountBO {
         return interestType;
     }
 
-    void setInterestType(InterestTypesEntity interestType) {
+    void setInterestType(final InterestTypesEntity interestType) {
         this.interestType = interestType;
     }
 
@@ -513,7 +514,7 @@ public class LoanBO extends AccountBO {
         return intrestAtDisbursement == LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT;
     }
 
-    void setInterestDeductedAtDisbursement(boolean interestDedAtDisb) {
+    void setInterestDeductedAtDisbursement(final boolean interestDedAtDisb) {
         this.intrestAtDisbursement = interestDedAtDisb ? Constants.YES : Constants.NO;
     }
 
@@ -521,7 +522,7 @@ public class LoanBO extends AccountBO {
         return loanAmount;
     }
 
-    void setLoanAmount(Money loanAmount) {
+    void setLoanAmount(final Money loanAmount) {
         this.loanAmount = loanAmount;
     }
 
@@ -529,7 +530,7 @@ public class LoanBO extends AccountBO {
         return loanBalance;
     }
 
-    void setLoanBalance(Money loanBalance) {
+    void setLoanBalance(final Money loanBalance) {
         this.loanBalance = loanBalance;
     }
 
@@ -537,7 +538,7 @@ public class LoanBO extends AccountBO {
         return loanMeeting;
     }
 
-    void setLoanMeeting(MeetingBO loanMeeting) {
+    void setLoanMeeting(final MeetingBO loanMeeting) {
         this.loanMeeting = loanMeeting;
     }
 
@@ -553,7 +554,7 @@ public class LoanBO extends AccountBO {
         return noOfInstallments;
     }
 
-    void setNoOfInstallments(Short noOfInstallments) {
+    void setNoOfInstallments(final Short noOfInstallments) {
         this.noOfInstallments = noOfInstallments;
     }
 
@@ -561,7 +562,7 @@ public class LoanBO extends AccountBO {
         return stateSelected;
     }
 
-    public void setStateSelected(String stateSelected) {
+    public void setStateSelected(final String stateSelected) {
         this.stateSelected = stateSelected;
     }
 
@@ -573,7 +574,7 @@ public class LoanBO extends AccountBO {
         return loanActivityDetails;
     }
 
-    public void addLoanActivity(LoanActivityEntity loanActivity) {
+    public void addLoanActivity(final LoanActivityEntity loanActivity) {
         this.loanActivityDetails.add(loanActivity);
     }
 
@@ -581,7 +582,7 @@ public class LoanBO extends AccountBO {
         return loanArrearsAgingEntity;
     }
 
-    public void setLoanArrearsAgingEntity(LoanArrearsAgingEntity loanArrearsAgingEntity) {
+    public void setLoanArrearsAgingEntity(final LoanArrearsAgingEntity loanArrearsAgingEntity) {
         this.loanArrearsAgingEntity = loanArrearsAgingEntity;
     }
 
@@ -603,13 +604,13 @@ public class LoanBO extends AccountBO {
      * Update LoanSummaryEntity by subtracting amount of removed fees.
      */
     @Override
-    protected void updateTotalFeeAmount(Money totalFeeAmount) {
+    protected void updateTotalFeeAmount(final Money totalFeeAmount) {
         LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
         loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees().subtract(totalFeeAmount));
     }
 
     @Override
-    protected void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
+    protected void updateTotalPenaltyAmount(final Money totalPenaltyAmount) {
         LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
         loanSummaryEntity.setOriginalPenalty(loanSummaryEntity.getOriginalPenalty().subtract(totalPenaltyAmount));
     }
@@ -651,8 +652,8 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    protected void updateAccountActivity(Money principal, Money interest, Money fee, Money penalty, Short personnelId,
-            String description) throws AccountException {
+    protected void updateAccountActivity(final Money principal, final Money interest, final Money fee, final Money penalty, final Short personnelId,
+            final String description) throws AccountException {
         try {
             PersonnelBO personnel = new PersonnelPersistence().getPersonnel(personnelId);
             LoanActivityEntity loanActivity = new LoanActivityEntity(this, personnel, description, principal,
@@ -668,7 +669,7 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    public void waiveAmountDue(WaiveEnum waiveType) throws AccountException {
+    public void waiveAmountDue(final WaiveEnum waiveType) throws AccountException {
         if (waiveType.equals(WaiveEnum.FEES)) {
             waiveFeeAmountDue();
         } else if (waiveType.equals(WaiveEnum.PENALTY)) {
@@ -677,7 +678,7 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    public void waiveAmountOverDue(WaiveEnum waiveType) throws AccountException {
+    public void waiveAmountOverDue(final WaiveEnum waiveType) throws AccountException {
         if (waiveType.equals(WaiveEnum.FEES)) {
             waiveFeeAmountOverDue();
         } else if (waiveType.equals(WaiveEnum.PENALTY)) {
@@ -748,7 +749,7 @@ public class LoanBO extends AccountBO {
      * the loan accordingly.
      */
     @Override
-    public final void removeFees(Short feeId, Short personnelId) throws AccountException {
+    public final void removeFees(final Short feeId, final Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
         Money totalFeeAmount = new Money();
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
@@ -770,7 +771,7 @@ public class LoanBO extends AccountBO {
             }
 
             try {
-                (new AccountPersistence()).createOrUpdate(this);
+                new AccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
@@ -784,7 +785,7 @@ public class LoanBO extends AccountBO {
      * removed.
      */
     @Override
-    public Money updateAccountActionDateEntity(List<Short> intallmentIdList, Short feeId) {
+    public Money updateAccountActionDateEntity(final List<Short> intallmentIdList, final Short feeId) {
         Money totalFeeAmount = new Money();
         Set<AccountActionDateEntity> accountActionDateEntitySet = this.getAccountActionDates();
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateEntitySet) {
@@ -795,11 +796,11 @@ public class LoanBO extends AccountBO {
         return totalFeeAmount;
     }
 
-    protected boolean isRoundedAmount(Double amount) {
+    protected boolean isRoundedAmount(final Double amount) {
         return isRoundedAmount(new Money(new BigDecimal(amount)));
     }
 
-    protected boolean isRoundedAmount(Money amount) {
+    protected boolean isRoundedAmount(final Money amount) {
         return amount.equals(initialRound_v2(amount)) && amount.equals(finalRound_v2(amount));
     }
 
@@ -814,7 +815,7 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    public void applyCharge(Short feeId, Double charge) throws AccountException, PersistenceException {
+    public void applyCharge(final Short feeId, final Double charge) throws AccountException, PersistenceException {
         List<AccountActionDateEntity> dueInstallments = getTotalDueInstallments();
         if (dueInstallments.isEmpty()) {
             throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
@@ -859,7 +860,7 @@ public class LoanBO extends AccountBO {
      *            - Installment id till which we want over due amounts.
      * 
      */
-    public OverDueAmounts getOverDueAmntsUptoInstallment(Short installmentId) throws AccountException {
+    public OverDueAmounts getOverDueAmntsUptoInstallment(final Short installmentId) throws AccountException {
         Set<AccountActionDateEntity> accountActionDateEntities = getAccountActionDates();
         OverDueAmounts totalOverDueAmounts = new OverDueAmounts();
         if (null != accountActionDateEntities && accountActionDateEntities.size() > 0) {
@@ -881,8 +882,8 @@ public class LoanBO extends AccountBO {
      * @deprecated use {@link LoanBO#disburseLoan(AccountPaymentEntity)}
      */
     @Deprecated
-    public void disburseLoan(String recieptNum, Date transactionDate, Short paymentTypeId, PersonnelBO personnel,
-            Date receiptDate, Short rcvdPaymentTypeId) throws AccountException {
+    public void disburseLoan(final String recieptNum, final Date transactionDate, final Short paymentTypeId, final PersonnelBO personnel,
+            final Date receiptDate, final Short rcvdPaymentTypeId) throws AccountException {
         disburseLoan(recieptNum, transactionDate, paymentTypeId, personnel, receiptDate, rcvdPaymentTypeId, true);
     }
 
@@ -890,13 +891,13 @@ public class LoanBO extends AccountBO {
      * @deprecated use {@link LoanBO#disburseLoan(AccountPaymentEntity)}
      */
     @Deprecated
-    public void disburseLoan(PersonnelBO personnel, Short rcvdPaymentTypeId, boolean persistChange)
+    public void disburseLoan(final PersonnelBO personnel, final Short rcvdPaymentTypeId, final boolean persistChange)
             throws AccountException {
         disburseLoan(null, getDisbursementDate(), rcvdPaymentTypeId, personnel, null, rcvdPaymentTypeId, persistChange);
     }
 
-    private void disburseLoan(String recieptNum, Date transactionDate, Short paymentTypeId, PersonnelBO personnel,
-            Date receiptDate, Short rcvdPaymentTypeId, boolean persistChange) throws AccountException {
+    private void disburseLoan(final String recieptNum, final Date transactionDate, final Short paymentTypeId, final PersonnelBO personnel,
+            final Date receiptDate, final Short rcvdPaymentTypeId, final boolean persistChange) throws AccountException {
         
         addLoanActivity(buildLoanActivity(this.loanAmount, personnel, AccountConstants.LOAN_DISBURSAL, transactionDate));
 
@@ -925,7 +926,7 @@ public class LoanBO extends AccountBO {
                     accountPaymentEntity = insertOnlyFeeAtDisbursement(recieptNum, transactionDate, rcvdPaymentTypeId,
                             personnel);
                 }
-            } catch (PersistenceException e) {
+            } catch (MifosRuntimeException e) {
                 throw new AccountException(e);
             }
         }
@@ -984,8 +985,8 @@ public class LoanBO extends AccountBO {
         return amount;
     }
 
-    public void makeEarlyRepayment(Money totalAmount, String receiptNumber, Date recieptDate, String paymentTypeId,
-            Short personnelId) throws AccountException {
+    public void makeEarlyRepayment(final Money totalAmount, final String receiptNumber, final Date recieptDate, final String paymentTypeId,
+            final Short personnelId) throws AccountException {
         try {
             MasterPersistence masterPersistence = new MasterPersistence();
             PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
@@ -1060,7 +1061,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    public boolean isLastInstallment(Short installmentId) {
+    public boolean isLastInstallment(final Short installmentId) {
         Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
         List<Object> objectList = Arrays.asList(accountActionDateSet.toArray());
         AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity) objectList
@@ -1190,17 +1191,12 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    public Money getAmountTobePaidAtdisburtail(Date disbursalDate) throws AccountException {
+    public Money getAmountTobePaidAtdisburtail() throws AccountException {
         if (this.isInterestDeductedAtDisbursement()) {
             return getDueAmount(getAccountActionDate(Short.valueOf("1")));
-        } else {
-            try {
-                return new Money(new LoanPersistence().getFeeAmountAtDisbursement(this.getAccountId()).toString());
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
-            }
         }
-
+        
+        return new Money(new LoanPersistence().getFeeAmountAtDisbursement(this.getAccountId()).toString());
     }
 
     public Boolean hasPortfolioAtRisk() {
@@ -1230,7 +1226,7 @@ public class LoanBO extends AccountBO {
     public void save() throws AccountException {
         try {
             this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), this
-                    .getAccountState(), (new PersonnelPersistence()).getPersonnel(userContext.getId()), this));
+                    .getAccountState(), new PersonnelPersistence().getPersonnel(userContext.getId()), this));
             new LoanPersistence().createOrUpdate(this);
             this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
             new LoanPersistence().createOrUpdate(this);
@@ -1239,15 +1235,15 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    public void save(AccountState accountState) throws AccountException {
+    public void save(final AccountState accountState) throws AccountException {
         this.setAccountState(new AccountStateEntity(accountState));
         save();
     }
 
-    public void updateLoan(Boolean interestDeductedAtDisbursment, Money loanAmount, Double interestRate,
-            Short noOfInstallments, Date disbursmentDate, Short gracePeriodDuration, Integer businessActivityId,
-            String collateralNote, Integer collateralTypeId, List<CustomFieldView> customFields,
-            boolean isRepaymentIndepOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay) throws AccountException {
+    public void updateLoan(final Boolean interestDeductedAtDisbursment, final Money loanAmount, final Double interestRate,
+            final Short noOfInstallments, final Date disbursmentDate, final Short gracePeriodDuration, final Integer businessActivityId,
+            final String collateralNote, final Integer collateralTypeId, final List<CustomFieldView> customFields,
+            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         if (interestDeductedAtDisbursment) {
             try {
                 if (noOfInstallments <= 1) {
@@ -1288,7 +1284,7 @@ public class LoanBO extends AccountBO {
         update();
     }
 
-    public void updateLoan(Money loanAmount, Integer businessActivityId) throws AccountException {
+    public void updateLoan(final Money loanAmount, final Integer businessActivityId) throws AccountException {
         setLoanAmount(loanAmount);
         setBusinessActivityId(businessActivityId);
         update();
@@ -1344,7 +1340,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    protected void updatePerformanceHistoryOnAdjustment(int numberOfTransactions) {
+    protected void updatePerformanceHistoryOnAdjustment(final int numberOfTransactions) {
         if (getPerformanceHistory() != null) {
             getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments() - numberOfTransactions);
         }
@@ -1359,7 +1355,7 @@ public class LoanBO extends AccountBO {
      * AccountPaymentEntity} and not {@link PaymentData} dto
      */
     @Override
-    protected AccountPaymentEntity makePayment(PaymentData paymentData) throws AccountException {
+    protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
         
         final LoanPaymentTypes loanPaymentTypes = getLoanPaymentType(paymentData.getTotalAmount());
         if (loanPaymentTypes == null) {
@@ -1406,7 +1402,7 @@ public class LoanBO extends AccountBO {
             }
 
             if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
-                    && (loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT))) {
+                    && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
                 handleArrearsAging();
             }
             LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
@@ -1432,7 +1428,7 @@ public class LoanBO extends AccountBO {
         return accountPayment;
     }
 
-    private void delete(PersistentObject objectoDelete) throws AccountException {
+    private void delete(final PersistentObject objectoDelete) throws AccountException {
 
         if (objectoDelete != null) {
             try {
@@ -1444,11 +1440,11 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    protected Money getDueAmount(AccountActionDateEntity installment) {
+    protected Money getDueAmount(final AccountActionDateEntity installment) {
         return ((LoanScheduleEntity) installment).getTotalDueWithFees();
     }
 
-    private boolean isInstallmentPaid(Short installmentId, List<AccountActionDateEntity> allInstallments) {
+    private boolean isInstallmentPaid(final Short installmentId, final List<AccountActionDateEntity> allInstallments) {
         for (AccountActionDateEntity accountActionDate : allInstallments) {
             if (accountActionDate.getInstallmentId().equals(installmentId)) {
                 return accountActionDate.isPaid();
@@ -1458,7 +1454,7 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    protected void updateInstallmentAfterAdjustment(List<AccountTrxnEntity> reversedTrxns) throws AccountException {
+    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns) throws AccountException {
         int numberOfFullPayments = 0;
         List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
 
@@ -1547,7 +1543,7 @@ public class LoanBO extends AccountBO {
     }
 
     private int getIncrementedNumberOfFullPaymentsIfPaid(Integer numberOfFullPayments,
-            List<AccountActionDateEntity> allInstallments, Short prevInstallmentId, Short currentInstallmentId) {
+            final List<AccountActionDateEntity> allInstallments, Short prevInstallmentId, final Short currentInstallmentId) {
         if (!currentInstallmentId.equals(prevInstallmentId)) {
             if (isInstallmentPaid(currentInstallmentId, allInstallments)) {
                 numberOfFullPayments++;
@@ -1561,7 +1557,7 @@ public class LoanBO extends AccountBO {
      * This method checks if the loan account has been reopened because of
      * payment adjustments made.
      */
-    private boolean isAccountReOpened(AccountStateEntity currentAccountState, AccountStateEntity newAccountState) {
+    private boolean isAccountReOpened(final AccountStateEntity currentAccountState, final AccountStateEntity newAccountState) {
         boolean reOpened = false;
 
         if (currentAccountState.isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET)
@@ -1574,10 +1570,10 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    protected void regenerateFutureInstallments(Short nextInstallmentId) throws AccountException {
-        if ((!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()))
-                && (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()))
-                && (!this.getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue()))) {
+    protected void regenerateFutureInstallments(final Short nextInstallmentId) throws AccountException {
+        if (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
+                && !this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
+                && !this.getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
             List<Date> meetingDates = null;
             int installmentSize = getLastInstallmentId();
             try {
@@ -1591,7 +1587,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void updateLoanSchedule(Short nextInstallmentId, List<Date> meetingDates) {
+    private void updateLoanSchedule(final Short nextInstallmentId, final List<Date> meetingDates) {
         short installmentId = nextInstallmentId;
 
         for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
@@ -1610,20 +1606,20 @@ public class LoanBO extends AccountBO {
         applyRounding_v2();
     }
 
-    private int calculateDays(Date fromDate, Date toDate) {
+    private int calculateDays(final Date fromDate, final Date toDate) {
         long y = 1000 * 60 * 60 * 24;
-        long x = (getMFITime(toDate) / y) - (getMFITime(fromDate) / y);
+        long x = getMFITime(toDate) / y - getMFITime(fromDate) / y;
         return (int) x;
     }
 
-    private long getMFITime(Date date) {
+    private long getMFITime(final Date date) {
         Calendar cal1 = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
         cal1.setTimeZone(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
         cal1.setTime(date);
         return date.getTime() + cal1.get(Calendar.ZONE_OFFSET) + cal1.get(Calendar.DST_OFFSET);
     }
 
-    private Money getAccountFeeAmount(AccountFeesEntity accountFees, Money loanInterest) {
+    private Money getAccountFeeAmount(final AccountFeesEntity accountFees, final Money loanInterest) {
 
         // OK. No-arg constructor uses new calc methods
         Money accountFeeAmount = new Money();
@@ -1647,8 +1643,8 @@ public class LoanBO extends AccountBO {
 
     @Override
     @Deprecated
-    protected final List<FeeInstallment> handlePeriodic(AccountFeesEntity accountFees,
-            List<InstallmentDate> installmentDates) throws AccountException {
+    protected final List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
+            final List<InstallmentDate> installmentDates) throws AccountException {
         Money accountFeeAmount = accountFees.getAccountFeeAmount();
         MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
         List<Date> feeDates = getFeeDates(feeMeetingFrequency, installmentDates);
@@ -1664,8 +1660,8 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    protected final List<FeeInstallment> handlePeriodic(AccountFeesEntity accountFees,
-            List<InstallmentDate> installmentDates, List<InstallmentDate> nonAdjustedInstallmentDates)
+    protected final List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
+            final List<InstallmentDate> installmentDates, final List<InstallmentDate> nonAdjustedInstallmentDates)
             throws AccountException {
         Money accountFeeAmount = accountFees.getAccountFeeAmount();
         MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
@@ -1683,8 +1679,8 @@ public class LoanBO extends AccountBO {
         return feeInstallmentList;
     }
 
-    private LoanActivityEntity buildLoanActivity(Collection<AccountTrxnEntity> accountTrxnDetails,
-            PersonnelBO personnel, String comments, Date trxnDate) {
+    private LoanActivityEntity buildLoanActivity(final Collection<AccountTrxnEntity> accountTrxnDetails,
+            final PersonnelBO personnel, String comments, final Date trxnDate) {
         Date activityDate = trxnDate;
         Money principal = new Money();
         Money interest = new Money();
@@ -1719,8 +1715,8 @@ public class LoanBO extends AccountBO {
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), activityDate);
     }
 
-    private LoanActivityEntity buildLoanActivity(Money totalPrincipal, PersonnelBO personnel, String comments,
-            Date trxnDate) {
+    private LoanActivityEntity buildLoanActivity(final Money totalPrincipal, final PersonnelBO personnel, final String comments,
+            final Date trxnDate) {
         Date activityDate = trxnDate;
         Money principal = totalPrincipal;
         Money interest = new Money();
@@ -1733,7 +1729,7 @@ public class LoanBO extends AccountBO {
                         .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), activityDate);
     }
 
-    private Short getInstallmentSkipToStartRepayment(boolean isRepaymentIndepOfMeetingEnabled) {
+    private Short getInstallmentSkipToStartRepayment(final boolean isRepaymentIndepOfMeetingEnabled) {
         boolean isInterestDeductedatDisbursement = false;
         if (isRepaymentIndepOfMeetingEnabled) {
             isInterestDeductedatDisbursement = !isInterestDeductedAtDisbursement();
@@ -1750,20 +1746,20 @@ public class LoanBO extends AccountBO {
         return (short) (getGracePeriodDuration() + 1);
     }
 
-    private String getRateBasedOnFormula(Double rate, FeeFormulaEntity formula, Money loanInterest) {
+    private String getRateBasedOnFormula(final Double rate, final FeeFormulaEntity formula, final Money loanInterest) {
         Double amountToCalculateOn = 1.0;
         if (formula.getId().equals(FeeFormula.AMOUNT.getValue())) {
             amountToCalculateOn = loanAmount.getAmountDoubleValue();
         } else if (formula.getId().equals(FeeFormula.AMOUNT_AND_INTEREST.getValue())) {
-            amountToCalculateOn = (loanAmount.add(loanInterest)).getAmountDoubleValue();
+            amountToCalculateOn = loanAmount.add(loanInterest).getAmountDoubleValue();
         } else if (formula.getId().equals(FeeFormula.INTEREST.getValue())) {
             amountToCalculateOn = loanInterest.getAmountDoubleValue();
         }
-        Double rateAmount = (rate * amountToCalculateOn) / 100;
+        Double rateAmount = rate * amountToCalculateOn / 100;
         return rateAmount.toString();
     }
 
-    private void populateAccountFeeAmount(Set<AccountFeesEntity> accountFees, Money loanInterest) {
+    private void populateAccountFeeAmount(final Set<AccountFeesEntity> accountFees, final Money loanInterest) {
         for (AccountFeesEntity accountFeesEntity : accountFees) {
             accountFeesEntity.setAccountFeeAmount(getAccountFeeAmount(accountFeesEntity, loanInterest));
         }
@@ -1835,8 +1831,8 @@ public class LoanBO extends AccountBO {
         return AccountConstants.DAYS_IN_MONTH;
     }
 
-    private void generateRepaymentSchedule(List<InstallmentDate> installmentDates,
-            List<EMIInstallment> EMIInstallments, List<FeeInstallment> feeInstallmentList) throws AccountException {
+    private void generateRepaymentSchedule(final List<InstallmentDate> installmentDates,
+            final List<EMIInstallment> EMIInstallments, final List<FeeInstallment> feeInstallmentList) throws AccountException {
         int count = installmentDates.size();
         for (int i = 0; i < count; i++) {
             InstallmentDate installmentDate = installmentDates.get(i);
@@ -1865,7 +1861,7 @@ public class LoanBO extends AccountBO {
         buildRawAmountTotal();
     }
 
-    private void validateSize(List installmentDates, List EMIInstallments) throws AccountException {
+    private void validateSize(final List installmentDates, final List EMIInstallments) throws AccountException {
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                 "Validating installment size  " + installmentDates.size());
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -1875,7 +1871,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private List<EMIInstallment> interestDeductedFirstPrincipalLast(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> interestDeductedFirstPrincipalLast(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         if (getGraceType() == GraceType.GRACEONALLREPAYMENTS || getGraceType() == GraceType.PRINCIPALONLYGRACE) {
             throw new AccountException(AccountConstants.INTERESTDEDUCTED_PRINCIPALLAST);
@@ -1904,7 +1900,7 @@ public class LoanBO extends AccountBO {
         throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
     }
 
-    public static Boolean isDisbursementDateValid(CustomerBO specifiedCustomer, Date disbursementDate)
+    public static Boolean isDisbursementDateValid(final CustomerBO specifiedCustomer, final Date disbursementDate)
             throws AccountException {
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("IsDisbursementDateValid invoked ");
         Boolean isValid = false;
@@ -1917,7 +1913,7 @@ public class LoanBO extends AccountBO {
         return isValid;
     }
 
-    private void applyPeriodicFee(FeeBO fee, Double charge, List<AccountActionDateEntity> dueInstallments)
+    private void applyPeriodicFee(final FeeBO fee, final Double charge, final List<AccountActionDateEntity> dueInstallments)
             throws AccountException, PersistenceException {
         AccountFeesEntity accountFee = getAccountFee(fee, charge);
         Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
@@ -1943,7 +1939,7 @@ public class LoanBO extends AccountBO {
         updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
     }
 
-    private void applyOneTimeFee(FeeBO fee, Double charge, AccountActionDateEntity accountActionDateEntity)
+    private void applyOneTimeFee(final FeeBO fee, final Double charge, final AccountActionDateEntity accountActionDateEntity)
             throws AccountException {
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
         AccountFeesEntity accountFee = new AccountFeesEntity(this, fee, charge, FeeStatus.ACTIVE.getValue(),
@@ -1964,11 +1960,11 @@ public class LoanBO extends AccountBO {
         updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);
     }
 
-    protected boolean canApplyMiscCharge(Money charge) {
+    protected boolean canApplyMiscCharge(final Money charge) {
         return !havePaymentsBeenMade() || isRoundedAmount(charge);
     }
 
-    private void applyMiscCharge(Short chargeType, Money charge, AccountActionDateEntity accountActionDateEntity)
+    private void applyMiscCharge(final Short chargeType, final Money charge, final AccountActionDateEntity accountActionDateEntity)
             throws AccountException {
 
         if (!canApplyMiscCharge(charge)) {
@@ -1981,7 +1977,7 @@ public class LoanBO extends AccountBO {
         updateLoanActivity(chargeType, charge, "");
     }
 
-    private void updateLoanSummary(Short chargeType, Money charge) {
+    private void updateLoanSummary(final Short chargeType, final Money charge) {
         if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
             getLoanSummary().updateOriginalPenalty(charge);
         } else {
@@ -1989,7 +1985,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void updateLoanActivity(Short chargeType, Money charge, String comments) throws AccountException {
+    private void updateLoanActivity(final Short chargeType, final Money charge, final String comments) throws AccountException {
         try {
             PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
             LoanActivityEntity loanActivityEntity = null;
@@ -2009,8 +2005,8 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private Money applyFeeToInstallments(List<FeeInstallment> feeInstallmentList,
-            List<AccountActionDateEntity> accountActionDateList) {
+    private Money applyFeeToInstallments(final List<FeeInstallment> feeInstallmentList,
+            final List<AccountActionDateEntity> accountActionDateList) {
         Date lastAppliedDate = null;
         Money totalFeeAmountApplied = new Money();
         AccountFeesEntity accountFeesEntity = null;
@@ -2052,7 +2048,7 @@ public class LoanBO extends AccountBO {
         return totalFeeAmountApplied;
     }
 
-    private void filterTimeOfDisbursementFees(LoanScheduleEntity loanScheduleEntity, FeeBO fee) {
+    private void filterTimeOfDisbursementFees(final LoanScheduleEntity loanScheduleEntity, final FeeBO fee) {
         Short paymentType = fee.getFeeFrequency().getFeePayment().getId();
         if (paymentType.equals(FeePayment.TIME_OF_DISBURSMENT.getValue()) && !isInterestDeductedAtDisbursement()) {
             Set<AccountFeesActionDetailEntity> accountFeesDetailSet = loanScheduleEntity.getAccountFeesActionDetails();
@@ -2065,7 +2061,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private MeetingBO buildLoanMeeting(MeetingBO customerMeeting, MeetingBO loanOfferingMeeting, Date disbursementDate)
+    private MeetingBO buildLoanMeeting(final MeetingBO customerMeeting, final MeetingBO loanOfferingMeeting, final Date disbursementDate)
             throws AccountException {
         if (customerMeeting != null
                 && loanOfferingMeeting != null
@@ -2104,7 +2100,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private boolean isMultiple(Short valueToBeChecked, Short valueToBeCheckedWith) {
+    private boolean isMultiple(final Short valueToBeChecked, final Short valueToBeCheckedWith) {
         return valueToBeChecked % valueToBeCheckedWith == 0;
     }
 
@@ -2159,7 +2155,7 @@ public class LoanBO extends AccountBO {
         return fees;
     }
 
-    private void buildAccountFee(List<FeeView> feeViews) {
+    private void buildAccountFee(final List<FeeView> feeViews) {
         if (feeViews != null && feeViews.size() > 0) {
             for (FeeView feeView : feeViews) {
                 FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
@@ -2168,8 +2164,8 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void setGracePeriodTypeAndDuration(boolean interestDeductedAtDisbursement, Short gracePeriodDuration,
-            Short noOfInstallments) throws AccountException {
+    private void setGracePeriodTypeAndDuration(final boolean interestDeductedAtDisbursement, final Short gracePeriodDuration,
+            final Short noOfInstallments) throws AccountException {
         if (interestDeductedAtDisbursement) {
             setGracePeriodType(GraceType.NONE);
             this.gracePeriodDuration = (short) 0;
@@ -2184,7 +2180,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) throws AccountException {
+    private void updateCustomerHistoryOnLastInstlPayment(final Money totalAmount) throws AccountException {
         try {
             getCustomer().updatePerformanceHistoryOnLastInstlPayment(this, totalAmount);
         } catch (CustomerException e) {
@@ -2200,7 +2196,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void updateCustomerHistoryOnDisbursement(Money disburseAmount) throws AccountException {
+    private void updateCustomerHistoryOnDisbursement(final Money disburseAmount) throws AccountException {
         try {
             getCustomer().updatePerformanceHistoryOnDisbursement(this, disburseAmount);
         } catch (CustomerException e) {
@@ -2208,7 +2204,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void updateCustomerHistoryOnRepayment(Money totalAmount) throws AccountException {
+    private void updateCustomerHistoryOnRepayment(final Money totalAmount) throws AccountException {
         try {
             getCustomer().updatePerformanceHistoryOnRepayment(this, totalAmount);
         } catch (CustomerException e) {
@@ -2238,7 +2234,7 @@ public class LoanBO extends AccountBO {
 
     }
 
-    private void regeneratePaymentSchedule(boolean isRepaymentIndepOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay)
+    private void regeneratePaymentSchedule(final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
         Money miscFee = getMiscFee();
         Money miscPenalty = getMiscPenalty();
@@ -2284,8 +2280,8 @@ public class LoanBO extends AccountBO {
         loanSummary.setOriginalPenalty(penalty);
     }
 
-    private AccountPaymentEntity payInterestAtDisbursement(String recieptNum, Date transactionDate,
-            Short paymentTypeId, PersonnelBO personnel, Date receiptDate) throws AccountException {
+    private AccountPaymentEntity payInterestAtDisbursement(final String recieptNum, final Date transactionDate,
+            final Short paymentTypeId, final PersonnelBO personnel, final Date receiptDate) throws AccountException {
         
         AccountActionDateEntity firstInstallment = null;
         for (AccountActionDateEntity accountActionDate : this.getAccountActionDates()) {
@@ -2370,8 +2366,8 @@ public class LoanBO extends AccountBO {
         return amount;
     }
 
-    private AccountPaymentEntity insertOnlyFeeAtDisbursement(String recieptNum, Date recieptDate, Short paymentTypeId,
-            PersonnelBO personnel) {
+    private AccountPaymentEntity insertOnlyFeeAtDisbursement(final String recieptNum, final Date recieptDate, final Short paymentTypeId,
+            final PersonnelBO personnel) {
 
         Money totalPayment = new Money();
         for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
@@ -2406,15 +2402,15 @@ public class LoanBO extends AccountBO {
         return accountPaymentEntity;
     }
 
-    private PaymentData getLoanAccountPaymentData(Money totalAmount,
-            PersonnelBO personnel, String recieptId, Short paymentId, Date receiptDate, Date transactionDate) {
+    private PaymentData getLoanAccountPaymentData(final Money totalAmount,
+            final PersonnelBO personnel, final String recieptId, final Short paymentId, final Date receiptDate, final Date transactionDate) {
         PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel, paymentId, transactionDate);
         paymentData.setRecieptDate(receiptDate);
         paymentData.setRecieptNum(recieptId);
         return paymentData;
     }
 
-    private LoanPaymentTypes getLoanPaymentType(Money amount) {
+    private LoanPaymentTypes getLoanPaymentType(final Money amount) {
         if (amount.getAmountDoubleValue() == getTotalPaymentDue().getAmountDoubleValue()) {
             return LoanPaymentTypes.FULL_PAYMENT;
         } else if (amount.getAmountDoubleValue() < getTotalPaymentDue().getAmountDoubleValue()) {
@@ -2426,7 +2422,7 @@ public class LoanBO extends AccountBO {
         return null;
     }
 
-    private void handlePartialPayment(PaymentData paymentData) {
+    private void handlePartialPayment(final PaymentData paymentData) {
         Money totalAmount = paymentData.getTotalAmount();
         for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
             if (totalAmount.getAmountDoubleValue() > 0.0) {
@@ -2440,7 +2436,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void addAccountPaymentToNextInstallmentIfNecessary(PaymentData paymentData) {
+    private void addAccountPaymentToNextInstallmentIfNecessary(final PaymentData paymentData) {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
         if (nextInstallment != null) {
             addAccountPaymentToNextInstallmentIfNecessary(paymentData, new LoanPaymentData(nextInstallment),
@@ -2448,7 +2444,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void addAccountPaymentToNextInstallmentIfNecessary(PaymentData paymentData, Money totalAmount) {
+    private void addAccountPaymentToNextInstallmentIfNecessary(final PaymentData paymentData, final Money totalAmount) {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
         if (nextInstallment != null) {
             addAccountPaymentToNextInstallmentIfNecessary(paymentData,
@@ -2456,8 +2452,8 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void addAccountPaymentToNextInstallmentIfNecessary(PaymentData paymentData,
-            LoanPaymentData loanPaymentData, AccountActionDateEntity nextInstallment) {
+    private void addAccountPaymentToNextInstallmentIfNecessary(final PaymentData paymentData,
+            final LoanPaymentData loanPaymentData, final AccountActionDateEntity nextInstallment) {
         if (!nextInstallment.isPaid()
                 && DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(
                         DateUtils.getCurrentDateWithoutTimeStamp())) {
@@ -2465,14 +2461,14 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void handleFullPayment(PaymentData paymentData) {
+    private void handleFullPayment(final PaymentData paymentData) {
         for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
             paymentData.addAccountPaymentData(new LoanPaymentData(accountActionDate));
         }
         addAccountPaymentToNextInstallmentIfNecessary(paymentData);
     }
 
-    private void handleFuturePayment(PaymentData paymentData) {
+    private void handleFuturePayment(final PaymentData paymentData) {
         Money totalAmount = paymentData.getTotalAmount();
         for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
             LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate);
@@ -2500,10 +2496,10 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void changeLoanStatus(AccountState newAccountState, PersonnelBO personnel) throws AccountException {
+    private void changeLoanStatus(final AccountState newAccountState, final PersonnelBO personnel) throws AccountException {
         AccountStateEntity accountState = this.getAccountState();
         try {
-            setAccountState((AccountStateEntity) (new MasterPersistence()).getPersistentObject(
+            setAccountState((AccountStateEntity) new MasterPersistence().getPersistentObject(
                     AccountStateEntity.class, newAccountState.getValue()));
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -2523,7 +2519,7 @@ public class LoanBO extends AccountBO {
         return amount;
     }
 
-    private boolean isAdjustmentForInterestDedAtDisb(Short installmentId) {
+    private boolean isAdjustmentForInterestDedAtDisb(final Short installmentId) {
         return installmentId.equals(Short.valueOf("1")) && isInterestDeductedAtDisbursement();
     }
 
@@ -2535,12 +2531,12 @@ public class LoanBO extends AccountBO {
         return this.redone;
     }
 
-    void setRedone(Boolean val) {
+    void setRedone(final Boolean val) {
         this.redone = val;
     }
 
-    private void makeEarlyRepaymentForDueInstallments(AccountPaymentEntity accountPaymentEntity, String comments,
-            AccountActionTypes accountActionTypes, PersonnelBO currentUser) throws AccountException {
+    private void makeEarlyRepaymentForDueInstallments(final AccountPaymentEntity accountPaymentEntity, final String comments,
+            final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) throws AccountException {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
         for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
@@ -2580,8 +2576,8 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void makeEarlyRepaymentForFutureInstallments(AccountPaymentEntity accountPaymentEntity, String comments,
-            AccountActionTypes accountActionTypes, PersonnelBO currentUser) throws AccountException {
+    private void makeEarlyRepaymentForFutureInstallments(final AccountPaymentEntity accountPaymentEntity, final String comments,
+            final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) throws AccountException {
         MasterPersistence masterPersistence = new MasterPersistence();
         List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
         for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
@@ -2652,7 +2648,7 @@ public class LoanBO extends AccountBO {
         return loanAccountDetails;
     }
 
-    public void setLoanAccountDetails(Set<LoanBO> loanAccountDetails) {
+    public void setLoanAccountDetails(final Set<LoanBO> loanAccountDetails) {
         this.loanAccountDetails = loanAccountDetails;
     }
 
@@ -2660,7 +2656,7 @@ public class LoanBO extends AccountBO {
         return parentAccount;
     }
 
-    public void setParentAccount(LoanBO parentAccount) {
+    public void setParentAccount(final LoanBO parentAccount) {
         this.parentAccount = parentAccount;
     }
 
@@ -2676,7 +2672,7 @@ public class LoanBO extends AccountBO {
         return monthRank;
     }
 
-    public void setMonthRank(RankOfDaysEntity monthRank) {
+    public void setMonthRank(final RankOfDaysEntity monthRank) {
         this.monthRank = monthRank;
     }
 
@@ -2684,7 +2680,7 @@ public class LoanBO extends AccountBO {
         return monthWeek;
     }
 
-    public void setMonthWeek(WeekDaysEntity monthWeek) {
+    public void setMonthWeek(final WeekDaysEntity monthWeek) {
         this.monthWeek = monthWeek;
     }
 
@@ -2692,7 +2688,7 @@ public class LoanBO extends AccountBO {
         return recurMonth;
     }
 
-    public void setRecurMonth(Short recurMonth) {
+    public void setRecurMonth(final Short recurMonth) {
         this.recurMonth = recurMonth;
     }
 
@@ -2704,7 +2700,7 @@ public class LoanBO extends AccountBO {
         return monthRank != null ? RankType.getRankType(monthRank.getId()) : null;
     }
 
-    public boolean isOfProductOffering(LoanOfferingBO loanOfferingBO) {
+    public boolean isOfProductOffering(final LoanOfferingBO loanOfferingBO) {
         return this.loanOffering.isOfSameOffering(loanOfferingBO);
     }
 
@@ -2712,7 +2708,7 @@ public class LoanBO extends AccountBO {
      * Financial Calculation Refactoring
      ***********************************/
 
-    private void generateMeetingSchedule(boolean isRepaymentIndepOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay)
+    private void generateMeetingSchedule(final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
 
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating meeting schedule... ");
@@ -2773,7 +2769,7 @@ public class LoanBO extends AccountBO {
     }
 
     // the decliningEPI amount = sum of interests for all installments
-    private Money getDecliningEPIAmountNonGrace_v2(int numNonGraceInstallments) {
+    private Money getDecliningEPIAmountNonGrace_v2(final int numNonGraceInstallments) {
         Money principalBalance = getLoanAmount();
         Money principalPerPeriod = principalBalance.divide(new BigDecimal(numNonGraceInstallments));
         double interestRate = getInterestFractionalRatePerInstallment_v2();
@@ -2869,10 +2865,10 @@ public class LoanBO extends AccountBO {
 
     private Money getDecliningInterestAmountGrace_v2() {
         return getLoanAmount().multiply(getInterestFractionalRatePerInstallment_v2()).multiply(
-                (double) (getGracePeriodDuration()));
+                (double) getGracePeriodDuration());
     }
 
-    private Money getDecliningInterestAmountNonGrace_v2(int numNonGraceInstallments) {
+    private Money getDecliningInterestAmountNonGrace_v2(final int numNonGraceInstallments) {
         Money totalPayments = getPaymentPerPeriodForDecliningInterest_v2(numNonGraceInstallments).multiply(
                 (double) numNonGraceInstallments);
         return totalPayments.subtract(getLoanAmount());
@@ -2888,7 +2884,7 @@ public class LoanBO extends AccountBO {
 
         Short recurrenceType = this.getLoanMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId();
 
-        int duration = (getNoOfInstallments()) * this.getLoanMeeting().getMeetingDetails().getRecurAfter();
+        int duration = getNoOfInstallments() * this.getLoanMeeting().getMeetingDetails().getRecurAfter();
 
         if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
             double totalMonthDays = duration * daysInMonth;
@@ -2917,7 +2913,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private List<EMIInstallment> generateEMI_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> generateEMI_v2(final Money loanInterest) throws AccountException {
         if (isInterestDeductedAtDisbursement()) {
             /*
              * Interest deducted at disbursement has been cut from r1.1 so throw
@@ -2959,7 +2955,7 @@ public class LoanBO extends AccountBO {
         throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
     }
 
-    private List<EMIInstallment> interestDeductedAtDisbursement_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> interestDeductedAtDisbursement_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         // grace can only be none
         if (getGraceType() == GraceType.GRACEONALLREPAYMENTS || getGraceType() == GraceType.PRINCIPALONLYGRACE) {
@@ -2986,7 +2982,7 @@ public class LoanBO extends AccountBO {
         return emiInstallments;
     }
 
-    private List<EMIInstallment> principalInLastPayment_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> principalInLastPayment_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         // grace can only be none
         if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
@@ -3014,7 +3010,7 @@ public class LoanBO extends AccountBO {
         throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
     }
 
-    private List<EMIInstallment> principalInLastPaymentDecliningInterest_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> principalInLastPaymentDecliningInterest_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         // grace can only be none
         if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
@@ -3024,7 +3020,7 @@ public class LoanBO extends AccountBO {
             Money principalLastInstallment = getLoanAmount();
 
             Money interestPerInstallment = new Money(Double.toString(getLoanAmount().getAmountDoubleValue()
-                    * (getInterestRate() / 100 / getDecliningInterestAnnualPeriods())));
+                    * getInterestRate() / 100 / getDecliningInterestAnnualPeriods()));
             EMIInstallment installment = null;
             for (int i = 0; i < getNoOfInstallments() - 1; i++) {
                 installment = new EMIInstallment();
@@ -3059,7 +3055,7 @@ public class LoanBO extends AccountBO {
      * be disable for release 1.1.
      * </ul>
      */
-    private List<EMIInstallment> allFlatInstallments_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> allFlatInstallments_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
@@ -3076,7 +3072,7 @@ public class LoanBO extends AccountBO {
      * Divide principal and interest evenly among all installments, no grace
      * period
      */
-    private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money principalPerInstallment = getLoanAmount().divide(
                 new BigDecimal(getNoOfInstallments(), Money.getInternalPrecisionAndRounding()));
@@ -3097,7 +3093,7 @@ public class LoanBO extends AccountBO {
      * evenly among all installments, but divide principle evenly among
      * installments after the grace period.
      */
-    private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(Money loanInterest)
+    private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(final Money loanInterest)
             throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money principalPerInstallment = getLoanAmount().divide(
@@ -3139,7 +3135,7 @@ public class LoanBO extends AccountBO {
      * Interest is divided evenly among all installments, but only interest is
      * paid during the grace period.
      */
-    private List<EMIInstallment> generateFlatInstallmentsInterestOnly_v2(Money loanInterest) {
+    private List<EMIInstallment> generateFlatInstallmentsInterestOnly_v2(final Money loanInterest) {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         Money zero = new Money(new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
@@ -3180,7 +3176,7 @@ public class LoanBO extends AccountBO {
      * NOTE: These calculations do not take into account EPI or grace period
      * adjustments.
      */
-    private Money getPaymentPerPeriodForDecliningInterest_v2(int numInstallments) {
+    private Money getPaymentPerPeriodForDecliningInterest_v2(final int numInstallments) {
         double factor = 0.0;
         if (interestRate == 0.0) {
             Money paymentPerPeriod = getLoanAmount().divide(
@@ -3248,7 +3244,7 @@ public class LoanBO extends AccountBO {
      * Return the list if payment installments for declining interest method,
      * for the number of installments specified.
      */
-    private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(int numInstallments) throws AccountException {
+    private List<EMIInstallment> generateDecliningInstallmentsNoGrace_v2(final int numInstallments) throws AccountException {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 
@@ -3277,7 +3273,7 @@ public class LoanBO extends AccountBO {
         return emiInstallments;
     }
 
-    private List<EMIInstallment> generateDecliningEPIInstallmentsNoGrace_v2(int numInstallments)
+    private List<EMIInstallment> generateDecliningEPIInstallmentsNoGrace_v2(final int numInstallments)
             throws AccountException {
 
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
@@ -3334,7 +3330,7 @@ public class LoanBO extends AccountBO {
         return generateDecliningInstallmentsNoGrace_v2(getNoOfInstallments() - getGracePeriodDuration());
     }
 
-    private List<EMIInstallment> interestDeductedFirstPrincipalLast_v2(Money loanInterest) throws AccountException {
+    private List<EMIInstallment> interestDeductedFirstPrincipalLast_v2(final Money loanInterest) throws AccountException {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         if (getGraceType() == GraceType.GRACEONALLREPAYMENTS || getGraceType() == GraceType.PRINCIPALONLYGRACE) {
             throw new AccountException(AccountConstants.INTERESTDEDUCTED_PRINCIPALLAST);
@@ -3382,7 +3378,7 @@ public class LoanBO extends AccountBO {
         double numInterestDays = getInterestDays();
         double numDaysInWeek = getDaysInWeek();
         if (meetingFrequency.equals(RecurrenceType.WEEKLY)) {
-            period = ((double) getInterestDays()) / (double) ((getDaysInWeek() * recurAfter));
+            period = (double) getInterestDays() / (double) (getDaysInWeek() * recurAfter);
 
         }
         /*
@@ -3400,7 +3396,7 @@ public class LoanBO extends AccountBO {
      * Revised fee calculations
      ***********************************/
 
-    private Money getAccountFeeAmount_v2(AccountFeesEntity accountFees, Money loanInterest) {
+    private Money getAccountFeeAmount_v2(final AccountFeesEntity accountFees, final Money loanInterest) {
         Money accountFeeAmount = new Money();
         Double feeAmount = accountFees.getFeeAmount();
 
@@ -3583,7 +3579,7 @@ public class LoanBO extends AccountBO {
         } // for
     }
 
-    private void updateRunningTotals_v2(RepaymentTotals totals, LoanScheduleEntity currentInstallment) {
+    private void updateRunningTotals_v2(final RepaymentTotals totals, final LoanScheduleEntity currentInstallment) {
 
         totals.runningPayments = totals.runningPayments.add(currentInstallment.getTotalPaymentDue());
 
@@ -3593,20 +3589,20 @@ public class LoanBO extends AccountBO {
         totals.runningPenalties = totals.runningPenalties.add(currentInstallment.getPenaltyDue());
     }
 
-    private Money currencyRound_v2(Money m) {
+    private Money currencyRound_v2(final Money m) {
         return Money.round(m, AccountingRules.getDigitsAfterDecimalMultiple(), AccountingRules
                 .getCurrencyRoundingMode());
     }
 
-    private Money initialRound_v2(Money m) {
+    private Money initialRound_v2(final Money m) {
         return Money.round(m, AccountingRules.getInitialRoundOffMultiple(), AccountingRules.getInitialRoundingMode());
     }
 
-    private Money finalRound_v2(Money m) {
+    private Money finalRound_v2(final Money m) {
         return Money.round(m, AccountingRules.getFinalRoundOffMultiple(), AccountingRules.getFinalRoundingMode());
     }
 
-    private Money getExactTotalPaymentDue_v2(List<AccountActionDateEntity> unpaidInstallments) {
+    private Money getExactTotalPaymentDue_v2(final List<AccountActionDateEntity> unpaidInstallments) {
         Money sum = new Money("0");
         for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
             sum = sum.add(((LoanScheduleEntity) it.next()).getTotalPaymentDue());
@@ -3618,8 +3614,8 @@ public class LoanBO extends AccountBO {
      * A grace-period installment can appear in the loan schedule only if the
      * loan is setup with principal-only grace.
      */
-    private boolean isGraceInstallment_v2(int installmentNum) {
-        return (getGraceType().equals(GraceType.PRINCIPALONLYGRACE) && installmentNum <= getGracePeriodDuration());
+    private boolean isGraceInstallment_v2(final int installmentNum) {
+        return getGraceType().equals(GraceType.PRINCIPALONLYGRACE) && installmentNum <= getGracePeriodDuration();
     }
 
     /**
@@ -3637,7 +3633,7 @@ public class LoanBO extends AccountBO {
      * .subtract (currentInstallment.getInterest() .subtract
      * (currentInstallment.getFee());
      */
-    private void roundAndAdjustButLastNonGraceInstallment_v2(LoanScheduleEntity installment) {
+    private void roundAndAdjustButLastNonGraceInstallment_v2(final LoanScheduleEntity installment) {
         Money roundedTotalInstallmentPaymentDue = initialRound_v2(installment.getTotalPaymentDue());
         roundInstallmentAccountFeesDue_v2(installment);
 
@@ -3648,7 +3644,7 @@ public class LoanBO extends AccountBO {
                 installment.getPrincipalPaid()));
     }
 
-    private void roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(LoanScheduleEntity installment) {
+    private void roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(final LoanScheduleEntity installment) {
         Money roundedTotalInstallmentPaymentDue = initialRound_v2(installment.getTotalPaymentDue());
         roundInstallmentAccountFeesDue_v2(installment);
         installment.setPrincipal(currencyRound_v2(installment.getPrincipal()));
@@ -3660,7 +3656,7 @@ public class LoanBO extends AccountBO {
     /**
      * See JavaDoc comment for applyRounding_v2. TODO: handle fees
      */
-    private void roundAndAdjustLastInstallment_v2(LoanScheduleEntity lastInstallment, RepaymentTotals totals) {
+    private void roundAndAdjustLastInstallment_v2(final LoanScheduleEntity lastInstallment, final RepaymentTotals totals) {
 
         roundInstallmentAccountFeesDue_v2(lastInstallment);
         Money installmentPayment = finalRound_v2(totals.roundedPaymentsDue.subtract(totals.runningPayments));
@@ -3674,7 +3670,7 @@ public class LoanBO extends AccountBO {
     /**
      * adjust the first fee in the installment's set of fees
      */
-    private void adjustLastInstallmentFees_v2(LoanScheduleEntity lastInstallment, RepaymentTotals totals) {
+    private void adjustLastInstallmentFees_v2(final LoanScheduleEntity lastInstallment, final RepaymentTotals totals) {
         Set<AccountFeesActionDetailEntity> feeDetails = lastInstallment.getAccountFeesActionDetails();
         if (!(feeDetails == null) && !feeDetails.isEmpty()) {
             Money lastInstallmentFeeSum = new Money();
@@ -3695,14 +3691,14 @@ public class LoanBO extends AccountBO {
      * For principal-only grace installments, adjust the interest to account for
      * rounding discrepancies.
      */
-    private void roundAndAdjustGraceInstallment_v2(LoanScheduleEntity installment) {
+    private void roundAndAdjustGraceInstallment_v2(final LoanScheduleEntity installment) {
         Money roundedInstallmentTotalPaymentDue = initialRound_v2(installment.getTotalPaymentDue());
         roundInstallmentAccountFeesDue_v2(installment);
         installment.setInterest(roundedInstallmentTotalPaymentDue.subtract(installment.getTotalFeeDueWithMiscFeeDue())
                 .subtract(installment.getPenaltyDue()));
     }
 
-    private RepaymentTotals calculateInitialTotals_v2(List<AccountActionDateEntity> installmentsToBeRounded) {
+    private RepaymentTotals calculateInitialTotals_v2(final List<AccountActionDateEntity> installmentsToBeRounded) {
 
         RepaymentTotals totals = new RepaymentTotals();
 
@@ -3741,7 +3737,7 @@ public class LoanBO extends AccountBO {
         return totals;
     }
 
-    private void roundInstallmentAccountFeesDue_v2(LoanScheduleEntity installment) {
+    private void roundInstallmentAccountFeesDue_v2(final LoanScheduleEntity installment) {
 
         for (Iterator feeActionIt = installment.getAccountFeesActionDetails().iterator(); feeActionIt.hasNext();) {
             AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) feeActionIt.next();
@@ -3750,7 +3746,7 @@ public class LoanBO extends AccountBO {
 
     }
 
-    private Money getExactTotalFeesDue_v2(List<AccountActionDateEntity> installments) {
+    private Money getExactTotalFeesDue_v2(final List<AccountActionDateEntity> installments) {
 
         Money totalFees = new Money("0");
         for (Iterator it = installments.iterator(); it.hasNext();) {
@@ -3786,7 +3782,7 @@ public class LoanBO extends AccountBO {
             return roundedPaymentsDue;
         }
 
-        void setRoundedPaymentsDue(Money roundedPaymentsDue) {
+        void setRoundedPaymentsDue(final Money roundedPaymentsDue) {
             this.roundedPaymentsDue = roundedPaymentsDue;
         }
 
@@ -3794,7 +3790,7 @@ public class LoanBO extends AccountBO {
             return roundedInterestDue;
         }
 
-        void setRoundedInterestDue(Money roundedInterestDue) {
+        void setRoundedInterestDue(final Money roundedInterestDue) {
             this.roundedInterestDue = roundedInterestDue;
         }
 
@@ -3802,7 +3798,7 @@ public class LoanBO extends AccountBO {
             return roundedAccountFeesDue;
         }
 
-        void setRoundedAccountFeesDue(Money roundedAccountFeesDue) {
+        void setRoundedAccountFeesDue(final Money roundedAccountFeesDue) {
             this.roundedAccountFeesDue = roundedAccountFeesDue;
         }
 
@@ -3810,7 +3806,7 @@ public class LoanBO extends AccountBO {
             return roundedMiscFeesDue;
         }
 
-        void setRoundedMiscFeesDue(Money roundedMiscFeesDue) {
+        void setRoundedMiscFeesDue(final Money roundedMiscFeesDue) {
             this.roundedMiscFeesDue = roundedMiscFeesDue;
         }
 
@@ -3818,7 +3814,7 @@ public class LoanBO extends AccountBO {
             return roundedPenaltiesDue;
         }
 
-        void setRoundedPenaltiesDue(Money roundedPenaltiesDue) {
+        void setRoundedPenaltiesDue(final Money roundedPenaltiesDue) {
             this.roundedPenaltiesDue = roundedPenaltiesDue;
         }
 
@@ -3826,7 +3822,7 @@ public class LoanBO extends AccountBO {
             return roundedMiscPenaltiesDue;
         }
 
-        void setRoundedMiscPenaltiesDue(Money roundedMiscPenaltiesDue) {
+        void setRoundedMiscPenaltiesDue(final Money roundedMiscPenaltiesDue) {
             this.roundedMiscPenaltiesDue = roundedMiscPenaltiesDue;
         }
 
@@ -3834,7 +3830,7 @@ public class LoanBO extends AccountBO {
             return runningPayments;
         }
 
-        void setRunningPayments(Money runningPayments) {
+        void setRunningPayments(final Money runningPayments) {
             this.runningPayments = runningPayments;
         }
 
@@ -3842,7 +3838,7 @@ public class LoanBO extends AccountBO {
             return runningAccountFees;
         }
 
-        void setRunningAccountFees(Money runningAccountFees) {
+        void setRunningAccountFees(final Money runningAccountFees) {
             this.runningAccountFees = runningAccountFees;
         }
 
@@ -3850,7 +3846,7 @@ public class LoanBO extends AccountBO {
             return runningPrincipal;
         }
 
-        void setRunningPrincipal(Money runningPrincipal) {
+        void setRunningPrincipal(final Money runningPrincipal) {
             this.runningPrincipal = runningPrincipal;
         }
 
@@ -3858,7 +3854,7 @@ public class LoanBO extends AccountBO {
             return runningMiscFees;
         }
 
-        void setRunningMiscFees(Money runningMiscFees) {
+        void setRunningMiscFees(final Money runningMiscFees) {
             this.runningMiscFees = runningMiscFees;
         }
 
@@ -3866,7 +3862,7 @@ public class LoanBO extends AccountBO {
             return runningPenalties;
         }
 
-        void setRunningPenalties(Money runningPenalties) {
+        void setRunningPenalties(final Money runningPenalties) {
             this.runningPenalties = runningPenalties;
         }
 
@@ -3874,7 +3870,7 @@ public class LoanBO extends AccountBO {
             return runningMiscPenalties;
         }
 
-        void setRunningMiscPenalties(Money runningMiscPenalties) {
+        void setRunningMiscPenalties(final Money runningMiscPenalties) {
             this.runningMiscPenalties = runningMiscPenalties;
         }
 
@@ -3882,28 +3878,28 @@ public class LoanBO extends AccountBO {
             return roundedPrincipalDue;
         }
 
-        void setRoundedPrincipalDue(Money roundedPrincipalDue) {
+        void setRoundedPrincipalDue(final Money roundedPrincipalDue) {
             this.roundedPrincipalDue = roundedPrincipalDue;
         }
     }
 
-    static boolean isDisbursementDateAfterCustomerActivationDate(Date disbursementDate, CustomerBO customer) {
+    static boolean isDisbursementDateAfterCustomerActivationDate(final Date disbursementDate, final CustomerBO customer) {
         return DateUtils.dateFallsOnOrBeforeDate(customer.getCustomerActivationDate(), disbursementDate);
     }
 
-    static boolean isDisbursementDateAfterProductStartDate(Date disbursementDate, LoanOfferingBO loanOffering) {
+    static boolean isDisbursementDateAfterProductStartDate(final Date disbursementDate, final LoanOfferingBO loanOffering) {
         return DateUtils.dateFallsOnOrBeforeDate(loanOffering.getStartDate(), disbursementDate);
     }
 
-    static boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
+    static boolean isDisbursementDateLessThanCurrentDate(final Date disbursementDate) {
         if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp())) {
             return true;
         }
         return false;
     }
 
-    static boolean isDibursementDateValidForRedoLoan(LoanOfferingBO loanOffering, CustomerBO customer,
-            Date disbursementDate) {
+    static boolean isDibursementDateValidForRedoLoan(final LoanOfferingBO loanOffering, final CustomerBO customer,
+            final Date disbursementDate) {
         return isDisbursementDateAfterCustomerActivationDate(disbursementDate, customer)
                 && isDisbursementDateAfterProductStartDate(disbursementDate, loanOffering);
     }
@@ -3914,7 +3910,7 @@ public class LoanBO extends AccountBO {
      */
     public boolean isLegacyLoan() {
 
-        if ((loanSummary == null) || (loanSummary.getRawAmountTotal() == null)) {
+        if (loanSummary == null || loanSummary.getRawAmountTotal() == null) {
             return true;
         }
         Money defaultAmount = new Money("0");
@@ -3929,7 +3925,7 @@ public class LoanBO extends AccountBO {
      * payment rounded amount and original amount
      */
 
-    public Money calculate999Account(boolean lastPayment) {
+    public Money calculate999Account(final boolean lastPayment) {
         Money account999 = new Money("0");
         if (isLegacyLoan()) {
             return account999;
@@ -3937,7 +3933,7 @@ public class LoanBO extends AccountBO {
         Money origInterestAndFees = loanSummary.getOriginalFees().add(loanSummary.getOriginalInterest());
         Money paidInterestAndFees = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid());
         if (lastPayment) {
-            assert (origInterestAndFees.equals(paidInterestAndFees));
+            assert origInterestAndFees.equals(paidInterestAndFees);
         }
         Money rawAmountTotal = loanSummary.getRawAmountTotal();
         account999 = origInterestAndFees.subtract(rawAmountTotal);
@@ -3948,7 +3944,7 @@ public class LoanBO extends AccountBO {
         return rawAmountTotal;
     }
 
-    public void setRawAmountTotal(Money rawAmountTotal) {
+    public void setRawAmountTotal(final Money rawAmountTotal) {
         this.rawAmountTotal = rawAmountTotal;
     }
 
@@ -3956,7 +3952,7 @@ public class LoanBO extends AccountBO {
         return this.intrestAtDisbursement;
     }
 
-    public void setIntrestAtDisbursement(Short intrestAtDisbursement) {
+    public void setIntrestAtDisbursement(final Short intrestAtDisbursement) {
         this.intrestAtDisbursement = intrestAtDisbursement;
     }
 }

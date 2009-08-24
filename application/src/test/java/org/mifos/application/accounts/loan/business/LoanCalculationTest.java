@@ -20,7 +20,6 @@
 
 package org.mifos.application.accounts.loan.business;
 
-import static org.junit.Assert.assertEquals;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
 import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;

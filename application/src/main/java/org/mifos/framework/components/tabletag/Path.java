@@ -24,7 +24,6 @@ public class Path {
 
     public Path() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     private String key;
@@ -42,7 +41,7 @@ public class Path {
      * @param action
      *            The action to set.
      */
-    public void setAction(String action) {
+    public void setAction(final String action) {
         this.action = action;
     }
 
@@ -57,7 +56,7 @@ public class Path {
      * @param forwardkey
      *            The forwardkey to set.
      */
-    public void setForwardkey(String forwardkey) {
+    public void setForwardkey(final String forwardkey) {
         this.forwardkey = forwardkey;
     }
 
@@ -72,7 +71,7 @@ public class Path {
      * @param key
      *            The key to set.
      */
-    public void setKey(String key) {
+    public void setKey(final String key) {
         this.key = key;
     }
 }

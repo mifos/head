@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.application.reports.business.ReportsBO;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddReport extends Upgrade {

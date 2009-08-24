@@ -21,7 +21,6 @@
 package org.mifos.application.reports.struts.action;
 
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.framework.MifosMockStrutsTestCase;

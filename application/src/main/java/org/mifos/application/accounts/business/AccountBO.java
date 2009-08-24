@@ -142,7 +142,7 @@ public class AccountBO extends BusinessObject {
         return dateTimeService;
     }
 
-    public void setDateTimeService(DateTimeService dateTimeService) {
+    public void setDateTimeService(final DateTimeService dateTimeService) {
         this.dateTimeService = dateTimeService;
     }
 
@@ -153,7 +153,7 @@ public class AccountBO extends BusinessObject {
         return accountPersistence;
     }
 
-    public void setAccountPersistence(AccountPersistence accountPersistence) {
+    public void setAccountPersistence(final AccountPersistence accountPersistence) {
         this.accountPersistence = accountPersistence;
     }
 
@@ -164,7 +164,7 @@ public class AccountBO extends BusinessObject {
         return configurationPersistence;
     }
 
-    public void setConfigurationPersistence(ConfigurationPersistence configurationPersistence) {
+    public void setConfigurationPersistence(final ConfigurationPersistence configurationPersistence) {
         this.configurationPersistence = configurationPersistence;
     }
 
@@ -175,7 +175,7 @@ public class AccountBO extends BusinessObject {
         return customerPersistence;
     }
 
-    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
+    public void setCustomerPersistence(final CustomerPersistence customerPersistence) {
         this.customerPersistence = customerPersistence;
     }
 
@@ -186,7 +186,7 @@ public class AccountBO extends BusinessObject {
         return feePersistence;
     }
 
-    public void setFeePersistence(FeePersistence feePersistence) {
+    public void setFeePersistence(final FeePersistence feePersistence) {
         this.feePersistence = feePersistence;
     }
 
@@ -197,7 +197,7 @@ public class AccountBO extends BusinessObject {
         return masterPersistence;
     }
 
-    public void setMasterPersistence(MasterPersistence masterPersistence) {
+    public void setMasterPersistence(final MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
     }
 
@@ -208,7 +208,7 @@ public class AccountBO extends BusinessObject {
         return personnelPersistence;
     }
 
-    public void setPersonnelPersistence(PersonnelPersistence personnelPersistence) {
+    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
         this.personnelPersistence = personnelPersistence;
     }
 
@@ -216,7 +216,7 @@ public class AccountBO extends BusinessObject {
         this(null);
     }
 
-    AccountBO(Integer accountId) {
+    AccountBO(final Integer accountId) {
         this.accountId = accountId;
         globalAccountNum = null;
         customer = null;
@@ -237,8 +237,8 @@ public class AccountBO extends BusinessObject {
         offsettingAllowable = new Integer(1);
     }
 
-    protected AccountBO(UserContext userContext, CustomerBO customer, AccountTypes accountType,
-            AccountState accountState) throws AccountException {
+    protected AccountBO(final UserContext userContext, final CustomerBO customer, final AccountTypes accountType,
+            final AccountState accountState) throws AccountException {
         super(userContext);
         validate(userContext, customer, accountType, accountState);
         accountFees = new HashSet<AccountFeesEntity>();
@@ -326,38 +326,38 @@ public class AccountBO extends BusinessObject {
     }
 
     public Date getClosedDate() {
-        return (Date) ((closedDate == null) ? null : closedDate.clone());
+        return (Date) (closedDate == null ? null : closedDate.clone());
     }
 
-    protected void setGlobalAccountNum(String globalAccountNum) {
+    protected void setGlobalAccountNum(final String globalAccountNum) {
         this.globalAccountNum = globalAccountNum;
     }
 
-    public void setAccountPayments(Set<AccountPaymentEntity> accountPayments) {
+    public void setAccountPayments(final Set<AccountPaymentEntity> accountPayments) {
         this.accountPayments = accountPayments;
     }
 
-    protected void setAccountState(AccountStateEntity accountState) {
+    protected void setAccountState(final AccountStateEntity accountState) {
         this.accountState = accountState;
     }
 
-    public void setPersonnel(PersonnelBO personnel) {
+    public void setPersonnel(final PersonnelBO personnel) {
         this.personnel = personnel;
     }
 
-    protected void setClosedDate(Date closedDate) {
-        this.closedDate = (Date) ((closedDate == null) ? null : closedDate.clone());
+    protected void setClosedDate(final Date closedDate) {
+        this.closedDate = (Date) (closedDate == null ? null : closedDate.clone());
     }
 
-    protected void addAccountStatusChangeHistory(AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
+    protected void addAccountStatusChangeHistory(final AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
         this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
     }
 
-    protected void addAccountFees(AccountFeesEntity fees) {
+    protected void addAccountFees(final AccountFeesEntity fees) {
         accountFees.add(fees);
     }
 
-    protected void addAccountActionDate(AccountActionDateEntity accountAction) {
+    protected void addAccountActionDate(final AccountActionDateEntity accountAction) {
         if (accountAction == null) {
             throw new NullPointerException();
         }
@@ -371,11 +371,11 @@ public class AccountBO extends BusinessObject {
         accountPayments.add(payment);
     }
 
-    public void addAccountNotes(AccountNotesEntity notes) {
+    public void addAccountNotes(final AccountNotesEntity notes) {
         accountNotes.add(notes);
     }
 
-    protected void addAccountFlag(AccountStateFlagEntity flagDetail) {
+    protected void addAccountFlag(final AccountStateFlagEntity flagDetail) {
         AccountFlagMapping flagMap = new AccountFlagMapping();
         flagMap.setCreatedBy(this.getUserContext().getId());
         flagMap.setCreatedDate(getDateTimeService().getCurrentJavaDateTime());
@@ -383,7 +383,7 @@ public class AccountBO extends BusinessObject {
         this.accountFlags.add(flagMap);
     }
 
-    public void addAccountCustomField(AccountCustomFieldEntity customField) {
+    public void addAccountCustomField(final AccountCustomFieldEntity customField) {
         if (customField.getFieldId() != null) {
             AccountCustomFieldEntity accountCustomField = getAccountCustomField(customField.getFieldId());
             if (accountCustomField == null) {
@@ -395,7 +395,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    protected void addcustomFields(List<CustomFieldView> customFields) {
+    protected void addcustomFields(final List<CustomFieldView> customFields) {
         if (customFields != null) {
             for (CustomFieldView view : customFields) {
                 this.getAccountCustomFields().add(
@@ -411,7 +411,7 @@ public class AccountBO extends BusinessObject {
      * FIXME: - keithw - this should use model concept
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
-    public final void applyPayment(PaymentData paymentData, boolean persistChanges) throws AccountException {
+    public final void applyPayment(final PaymentData paymentData, final boolean persistChanges) throws AccountException {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
@@ -428,12 +428,12 @@ public class AccountBO extends BusinessObject {
      * FIXME: - keithw - this should use model concept
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
-    public final void applyPaymentWithPersist(PaymentData paymentData) throws AccountException {
+    public final void applyPaymentWithPersist(final PaymentData paymentData) throws AccountException {
         applyPayment(paymentData, true);
     }
 
-    public PaymentData createPaymentData(UserContext userContext, Money amount, Date trxnDate, String receiptId,
-            Date receiptDate, Short paymentTypeId) {
+    public PaymentData createPaymentData(final UserContext userContext, final Money amount, final Date trxnDate, final String receiptId,
+            final Date receiptDate, final Short paymentTypeId) {
         PersonnelBO personnel;
         try {
             personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
@@ -463,7 +463,7 @@ public class AccountBO extends BusinessObject {
         return paymentData;
     }
 
-    public final void adjustPmnt(String adjustmentComment) throws AccountException {
+    public final void adjustPmnt(final String adjustmentComment) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "Adjustment is possible hence attempting to adjust.");
@@ -478,7 +478,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    public final void adjustLastPayment(String adjustmentComment) throws AccountException {
+    public final void adjustLastPayment(final String adjustmentComment) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "Adjustment is possible hence attempting to adjust.");
@@ -495,8 +495,8 @@ public class AccountBO extends BusinessObject {
 
     }
 
-    protected final void adjustPayment(AccountPaymentEntity accountPayment, PersonnelBO personnel,
-            String adjustmentComment) throws AccountException {
+    protected final void adjustPayment(final AccountPaymentEntity accountPayment, final PersonnelBO personnel,
+            final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> reversedTrxns = accountPayment.reversalAdjustment(personnel, adjustmentComment);
         updateInstallmentAfterAdjustment(reversedTrxns);
         buildFinancialEntries(new HashSet(reversedTrxns));
@@ -524,11 +524,11 @@ public class AccountBO extends BusinessObject {
     protected void resetUpdatedFlag() throws AccountException {
     }
 
-    public void changeStatus(AccountState newStatus, Short flagId, String comment) throws AccountException {
+    public void changeStatus(final AccountState newStatus, final Short flagId, final String comment) throws AccountException {
         changeStatus(newStatus.getValue(), flagId, comment);
     }
 
-    public final void changeStatus(Short newStatusId, Short flagId, String comment) throws AccountException {
+    public final void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws AccountException {
         try {
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "In the change status method of AccountBO:: new StatusId= " + newStatusId);
@@ -583,7 +583,7 @@ public class AccountBO extends BusinessObject {
     protected void updateClientPerformanceOnRescheduleLoan() {
     }
 
-    protected void updateAccountFeesEntity(Short feeId) {
+    protected void updateAccountFeesEntity(final Short feeId) {
         AccountFeesEntity accountFees = getAccountFees(feeId);
         if (accountFees != null) {
             accountFees.changeFeesStatus(FeeStatus.INACTIVE, getDateTimeService().getCurrentJavaDateTime());
@@ -591,7 +591,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    public AccountFeesEntity getAccountFees(Short feeId) {
+    public AccountFeesEntity getAccountFees(final Short feeId) {
         for (AccountFeesEntity accountFeesEntity : this.getAccountFees()) {
             if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
                 return accountFeesEntity;
@@ -600,7 +600,7 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    public FeeBO getAccountFeesObject(Short feeId) {
+    public FeeBO getAccountFeesObject(final Short feeId) {
         AccountFeesEntity accountFees = getAccountFees(feeId);
         if (accountFees != null) {
             return accountFees.getFees();
@@ -608,12 +608,12 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    public Boolean isFeeActive(Short feeId) {
+    public Boolean isFeeActive(final Short feeId) {
         AccountFeesEntity accountFees = getAccountFees(feeId);
         return accountFees.getFeeStatus() == null || accountFees.getFeeStatus().equals(FeeStatus.ACTIVE.getValue());
     }
 
-    protected Money removeSign(Money amount) {
+    protected Money removeSign(final Money amount) {
         if (amount != null && amount.getAmountDoubleValue() < 0) {
             return amount.negate();
         } else {
@@ -661,7 +661,7 @@ public class AccountBO extends BusinessObject {
         return accntPmnt;
     }
 
-    public AccountActionDateEntity getAccountActionDate(Short installmentId) {
+    public AccountActionDateEntity getAccountActionDate(final Short installmentId) {
         if (null != accountActionDates && accountActionDates.size() > 0) {
             for (AccountActionDateEntity accntActionDate : accountActionDates) {
                 if (accntActionDate.getInstallmentId().equals(installmentId)) {
@@ -672,7 +672,7 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    public AccountActionDateEntity getAccountActionDate(Short installmentId, Integer customerId) {
+    public AccountActionDateEntity getAccountActionDate(final Short installmentId, final Integer customerId) {
         if (null != accountActionDates && accountActionDates.size() > 0) {
             for (AccountActionDateEntity accntActionDate : accountActionDates) {
                 if (accntActionDate.getInstallmentId().equals(installmentId)
@@ -839,7 +839,7 @@ public class AccountBO extends BusinessObject {
         return dueInstallments;
     }
 
-    public boolean isTrxnDateBeforePreviousMeetingDateAllowed(Date trxnDate) {
+    public boolean isTrxnDateBeforePreviousMeetingDateAllowed(final Date trxnDate) {
         try {
             Date meetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
 
@@ -889,7 +889,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
+    public boolean isTrxnDateValid(final Date trxnDate) throws AccountException {
         if (AccountingRules.isBackDatedTxnAllowed()) {
             return isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate);
         }
@@ -922,14 +922,14 @@ public class AccountBO extends BusinessObject {
         return AccountState.fromShort(getAccountState().getId());
     }
 
-    protected void updateAccountActivity(Money principal, Money interest, Money fee, Money penalty, Short personnelId,
-            String description) throws AccountException {
+    protected void updateAccountActivity(final Money principal, final Money interest, final Money fee, final Money penalty, final Short personnelId,
+            final String description) throws AccountException {
     }
 
-    public void waiveAmountDue(WaiveEnum waiveType) throws AccountException {
+    public void waiveAmountDue(final WaiveEnum waiveType) throws AccountException {
     }
 
-    public void waiveAmountOverDue(WaiveEnum waiveType) throws AccountException {
+    public void waiveAmountOverDue(final WaiveEnum waiveType) throws AccountException {
     }
 
     public Boolean isCurrentDateGreaterThanFirstInstallment() {
@@ -942,7 +942,7 @@ public class AccountBO extends BusinessObject {
         return false;
     }
 
-    public void applyCharge(Short feeId, Double charge) throws AccountException, PersistenceException {
+    public void applyCharge(final Short feeId, final Double charge) throws AccountException, PersistenceException {
     }
 
     public AccountTypes getType() {
@@ -980,7 +980,7 @@ public class AccountBO extends BusinessObject {
         return nextAccountAction;
     }
 
-    protected final void buildFinancialEntries(Set<AccountTrxnEntity> accountTrxns) throws AccountException {
+    protected final void buildFinancialEntries(final Set<AccountTrxnEntity> accountTrxns) throws AccountException {
         try {
             FinancialBusinessService financialBusinessService = new FinancialBusinessService();
             for (AccountTrxnEntity accountTrxn : accountTrxns) {
@@ -991,7 +991,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    protected final String generateId(String officeGlobalNum) throws AccountException {
+    protected final String generateId(final String officeGlobalNum) throws AccountException {
         StringBuilder systemId = new StringBuilder();
         systemId.append(officeGlobalNum);
         try {
@@ -1026,11 +1026,11 @@ public class AccountBO extends BusinessObject {
         return dueInstallmentList;
     }
 
-    protected final Boolean isFeeAlreadyApplied(FeeBO fee) {
+    protected final Boolean isFeeAlreadyApplied(final FeeBO fee) {
         return getAccountFees(fee.getFeeId()) != null;
     }
 
-    protected final AccountFeesEntity getAccountFee(FeeBO fee, Double charge) {
+    protected final AccountFeesEntity getAccountFee(final FeeBO fee, final Double charge) {
         AccountFeesEntity accountFee = null;
         if (fee.isPeriodic() && isFeeAlreadyApplied(fee)) {
             accountFee = getAccountFees(fee.getFeeId());
@@ -1043,19 +1043,19 @@ public class AccountBO extends BusinessObject {
         return accountFee;
     }
 
-    protected final List<InstallmentDate> getInstallmentDates(MeetingBO meeting, Short noOfInstallments,
-            Short installmentToSkip) throws AccountException {
+    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+            final Short installmentToSkip) throws AccountException {
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
     }
 
-    protected final List<InstallmentDate> getInstallmentDates(MeetingBO meeting, Short noOfInstallments,
-            Short installmentToSkip, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
+    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
 
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, isRepaymentIndepOfMeetingEnabled, true);
     }
 
-    protected final List<InstallmentDate> getInstallmentDates(MeetingBO meeting, Short noOfInstallments,
-            Short installmentToSkip, boolean isRepaymentIndepOfMeetingEnabled, boolean adjustForHolidays)
+    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled, final boolean adjustForHolidays)
             throws AccountException {
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating intallment dates");
         if (noOfInstallments > 0) {
@@ -1076,7 +1076,7 @@ public class AccountBO extends BusinessObject {
         return new ArrayList<InstallmentDate>();
     }
 
-    private List<InstallmentDate> createInstallmentDates(Short installmentToSkip, List<Date> dueDates) {
+    private List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         int installmentId = 1;
         for (Date date : dueDates) {
@@ -1087,7 +1087,7 @@ public class AccountBO extends BusinessObject {
     }
 
     @Deprecated
-    protected final List<FeeInstallment> getFeeInstallments(List<InstallmentDate> installmentDates)
+    protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
             throws AccountException {
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
@@ -1110,8 +1110,8 @@ public class AccountBO extends BusinessObject {
      * @param nonAdjustedInstallmentDates
      *            dates not adjusted for holidays
      */
-    protected final List<FeeInstallment> getFeeInstallments(List<InstallmentDate> installmentDates,
-            List<InstallmentDate> nonAdjustedInstallmentDates) throws AccountException {
+    protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates,
+            final List<InstallmentDate> nonAdjustedInstallmentDates) throws AccountException {
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
             if (accountFeesEntity.isActive()) {
@@ -1127,7 +1127,7 @@ public class AccountBO extends BusinessObject {
         return feeInstallmentList;
     }
 
-    protected final List<Date> getFeeDates(MeetingBO feeMeetingFrequency, List<InstallmentDate> installmentDates)
+    protected final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates)
             throws AccountException {
         MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
         Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
@@ -1146,8 +1146,8 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    protected final FeeInstallment buildFeeInstallment(Short installmentId, Money accountFeeAmount,
-            AccountFeesEntity accountFee) {
+    protected final FeeInstallment buildFeeInstallment(final Short installmentId, final Money accountFeeAmount,
+            final AccountFeesEntity accountFee) {
         FeeInstallment feeInstallment = new FeeInstallment();
         feeInstallment.setInstallmentId(installmentId);
         feeInstallment.setAccountFee(accountFeeAmount);
@@ -1156,7 +1156,7 @@ public class AccountBO extends BusinessObject {
         return feeInstallment;
     }
 
-    protected final Short getMatchingInstallmentId(List<InstallmentDate> installmentDates, Date feeDate) {
+    protected final Short getMatchingInstallmentId(final List<InstallmentDate> installmentDates, final Date feeDate) {
         for (InstallmentDate installmentDate : installmentDates) {
             if (DateUtils.getDateWithoutTimeStamp(installmentDate.getInstallmentDueDate().getTime()).compareTo(
                     DateUtils.getDateWithoutTimeStamp(feeDate.getTime())) >= 0) {
@@ -1166,7 +1166,7 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    protected final List<FeeInstallment> mergeFeeInstallments(List<FeeInstallment> feeInstallmentList) {
+    protected final List<FeeInstallment> mergeFeeInstallments(final List<FeeInstallment> feeInstallmentList) {
         List<FeeInstallment> newFeeInstallmentList = new ArrayList<FeeInstallment>();
         for (Iterator<FeeInstallment> iterator = feeInstallmentList.iterator(); iterator.hasNext();) {
             FeeInstallment feeInstallment = iterator.next();
@@ -1245,7 +1245,7 @@ public class AccountBO extends BusinessObject {
 
     }
 
-    public boolean isPaymentPermitted(UserContext userContext) {
+    public boolean isPaymentPermitted(final UserContext userContext) {
         CustomerLevel customerLevel = null;
         if (getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             customerLevel = getCustomer().getLevel();
@@ -1269,7 +1269,7 @@ public class AccountBO extends BusinessObject {
         }
 
         Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
-            public int compare(AccountTrxnEntity trx1, AccountTrxnEntity trx2) {
+            public int compare(final AccountTrxnEntity trx1, final AccountTrxnEntity trx2) {
                 if (trx1.getCreatedDate().equals(trx2.getCreatedDate())) {
                     return trx1.getAccountTrxnId().compareTo(trx2.getAccountTrxnId());
                 } else {
@@ -1287,7 +1287,7 @@ public class AccountBO extends BusinessObject {
         }
 
         Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
-            public int compare(AccountTrxnEntity trx1, AccountTrxnEntity trx2) {
+            public int compare(final AccountTrxnEntity trx1, final AccountTrxnEntity trx2) {
                 if (trx1.getActionDate().equals(trx2.getActionDate())) {
                     return trx1.getAccountTrxnId().compareTo(trx2.getAccountTrxnId());
                 } else {
@@ -1302,29 +1302,29 @@ public class AccountBO extends BusinessObject {
         this.accountActionDates.clear();
     }
 
-    protected void updateInstallmentAfterAdjustment(List<AccountTrxnEntity> reversedTrxns) throws AccountException {
+    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns) throws AccountException {
     }
 
-    protected Money getDueAmount(AccountActionDateEntity installment) {
+    protected Money getDueAmount(final AccountActionDateEntity installment) {
         return null;
     }
 
-    protected void regenerateFutureInstallments(Short nextIntallmentId) throws AccountException {
+    protected void regenerateFutureInstallments(final Short nextIntallmentId) throws AccountException {
     }
 
-    protected List<InstallmentDate> getInstallmentDates(MeetingBO Meeting, Integer installmentSkipToStartRepayment)
+    protected List<InstallmentDate> getInstallmentDates(final MeetingBO Meeting, final Integer installmentSkipToStartRepayment)
             throws AccountException {
         return null;
     }
 
     @Deprecated
-    protected List<FeeInstallment> handlePeriodic(AccountFeesEntity accountFees, List<InstallmentDate> installmentDates)
+    protected List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees, final List<InstallmentDate> installmentDates)
             throws AccountException {
         return null;
     }
 
-    protected List<FeeInstallment> handlePeriodic(AccountFeesEntity accountFees,
-            List<InstallmentDate> installmentDates, List<InstallmentDate> nonAdjustedInstallmentDates)
+    protected List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
+            final List<InstallmentDate> installmentDates, final List<InstallmentDate> nonAdjustedInstallmentDates)
             throws AccountException {
         return null;
     }
@@ -1333,19 +1333,19 @@ public class AccountBO extends BusinessObject {
      * FIXME: - keithw - this should use model concept
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
-    protected AccountPaymentEntity makePayment(PaymentData accountPaymentData) throws AccountException {
+    protected AccountPaymentEntity makePayment(final PaymentData accountPaymentData) throws AccountException {
         return null;
     }
     
     // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
-    protected void updateTotalFeeAmount(Money totalFeeAmount) {
+    protected void updateTotalFeeAmount(final Money totalFeeAmount) {
     }
  
     // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
-    protected void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
+    protected void updateTotalPenaltyAmount(final Money totalPenaltyAmount) {
     }
 
-    protected Money updateAccountActionDateEntity(List<Short> intallmentIdList, Short feeId) {
+    protected Money updateAccountActionDateEntity(final List<Short> intallmentIdList, final Short feeId) {
         return new Money();
     }
 
@@ -1353,10 +1353,10 @@ public class AccountBO extends BusinessObject {
         return false;
     }
 
-    public void removeFees(Short feeId, Short personnelId) throws AccountException {
+    public void removeFees(final Short feeId, final Short personnelId) throws AccountException {
     }
 
-    protected void activationDateHelper(Short newStatusId) throws AccountException {
+    protected void activationDateHelper(final Short newStatusId) throws AccountException {
     }
 
     /**
@@ -1377,13 +1377,13 @@ public class AccountBO extends BusinessObject {
         return installmentIdList;
     }
 
-    protected List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment, AccountPaymentEntity lastPayment)
+    protected List<AccountTrxnEntity> reversalAdjustment(final String adjustmentComment, final AccountPaymentEntity lastPayment)
             throws AccountException {
         return lastPayment.reversalAdjustment(getLoggedInUser(), adjustmentComment);
 
     }
 
-    private void setFinancialEntries(FinancialTransactionBO financialTrxn, TransactionHistoryView transactionHistory) {
+    private void setFinancialEntries(final FinancialTransactionBO financialTrxn, final TransactionHistoryView transactionHistory) {
         String debit = "-";
         String credit = "-";
         String notes = "-";
@@ -1405,14 +1405,14 @@ public class AccountBO extends BusinessObject {
 
     }
 
-    private void setAccountingEntries(AccountTrxnEntity accountTrxn, TransactionHistoryView transactionHistory) {
+    private void setAccountingEntries(final AccountTrxnEntity accountTrxn, final TransactionHistoryView transactionHistory) {
 
         transactionHistory.setAccountingEnteries(accountTrxn.getAccountPayment().getPaymentId(), String
                 .valueOf(removeSign(accountTrxn.getAmount())), accountTrxn.getCustomer().getDisplayName(), accountTrxn
                 .getPersonnel().getDisplayName());
     }
 
-    private AccountCustomFieldEntity getAccountCustomField(Short fieldId) {
+    private AccountCustomFieldEntity getAccountCustomField(final Short fieldId) {
         if (null != this.accountCustomFields && this.accountCustomFields.size() > 0) {
             for (AccountCustomFieldEntity obj : this.accountCustomFields) {
                 if (obj.getFieldId().equals(fieldId)) {
@@ -1423,7 +1423,7 @@ public class AccountBO extends BusinessObject {
         return null;
     }
 
-    protected final FeeInstallment handleOneTime(AccountFeesEntity accountFee, List<InstallmentDate> installmentDates) {
+    protected final FeeInstallment handleOneTime(final AccountFeesEntity accountFee, final List<InstallmentDate> installmentDates) {
         Money accountFeeAmount = accountFee.getAccountFeeAmount();
         Date feeDate = installmentDates.get(0).getInstallmentDueDate();
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Handling OneTime fee" + feeDate);
@@ -1433,8 +1433,8 @@ public class AccountBO extends BusinessObject {
         return buildFeeInstallment(installmentId, accountFeeAmount, accountFee);
     }
 
-    private void removeInstallmentsNeedNotPay(Short installmentSkipToStartRepayment,
-            List<InstallmentDate> installmentDates) {
+    private void removeInstallmentsNeedNotPay(final Short installmentSkipToStartRepayment,
+            final List<InstallmentDate> installmentDates) {
         int removeCounter = 0;
         for (int i = 0; i < installmentSkipToStartRepayment; i++) {
             installmentDates.remove(removeCounter);
@@ -1449,14 +1449,14 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    private void validate(UserContext userContext, CustomerBO customer, AccountTypes accountType,
-            AccountState accountState) throws AccountException {
+    private void validate(final UserContext userContext, final CustomerBO customer, final AccountTypes accountType,
+            final AccountState accountState) throws AccountException {
         if (userContext == null || customer == null || accountType == null || accountState == null) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
         }
     }
 
-    private void setFlag(AccountStateFlagEntity accountStateFlagEntity) {
+    private void setFlag(final AccountStateFlagEntity accountStateFlagEntity) {
         accountStateFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
         Iterator iter = this.getAccountFlags().iterator();
         while (iter.hasNext()) {
@@ -1476,7 +1476,7 @@ public class AccountBO extends BusinessObject {
         }
     }
 
-    protected void updateCustomFields(List<CustomFieldView> customFields) throws InvalidDateException {
+    protected void updateCustomFields(final List<CustomFieldView> customFields) throws InvalidDateException {
         if (customFields == null) {
             return;
         }
@@ -1518,11 +1518,11 @@ public class AccountBO extends BusinessObject {
         return offsettingAllowable;
     }
 
-    public void setOffsettingAllowable(Integer offsettingAllowable) {
+    public void setOffsettingAllowable(final Integer offsettingAllowable) {
         this.offsettingAllowable = offsettingAllowable;
     }
 
-    public boolean isInState(AccountState state) {
+    public boolean isInState(final AccountState state) {
         return accountState.isInState(state);
     }
 
@@ -1534,7 +1534,7 @@ public class AccountBO extends BusinessObject {
         return isOfType(SAVINGS_ACCOUNT);
     }
 
-    public boolean isOfType(AccountTypes accountType) {
+    public boolean isOfType(final AccountTypes accountType) {
         return accountType.equals(getType());
     }
 

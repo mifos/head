@@ -28,12 +28,10 @@ public class CenterEditStatusAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public CenterEditStatusAction() {
         super();
-        // TODO Auto-generated constructor stub
     }
 }

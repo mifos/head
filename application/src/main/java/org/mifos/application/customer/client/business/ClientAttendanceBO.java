@@ -31,7 +31,6 @@ import org.mifos.framework.business.BusinessObject;
  */
 public class ClientAttendanceBO extends BusinessObject {
 
-    private static final long serialVersionUID = -6373550605583206363L;
     private Integer id;
     private Date meetingDate;
     private CustomerBO customer;
@@ -41,7 +40,7 @@ public class ClientAttendanceBO extends BusinessObject {
         super();
     }
 
-    public ClientAttendanceBO(Integer id, Date meetingDate, Short attendance) {
+    public ClientAttendanceBO(final Integer id, final Date meetingDate, final Short attendance) {
         super();
         this.id = id;
         this.attendance = attendance;
@@ -52,7 +51,7 @@ public class ClientAttendanceBO extends BusinessObject {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -64,11 +63,11 @@ public class ClientAttendanceBO extends BusinessObject {
         return AttendanceType.fromShort(attendance);
     }
 
-    public void setAttendance(Short attendance) {
+    public void setAttendance(final Short attendance) {
         this.attendance = attendance;
     }
 
-    public void setAttendance(AttendanceType type) {
+    public void setAttendance(final AttendanceType type) {
         setAttendance(type.getValue());
     }
 
@@ -76,7 +75,7 @@ public class ClientAttendanceBO extends BusinessObject {
         return meetingDate;
     }
 
-    public void setMeetingDate(java.util.Date meetingDate) {
+    public void setMeetingDate(final java.util.Date meetingDate) {
         this.meetingDate = meetingDate;
     }
 
@@ -84,7 +83,7 @@ public class ClientAttendanceBO extends BusinessObject {
         return customer;
     }
 
-    public void setCustomer(CustomerBO customer) {
+    public void setCustomer(final CustomerBO customer) {
         this.customer = customer;
     }
 

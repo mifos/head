@@ -44,7 +44,7 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
         return feesPaid;
     }
 
-    private void setFeesPaid(Map<Short, Money> feesPaid) {
+    private void setFeesPaid(final Map<Short, Money> feesPaid) {
         this.feesPaid = feesPaid;
     }
 
@@ -52,7 +52,7 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
         return miscFeePaid;
     }
 
-    private void setMiscFeePaid(Money miscFeePaid) {
+    private void setMiscFeePaid(final Money miscFeePaid) {
         this.miscFeePaid = miscFeePaid;
     }
 
@@ -60,11 +60,11 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
         return miscPenaltyPaid;
     }
 
-    private void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+    private void setMiscPenaltyPaid(final Money miscPenaltyPaid) {
         this.miscPenaltyPaid = miscPenaltyPaid;
     }
 
-    public CustomerAccountPaymentData(AccountActionDateEntity accountAction) {
+    public CustomerAccountPaymentData(final AccountActionDateEntity accountAction) {
         super(accountAction);
         CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountAction;
         Map<Short, Money> feesPaid = new HashMap<Short, Money>();
@@ -77,7 +77,7 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
         setPaymentStatus(PaymentStatus.PAID.getValue());
     }
 
-    public CustomerAccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+    public CustomerAccountPaymentData(final CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
         super(bulkEntryAccountAction);
         CollectionSheetEntryCustomerAccountInstallmentView installmentView = (CollectionSheetEntryCustomerAccountInstallmentView) bulkEntryAccountAction;
         Map<Short, Money> feesPaid = new HashMap<Short, Money>();
@@ -87,10 +87,12 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
                 .getCollectionSheetEntryAccountFeeActions();
         if (collectionSheetEntryAccountFeeActionViews != null && collectionSheetEntryAccountFeeActionViews.size() > 0) {
             for (CollectionSheetEntryAccountFeeActionView accountFeesActionDetailEntity : collectionSheetEntryAccountFeeActionViews) {
+               
                 if (accountFeesActionDetailEntity.getFeeAmount() != null
-                        && accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue() != 0)
-                    feesPaid.put(accountFeesActionDetailEntity.getFee().getFeeId(), accountFeesActionDetailEntity
+                        && accountFeesActionDetailEntity.getFeeAmount().getAmountDoubleValue() != 0) {
+                    feesPaid.put(accountFeesActionDetailEntity.getFeeId(), accountFeesActionDetailEntity
                             .getFeeAmount());
+                }
             }
         }
         setFeesPaid(feesPaid);

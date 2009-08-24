@@ -29,10 +29,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.easymock.internal.ExpectedInvocation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
@@ -67,8 +63,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import static org.easymock.classextension.EasyMock.createMock;
 
 public class CollSheetBOIntegrationTest extends MifosIntegrationTestCase {
 

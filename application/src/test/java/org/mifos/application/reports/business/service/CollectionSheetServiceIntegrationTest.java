@@ -30,7 +30,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
-import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;

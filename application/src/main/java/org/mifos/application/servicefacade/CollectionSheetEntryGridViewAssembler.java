@@ -25,14 +25,13 @@ import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.client.business.service.ClientService;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -43,58 +42,61 @@ import org.mifos.framework.exceptions.ServiceException;
  */
 public class CollectionSheetEntryGridViewAssembler {
 
+    private final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler;
     private final CustomerPersistence customerPersistence;
     private final MasterPersistence masterPersistence;
     private final ClientService clientService;
 
     public CollectionSheetEntryGridViewAssembler(final CustomerPersistence customerPersistence,
-            final MasterPersistence masterPersistence, final ClientService clientService) {
+            final MasterPersistence masterPersistence, final ClientService clientService,
+            final CollectionSheetEntryViewAssembler collectionSheetEntryViewAssembler) {
                 this.customerPersistence = customerPersistence;
         this.masterPersistence = masterPersistence;
         this.clientService = clientService;
+        this.collectionSheetEntryViewAssembler = collectionSheetEntryViewAssembler;
     }
 
     public CollectionSheetEntryGridDto toDto(final CollectionSheetFormEnteredDataDto formEnteredDataDto,
-            final Short localeId, final CollectionSheetEntryView collectionSheetParent) {
+            final Short localeId) {
 
         final java.sql.Date meetingDate = new java.sql.Date(formEnteredDataDto.getMeetingDate().getTime());
         final String selectedCustomerSearchId = formEnteredDataDto.getCustomer().getCustomerSearchId();
         final Short loanOfficerId = formEnteredDataDto.getLoanOfficer().getPersonnelId();
         final Short officeId = formEnteredDataDto.getOffice().getOfficeId();
         
+        final List<CustomerView> customerHierarchy = customerPersistence.findCustomerHierarchyForOfficeBySearchId(
+                officeId, selectedCustomerSearchId);
+        final int countOfCustomers = customerHierarchy.size();
+        
+        final CollectionSheetEntryView collectionSheetParent = collectionSheetEntryViewAssembler
+                .toDto(
+                formEnteredDataDto, customerHierarchy, countOfCustomers);
+        
         List<ProductDto> loanProductDtos = new ArrayList<ProductDto>();
         List<ProductDto> savingProductDtos = new ArrayList<ProductDto>();
 
         try {
 
-            // TODO - keithw - use DAO method that puts into DTO from hibernate
-            // query
-            List<PrdOfferingBO> loanProducts = customerPersistence.getLoanProducts(meetingDate,
+            loanProductDtos = customerPersistence.getLoanProducts(meetingDate,
                     selectedCustomerSearchId, loanOfficerId);
-            for (PrdOfferingBO prdOffering : loanProducts) {
-                loanProductDtos.add(new ProductDto(prdOffering.getPrdOfferingId(), prdOffering
-                        .getPrdOfferingShortName()));
-            }
 
-            // TODO - keithw - use DAO method that puts into DTO from hibernate
-            // query
-            List<PrdOfferingBO> savingProducts = customerPersistence.getSavingsProducts(meetingDate,
+            savingProductDtos = customerPersistence.getSavingsProducts(meetingDate,
                     selectedCustomerSearchId, loanOfficerId);
-            for (PrdOfferingBO prdOffering : savingProducts) {
-                savingProductDtos.add(new ProductDto(prdOffering.getPrdOfferingId(), prdOffering
-                        .getPrdOfferingShortName()));
-            }
 
-            List<CustomerBO> customers = customerPersistence.getClientsUnderParent(selectedCustomerSearchId, officeId);
+            
+            // FIXME - keithw - this fetch of clients and their attendances
+            // below are connected
+            final List<CustomerView> customers = customerPersistence
+                    .findClientsThatAreActiveOrOnHoldInCustomerHierarchy(
+                    selectedCustomerSearchId, officeId);
 
             ArrayList<ClientAttendanceDto> clientAttendanceDtos = new ArrayList<ClientAttendanceDto>();
-            for (CustomerBO client : customers) {
+            for (CustomerView client : customers) {
                 ClientAttendanceDto clientAttendanceDto = new ClientAttendanceDto(client.getCustomerId(), meetingDate);
                 clientAttendanceDtos.add(clientAttendanceDto);
             }
             HashMap<Integer, ClientAttendanceDto> result;
 
-            // TODO - keithw - review the need for call to getClientAttendance
             try {
                 result = clientService.getClientAttendance(clientAttendanceDtos);
             } catch (ServiceException e) {
@@ -103,6 +105,7 @@ public class CollectionSheetEntryGridViewAssembler {
                     result.put(clientAttendanceDto.getClientId(), clientAttendanceDto);
                 }
             }
+            // end of fix me
 
             List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, localeId,

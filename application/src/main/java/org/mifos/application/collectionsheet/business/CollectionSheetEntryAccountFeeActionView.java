@@ -20,29 +20,28 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ *
+ */
 public class CollectionSheetEntryAccountFeeActionView extends View {
 
     private final Integer actionDateId;
-
-    private final FeeBO fee;
-
+    private final Short feeId;
     private final Money feeAmount;
-
     private final Money feeAmountPaid;
 
-    public CollectionSheetEntryAccountFeeActionView(Integer actionDateId, FeeBO fee, Money feeAmount,
-            Money feeAmountPaid) {
+    public CollectionSheetEntryAccountFeeActionView(final Integer actionDateId, final Short feeId,
+            final Money feeAmount, final Money feeAmountPaid) {
         this.actionDateId = actionDateId;
-        this.fee = fee;
+        this.feeId = feeId;
         this.feeAmount = feeAmount;
         this.feeAmountPaid = feeAmountPaid;
     }
 
-    public CollectionSheetEntryAccountFeeActionView(Integer actionDateId) {
+    public CollectionSheetEntryAccountFeeActionView(final Integer actionDateId) {
         this(actionDateId, null, null, null);
     }
 
@@ -50,8 +49,8 @@ public class CollectionSheetEntryAccountFeeActionView extends View {
         return actionDateId;
     }
 
-    public FeeBO getFee() {
-        return fee;
+    public Short getFeeId() {
+        return feeId;
     }
 
     public Money getFeeAmount() {
@@ -67,11 +66,12 @@ public class CollectionSheetEntryAccountFeeActionView extends View {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && obj instanceof CollectionSheetEntryAccountFeeActionView) {
             CollectionSheetEntryAccountFeeActionView otherView = (CollectionSheetEntryAccountFeeActionView) obj;
-            if (otherView.getActionDateId().equals(getActionDateId()))
+            if (otherView.getActionDateId().equals(getActionDateId())) {
                 return true;
+            }
         }
         return false;
     }
@@ -82,7 +82,7 @@ public class CollectionSheetEntryAccountFeeActionView extends View {
         // constructor
         // (or just pass null to the constructor we have...)
         if (null == this.getActionDateId()) {
-            return (super.hashCode());
+            return super.hashCode();
             // throw new NullPointerException("shouldn't happen");
         }
         return this.getActionDateId().intValue();

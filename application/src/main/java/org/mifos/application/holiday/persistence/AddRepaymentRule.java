@@ -23,13 +23,11 @@ package org.mifos.application.holiday.persistence;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddRepaymentRule extends Upgrade {

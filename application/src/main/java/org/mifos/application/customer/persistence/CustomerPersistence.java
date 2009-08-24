@@ -82,7 +82,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
@@ -149,12 +149,13 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<CustomerBO> getClientsUnderParent(String searchId, Short officeId) throws PersistenceException {
+    public List<CustomerView> findClientsThatAreActiveOrOnHoldInCustomerHierarchy(final String searchId,
+            final Short officeId)
+            throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
-        List<CustomerBO> queryResult = executeNamedQuery("Customer.getAllClientChildren", queryParameters);
-        return queryResult;
+        return executeNamedQuery("findClientsThatAreActiveOrOnHoldInCustomerHierarchy", queryParameters);
     }
 
     public List<Integer> getChildrenForParent(String searchId, Short officeId) throws PersistenceException {
@@ -178,26 +179,22 @@ public class CustomerPersistence extends Persistence {
 
     }
 
-    public List<PrdOfferingBO> getLoanProducts(Date meetingDate, String searchId, Short personnelId)
+    public List<ProductDto> getLoanProducts(Date meetingDate, String searchId, Short personnelId)
             throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("meetingDate", meetingDate);
         queryParameters.put("searchId", searchId + "%");
         queryParameters.put("personnelId", personnelId);
-        List<PrdOfferingBO> queryResult = executeNamedQuery(NamedQueryConstants.BULKENTRYPRODUCTS, queryParameters);
-        return queryResult;
-
+        return executeNamedQuery(NamedQueryConstants.BULKENTRYPRODUCTS, queryParameters);
     }
 
-    public List<PrdOfferingBO> getSavingsProducts(Date meetingDate, String searchId, Short personnelId)
+    public List<ProductDto> getSavingsProducts(final Date meetingDate, final String searchId, final Short personnelId)
             throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("meetingDate", meetingDate);
         queryParameters.put("searchId", searchId + "%");
         queryParameters.put("personnelId", personnelId);
-        List<PrdOfferingBO> queryResult = executeNamedQuery(NamedQueryConstants.BULKENTRYSAVINGSPRODUCTS,
-                queryParameters);
-        return queryResult;
+        return executeNamedQuery(NamedQueryConstants.BULKENTRYSAVINGSPRODUCTS, queryParameters);
     }
 
     /*

@@ -40,7 +40,6 @@ import org.mifos.application.accounts.loan.persistance.StandardClientAttendanceD
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.service.CollectionSheetEntryBusinessService;
 import org.mifos.application.collectionsheet.persistence.BulkEntryPersistence;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
@@ -75,6 +74,7 @@ import org.mifos.application.servicefacade.FormEnteredDataAssembler;
 import org.mifos.application.servicefacade.LoanAccountAssembler;
 import org.mifos.application.servicefacade.SavingsAccountAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -120,7 +120,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         clientPersistence = new ClientPersistence();
         bulkEntryPersistence = new BulkEntryPersistence();
         savingsPersistence = new SavingsPersistence();
-        clientAttendanceDao = new StandardClientAttendanceDao();
+        clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
         loanPersistence = new LoanPersistence();
         accountPersistence = new AccountPersistence();
         clientService = new StandardClientService(clientAttendanceDao);
@@ -129,7 +129,7 @@ public class CollectionSheetEntryAction extends BaseAction {
                 bulkEntryPersistence, customerPersistence, clientAttendanceDao);
         
         final CollectionSheetEntryGridViewAssembler collectionSheetEntryGridViewAssembler = new CollectionSheetEntryGridViewAssembler(
-                customerPersistence, masterPersistence, clientService);
+                customerPersistence, masterPersistence, clientService, collectionSheetEntryViewAssembler);
         
         final AccountPaymentAssembler accountPaymentAssembler = new AccountPaymentAssembler(personnelPersistence);
         final SavingsAccountAssembler savingsAccountAssembler = new SavingsAccountAssembler(savingsPersistence,
@@ -144,14 +144,13 @@ public class CollectionSheetEntryAction extends BaseAction {
         
         collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence, masterPersistence,
                 personnelPersistence, customerPersistence, collectionSheetService,
-                collectionSheetEntryViewAssembler,
                 collectionSheetEntryGridViewAssembler, clientAttendanceAssembler, loanAccountAssembler,
                 customerAccountAssember, savingsAccountAssembler, accountPaymentAssembler);
     }
 
     @Override
     protected BusinessService getService() {
-        return new CollectionSheetEntryBusinessService(null, null, null, null);
+        return new DummyBusinessService();
     }
 
     public static ActionSecurity getSecurity() {
@@ -559,5 +558,14 @@ public class CollectionSheetEntryAction extends BaseAction {
             locale = userContext.getCurrentLocale();
         }
         return locale;
+    }
+    
+    private class DummyBusinessService implements BusinessService {
+
+        @Override
+        public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
+            return null;
+        }
+
     }
 }

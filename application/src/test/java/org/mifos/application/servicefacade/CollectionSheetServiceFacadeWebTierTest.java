@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -35,14 +34,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -85,9 +80,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private CollectionSheetService collectionSheetService;
 
     @Mock
-    private CollectionSheetEntryViewAssembler collectionSheetViewAssembler;
-
-    @Mock
     private CollectionSheetEntryGridViewAssembler collectionSheetGridViewAssembler;
     
     @Mock
@@ -107,12 +99,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
     @Mock
     private MasterDataEntity masterDataEntity;
-    
-    @Mock
-    private CollectionSheetEntryView collectionSheetEntryView;
-
-    @Mock
-    private CollectionSheetFormEnteredDataDto collectionSheetFormEnteredDataDto;
     
     private UserContext userContext;
     private BulkEntryActionForm collectionSheetForm;
@@ -138,7 +124,6 @@ public class CollectionSheetServiceFacadeWebTierTest {
         
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
                 masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
-                collectionSheetViewAssembler,
                 collectionSheetGridViewAssembler, clientAttendanceAssembler,
                 loanAccountAssembler,
                 customerAccountAssembler, savingsAccountAssembler, accountPaymentAssembler);
@@ -392,44 +377,5 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         // assert rest of data comes from previousDto
         assertThat(formDto.getCustomerList(), is(customers));
-    }
-    
-    @Test
-    public void shouldUseAssemblersToCreateCollectionSheetEntryGridDtoAndSetParentNodeInView() {
-
-        // setup
-        final PersonnelView loanOfficer = null;
-        final OfficeView office = null;
-        final ListItem<Short> paymentType = null;
-        final Date meetingDate = new DateTime().toDate();
-        final String receiptId = "test";
-        final Date receiptDate = new DateTime().toDate();
-        final List<ProductDto> loanProductDtos = new ArrayList<ProductDto>();
-        final List<ProductDto> savingProductDtos = new ArrayList<ProductDto>();
-        final HashMap<Integer, ClientAttendanceDto> clientAttendance = new HashMap<Integer, ClientAttendanceDto>();
-        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
-
-        final CollectionSheetEntryGridDto gridDto = new CollectionSheetEntryGridDto(collectionSheetEntryView,
-                loanOfficer, office, paymentType, meetingDate, receiptId, receiptDate, loanProductDtos,
-                savingProductDtos, clientAttendance, attendanceTypesList);
-        
-        // stub
-        when(collectionSheetViewAssembler.toDto(collectionSheetFormEnteredDataDto))
-                .thenReturn(collectionSheetEntryView);
-        when(
-                collectionSheetGridViewAssembler.toDto(collectionSheetFormEnteredDataDto, userContext.getLocaleId(),
-                        collectionSheetEntryView))
-                .thenReturn(gridDto);
-        
-        when(collectionSheetEntryView.getCollectionSheetEntryChildren()).thenReturn(
-                new ArrayList<CollectionSheetEntryView>());
-        
-        // exercise test
-        collectionSheetServiceFacadeWebTier.generateCollectionSheetEntryGridView(collectionSheetFormEnteredDataDto,
-                userContext);
-        
-        // state verification
-        assertThat(gridDto.getTotalCustomers(), is(0));
-        assertThat(gridDto.getBulkEntryParent(), is(collectionSheetEntryView));
     }
 }

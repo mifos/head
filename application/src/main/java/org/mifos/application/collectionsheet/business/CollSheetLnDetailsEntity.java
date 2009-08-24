@@ -20,8 +20,6 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import java.io.Serializable;
-
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;

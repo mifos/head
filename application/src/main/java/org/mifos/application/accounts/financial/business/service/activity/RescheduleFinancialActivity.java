@@ -26,7 +26,6 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.BaseAccountingEntry;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.RescheduleAccountingEntry;
-import org.mifos.application.accounts.financial.business.service.activity.accountingentry.WriteOffAccountingEntry;
 
 public class RescheduleFinancialActivity extends BaseFinancialActivity {
 

@@ -67,7 +67,7 @@ public class AccountStatusAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(final String method) {
         return true;
     }
 
@@ -86,8 +86,8 @@ public class AccountStatusAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse httpservletresponse) throws Exception {
         cleanUp(form, request);
 
         masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
@@ -110,16 +110,17 @@ public class AccountStatusAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward searchResults(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward searchResults(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse httpservletresponse) throws Exception {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
         List<LoanBO> searchResults;
 
         searchResults = getSearchResults(accountStatusActionForm.getOfficeId(), accountStatusActionForm
-                .getPersonnelId(), accountStatusActionForm.getType(), accountStatusActionForm.getCurrentStatus());
-        for (LoanBO loanBO : searchResults)
+                .getPersonnelId(), accountStatusActionForm.getCurrentStatus());
+        for (LoanBO loanBO : searchResults) {
             loanBO.getAccountState().setLocaleId(getUserContext(request).getLocaleId());
+        }
         if (searchResults == null) {
             throw new AccountException(LoanConstants.NOSEARCHRESULTS);
         }
@@ -133,8 +134,8 @@ public class AccountStatusAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward update(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse httpservletresponse) throws Exception {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
         List accountList = updateAccountsStatus(accountStatusActionForm.getAccountRecords(), accountStatusActionForm
@@ -146,8 +147,8 @@ public class AccountStatusAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward getLoanOfficers(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward getLoanOfficers(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse httpservletresponse) throws Exception {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
         Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
         List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(getUserContext(request), officeId);
@@ -170,8 +171,8 @@ public class AccountStatusAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            final HttpServletResponse httpservletresponse) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
 
         if (method.equalsIgnoreCase(Methods.searchResults.toString())) {
@@ -185,7 +186,7 @@ public class AccountStatusAction extends BaseAction {
         return null;
     }
 
-    private List<PersonnelView> loadLoanOfficersForBranch(UserContext userContext, Short officeId) throws Exception {
+    private List<PersonnelView> loadLoanOfficersForBranch(final UserContext userContext, final Short officeId) throws Exception {
         masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
 
@@ -193,15 +194,15 @@ public class AccountStatusAction extends BaseAction {
                 userContext.getId(), userContext.getLevelId());
     }
 
-    private List<LoanBO> getSearchResults(String officeId, String personnelId, String type, String currentStatus)
+    private List<LoanBO> getSearchResults(final String officeId, final String personnelId, final String currentStatus)
             throws Exception {
         loanService = new LoanBusinessService();
 
-        return loanService.getSearchResults(officeId, personnelId, type, currentStatus);
+        return loanService.getSearchResults(officeId, personnelId, currentStatus);
     }
 
-    private List updateAccountsStatus(List<String> accountList, String newStatus, String comments,
-            UserContext userContext, CustomerPersistence customerPersistence) throws Exception {
+    private List updateAccountsStatus(final List<String> accountList, final String newStatus, final String comments,
+            final UserContext userContext, final CustomerPersistence customerPersistence) throws Exception {
         loanService = new LoanBusinessService();
 
         List accountNumbers = new ArrayList();
@@ -220,7 +221,7 @@ public class AccountStatusAction extends BaseAction {
         return accountNumbers;
     }
 
-    private void cleanUp(ActionForm form, HttpServletRequest request) {
+    private void cleanUp(final ActionForm form, final HttpServletRequest request) {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
         accountStatusActionForm.setAccountRecords(new ArrayList<String>());
         accountStatusActionForm.setComments("");

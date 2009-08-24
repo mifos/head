@@ -23,6 +23,7 @@ package org.mifos.application.acceptedpaymenttype.struts.action;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
@@ -38,8 +39,6 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -86,15 +85,16 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
         flowKey = createFlow(request, AcceptedPaymentTypeAction.class);
     }
 
-    private boolean FindPaymentType(List<PaymentTypeData> list, String payment) {
+    private boolean FindPaymentType(final List<PaymentTypeData> list, final String payment) {
         for (PaymentTypeData paymentType : list) {
-            if (paymentType.getName().equals(payment))
+            if (paymentType.getName().equals(payment)) {
                 return true;
+            }
         }
         return false;
     }
 
-    private boolean compareLists(List<PaymentTypeData> first, String[] second, int expectedLength) {
+    private boolean compareLists(final List<PaymentTypeData> first, final String[] second, final int expectedLength) {
 
         assertEquals(expectedLength, first.size());
         for (int index = 0; index < second.length; ++index) {
@@ -104,22 +104,26 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
         return true;
     }
 
-    private String[] TotalList(List<PaymentTypeData> inList, List<PaymentTypeData> outList) {
+    private String[] TotalList(final List<PaymentTypeData> inList, final List<PaymentTypeData> outList) {
         int totalLength = 0;
-        if (inList != null)
+        if (inList != null) {
             totalLength += inList.size();
-        if (outList != null)
+        }
+        if (outList != null) {
             totalLength += outList.size();
+        }
 
         String[] totalList = new String[totalLength];
         Short index = 0;
         if (inList != null) {
-            for (PaymentTypeData payment : inList)
+            for (PaymentTypeData payment : inList) {
                 totalList[index++] = payment.getName();
+            }
         }
         if (outList != null) {
-            for (PaymentTypeData payment : outList)
+            for (PaymentTypeData payment : outList) {
                 totalList[index++] = payment.getName();
+            }
         }
         return totalList;
     }
@@ -177,14 +181,13 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
 
     }
 
-    protected List<MasterDataEntity> getMasterEntities(Class clazz, Short localeId) throws ServiceException,
-            PersistenceException {
+    protected List<MasterDataEntity> getMasterEntities(final Class clazz, final Short localeId) throws Exception {
         MasterDataService masterDataService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
         return masterDataService.retrieveMasterEntities(clazz, localeId);
     }
 
-    private List<PaymentTypeData> getAllPaymentTypes(Short localeId) throws Exception {
+    private List<PaymentTypeData> getAllPaymentTypes(final Short localeId) throws Exception {
         List<PaymentTypeData> paymentTypeList = new ArrayList();
         PaymentTypeData payment = null;
         Short id = 0;
@@ -210,15 +213,16 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
      * ""; }
      */
 
-    private void RemoveFromInList(List<PaymentTypeData> list, Short paymentTypeId) {
+    private void RemoveFromInList(final List<PaymentTypeData> list, final Short paymentTypeId) {
         for (int i = list.size() - 1; i >= 0; i--) {
-            if (list.get(i).getId().shortValue() == paymentTypeId.shortValue())
+            if (list.get(i).getId().shortValue() == paymentTypeId.shortValue()) {
                 list.remove(i);
+            }
         }
     }
 
-    private void setPaymentTypesForATransactionType(List<PaymentTypeData> payments, TrxnTypes transactionType,
-            AcceptedPaymentTypePersistence paymentTypePersistence, HttpServletRequest request, boolean reverse)
+    private void setPaymentTypesForATransactionType(final List<PaymentTypeData> payments, final TrxnTypes transactionType,
+            final AcceptedPaymentTypePersistence paymentTypePersistence, final HttpServletRequest request, final boolean reverse)
             throws Exception {
 
         Short transactionId = transactionType.getValue();
@@ -244,55 +248,64 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
         }
         if (transactionType == TrxnTypes.loan_repayment) {
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.IN_REPAYMENT_LIST, inList, request);
-            if (reverse == false)
+            if (reverse == false) {
                 feeOutList = outList;
+            }
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.OUT_REPAYMENT_LIST, outList, request);
         } else if (transactionType == TrxnTypes.fee) {
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.IN_FEE_LIST, inList, request);
-            if (reverse == false)
+            if (reverse == false) {
                 repaymentOutList = outList;
+            }
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.OUT_FEE_LIST, outList, request);
         } else if (transactionType == TrxnTypes.loan_disbursement) {
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.IN_DISBURSEMENT_LIST, inList, request);
-            if (reverse == false)
+            if (reverse == false) {
                 disbursementOutList = outList;
+            }
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.OUT_DISBURSEMENT_LIST, outList, request);
         } else if (transactionType == TrxnTypes.savings_deposit) {
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.IN_DEPOSIT_LIST, inList, request);
-            if (reverse == false)
+            if (reverse == false) {
                 depositOutList = outList;
+            }
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.OUT_DEPOSIT_LIST, outList, request);
         } else if (transactionType == TrxnTypes.savings_withdrawal) {
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.IN_WITHDRAWAL_LIST, inList, request);
-            if (reverse == false)
+            if (reverse == false) {
                 withdrawalOutList = outList;
+            }
             SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.OUT_WITHDRAWAL_LIST, outList, request);
-        } else
+        } else {
             throw new Exception("Unknow account action for accepted payment type " + transactionType.toString());
+        }
     }
 
-    private boolean Find(Short paymentTypeId, List<PaymentTypeData> payments) {
-        if (payments.size() == 0)
+    private boolean Find(final Short paymentTypeId, final List<PaymentTypeData> payments) {
+        if (payments.size() == 0) {
             return false;
+        }
         for (PaymentTypeData paymentTypeData : payments) {
             Short paymentId = paymentTypeData.getId();
-            if (paymentId.shortValue() == paymentTypeId.shortValue())
+            if (paymentId.shortValue() == paymentTypeId.shortValue()) {
                 return true;
+            }
         }
         return false;
     }
 
-    private void AddAPayment(List<PaymentTypeData> selectedList, List<PaymentTypeData> allPayments) {
-        for (PaymentTypeData payment : allPayments)
+    private void AddAPayment(final List<PaymentTypeData> selectedList, final List<PaymentTypeData> allPayments) {
+        for (PaymentTypeData payment : allPayments) {
             if (Find(payment.getId(), selectedList) == false) {
                 selectedList.add(payment);
                 return;
             }
+        }
 
     }
 
-    private void setSelectedPaymentTypesForATransactionType(List<PaymentTypeData> allPayments,
-            TrxnTypes transactionType, AcceptedPaymentTypeActionForm form) throws Exception {
+    private void setSelectedPaymentTypesForATransactionType(final List<PaymentTypeData> allPayments,
+            final TrxnTypes transactionType, final AcceptedPaymentTypeActionForm form) throws Exception {
         List<PaymentTypeData> selectedList = null;
 
         if (transactionType == TrxnTypes.loan_repayment) {
@@ -307,8 +320,9 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
         } else if (transactionType == TrxnTypes.savings_withdrawal) {
             selectedList = new ArrayList(withdrawalOutList);
         }
-        if ((selectedList != null) && (selectedList.size() > 0))
+        if (selectedList != null && selectedList.size() > 0) {
             selectedList.remove(0); // remove the first one
+        }
         AddAPayment(selectedList, allPayments);
         String[] selectedPaymentTypeValues = null;
         if (selectedList.size() > 0) {
@@ -337,24 +351,26 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
 
     }
 
-    private void setFormFields(List<PaymentTypeData> allPayments, AcceptedPaymentTypeActionForm form) throws Exception {
-        for (int i = 0; i < TrxnTypes.values().length; i++)
+    private void setFormFields(final List<PaymentTypeData> allPayments, final AcceptedPaymentTypeActionForm form) throws Exception {
+        for (int i = 0; i < TrxnTypes.values().length; i++) {
             setSelectedPaymentTypesForATransactionType(allPayments, TrxnTypes.values()[i], form);
+        }
         setActionForm(form);
     }
 
-    private String[] toStringArray(List<PaymentTypeData> list) {
+    private String[] toStringArray(final List<PaymentTypeData> list) {
         String[] stringArray = null;
-        if ((list != null) && (list.size() > 0)) {
+        if (list != null && list.size() > 0) {
             stringArray = new String[list.size()];
             int i = 0;
-            for (PaymentTypeData payment : list)
+            for (PaymentTypeData payment : list) {
                 stringArray[i] = payment.getId().toString();
+            }
         }
         return stringArray;
     }
 
-    private void setFormFieldsForReverse(TrxnTypes transactionType, AcceptedPaymentTypeActionForm form) {
+    private void setFormFieldsForReverse(final TrxnTypes transactionType, final AcceptedPaymentTypeActionForm form) {
         if (transactionType == TrxnTypes.loan_repayment) {
             form.setRepayments(toStringArray(repaymentOutList));
         } else if (transactionType == TrxnTypes.fee) {
@@ -369,17 +385,18 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
 
     }
 
-    private boolean Find(Short paymentId, String[] payments) {
+    private boolean Find(final Short paymentId, final String[] payments) {
         for (int i = 0; i < payments.length; i++) {
             Short id = Short.parseShort(payments[i]);
-            if (id.shortValue() == paymentId.shortValue())
+            if (id.shortValue() == paymentId.shortValue()) {
                 return true;
+            }
         }
         return false;
     }
 
-    private void comparePaymentTypes(List<AcceptedPaymentType> paymentFromDB, TrxnTypes transactionType, Locale locale,
-            List<PaymentTypeData> allPayments) {
+    private void comparePaymentTypes(final List<AcceptedPaymentType> paymentFromDB, final TrxnTypes transactionType, final Locale locale,
+            final List<PaymentTypeData> allPayments) {
         String[] savedPaymentTypes = null;
         if (transactionType == TrxnTypes.loan_repayment) {
             savedPaymentTypes = repaymentAcceptedPaymentTypes;
@@ -401,7 +418,7 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
 
     }
 
-    private void verify(AcceptedPaymentTypePersistence persistence, Locale locale, List<PaymentTypeData> allPayments)
+    private void verify(final AcceptedPaymentTypePersistence persistence, final Locale locale, final List<PaymentTypeData> allPayments)
             throws Exception {
         for (int i = 0; i < TrxnTypes.values().length; i++) {
             Short transactionId = TrxnTypes.values()[i].getValue();
@@ -427,8 +444,9 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
         // back to the
         // payment types in the database before this test is executed
         boolean reverse = false;
-        for (int i = 0; i < TrxnTypes.values().length; i++)
+        for (int i = 0; i < TrxnTypes.values().length; i++) {
             setPaymentTypesForATransactionType(allPayments, TrxnTypes.values()[i], persistence, request, reverse);
+        }
         // set data on the form to represent user's selected payment types
         setFormFields(allPayments, acceptedPaymentTypeActionForm);
         actionPerform();
@@ -446,10 +464,12 @@ public class AcceptedPaymentTypeActionIntegrationTest extends MifosMockStrutsTes
         setRequestPathInfo("/acceptedPaymentTypeAction.do");
         addRequestParameter("method", "update");
         reverse = true;
-        for (int i = 0; i < TrxnTypes.values().length; i++)
+        for (int i = 0; i < TrxnTypes.values().length; i++) {
             setPaymentTypesForATransactionType(allPayments, TrxnTypes.values()[i], persistence, request, reverse);
-        for (int i = 0; i < TrxnTypes.values().length; i++)
+        }
+        for (int i = 0; i < TrxnTypes.values().length; i++) {
             setFormFieldsForReverse(TrxnTypes.values()[i], acceptedPaymentTypeActionForm);
+        }
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();

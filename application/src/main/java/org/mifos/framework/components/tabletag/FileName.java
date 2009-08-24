@@ -24,7 +24,6 @@ public class FileName {
 
     public FileName() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     private String name;
@@ -41,7 +40,7 @@ public class FileName {
      * @param name
      *            The name to set.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -56,7 +55,7 @@ public class FileName {
      * @param path
      *            The path to set.
      */
-    public void setPath(String path) {
+    public void setPath(final String path) {
         this.path = path;
     }
 }

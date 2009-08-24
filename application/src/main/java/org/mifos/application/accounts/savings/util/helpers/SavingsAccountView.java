@@ -54,16 +54,6 @@ public class SavingsAccountView extends View {
         this.savingsOfferingId = savingsOfferingId;
         this.savingsTypeId = savingsTypeId;
         this.recommendedAmntUnitId = recommendedAmntUnitId;
-
-        // this.savingsOffering = new SavingsOfferingBO(savingsOfferingId, null,
-        // null, null);
-        // this.savingsOffering.setPrdOfferingShortName(savingsOfferingShortName);
-        // this.savingsOffering.setSavingsType(new
-        // SavingsTypeEntity(SavingsType.fromInt(savingsTypeId)));
-        //        
-        // if (recommendedAmntUnitId != null) {
-        // this.savingsOffering.setRecommendedAmntUnit(RecommendedAmountUnit.fromInt(recommendedAmntUnitId));
-        // }
     }
 
     public Integer getAccountId() {

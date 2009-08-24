@@ -21,8 +21,6 @@
 package org.mifos.application.master.business;
 
 import java.math.RoundingMode;
-import org.mifos.config.AccountingRules;
-
 import org.mifos.framework.business.PersistentObject;
 
 /**

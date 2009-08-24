@@ -28,7 +28,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.security.util.UserContext;

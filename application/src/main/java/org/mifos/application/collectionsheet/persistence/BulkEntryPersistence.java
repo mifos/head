@@ -20,6 +20,7 @@
 
 package org.mifos.application.collectionsheet.persistence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,8 +35,8 @@ import org.mifos.framework.persistence.Persistence;
 
 public class BulkEntryPersistence extends Persistence {
 
-    public List<CollectionSheetEntryInstallmentView> getBulkEntryActionView(Date meetingDate, String searchString,
-            Short officeId, AccountTypes accountType) throws PersistenceException {
+    public List<CollectionSheetEntryInstallmentView> findAccountSchedulesForCollectionSheetEntryGridView(final Date meetingDate, final String searchString,
+            final Short officeId, final AccountTypes accountType) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
@@ -52,31 +53,50 @@ public class BulkEntryPersistence extends Persistence {
             return result;
         }
         return null;
-
     }
 
-    public List<CollectionSheetEntryAccountFeeActionView> getBulkEntryFeeActionView(Date meetingDate,
-            String searchString, Short officeId, AccountTypes accountType) throws PersistenceException {
-        List<CollectionSheetEntryAccountFeeActionView> queryResult = null;
+    public List<CollectionSheetEntryAccountFeeActionView> getBulkEntryFeeActionView(final Date meetingDate,
+            final String searchString, final Short officeId, final AccountTypes accountType) throws PersistenceException {
+        
+        List<CollectionSheetEntryAccountFeeActionView> queryResult = new ArrayList<CollectionSheetEntryAccountFeeActionView>();
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
         queryParameters.put("SEARCH_STRING", searchString + ".%");
         queryParameters.put("OFFICE_ID", officeId);
+        
         if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
+
+            // String hqlQuery =
+            // "select new org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView(feeAction.accountActionDate.actionDateId, feeAction.fee.feeId, feeAction.feeAmount, feeAction.feeAmountPaid) "
+            // +
+            // "from LoanScheduleEntity as accountAction, CustomerBO as customer, LoanFeeScheduleEntity as feeAction "
+            // +
+            // "where customer.customerId = accountAction.customer.customerId "
+            // +
+            // "and accountAction.actionDate <= date(:MEETING_DATE) " +
+            // "and accountAction.paymentStatus=:PAYMENT_STATUS " +
+            // "and customer.searchId like :SEARCH_STRING " +
+            // "and customer.office.officeId = :OFFICE_ID " +
+            // "and customer.customerStatus.id in (3,4,9,10,13) " +
+            // "and accountAction.actionDateId = feeAction.accountActionDate.actionDateId "
+            // +
+            // "order by customer.customerId, accountAction.account.accountId, accountAction.actionDate, feeAction.accountActionDate.actionDateId";
+            //
+            // queryResult = executeNonUniqueHqlQuery(hqlQuery);
+            
             queryResult = executeNamedQuery(NamedQueryConstants.ALL_LOAN_FEE_SCHEDULE_DETAILS, queryParameters);
+            
         } else if (accountType.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             queryResult = getBulkEntryFeeActionViewForCustomerAccountWithSearchId(meetingDate, searchString, officeId);
             queryResult
                     .addAll(executeNamedQuery(NamedQueryConstants.ALL_CUSTOMER_FEE_SCHEDULE_DETAILS, queryParameters));
         }
-        initializeFees(queryResult);
         return queryResult;
-
     }
 
     public List<CollectionSheetEntryInstallmentView> getBulkEntryActionViewForCustomerAccountWithSearchId(
-            Date meetingDate, String searchString, Short officeId) throws PersistenceException {
+            final Date meetingDate, final String searchString, final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
@@ -87,7 +107,7 @@ public class BulkEntryPersistence extends Persistence {
     }
 
     public List<CollectionSheetEntryAccountFeeActionView> getBulkEntryFeeActionViewForCustomerAccountWithSearchId(
-            Date meetingDate, String searchString, Short officeId) throws PersistenceException {
+            final Date meetingDate, final String searchString, final Short officeId) throws PersistenceException {
         List<CollectionSheetEntryAccountFeeActionView> queryResult = null;
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
@@ -95,15 +115,6 @@ public class BulkEntryPersistence extends Persistence {
         queryParameters.put("SEARCH_STRING", searchString);
         queryParameters.put("OFFICE_ID", officeId);
         queryResult = executeNamedQuery(NamedQueryConstants.CUSTOMER_FEE_SCHEDULE_DETAILS, queryParameters);
-        initializeFees(queryResult);
         return queryResult;
-
     }
-
-    private void initializeFees(List<CollectionSheetEntryAccountFeeActionView> actionViewList) {
-        for (CollectionSheetEntryAccountFeeActionView actionView : actionViewList) {
-            initialize(actionView.getFee());
-        }
-    }
-
 }

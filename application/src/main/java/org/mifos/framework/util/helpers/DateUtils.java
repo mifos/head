@@ -31,7 +31,6 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;

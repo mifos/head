@@ -36,7 +36,6 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
-import java.text.DateFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

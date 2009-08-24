@@ -24,8 +24,6 @@ import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * Subclasses of this class provide access to the database tables which

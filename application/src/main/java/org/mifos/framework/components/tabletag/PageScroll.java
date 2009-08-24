@@ -23,8 +23,6 @@ package org.mifos.framework.components.tabletag;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.mifos.config.AccountingRules;
-import org.mifos.config.Localization;
 import org.mifos.framework.http.request.RequestConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 

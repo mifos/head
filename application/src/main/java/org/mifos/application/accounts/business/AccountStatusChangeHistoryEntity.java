@@ -20,7 +20,6 @@
 
 package org.mifos.application.accounts.business;
 
-import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.application.personnel.business.PersonnelBO;

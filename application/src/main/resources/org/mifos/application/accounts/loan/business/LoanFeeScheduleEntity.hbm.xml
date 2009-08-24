@@ -31,7 +31,7 @@
 	
 	<query name="account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts">
 		<![CDATA[select new org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView(
-			feeAction.accountActionDate.actionDateId, feeAction.fee,
+			feeAction.accountActionDate.actionDateId, feeAction.fee.feeId,
 			feeAction.feeAmount, feeAction.feeAmountPaid
 			) from org.mifos.application.accounts.loan.business.LoanScheduleEntity as accountAction,
 			org.mifos.application.customer.business.CustomerBO as customer,

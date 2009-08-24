@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.reports.business.dto.CollectionSheetReportData;
-import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;

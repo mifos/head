@@ -30,9 +30,8 @@ import org.mifos.application.accounts.financial.business.service.activity.accoun
 
 public class CustomerAdjustmentFinancialActivity extends BaseFinancialActivity {
 
-    public CustomerAdjustmentFinancialActivity(AccountTrxnEntity accountTrxn) {
+    public CustomerAdjustmentFinancialActivity(final AccountTrxnEntity accountTrxn) {
         super(accountTrxn);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

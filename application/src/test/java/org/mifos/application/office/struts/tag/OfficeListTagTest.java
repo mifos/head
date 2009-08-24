@@ -30,7 +30,6 @@ import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;

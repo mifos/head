@@ -96,7 +96,7 @@ public class LoanDisbursmentActionTest extends MifosMockStrutsTestCase {
         super.tearDown();
     }
 
-    private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
+    private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -106,7 +106,7 @@ public class LoanDisbursmentActionTest extends MifosMockStrutsTestCase {
 
     }
 
-    private LoanBO getLoanAccountInGoodStanding(AccountState state, Date startDate, int disbursalType) {
+    private LoanBO getLoanAccountInGoodStanding(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center2 = TestObjectFactory.createCenter("Center2", meeting);
         group2 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center2);
@@ -127,7 +127,7 @@ public class LoanDisbursmentActionTest extends MifosMockStrutsTestCase {
         assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
         LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) request.getSession().getAttribute(
                 "loanDisbursmentActionForm");
-        assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail(new Date(System.currentTimeMillis())));
+        assertEquals(actionForm.getAmount(), loanBO.getAmountTobePaidAtdisburtail());
         assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
     }
 
@@ -225,7 +225,7 @@ public class LoanDisbursmentActionTest extends MifosMockStrutsTestCase {
 
     }
 
-    private void createInitialObjects(int disbursalType) {
+    private void createInitialObjects(final int disbursalType) {
         // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         // String date = sdf.format(currentDate);
         loanBO = getLoanAccount(AccountState.LOAN_APPROVED, currentDate, disbursalType);

@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;

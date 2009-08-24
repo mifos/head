@@ -59,10 +59,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.AccountActionDateEntityIntegrationTest;
-import org.mifos.application.accounts.business.AccountFeesEntityIntegrationTest;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.persistance.LoanDao;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -76,12 +73,11 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerBOIntegrationTest;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
-import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -96,8 +92,8 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.holiday.util.helpers.HolidayUtilsIntegrationTest;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -107,7 +103,6 @@ import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -127,7 +122,6 @@ import org.mifos.framework.components.configuration.persistence.ConfigurationPer
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -149,16 +143,16 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DEFAULT_LOAN_AMOUNT = 300.0;
 
-    LoanOfferingBO loanOffering = null;
+    private LoanOfferingBO loanOffering = null;
 
     // TODO: probably should be of type LoanBO
-    protected AccountBO accountBO = null;
+    private AccountBO accountBO = null;
 
-    protected AccountBO badAccountBO = null;
+    private AccountBO badAccountBO = null;
 
-    protected CustomerBO center = null;
+    private CustomerBO center = null;
 
-    protected CustomerBO group = null;
+    private CustomerBO group = null;
 
     private CustomerBO client = null;
 
@@ -168,7 +162,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private UserContext userContext = null;
 
-    private List<FeeView> feeViews = new ArrayList<FeeView>();
+    private final List<FeeView> feeViews = new ArrayList<FeeView>();
 
     private BigDecimal savedInitialRoundOffMultiple = null;
     private BigDecimal savedFinalRoundOffMultiple = null;
@@ -178,7 +172,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private Short savedDigitAfterDecimal;
 
     private LoanDao loanDao;
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
 
     @Override
     protected void setUp() throws Exception {
@@ -207,16 +200,20 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     protected void tearDown() throws Exception {
         try {
             TestObjectFactory.removeObject(loanOffering);
-            if (accountBO != null)
+            if (accountBO != null) {
                 accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
                         accountBO.getAccountId());
-            if (badAccountBO != null)
+            }
+            if (badAccountBO != null) {
                 badAccountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
                         badAccountBO.getAccountId());
-            if (group != null)
+            }
+            if (group != null) {
                 group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-            if (center != null)
+            }
+            if (center != null) {
                 center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+            }
             TestObjectFactory.cleanUp(accountBO);
             TestObjectFactory.cleanUp(badAccountBO);
             TestObjectFactory.cleanUp(client);
@@ -253,7 +250,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         Date lastAppliedDate = null;
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "200.0");// missing an entry
         fees1.put("Mainatnence Fee", "100.0");
 
@@ -277,8 +274,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         assertEquals(intialTotalFeeAmount.add(new Money("600.0")), ((LoanBO) accountBO).getLoanSummary()
                 .getOriginalFees());
-        LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO).getLoanActivityDetails()
-                .toArray())[0]);
+        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) ((LoanBO) accountBO).getLoanActivityDetails()
+                .toArray()[0];
         assertEquals(periodicFee.getFeeName() + " applied", loanActivityEntity.getComments());
         assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(), loanActivityEntity.getFeeOutstanding());
         AccountFeesEntity accountFeesEntity = accountBO.getAccountFees(periodicFee.getFeeId());
@@ -317,10 +314,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.closeSession();
 
-            HashMap fees1 = new HashMap();
+            Map<String, String> fees1 = new HashMap<String, String>();
             fees1.put("Mainatnence Fee", "100.0");
 
-            HashMap fees2 = new HashMap();
+            Map<String, String> fees2 = new HashMap<String, String>();
             fees2.put("Mainatnence Fee", "100.0");
             fees2.put("Periodic Fee", "25.0");
 
@@ -336,8 +333,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     feeDates.add(feeDate);
                 }
             }
-            System.out.println(installmentDates);
-            System.out.println(feeDates);
 
             assertEquals(6, paymentsArray.length);
 
@@ -392,7 +387,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     .getGracePeriodDuration(), loanBO.getBusinessActivityId(), "Loan account updated", null, null,
                     false, null);
 
-            HashMap fees1 = new HashMap();
+            Map<String, String> fees1 = new HashMap<String, String>();
             fees1.put("Mainatnence Fee", "100.0");
 
             LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(loanBO.getAccountActionDates());
@@ -443,14 +438,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private AccountBO getLoanAccount(Date startDate, AccountState state) throws MeetingException {
+    private AccountBO getLoanAccount(final Date startDate, final AccountState state) throws MeetingException {
         createInitialCustomers(startDate);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, center.getCustomerMeeting()
                 .getMeeting());
         return TestObjectFactory.createLoanAccount("42423142341", group, state, startDate, loanOffering);
     }
 
-    private void createInitialCustomers(Date meetingStartDate) throws MeetingException {
+    private void createInitialCustomers(final Date meetingStartDate) throws MeetingException {
         Calendar cal = Calendar.getInstance();
         cal.setTime(meetingStartDate);
         // create a meeting based on meetingStartDate rather than the
@@ -461,7 +456,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
-    private HolidayBO createHoliday(Date holidayDate) throws PersistenceException, ApplicationException {
+    private HolidayBO createHoliday(final Date holidayDate) throws PersistenceException, ApplicationException {
         // next working day repayment rule
         RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY
                 .getValue());
@@ -472,7 +467,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return holiday;
     }
 
-    private void deleteHoliday(HolidayBO holiday) throws PersistenceException {
+    private void deleteHoliday(final HolidayBO holiday) throws PersistenceException {
         new HolidayPersistence().delete(holiday);
         StaticHibernateUtil.commitTransaction();
     }
@@ -613,7 +608,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         assertEquals(loan.getLoanSummary().getPenaltyPaid(), new Money("200"));
     }
 
-    public static void setFeeAmount(AccountFeesActionDetailEntity accountFeesActionDetailEntity, Money feeAmount) {
+    public static void setFeeAmount(final AccountFeesActionDetailEntity accountFeesActionDetailEntity, final Money feeAmount) {
         ((LoanFeeScheduleEntity) accountFeesActionDetailEntity).setFeeAmount(feeAmount);
     }
 
@@ -664,12 +659,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Set<AccountFeesEntity> accountFeesEntitySet = accountBO.getAccountFees();
         ((LoanBO) accountBO).getLoanOffering().setPrinDueLastInst(false);
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 ((LoanScheduleEntity) accountActionDateEntity).setMiscFee(new Money("20.3"));
+            }
         }
-        Iterator itr = accountFeesEntitySet.iterator();
-        while (itr.hasNext())
-            accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees().getFeeId(), uc.getId());
+        Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
+        while (itr.hasNext()) {
+            accountBO.removeFees(itr.next().getFees().getFeeId(), uc.getId());
+        }
 
         StaticHibernateUtil.getTransaction().commit();
         for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
@@ -689,14 +686,15 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         for (AccountActionDateEntity accountActionDate : accountBO.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-            if (accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+            if (accountActionDate.getInstallmentId().equals(Short.valueOf("1"))) {
                 assertEquals(new Money("212.0"), loanScheduleEntity.getTotalDueWithFees());
-            else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2")))
+            } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 assertEquals(new Money("133.0"), loanScheduleEntity.getTotalDueWithFees());
-            else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("6")))
+            } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 assertEquals(new Money("111.3"), loanScheduleEntity.getTotalDueWithFees());
-            else
+            } else {
                 assertEquals(new Money("112.0"), loanScheduleEntity.getTotalDueWithFees());
+            }
         }
 
     }
@@ -810,13 +808,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 ((LoanBO) accountBO).getTotalInterestAmountInArrears()), agingEntity.getOverdueBalance());
     }
 
-    public void testUpdateLoanForLogging() throws ApplicationException, SystemException, InvalidDateException {
+    public void testUpdateLoanForLogging() throws Exception {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
         StaticHibernateUtil.getInterceptor().createInitialValueMap(accountBO);
 
-        LoanBO loanBO = ((LoanBO) accountBO);
+        LoanBO loanBO = (LoanBO) accountBO;
         ((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO.getInterestRate(), loanBO
                 .getNoOfInstallments(), newDate, (short) 2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, "Added note",
                 null, null, false, null);
@@ -1098,7 +1096,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private LoanOfferingBO createOfferingNoPrincipalInLastInstallment(Date startDate, MeetingBO meeting) {
+    private LoanOfferingBO createOfferingNoPrincipalInLastInstallment(final Date startDate, final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE,
                 DEFAULT_LOAN_AMOUNT, 1.2, 3, InterestType.FLAT, meeting);
     }
@@ -1335,7 +1333,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
         Money orignalFeesAmount = loanSummaryEntity.getOriginalFees();
         loanBO.updateTotalFeeAmount(new Money("20"));
-        assertEquals(loanSummaryEntity.getOriginalFees(), (orignalFeesAmount.subtract(new Money("20"))));
+        assertEquals(loanSummaryEntity.getOriginalFees(), orignalFeesAmount.subtract(new Money("20")));
     }
 
     public void testDisburseLoanWithFeeAtDisbursement() throws Exception {
@@ -1381,8 +1379,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                             .getFeesTrxnDetails();
                     assertEquals(2, feesTrxnDetails.size());
                 }
-                if (transaction.getAccountAction() == AccountActionTypes.DISBURSAL)
+                if (transaction.getAccountAction() == AccountActionTypes.DISBURSAL) {
                     assertEquals(300.0, transaction.getAmount().getAmountDoubleValue(), DELTA);
+                }
 
                 assertEquals(accountBO.getAccountId(), transaction.getAccount().getAccountId());
 
@@ -1490,8 +1489,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * .getAccountStatusChangeHistory().size()); }
      */
 
-    public void testDisbursalLoanRegeneteRepaymentScheduleWithInvalidDisbDate() throws AccountException,
-            SystemException, FinancialException {
+    public void testDisbursalLoanRegeneteRepaymentScheduleWithInvalidDisbDate() throws Exception {
 
         // Allowing loan disbursal dates to become independent of meeting
         // schedules.
@@ -1519,8 +1517,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testDisbursalLoanRegeneteRepaymentSchedule() throws AccountException, SystemException,
-            FinancialException, InterruptedException {
+    public void testDisbursalLoanRegeneteRepaymentSchedule() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3, new Money("20"),
                 new Money("30"));
@@ -1551,38 +1548,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         session.update(accountBO);
         StaticHibernateUtil.getTransaction().commit();
         assertEquals(true, true);
-    }
-
-    /**
-     * TODO: Only called from {@link HolidayUtilsIntegrationTest}. We should not
-     * have one test depending on another.
-     */
-    public LoanScheduleEntity[] createLoanRepaymentSchedule() throws AccountException, SystemException,
-            FinancialException, InterruptedException {
-        Date startDate = new Date(System.currentTimeMillis());
-        accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3, new Money("20"),
-                new Money("30"));
-
-        Set<AccountActionDateEntity> intallments = accountBO.getAccountActionDates();
-
-        AccountActionDateEntity firstInstallment = null;
-        for (AccountActionDateEntity entity : intallments) {
-            if (entity.getInstallmentId().intValue() == 1) {
-                firstInstallment = entity;
-                break;
-            }
-        }
-        Calendar disbursalDate = new GregorianCalendar();
-        disbursalDate.setTimeInMillis(firstInstallment.getActionDate().getTime());
-        Calendar cal = new GregorianCalendar(disbursalDate.get(Calendar.YEAR), disbursalDate.get(Calendar.MONTH),
-                disbursalDate.get(Calendar.DATE), 0, 0);
-        ((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short.valueOf("1"), accountBO.getPersonnel(),
-                startDate, Short.valueOf("1"));
-
-        Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
-
-        return paymentsArray;
     }
 
     public void testGetTotalAmountDueForCurrentDateMeeting() {
@@ -1781,7 +1746,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         assertEquals(statusChangeHistorySize + 1, accountBO.getAccountStatusChangeHistory().size());
     }
 
-    public void testChangedStatusOnPayment() throws AccountException, SystemException, InvalidDateException {
+    public void testChangedStatusOnPayment() throws Exception {
         accountBO = getLoanAccount();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -2013,8 +1978,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))
                         || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                     assertEquals(new Money(), accountFeesActionDetailEntity.getFeeAmount());
-                } else
+                } else {
                     assertEquals(new Money("100"), accountFeesActionDetailEntity.getFeeAmount());
+                }
             }
         }
 
@@ -2047,14 +2013,15 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         // machinery needed to get that data?
 
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId() < 3)
+            if (actionDateEntity.getInstallmentId() < 3) {
                 assertEquals(
                         DateUtils.getCurrentPlusWeeksDateWithoutTimeStamp(actionDateEntity.getInstallmentId() - 1),
                         DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
-            else
+            } else {
                 assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
                         .get(actionDateEntity.getInstallmentId() - 1)), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
+            }
         }
     }
 
@@ -2097,9 +2064,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         assertEquals(Short.valueOf("2"), ((LoanBO) accountBO).getLoanOffering().getLoanOfferingMeeting().getMeeting()
                 .getMeetingDetails().getRecurAfter());
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId() == 1)
+            if (actionDateEntity.getInstallmentId() == 1) {
                 assertEquals(DateUtils.getDateWithoutTimeStamp(startDate), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
+            }
         }
     }
 
@@ -2110,10 +2078,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         java.sql.Date intallment2ndDate = null;
         java.sql.Date intallment3ndDate = null;
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 intallment2ndDate = actionDateEntity.getActionDate();
-            else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
                 intallment3ndDate = actionDateEntity.getActionDate();
+            }
         }
         AccountActionDateEntity accountActionDateEntity = accountBO.getDetailsOfNextInstallment();
         MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting().getMeeting();
@@ -2131,12 +2100,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         // machinery needed to get that data?
 
         for (AccountActionDateEntity actionDateEntity : accountBO.getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 assertEquals(DateUtils.getDateWithoutTimeStamp(intallment2ndDate.getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
-            else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3")))
+            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
                 assertEquals(DateUtils.getDateWithoutTimeStamp(intallment3ndDate.getTime()), DateUtils
                         .getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()));
+            }
         }
     }
 
@@ -2290,7 +2260,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         LoanBO loan = (LoanBO) accountBO;
-        clientPerfHistory = (ClientPerformanceHistoryEntity) (loan).getCustomer().getPerformanceHistory();
+        clientPerfHistory = (ClientPerformanceHistoryEntity) loan.getCustomer().getPerformanceHistory();
         assertEquals(loanCycleNumber - 1, clientPerfHistory.getLoanCycleNumber().intValue());
         assertEquals(noOfActiveLoans - 1, clientPerfHistory.getNoOfActiveLoans().intValue());
     }
@@ -2414,8 +2384,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1")))
+            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 accountActionDateEntity.setMiscFee(new Money("20.3"));
+            }
         }
         ((LoanBO) accountBO).applyRounding();
         TestObjectFactory.updateObject(accountBO);
@@ -2434,7 +2405,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         checkTotalDueWithFees("212.0", paymentsArray[5]);
     }
 
-    public void testBuildLoanWithoutLoanOffering() throws NumberFormatException, AccountException, Exception {
+    public void testBuildLoanWithoutLoanOffering() throws Exception {
         createInitialCustomers();
         try {
             loanDao.createLoan(TestUtils.makeUser(), null, group, AccountState.LOAN_APPROVED, new Money("300.0"), Short
@@ -2447,7 +2418,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testBuildForInactiveLoanOffering() throws NumberFormatException, SystemException, ApplicationException {
+    public void testBuildForInactiveLoanOffering() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false, false, PrdStatus.LOAN_INACTIVE);
         try {
@@ -2465,7 +2436,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testBuildLoanWithoutCustomer() throws NumberFormatException, AccountException, Exception {
+    public void testBuildLoanWithoutCustomer() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
@@ -2483,7 +2454,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testBuildForInactiveCustomer() throws NumberFormatException, SystemException, ApplicationException {
+    public void testBuildForInactiveCustomer() throws Exception {
         createInitialCustomers();
         CustomerBOIntegrationTest.setCustomerStatus(group, new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED));
         TestObjectFactory.updateObject(group);
@@ -2503,8 +2474,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testMeetingNotMatchingForCustomerAndLoanOffering() throws NumberFormatException, SystemException,
-            ApplicationException {
+    public void testMeetingNotMatchingForCustomerAndLoanOffering() throws Exception {
         createInitialCustomers();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(MONTHLY,
                 EVERY_MONTH, CUSTOMER_MEETING));
@@ -2525,8 +2495,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testMeetingRecurrenceOfLoanOfferingInMultipleOfCustomer() throws NumberFormatException,
-            SystemException, ApplicationException {
+    public void testMeetingRecurrenceOfLoanOfferingInMultipleOfCustomer() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         createInitialCustomers();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -2544,7 +2513,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testBuildLoanWithoutLoanAmount() throws NumberFormatException, AccountException, Exception {
+    public void testBuildLoanWithoutLoanAmount() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
@@ -2562,8 +2531,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testGracePeriodGraterThanMaxNoOfInst() throws NumberFormatException, SystemException,
-            ApplicationException {
+    public void testGracePeriodGraterThanMaxNoOfInst() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
@@ -2581,7 +2549,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testGracePeriodForInterestNotDedAtDisb() throws NumberFormatException, AccountException, Exception {
+    public void testGracePeriodForInterestNotDedAtDisb() throws Exception {
         createInitialCustomers();
         LoanOfferingBO product = createLoanOffering(false);
         // product.updateLoanOfferingSameForAllLoan(product);
@@ -2627,7 +2595,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * 
      * TestObjectFactory.removeObject(loanOffering); }
      */
-    public void testBuildLoanWithValidDisbDate() throws NumberFormatException, AccountException, Exception {
+    public void testBuildLoanWithValidDisbDate() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         Date disbursementDate = new Date(System.currentTimeMillis());
@@ -2667,8 +2635,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * TestObjectFactory.removeObject(loanOffering); }
      */
 
-    public void testBuildLoanWithDisbDateOlderThanCurrentDate() throws NumberFormatException, AccountException,
-            Exception {
+    public void testBuildLoanWithDisbDateOlderThanCurrentDate() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         Date disbursementDate = offSetCurrentDate(15);
@@ -2688,7 +2655,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testBuildLoanWithFee() throws NumberFormatException, AccountException, Exception {
+    public void testBuildLoanWithFee() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         List<FeeView> feeViews = getFeeViews();
@@ -2701,17 +2668,18 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         assertEquals(2, loan.getAccountFees().size());
         for (AccountFeesEntity accountFees : loan.getAccountFees()) {
-            if (accountFees.getFees().getFeeName().equals("One Time Amount Fee"))
+            if (accountFees.getFees().getFeeName().equals("One Time Amount Fee")) {
                 assertEquals(new Double("120.0"), accountFees.getFeeAmount());
-            else
+            } else {
                 assertEquals(new Double("10.0"), accountFees.getFeeAmount());
+            }
         }
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "10.0");
         fees1.put("One Time Amount Fee", "120.0");
 
-        HashMap fees2 = new HashMap();
+        Map<String, String> fees2 = new HashMap<String, String>();
         fees2.put("Periodic Fee", "10.0");
 
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
@@ -2731,7 +2699,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testBuildLoan() throws NumberFormatException, AccountException, Exception {
+    public void testBuildLoan() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         List<FeeView> feeViews = getFeeViews();
@@ -2755,7 +2723,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOffering);
     }
 
-    public void testCreateLoan() throws NumberFormatException, AccountException, Exception {
+    public void testCreateLoan() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         List<FeeView> feeViews = getFeeViews();
@@ -2765,10 +2733,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         assertEquals(2, loan.getAccountFees().size());
         for (AccountFeesEntity accountFees : loan.getAccountFees()) {
-            if (accountFees.getFees().getFeeName().equals("One Time Amount Fee"))
+            if (accountFees.getFees().getFeeName().equals("One Time Amount Fee")) {
                 assertEquals(new Double("120.0"), accountFees.getFeeAmount());
-            else
+            } else {
                 assertEquals(new Double("10.0"), accountFees.getFeeAmount());
+            }
         }
 
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
@@ -2913,7 +2882,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testLoanScheduleRoundingWithMiscFee() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
-        boolean isInterestDedAtDisb = false;
         Short noOfinstallments = (short) 2;
         LoanBO loan = createButDontRetrieveLoanAccount(loanOffering, false, null, noOfinstallments, 0.0, new Money(
                 "300.0"));
@@ -2921,21 +2889,23 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
             if (loanScheduleEntity.getInstallmentId() == 1) {
                 assertEquals(new Money("150.0"), loanScheduleEntity.getTotalDueWithFees());
-            } else
+            } else {
                 assertEquals(new Money("150.0"), loanScheduleEntity.getTotalDueWithFees());
+            }
         }
-        loan.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), (double) 10.0);
+        loan.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), 10.0);
         for (AccountActionDateEntity accountActionDate : loan.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
             if (loanScheduleEntity.getInstallmentId() == 1) {
                 assertEquals(new Money("160.0"), loanScheduleEntity.getTotalDueWithFees());
                 assertEquals(new Money("150.0"), loanScheduleEntity.getPrincipal());
-            } else
+            } else {
                 assertEquals(new Money("150.0"), loanScheduleEntity.getTotalDueWithFees());
+            }
         }
     }
 
-    public void testAmountRoundedWhileCreate() throws NumberFormatException, AccountException, Exception {
+    public void testAmountRoundedWhileCreate() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
         boolean isInterestDedAtDisb = false;
@@ -2987,13 +2957,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), new Double("33"));
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
-            if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1")))
+            if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 assertEquals(new Money("33.0"), loanScheduleEntity.getMiscFee());
+            }
         }
         assertEquals(intialTotalFeeAmount.add(new Money("33.0")), ((LoanBO) accountBO).getLoanSummary()
                 .getOriginalFees());
-        LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO).getLoanActivityDetails()
-                .toArray())[0]);
+        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) ((LoanBO) accountBO).getLoanActivityDetails()
+                .toArray()[0];
         assertEquals(AccountConstants.MISC_FEES_APPLIED, loanActivityEntity.getComments());
         assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(), loanActivityEntity.getFeeOutstanding());
     }
@@ -3017,8 +2988,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
-            if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1")))
+            if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 loanScheduleEntity.setPaymentStatus(PaymentStatus.PAID);
+            }
         }
         UserContext uc = TestUtils.makeUser();
         accountBO.setUserContext(uc);
@@ -3029,13 +3001,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
-            if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2")))
+            if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 assertEquals(new Money("33.0"), loanScheduleEntity.getMiscFee());
+            }
         }
         assertEquals(intialTotalFeeAmount.add(new Money("33.0")), ((LoanBO) accountBO).getLoanSummary()
                 .getOriginalFees());
-        LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO).getLoanActivityDetails()
-                .toArray())[0]);
+        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) ((LoanBO) accountBO).getLoanActivityDetails()
+                .toArray()[0];
         assertEquals(AccountConstants.MISC_FEES_APPLIED, loanActivityEntity.getComments());
         assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(), loanActivityEntity.getFeeOutstanding());
     }
@@ -3055,7 +3028,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         Date lastAppliedDate = null;
         Money feeAmountApplied = new Money();
-        HashMap fees2 = new HashMap();
+        Map<String, String> fees2 = new HashMap<String, String>();
         fees2.put("Upfront Fee", "60.0");
         fees2.put("Mainatnence Fee", "100.0");
 
@@ -3081,8 +3054,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         assertEquals(intialTotalFeeAmount.add(feeAmountApplied), ((LoanBO) accountBO).getLoanSummary()
                 .getOriginalFees());
-        LoanActivityEntity loanActivityEntity = ((LoanActivityEntity) (((LoanBO) accountBO).getLoanActivityDetails()
-                .toArray())[0]);
+        LoanActivityEntity loanActivityEntity = (LoanActivityEntity) ((LoanBO) accountBO).getLoanActivityDetails()
+                .toArray()[0];
         assertEquals(upfrontFee.getFeeName() + " applied", loanActivityEntity.getComments());
         assertEquals(((LoanBO) accountBO).getLoanSummary().getOriginalFees(), loanActivityEntity.getFeeOutstanding());
         AccountFeesEntity accountFeesEntity = accountBO.getAccountFees(upfrontFee.getFeeId());
@@ -3101,7 +3074,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO.setUserContext(TestObjectFactory.getContext());
         accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
 
-        LoanBO loanBO = ((LoanBO) accountBO);
+        LoanBO loanBO = (LoanBO) accountBO;
         ((LoanBO) accountBO).updateLoan(loanBO.isInterestDeductedAtDisbursement(), loanBO.getLoanAmount(), loanBO
                 .getInterestRate(), loanBO.getNoOfInstallments(), newDate, loanBO.getGracePeriodDuration(), loanBO
                 .getBusinessActivityId(), loanBO.getCollateralNote(), null, null, false, null);
@@ -3115,12 +3088,12 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 firstInstallmentDate, newActionDate);
     }
 
-    public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule() throws ApplicationException, SystemException, InvalidDateException {
+    public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule() throws Exception {
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         Date oldActionDate = DateUtils.getDateWithoutTimeStamp(accountBO.getAccountActionDate(Short.valueOf("1"))
                 .getActionDate().getTime());
-        LoanBO loanBO = ((LoanBO) accountBO);
+        LoanBO loanBO = (LoanBO) accountBO;
         ((LoanBO) accountBO).updateLoan(loanBO.isInterestDeductedAtDisbursement(), loanBO.getLoanAmount(), loanBO
                 .getInterestRate(), loanBO.getNoOfInstallments(), newDate, loanBO.getGracePeriodDuration(), loanBO
                 .getBusinessActivityId(), loanBO.getCollateralNote(), null, null, false, null);
@@ -3375,12 +3348,12 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 1.2, (short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
         new TestObjectPersistence().persist(accountBO);
 
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "100.0");
 
-        HashMap fees2 = new HashMap();
+        Map<String, String> fees2 = new HashMap<String, String>();
         fees2.put("Periodic Fee", "100.0");
         fees2.put("Upfront Fee", "60.0");
 
@@ -3442,12 +3415,12 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
         new TestObjectPersistence().persist(accountBO);
 
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "100.0");
 
-        HashMap fees2 = new HashMap();
+        Map<String, String> fees2 = new HashMap<String, String>();
         fees2.put("Periodic Fee", "100.0");
         fees2.put("Upfront Fee", "60.0");
 
@@ -3538,10 +3511,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 SHORT_ZERO, SHORT_ZERO);
         new TestObjectPersistence().persist(accountBO);
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "200.0");
 
-        HashMap fees3 = new HashMap();
+        Map<String, String> fees3 = new HashMap<String, String>();
         fees3.put("Periodic Fee", "100.0");
         fees3.put("Upfront Fee", "60.0");
         fees3.put("First Repayment Fee", "1.5");
@@ -3603,10 +3576,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         int year = disbursementDate.get(Calendar.YEAR);
         int month = disbursementDate.get(Calendar.MONTH);
         int day = 25;
-        if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
+        if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue()) {
             disbursementDate = new GregorianCalendar(year, month, day);
-        else
+        } else {
             disbursementDate = new GregorianCalendar(year, month + 1, day);
+        }
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
         List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3632,10 +3606,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         year = disbursementDate.get(Calendar.YEAR);
         month = disbursementDate.get(Calendar.MONTH);
         day = 25;
-        if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue())
+        if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth.intValue()) {
             disbursementDate = new GregorianCalendar(year, month + 1, day);
-        else
+        } else {
             disbursementDate = new GregorianCalendar(year, month + 2, day);
+        }
         ((LoanBO) accountBO).disburseLoan("1234", disbursementDate.getTime(), Short.valueOf("1"), accountBO
                 .getPersonnel(), disbursementDate.getTime(), Short.valueOf("1"));
         Session session = StaticHibernateUtil.getSessionTL();
@@ -3661,8 +3636,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         } catch (AccountException expected) {
             if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
                 assertEquals("exceptions.application.loan.invalidDisbursement", expected.getKey());
-            } else
+            } else {
                 assertEquals("errors.invalidDisbursementDate", expected.getKey());
+            }
 
         }
     }
@@ -3670,7 +3646,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testUpdateLoanSuccess() {
         accountBO = getLoanAccount();
         try {
-            LoanBO loanBO = ((LoanBO) accountBO);
+            LoanBO loanBO = (LoanBO) accountBO;
             ((LoanBO) accountBO).updateLoan(loanBO.isInterestDeductedAtDisbursement(), loanBO.getLoanAmount(), loanBO
                     .getInterestRate(), loanBO.getNoOfInstallments(), loanBO.getDisbursementDate(), loanBO
                     .getGracePeriodDuration(), loanBO.getBusinessActivityId(), "Loan account updated", null, null,
@@ -3685,7 +3661,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         final short NUMBER_OF_INSTALLMENTS = 1;
         accountBO = getLoanAccount();
         try {
-            LoanBO loanBO = ((LoanBO) accountBO);
+            LoanBO loanBO = (LoanBO) accountBO;
             ((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO.getInterestRate(),
                     NUMBER_OF_INSTALLMENTS, loanBO.getDisbursementDate(), loanBO.getGracePeriodDuration(), loanBO
                             .getBusinessActivityId(), "Loan account updated", null, null, false, null);
@@ -3699,7 +3675,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         final short NUMBER_OF_INSTALLMENTS = 1;
         accountBO = getLoanAccount();
         try {
-            LoanBO loanBO = ((LoanBO) accountBO);
+            LoanBO loanBO = (LoanBO) accountBO;
             ((LoanBO) accountBO).updateLoan(false, loanBO.getLoanAmount(), loanBO.getInterestRate(),
                     NUMBER_OF_INSTALLMENTS, loanBO.getDisbursementDate(), loanBO.getGracePeriodDuration(), loanBO
                             .getBusinessActivityId(), "Loan account updated", null, null, false, null);
@@ -3918,9 +3894,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.commitTransaction();
 
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "60");
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
@@ -3985,11 +3961,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             accountBO.removeFees(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
-        HashMap fees0 = new HashMap(0);
+        Map<String, String> fees0 = new HashMap<String, String>(0);
 
-        HashMap fees1 = new HashMap();
+        Map<String, String> fees1 = new HashMap<String, String>();
         fees1.put("Periodic Fee", "60");
-        HashMap feesPaid1 = new HashMap();
+        Map<String, String> feesPaid1 = new HashMap<String, String>();
         feesPaid1.put("Periodic Fee", "60");
 
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(((LoanBO) accountBO)
@@ -4025,10 +4001,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.commitTransaction();
 
-        Map fee260 = new HashMap();
+        Map<String, String> fee260 = new HashMap<String, String>();
         fee260.put("Periodic Fee", "260");
 
-        Map fee400 = new HashMap();
+        Map<String, String> fee400 = new HashMap<String, String>();
         fee400.put("Periodic Fee", "400");
 
         Set<AccountActionDateEntity> actionDateEntities1 = ((LoanBO) accountBO).getAccountActionDates();
@@ -4123,8 +4099,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         java.sql.Date twoWeeksBeforeDate = setDate(new GregorianCalendar().DAY_OF_MONTH, daysMoreThanLateness);
         accountBO = getLoanAccount();
 
-        for (AccountActionDateEntity installment : accountBO.getAccountActionDates())
+        for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
             ((LoanScheduleEntity) installment).setActionDate(twoWeeksBeforeDate);
+        }
         TestObjectFactory.updateObject(accountBO);
         TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
@@ -4295,12 +4272,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
         Money orignalFeesAmount = loanSummaryEntity.getOriginalFees();
         loanBO.updateTotalFeeAmount(new Money(TestObjectFactory.getMFICurrency(), "20"));
-        assertEquals(loanSummaryEntity.getOriginalFees(), (orignalFeesAmount.subtract(new Money(TestObjectFactory
-                .getMFICurrency(), "20"))));
+        assertEquals(loanSummaryEntity.getOriginalFees(), orignalFeesAmount.subtract(new Money(TestObjectFactory
+                .getMFICurrency(), "20")));
     }
 
-    public void testCreateLoanAccountWithDecliningInterestNoGracePeriod() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException {
+    public void testCreateLoanAccountWithDecliningInterestNoGracePeriod() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -4319,7 +4295,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         new TestObjectPersistence().persist(accountBO);
         assertEquals(6, accountBO.getAccountActionDates().size());
 
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
@@ -4363,8 +4339,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * installment.getMiscPenaltyDue()); assertOneInstallmentFee(new
      * Money(accountFee.toString()), installment); }
      */
-    public void testCreateLoanAccountWithDecliningInterestWithFeesNoGracePeriod() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException {
+    public void testCreateLoanAccountWithDecliningInterestWithFeesNoGracePeriod() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -4388,10 +4363,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         assertEquals(6, accountBO.getAccountActionDates().size());
 
         LoanBO loan = (LoanBO) accountBO;
-        loan.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), (double) 2.0);
-        loan.applyCharge(Short.valueOf(AccountConstants.MISC_PENALTY), (double) 10.0);
+        loan.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), 2.0);
+        loan.applyCharge(Short.valueOf(AccountConstants.MISC_PENALTY), 10.0);
 
-        Set<AccountActionDateEntity> actionDateEntities = (loan).getAccountActionDates();
+        Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] sortedInstallments = getSortedAccountActionDateEntity(actionDateEntities);
         LoanTestUtils.assertInstallmentDetails(sortedInstallments[0], 50.0, 0.7, 0.3, 2.0, 10.0);
         LoanTestUtils.assertInstallmentDetails(sortedInstallments[1], 50.1, 0.6, 0.3, 0.0, 0.0);
@@ -4439,8 +4414,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
          */
     }
 
-    public void testCreateLoanAccountWithZeroFlatInterest() throws NumberFormatException, PropertyNotFoundException,
-            SystemException, ApplicationException {
+    public void testCreateLoanAccountWithZeroFlatInterest() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -4458,7 +4432,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         new TestObjectPersistence().persist(accountBO);
         assertEquals(6, accountBO.getAccountActionDates().size());
 
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
@@ -4481,8 +4455,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testCreateLoanAccountWithZeroDecliningInterest() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException {
+    public void testCreateLoanAccountWithZeroDecliningInterest() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -4500,7 +4473,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         new TestObjectPersistence().persist(accountBO);
         assertEquals(6, accountBO.getAccountActionDates().size());
 
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
@@ -4523,8 +4496,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testCreateLoanAccountWithDecliningInterestGraceAllRepayments() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException {
+    public void testCreateLoanAccountWithDecliningInterestGraceAllRepayments() throws Exception {
 
         short graceDuration = (short) 2;
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
@@ -4542,7 +4514,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 12.0, graceDuration, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
         new TestObjectPersistence().persist(accountBO);
         assertEquals(6, accountBO.getAccountActionDates().size());
-        HashMap fees0 = new HashMap();
+        Map<String, String> fees0 = new HashMap<String, String>();
 
         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
@@ -4564,8 +4536,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testCreateLoanAccountWithDecliningInterestGracePrincipalOnly() throws NumberFormatException,
-            PropertyNotFoundException, SystemException, ApplicationException {
+    public void testCreateLoanAccountWithDecliningInterestGracePrincipalOnly() throws Exception {
 
         BigDecimal savedInitialRoundingMode = AccountingRules.getInitialRoundOffMultiple();
         BigDecimal savedFinalRoundingMode = AccountingRules.getFinalRoundOffMultiple();
@@ -4594,7 +4565,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             new TestObjectPersistence().persist(accountBO);
             assertEquals(6, accountBO.getAccountActionDates().size());
 
-            HashMap fees0 = new HashMap();
+            Map<String, String> fees0 = new HashMap<String, String>();
 
             Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
             LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
@@ -4903,15 +4874,15 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * }
      */
 
-    private java.sql.Date setDate(int dayUnit, int interval) {
+    private java.sql.Date setDate(final int dayUnit, final int interval) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
         calendar.add(dayUnit, interval);
         return new java.sql.Date(calendar.getTimeInMillis());
     }
 
-    private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering, boolean isInterestDedAtDisb,
-            List<FeeView> feeViews, Short noOfinstallments, Double interestRate, Money loanAmount)
+    private LoanBO createAndRetrieveLoanAccount(final LoanOfferingBO loanOffering, final boolean isInterestDedAtDisb,
+            final List<FeeView> feeViews, final Short noOfinstallments, final Double interestRate, final Money loanAmount)
             throws NumberFormatException, AccountException, SystemException, ApplicationException {
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
@@ -4938,9 +4909,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * testLoanScheduleRoundingWithMiscFee(). This modified method saves the
      * loan but does not replace it with the retrieved one before returning it.
      */
-    private LoanBO createButDontRetrieveLoanAccount(LoanOfferingBO loanOffering, boolean isInterestDedAtDisb,
-            List<FeeView> feeViews, Short noOfinstallments, Double interestRate, Money loanAmount)
-            throws NumberFormatException, AccountException, SystemException, ApplicationException {
+    private LoanBO createButDontRetrieveLoanAccount(final LoanOfferingBO loanOffering, final boolean isInterestDedAtDisb,
+            final List<FeeView> feeViews, final Short noOfinstallments, final Double interestRate, final Money loanAmount)
+            throws Exception {
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         // LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -4957,30 +4928,21 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return loan;
     }
 
-    private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering, boolean isInterestDedAtDisb,
-            List<FeeView> feeViews, Short noOfinstallments) throws NumberFormatException, AccountException,
+    private LoanBO createAndRetrieveLoanAccount(final LoanOfferingBO loanOffering, final boolean isInterestDedAtDisb,
+            final List<FeeView> feeViews, final Short noOfinstallments) throws NumberFormatException, AccountException,
             SystemException, ApplicationException {
         return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeViews, noOfinstallments, 10.0,
                 new Money("300.0"));
     }
 
-    private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
+    private LoanOfferingBO createLoanOffering(final boolean isPrincipalAtLastInst) {
         return createLoanOffering(isPrincipalAtLastInst, false, PrdStatus.LOAN_ACTIVE);
-    }
-
-    /*
-     * This method is called by tests that are currently commented out waiting
-     * for these parameters to be turned back on. The tests that use this method
-     * have been marked as TODO 's
-     */
-    private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst, boolean interestDeductedAtDisbursement) {
-        return createLoanOffering(isPrincipalAtLastInst, interestDeductedAtDisbursement, PrdStatus.LOAN_ACTIVE);
     }
 
     // TODO: check where this is used to see if the test cases that use it
     // need to be commented out
-    private LoanOfferingBO createLoanOffering(boolean principalAtLastInst, boolean interestDeductedAtDisbursement,
-            PrdStatus status) {
+    private LoanOfferingBO createLoanOffering(final boolean principalAtLastInst, final boolean interestDeductedAtDisbursement,
+            final PrdStatus status) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         return TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()),
@@ -5002,7 +4964,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return feeViews;
     }
 
-    private void deleteFee(List<FeeView> feeViews) {
+    private void deleteFee(final List<FeeView> feeViews) {
         for (FeeView feeView : feeViews) {
             TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(FeeBO.class, feeView.getFeeIdValue()));
         }
@@ -5033,7 +4995,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.createGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
     }
 
-    private void changeFirstInstallmentDateToNextDate(AccountBO accountBO) {
+    private void changeFirstInstallmentDateToNextDate(final AccountBO accountBO) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -5059,8 +5021,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    private AccountBO getLoanAccountWithMiscFeeAndPenalty(AccountState state, Date startDate, int disbursalType,
-            Money miscFee, Money miscPenalty) {
+    private AccountBO getLoanAccountWithMiscFeeAndPenalty(final AccountState state, final Date startDate, final int disbursalType,
+            final Money miscFee, final Money miscPenalty) {
         LoanBO accountBO = getLoanAccount(state, startDate, disbursalType);
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -5078,7 +5040,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return testObjectPersistence.getObject(LoanBO.class, accountBO.getAccountId());
     }
 
-    private void changeInstallmentDate(AccountBO accountBO, int numberOfDays, Short installmentId) {
+    private void changeInstallmentDate(final AccountBO accountBO, final int numberOfDays, final Short installmentId) {
         for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
             if (accountActionDateEntity.getInstallmentId().equals(installmentId)) {
                 Calendar dateCalendar = new GregorianCalendar();
@@ -5114,7 +5076,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return accountBO;
     }
 
-    private AccountBO getLoanAccountWithPerformanceHistory(AccountState state, Date startDate, int disbursalType) {
+    private AccountBO getLoanAccountWithPerformanceHistory(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
@@ -5129,7 +5091,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private AccountBO getLoanAccountWithGroupPerformanceHistory(AccountState state, Date startDate, int disbursalType) {
+    private AccountBO getLoanAccountWithGroupPerformanceHistory(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
@@ -5142,20 +5104,21 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private AccountActionDateEntity getLastInstallmentAccountAction(LoanBO loanBO) {
+    private AccountActionDateEntity getLastInstallmentAccountAction(final LoanBO loanBO) {
         AccountActionDateEntity nextAccountAction = null;
         if (loanBO.getAccountActionDates() != null && loanBO.getAccountActionDates().size() > 0) {
             for (AccountActionDateEntity accountAction : loanBO.getAccountActionDates()) {
-                if (null == nextAccountAction)
+                if (null == nextAccountAction) {
                     nextAccountAction = accountAction;
-                else if (nextAccountAction.getInstallmentId() < accountAction.getInstallmentId())
+                } else if (nextAccountAction.getInstallmentId() < accountAction.getInstallmentId()) {
                     nextAccountAction = accountAction;
+                }
             }
         }
         return nextAccountAction;
     }
 
-    private void changeFirstInstallmentDate(AccountBO accountBO, int numberOfDays) {
+    private void changeFirstInstallmentDate(final AccountBO accountBO, final int numberOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -5168,7 +5131,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private void changeFirstInstallmentDate(AccountBO accountBO) {
+    private void changeFirstInstallmentDate(final AccountBO accountBO) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -5181,13 +5144,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private AccountBO saveAndFetch(AccountBO account) throws Exception {
+    private AccountBO saveAndFetch(final AccountBO account) throws Exception {
         TestObjectFactory.updateObject(account);
         StaticHibernateUtil.closeSession();
         return accountPersistence.getAccount(account.getAccountId());
     }
 
-    private java.sql.Date offSetCurrentDate(int noOfDays) {
+    private java.sql.Date offSetCurrentDate(final int noOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -5196,7 +5159,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return new java.sql.Date(currentDateCalendar.getTimeInMillis());
     }
 
-    private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
+    private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting);
@@ -5207,7 +5170,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    private Date incrementCurrentDate(int noOfDays) {
+    private Date incrementCurrentDate(final int noOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
@@ -5216,9 +5179,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return DateUtils.getDateWithoutTimeStamp(currentDateCalendar.getTimeInMillis());
     }
 
-    private void checkLoanScheduleEntity(Date date, String principal, String interest, String miscFee,
-            String miscPenalty, String penalty, Map fees, Map feesPaid, String totalFeeDue, String totalDueWithFees,
-            LoanScheduleEntity entity) {
+    private void checkLoanScheduleEntity(final Date date, final String principal, final String interest, final String miscFee,
+            final String miscPenalty, final String penalty, final Map<String, String> fees,
+            final Map<String, String> feesPaid, final String totalFeeDue, final String totalDueWithFees,
+            final LoanScheduleEntity entity) {
         if (date != null) {
             assertDate(date, entity);
         }
@@ -5259,16 +5223,17 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private void checkTotalDueWithFees(String totalDueWithFees, LoanScheduleEntity entity) {
+    private void checkTotalDueWithFees(final String totalDueWithFees, final LoanScheduleEntity entity) {
         assertEquals(new Money(totalDueWithFees), entity.getTotalDueWithFees());
     }
 
-    private void checkTotalDue(String totalFeeDue, LoanScheduleEntity entity) {
+    private void checkTotalDue(final String totalFeeDue, final LoanScheduleEntity entity) {
         assertEquals(new Money(totalFeeDue), entity.getTotalFeeDue());
     }
 
-    private void checkLoanScheduleEntity(Date date, String principal, String interest, Map fees,
-            LoanScheduleEntity entity) {
+    private void checkLoanScheduleEntity(final Date date, final String principal, final String interest,
+            final Map<String, String> fees,
+            final LoanScheduleEntity entity) {
         if (date != null) {
             assertDate(date, entity);
         }
@@ -5279,22 +5244,24 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         checkFees(fees, entity, false);
     }
 
-    private void assertDate(Date date, LoanScheduleEntity entity) {
+    private void assertDate(final Date date, final LoanScheduleEntity entity) {
         assertEquals(DateUtils.getDateWithoutTimeStamp(date.getTime()), DateUtils.getDateWithoutTimeStamp(entity
                 .getActionDate().getTime()));
     }
 
-    private void checkFees(Map expectedFess, String totalFeeDue, LoanScheduleEntity entity) {
+    private void checkFees(final Map<String, String> expectedFess, final String totalFeeDue,
+            final LoanScheduleEntity entity) {
         checkFees(expectedFess, entity, false);
         assertEquals(new Money(totalFeeDue), entity.getTotalFeeDue());
     }
 
-    private void checkPrincipalAndInterest(String principal, String interest, LoanScheduleEntity entity) {
+    private void checkPrincipalAndInterest(final String principal, final String interest, final LoanScheduleEntity entity) {
         assertEquals(new Money(principal), entity.getPrincipal());
         assertEquals(new Money(interest), entity.getInterest());
     }
 
-    private void checkFees(Map expected, LoanScheduleEntity loanScheduleEntity, boolean checkPaid) {
+    private void checkFees(final Map<String, String> expected, final LoanScheduleEntity loanScheduleEntity,
+            final boolean checkPaid) {
         Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity.getAccountFeesActionDetails();
         assertEquals("fees were " + feeNames(accountFeesActionDetails), expected.size(), accountFeesActionDetails
                 .size());
@@ -5302,7 +5269,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
 
             if (expected.get(accountFeesActionDetailEntity.getFee().getFeeName()) != null) {
-                assertEquals(new Money((String) expected.get(accountFeesActionDetailEntity.getFee().getFeeName())),
+                assertEquals(new Money(expected.get(accountFeesActionDetailEntity.getFee().getFeeName())),
                         checkPaid ? accountFeesActionDetailEntity.getFeeAmountPaid() : accountFeesActionDetailEntity
                                 .getFeeAmount());
             } else {
@@ -5312,7 +5279,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private String feeNames(Collection<AccountFeesActionDetailEntity> details) {
+    private String feeNames(final Collection<AccountFeesActionDetailEntity> details) {
         StringBuilder debugString = new StringBuilder();
         for (Iterator<AccountFeesActionDetailEntity> iter = details.iterator(); iter.hasNext();) {
             AccountFeesActionDetailEntity detail = iter.next();
@@ -5326,7 +5293,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     // altered form protected
     public static LoanScheduleEntity[] getSortedAccountActionDateEntity(
-            Set<AccountActionDateEntity> actionDateCollection) {
+            final Set<AccountActionDateEntity> actionDateCollection) {
 
         LoanScheduleEntity[] sortedList = new LoanScheduleEntity[actionDateCollection.size()];
 
@@ -5349,7 +5316,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
-    private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+    private AccountBO getLoanAccount(final CustomerBO customer, final MeetingBO meeting) {
         Date startDate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
@@ -5457,5 +5424,36 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 return DateUtils.getDate(2008, Calendar.JANUARY, 1);
             }
         }, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+    }
+
+    /**
+     * FIXME: Only called from {@link HolidayUtilsIntegrationTest}. We should
+     * not have one test depending on another.
+     */
+    public LoanScheduleEntity[] createLoanRepaymentSchedule() throws Exception {
+        Date startDate = new Date(System.currentTimeMillis());
+        accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3, new Money("20"),
+                new Money("30"));
+
+        Set<AccountActionDateEntity> intallments = accountBO.getAccountActionDates();
+
+        AccountActionDateEntity firstInstallment = null;
+        for (AccountActionDateEntity entity : intallments) {
+            if (entity.getInstallmentId().intValue() == 1) {
+                firstInstallment = entity;
+                break;
+            }
+        }
+        Calendar disbursalDate = new GregorianCalendar();
+        disbursalDate.setTimeInMillis(firstInstallment.getActionDate().getTime());
+        Calendar cal = new GregorianCalendar(disbursalDate.get(Calendar.YEAR), disbursalDate.get(Calendar.MONTH),
+                disbursalDate.get(Calendar.DATE), 0, 0);
+        ((LoanBO) accountBO).disburseLoan("1234", cal.getTime(), Short.valueOf("1"), accountBO.getPersonnel(),
+                startDate, Short.valueOf("1"));
+
+        Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+
+        return paymentsArray;
     }
 }

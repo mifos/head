@@ -25,7 +25,6 @@ import java.util.Date;
 
 import org.joda.time.DateMidnight;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;

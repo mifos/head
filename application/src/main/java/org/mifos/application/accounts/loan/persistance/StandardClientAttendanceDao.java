@@ -27,24 +27,24 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.joda.time.LocalDate;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.client.business.service.ClientAttendanceDto;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
-    private CustomerPersistence customerPersistence;
-    private MasterPersistence masterPersistence;
+    private final MasterPersistence masterPersistence;
     private HibernateUtil hibernateUtil;
 
-    public StandardClientAttendanceDao() {
+    public StandardClientAttendanceDao(final MasterPersistence masterPersistence) {
+        this.masterPersistence = masterPersistence;
     }
 
-    public AttendanceType getAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
+    public AttendanceType getAttendance(final Integer clientId, final LocalDate meetingDate) throws PersistenceException {
         ClientAttendanceBO result = getClientAttendance(clientId, meetingDate);
         if (result == null) {
             throw new PersistenceException("Could not find attendance for clientId " + clientId + " and meeting date "
@@ -53,62 +53,30 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         return result.getAttendanceAsEnum();
     }
 
-    public void setAttendance(Integer clientId, LocalDate meetingDate, AttendanceType attendance)
-            throws PersistenceException {
-        CustomerBO customer = getCustomerPersistence().getCustomer(clientId);
-        ClientAttendanceBO clientAttendance = getClientAttendance(clientId, meetingDate);
-        if (null == clientAttendance) {
-            clientAttendance = new ClientAttendanceBO();
-            clientAttendance.setCustomer(customer);
-            clientAttendance.setMeetingDate(meetingDate.toDateMidnight().toDate());
-        }
-        clientAttendance.setAttendance(attendance);
-        getCustomerPersistence().createOrUpdate(clientAttendance);
-    }
-
     @SuppressWarnings("unchecked")
-    public List<ClientAttendanceBO> getClientAttendance(Date meetingDate, Short officeId) throws PersistenceException {
+    public List<ClientAttendanceDto> findClientAttendanceForOffice(final Date meetingDate, final Short officeId) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("MEETING_DATE", meetingDate);
         queryParameters.put("OFFICE_ID", officeId);
-        return getMasterPersistence().executeNamedQuery(
-                "ClientAttendance.getAttendanceForOffice", queryParameters);
-    }
 
-    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
-        this.customerPersistence = customerPersistence;
-    }
-
-    public MasterPersistence getMasterPersistence() {
-        if (null == masterPersistence) {
-            masterPersistence = new MasterPersistence();
+        try {
+            List<ClientAttendanceDto> queryResult = masterPersistence.executeNamedQuery("ClientAttendance.getAttendanceForOffice",
+                    queryParameters);
+            
+            return queryResult;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
         }
-        return masterPersistence;
     }
 
-    public void setMasterPersistence(MasterPersistence masterPersistence) {
-        this.masterPersistence = masterPersistence;
-    }
-
-    public HibernateUtil getHibernateUtil() {
-        if (null == hibernateUtil) {
-            hibernateUtil = new HibernateUtil();
-        }
-        return hibernateUtil;
-    }
-
-    public void setHibernateUtil(HibernateUtil hibernateUtil) {
-        this.hibernateUtil = hibernateUtil;
-    }
-    
-    public ClientAttendanceBO findClientAttendance(Integer clientId, LocalDate meetingDate) {
+    public ClientAttendanceBO findClientAttendance(final Integer clientId, final LocalDate meetingDate) {
         
         ClientAttendanceBO result;
         try {
             Map<String, Object> queryParameters = new HashMap<String, Object>();
             queryParameters.put("CUSTOMER_ID", clientId);
             queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
-            result = (ClientAttendanceBO) getMasterPersistence().execUniqueResultNamedQuery(
+            result = (ClientAttendanceBO) masterPersistence.execUniqueResultNamedQuery(
                     "ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
             return result;
         } catch (NumberFormatException e) {
@@ -118,7 +86,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         }
     }
     
-    public void save(List<ClientAttendanceBO> clientAttendances) {
+    public void save(final List<ClientAttendanceBO> clientAttendances) {
         Session session = getHibernateUtil().getSessionTL();
 
         for (ClientAttendanceBO clientAttendanceBO : clientAttendances) {
@@ -127,24 +95,24 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         session.flush();
     }
 
-    private ClientAttendanceBO getClientAttendance(Integer clientId, LocalDate meetingDate) throws PersistenceException {
+    private ClientAttendanceBO getClientAttendance(final Integer clientId, final LocalDate meetingDate) throws PersistenceException {
         ClientAttendanceBO result;
         try {
             Map<String, Object> queryParameters = new HashMap<String, Object>();
             queryParameters.put("CUSTOMER_ID", clientId);
             queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
-            result = (ClientAttendanceBO) getMasterPersistence().execUniqueResultNamedQuery(
+            result = (ClientAttendanceBO) masterPersistence.execUniqueResultNamedQuery(
                     "ClientAttendance.getAttendanceForClientAndMeetingDate", queryParameters);
             return result;
         } catch (NumberFormatException e) {
             throw new PersistenceException(e);
         }
     }
-
-    private CustomerPersistence getCustomerPersistence() {
-        if (null == customerPersistence) {
-            customerPersistence = new CustomerPersistence();
+    
+    private HibernateUtil getHibernateUtil() {
+        if (null == hibernateUtil) {
+            hibernateUtil = new HibernateUtil();
         }
-        return customerPersistence;
+        return hibernateUtil;
     }
 }

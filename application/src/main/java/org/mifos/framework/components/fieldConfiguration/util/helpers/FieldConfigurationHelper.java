@@ -20,13 +20,11 @@
 
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
-import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
 

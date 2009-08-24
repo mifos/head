@@ -45,7 +45,6 @@ import static org.mifos.application.branchreport.BranchReportStaffingLevelSummar
 import static org.mifos.application.customer.util.helpers.CustomerLevel.CLIENT;
 import static org.mifos.application.customer.util.helpers.CustomerSearchConstants.OFFICEID;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.BRANCH_ID;
-import static org.mifos.application.customer.util.helpers.QueryParamConstants.CURRENCY_ID;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.CUSTOMER_LEVEL_ID;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.DAYS_IN_ARREARS;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.LOAN_ACTIVE_IN_BAD_STANDING;

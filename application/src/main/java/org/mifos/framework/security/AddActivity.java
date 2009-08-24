@@ -30,7 +30,6 @@ import java.sql.Types;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddActivity extends Upgrade {

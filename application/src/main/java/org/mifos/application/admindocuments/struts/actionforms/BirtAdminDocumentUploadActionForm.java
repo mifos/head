@@ -20,9 +20,6 @@
 
 package org.mifos.application.admindocuments.struts.actionforms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -31,16 +28,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {

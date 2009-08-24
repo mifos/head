@@ -20,7 +20,6 @@
 
 package org.mifos.application.accounts.savings.struts.action;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
