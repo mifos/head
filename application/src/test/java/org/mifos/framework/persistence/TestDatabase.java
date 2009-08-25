@@ -23,8 +23,6 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -44,6 +42,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialInitialize
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -212,21 +211,11 @@ public class TestDatabase implements SessionOpener {
     // FIXME Use Spring Managed Connection
 
     private static Connection getJDBCConnection() throws Exception {
-        ConfigurationLocator configurationLocator = new ConfigurationLocator();
-        Properties p = new Properties();
-        p.load(new FileInputStream(configurationLocator.getFile(FilePaths.INTEGRATION_DATABASE_CONFIGURATION)));
-
-        try {
-            p.load(new FileInputStream(configurationLocator.getFile(FilePaths.LOCAL_CONFIGURATION_OVERRIDES)));
-        } catch (FileNotFoundException e) {
-            // this config file is optional
-        }
-
-        // Class.forName(p.getProperty("integration.database.driver"));
-        String url = "jdbc:mysql://" + p.getProperty("integration.database.host") + ":"
-                + p.getProperty("integration.database.port") + "/" + p.getProperty("integration.database")
-                + "?useUnicode=true&characterEncoding=UTF-8&sessionVariables=FOREIGN_KEY_CHECKS=0";
-        return DriverManager.getConnection(url, p.getProperty("integration.database.user"), p
-                .getProperty("integration.database.password"));
+        final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
+        final String noFkChecksUrl = databaseSettings.getProperty("hibernate.connection.url")
+                + "&sessionVariables=FOREIGN_KEY_CHECKS=0";
+        return DriverManager.getConnection(noFkChecksUrl,
+                databaseSettings.getProperty("hibernate.connection.username"), databaseSettings
+                        .getProperty("hibernate.connection.password"));
     }
 }
