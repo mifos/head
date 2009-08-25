@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-08-11 15:56-0700\n"
+"PO-Revision-Date: 2009-08-18 13:24-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1461,7 +1461,7 @@ msgstr "definir un nuevo"
 
 #: product.savingsdefprd
 msgid "Define a new Savings product"
-msgstr ""
+msgstr "Definir un nuevo producto de ahorro"
 
 #: product.savingsintrateperc
 msgid "(0 - 100 )%"
@@ -1469,7 +1469,7 @@ msgstr "(0 - 100 )%"
 
 #: product.savingsprodnum
 msgid "Savings Product has been assigned the system ID number"
-msgstr ""
+msgstr "Al producto de ahorro se le ha asignado el número de ID del sistema"
 
 #: product.savingsview
 msgctxt "product.savingsview"
@@ -1478,35 +1478,42 @@ msgstr "Ver"
 
 #: product.savingsviewdet
 msgid "View Savings Product details now"
-msgstr ""
+msgstr "Ver detalles del producto de ahorro ahora"
 
 #: product.setdormdef
 msgid "Set Dormancy Definition"
-msgstr ""
+msgstr "Establecer definición de inactividad"
 
 #: product.setlatedef
 msgid "Set Lateness Definition"
-msgstr ""
+msgstr "Establecer definición de retraso"
 
 #: product.setpencal
 msgid "Set Penalty Calculation Method"
-msgstr ""
+msgstr "Establecer método de cálculo de la penalidad"
 
 #: product.shortname
 msgid "Short name"
-msgstr ""
+msgstr "Abreviatura"
 
+# I have not translated &quot assuming it is some kind of mark for the system
 #: product.specLoanNoDaysAccountChanged
+#, fuzzy
 msgid ""
 "Specify the number of days of non-payment after which status of {0} account "
 "is changed to &quot;In Arrears&quot; by the system"
 msgstr ""
+"Especifique el número de días de impago después de los cuales el estatus de "
+"la cuenta {0} se cambia a &quot;moroso&quot; por el sistema"
 
 #: product.specSavingsDormDaysAccountChanged
 msgid ""
 "Specify the number of days to define &quot;Dormancy&quot; in {0} Accounts. "
 "The account status will be changed to &quot;On Hold&quot; by the system"
 msgstr ""
+"Especifique el número de días para definir &quot;Inactividad&quot; en las "
+"cuentas {0}. El estatus de la cuenta se cambiará a &quot;En pausa&quot; por "
+"el sistema &quot;moroso&quot; por el sistema"
 
 #: product.specacceptpymtinsurance
 msgid "Specify the accepted payment types for insurance products"
@@ -1526,15 +1533,15 @@ msgstr ""
 
 #: product.specpencal
 msgid "Specify the penalty calculation method"
-msgstr ""
+msgstr "Especifique el método de cálculo de la penalización"
 
 #: product.specpymttypessavings
 msgid "Specify the accepted payment types for savings products"
-msgstr ""
+msgstr "Especifique el tipo de pago aceptado para los productos de ahorro"
 
 #: product.specsavdormdays
 msgid "Specify the number of days to define &quot;Dormancy&quot; in"
-msgstr ""
+msgstr "Especifique el número de días para definir &quot;Inactividad&quot; en"
 
 #: product.srcfunds
 msgid "Sources of funds"
@@ -1555,11 +1562,11 @@ msgstr "Enviar para aprobación"
 
 #: product.successfullydefinedanew
 msgid "You have successfully defined a new"
-msgstr ""
+msgstr "Ha definido con éxito un nuevo"
 
 #: product.tardepwidrest
 msgid "Targeted Deposits and Withdrawal Restrictions"
-msgstr ""
+msgstr "Depósitos Objetivo y Restricciones de Retiros"
 
 #: product.the
 msgid "The"
@@ -1597,48 +1604,48 @@ msgstr "tipo"
 
 #: product.typeofdep
 msgid "Type of deposits"
-msgstr ""
+msgstr "Tipo de depósitos"
 
 #: product.view
 msgctxt "product.view"
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #: product.viewLoanDetails
 msgctxt "product.viewLoanDetails"
 msgid "View {0} product details now."
-msgstr ""
+msgstr "Ver detalle de productos {0} ahora."
 
 #: product.viewLoanProducts
 msgctxt "product.viewLoanProducts"
 msgid "View {0} products"
-msgstr ""
+msgstr "Ver productos {0}"
 
 #: product.viewSavingsDetails
 msgctxt "product.viewSavingsDetails"
 msgid "View {0} product details now."
-msgstr ""
+msgstr "Ver detalle de productos {0} ahora."
 
 #: product.viewSavingsProducts
 msgctxt "product.viewSavingsProducts"
 msgid "View {0} products"
-msgstr ""
+msgstr "Ver productos {0}"
 
 #: product.viewacceptpymttypes
 msgid "View Accepted Payment Types"
-msgstr ""
+msgstr "Ver tipos de pago aceptados"
 
 #: product.viewchangelog
 msgid "View Change Log"
-msgstr ""
+msgstr "Ver registro de cambios"
 
 #: product.viewdet
 msgid "View category details now"
-msgstr ""
+msgstr "Ver detalles de categoría ahora"
 
 #: product.viewlatedef
 msgid "View Lateness/Dormancy Definition"
-msgstr ""
+msgstr "Ver definición de retraso/inactividad"
 
 #: product.viewloanprd
 msgid "View Loan Products"
