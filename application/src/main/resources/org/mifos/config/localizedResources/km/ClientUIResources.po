@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:46-0700\n"
-"PO-Revision-Date: 2009-08-14 03:06-0700\n"
+"PO-Revision-Date: 2009-08-16 21:53-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1419,41 +1419,46 @@ msgstr ""
 
 #: errors.Customer.invalidFormedBy
 msgid "<li>Please select recruited by personnel.</li>"
-msgstr ""
+msgstr "សូមរើសយកការជ្រើសរើសបុគ្គលិកដោយបុគ្កលម្នាក់ៗ"
 
 #: errors.Customer.invalidLoanOfficer
 msgid "<li>Please select loan officer.</li>"
-msgstr ""
+msgstr "សូមជ្រើសរើសមន្ត្រីផ្នែកឥណទាន"
 
 #: errors.Customer.invalidMeeting
 msgid "<li>Please select meeting schedule.</li>"
-msgstr ""
+msgstr "សូមជ្រើសរើសកាលវិភាគប្រជុំ"
 
 #: errors.Customer.invalidName
 msgid "<li>Please specify a name.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីឈ្មោះ"
 
 #: errors.Customer.invalidOffice
 msgid "<li>Please specify a office.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីការិយាល័យ"
 
 #: errors.Customer.meetingFrequencyMismatch
 msgid ""
 "<li>Customer cannot be transferred to parent with different meeting "
 "frequency.</li>"
-msgstr ""
+msgstr "អតិថិជនមិនអាចបញ្ជូនទៅអាណាព្យាបាលដែលមានខួបប្រជុំខុសគ្នាទេ"
 
 #: errors.Customer.officeInactive
 msgid ""
 "<li>Customer cannot be transferred to the inactive office. Please change "
 "office and try again.</li>"
 msgstr ""
+"អតិថិជនមិនអាចបញ្ជូនទៅការិយាល័យដែលមិនដំនើរការទេ។សូមប្តូការិយាល័យនិងសាកល្បងម្ត"
+"ងទៀត"
 
 #: errors.Customer.parentInactive
 msgid ""
 "<li>Customer cannot be transferred to cancelled/closed parent. Please change "
 "parent and try again.</li>"
 msgstr ""
+"ប្រអប់/​អានាព្យាបាលត្រុវបិត។​សូមប្តូអានាព្យាបាលហើយសាកល្បងម្តងទៀត។​អតិថិជនមិន"
+"អាបញ្ជូនទៅអានាព្យាបាលដែលត្រូវបានចាត់ទុកជាមោឃះ/បានបិទ។​សូមប្តូអានាព្យាបាលនិងស"
+"ាកល្បងម្តងទៀត"
 
 #: errors.Customer.sameBranchTransfer
 msgctxt "errors.Customer.sameBranchTransfer"
@@ -1461,96 +1466,105 @@ msgid ""
 "<li>Customer cannot be transferred to the same office. Please change office "
 "and try again.</li>"
 msgstr ""
+"អតិថិជនមិនអាចបញ្ជូនទៅការិយាល័យដែលដូចគ្នានោះទេ។សូមប្តូការិយាល័យនិងសាកល្បងម្តង"
+"ទៀត"
 
 #: errors.Customer.sameParentTransferException
 msgid ""
 "<li>Customer cannot be transferred to same parent. Please change parent and "
 "try again.</li>"
 msgstr ""
+"អតិថិជនមិនអាចបញ្ជូនទៅអាណាព្យាបាលដែលដូចគ្នានោះទេ។សូមប្តូអានាព្យាបាលនិងសាកល្បង"
+"ម្តងទៀត"
 
 #: errors.Customer.specifyCustomFieldValue
 msgid "<li>Please specify required additional information.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីព័តមានបន្ថែមដែលត្រូវការចាំបាច់"
 
 #: errors.Customer.specifyFeeAmount
 msgid "<li>Please specify fee amount.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីតំលៃសេវា"
 
 #: errors.Customer.ClientCannotBeAddedToInactiveGroup
 msgid "Customer cannot be added to an inactive group"
-msgstr ""
+msgstr "អតិថិជនមិនអាចបន្ថែមទៅក្រុមដែលអសកម្មភាពនោះទេ"
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"
-msgstr ""
+msgstr "សូមដាក់បញ្ចូលកាលបរិច្ឆេទហ្វឹកហាត់ដែលមានសុពលភាព"
 
 #: errors.TrainedCheckbox
 msgctxt "errors.TrainedCheckbox"
 msgid "<li>Please select the Trained checkbox.</li>"
-msgstr ""
+msgstr "សូមជ្រើសរើសប្រអប់ហ្វឹកហាត់"
 
 #: errors.TrainedDateNeeded
 msgctxt "errors.TrainedDateNeeded"
 msgid "<li>Please specify Trained Date.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់កាលបរិច្ឆេទហ្វឹកហាត់"
 
 #: errors.feewithoutmeeting
 msgid "<li>Meeting has to be selected if fee has to be added.</li>"
-msgstr ""
+msgstr "ការប្រជុំត្រូវតែជ្រើសរើសប្រសិនបើថ្លៃសេវាត្រូវបានបន្ថែម"
 
 #: errors.invalidfeeamt
 msgid "<li>Please specifiy fee amount.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ថ្លៃសេវា"
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
 msgid "<li>Please specify {0}.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់{0}"
 
 #: errors.maskmsg
 msgid ""
 "<li>Invalid entry. Please use only alphanumeric characters for this "
 "field.</li>"
 msgstr ""
+"ការដាក់បញ្ចូលមិនត្រឺមត្រូវ។សូបប្រើតែតួអក្សរក្រមលេខប៉ុណ្ណោះសំរាប់ប្រអប់នេះ"
 
 #: errors.maxlength
 msgid "<li> The maximum length for this field is {0} characters.</li>"
-msgstr ""
+msgstr "ចំនួនដែលវែងបំផុតសំរាប់ប្រអប់នេះគឺ{0}តូអក្សរប៉ុណ្ណោះ"
 
 #: errors.meetingnotassigned
 msgid ""
 "<li>Meeting Schedule has to be selected for the customer to be Active.</li>"
-msgstr ""
+msgstr "កាលវិភាគប្រជុំគឺត្រូវបានជ្រើសរើសសំរាប់តែអតិថិជនដែលនៅមានសកម្មភាពប៉ុណ្ណោះ"
 
 #: errors.required
 msgctxt "errors.required"
 msgid "<li>Please specify {0}.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ឈ្មោះ។សូមបញ្ជាក់{0}"
 
 #: errors.requiredCustomField
 msgid "<li>Please specify mandatory additional information.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីព៏តមាននៃអណត្តិបន្ថែម"
 
 #: errors.requiredSelect
 msgid "<li>Please select the {0}.</li>"
-msgstr ""
+msgstr "សូមជ្រើសរើស{0}"
 
 #: exception.framework.ConcurrencyException
 msgid ""
 "<li>The record you were trying to update was updated by another transaction. "
 "Please search again to get the updated data.</li>"
 msgstr ""
+"កំនត់ត្រាដែលអ្នកបានកែទៅតាមសម័យកាលត្រូវបានកែប្រែដោយប្រត្តិបត្តិការមួយទៀត។សូមស"
+"្វែងរកម្តងទៀតនូងទិន្ន័យទាំងនោះ"
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."
-msgstr ""
+msgstr "សកម្មភាពនេះគឺគ្មានការអនុញ្ញាត្តិឡើយ"
 
 #: exception.framework.fieldConfiguration.mandatory
 msgid "<li>Please specify value for {0}.</li>"
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីតំលៃសំរាប់{0}"
 
 #: warning.clientWithSameGovtIdExistInClosed
 msgid ""
 "A record matching this client was found in \"closed\" status.  Please review "
 "that client record before continuing."
 msgstr ""
+"ការកត់ត្រាដែលត្រូវជាមួយអតិថិជននេះត្រូវបានរកឃើញនៅក្នុងលក្ខ័ណ\"បិទ\"សូមពិនិត្យមើ"
+"លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"

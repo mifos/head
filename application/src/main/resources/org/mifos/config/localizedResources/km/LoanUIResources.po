@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-07 01:02-0700\n"
-"PO-Revision-Date: 2009-08-07 01:55-0700\n"
+"PO-Revision-Date: 2009-08-25 02:44-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "ការពិព័ណនា"
 #: DueDate
 msgctxt "DueDate"
 msgid "Due Date"
-msgstr ""
+msgstr "ថ្ងៃដែលត្រូវសង"
 
 #: Fees
 msgctxt "Fees"
@@ -93,7 +93,7 @@ msgstr "តំលៃចាស់"
 #: Principal
 msgctxt "Principal"
 msgid "Principal"
-msgstr "គ្រឹះ"
+msgstr "ប្រាក់ដើម"
 
 #: Total
 msgctxt "Total"
@@ -150,25 +150,27 @@ msgstr "សកម្មភាពនេះមិនត្រូវបានផ្
 msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again."
-msgstr "ការកត់ត្រាត្រូវកែប្រែរួចរាលដោយអ្នកប្រើប្រាស។ "
+msgstr "ការកត់ត្រាត្រូវកែប្រែរួចរាលដោយអ្នកប្រើប្រាស់។ "
 
 #: errors.Account.specifyCustomFieldValue
 msgid "Please specify required additional information."
-msgstr ""
+msgstr "សូមបញ្ជាក់ព៍តមានបន្ថែមដែលត្រូវការ"
 
 #: errors.alleastonerecord
 msgid "Please select at least one {0}."
-msgstr ""
+msgstr "សូមជ្រើសរើសយ៉ាងតិចមូយ{0}."
 
 #: errors.cannotDisburseLoan.because.otherLoansAreActive
 msgid ""
 "This loan cannot be disbursed because the customer has other active loans "
 "for the same product."
 msgstr ""
+"កម្ចីនេះមិនអាចសងបានទេព្រោះអតិថិជននៅមានកម្ចីប្រភេទដូចនេះផ្សេងទៀតដែលនៅមានសកម្ម"
+"ភាពនូវឡើយ"
 
 #: errors.customernotselected
 msgid "Please select a {0} / {1}."
-msgstr ""
+msgstr "សូមជ្រើសរើស{0} / {1}."
 
 #: errors.datemismatch
 msgid ""
@@ -178,99 +180,111 @@ msgstr ""
 
 #: errors.decimalFormat
 msgid "{0} is greater than the allowable size."
-msgstr ""
+msgstr "{0}គឺធំជាងទំហំដែលងអាចដាក់បាន"
 
 #: errors.defMinMax
 msgid ""
 "Please specify valid {0}. {0} should be a value between {1} and {2}, "
 "inclusive."
-msgstr ""
+msgstr "សូមបញ្ជាក់តំលៃ{0}។{0}គួតែស្ថិតនៅចន្លោះរវាង{១}និង{២}ដោយមិនរាប់បញ្ចូល"
 
 #: errors.double
 msgctxt "errors.double"
 msgid "Please specify valid {0}. Use numbers only."
-msgstr ""
+msgstr "សូមបញ្ជាក់តំលៃ{0}។ដោយប្រើតំលៃលេខប៉ុណ្ណោះ"
 
 #: errors.emitype_not_supported
 msgid "EMI type is not supported."
-msgstr ""
+msgstr "មិនអាចប្រើប្រាស់បានទេសំរាប់ប្រភេទEMI"
 
 #: errors.feeschedule
 msgid "Fee schedule error."
-msgstr ""
+msgstr "កាលវិភាគនៃថ្ងៃយកសេវាមានបញ្ហាខុសឆ្គង"
 
 #: errors.futuredate
 msgid "{0} can not be a future date."
-msgstr ""
+msgstr "{0}មិនអាចជាថ្ងៃក្នុងពេលអនាគត"
 
 #: errors.gracePeriod
 msgid "The Grace period should be less than the total number of installments."
-msgstr ""
+msgstr "ដំនាក់កាលលើកលែងគួតែតិចជាងចំនួនដងសរុបនៃការសងរំលោះ"
 
 #: errors.graceper
 msgid "Please specify valid {0}. {0} should be a value less than {1}."
-msgstr ""
+msgstr "សូមបញ្ជាក់តំលៃ{0}. {0}គួតែតិចជាង{១}. "
 
 #: errors.individualamountfield
 msgid "Please specify a non-zero loan amount for all selected clients."
-msgstr ""
+msgstr "សូមបញ្ជាក់ចំនួនកំចីដែលមិនមែនជាសូន្យនូវរាល់អតិថិជនទាំងនេះដែលបានជ្រើសរើស"
 
 #: errors.individualpurposeofloanfield
 msgid "Please specify loan purpose for the selected client(s)."
-msgstr ""
+msgstr "សូមបញ្ជាក់ពីគោលបំនងនៃកំចីសំរាប់រាល់អតិថិជនដែលបានជ្រើសរើសទាំងនេះ"
 
 #: errors.integer
 msgctxt "errors.integer"
 msgid "Please specify valid {0}. Use numbers only."
-msgstr ""
+msgstr "សូមបញ្ជាក់តំលៃសុពលភាព{0}. ដោយប្រើប្រាស់តែតំលៃលេខប៉ុណ្ណោះ"
 
 #: errors.interestdedcuted_principallast
 msgid ""
 "The Grace ALLREPAYMENTS/Principal is not applicable to Principal in last "
 "repayment, Interest Deducted at disbursement."
 msgstr ""
+"ការលើកលែង​\"រាល់ការសងរំលោះទាំងអស់\"ឬប្រាក់ដើមគឺមិនអាចអនុវត្តិប្រាក់ដើមសល់នៅពេល"
+"សងរំលោះចុងក្រោយទេ។ការប្រាក់គឺត្រូវបន្ថយនៅពេលសង"
 
 #: errors.interestdeducted_invalidgrace
 msgid ""
 "The Grace AllRepayment/Principal is not applicable to Interest Deducted at "
 "disbursement."
 msgstr ""
+"ការលើកលែងរាល់ការសងរំលោះទាំងអស់\"ឬប្រាក់ដើមគឺមិនអាចអនុវត្តិចំពោះកាបន្ថយការប្រា"
+"ក់នៅពេលសងទេ"
 
 #: errors.invalidDisbursementDate
 msgid ""
 "You have entered an invalid disbursal date. Enter a disbursal date greater "
 "than or equal to today's date"
 msgstr ""
+"អ្នកបានដាក់បញ្ចូលកាលបរិច្ឆេទសងដែលពុំត្រឹមត្រូវ។សូមដាក់បញ្ចូលការបរិច្ឆេទសងដែល"
+"ធំជាងឬដូចគ្នានឹងថ្ងៃនេះ"
 
 #: errors.invalidDisbursementDateForRedoLoan
 msgid ""
 "You have entered an invalid disbursal date. Enter a disbursal date less than "
 "today's date"
 msgstr ""
+"អ្នកបានដាក់បញ្ចូលកាលបរិច្ឆេទសងដែលពុំត្រឹមត្រូវ។សូមដាក់បញ្ចូលការបរិច្ឆេទសងដែល"
+"តូចជាងថ្ងៃនេះ"
 
 #: errors.invalidPersonnel
 msgid "Specified user does not exist."
-msgstr ""
+msgstr "អតិថិជនដែលបានបញ្ជាក់គឺពុំត្រឹមត្រូវទេ"
 
 #: errors.invalidTxndate
 msgid ""
 "Date of transaction is invalid. It can not be prior to last meeting date of "
 "the customer."
 msgstr ""
+"កាលបរិច្ឆេទរបស់ប្រតិ្តបត្តិការគឺពុំត្រឹមត្រូវទេ។ការបរិច្ឆេទបពុំអាចមុនថ្ងៃប្រ"
+"ជុំចុងក្រោយនៃអតិថិជនឡើយ"
 
 #: errors.invalidTxndateLessThanLastTransactionMade
 msgid ""
 "Date of transaction is invalid. It can not be prior to the date of the last "
 "transaction made on the loan account."
 msgstr ""
+"កាលបរិច្ឆេទរបស់ប្រតិ្តបត្តិការគឺពុំត្រឹមត្រូវទេ។ការបរិច្ឆេទបពុំអាចមុនថ្ងៃប្រ"
+"តិបត្តិការចុងក្រោយដែលបានធ្វើសំរាប់គណនីកំចីនេះ"
 
 #: errors.loan.duplicatePeriodicFee
 msgid "Same periodic fee cannot be selected multiple times."
-msgstr ""
+msgstr "ដំនាក់កាលនៃកាយកសេវាគឺមិនអាចជ្រើសរើសច្រើនដងឡើយ"
 
 #: errors.loan.specifyFeeAmount
 msgid "Please specify fee amount."
-msgstr ""
+msgstr "សូមបញ្ជាក់ចំនួនថ្លៃសេវារ"
 
 #: errors.loanandpurposeentredwithoutselectingindividual
 msgid ""
@@ -278,17 +292,20 @@ msgid ""
 "checkbox in front of the member's name in order to include him or her in the "
 "loan."
 msgstr ""
+"អ្នកបានដាក់បញ្ចុលពត៍មានលំអិតនៃសមាជិកដែលអ្នកមិនបានជ្រើសរើស។សូមជ្រើសរើសប្រអប់ខ"
+"ាងមុខឈ្មោះអតិថិជនដើម្បីដាក់គាត់នៅក្នុងកំចី"
 
 #: errors.loancouldnotcoexist
 msgid ""
 "The loan could not be disbursed as {0} and {1} are not allowed to co-exist"
-msgstr ""
+msgstr "កំចីមិនអាចសងរំលោះជា{0}​។ហើយ{១}មិនអនុញ្ញាត្តិអោយបង្ហាញជាមួយ"
 
 #: errors.loancouldnotcoexistacrosscustomerlevels
 msgid ""
 "The loan could not be disbursed as loan '{0}' of customer '{2}' and {1} are "
 "not allowed to co-exist"
 msgstr ""
+"កំចីមិនអាចសងរំលោះដូចកំចី{0}នៃអតិថិជន{២}ហើយ{១}គឺមិនអនុញ្ញាត្តិអោយបង្ហាញជាមួយ"
 
 #: errors.loanofferingnotselected
 msgid "Please select a {0} {1}."
@@ -299,6 +316,8 @@ msgid ""
 "Please specify valid Amount. The amount specified should be less than the "
 "amount required for complete payment."
 msgstr ""
+"សូមបញ្ជាក់ចំនួនដែលត្រឹមត្រូវ។ចំនួនដែលបានបញ្ជាក់គួតែតិចជាងចំនួនដែលត្រូវកាសំរា"
+"ប់សងបង្គ្រប់"
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
@@ -320,17 +339,17 @@ msgstr "សូមជ្រើសរើស {0}."
 
 #: errors.mask
 msgid "Please specify alphanumeric characters only for {0}."
-msgstr ""
+msgstr "សូមបញ្ជាក់តួអក្សរក្រម្យលេខប៉ុណ្ណោះសំរាប់{0}."
 
 #: errors.maxMin
 msgid ""
 "Please enter valid values for {0}. {0} should be greater than or equal to "
 "{1}."
-msgstr ""
+msgstr "សូមដាក់បញ្ចូលតំលៃត្រឹមត្រូវសំរាប់{0}.{0}គួតែធំជាងឬស្មើនិង{១}."
 
 #: errors.maximumlength
 msgid "The maximum length for {0} field is {1}."
-msgstr ""
+msgstr "ប្រវែងអតិបរិមាសំរាប់ប្រឡោះ{0}គឺ{១}.."
 
 #: errors.maxrangeisnotmet
 msgid ""
@@ -339,10 +358,13 @@ msgid ""
 "repayment day so that the number of days between the disbursal date and "
 "first repayment date is at most {0} day(s)."
 msgstr ""
+"មានចំនួនថ្ងៃច្រើនពេករវាងថ្ងៃដែលត្រូវសងនិងថ្ងៃសងលើកតំបូងដែលប្រពន្ធ័បានគណនា។កែ"
+"ថ្ងៃដែលត្រូវសងនិងថ្ងៃសងលើកទីមួយដូចនេះចំនួនថ្ងៃទាំងអស់រវាងថ្ងៃដែលត្រូវសងនិងថ្"
+"ងៃសងលើកទីមួយគឺច្រើនបំផុតត្រឹមតែ{0}"
 
 #: errors.minimumlength
 msgid "The length of {0} cannot be less than {1} character(s)."
-msgstr ""
+msgstr "ប្រវែងនៃ{0}គឺមិនអាចតិចជាង{១}ចំនួនតួរ"
 
 #: errors.minrangeisnotmet
 msgid ""
@@ -351,74 +373,82 @@ msgid ""
 "repayment day so that the number of days between the disbursal date and "
 "first repayment date is at least {0} day(s)."
 msgstr ""
+"ពុំមានចំនួនថ្ងៃគ្រប់គ្រាន់ទេរវាងថ្ងៃដែលត្រូវសងនិងថ្ងៃសងលើកតំបូងដែលប្រពន្ធ័បា"
+"នគណនា។កែថ្ងៃដែលត្រូវសងនិងថ្ងៃសងលើកទីមួយដូចនេះចំនួនថ្ងៃទាំងអស់រវាងថ្ងៃដែលត្រូ"
+"វសងនិងថ្ងៃសងលើកទីមួយគឺច្រើនបំផុតត្រឹមតែ{0}"
 
 #: errors.nosearchresults
 msgid "No search results found."
-msgstr ""
+msgstr "ការស្វែងរកគឺពុំមានលទ្ធផលទេ"
 
 #: errors.not_supported_durationtype
 msgid ""
 "This Duration Type is not supported. Please select another Duration Type."
-msgstr ""
+msgstr "ប្រភេទនៃរយះពេលគឺមិនអាចដាក់ប្រើបានទេ។សូមជ្រើសរើសប្រភេទនៃរយះពេលផ្សេងទៀត"
 
 #: errors.not_supported_feeformula
 msgid "This fee formula is not supported. Please select another fee formula."
-msgstr ""
+msgstr "រុបមន្តនៃសេវានេះគឺមិនអាចដាក់ប្រើប្រាស់បានទេ។សូមជ្រើសរើសរូបមន្តផ្សេងទៀត"
 
 #: errors.not_supported_feepayment
 msgid "This fee payment is not supported. Please select another fee payment."
-msgstr ""
+msgstr "ថ្លៃសេវាដែលបានបង់នេះគឺមិនត្រឹមត្រូវទែ។សូមជ្រើសរើសការបង់ផ្សេងទៀត"
 
 #: errors.not_supported_feetype
 msgid "This fee type is not supported.  Please select another fee type."
-msgstr ""
+msgstr "ប្រភេទសេវារនេះគឺមិនត្រឹមត្រូវទេ​។​សូមជ្រើសរើសប្រភេទផ្សេងទៀត"
 
 #: errors.not_supported_frequencytype
 msgid ""
 "This Frequency type is not supported. Please select another Frequency type."
-msgstr ""
+msgstr "ប្រភេទនៃខួបនេះគឺមិនត្រឺមត្រូវទេ។សូមជ្រើសរើសប្រភេទនៃខួបផ្សេងទៀត"
 
 #: errors.not_supported_gracetype
 msgid "This Grace type is not supported. Please select another Grace Type."
 msgstr ""
+"ប្រភេទនៃការលើកលែងនេះគឺមិនត្រឺមត្រូវ។សូមជ្រើសរើសប្រភេទនៃការលើកលែងផ្សេងទៀត"
 
 #: errors.not_supported_interestdays
 msgid "The No. of interest days is not supported."
-msgstr ""
+msgstr "ចំនួនថ្ងៃនៃការប្រាក់គឺមិនត្រឹមត្រូវទេ"
 
 #: errors.not_supported_meetingtype
 msgid "This Meeting type is not supported. Please select another Meeting type."
 msgstr ""
+"ប្រភេទនៃការប្រជុំនេះគឺមិនត្រឹមត្រូវទេ។សូមជ្រើសរើសប្រភេទនៃកាប្រជុំផ្សេងទៀត"
 
 #: errors.not_valid_disbursal_date
 msgid "This Disbursal date is not valid."
-msgstr ""
+msgstr "ថ្ងៃសងនេះគឺមិនត្រឹមត្រូវទេ"
 
 #: errors.numberofselectedmembersisnotatleasttwo
 msgid ""
 "You must select at least two individual members in the \"Individual Details\" "
 "section in order to successfully create a loan."
 msgstr ""
+"អ្នកត្រូវតែជ្រើសរើសយាងតិចបំផុតពីសមាជិកបុគ្គលនៅក្នុងការជ្រើសរើស\"ពត៍មានលំអិតនៃ"
+"បុគ្គល\"ដើម្បីបង្កើតកំចីមួយដោយជោគជយ័"
 
 #: errors.prefix
 msgid "<LI>"
-msgstr ""
+msgstr "<LI>"
 
 #: errors.principallast_invalidgrace
 msgid "The Grace Principal not applicable to Principal in last repayment."
 msgstr ""
+"ការលើកលែងប្រាក់ដើមគឺមិនអាចអនុវត្តិទៅនិងប្រាក់ដើមនៅក្នុងពេលសងរំលោះចុងក្រោយទេ"
 
 #: errors.range
 msgid "{0} is not in the range {1} through {2}."
-msgstr ""
+msgstr "{0}មិនថិតនៅក្នុងរៀងនៃ{១}តាមរយះ{២}"
 
 #: errors.repaymentDayIsRequired
 msgid "Please specify repayment day"
-msgstr ""
+msgstr "សូមបញ្ជាក់ថ្ចៃដែលត្រូវសង"
 
 #: errors.repaymentinputs_notspecified
 msgid "Repayment inputs are not specified."
-msgstr ""
+msgstr "ការសងដែលបានដាក់ចូលគឺមិនបានបញ្ជាក់ទេ"
 
 #: errors.selectAnyValue
 msgid "Please select the {0}"
@@ -430,7 +460,7 @@ msgstr "សុមបញ្ជាក់ លេខកូដ {0}សំរាប់�
 
 #: errors.suffix
 msgid "</LI>"
-msgstr ""
+msgstr "</LI>"
 
 #: errors.sumofindividualamountsisnotintherangeofallowedamounts
 msgid ""
@@ -438,6 +468,8 @@ msgid ""
 "total amount for this loan product. Enter individual amounts so that the "
 "total amount is between {0} and {1}"
 msgstr ""
+"ចំនួនខ្លះៗនៃចំនួនដែលបានបញ្ជាក់សំរាប់សមាជិកនិមួៗគឺស្ថិតនៅក្រៅចំនួនសរុបដែលអាចដ"
+"ាក់បាននៃកំចីនេះ។សូមដាក់ចំនួនបុគ្កលដូច្នេះចំនួនសរុបទាំងអស់គឺនៅរវាង{0} និង {១}"
 
 #: errors.validandmandatory
 msgid "Please specify a valid {0}."
@@ -448,6 +480,8 @@ msgid ""
 "Cannot create a loan as frequency of loan product has already been modified "
 "by another user."
 msgstr ""
+"មិនអាចបង្កើតកំចីបានទេដោយសាខួបនៃផលិតផលកំចីគឺត្រូវបានកែដោយអ្នកប្រើប្រាស់ផ្សេងទ"
+"ៀត"
 
 #: exception.accounts.create
 msgid "Please specify required information."
@@ -455,7 +489,7 @@ msgstr "សូមបញ្ជាក់ពត័មានចាំបាច់"
 
 #: exception.accounts.create.customer.inactive
 msgid "Cannot create a loan for inactive customer."
-msgstr ""
+msgstr "មិនអាចបង្កើតកំចីសំរាប់អតិថិជនដែលអសកម្មទេ"
 
 #: exception.accounts.create.prd.inactive
 msgid ""
@@ -468,15 +502,17 @@ msgid ""
 "The record you were trying to update was already updated; search again to "
 "get the updated data."
 msgstr ""
+"កំនត់ត្រាដែលអ្នកព្យាយាមកែប្រែគឺបានកែប្រែរួចហើយ។ស្វែងរកម្តងទៀតដើម្បីកែប្រែទិន"
+"្ន័យ"
 
 #: exception.framework.DoubleSubmitException
 msgctxt "exception.framework.DoubleSubmitException"
 msgid "This action is not permissible."
-msgstr ""
+msgstr "សកម្មភាពនេះគឺមិនអនុញ្ញាត្តិទេ"
 
 #: exception.framework.fieldConfiguration.mandatory
 msgid "Please specify {0} as it is a mandatory field."
-msgstr ""
+msgstr "សូមបញ្ជាក់{0}ដោយសារវាជាប្រឡោះសំរាប់បទបញ្ញត្តិ"
 
 #: exceptions.application.loan.changeInLoanOffering
 msgid ""
@@ -484,49 +520,59 @@ msgid ""
 "longer valid. Please modify the same from the edit page before changing the "
 "status."
 msgstr ""
+"ដោយសាការប្តូរនៅក្នុងនិយមន័យនែផលិតផលកំចី​​​​​ ពត៍មានរបស់គណនីគឺមិនមានសុពលភាពទៀ"
+"តទេ។សូមកែអោយដូចទំពរ័ដែលបានកែដូចមុនពេលដែលលក្ខ័ណមិនទាន់ផ្លាស់ប្តូរ"
 
 #: exceptions.application.loan.duplicatePeriodicFee
 msgid "{0}(periodic) fee selected multiple times."
-msgstr ""
+msgstr "{0}(ដំនាក់កាល)ថ្លៃសេវារបានជ្រើសរើសច្រើនដង"
 
 #: exceptions.application.loan.incompatibleFeerecurrence
 msgid ""
 "The Recurrence type of product and fees with fee name {0} are incompatible."
 msgstr ""
+"ប្រភេទញឹកញាប់នៃផលិតផលនិងថ្លៃសេវាកម្មជាមួយនឹងឈ្មោះសេវាកម្ម "
+"{0}គឺមិនត្រូវគ្នាទេ"
 
 #: exceptions.application.loan.incompatibleMeetingrecurrence
 msgid ""
 "The Recurrence type of the product and customer are incompatible. Please "
 "select a different product offering."
 msgstr ""
+"ប្រភេទញឹកញាប់នៃផលិតផលនិងអតិថិជនគឺមិនត្រូវគ្នាទេ។សូមជ្រើសរើសប្រភេទផលិតផលផ្សេង"
+"ទៀតដែលបានផ្តល់អោយជ្រើសរើស"
 
 #: exceptions.application.loan.invalidDisbursementDate
 msgid "This is an invalid Disbursement date."
-msgstr ""
+msgstr "មានភាពមោឃះមួយនៃកាលបរិច្ឆេទសង"
 
 #: exceptions.application.loan.invalidFeeAmnt
 msgid "The Fee amount cannot be zero or blank."
-msgstr ""
+msgstr "តំលៃសេវាគឺមិនអាចសូន្យឬទទេឡើយ"
 
 #: exceptions.application.loan.invalidNoOfInstallments
 msgid ""
 "The no of installments should be greater than 1 if interest deducted at "
 "disbursement is selected."
 msgstr ""
+"ភាពពុំសងរំលោះគួតែធំជាង១ប្រសិនបើការប្រាក់ដែលបានកាត់បន្ថយនៅពេលសងរំលោះត្រូវបានជ"
+"្រើសរើស"
 
 #: exceptions.application.loan.invalidTransactionDate
 msgid "Please enter a valid transaction date."
-msgstr ""
+msgstr "សូមដាក់បញ្ចូលកាលបរិច្ឆេទប្រតិបត្តិការដែលមានសុពលភាព"
 
 #: exceptions.application.loan.invalidTransactionDateForPayment
 msgid ""
 "You have entered a payment which occurs in the future. You may only enter "
 "payment dates in the past when redoing a loan."
 msgstr ""
+"អ្នកបានដាក់បញ្ចូលកាសងមួយដែលបាននឹងឡើងក្នុងពេលអនាគត។អ្នកគួដាក់តែការបរិច្ឆេទសងន"
+"ៅក្នុងពេលអតីតកាលប៉ុណ្ណោះនៅពេលរៀបចំកំចីម្តងទៀត"
 
 #: exceptions.application.loan.invalidfield
 msgid "Please specify a value greater than zero for {0}."
-msgstr ""
+msgstr "សូមបញ្ជាក់តំលៃដែលធំជាងសូន្យសំរាប់{0}។"
 
 #: exceptions.application.loan.invalidloanfield
 msgctxt "exceptions.application.loan.invalidloanfield"
@@ -535,25 +581,25 @@ msgstr "សូមបញ្ជាក់{0}."
 
 #: exceptions.application.loan.loanUpdationException
 msgid "There was some problem updating the account, please try again."
-msgstr ""
+msgstr "មានបញ្ហាមួយកើតឡើងក្នុងគណនី សូមសាកល្បងម្តងទៀត"
 
 #: exceptions.application.loan.noOfInstallmentsLessThanTwo
 msgid ""
 "The No. of installments should be greater than 1 if {1} is deducted at "
 "disbursement. Please specify {0}"
-msgstr ""
+msgstr "ភាពពុំសងរំលោះគួតែធំជាង១ប្រសិនបើ{១}គឺបានកាត់បន្ថយនាពេលសង។សូមបញ្ជាក់{០}"
 
 #: loan.Account
 msgid "Account"
-msgstr "ចំនួន"
+msgstr "គណនី"
 
 #: loan.ChecklistMsg
 msgid "Complete and check off the following tasks."
-msgstr ""
+msgstr "បញ្ចប់និងត្រួតពិនិត្យបង្ហើយនូវរាល់កិច្ចការទាំងនេះ"
 
 #: loan.ClickCancel
 msgid "Click Cancel to return to details page without submitting information."
-msgstr ""
+msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រពត៍មានលំអិតដោយពុំចាំបាច់បញ្ជូនពត៍មានលំអិត"
 
 #: loan.ClickContinue
 msgid "Then click Continue."
@@ -582,7 +628,7 @@ msgstr "កែប្រែ"
 #: loan.Fieldsmarkedwithanasteriskarerequired
 msgctxt "loan.Fieldsmarkedwithanasteriskarerequired"
 msgid "Fields marked with an asterisk are required."
-msgstr ""
+msgstr "ប្រឡោះដែលមានសញ្ញាផ្កាយមួយគឺត្រូវកា"
 
 #: loan.NewStatus
 msgid "New status\\:"
@@ -590,15 +636,15 @@ msgstr "លក្ខ័ណថ្មី"
 
 #: loan.NoChecklist
 msgid "No CheckList Available"
-msgstr ""
+msgstr "ពុំមានតារាងសំរាប់ផ្ទៀងផ្ទាត់ទេ"
 
 #: loan.NoFlagsAvailable
 msgid "No Flags Available"
-msgstr ""
+msgstr "ពុំមានសញ្ញាសំគាល់ទេ"
 
 #: loan.NoNotesAvailable
 msgid "No notes entered"
-msgstr "មិនចាំបាច់បញ្ជូន"
+msgstr "គ្មានកំនត់ត្រាដាក់បញ្ចូលទេ"
 
 #: loan.Select
 msgid "Select"
@@ -608,19 +654,19 @@ msgstr "ជ្រើសរើស"
 msgid ""
 "When cancelling a account, select an explanation from the dropdown list "
 "below."
-msgstr ""
+msgstr "នៅពេលដែលចុចបោះបង់គណនីមួយ  សូមជ្រើសរើសការពន្យល់ពីតារាងបង្ហាញខាងក្រោម"
 
 #: loan.SelectStatus
 msgid "Select from the status options below."
-msgstr ""
+msgstr "ជ្រើសរើសជំរើសនៃលក្ខ័ណខាងក្រោម"
 
 #: loan.Slash
 msgid "/"
-msgstr ""
+msgstr "/"
 
 #: loan.TimeOfDisbursmentFees
 msgid "Fee deducted at disbursement"
-msgstr ""
+msgstr "ថ្លៃសេវាបានដកយកហើយនាពេលដែលសង"
 
 #: loan.a
 msgid "a"
@@ -770,7 +816,7 @@ msgstr "ចំនួនដែលសង"
 
 #: loan.anti_disburse_dd
 msgid "Anticipated disbursement date"
-msgstr ""
+msgstr "ស្មានទុកជាមុននូវថ្ងៃសង"
 
 #: loan.app_fee
 msgid "Application Fee"
@@ -928,10 +974,12 @@ msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
+"បញ្ចប់ប្រឡោះខាងក្រោម រួចចុចបើកមើលជាមុន។ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជននិងគណនី"
+"ដោយពុំចាំបាច់បញ្ជូនពត៍មាន"
 
 #: loan.congo1_1
 msgid "A new"
-msgstr "ថ្មី"
+msgstr "ថ្មីមួយ"
 
 #: loan.congo1_2
 msgid "account for"
@@ -939,178 +987,182 @@ msgstr "គណនីសំរាប់"
 
 #: loan.congo2
 msgid "has been assigned account \\#"
-msgstr ""
+msgstr "ការចាត់តាំងគណនីគឺបានធ្វើឡើង"
 
 #: loan.congo3
 msgid ""
 ". You can enter an account number into the search box to access account "
 "details."
 msgstr ""
+"អ្នកអាចដាក់បញ្ចូលលេខគណនីទៅក្នុងប្រអប់ស្វែងរកខាងក្រោមដើម្បីចុលទៅមើលពត៍មានលំអិ"
+"តនៃគណនី"
 
 #: loan.consultancy_fee
 msgid "Consultancy fee"
-msgstr ""
+msgstr "ថ្លៃសេវាប្រឹក្សាយោបល"
 
 #: loan.continue
 msgid "Continue"
-msgstr ""
+msgstr "បន្ត"
 
 #: loan.create
 msgid "Create"
-msgstr ""
+msgstr "បង្កើត"
 
 #: loan.createAccount
 msgid "Create {0} account"
-msgstr ""
+msgstr "បង្កើតគណនី{0}"
 
 #: loan.create_loan_acc
 msgid "Create Loan Account"
-msgstr ""
+msgstr "បង្កើតគណនីកំចី"
 
 #: loan.credit
 msgid "Credit"
-msgstr ""
+msgstr "បន្ថែម"
 
 #: loan.currentStatus
 msgid "Current Status"
-msgstr ""
+msgstr "លក័្ខណបច្ចុប្បន្ន"
 
 #: loan.current_installment
 msgid "Current installment"
-msgstr ""
+msgstr "ការសងរំលោះបច្ជុប្បន្ន"
 
 #: loan.currentstatus
 msgid "Current status"
-msgstr ""
+msgstr "លក័្ខណបច្ចុប្បន្ន"
 
 #: loan.date
 msgctxt "loan.date"
 msgid "Disbursal Date"
-msgstr ""
+msgstr "ថ្ងៃសងត្រលប់"
 
 #: loan.date_paid
 msgid "Date paid"
-msgstr ""
+msgstr "ថ្ងៃសង"
 
 #: loan.date_posted
 msgid "Date Posted"
-msgstr ""
+msgstr "ថ្ចៃធ្វើប្រតិបត្តិការ"
 
 #: loan.dateofdisb/payment
 msgctxt "loan.dateofdisb/payment"
 msgid "Disbursal Date"
-msgstr ""
+msgstr "ថ្ងៃសងត្រលប់"
 
 #: loan.dateofpayment
 msgid "Actual Payment Date"
-msgstr ""
+msgstr "ថ្ងៃចំនាយពិតប្រាកដ"
 
 #: loan.dateoftrxn
 msgctxt "loan.dateoftrxn"
 msgid "Date of transaction"
-msgstr ""
+msgstr "ការបរិច្ឆេទនៃប្រតិបត្តិការ"
 
 #: loan.days_arrears
 msgid "Days in arrears\\:"
-msgstr ""
+msgstr "ថ្ងៃដែលនៅមិនទាន់សង"
 
 #: loan.debit
 msgid "Debit"
-msgstr ""
+msgstr "ដក"
 
 #: loan.defamt
 msgid "Default amount"
-msgstr ""
+msgstr "ចំនួនដែលដាក់ជាស្រេច"
 
 #: loan.definst
 msgid "Number of installments"
-msgstr ""
+msgstr "ចំនួនដងនៃការសងរំលោះ"
 
 #: loan.delinquency
 msgid "Delinquency\\:"
-msgstr ""
+msgstr "បទល្មើស"
 
 #: loan.desc
 msgctxt "loan.desc"
 msgid "Description"
-msgstr ""
+msgstr "ការពិពណ៍នា"
 
 #: loan.description
 msgctxt "loan.description"
 msgid "Description"
-msgstr ""
+msgstr "ការពិពណ៍នា"
 
 #: loan.detailssearch
 msgid "details and click Search. Click Cancel to return to"
-msgstr ""
+msgstr "លំអិតនិងចុចស្វែងរក។ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
 
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
-msgstr ""
+msgstr "ស្នើ/ការបរិច្ឆេទសងពិតប្រាកដ"
 
 #: loan.disb_pr
 msgid "Disb Pr"
-msgstr ""
+msgstr "ដំនាក់កាលចំនាយ"
 
 #: loan.disbdetails
 msgid "Disbursement details"
-msgstr ""
+msgstr "ការចំនាយសងលំអិត"
 
 #: loan.disbursal
 msgid "disbursal"
-msgstr ""
+msgstr "ការចំនាយសង"
 
 #: loan.disbursalDate
 msgid "disbursal date"
-msgstr ""
+msgstr "ការបរិច្ឆេទចំនាយសង"
 
 #: loan.disburse
 msgid "Disburse"
-msgstr ""
+msgstr "ចំនាយសង"
 
 #: loan.disburseLoan
 msgid "Disburse {0}"
-msgstr ""
+msgstr "ចំនាយសង{0}"
 
 #: loan.disbursed
 msgid "disbursed"
-msgstr ""
+msgstr "ចំនាយសង"
 
 #: loan.disburseloan
 msgid "Disburse Loan"
-msgstr ""
+msgstr "ចំនាយសងកំចី"
 
 #: loan.due_date
 msgid "Due date"
-msgstr ""
+msgstr "ថ្ងៃត្រូវសង"
 
 #: loan.duedate
 msgctxt "loan.duedate"
 msgid "Due Date"
-msgstr ""
+msgstr "ថ្ងៃត្រូវសង"
 
 #: loan.editTrxn
 msgctxt "loan.editTrxn"
 msgid "Edit transaction"
-msgstr ""
+msgstr "កែប្រតិបត្តិការ"
 
 #: loan.edit_acc_info
 msgid "Edit account information"
-msgstr ""
+msgstr "កែពត៍មានគណនី"
 
 #: loan.edit_acc_status
 msgid "Edit account status"
-msgstr ""
+msgstr "កែលក្ខ័នគណនី"
 
 #: loan.edit_info
 msgid ""
 "Edit the fields below. Then click Preview. Click Cancel to return to Loan "
 "Account Details without submitting information."
 msgstr ""
+"កែប្រឡោះខាងក្រោម រួចចុចបើកមើលជាមុន។ចុចបោះបង់រួចត្រលប់ទៅគណនីកំចី​ "
+"រៀបរាប់លំអិតដោយពុំចាំបាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: loan.edit_loan_acc
 msgid "Edit  account information"
-msgstr ""
+msgstr "កែពត៍មានគណនី"
 
 #: loan.edittrans
 msgid ""
@@ -1118,100 +1170,107 @@ msgid ""
 "return to account details without submitting information or to try again "
 "with changes."
 msgstr ""
+"ពិនិត្យឡើងវិញនូវប្រតិបត្តិការខាងក្រោម។ប្រសិនបើពេញចិត្តសូមចុចបញ្ជូន។ចុចបោះបង់"
+"ដើម្បីត្រលប់ទៅពត៍មានលំអិតរបស់គណនីដោយមិនចាំបាច់ដាក់បញ្ជូនពត៍មានឬសាកល្បងម្តងទៀ"
+"តជាមួយនិងការប្តូរ"
 
 #: loan.edu_loan
 msgid "Educational"
-msgstr ""
+msgstr "ការសិក្សាអប់រំ"
 
 #: loan.enterAccInfo
 msgid "Enter {0} account information"
-msgstr ""
+msgstr "ដាក់បញ្ចុលពត៍មានរបស់គណនី{0} "
 
 #: loan.enter_client_details
 msgid ""
 "Enter a client/group name and click Search. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
+"ដាក់បញ្ចូលអតិថិជន/ក្រុមឈ្មោះនិងចុចស្វែងរក។ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជននិងគ"
+"ណនីដោយពុំចាំបាច់ដាក់បញ្ចូលពត៍មាន"
 
 #: loan.enter_loan_accinfo
 msgid "Enter loan account information"
-msgstr ""
+msgstr "ដាក់បញ្ចូលពត៍មានគណនីកំចី"
 
 #: loan.enter_note
 msgid ""
 "Enter a note in the field below. Then click preview. Click Cancel to return "
 "to group details without submitting information"
 msgstr ""
+"ដាក់កំនត់ចំនាំមួយក្នុងប្រឡោះខាងក្រោម រួចចុចបើកមើលជាមុន។​ចុចបោះបង់ដើម្បីត្រលប"
+"់ទៅក្រុមលំអិតដោយពុំចាំបាច់បញ្ជូនពត៍មាន"
 
 #: loan.enteramount
 msgid "Enter amount"
-msgstr ""
+msgstr "បញ្ចូលចំនួន"
 
 #: loan.entityAccInfo
 msgid "{0} account information"
-msgstr ""
+msgstr "ពត៍មានរបស់គណនី{0}"
 
 #: loan.feeAmtIs
 msgid "Fee amount is"
-msgstr ""
+msgstr "ចំនួនថ្លៃសេវាគឺ"
 
 #: loan.fee_pd
 msgid "Fee Pd"
-msgstr ""
+msgstr "ថ្លៃសេវា"
 
 #: loan.fee_rec
 msgid "Fee Rec"
-msgstr ""
+msgstr "ថ្លៃសេវា"
 
 #: loan.fee_type
 msgid "Fee Type"
-msgstr ""
+msgstr "ប្រភេទថ្លៃសេវា"
 
 #: loan.fees
 msgctxt "loan.fees"
 msgid "Fees"
-msgstr ""
+msgstr "ថ្លៃសេវា"
 
 #: loan.field
 msgctxt "loan.field"
 msgid "Field"
-msgstr ""
+msgstr "ប្រអប់"
 
 #: loan.folldetails
 msgid "Following are the account details for the"
-msgstr ""
+msgstr "ទាំងនេះគឺជាពត៍មានលំអិតរបស់គណនីសំរាប់"
 
 #: loan.freq_of_inst
 msgid "Frequency of Installments"
-msgstr ""
+msgstr "ភាពញឹកញាប់នៃការសង"
 
 #: loan.future_install
 msgid "Future Installments"
-msgstr ""
+msgstr "ការសងរំលោះនាពេលអនាគត"
 
 #: loan.generate_report
 msgid "Generate report"
-msgstr ""
+msgstr "បង្កើតរបាយការណ៍"
 
 #: loan.gl_cod
 msgid "GL Cod"
-msgstr ""
+msgstr "លេខកូដសៀវភៅធំ"
 
 #: loan.gracePeriodForRepayments
 msgid "Grace period for repayments {0}"
-msgstr ""
+msgstr "ដំនាក់កាលលើកលែងសំរាប់ការសងរំលោះមកវិញ{0}"
 
 #: loan.grace_period
 msgid "Grace period for repayments"
-msgstr ""
+msgstr "ដំនាក់កាលលើកលែងសំរាប់ការសងរំលោះមកវិញ"
 
 #: loan.grace_period_type
 msgid "Grace Period Type"
-msgstr ""
+msgstr "ប្រភេទនៃដំនាក់កាលលើកលែង"
 
 #: loan.graceperdur
 msgid "Grace period duration"
-msgstr ""
+msgstr "រយះពេលនៃដំនាក់កាលលើកលែង"
 
 #: loan.hope&effort_group
 msgid "Hope & Effort Group"
@@ -1222,6 +1281,8 @@ msgid ""
 "If you click submit all financial transactions made till this date will be "
 "reversed and the"
 msgstr ""
+"ប្រសិនបើអ្នកចុចបញ្ជូនរាល់ប្រតិបត្តិការណ៍អាចធ្វើទៅបានលុះត្រាតែកាលបរិច្ឆេទនឺងត"
+"្រូវកែត្រឡប់មកវិញ"
 
 #: loan.ins
 msgid "Ins \\#"
@@ -1230,112 +1291,112 @@ msgstr ""
 #: loan.inst
 msgctxt "loan.inst"
 msgid "Installments"
-msgstr ""
+msgstr "ការសងរំលោះ"
 
 #: loan.install_paid
 msgctxt "loan.install_paid"
 msgid "Installments"
-msgstr ""
+msgstr "ការសងរំលោះ"
 
 #: loan.installment_details
 msgid "Installment details"
-msgstr ""
+msgstr "ពត័មានលំអិតនៃការសងរំលោះ"
 
 #: loan.installments
 msgctxt "loan.installments"
 msgid "Installment"
-msgstr ""
+msgstr "ការសងរំលោះ"
 
 #: loan.instanceName
 msgctxt "loan.instanceName"
 msgid "instance name"
-msgstr ""
+msgstr "នាមឧបមា"
 
 #: loan.instance_info
 msgid "Instance information"
-msgstr ""
+msgstr "ឧបមាថាពត៍មាន"
 
 #: loan.instance_name
 msgid "Loan instance name"
-msgstr ""
+msgstr "ឧបមាថាឈ្មោះកំចីគឺ"
 
 #: loan.instancename
 msgctxt "loan.instancename"
 msgid "instance name"
-msgstr ""
+msgstr "នាមឧបមា"
 
 #: loan.instt_due
 msgid "Installments due"
-msgstr ""
+msgstr "ដល់ពេលដែលត្រូវសង"
 
 #: loan.instt_paid
 msgid "Installments paid"
-msgstr ""
+msgstr "ការសងរំលោះប្រចាំខែដែលបានបង់"
 
 #: loan.int_rate
 msgid "Rate"
-msgstr ""
+msgstr "អាត្រា"
 
 #: loan.interest
 msgctxt "loan.interest"
 msgid "Interest"
-msgstr ""
+msgstr "ការប្រាក់"
 
 #: loan.interestDisbursement
 msgid "{0} deducted at disbursement"
-msgstr ""
+msgstr "{0}ដែលបា្ននកាត់បន្ថយនាពេលសងរំលោះ"
 
 #: loan.interestRate
 msgid "Interest rate"
-msgstr ""
+msgstr "អាត្រាការប្រាក់"
 
 #: loan.interestRateType
 msgid "{0} Rate Type"
-msgstr ""
+msgstr "{0}ប្រភេទអាត្រាការប្រាក់"
 
 #: loan.interestRules
 msgid "{0} rules"
-msgstr ""
+msgstr "{0}និតិវិធី"
 
 #: loan.interest_amount
 msgid "rate amount"
-msgstr ""
+msgstr "ចំនួនអាត្រា"
 
 #: loan.interest_cal_payments
 msgid "Interest Calculation Rule For Early/Late Payments"
-msgstr ""
+msgstr "និតិវិធីនៃការគណនាការប្រាក់សំរាប់ការសងលឿនឬយឺត"
 
 #: loan.interest_disb
 msgid "deducted at disbursement"
-msgstr ""
+msgstr "បានកាត់បន្ថយនាពេលបង់សង"
 
 #: loan.interest_rate
 msgid "rate"
-msgstr ""
+msgstr "អាត្រា"
 
 #: loan.interest_type
 msgid "Rate Type"
-msgstr ""
+msgstr "ប្រភេទអាត្រា"
 
 #: loan.intr_rec
 msgid "Intr Rec"
-msgstr ""
+msgstr "គណនាទូទាត់ការប្រាក់ឡើងេវិញរ"
 
 #: loan.intratetype
 msgid "Interest rate type"
-msgstr ""
+msgstr "ប្រភេទនៃអាត្រាការប្រាក់"
 
 #: loan.is_redo_loan
 msgid "Loan has been redone"
-msgstr ""
+msgstr "កំចីបានរៀបចំរួចរាល់ហើយ"
 
 #: loan.kanakpura_center
 msgid "Kanakpura Center"
-msgstr ""
+msgstr "មជ្ឈមណ្ឌលកានាក់ពូរា"
 
 #: loan.lastpaymentamount
 msgid "Last payment made"
-msgstr ""
+msgstr "ការសងចុងក្រោយបានបង់ហើយ"
 
 #: loan.lastpaymentdescription
 msgid ""
@@ -1343,56 +1404,58 @@ msgid ""
 "will make a reverse transaction entry and the account balance will be "
 "updated."
 msgstr ""
+"ចំនួនសងចុងក្រោយអាចប្រគល់ជូនវិញប្រសិនបើត្រូវកា។ប្រសិនបើការកែតំរូវត្រូវបានធ្វើ "
+"ប្រព័ន្ធនឺងលប់ប្រតិបត្តិការណ៍ដែលបានដាក់ចូលហើយសមតុល្យនឹងត្រូវកែប្រែ"
 
 #: loan.loanAccountDetails
 msgid "{0} Account Details"
-msgstr ""
+msgstr "{0}ពត៍មានលំអិតរបស់គណនី"
 
 #: loan.loanAmount
 msgid "{0} Amount"
-msgstr ""
+msgstr "{0}ចំនួន"
 
 #: loan.loanAmountFor
 msgid "Loan Amount for"
-msgstr ""
+msgstr "ចំនួនកំចីសំរាប់"
 
 #: loan.loanBalance
 msgid "{0} balance"
-msgstr ""
+msgstr "សមតុល្យ{0}"
 
 #: loan.loanInstanceName
 msgid "{0} instance name"
-msgstr ""
+msgstr "{0}នាមឧបមា"
 
 #: loan.loanOfficer
 msgid "Loan Officer"
-msgstr ""
+msgstr "មន្ត្រីផ្នែកឥណទាន"
 
 #: loan.loanProductSummary
 msgid "{0} Product Summary"
-msgstr ""
+msgstr "{0} ពត៍មានសង្ខេបនៃផលិតផល"
 
 #: loan.loan_acc_details
 msgid "Account Details"
-msgstr ""
+msgstr "ពត៍មានលំអិតនៃគណនី"
 
 #: loan.loan_amount
 msgctxt "loan.loan_amount"
 msgid "Loan amount"
-msgstr ""
+msgstr "ចំនួនកំចី"
 
 #: loan.loan_balance
 msgid "balance"
-msgstr ""
+msgstr "សមតុល្យ"
 
 #: loan.loanamount
 msgctxt "loan.loanamount"
 msgid "Loan amount"
-msgstr ""
+msgstr "ចំនួនកំចី"
 
 #: loan.maintenance_fee
 msgid "Maintenance fee"
-msgstr ""
+msgstr "ថ្លៃសេវាថែទាំ"
 
 #: loan.mariev
 msgid "mariev"
@@ -1400,267 +1463,267 @@ msgstr ""
 
 #: loan.maturity_date
 msgid "Loan maturity date\\:"
-msgstr ""
+msgstr "ថ្ងៃដល់កំនត់សងនៃកំចី"
 
 #: loan.maxinst
 msgid "max number of installments"
-msgstr ""
+msgstr "ចំនួនដងអតិបរិមានៃការសងរំលោះ"
 
 #: loan.maxintrate
 msgid "Max interest rate"
-msgstr ""
+msgstr "អាត្រាកាប្រាក់អតិបរិមា"
 
 #: loan.maxloanamt
 msgid "Max loan amount"
-msgstr ""
+msgstr "ចំនួនកំចីអតិបរិមា"
 
 #: loan.meeting_charges
 msgid "Meeting charges"
-msgstr ""
+msgstr "កាប្រជុំបានធ្វើឡើង"
 
 #: loan.member_fee_amt
 msgid "Membership fee amount\\:"
-msgstr ""
+msgstr "ថ្លៃសេវាសមាជិកភាព"
 
 #: loan.membership_fee
 msgid "Membership fee"
-msgstr ""
+msgstr "ថ្លៃសេវាសមាជិកភាព"
 
 #: loan.mininst
 msgid "min number of installments"
-msgstr ""
+msgstr "ចំនួនដងអប្បបរិមានៃការសងរំលោះ"
 
 #: loan.minintrate
 msgid "Min interest rate"
-msgstr ""
+msgstr "ចំនួនអប្បបរិមានៃអាត្រាកាប្រាក់"
 
 #: loan.minloanamt
 msgid "Min loan amount"
-msgstr ""
+msgstr "ចំនួនអប្បបរិមានៃកំចី"
 
 #: loan.missed_payments
 msgid "\\# of missed payments\\:"
-msgstr ""
+msgstr "\\#នៃការអាក់ខានសង"
 
 #: loan.mode_of_payment
 msgid "Mode of payment"
-msgstr ""
+msgstr "ប្រភេទនៃការសង"
 
 #: loan.mon
 msgid "(Monthly)"
-msgstr ""
+msgstr "ជារៀងរាល់ចុងខែ"
 
 #: loan.month(s)
 msgid "Month(s)"
-msgstr ""
+msgstr "ខែ"
 
 #: loan.more_details
 msgid "More account and transaction details"
-msgstr ""
+msgstr "គណនីនិងពត៍មានលំអិតនៃប្រតិបត្តិការថែមទៀត"
 
 #: loan.multiple
 msgid "multiple"
-msgstr ""
+msgstr "ពហុគុណ"
 
 #: loan.new
 msgid "New"
-msgstr ""
+msgstr "ថ្មី"
 
 #: loan.new_status
 msgctxt "loan.new_status"
 msgid "New Status"
-msgstr ""
+msgstr "លក្ខ័ណថ្មី"
 
 #: loan.new_val
 msgctxt "loan.new_val"
 msgid "New Value"
-msgstr ""
+msgstr "តំលៃថ្មី"
 
 #: loan.next_inst
 msgid "Next installment"
-msgstr ""
+msgstr "ការំលោះបន្ទាប់"
 
 #: loan.next_inst_due
 msgid "Next installment due"
-msgstr ""
+msgstr "ពេលសងរំលោះបន្ទាប់នឹងដល់"
 
 #: loan.next_install_details
 msgid "Next installment details"
-msgstr ""
+msgstr "ពត៍មានលំអិតៃនៃការសងរំលោះបន្ទាប់"
 
 #: loan.no
 msgid "No"
-msgstr ""
+msgstr "ចំនួន"
 
 #: loan.noOfInstallments
 msgctxt "loan.noOfInstallments"
 msgid "No. of installments"
-msgstr ""
+msgstr "ចំនួននៃការសងរំលោះ"
 
 #: loan.no_of_inst
 msgctxt "loan.no_of_inst"
 msgid "No. of installments"
-msgstr ""
+msgstr "ចំនួននៃការសងរំលោះ"
 
 #: loan.nopaymentsmade
 msgid "No. of payments made"
-msgstr ""
+msgstr "ចំនួននៃការសងរំលោះដែលបានបង់"
 
 #: loan.note
 msgid "note"
-msgstr ""
+msgstr "កំនត់ចំនាំ"
 
 #: loan.notes
 msgid "notes"
-msgstr ""
+msgstr "កំនត់ចំនាំ"
 
 #: loan.of_payments
 msgid "\\# of payments\\:"
-msgstr ""
+msgstr "\\# នៃការចំនាយ"
 
 #: loan.old_status
 msgctxt "loan.old_status"
 msgid "Old Status"
-msgstr ""
+msgstr "លក្ខ័ណចាស់"
 
 #: loan.old_val
 msgctxt "loan.old_val"
 msgid "Old Value"
-msgstr ""
+msgstr "តំលៃចាស់"
 
 #: loan.once_20days
 msgid "Once in 20 days)"
-msgstr ""
+msgstr "ម្តងក្នុងរវាង២០ថ្ងៃ"
 
 #: loan.openNewAccountFor
 msgid "Open another account for {0}"
-msgstr ""
+msgstr "បើកគណនីថ្មីមួយផ្សេងទៀត {0}"
 
 #: loan.openNewLoanAccount
 msgctxt "loan.openNewLoanAccount"
 msgid "Open a new {0} account."
-msgstr ""
+msgstr "បើកគណនីថ្មីមួយផ្សេងទៀត"
 
 #: loan.openNewSavingsAccount
 msgctxt "loan.openNewSavingsAccount"
 msgid "Open a new {0} account."
-msgstr ""
+msgstr "បើកគណនីថ្មីមួយផ្សេងទៀត"
 
 #: loan.open_new
 msgid "Open a new"
-msgstr ""
+msgstr "បើកថ្មី"
 
 #: loan.open_new_acc
 msgid "Open another account for"
-msgstr ""
+msgstr "បើកគណនីថ្មីមួយផ្សេងទៀត"
 
 #: loan.open_new_insur_acc
 msgid "Open a new insurance account"
-msgstr ""
+msgstr "បើកគណនីធានារាប់រងថ្មីមួយ"
 
 #: loan.open_new_loan_acc
 msgid "Open a new loan account"
-msgstr ""
+msgstr "បើកគណនីកំចីថ្មីមួយ"
 
 #: loan.open_new_sav_acc
 msgid "Open a new savings account"
-msgstr ""
+msgstr "បើកគណនីសន្សំថ្មីមួយ"
 
 #: loan.originalLoan
 msgid "Original {0}"
-msgstr ""
+msgstr "សំនៅដើម{0}"
 
 #: loan.original_loan
 msgid "Original"
-msgstr ""
+msgstr "សំនៅដើម"
 
 #: loan.outstandingbalance
 msgid "Outstanding balance"
-msgstr ""
+msgstr "សមតុល្យដែលនៅសល់"
 
 #: loan.overdueamount
 msgid "Overdue amount"
-msgstr ""
+msgstr "ចំនួនហួសកំនត់"
 
 #: loan.paid
 msgid "paid"
-msgstr ""
+msgstr "ចំនាយ"
 
 #: loan.past_due
 msgid "Past due\\:"
-msgstr ""
+msgstr "ការជំពាក់ពីមុន"
 
 #: loan.past_due_details
 msgid "Past due details"
-msgstr ""
+msgstr "ពត៍មានលំអិតនៃការជំពាក់ពីមុន"
 
 #: loan.pastdue
 msgid "Total past due"
-msgstr ""
+msgstr "ចំនួនជំពាក់សរុបចាស់"
 
 #: loan.payment
 msgid "Payment"
-msgstr ""
+msgstr "ចំនាយ"
 
 #: loan.paymentDate
 msgid "Payment Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទចំ​នាយ"
 
 #: loan.paymentType
 msgid "Payment type"
-msgstr ""
+msgstr "ប្រភេទចំ​នាយ"
 
 #: loan.payment_id
 msgid "Payment ID\\#"
-msgstr ""
+msgstr "លេខកូដចំនាយ"
 
 #: loan.paymentdate
 msgid "Date of payment"
-msgstr ""
+msgstr "កាលបរិច្ចទនៃចំ​នាយ"
 
 #: loan.paymentdetails
 msgid "Payment details"
-msgstr ""
+msgstr "លំអិតនៃចំនាយ"
 
 #: loan.paymentid
 msgid "Mode of payment in Payment Details"
-msgstr ""
+msgstr "ប្រភេទលំអិតនៃការចំនាយ"
 
 #: loan.payments
 msgid "Payments"
-msgstr ""
+msgstr "ចំនាយ"
 
 #: loan.paymentsmade
 msgid "Payments Made"
-msgstr ""
+msgstr "ការចំនាយបានបង់ហើយ"
 
 #: loan.penalty
 msgid "Penalty"
-msgstr ""
+msgstr "ការពិន័យ"
 
 #: loan.penalty_01
 msgid "Penalty for Installment \\#1"
-msgstr ""
+msgstr "ការពិន័យសំរាប់ការសងរំលោះ\\#១"
 
 #: loan.penalty_02
 msgid "Penalty for Installment \\#2"
-msgstr ""
+msgstr "ការពិន័យសំរាប់ការសងរំលោះ\\#២"
 
 #: loan.penalty_type
 msgid "Penalty Type"
-msgstr ""
+msgstr "ប្រភេទនៃការពិន័យ្យ"
 
 #: loan.performance_history
 msgid "Performance history"
-msgstr ""
+msgstr "ប្រវត្តិនៃស្នាដៃ"
 
 #: loan.periodicity
 msgid "Periodicity"
-msgstr ""
+msgstr "ដំនាក់កាល"
 
 #: loan.periodicityTypeFlat
 msgid "one time"
-msgstr ""
+msgstr "ម្តង"
 
 #: loan.periodicityTypeRate
 msgid "Recur every"
@@ -1668,23 +1731,23 @@ msgstr ""
 
 #: loan.periodicity_annual_fee
 msgid "Periodicity\\: annual fee"
-msgstr ""
+msgstr "ជាដំនាក់កាល\\:ថ្លៃសេវាប្រចាំឆ្នាំ"
 
 #: loan.periodicity_one_time_fee
 msgid "Periodicity\\: one time fee"
-msgstr ""
+msgstr "ជាដំនាក់កាល\\:ថ្លៃសេវាម្តង"
 
 #: loan.phonenumber
 msgid "Phone Number\\:"
-msgstr ""
+msgstr "លេខទូរសព័្ទ"
 
 #: loan.plz_note
 msgid "Please Note\\:"
-msgstr ""
+msgstr "សូមចំណាំ"
 
 #: loan.posted_by
 msgid "Posted By"
-msgstr ""
+msgstr "ប្រតិ្តបត្តិការដោយ"
 
 #: loan.pr_pd
 msgid "Pr Pd"
@@ -1692,61 +1755,61 @@ msgstr ""
 
 #: loan.preview
 msgid "Preview"
-msgstr ""
+msgstr "ពិនិត្យមើលជាមុន"
 
 #: loan.preview_accinfo
 msgid "Preview loan account information"
-msgstr ""
+msgstr "ពិនិត្យមើលពត៍មានគណនីកំចីជាមុន"
 
 #: loan.principal
 msgctxt "loan.principal"
 msgid "Principal"
-msgstr ""
+msgstr "ប្រាក់ដើម"
 
 #: loan.principle_due
 msgid "Principal due on last installment"
-msgstr ""
+msgstr "ប្រាក់ដើមបានដល់កំនត់កាលពីសងរំលោះគ្រាមុន"
 
 #: loan.product_summary
 msgid "Product Summary"
-msgstr ""
+msgstr "សង្ខបនៃផលិតផល"
 
 #: loan.proposed_date
 msgid "Disbursal date"
-msgstr ""
+msgstr "ថ្ងៃសង"
 
 #: loan.purposeOfLoan
 msgid "Purpose of {0}"
-msgstr ""
+msgstr "គោលបំនងនៃ{0}"
 
 #: loan.purposeofloan
 msgid "Purpose of loan"
-msgstr ""
+msgstr "គោលបំនងនៃកំចី"
 
 #: loan.rec_creation_date
 msgid "Record Creation Date"
-msgstr ""
+msgstr "កត់ត្រាថ្ងៃបង្កើត"
 
 #: loan.receiptId
 msgctxt "loan.receiptId"
 msgid "Receipt ID"
-msgstr ""
+msgstr "លេខកូដវិក័យ្យបត្រ័"
 
 #: loan.receiptNumber
 msgid "Receipt Number"
-msgstr ""
+msgstr "លេខវិក័យ្យប័ត្រ"
 
 #: loan.receiptdate
 msgid "Receipt Date"
-msgstr ""
+msgstr "កាលបរិច្ឆទវិក័យ្យប្បត្រ"
 
 #: loan.recentActivity
 msgid "Recent activity"
-msgstr ""
+msgstr "សកម្មភាពថ្មីៗ"
 
 #: loan.recent_notes
 msgid "Recent notes"
-msgstr ""
+msgstr "កំនត់ចំនាំថ្មីៗ"
 
 #: loan.recurring_acc_fees
 msgid "Recurring account fees"
@@ -2045,27 +2108,27 @@ msgstr ""
 
 #: loan.view_status_history
 msgid "View status history"
-msgstr ""
+msgstr "បើកមើលពត៍មាននៃលក្ខ័នពីមុន"
 
 #: loan.view_transc_history
 msgid "View transaction history"
-msgstr ""
+msgstr "បើកមើលប្រវត្តិប្រត្តិបត្តិការពីមុន"
 
 #: loan.voucherNumber
 msgid "Voucher Number"
-msgstr ""
+msgstr "លេខប័ណ្ណ"
 
 #: loan.waive
 msgid "Waive"
-msgstr ""
+msgstr "លើកលែង"
 
 #: loan.week(s)
 msgid "Week(s)"
-msgstr ""
+msgstr "សប្តាហ៍"
 
 #: loan.withfollid
 msgid "with the following IDs have been created"
-msgstr ""
+msgstr "ជាមួយនិងលេខកូដទាំងនេះដែលបានបង្កើត"
 
 #: loan.yes
 msgid "Yes"

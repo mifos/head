@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-09 15:53-0700\n"
-"PO-Revision-Date: 2009-06-23 18:25-0700\n"
+"PO-Revision-Date: 2009-08-16 22:14-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,15 +17,15 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: exception.framework.ConstantsNotLoadedException
 msgid "Constant File is not Loaded."
-msgstr ""
+msgstr "សំនុំបញ្ជីដែលមិនប្រែប្រូលគឺមិនបានដាក់បញ្ជុល"
 
 #: exception.framework.SystemException.ValueObjectConversionException
 msgid "Value Object could not be created"
-msgstr ""
+msgstr "ការជំទាស់ដ៏មានតំលៃគឺមិនគួបង្កើត"
 
 #: exception.validation.ppi.MissingLikelihoodChartRowException
 msgid "Missing likelihood row for one or more scores"
-msgstr ""
+msgstr "ការបាត់បង់ជួដែលមានភាពប្រហាក់ប្រហែលគ្នាសំរាប់ពិន្ទុមួយឬច្រើន"
 
 #: exception.validation.ppi.PpiLikelihoodArgsInvalidException
 msgid "PPI likelihood percent values are invalid"

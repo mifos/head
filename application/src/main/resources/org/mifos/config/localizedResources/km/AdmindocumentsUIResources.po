@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-08-04 00:22-0700\n"
+"PO-Revision-Date: 2009-08-18 21:19-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -291,11 +291,11 @@ msgstr "របាយការណ័គណនីចាប់ពី"
 
 #: accounts.acc_summary
 msgid "Account summary"
-msgstr "សេចក្តីសង្ខេបគណនិ"
+msgstr "សេចក្តីសង្ខេបគណនី"
 
 #: accounts.account
 msgid "account"
-msgstr "គណនិ"
+msgstr "គណនី"
 
 #: accounts.activity
 msgid "Activity"
@@ -526,7 +526,7 @@ msgstr "ការប្រមូលផ្តុំប្រភេទតារា
 #: accounts.collateral_notes
 msgctxt "accounts.collateral_notes"
 msgid "Collateral notes"
-msgstr ""
+msgstr "កំនត់ចំនាំនៃវត្តុបញ្ចាំ"
 
 #: accounts.collateral_type
 msgid "Collateral type"
@@ -763,7 +763,7 @@ msgstr "បង្កើតរបាយការណ៍"
 
 #: accounts.gl_cod
 msgid "GL Cod"
-msgstr ""
+msgstr "លេខកូដរបស់សៀវភៅបញ្ជីរ"
 
 #: accounts.grace_period
 msgid "Grace period for repayments"

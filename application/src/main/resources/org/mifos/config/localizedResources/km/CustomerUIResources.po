@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-09 15:53-0700\n"
-"PO-Revision-Date: 2009-06-18 21:58-0700\n"
+"PO-Revision-Date: 2009-08-21 02:13-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -525,113 +525,113 @@ msgstr "បញ្ចូលកំនត់ត្រា"
 
 #: label.amountof
 msgid "Amount of"
-msgstr ""
+msgstr "ចំនួននៃ"
 
 #: label.amountofloan
 msgid "Amount of loan\\:"
-msgstr ""
+msgstr "ចំនួននៃកំចីយ"
 
 #: label.amountofloanLabel
 msgid "Amount of loan"
-msgstr ""
+msgstr "ចំនួននៃកំចីយ"
 
 #: label.backtodetailpage
 msgid "Back to Details Page"
-msgstr ""
+msgstr "ត្រលប់ទៅទំពរ័ពត៍មានលំអិត"
 
 #: label.backtodetailspage
 msgid "Back to Charges Page"
-msgstr ""
+msgstr "ត្រលប់ទៅទំពរ័ដែលយកថ្លៃសេវា"
 
 #: label.colon
 msgid "\\:"
-msgstr ""
+msgstr "\\:"
 
 #: label.edithistoricaldata
 msgid "Edit historical data"
-msgstr ""
+msgstr "កែប្រែប្រវត្តិនៃទិន្នយ័"
 
 #: label.historicaldata
 msgid "Historical data"
-msgstr ""
+msgstr "ប្រវត្តិនៃទិន្នយ័"
 
 #: label.interestpaid
 msgid "paid\\:"
-msgstr ""
+msgstr "បង់"
 
 #: label.interestpaidLabel
 msgid "paid"
-msgstr ""
+msgstr "បង់"
 
 #: label.loancyclecounter
 msgid "Cycle per Product"
-msgstr ""
+msgstr "ឃួបនៃផលិតផល"
 
 #: label.loancyclenumber
 msgid "cycle number\\:"
-msgstr ""
+msgstr "ឃួបនៃលេខ"
 
 #: label.note
 msgctxt "label.note"
 msgid "Note\\:"
-msgstr ""
+msgstr "កំនត់ចំនាំ"
 
 #: label.noteMsg
 msgctxt "label.noteMsg"
 msgid "Note"
-msgstr ""
+msgstr "កំនត់ចំនាំ"
 
 #: label.noteMsg1
 msgid "Review the text  below."
-msgstr ""
+msgstr "ពិនិត្យឡើងវិញនៃអត្ថបទខាងក្រោម"
 
 #: label.noteMsg2
 msgctxt "label.noteMsg2"
 msgid "If satisfied click Submit."
-msgstr ""
+msgstr "ប្រសិនបើពេញចិត្តសូមចុចបញ្ជូន"
 
 #: label.noteMsg3
 msgctxt "label.noteMsg3"
 msgid "Click Edit to make changes."
-msgstr ""
+msgstr "សូមចុចលើពាក្យកែតំរូវដើម្បីធ្វើការកែប្រែ"
 
 #: label.noteMsg4
 msgid "Click Cancel to return to details page without submitting information."
-msgstr ""
+msgstr "ចុចបោះបង់ដើម្បីត្រលប់ទៅទំព័រពត៍មានលំអិតដោយពុំចាំបាច់បញ្ជូនព៍តមាន"
 
 #: label.notes
 msgctxt "label.notes"
 msgid "Notes"
-msgstr ""
+msgstr "កំនត់ចំនាំ"
 
 #: label.numberofmissedpayments
 msgid "Number of missed payments"
-msgstr ""
+msgstr "ចំនូនដងដែលពុំបានសង"
 
 #: label.previewhistoricaldata
 msgid "Preview historical data"
-msgstr ""
+msgstr "ពិនិត្យជាមុននូវទិន្ន័យពីមុន"
 
 #: label.previewnote
 msgid "Preview note"
-msgstr ""
+msgstr "ពិនិត្យជាមុននូវកំនត់ចំនាំ"
 
 #: label.productname
 msgid "Product name\\:"
-msgstr ""
+msgstr "ឈ្មោះផលិតផល"
 
 #: label.productnameLabel
 msgid "Product name"
-msgstr ""
+msgstr "ឈ្មោះផលិតផល"
 
 #: label.totalamountpaid
 msgid "Total amount paid\\:"
-msgstr ""
+msgstr "ចំនួនសងសរុប"
 
 #: label.totalamountpaidLabel
 msgid "Total amount paid"
-msgstr ""
+msgstr "ចំនួនសងសរុប"
 
 #: label.totalnumberofpayments
 msgid "Total number of payments"
-msgstr ""
+msgstr "ចំនួនដងនៃការសង"
