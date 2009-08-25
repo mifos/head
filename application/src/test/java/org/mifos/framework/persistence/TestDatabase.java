@@ -43,9 +43,7 @@ import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.helpers.DatabaseSetup;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class TestDatabase implements SessionOpener {
 
