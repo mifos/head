@@ -91,7 +91,7 @@ public class ConfigurationLocator {
     }
 
     @SuppressWarnings({"PMD.OnlyOneReturn"})
-    public String getConfigurationDirectory() throws IOException {
+    public String getConfigurationDirectory() {
         for (String directoryPath : getDirectoriesToSearch()) {
             if (directoryExists(directoryPath)) {
                 LOG.info("ConfigurationLocator found configuration directory: " + directoryPath);
@@ -118,11 +118,11 @@ public class ConfigurationLocator {
         return configurationLocatorHelper.getHomeProperty(HOME_PROPERTY_NAME);
     }
     
-    private boolean directoryExists(String directory) throws IOException {
+    private boolean directoryExists(String directory) {
         return StringUtils.isNotBlank(directory) && (getFileObject(directory)).exists();
     }
 
-    private File getFileObject(String directory) throws IOException {
+    private File getFileObject(String directory) {
         return configurationLocatorHelper.getFile(directory);
     }
 
