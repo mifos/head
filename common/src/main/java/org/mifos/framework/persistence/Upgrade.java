@@ -26,8 +26,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.exceptions.SystemException;
 
 @SuppressWarnings("PMD.AbstractNaming")
@@ -38,6 +40,17 @@ public abstract class Upgrade {
     private final int higherVersion;
     protected static final int LOOKUP_VALUE_CHANGE_VERSION = 174;
     public static final String wrongConstructor = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
+
+    /*
+     * FIXME: use MifosLogger instead. And note that this will require pulling
+     * lots of code into the common module, and/or an extensive refactor of
+     * logging code in Mifos.
+     */
+    private static final Logger logger = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+
+    protected Logger getLogger() {
+        return logger;
+    }
 
     protected Upgrade(int higherVersion) {
         this.higherVersion = higherVersion;

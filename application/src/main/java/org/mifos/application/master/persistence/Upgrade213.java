@@ -27,7 +27,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
 import net.sourceforge.mayfly.MayflySqlException;
 import net.sourceforge.mayfly.UnimplementedException;
@@ -153,8 +152,8 @@ public class Upgrade213 extends Upgrade {
                 mysqlOnly = new URI(connection.getMetaData().getURL());
             } catch (UnimplementedException mayflyUnimplementedException) {
                 getLogger().info(
-                        "Mayfly doesnt' support DatabaseMetaData.getURL(). Will try fetching this"
-                                + " information from database configuraion files.");
+                        "Mayfly does not support DatabaseMetaData.getURL(). Will try fetching this"
+                                + " information from database configuration files.");
                 String dbUrl = new StandardTestingService().getDatabaseConnectionSettings().getProperty(
                         "hibernate.connection.url");
                 mysqlOnly = new URI(dbUrl);
@@ -174,19 +173,6 @@ public class Upgrade213 extends Upgrade {
             throw new SQLException(e);
         }
         return databaseName;
-    }
-
-    /*
-     * FIXME: Temporary. Will be improved by moving logger into superclass
-     * ("Upgrade") once LoggerConstants is moved into the "common" module.
-     */
-    private Logger logger = null;
-
-    private Logger getLogger() {
-        if (null == logger) {
-            logger = Logger.getLogger("org.mifos.framework");
-        }
-        return logger;
     }
 
 }

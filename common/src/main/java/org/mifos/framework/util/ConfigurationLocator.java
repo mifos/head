@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.components.logger.LoggerConstants;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -42,7 +43,7 @@ public class ConfigurationLocator {
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
-    private static final Logger LOG = Logger.getLogger("org.mifos.framework.util");
+    private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     @SuppressWarnings("PMD.ImmutableField")
     private ConfigurationLocatorHelper configurationLocatorHelper;
