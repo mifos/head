@@ -21,22 +21,19 @@
 package org.mifos.application.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import junit.framework.TestCase;
 
 import org.hibernate.Session;
 import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class AddInterestCalcRuleTest extends TestCase {
+public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase {
 
-    /*
-     * We need the test case initializer in order to set up the message cache in
-     * MifosConfiguration.
-     */
-    public void setUp() throws Exception {
-        new TestCaseInitializer().initialize();
+    public AddInterestCalcRuleIntegrationTest() throws SystemException, ApplicationException {
+        super();
     }
 
     public void testValidateLookupValueKeyTest() throws Exception {

@@ -829,6 +829,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <testNGArtifactName>null</testNGArtifactName>
+                    <printSummary>false</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
                         <include>**/*Test.java</include>

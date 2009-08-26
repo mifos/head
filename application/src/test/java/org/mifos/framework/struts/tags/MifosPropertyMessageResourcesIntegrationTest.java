@@ -20,19 +20,19 @@
 
 package org.mifos.framework.struts.tags;
 
-import junit.framework.TestCase;
-
 import org.apache.struts.util.MessageResources;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
 
-public class MifosPropertyMessageResourcesTest extends TestCase {
+public class MifosPropertyMessageResourcesIntegrationTest extends MifosIntegrationTestCase {
 
-    public void setUp() throws Exception {
-        TestCaseInitializer initializer = new TestCaseInitializer();
-        initializer.initialize();
+
+    public MifosPropertyMessageResourcesIntegrationTest() throws SystemException, ApplicationException {
+        super();
     }
 
     public void testGetMessageLocaleString() {

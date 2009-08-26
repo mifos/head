@@ -25,8 +25,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
-
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -34,6 +32,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -44,17 +43,12 @@ import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AddActivityTest extends TestCase {
+public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
-    /*
-     * We need the test case initializer in order to set up the message cache in
-     * MifosConfiguration.
-     */
-    public void setUp() throws SystemException, ApplicationException {
-        new TestCaseInitializer().initialize();
+    public AddActivityIntegrationTest() throws SystemException, ApplicationException {
+        super();
     }
 
     public void testStartFromStandardStore() throws Exception {
