@@ -21,7 +21,7 @@ start)
         $CATALINA_HOME/bin/startup.sh
         ;;
 stop)  
-        $CATALINA_HOME/bin/shutdown.sh
+        $CATALINA_HOME/bin/shutdown.sh -force
         rm -f $CATALINA_PID
         ;;
 status)  
