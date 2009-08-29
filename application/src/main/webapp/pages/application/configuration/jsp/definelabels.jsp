@@ -68,7 +68,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.headoffice" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="headOffice" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.headOffice" property="headOffice" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -77,7 +77,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.regoffice" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="regionalOffice" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.regionalOffice" property="regionalOffice" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -86,7 +86,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.subregoffice" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="subRegionalOffice" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.subRegionalOffice" property="subRegionalOffice" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -95,7 +95,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.areaoffice" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="areaOffice" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.areaOffice" property="areaOffice" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -104,7 +104,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.branchoffice" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="branchOffice" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.branchOffice" property="branchOffice" />
 								</td>
 							</tr>
 						</table>
@@ -123,7 +123,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.client" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="client" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.client" property="client" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -132,7 +132,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.group" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="group" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.group" property="group" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -141,7 +141,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.center" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="center" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.center" property="center" />
 								</td>
 							</tr>
 						</table>
@@ -160,7 +160,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.cash" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="cash" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.cash" property="cash" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -169,7 +169,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.check" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="check" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.check" property="check" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -177,7 +177,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.vouchers" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="vouchers" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.vouchers" property="vouchers" />
 								</td>
 							</tr>
 						</table>
@@ -196,7 +196,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.loans" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="loans" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.loans" property="loans" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -205,7 +205,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.savings" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="savings" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.savings" property="savings" />
 								</td>
 							</tr>
 						</table>
@@ -223,7 +223,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.state" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="state" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.state" property="state" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -232,7 +232,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.postalcode" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="postalCode" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.postalCode" property="postalCode" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -241,7 +241,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.ethnicity" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="ethnicity" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.ethnicity" property="ethnicity" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -249,7 +249,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.citizenship" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="citizenship" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.citizenship" property="citizenship" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -257,7 +257,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.handicapped" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="handicapped" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.handicapped" property="handicapped" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -265,7 +265,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.govtId" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="govtId" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.govtId" property="govtId" />
 								</td>
 							</tr>
 						</table>
@@ -284,7 +284,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.address1" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="address1" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.address1" property="address1" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -293,7 +293,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.address2" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="address2" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.address2" property="address2" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -302,7 +302,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.address3" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="address3" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.address3" property="address3" />
 								</td>
 							</tr>
 						</table>
@@ -321,7 +321,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.partialappl" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="partialApplication" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.partialApplication" property="partialApplication" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -329,7 +329,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.pendingappr" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="pendingApproval" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.pendingApproval" property="pendingApproval" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -337,7 +337,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.approved" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="approved" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.approved" property="approved" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -345,7 +345,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.cancel" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="cancel" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.cancel" property="cancel" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -353,7 +353,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.closed" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="closed" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.closed" property="closed" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -361,7 +361,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.onhold" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="onhold" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.onhold" property="onhold" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -369,7 +369,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.active" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="active" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.active" property="active" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -377,7 +377,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.inactive" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="inActive" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.inActive" property="inActive" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -385,7 +385,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.activegoodstand" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="activeInGoodStanding" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.activeInGoodStanding" property="activeInGoodStanding" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -393,7 +393,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.activebadstand" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="activeInBadStanding" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.activeInBadStanding" property="activeInBadStanding" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -401,7 +401,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.closeobligmet" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="closedObligationMet" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.closedObligationMet" property="closedObligationMet" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -409,7 +409,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.closeresch" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="closedRescheduled" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.closedRescheduled" property="closedRescheduled" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -417,7 +417,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.closewriteoff" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="closedWrittenOff" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.closedWrittenOff" property="closedWrittenOff" />
 								</td>
 							</tr>
 						</table>
@@ -436,7 +436,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.none" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="none" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.none" property="none" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -445,7 +445,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.graceallrepay" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="graceOnAllRepayments" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.graceOnAllRepayments" property="graceOnAllRepayments" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -454,7 +454,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.pringrace" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="principalOnlyGrace" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.principalOnlyGrace" property="principalOnlyGrace" />
 								</td>
 							</tr>
 						</table>
@@ -473,7 +473,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.interest" isColonRequired="Yes" />
 								</td>
 								<td width="70%" valign="top">
-									<mifos:mifosalphanumtext property="interest" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.interest" property="interest" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -481,7 +481,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.externalId" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="externalId" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.externalId" property="externalId" />
 								</td>
 							</tr>
 							<tr class="fontnormal">
@@ -489,7 +489,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.bulkentry" isColonRequired="Yes" />
 								</td>
 								<td valign="top">
-									<mifos:mifosalphanumtext property="bulkEntry" />
+									<mifos:mifosalphanumtext styleId="definelabels.input.bulkEntry" property="bulkEntry" />
 								</td>
 							</tr>
 						</table>
@@ -504,12 +504,12 @@ explanation of the license and how it is applied.
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="submitButton" styleClass="buttn">
+									<html-el:submit styleId="definelabels.button.submit" property="submitButton" styleClass="buttn">
 										<mifos:mifoslabel name="configuration.submit" />
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='labelconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn">
+									<html-el:button styleId="definelabels.button.cancel" property="cancelButton" onclick="location.href='labelconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="configuration.cancel" />
 									</html-el:button>
 								</td>

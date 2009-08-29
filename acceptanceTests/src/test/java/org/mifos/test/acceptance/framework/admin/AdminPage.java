@@ -44,7 +44,8 @@ import com.thoughtworks.selenium.Selenium;
  * that will be navigated to.
  *
  */
-@SuppressWarnings({"PMD", "PMD.CouplingBetweenObjects", "all"})
+//@SuppressWarnings({"PMD", "PMD.CouplingBetweenObjects", "all"})
+@SuppressWarnings("PMD")
 public class AdminPage extends MifosPage {
 
 	public AdminPage() {
@@ -213,5 +214,11 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.ViewReportsCategory");
         waitForPageToLoad();
         return new ViewReportCategoriesPage(selenium);
+    }
+    
+    public DefineLabelsPage navigateToDefineLabelsPage() {
+        selenium.click("admin.link.defineLabels");
+        waitForPageToLoad();
+        return new DefineLabelsPage(selenium);
     }
 }

@@ -155,7 +155,8 @@
    <rule ref="rulesets/optimizations.xml/AddEmptyString"/>
    <rule ref="rulesets/sunsecure.xml/MethodReturnsInternalArray"/>
    <rule ref="rulesets/sunsecure.xml/ArrayIsStoredDirectly"/>
-   <rule ref="rulesets/coupling.xml/CouplingBetweenObjects"/>
+   <!-- 
+     <rule ref="rulesets/coupling.xml/CouplingBetweenObjects"/> --> 
    <!--  
      <rule ref="rulesets/coupling.xml/ExcessiveImports"/> -->
    <rule ref="rulesets/coupling.xml/LooseCoupling"/>
