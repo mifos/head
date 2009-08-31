@@ -127,7 +127,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
 
     private String getDirection(String language) {
         String result = LTR;
-        if (ARABIC_LANGUAGE.equals(language)) {
+        if (ARABIC_LANGUAGE.equalsIgnoreCase(language)) {
             result = RTL;
         }
         return result;
