@@ -44,7 +44,7 @@ import org.testng.annotations.Test;
 
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private NavigationHelper navigationHelper;

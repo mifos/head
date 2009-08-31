@@ -43,7 +43,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"smoke","loan","acceptance","ui"})
+@Test(sequential=true, groups={"loan","acceptance","ui"})
 public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
     
     private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";

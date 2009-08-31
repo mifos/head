@@ -34,7 +34,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","acceptance","ui"})
+@Test(sequential = true, groups = {"admin","acceptance","ui"})
 public class DefineAdditionalFieldsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;

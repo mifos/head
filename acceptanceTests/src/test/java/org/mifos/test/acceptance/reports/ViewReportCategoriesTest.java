@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
  */
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(groups={"smoke", "ui", "workInProgress"})
+@Test(groups={"reports", "ui", "workInProgress"})
 public class ViewReportCategoriesTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 

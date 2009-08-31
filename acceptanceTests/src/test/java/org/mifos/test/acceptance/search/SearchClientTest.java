@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","client","acceptance","ui"})
+@Test(sequential = true, groups = {"smoke","search","acceptance","ui"})
 
 public class SearchClientTest extends UiTestCaseBase {
 

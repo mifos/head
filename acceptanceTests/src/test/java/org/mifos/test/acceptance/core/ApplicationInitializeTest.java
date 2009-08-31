@@ -27,7 +27,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "initializeApplicationTest", "acceptance", "ui" })
+@Test(sequential = true, groups = { "core", "acceptance", "ui" })
 public class ApplicationInitializeTest extends UiTestCaseBase {
 
     public void applicationInitTest() {
