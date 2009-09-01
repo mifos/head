@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-07 01:02-0700\n"
-"PO-Revision-Date: 2009-08-25 02:44-0700\n"
+"PO-Revision-Date: 2009-08-25 21:02-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1817,67 +1817,69 @@ msgstr ""
 
 #: loan.redoAccount
 msgid "Redo {0} account"
-msgstr ""
+msgstr "បង្កើតគណនី{0}ម្តងទៀត"
 
 #: loan.redo_loan_note
 msgid "Note\\: You are redoing a loan account."
-msgstr ""
+msgstr "កំនត់ចំនាំ\\:អ្នកកំពុងតែបង្កើតគណនីកំចីម្តងទៀត"
 
 #: loan.remove
 msgid "Remove"
-msgstr ""
+msgstr "ដកចេញ"
 
 #: loan.repay
 msgid "Repay"
-msgstr ""
+msgstr "សងម្តងទៀត"
 
 #: loan.repayLoan
 msgid "Repay {0}"
-msgstr ""
+msgstr "សងម្តងទៀត{0}"
 
 #: loan.repayloan
 msgid "Repay Loan"
-msgstr ""
+msgstr "សងប្រាក់ដែលខ្ចីម្តងទៀត"
 
 #: loan.repaymentRules
 msgid "Repayment rules"
-msgstr ""
+msgstr "និតិវីធីនៃការសងត្រលប់វិញ"
 
 #: loan.repayment_date
 msgid "Repayment day"
-msgstr ""
+msgstr "ថ្ចៃសងត្រលប់វិញ"
 
 #: loan.repayment_sched
 msgid "Repayment Schedule as of"
-msgstr ""
+msgstr "កាលវិភាគនៃការសងត្រឹមពេល"
 
 #: loan.returnToAccountDetails
 msgid "Return to account details"
-msgstr ""
+msgstr "ត្រលប់ទៅទំពរ័ពត៍មានលំអិតនៃគណនី"
 
 #: loan.reverse
 msgid "Reverse"
-msgstr ""
+msgstr "ដាក់ត្រលប់មកវិញ"
 
 #: loan.review&edit
 msgctxt "loan.review&edit"
 msgid "Review installments"
-msgstr ""
+msgstr "ពិនិត្យមើលឡើងវិញនូវការសងរំលោះ"
 
 #: loan.review&submit
 msgid "Review & submit"
-msgstr ""
+msgstr "ពិនិត្យឡើងវិញនិងដាក់ប​ញ្ជូន"
 
 #: loan.review/edit_ins
 msgctxt "loan.review/edit_ins"
 msgid "Review installments"
-msgstr ""
+msgstr "ពិនិត្យមើលឡើងវិញនូវការសងរំលោះ"
 
 #: loan.review_payment_schedule
 msgid ""
 "Review the payment schedule below. Click Preview to continue. Click Cancel "
 "to return to Clients & Accounts without submitting information."
 msgstr ""
+"ពិនិត្យមើលឡើងវិញនូវកម្មវិធីសងរំលោះខាងក្រោម។ចុចពិនិត្យជាមុនដើម្បីបន្ត។ចុចបោះប"
+"ង់ដើម្បីត្រលប់ទៅអតិថិជននិងគណនីដោយពុំចាំបាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: loan.reviewaccontinfo
 msgid ""
@@ -1885,151 +1887,159 @@ msgid ""
 "Edit to make changes. Click Cancel to return to Clients & Accounts without "
 "submitting information."
 msgstr ""
+"ពិនិត្យមើលពត៍មានខាងក្រោម។ចុចបញ្ជូនប្រសិនបើអ្នកគិតថាពេញចិត្ត ឬ ចុចត្រង់ពាក្យក"
+"ែប្រែដើម្បីធ្វើការផ្លាស់ប្តូរ។ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជននិងគណនីដោយពុំចាំ"
+"បាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: loan.reviewaccountinformation1
 msgid ""
 "Review the information below. Click Submit if you are satisfied or click "
 "'Edit"
 msgstr ""
+"ពិនិត្យមើលពត៍មានខាងក្រោម។ចុចបញ្ជូនប្រសិនបើអ្នកពេញចិត្តឬចុចត្រង់ពាក្យកែប្រែ"
 
 #: loan.reviewaccountinformation2
 msgid "account information' to make changes. Click Cancel to return to"
-msgstr ""
+msgstr "ពត៍មានរបស់គណនីដើម្បីផ្លាស់ប្តូរ។ចុចបោះបង់ដើម្បីត្រលប់ទៅ"
 
 #: loan.reviewaccountinformation3
 msgid "Account Details without submitting information."
-msgstr ""
+msgstr "ពត៍មានគណនីលំអិតដោយពុំចាំបាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: loan.reviewtransaction
 msgid "Review Transaction"
-msgstr ""
+msgstr "ពិនិត្យមើលប្រតិបត្តិការឡើងវិញ"
 
 #: loan.running_bal
 msgid "Running balance"
-msgstr ""
+msgstr "សមតុល្យកំពុងតែបង្កើត"
 
 #: loan.s
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #: loan.saveForLater
 msgid "Save for later"
-msgstr ""
+msgstr "រក្សាទុកសំរាប់ពេលក្រោយ"
 
 #: loan.search
 msgid "Search"
-msgstr ""
+msgstr "ស្វែងរក"
 
 #: loan.seeallnotes
 msgid "See all notes"
-msgstr ""
+msgstr "មើលរាល់កំនត់ត្រាទាំងអស់"
 
 #: loan.sel_charge_type
 msgid "Select charge type\\:"
-msgstr ""
+msgstr "ជ្រើសរើសប្រភេទនៃកាយកថ្លៃសេវា"
 
 #: loan.select
 msgid "select"
-msgstr ""
+msgstr "ជ្រើសរើស"
 
 #: loan.selectLoanInstance
 msgid ""
 "Select a {0} instance. Then click Continue. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
+"ជ្រើសរើស{0}នៃឧទាហរណ៍មួយ​  រួចចុចបន្ត។ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជននិងគណនីដោ"
+"យពុំចាំបាច់ដាក់បញ្ជូនពត៍មាន"
 
 #: loan.select_client
 msgid "Select client"
-msgstr ""
+msgstr "ជ្រើសរើសអតិថិជន"
 
 #: loan.select_client/group
 msgid "Select Client/Group"
-msgstr ""
+msgstr "ជ្រើសរើសអតិថិជន​ឬ្​ក្រុម"
 
 #: loan.select_loan_inst
 msgid ""
 "instance. Then click Continue. Click Cancel to return to Clients & Accounts "
 "without submitting information."
 msgstr ""
+"បណ្តោះអាសន្នុ។និងចុចបន្ត។ចុចបោះបង់ដើម្បីត្រលប់ទៅអតិថិជននិងគណនីដោយពុំចាំបាច់ដ"
+"ាក់បញ្ជូនពត៍មាន"
 
 #: loan.selection
 msgid "Select {0}/{1}"
-msgstr ""
+msgstr "ជ្រើសរើស{0}/{១}"
 
 #: loan.source_fund
 msgid "Source of fund"
-msgstr ""
+msgstr "ប្រភពនៃថវិការ"
 
 #: loan.specifynote
 msgid "Specify the note and click Preview if you want to reverse the"
-msgstr ""
+msgstr "បញ្ជាក់កំនត់ត្រានិងចុចពិនិត្យមើលជាមុនប្រសិនបើអ្នកចង់បកត្រលប់ឡើងវិញ"
 
 #: loan.status
 msgid "Status"
-msgstr ""
+msgstr "លក្ខ័ណ"
 
 #: loan.status_active
 msgid "Active"
-msgstr ""
+msgstr "សកម្ម"
 
 #: loan.status_history
 msgid "Status history"
-msgstr ""
+msgstr "ប្រវត្តិលក្ខ័ណ"
 
 #: loan.statuschanged
 msgid "status will be changed to cancelled."
-msgstr ""
+msgstr "លក្ខ័ណនឺងប្តូរទៅជាបោះបង់"
 
 #: loan.subTotal
 msgid "subTotal"
-msgstr ""
+msgstr "សរុបទាំងអស់"
 
 #: loan.submit
 msgid "Submit"
-msgstr ""
+msgstr "បញ្ជូន"
 
 #: loan.submitForApproval
 msgid "Submit for approval"
-msgstr ""
+msgstr "បញ្ជូនដើម្បីសុំការសំរេច"
 
 #: loan.succcreatenew
 msgid "You have successfully created new"
-msgstr ""
+msgstr "អ្នកបានសំរេចហើយក្នុងការបង្កើតថ្មី"
 
 #: loan.successfulCreation
 msgid "You have successfully created a new {0} account."
-msgstr ""
+msgstr "អ្នកបានសំរេចហើយក្នុងការបង្កើតគណនី{0}ថ្មី"
 
 #: loan.successfulRecreation
 msgid "You have successfully recreated a new {0} account."
-msgstr ""
+msgstr "អ្នកបានសំរេចហើយក្នុងការបង្កើតគណនី{0}ថ្មី"
 
 #: loan.successful_creation
 msgid "You have successfully created a new"
-msgstr ""
+msgstr "អ្នកបានសំរេចហើយក្នុងការបង្កើតថ្មី"
 
 #: loan.successful_recreation
 msgid "You have successfully recreated a new"
-msgstr ""
+msgstr "អ្នកបានសំរេចហើយក្នុងការបង្កើតថ្មី"
 
 #: loan.suggested_steps
 msgid "Suggested next steps"
-msgstr ""
+msgstr "ផ្តល់យោបល់នៅដំនាក់កាលបន្ទាប់"
 
 #: loan.total
 msgctxt "loan.total"
 msgid "Total"
-msgstr ""
+msgstr "សរុប"
 
 #: loan.totalAmtDue
 msgctxt "loan.totalAmtDue"
 msgid "Total amount due on"
-msgstr ""
+msgstr "ចំនួនសរុបទាំងអស់និងដល់ពេល"
 
 #: loan.totalDueOn
 msgctxt "loan.totalDueOn"
 msgid "Total amount due on"
-msgstr ""
+msgstr "ចំនួនសរុបទាំងអស់និងដល់ពេល"
 
 #: loan.total_due_install
 msgid "Total due this installment"
@@ -2037,74 +2047,74 @@ msgstr ""
 
 #: loan.totalamount
 msgid "Total amount"
-msgstr ""
+msgstr "ចំនួនសរុប"
 
 #: loan.training_fee
 msgid "Training fee\\:"
-msgstr ""
+msgstr "ថ្លៃសេវានៃការហ្ងឹកហ្វឺន"
 
 #: loan.transaction_id
 msgid "Transaction ID\\#"
-msgstr ""
+msgstr "លេខកូដនៃប្រតិបត្តិការណ៍"
 
 #: loan.transc_history
 msgid "Transaction history"
-msgstr ""
+msgstr "ប្រវត្តិនៃប្រតិបត្តិការ"
 
 #: loan.trxn
 msgid "Transactions"
-msgstr ""
+msgstr "ប្រតិបត្តិការ"
 
 #: loan.type
 msgid "Type"
-msgstr ""
+msgstr "ប្រភេទ"
 
 #: loan.type_1
 msgid "Type 1"
-msgstr ""
+msgstr "ប្រភេទ១"
 
 #: loan.type_2
 msgid "Type 2"
-msgstr ""
+msgstr "ប្រភេទ២"
 
 #: loan.user
 msgctxt "loan.user"
 msgid "User"
-msgstr ""
+msgstr "អ្នកប្រើប្រាស់"
 
 #: loan.viewLoanDetails
 msgid "View {0} account details now"
-msgstr ""
+msgstr "បើកមើលពត៍មានលំអិតនៃគណនី{0}ក្នុងពេលឥឡូវ"
 
 #: loan.view_acc_activity
 msgid "View all account activity"
-msgstr ""
+msgstr "បើកមើលរាល់សកម្មភាពគណនី"
 
 #: loan.view_change_log
 msgid "View change log"
-msgstr ""
+msgstr "បើកមើលរាល់កាកត់ត្រាផ្លាស់ប្តូរ"
 
 #: loan.view_inst_details
 msgctxt "loan.view_inst_details"
 msgid "View installment details"
-msgstr ""
+msgstr "បើកមើលរាល់ការសងរំលោះលំអិត"
 
 #: loan.view_installment_details
 msgctxt "loan.view_installment_details"
 msgid "View installment details"
-msgstr ""
+msgstr "បើកមើលរាល់ការសងរំលោះលំអិត"
 
 #: loan.view_loan_acc1
 msgid "View"
-msgstr ""
+msgstr "បើកមើល"
 
 #: loan.view_loan_acc2
 msgid "account details now"
-msgstr ""
+msgstr "រាល់ពត៍មានលំអិតឥឡូវ"
 
 #: loan.view_schd
 msgid "View repayment schedule"
-msgstr ""
+msgstr "បើកមើលកាលវិភាគនៃការសងរំលោះ"
 
 #: loan.view_status_history
 msgid "View status history"
