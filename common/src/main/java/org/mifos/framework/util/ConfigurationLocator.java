@@ -37,9 +37,9 @@ import org.springframework.core.io.ClassPathResource;
  * particular class is used to find the file used to configure the logger.
  */
 public class ConfigurationLocator {
+    private static final String LOCATOR_ENVIRONMENT_PROPERTY_NAME = "MIFOS_CONF";
     private static final String CURRENT_WORKING_DIRECTORY_PATH = "";
     private static final String LOCATOR_SYSTEM_PROPERTY_NAME = "mifos.conf";
-    private static final String LOCATOR_ENVIRONMENT_PROPERTY_NAME = "MIFOS_CONF";
     private static final String HOME_PROPERTY_NAME = "user.home";
     private static final String MIFOS_USER_CONFIG_DIRECTORY_NAME = ".mifos";
     private static final String DEFAULT_CONFIGURATION_PATH = "org/mifos/config/resources/";
@@ -83,7 +83,7 @@ public class ConfigurationLocator {
 
     private String[] getDirectoriesToSearch() {
         String systemPropertyDirectory = System.getProperty(LOCATOR_SYSTEM_PROPERTY_NAME);
-        String envPropertyDirectory = System.getenv(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
+        String envPropertyDirectory = configurationLocatorHelper.getEnvironmentProperty(LOCATOR_ENVIRONMENT_PROPERTY_NAME);
         String homeDirectory = getHomeProperty();
         String userConfigDirectory = homeDirectory + '/' + MIFOS_USER_CONFIG_DIRECTORY_NAME;
         

@@ -12,4 +12,8 @@ public class ConfigurationLocatorHelper {
       return System.getProperty(homePropertyName);
     }
 
+    public String getEnvironmentProperty(String environmentPropertyName) {
+        return System.getenv(environmentPropertyName);
+    }
+
 }

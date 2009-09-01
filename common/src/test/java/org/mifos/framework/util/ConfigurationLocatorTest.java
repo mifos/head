@@ -68,6 +68,7 @@ public class ConfigurationLocatorTest {
         ConfigurationLocatorHelper mockFileFactory = createMock(ConfigurationLocatorHelper.class);
         expect(mockFileFactory.getFile(EXPECTED_PATH)).andReturn(mockFile);
         expect(mockFileFactory.getHomeProperty("user.home")).andReturn("/Users/caitie");
+        expect(mockFileFactory.getEnvironmentProperty("MIFOS_CONF")).andReturn("");
         replay(mockFileFactory);
         ConfigurationLocator configurationLocator = new ConfigurationLocator();
         configurationLocator.setConfigurationLocatorHelper(mockFileFactory);
