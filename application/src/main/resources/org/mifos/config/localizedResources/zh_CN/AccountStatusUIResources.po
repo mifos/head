@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:47-0700\n"
-"PO-Revision-Date: 2009-08-24 00:11-0700\n"
+"PO-Revision-Date: 2009-08-26 05:36-0700\n"
 "Last-Translator: Tang Zhilong <asfnuts@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,60 +78,60 @@ msgstr ""
 
 #: accountStatus.loan
 msgid "Loan"
-msgstr ""
+msgstr "贷款"
 
 #: accountStatus.loanOfficer
 msgid "Loan Officer"
-msgstr ""
+msgstr "贷款机构"
 
 #: accountStatus.loanamount
 msgid "Loan Amount"
-msgstr ""
+msgstr "贷款额"
 
 #: accountStatus.loanofficer
 msgid "Loan Officer\\:"
-msgstr ""
+msgstr "贷款机构\\:"
 
 #: accountStatus.newstatus
 msgid "New Status\\:"
-msgstr ""
+msgstr "新状态\\:"
 
 #: accountStatus.noresultfound
 msgid "No search result found."
-msgstr ""
+msgstr "没有找到搜索的结果。"
 
 #: accountStatus.note
 msgid "Note\\:"
-msgstr ""
+msgstr "注意\\:"
 
 #: accountStatus.results
 msgid "results"
-msgstr ""
+msgstr "结果"
 
 #: accountStatus.search
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: accountStatus.select
 msgid "--Select--"
-msgstr ""
+msgstr "--选择--"
 
 #: accountStatus.state
 msgid "Pending-Approval"
-msgstr ""
+msgstr "未经许可"
 
 #: accountStatus.statusmessage
 msgid "The following account status has been successfully modified"
-msgstr ""
+msgstr "以下账户的状态已经被成功修改"
 
 #: accountStatus.submit
 msgid "Submit"
-msgstr ""
+msgstr "提交"
 
 #: accountStatus.type
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #: accountStauts.searchheader
 msgid "7 results in All branches found for Loans in Pending approval"
-msgstr ""
+msgstr "在所有机构中找到的7个未经许可的贷款结果"
