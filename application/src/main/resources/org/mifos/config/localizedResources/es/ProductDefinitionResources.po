@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-06 16:45-0700\n"
-"PO-Revision-Date: 2009-08-18 13:24-0700\n"
+"PO-Revision-Date: 2009-08-29 10:10-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -348,33 +348,50 @@ msgid ""
 "The Start date can be anything between current date and 1 year from the "
 "current date."
 msgstr ""
+"La fecha de Comienzo debe estar comprendida entre el día de hoy y un año a "
+"partir de hoy."
 
 #: errors.startdateupdateexception
 msgid ""
 "The Start date cannot be changed because either the product is active or the "
 "date specified is invalid."
 msgstr ""
+"No se puede cambiar la fecha de comienzo, bien porque el producto está "
+"activo, bien porque la fecha especificada no es válida."
 
+# for \# of last loan Installments - not sure about what this means in English, translated literally.
 #: errors.startendinstallment
+#, fuzzy
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount for \\# of last loan Installments "
 "{0} {1}."
 msgstr ""
+"Por favor especifique un final del rango del importe del préstamo válido. El "
+"final del rango del importe del préstamo debe ser mayor que el inicio del "
+"rango del importe del préstamo para \n"
+"úmero de las últimas cuotas del préstamo {0} {1}."
 
 #: errors.startendrangeloanamount
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount {0} {1}."
 msgstr ""
+"Por favor especifique un final del rango del importe del préstamo válido. El "
+"final del rango del importe del préstamo debe ser mayor que el inicio del "
+"rango del importe del préstamo {0} {1}."
 
 #: errors.startinstallment
 msgid "Please Specify the valid Start Installment Range Number {0} {1}."
 msgstr ""
+"Por favor especifique el número de inicio del rango de cuotas válido {0} "
+"{1}."
 
 #: errors.startloanamount
 msgid "Please Specify the valid Start Range Loan Amount {0} {1}."
 msgstr ""
+"Por favor especifique el inicio del rango del importe del préstamo válido "
+"{0} {1}."
 
 #: errors.suffix
 msgid "</LI>"
@@ -387,14 +404,19 @@ msgstr "Esta acción no está permitida."
 #: exceptions.application.productDef.invalidfield
 msgctxt "exceptions.application.productDef.invalidfield"
 msgid "Please specify a value greater than zero for {0}."
-msgstr ""
+msgstr "Por favor especifique un importe mayor que cero para {0}."
 
+# Not sure about flat interest, I have assumed flat amount.
 #: exceptions.declineinterestdisbursementdeduction
+#, fuzzy
 msgid ""
 "You cannot deduct interest at disbursement for declining balance loans. "
 "Please unselect this option or change the interest calculation method to "
 "flat interest.."
 msgstr ""
+"No se puede deducir el interés al desembolso para préstamos amortizables. "
+"Por favor no seleccione esta opción o cambie el método de cálculo del "
+"interés a un importe fijo."
 
 #: product.DefineMixForNewProduct
 msgid "Define mix for a new product"
