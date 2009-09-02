@@ -59,7 +59,6 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
 
 
     public void testUpdateLoanForLogging() throws Exception {
-        TestDatabase.resetMySQLDatabase();
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());
@@ -87,6 +86,9 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
             }
         }
         TestObjectFactory.cleanUpChangeLog();
+        TestObjectFactory.cleanUp(accountBO);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
     }
 
     public void testAuditLogView() {

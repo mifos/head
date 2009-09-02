@@ -126,6 +126,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.SecurityConstants;
 import org.mifos.framework.security.util.UserContext;
@@ -166,6 +167,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         super.tearDown();
     }
 
@@ -520,7 +522,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    public void testPreview() throws PageExpiredException {
+    public void testPreview() {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         addRequestParameter("customerId", group.getCustomerId().toString());

@@ -46,7 +46,9 @@ public class BranchReportIntegrationTestCase extends MifosIntegrationTestCase {
         super();
     }
     
+    @Override
     protected void setUp() throws Exception {
+        super.setUp();
         DEFAULT_CURRENCY = Configuration.getInstance().getSystemConfig().getCurrency();
         CURRENCY_ID = DEFAULT_CURRENCY.getCurrencyId();
     }

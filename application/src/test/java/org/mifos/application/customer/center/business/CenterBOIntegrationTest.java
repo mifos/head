@@ -98,6 +98,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        TestDatabase.resetMySQLDatabase();
         super.tearDown();
     }
 
@@ -167,7 +168,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutLO() throws Exception {
         try {
             meeting = getMeeting();
-            center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null, null,
+            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null,
                     officeBo, meeting, null, new CustomerPersistence());
             fail();
         } catch (CustomerException ce) {
@@ -179,7 +180,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCreateWithoutMeeting() throws Exception {
         try {
-            center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null, null,
+            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null,
                     officeBo, meeting, personnelBo, new CustomerPersistence());
             fail();
         } catch (CustomerException ce) {
@@ -191,7 +192,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCreateWithoutOffice() throws Exception {
         try {
             meeting = getMeeting();
-            center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null, null,
+            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null,
                     null, meeting, personnelBo, new CustomerPersistence());
             fail();
         } catch (CustomerException ce) {
@@ -202,7 +203,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
-        String name = "CenterBOIntegrationTest_Center";
+        String name = "Center";
         meeting = getMeeting();
         center = new CenterBO(TestUtils.makeUser(), name, null, null, null, null, null, officeBo, meeting, personnelBo,
                 new CustomerPersistence());
@@ -215,7 +216,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testSuccessfulCreateWithoutFee() throws Exception {
-        String name = "CenterBOIntegrationTest_Center";
+        String name = "Center";
         meeting = getMeeting();
         center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), null, null, null, officeBo, meeting,
                 personnelBo, new CustomerPersistence());
@@ -229,7 +230,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testFailureCreate_DuplicateName() throws Exception {
-        String name = "CenterBOIntegrationTest_Center";
+        String name = "Center";
         center = TestObjectFactory.createCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
 
@@ -248,7 +249,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testFailureDuplicateName() throws Exception {
-        String name = "CenterBOIntegrationTest_Center";
+        String name = "Center";
         center = TestObjectFactory.createCenter(name, getMeeting());
         StaticHibernateUtil.closeSession();
 
@@ -269,7 +270,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testSuccessfulCreate() throws Exception {
-        String name = "CenterBOIntegrationTest_Center";
+        String name = "Center";
         String externalId = "12345";
         Date mfiJoiningDate = getDate("11/12/2005");
         meeting = getMeeting();
@@ -442,11 +443,11 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     public void testCenterSearchResultsView() {
 
         CenterSearchResults searchResults = new CenterSearchResults();
-        searchResults.setCenterName("CenterBOIntegrationTest_Center");
+        searchResults.setCenterName("Center");
         searchResults.setCenterSystemId("1234");
         searchResults.setParentOfficeId(Short.valueOf("1"));
         searchResults.setParentOfficeName("BO");
-        assertEquals("CenterBOIntegrationTest_Center", searchResults.getCenterName());
+        assertEquals("Center", searchResults.getCenterName());
         assertEquals("1234", searchResults.getCenterSystemId());
         assertEquals(Short.valueOf("1").shortValue(), searchResults.getParentOfficeId());
         assertEquals("BO", searchResults.getParentOfficeName());
@@ -464,15 +465,15 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short) 1, startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
 
         PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-        center = new CenterBO(TestUtils.makeUser(), "CenterBOIntegrationTest_Center", null, null, null, null,
+        center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null,
                 startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);
 
-        CenterBO center2 = new CenterBO(TestUtils.makeUser(), "center2_CenterBOIntegrationTest", null, null, null,
+        CenterBO center2 = new CenterBO(TestUtils.makeUser(), "center2", null, null, null,
                 null, startDate, new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), meeting,
                 systemUser, new CustomerPersistence());
 
-        CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), "sameBranch_CenterBOIntegrationTest", null, null,
+        CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), "sameBranch", null, null,
                 null, null, startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);
         StaticHibernateUtil.commitTransaction();
@@ -485,10 +486,10 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     private void createCustomers() throws Exception {
         meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK, new Date(),
                 MeetingType.CUSTOMER_MEETING, "Delhi");
-        center = TestObjectFactory.createCenter("CenterBOIntegrationTest_Center", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_CenterBOIntegrationTest", CustomerStatus.GROUP_ACTIVE,
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
                 center);
-        client = TestObjectFactory.createClient("Client_CenterBOIntegrationTest", CustomerStatus.CLIENT_ACTIVE, group);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private MeetingBO getMeeting() {
@@ -505,9 +506,9 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     private List<FeeView> getFees() {
         List<FeeView> fees = new ArrayList<FeeView>();
-        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee_CenterBOIntegrationTest",
+        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
                 FeeCategory.CENTER, "200", RecurrenceType.WEEKLY, Short.valueOf("2"));
-        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee_CenterBOIntegrationTest",
+        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee",
                 FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
         fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
         fees.add(new FeeView(TestObjectFactory.getContext(), fee2));

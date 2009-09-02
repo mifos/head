@@ -33,7 +33,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
     public MessageLookupIntegrationTest() throws SystemException, ApplicationException {
@@ -43,15 +42,12 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
     private static MessageLookup messageLookup;
 
 
+    @Override
     public void setUp() throws Exception {
-        try {
-            Class.forName(TestCaseInitializer.class.getName());
-        } catch (ClassNotFoundException e) {
-            throw new Error("Failed to start up", e);
-        }
+        super.setUp();
         messageLookup = MessageLookup.getInstance();
     }
-
+    
     public void testWeekDayLookup() {
         // default locale
         assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));

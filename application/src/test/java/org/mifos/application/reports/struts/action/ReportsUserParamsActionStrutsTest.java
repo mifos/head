@@ -55,13 +55,14 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
         super.tearDown();
     }
 
-    public void testLoadAddListShouldGoToBirtReport() {
+    public void testLoadAddListShouldGoToBirtReport() throws Exception {
         setRequestPathInfo("/reportsUserParamsAction.do");
         addRequestParameter("method", "loadAddList");
         addRequestParameter("reportId", "1");
         actionPerform();
         verifyForwardPath("/pages/application/reports/jsp/birtReport.jsp");
-
+        // FIXME This test leave CUSTOMER table in dirty state 
+        TestDatabase.resetMySQLDatabase();
     }
 
     public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId() {

@@ -322,10 +322,6 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testRescheduleLoanRepaymentDates() throws Exception {
-        // In order to make this test pass resetting database is required
-        // because some other test is leaving the database in dirty state
-        TestDatabase.resetMySQLDatabase();
-
         // Make SUNDAY (FirstDay) as Working Day.
         toggleFirstDayOnOff(Short.valueOf("1"));
         setNewWorkingDays(sundayIncludedWorkingDays);
@@ -412,6 +408,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         // Create Non Working Day
         toggleFirstDayOnOff(Short.valueOf("0"));
         setNewWorkingDays(sundayIncludedWorkingDays);
+        TestDatabase.resetMySQLDatabase();
     }
 
     public void testRescheduleSavingDates() throws Exception {

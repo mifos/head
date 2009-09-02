@@ -34,7 +34,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
@@ -48,7 +47,6 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
     }
 
     @Override
@@ -58,7 +56,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         super.tearDown();
     }
 
-    public void testGetBusinessObject() throws ServiceException {
+    public void testGetBusinessObject() {
         assertNull(new LoanPrdBusinessService().getBusinessObject(null));
     }
 
@@ -100,7 +98,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         assertEquals("Loan", loanOffering.getPrdOfferingShortName());
     }
 
-    public void testGetLoanOfferingForInvalidConnection() throws ServiceException {
+    public void testGetLoanOfferingForInvalidConnection() {
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.closeSession();
 

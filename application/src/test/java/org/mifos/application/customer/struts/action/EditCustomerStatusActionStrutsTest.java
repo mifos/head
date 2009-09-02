@@ -81,7 +81,6 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -110,6 +109,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
         assertEquals("Size of the status list should be 2", 1, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
+        cleanInitialObjects();
 
     }
 
@@ -169,6 +169,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
     @SuppressWarnings("unchecked")
     public void testPreviewSuccess() throws PageExpiredException {
+        cleanInitialObjects();
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -192,10 +193,11 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
         assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
-    public void testUpdateCenterStatus() throws PageExpiredException {
+    public void testUpdateCenterStatus() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createCenter("Center", meeting);
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -227,6 +229,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.center_detail_page.toString());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         assertFalse(center.isActive());
+        TestDatabase.resetMySQLDatabase();
     }
 
     @SuppressWarnings("unchecked")
@@ -242,7 +245,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
         assertEquals("Size of the status list should be 2", 2, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
-
+        cleanInitialObjects();
     }
 
     public void testFailurePreviewWithAllValuesNullForClient() throws Exception {
@@ -302,6 +305,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNotNull(SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
         assertNotNull("Since new Status is Closed,so flag should not be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
+        cleanInitialObjects();
     }
 
     public void testPrevious() {
@@ -313,6 +317,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previousStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
     }
 
     public void testCancel() {
@@ -324,10 +331,11 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.client_detail_page.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
-    public void testUpdateStatusForClient() throws CustomerException, PageExpiredException {
+    public void testUpdateStatusForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -358,10 +366,11 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         assertFalse(client.isActive());
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
-    public void testUpdateStatusForClientForFirstTimeActive() throws CustomerException, PageExpiredException {
+    public void testUpdateStatusForClientForFirstTimeActive() throws PageExpiredException {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_PARTIAL);
         assertTrue(((ClientBO) client).getCustomerAccount().getAccountActionDates().isEmpty());
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -397,6 +406,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertEquals("ActivationDate should be the current date.", DateUtils
                 .getDateWithoutTimeStamp(new java.util.Date().getTime()), DateUtils.getDateWithoutTimeStamp(client
                 .getCustomerActivationDate().getTime()));
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
@@ -437,11 +447,11 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.client_detail_page.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         assertTrue(client.isActive());
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
-    public void testUpdateStatusForClientWhenParentCustomerIsInPartialState() throws CustomerException,
-            PageExpiredException {
+    public void testUpdateStatusForClientWhenParentCustomerIsInPartialState() throws PageExpiredException {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_PARTIAL);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -472,6 +482,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.updateStatus_failure.toString());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         assertFalse(client.isActive());
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
@@ -514,6 +525,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
+        TestObjectFactory.cleanUp(loanBO);
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
@@ -566,6 +579,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
             assertNull(customerPosition.getCustomer());
             break;
         }
+        cleanInitialObjects();
     }
 
     @SuppressWarnings("unchecked")
@@ -600,6 +614,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         verifyActionErrors(new String[] { ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED });
         verifyForward(ActionForwards.updateStatus_failure.toString());
+        cleanObjectsForClient();
     }
 
     @SuppressWarnings("unchecked")
@@ -629,6 +644,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         verifyActionErrors(new String[] { GroupConstants.MEETING_NOT_ASSIGNED });
         verifyForward(ActionForwards.updateStatus_failure.toString());
+        cleanObjectsForClient();
     }
 
     @SuppressWarnings("unchecked")
@@ -644,6 +660,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
         assertEquals("Size of the status list should be 2", 2, ((List<CustomerStatusEntity>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_LIST, request)).size());
+        cleanInitialObjects();
     }
 
     public void testPreviewSuccessForGroup() throws PageExpiredException {
@@ -663,6 +680,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
                 SavingsConstants.NEW_STATUS_NAME, request));
         assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
+        cleanInitialObjects();
     }
 
     public void testPreviewStatusFailureWithAllValuesNullForGroup() throws Exception {
@@ -677,6 +695,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertEquals("Status id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
         assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
+        cleanInitialObjects();
     }
 
     public void testPreviewStatusFailureWithFlagValueNullForGroup() throws Exception {
@@ -691,9 +710,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertEquals(1, getErrorSize());
         assertEquals("flag id", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
         verifyInputForward();
+        cleanInitialObjects();
     }
 
-    public void testPreviewStatusFailureWhenStatusIsNull() throws PageExpiredException {
+    public void testPreviewStatusFailureWhenStatusIsNull() {
         createInitialObjects();
         invokeLoadSuccessfully();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -705,9 +725,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertEquals(1, getErrorSize());
         assertEquals("Status", 1, getErrorSize(CustomerConstants.MANDATORY_SELECT));
         verifyInputForward();
+        cleanInitialObjects();
     }
 
-    public void testPreviewStatusFailureWhenNotesIsNull() throws PageExpiredException {
+    public void testPreviewStatusFailureWhenNotesIsNull() {
         createInitialObjects();
         invokeLoadSuccessfully();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -719,6 +740,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertEquals(1, getErrorSize());
         assertEquals("Notes", 1, getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
         verifyInputForward();
+        cleanInitialObjects();
     }
 
     public void testPreviousStatus() {
@@ -731,6 +753,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previousStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
+        cleanInitialObjects();
     }
 
     public void testCancelStatus() {
@@ -743,6 +766,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.group_detail_page.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
+        cleanInitialObjects();
     }
 
     public void testUpdateStatusSuccess() {
@@ -758,6 +782,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNull(request.getAttribute(Constants.FLOWMANAGER));
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         assertTrue(group.isBlackListed());
+        cleanInitialObjects();
     }
 
     public void testUpdateStatusSuccessWhileChangingStatusToActive() {
@@ -775,6 +800,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertEquals("ActivationDate should be the current date.", DateUtils
                 .getDateWithoutTimeStamp(new java.util.Date().getTime()), DateUtils.getDateWithoutTimeStamp(group
                 .getCustomerActivationDate().getTime()));
+        cleanInitialObjects();
     }
 
     public void testUpdateStatusFailureWhenGroupHasActiveAccounts() throws CustomerException {
@@ -795,9 +821,11 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
+        TestObjectFactory.cleanUp(loanBO);
+        cleanInitialObjects();
     }
 
-    public void testUpdateStatusFailureWhenGroupHasActiveClients() throws CustomerException {
+    public void testUpdateStatusFailureWhenGroupHasActiveClients() {
         createInitialObjects();
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_OTHER);
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -806,6 +834,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION });
+        cleanInitialObjects();
     }
 
     public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenOfficeInactiveWhileChangingStatusCancelToPartial()
@@ -823,7 +852,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.BRANCH_INACTIVE });
         office = (OfficeBO) TestObjectFactory.getObject(OfficeBO.class, office.getOfficeId());
-
+        cleanInitialObjectsOfficeInactive();
     }
 
     public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenCenterIsInactiveWhileChangingStatusCancelToPartial()
@@ -838,10 +867,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.CENTER_INACTIVE });
+        cleanInitialObjects();
     }
 
-    public void testUpdateStatusFailureWhenGroupIsUnderBranchWhileChangingStatusCancelToPartial()
-            throws CustomerException {
+    public void testUpdateStatusFailureWhenGroupIsUnderBranchWhileChangingStatusCancelToPartial() {
         createInitialObjectsWhenCenterHierarchyNotExist(CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -850,9 +879,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.LOANOFFICER_INACTIVE });
+        cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
 
-    public void testChangeStatusToActiveForGroupUnderBranchWithNoLO() throws CustomerException {
+    public void testChangeStatusToActiveForGroupUnderBranchWithNoLO() {
         createInitialObjectsWhenCenterHierarchyNotExistWithNoLO(CustomerStatus.GROUP_PARTIAL,
                 CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_ACTIVE, null);
@@ -862,10 +892,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED });
+        cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
 
-    public void testUpdateStatusFailureWhenGroupIsUnderBranchWitnNoMeetingsWhileChangingStatusToActive()
-            throws CustomerException {
+    public void testUpdateStatusFailureWhenGroupIsUnderBranchWitnNoMeetingsWhileChangingStatusToActive() {
         createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(CustomerStatus.GROUP_PARTIAL,
                 CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_ACTIVE, null);
@@ -875,6 +905,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.MEETING_NOT_ASSIGNED });
+        cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
 
     private void invokeLoadSuccessfully() {
@@ -901,60 +932,81 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_EditCustomerStatusActionTest", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_EditCustomerStatusActionTest", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", CustomerStatus.CLIENT_ACTIVE, group);
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private void createInitialObjects(CustomerStatus centerStatus, CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_EditCustomerStatusActionTest", meeting);
-        group = TestObjectFactory.createGroupUnderCenter("Group_EditCustomerStatusActionTest", groupStatus, center);
-        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group);
+        center = TestObjectFactory.createCenter("Center", meeting);
+        group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
+        client = TestObjectFactory.createClient("Client", clientStatus, group);
+    }
+    
+    private void cleanInitialObjects(){
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(center);
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExist(CustomerStatus groupStatus, CustomerStatus clientStatus) {
         Short officeId = new Short("3");
         Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, officeId, getMeeting(), personnel);
-        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
+        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, officeId, getMeeting(), personnel);
+        client = TestObjectFactory.createClient("Client", clientStatus, group, new java.util.Date());
+    }
+    private void cleanInitialObjectsWhenCenterHierarchyNotExist() {
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoLO(CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         Short officeId = new Short("3");
-        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, officeId, getMeeting(), null);
-        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
+        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, officeId, getMeeting(), null);
+        client = TestObjectFactory.createClient("Client", clientStatus, group, new java.util.Date());
     }
 
     private void createObjectsForClient(String name) throws Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office_EditCustomerStatusActionTest", "cust");
-        client = TestObjectFactory.createClient(name, getMeeting(), CustomerStatus.CLIENT_PARTIAL);
+                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
+        client = TestObjectFactory.createClient( name, getMeeting(), CustomerStatus.CLIENT_PARTIAL);
+    }
+    
+    private void cleanObjectsForClient() {
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(office);
     }
 
     private void createClientWithoutMeeting(String name) throws Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office_EditCustomerStatusActionTest", "cust");
-        client = TestObjectFactory.createClient(name, null, CustomerStatus.CLIENT_PARTIAL);
+                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
+        client = TestObjectFactory.createClient( name, null, CustomerStatus.CLIENT_PARTIAL);
     }
 
     private void createInitialObjectsOfficeInactive(CustomerStatus groupStatus, CustomerStatus clientStatus)
             throws NumberFormatException, Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office_EditCustomerStatusActionTest", "cust");
-        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, office.getOfficeId(), getMeeting(),
+                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
+        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, office.getOfficeId(), getMeeting(),
                 PersonnelConstants.TEST_USER);
-        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
+        client = TestObjectFactory.createClient("Client", clientStatus, group, new java.util.Date());
+    }
+    
+    private void cleanInitialObjectsOfficeInactive(){
+        TestObjectFactory.cleanUp(client);
+        TestObjectFactory.cleanUp(group);
+        TestObjectFactory.cleanUp(office);
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(CustomerStatus groupStatus,
             CustomerStatus clientStatus) {
         Short officeId = new Short("3");
         Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group_EditCustomerStatusActionTest", groupStatus, officeId, null, personnel);
-        client = TestObjectFactory.createClient("Client_EditCustomerStatusActionTest", clientStatus, group, new java.util.Date());
+        group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus, officeId, null, personnel);
+        client = TestObjectFactory.createClient("Client", clientStatus, group, new java.util.Date());
     }
 
     private MeetingBO getMeeting() {

@@ -366,7 +366,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
         assertEquals(2006, calendar.get(Calendar.YEAR));
         assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
-
+        TestDatabase.resetMySQLDatabase();
     }
 
     public void testCreateWithOfficerDisplayName() throws Exception {
