@@ -31,7 +31,7 @@ public class CenterSearchTransferGroupPage extends MifosPage {
     }
 
     public void verifyPage() {
-        this.verifyPage("center_search_transfer_group");
+        verifyPage("center_search_transfer_group");
     }
 
     public ConfirmCenterMembershipPage search(String centerName) {

@@ -44,7 +44,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
 public class GroupTest extends UiTestCaseBase {
 
     @Autowired
@@ -68,6 +67,7 @@ public class GroupTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
     public void testHitGroupDashboard() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
         LoginPage loginPage = appLauncher.launchMifos();
@@ -79,7 +79,7 @@ public class GroupTest extends UiTestCaseBase {
         groupViewDetailsPage.verifyPage();
     }
 
-    @Test(enabled=false)  // need ability to initialize cached data
+    @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPendingApprovalStateTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
@@ -92,7 +92,7 @@ public class GroupTest extends UiTestCaseBase {
         groupDetailsPage.verifyStatus("Application Pending*");
     }
 
-    @Test(enabled=false)  // need ability to initialize cached data
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPartialApplicationStateTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
@@ -105,7 +105,7 @@ public class GroupTest extends UiTestCaseBase {
         groupDetailsPage.verifyStatus("Partial Application*");
     }
     
-    @Test(enabled=false)  // need ability to initialize cached data
+    @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void changeCenterMembership() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);

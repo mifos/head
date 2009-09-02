@@ -72,7 +72,7 @@ public class HomePage extends MifosPage {
     }
 
     public CreateGroupSearchPage navigateToCreateNewGroupSearchPage() {
-        selenium.click("menu.link.create.new.group");
+        selenium.click("menu.link.label.createnew.group");
         waitForPageToLoad();
         return new CreateGroupSearchPage(selenium);        
     }

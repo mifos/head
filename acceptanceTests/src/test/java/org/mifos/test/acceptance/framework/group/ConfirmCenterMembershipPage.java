@@ -32,7 +32,7 @@ public class ConfirmCenterMembershipPage extends MifosPage {
     }
 
     public void verifyPage() {
-        this.verifyPage("ConfirmCenterMembership");
+        verifyPage("ConfirmCenterMembership");
     }
 
     public GroupViewDetailsPage submitMembershipChange() {

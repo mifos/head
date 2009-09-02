@@ -47,6 +47,7 @@ public class GroupViewDetailsPage extends MifosPage {
 
     public CenterSearchTransferGroupPage editCenterMembership() {
         selenium.click("viewgroupdetails.link.editCenterMembership");
+        waitForPageToLoad();
         return new CenterSearchTransferGroupPage(selenium);
     }
 
