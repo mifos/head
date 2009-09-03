@@ -23,6 +23,7 @@ package org.mifos.application.configuration.struts.action;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LookupOptionData;
@@ -110,13 +111,10 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
         return true;
     }
 
-    // FIXME This test has been disabled because it was failing with surefire
-    // run (with all the tests), may be some test is changing the lookup value
-    // Although this test passes when run in stand alone mode from eclipse
-    // or through "mvn test -Dtest=LookupOptionActionStrutsTest
-    // also I am not able to reproduce this failure on my(ugupta) system
-    // but its failing on hudson and birch
-    public void xtestLoad() throws Exception {
+    public void testLoad() throws Exception {
+        // Required for resetting the label cache 
+        MifosConfiguration.getInstance().init();
+        
         setRequestPathInfo("/lookupOptionsAction.do");
         addRequestParameter("method", "load");
         performNoErrors();
@@ -158,7 +156,6 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
         String[] EXPECTED_OFFICER_TITLES = { "President", "Vice President" };
         assertTrue(compareLists(lookupOptionsActionForm.getOfficerTitles(), EXPECTED_OFFICER_TITLES, 2));
-
     }
 
     public void testCancel() {
